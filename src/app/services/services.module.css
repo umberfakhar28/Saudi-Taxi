@@ -1,0 +1,84 @@
+.hero {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 8rem 0 4rem;
+    text-align: center;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-family: var(--font-heading);
+    margin-bottom: 3rem;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 4rem 1rem;
+}
+
+.serviceRow {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-bottom: 6rem;
+}
+
+.serviceRow.reverse {
+    flex-direction: row-reverse;
+}
+
+.image {
+    flex: 1;
+    height: 400px;
+    background-color: #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+    flex: 1;
+}
+
+.serviceTitle {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-family: var(--font-heading);
+}
+
+.serviceText {
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.link {
+    color: var(--secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+.link:hover {
+    border-bottom-color: var(--secondary);
+    padding-bottom: 2px;
+}
+
+@media (max-width: 768px) {
+
+    .serviceRow,
+    .serviceRow.reverse {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .image {
+        width: 100%;
+        height: 300px;
+    }
+}
