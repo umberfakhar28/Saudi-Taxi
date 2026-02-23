@@ -2,7 +2,7 @@
     background: linear-gradient(180deg, #0a0a0a, #000000);
     color: var(--text-light);
     padding: 5rem 0 0;
-    border-top: 4px solid var(--secondary);
+    border-top: 4px solid var(--accent);
     font-size: 0.9rem;
 }
 
@@ -19,7 +19,7 @@
 }
 
 .heading {
-    color: var(--secondary);
+    color: var(--accent);
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
     text-transform: uppercase;
@@ -30,7 +30,7 @@
 }
 
 .logoIcon {
-    font-size: 1.2rem;
+    color: var(--accent);
 }
 
 .text {
@@ -57,7 +57,7 @@
 }
 
 .socialLink:hover {
-    background: var(--secondary);
+    background: var(--accent);
     transform: translateY(-3px);
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
@@ -76,7 +76,8 @@
 }
 
 .contactIcon {
-    font-size: 0.85rem;
+    color: var(--accent);
+    flex-shrink: 0;
 }
 
 .link {
@@ -88,7 +89,7 @@
 
 .link:hover {
     opacity: 1;
-    color: var(--secondary);
+    color: var(--accent);
     padding-left: 4px;
 }
 
@@ -120,7 +121,7 @@
 
 .bottomLink:hover {
     opacity: 1;
-    color: var(--secondary);
+    color: var(--accent);
 }
 
 .divider {

@@ -1,6 +1,11 @@
 import Hero from "@/components/Hero";
+import SocialProof from "@/components/SocialProof";
 import Features from "@/components/Features";
+import KeyTakeaways from "@/components/KeyTakeaways";
+import TrustBadges from "@/components/TrustBadges";
+import FAQSection from "@/components/FAQSection";
 import Link from "next/link";
+import { Landmark, Plane, Car } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,21 +15,21 @@ export const metadata: Metadata = {
 
 const services = [
   {
-    icon: "🕌",
+    icon: <Landmark size={48} />,
     title: "Umrah Taxi Services",
-    description: "Dedicated taxi services for Umrah pilgrims. Comfortable, reliable rides between Holy sites with knowledgeable drivers.",
+    description: "Direct transport between Holy sites. Our licensed drivers ensure a comfortable, safe, and efficient journey for all Umrah pilgrims.",
     link: "/umrah-taxi-services",
   },
   {
-    icon: "✈️",
+    icon: <Plane size={48} />,
     title: "Airport Transfers",
-    description: "Hassle-free airport pickup & drop-off at Jeddah Airport (KAIA). Meet & greet service with flight tracking.",
+    description: "Instant Jeddah Airport (KAIA) pickups. We provide 24/7 meet-and-greet services with real-time flight tracking for zero wait time.",
     link: "/airport-transfer-for-umrah",
   },
   {
-    icon: "🚗",
+    icon: <Car size={48} />,
     title: "Jeddah to Makkah",
-    description: "Direct taxi service from Jeddah city or airport to Makkah. Fixed prices, no hidden charges, comfortable vehicles.",
+    description: "The fastest way to reach Makkah from Jeddah. Enjoy fixed-rate, direct transfers with professional chauffeurs in premium vehicles.",
     link: "/jeddah-to-makkah-taxi-service",
   },
 ];
@@ -47,19 +52,31 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <SocialProof />
+      <div className="container">
+        <KeyTakeaways
+          items={[
+            "Fixed Prices: No hidden charges or peak hour surcharges.",
+            "24/7 Service: Available for Jeddah Airport transfers and Holy City travel anytime.",
+            "Licensed Fleet: All vehicles are modern, insured, and Ministry authorized.",
+            "Professional Drivers: Local experts with multilingual communication skills."
+          ]}
+        />
+      </div>
       <Features />
+      <TrustBadges />
 
       {/* Services Section */}
       <section className="section-lg bg-light">
         <div className="container">
-          <h2 className="section-title">Our Premium Services</h2>
+          <h2 className="section-title">Professional Transportation Services</h2>
           <p className="section-subtitle">
-            We provide comprehensive transportation solutions for pilgrims and travelers across Saudi Arabia. Every ride is crafted for your comfort and peace of mind.
+            Get the most reliable transportation in Saudi Arabia. We provide direct Jeddah Airport transfers and Holy City taxi services with 100% fixed pricing.
           </p>
           <div className="grid-3">
             {services.map((service, i) => (
               <div key={i} className="card" style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{service.icon}</div>
+                <div style={{ color: 'var(--accent)', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>{service.icon}</div>
                 <h3 style={{ color: 'var(--primary)', marginBottom: '0.75rem', fontSize: '1.3rem' }}>{service.title}</h3>
                 <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>{service.description}</p>
                 <Link href={service.link} className="btn btn-outline-gold btn-sm">
@@ -84,7 +101,7 @@ export default function Home() {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: 'radial-gradient(var(--secondary) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
           opacity: 0.05,
         }} />
@@ -95,7 +112,7 @@ export default function Home() {
                 <div style={{
                   fontSize: '3rem',
                   fontWeight: 700,
-                  color: 'var(--secondary)',
+                  color: 'var(--accent)',
                   fontFamily: 'var(--font-heading)',
                   lineHeight: 1,
                   marginBottom: '0.5rem',
@@ -156,7 +173,7 @@ export default function Home() {
                     <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>{route.time}</td>
                     <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center' }}>
                       <span style={{
-                        background: 'linear-gradient(135deg, var(--secondary), var(--secondary-light))',
+                        background: 'linear-gradient(135deg, var(--accent), var(--accent-light))',
                         color: 'var(--primary)',
                         padding: '0.4rem 1rem',
                         borderRadius: '20px',
@@ -179,6 +196,8 @@ export default function Home() {
         </div>
       </section>
 
+      <FAQSection />
+
       {/* CTA Section */}
       <section style={{
         background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%)',
@@ -193,7 +212,7 @@ export default function Home() {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: 'radial-gradient(var(--secondary) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
           backgroundSize: '30px 30px',
           opacity: 0.04,
         }} />

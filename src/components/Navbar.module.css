@@ -22,7 +22,7 @@
 
 .logo {
     font-family: var(--font-heading);
-    color: var(--secondary);
+    color: var(--accent);
     font-size: 1.6rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -33,7 +33,7 @@
 }
 
 .logoIcon {
-    font-size: 1.4rem;
+    color: var(--accent);
 }
 
 .navLinks {
@@ -67,12 +67,12 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--secondary);
+    background: var(--accent);
     transition: width 0.3s ease;
 }
 
 .link:hover {
-    color: var(--secondary);
+    color: var(--accent);
 }
 
 .link:hover::after {
@@ -80,8 +80,11 @@
 }
 
 .arrow {
-    font-size: 0.7rem;
     transition: transform 0.3s ease;
+}
+
+.arrowRotate {
+    transform: rotate(180deg);
 }
 
 /* Dropdown */
@@ -104,7 +107,8 @@
     transform: translateX(-50%) translateY(10px);
     transition: all 0.3s ease;
     z-index: 100;
-    border-top: 3px solid var(--secondary);
+    border-top: 3px solid var(--accent);
+    overflow: hidden;
 }
 
 .dropdownMenuOpen {
@@ -116,7 +120,7 @@
 .dropdownItem {
     display: block;
     padding: 0.75rem 1.5rem;
-    color: var(--text-dark);
+    color: var(--text-main);
     font-size: 0.9rem;
     transition: all 0.2s ease;
     white-space: nowrap;
@@ -129,8 +133,8 @@
 }
 
 .cta {
-    background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-    color: var(--primary) !important;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--primary-dark) !important;
     padding: 10px 24px;
     border-radius: 4px;
     font-weight: 700;
@@ -151,34 +155,10 @@
 /* Hamburger */
 .hamburger {
     display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
     z-index: 1001;
-}
-
-.hamburger span {
-    display: block;
-    width: 28px;
-    height: 2px;
-    background: var(--white);
-    transition: all 0.3s ease;
-    border-radius: 2px;
-}
-
-.hamburgerActive span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.hamburgerActive span:nth-child(2) {
-    opacity: 0;
-}
-
-.hamburgerActive span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
 }
 
 /* Responsive */
@@ -256,7 +236,7 @@
 
     .dropdownItem:hover {
         background: rgba(255, 255, 255, 0.1);
-        color: var(--secondary);
+        color: var(--accent);
     }
 
     .cta {

@@ -1,30 +1,40 @@
 :root {
-  /* Colors */
-  --primary: #004d00;
-  --primary-light: #006400;
-  --primary-dark: #003300;
-  --secondary: #d4af37;
-  --secondary-light: #f5c75d;
-  --secondary-dark: #b8960f;
-  --accent: #f8f9fa;
-  --text-dark: #1a1a1a;
-  --text-muted: #555555;
-  --text-light: #f5f5f5;
+  /* 60% - Base (Neutrals) */
+  --bg-base: #ffffff;
+  --bg-subtle: #f9fafb;
+  --bg-dark: #002200;
   --white: #ffffff;
   --black: #000000;
-  --gray-100: #f7f7f7;
-  --gray-200: #eeeeee;
-  --gray-300: #dddddd;
-  --gray-400: #cccccc;
-  --gray-500: #999999;
-  --danger: #dc3545;
-  --success: #28a745;
-  --warning: #ffc107;
-  --info: #17a2b8;
+  --text-main: #111827;
+  --text-muted: #374151;
+  --text-muted-light: #6b7280;
+  --text-light: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #9ca3af;
+
+  /* 30% - Primary Brand (Dark Green) */
+  --primary: #004d00;
+  --primary-light: #006600;
+  --primary-dark: #003300;
+  --primary-transparent: rgba(0, 77, 0, 0.05);
+
+  /* 10% - Accent / CTA (Gold) */
+  --accent: #d4af37;
+  --accent-light: #f5c75d;
+  --accent-dark: #b8960f;
+  --accent-text: #856404;
+  --accent-transparent: rgba(212, 175, 55, 0.1);
+
+  /* Status Colors */
+  --danger: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --info: #3b82f6;
 
   /* Fonts */
-  --font-heading: var(--font-playfair), serif;
-  --font-body: var(--font-lato), sans-serif;
+  --font-heading: var(--font-primary), serif;
+  --font-body: var(--font-secondary), sans-serif;
 
   /* Layout */
   --container-width: 1200px;
@@ -43,7 +53,7 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.15);
-  --shadow-gold: 0 4px 15px rgba(212, 175, 55, 0.3);
+  --shadow-gold: 0 4px 15px rgba(133, 100, 4, 0.2);
 
   /* Border Radius */
   --radius-sm: 4px;
@@ -71,8 +81,8 @@ body {
   padding: 0;
   overflow-x: hidden;
   font-family: var(--font-body);
-  background-color: var(--white);
-  color: var(--text-dark);
+  background-color: var(--bg-base);
+  color: var(--text-main);
   line-height: 1.7;
   scroll-behavior: smooth;
 }
@@ -164,7 +174,7 @@ ul {
   display: block;
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, var(--secondary), var(--secondary-light));
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
   margin: 12px auto 0;
   border-radius: 2px;
 }
@@ -195,9 +205,9 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: radial-gradient(var(--secondary) 1px, transparent 1px);
+  background-image: radial-gradient(var(--accent) 1px, transparent 1px);
   background-size: 40px 40px;
-  opacity: 0.06;
+  opacity: 0.08;
   pointer-events: none;
 }
 
@@ -265,8 +275,8 @@ ul {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-  color: var(--primary);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: var(--primary-dark);
   box-shadow: var(--shadow-gold);
 }
 
@@ -299,14 +309,14 @@ ul {
 }
 
 .btn-outline-gold {
-  border: 2px solid var(--secondary);
-  color: var(--secondary);
+  border: 2px solid var(--accent);
+  color: var(--accent-text);
   background: transparent;
 }
 
 .btn-outline-gold:hover {
-  background: var(--secondary);
-  color: var(--primary);
+  background: var(--accent);
+  color: var(--primary-dark);
 }
 
 .btn-lg {
@@ -337,7 +347,7 @@ ul {
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, var(--secondary), var(--secondary-light));
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
   transform: scaleX(0);
   transition: transform var(--transition-base);
   transform-origin: left;

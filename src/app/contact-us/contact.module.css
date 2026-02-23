@@ -15,8 +15,10 @@
 }
 
 .contactIcon {
-    font-size: 2.5rem;
+    color: var(--secondary);
     margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
 }
 
 .contactTitle {
@@ -32,7 +34,9 @@
 }
 
 .contactLink {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-top: 1rem;
     color: var(--secondary);
     font-weight: 600;
@@ -76,9 +80,14 @@
     align-items: flex-start;
 }
 
-.infoIcon {
-    font-size: 1.5rem;
-    margin-top: 2px;
+.infoIconWrapper {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--secondary);
+    padding: 0.6rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .infoItem strong {

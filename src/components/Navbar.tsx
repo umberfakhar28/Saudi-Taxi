@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Menu, X, ChevronDown, MapPin } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -15,7 +16,7 @@ const Navbar = () => {
         <nav className={styles.navbar}>
             <div className={styles.container}>
                 <Link href="/" className={styles.logo}>
-                    <span className={styles.logoIcon}>🕌</span>
+                    <MapPin className={styles.logoIcon} size={24} />
                     SAUDI TAXI
                 </Link>
 
@@ -24,9 +25,7 @@ const Navbar = () => {
                     onClick={() => setMenuOpen(!menuOpen)}
                     aria-label="Toggle menu"
                 >
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    {menuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
 
                 <div className={`${styles.navLinks} ${menuOpen ? styles.navLinksOpen : ''}`}>
@@ -39,7 +38,7 @@ const Navbar = () => {
                         onMouseLeave={() => setServicesOpen(false)}
                     >
                         <button className={styles.link} onClick={() => setServicesOpen(!servicesOpen)}>
-                            Services <span className={styles.arrow}>▾</span>
+                            Services <ChevronDown className={`${styles.arrow} ${servicesOpen ? styles.arrowRotate : ''}`} size={16} />
                         </button>
                         <div className={`${styles.dropdownMenu} ${servicesOpen ? styles.dropdownMenuOpen : ''}`}>
                             <Link href="/our-services" className={styles.dropdownItem} onClick={close}>All Services</Link>
@@ -58,7 +57,7 @@ const Navbar = () => {
                         onMouseLeave={() => setToursOpen(false)}
                     >
                         <button className={styles.link} onClick={() => setToursOpen(!toursOpen)}>
-                            Tours <span className={styles.arrow}>▾</span>
+                            Tours <ChevronDown className={`${styles.arrow} ${toursOpen ? styles.arrowRotate : ''}`} size={16} />
                         </button>
                         <div className={`${styles.dropdownMenu} ${toursOpen ? styles.dropdownMenuOpen : ''}`}>
                             <Link href="/jeddah-city-tour-services-in-saudi-arabia" className={styles.dropdownItem} onClick={close}>Jeddah City Tour</Link>

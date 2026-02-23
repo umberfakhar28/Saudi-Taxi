@@ -1,136 +1,185 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Plane, Users, Clock, Tag, ShieldCheck, MapPin, ChevronRight, MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Airport Transfers Saudi Arabia | Jeddah Airport Taxi | Saudi Taxi",
-    description: "Professional airport transfer services from Jeddah's King Abdulaziz International Airport (KAIA) to Makkah, Madinah, Taif and beyond. Meet & greet, flight tracking, 24/7.",
+    description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Fixed prices, 24/7 availability.",
 };
 
-const features = [
-    { icon: "✈️", title: "Flight Tracking", description: "We monitor your flight in real time, adjusting pickup time automatically in case of delays or early arrivals." },
-    { icon: "👋", title: "Meet & Greet", description: "Our driver will meet you at the arrivals hall with a name sign, helping you navigate the airport with ease." },
-    { icon: "🧳", title: "Luggage Assistance", description: "Our professional drivers will handle your luggage and help you get settled into the vehicle comfortably." },
-    { icon: "💱", title: "Fixed Prices", description: "No surge pricing, no hidden fees. Your fare is confirmed at the time of booking, regardless of traffic." },
-    { icon: "🚗", title: "Modern Fleet", description: "Travel in clean, comfortable, modern vehicles — sedans, SUVs, minivans — suited to your group size." },
-    { icon: "🌐", title: "Multilingual Drivers", description: "Our drivers communicate in Arabic, English, Urdu and Hindi to ensure smooth communication for all passengers." },
+const benefits = [
+    {
+        icon: <Users size={32} />,
+        title: "Meet & Greet Service",
+        description: "Your driver will be waiting at the arrivals hall with a name board. Easy identification, no confusion, even for first-time visitors.",
+    },
+    {
+        icon: <Clock size={32} />,
+        title: "Real-Time Flight Tracking",
+        description: "We monitor your flight status in real-time. If your flight is early or delayed, we adjust accordingly — at no extra cost.",
+    },
+    {
+        icon: <Plane size={32} />,
+        title: "Domestic & International",
+        description: "Seamless transfers from both Terminal 1 and North Terminal at Jeddah Airport to your hotel in Makkah or Madinah.",
+    },
+    {
+        icon: <ShieldCheck size={32} />,
+        title: "Licensed & Insured",
+        description: "All vehicles are Ministry-licensed and fully insured. Travel with peace of mind knowing you are in safe hands.",
+    },
+    {
+        icon: <Tag size={32} />,
+        title: "Pre-Booked Fixed Price",
+        description: "No meters, no surprises. Confirm your price when you book and pay exactly that. Transparent pricing you can trust.",
+    },
+    {
+        icon: <MapPin size={32} />,
+        title: "Door-to-Door Service",
+        description: "We take you directly from the airport arrivals to your hotel lobby. No walking with heavy luggage or searching for shuttles.",
+    },
 ];
 
-const routes = [
-    { from: "Jeddah Airport (KAIA)", to: "Makkah", time: "~1.5 hrs", price: "150 SAR" },
-    { from: "Jeddah Airport (KAIA)", to: "Madinah", time: "~5 hrs", price: "550 SAR" },
-    { from: "Jeddah Airport (KAIA)", to: "Jeddah City", time: "~30 min", price: "80 SAR" },
-    { from: "Jeddah Airport (KAIA)", to: "Taif", time: "~2.5 hrs", price: "280 SAR" },
-    { from: "Makkah", to: "Jeddah Airport (KAIA)", time: "~1.5 hrs", price: "150 SAR" },
-    { from: "Madinah", to: "Jeddah Airport (KAIA)", time: "~5 hrs", price: "550 SAR" },
-];
-
-const steps = [
-    { step: "1", title: "Book Online or WhatsApp", description: "Complete our simple booking form or send us a WhatsApp with your travel details." },
-    { step: "2", title: "Receive Confirmation", description: "You'll receive a booking confirmation with your driver's details and contact number." },
-    { step: "3", title: "Land & Be Greeted", description: "Your driver will meet you at arrivals with your name sign — no waiting or searching." },
-    { step: "4", title: "Arrive in Comfort", description: "Sit back and enjoy a smooth, comfortable ride to your destination." },
+const airports = [
+    {
+        name: "Jeddah Airport (KAIA)",
+        code: "JED",
+        routes: [
+            { to: "Makkah Hotels", price: "150 SAR", time: "~1.5 hrs" },
+            { to: "Madinah Hotels", price: "600 SAR", time: "~4.5 hrs" },
+            { to: "Jeddah City Hotels", price: "80 SAR", time: "~30 min" },
+        ],
+    },
+    {
+        name: "Madinah Airport (PMBA)",
+        code: "MED",
+        routes: [
+            { to: "Madinah Hotels", price: "80 SAR", time: "~20 min" },
+            { to: "Makkah Hotels", price: "600 SAR", time: "~4.5 hrs" },
+        ],
+    },
 ];
 
 export default function AirportTransfers() {
     return (
         <main>
+            {/* Hero */}
             <section className="page-hero">
-                <h1>Airport Transfer Services in Saudi Arabia</h1>
-                <p>Seamless, professional airport transfers from Jeddah's King Abdulaziz International Airport to Makkah, Madinah, and beyond.</p>
+                <h1>Professional Airport Transfers</h1>
+                <p>
+                    Reliable taxi services from Jeddah and Madinah airports. Fixed prices, professional drivers, and 24/7 availability.
+                </p>
                 <div className="breadcrumb">
-                    <Link href="/">Home</Link> / <span>Airport Transfers</span>
+                    <Link href="/">Home</Link> <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Airport Transfers</span>
                 </div>
             </section>
 
-            {/* Features */}
+            {/* Intro */}
             <section className="section-lg">
-                <div className="container">
-                    <h2 className="section-title">Why Choose Our Airport Transfer?</h2>
-                    <p className="section-subtitle">We arrange hassle-free transfers with professional drivers so you can focus entirely on your journey.</p>
-                    <div className="grid-3">
-                        {features.map((f, i) => (
-                            <div key={i} className="card" style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{f.icon}</div>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>{f.title}</h3>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.7', margin: 0 }}>{f.description}</p>
-                            </div>
-                        ))}
-                    </div>
+                <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
+                    <h2 className="section-title">Hassle-Free Arrival in Saudi Arabia</h2>
+                    <p className="section-subtitle">
+                        Avoid the stress of airport crowds and unreliable transport. Our pre-arranged airport transfer service ensures a comfortable journey to the Holy Cities.
+                    </p>
                 </div>
             </section>
 
-            {/* Routes Table */}
+            {/* Benefits Grid */}
             <section className="section-lg bg-light">
                 <div className="container">
-                    <h2 className="section-title">Popular Airport Transfer Routes</h2>
-                    <p className="section-subtitle">Transparent fixed pricing — confirmed at the time of booking, no surprises.</p>
-                    <div style={{ overflowX: 'auto', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-lg)' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--white)', minWidth: '500px' }}>
-                            <thead>
-                                <tr style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', color: 'var(--white)' }}>
-                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'left', fontWeight: 600, fontSize: '0.9rem' }}>From</th>
-                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'left', fontWeight: 600, fontSize: '0.9rem' }}>To</th>
-                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>Est. Time</th>
-                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>Starting From</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {routes.map((route, i) => (
-                                    <tr key={i} style={{ borderBottom: '1px solid var(--gray-200)' }}>
-                                        <td style={{ padding: '1.1rem 1.5rem', fontWeight: 500 }}>{route.from}</td>
-                                        <td style={{ padding: '1.1rem 1.5rem', fontWeight: 500 }}>{route.to}</td>
-                                        <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>{route.time}</td>
-                                        <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center' }}>
-                                            <span style={{ background: 'linear-gradient(135deg, var(--secondary), var(--secondary-light))', color: 'var(--primary)', padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 700, fontSize: '0.9rem' }}>
-                                                {route.price}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="text-center mt-3">
-                        <Link href="/book-online" className="btn btn-primary">Book Your Airport Transfer</Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* How It Works */}
-            <section className="section-lg">
-                <div className="container">
-                    <h2 className="section-title">How It Works</h2>
-                    <div className="grid-4">
-                        {steps.map((step, i) => (
-                            <div key={i} style={{ textAlign: 'center' }}>
-                                <div style={{
-                                    width: '60px', height: '60px', borderRadius: '50%',
-                                    background: 'linear-gradient(135deg, var(--secondary), var(--secondary-light))',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    margin: '0 auto 1.5rem',
-                                    fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary)',
-                                    fontFamily: 'var(--font-heading)',
-                                }}>
-                                    {step.step}
-                                </div>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>{step.title}</h3>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.7' }}>{step.description}</p>
+                    <div className="grid-3">
+                        {benefits.map((benefit, i) => (
+                            <div key={i} className="card" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
+                                <div style={{ color: 'var(--accent)', marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>{benefit.icon}</div>
+                                <h3 style={{ color: 'var(--primary)', fontSize: '1.25rem', marginBottom: '1rem' }}>{benefit.title}</h3>
+                                <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '0.95rem', margin: 0 }}>{benefit.description}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* CTA */}
-            <section style={{ background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)', padding: '5rem 0', textAlign: 'center' }}>
+            {/* Airport Routes */}
+            <section className="section-lg">
                 <div className="container">
-                    <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Book Your Airport Transfer Now</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>
-                        Available 24/7. Fixed prices. Professional drivers. Book now and travel with complete peace of mind.
+                    <h2 className="section-title">Popular Routes & Fixed Prices</h2>
+                    <div className="grid-2" style={{ maxWidth: '1000px', margin: '3rem auto 0' }}>
+                        {airports.map((airport, i) => (
+                            <div key={i} style={{
+                                background: 'var(--white)',
+                                borderRadius: 'var(--radius-lg)',
+                                boxShadow: 'var(--shadow-lg)',
+                                overflow: 'hidden',
+                                border: '1px solid var(--gray-200)'
+                            }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
+                                    padding: '1.5rem 2rem',
+                                    color: 'var(--white)',
+                                }}>
+                                    <h3 style={{ color: 'var(--accent)', margin: 0, fontSize: '1.2rem' }}>{airport.name}</h3>
+                                    <span style={{ opacity: 0.8, fontSize: '0.85rem' }}>Airport Code: {airport.code}</span>
+                                </div>
+                                <div style={{ padding: '1.5rem 2rem' }}>
+                                    {airport.routes.map((route, j) => (
+                                        <div key={j} style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '1.25rem 0',
+                                            borderBottom: j < airport.routes.length - 1 ? '1px solid var(--gray-100)' : 'none',
+                                        }}>
+                                            <div>
+                                                <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-main)' }}>To {route.to}</div>
+                                                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Travel Time: {route.time}</div>
+                                            </div>
+                                            <span style={{
+                                                background: 'linear-gradient(135deg, var(--accent), var(--accent-light))',
+                                                color: 'var(--primary-dark)',
+                                                padding: '0.5rem 1.25rem',
+                                                borderRadius: '30px',
+                                                fontWeight: 800,
+                                                fontSize: '0.9rem',
+                                                boxShadow: '0 4px 10px rgba(212, 175, 55, 0.2)'
+                                            }}>
+                                                {route.price}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section style={{
+                background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)',
+                padding: '6rem 0',
+                textAlign: 'center',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, width: '100%', height: '100%',
+                    backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
+                    backgroundSize: '40px 40px',
+                    opacity: 0.05
+                }} />
+                <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+                    <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem', fontSize: '2.5rem' }}>Ready to Land?</h2>
+                    <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
+                        Book your airport transfer now and have a professional driver waiting for you.
                     </p>
-                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
-                        <a href="https://wa.me/966501234567" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">💬 WhatsApp Us</a>
+                    <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <Link href="/book-online" className="btn btn-primary btn-lg" style={{ minWidth: '200px' }}>
+                            Book Now
+                        </Link>
+                        <a href="https://wa.me/966123456789" className="btn btn-outline btn-lg" style={{ minWidth: '200px', color: 'var(--white)', borderColor: 'rgba(255,255,255,0.5)' }}>
+                            <MessageCircle size={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> WhatsApp Us
+                        </a>
                     </div>
                 </div>
             </section>
