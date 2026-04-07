@@ -1,0 +1,81 @@
+.header {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 8rem 0 4rem;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 4rem 1rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.info {
+    background: var(--accent);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.form {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.contactItem {
+    margin-bottom: 1.5rem;
+}
+
+.inputGroup {
+    margin-bottom: 1rem;
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.submitBtn {
+    background-color: var(--secondary);
+    color: var(--primary);
+    padding: 12px 24px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.submitBtn:hover {
+    background-color: var(--secondary-light);
+}
+
+.map {
+    margin-top: 2rem;
+    width: 100%;
+    height: 200px;
+    border: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

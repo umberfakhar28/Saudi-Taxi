@@ -1,0 +1,384 @@
+/*
+  HERO — 5 Design Principles applied:
+  ✅ BALANCE:    Two-column split, image weight balanced by heading+trust items
+  ✅ ALIGNMENT:  Left-aligned text column; decorative elements on the right
+  ✅ PROXIMITY:  Badge → Title → Subtitle → CTAs grouped tightly; trust row separate
+  ✅ REPETITION: Same badge pill, same CTA style as rest of site
+  ✅ CONTRAST:   H1 at 60px on dark bg; bright gold CTA vs dark green background
+*/
+
+/* ---- Root hero container ---- */
+.hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;        /* Balance: two equal-weight columns */
+    align-items: center;
+    background: linear-gradient(
+        140deg,
+        #0d2137 0%,
+        #1a3a52 45%,
+        #1e5f6e 100%
+    );
+    position: relative;
+    overflow: hidden;
+    padding-top: var(--nav-height);
+}
+
+/* Subtle dot pattern overlay — decorative, aligned absolutely so it doesn't disrupt content alignment */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+}
+
+/* Diagonal slice — Balance: gives the right column breathing room */
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: var(--white);
+    clip-path: polygon(0 80%, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ---- LEFT: Text content (Alignment: left-aligned for clean readability) ---- */
+.content {
+    position: relative;
+    z-index: 10;
+    padding: var(--space-20) var(--space-12) var(--space-20) 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;            /* Alignment: text left-aligned */
+    animation: heroFadeInLeft 0.9s ease-out;
+}
+
+/* Badge — Repetition: same pill badge as used across the site */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: var(--space-6);      /* Proximity: space before title */
+}
+
+.badgeIcon {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+/* Title — Contrast: largest, boldest element on the page */
+.title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.6rem, 5vw, 3.8rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-5);      /* Proximity: close to subtitle below */
+    text-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+/* Gold highlight on part of title — strong visual contrast */
+.title em {
+    font-style: normal;
+    color: var(--accent);
+}
+
+/* Subtitle — Contrast: smaller, muted vs the title */
+.subtitle {
+    font-size: var(--text-lg);
+    color: rgba(255,255,255,0.82);
+    line-height: 1.75;
+    max-width: 500px;
+    margin-bottom: var(--space-10);     /* Proximity: more gap before CTAs */
+}
+
+/* CTA Group — Balance: two equal-weight buttons side by side */
+.ctaGroup {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-12);     /* Proximity: breathing room before trust row */
+}
+
+/* Primary CTA — Contrast: gold on dark, unmissable */
+.ctaButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--primary-dark);
+    padding: 17px 40px;
+    font-size: var(--text-sm);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-radius: var(--radius-sm);
+    transition: all var(--ease-base);
+    box-shadow: var(--shadow-gold);
+    position: relative;
+    overflow: hidden;
+}
+
+.ctaButton::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left var(--ease-slow);
+}
+
+.ctaButton:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-gold-lg);
+}
+
+.ctaButton:hover::before {
+    left: 140%;
+}
+
+/* Secondary CTA — less contrast = lower priority (Contrast hierarchy) */
+.ctaSecondary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: 2px solid rgba(255,255,255,0.45);
+    color: var(--white);
+    padding: 15px 32px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: var(--radius-sm);
+    transition: all var(--ease-base);
+}
+
+.ctaSecondary:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.8);
+    transform: translateY(-2px);
+}
+
+/* Trust strip — Proximity: grouped together as a unit, separated from CTAs */
+.trustStrip {
+    display: flex;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    padding-top: var(--space-6);
+    border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.trustItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+}
+
+.trustItem svg {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+/* ---- RIGHT: Visual panel (Balance: rich visual counterweight to text) ---- */
+.visual {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-16) 8% var(--space-16) var(--space-8);
+    animation: heroFadeInRight 0.9s ease-out 0.15s both;
+}
+
+/* Main feature card (Balance: structured card counterweights left column text) */
+.featureCard {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+}
+
+.featureCard h3 {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    color: var(--white);
+    margin-bottom: var(--space-6);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.featureCard h3 svg {
+    color: var(--accent);
+}
+
+/* Service list items inside feature card */
+.serviceList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+}
+
+.serviceItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: rgba(255,255,255,0.06);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background var(--ease-fast);
+    cursor: default;
+}
+
+.serviceItem:hover {
+    background: rgba(255,255,255,0.11);
+}
+
+.serviceItemIcon {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-subtle);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.serviceItemText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.serviceItemName {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--white);
+}
+
+.serviceItemDesc {
+    font-size: var(--text-xs);
+    color: rgba(255,255,255,0.55);
+}
+
+/* Inline stat row at bottom of feature card — Repetition: gold number format */
+.cardStats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    padding-top: var(--space-6);
+    border-top: 1px solid rgba(255,255,255,0.12);
+    text-align: center;
+}
+
+.cardStat strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: var(--space-1);
+}
+
+.cardStat span {
+    font-size: var(--text-xs);
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ---- Keyframes ---- */
+@keyframes heroFadeInLeft {
+    from { opacity: 0; transform: translateX(-28px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes heroFadeInRight {
+    from { opacity: 0; transform: translateX(28px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ===== RESPONSIVE (Alignment: stack to single col on mobile) ===== */
+@media (max-width: 960px) {
+    .hero {
+        grid-template-columns: 1fr;    /* Balance: stacked on mobile */
+        padding-top: calc(var(--nav-height) + var(--space-8));
+    }
+
+    .content {
+        padding: var(--space-12) var(--space-6) var(--space-8);
+        align-items: center;          /* Alignment: centered on mobile */
+        text-align: center;
+    }
+
+    .subtitle {
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ctaGroup {
+        justify-content: center;
+    }
+
+    .trustStrip {
+        justify-content: center;
+    }
+
+    .visual {
+        padding: 0 var(--space-6) var(--space-16);
+    }
+
+    .featureCard {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .ctaButton,
+    .ctaSecondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .cardStats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-2);
+    }
+
+    .featureCard {
+        padding: var(--space-6);
+    }
+}

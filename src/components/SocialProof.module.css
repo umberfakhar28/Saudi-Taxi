@@ -1,0 +1,105 @@
+.socialProof {
+    background: var(--white);
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.grid {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.platform {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.platformIcon {
+    opacity: 0.8;
+}
+
+.starIcon {
+    color: #f4b400;
+}
+
+.awardIcon {
+    color: #34a853;
+}
+
+.thumbsIcon {
+    color: #4285f4;
+}
+
+.shieldIcon {
+    color: #ea4335;
+}
+
+.platformInfo {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.platformName {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.platformNameGoogle::after {
+    content: '...';
+    position: absolute;
+    opacity: 0;
+}
+
+.platformRating {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .grid {
+        justify-content: center;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .grid {
+        gap: 1.5rem;
+    }
+
+    .platform {
+        min-width: 120px;
+        justify-content: center;
+    }
+}

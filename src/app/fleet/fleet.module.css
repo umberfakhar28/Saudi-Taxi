@@ -1,0 +1,130 @@
+.header {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 8rem 0 4rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-heading);
+}
+
+.subtitle {
+    color: var(--secondary);
+    font-size: 1.2rem;
+    font-family: var(--font-body);
+    letter-spacing: 1px;
+}
+
+.section {
+    padding: 4rem 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.carCard {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--white);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.carCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.imageContainer {
+    height: 240px;
+    background-color: #f0f0f0;
+    overflow: hidden;
+}
+
+.carImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.carCard:hover .carImage {
+    transform: scale(1.05);
+}
+
+.carDetails {
+    padding: 2rem;
+}
+
+.carTitle {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.category {
+    color: var(--secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.specs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.priceContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.unit {
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: 400;
+}
+
+.bookBtn {
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.bookBtn:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+}
