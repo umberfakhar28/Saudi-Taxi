@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ShieldCheck, TrendingUp, Heart, CreditCard, Languages, Award, Landmark, Target, Eye, ChevronRight } from "lucide-react";
+import { ShieldIcon, TrendingUpIcon, HeartIcon, CreditCardIcon, LanguagesIcon, AwardIcon, LandmarkIcon, TargetIcon, EyeIcon } from "@/components/Icons";
 import styles from "./about.module.css";
 
 export const metadata: Metadata = {
@@ -10,32 +10,32 @@ export const metadata: Metadata = {
 
 const values = [
     {
-        icon: <ShieldCheck size={32} />,
+        icon: <ShieldIcon size={32} />,
         title: "Safety First",
         description: "Your safety is our top priority. All our vehicles are regularly maintained, fully insured, and equipped with modern safety features. Our drivers undergo thorough background checks and safety training.",
     },
     {
-        icon: <TrendingUp size={32} />,
+        icon: <TrendingUpIcon size={32} />,
         title: "Reliability",
         description: "When we say we'll be there, we'll be there. Punctuality and dependability are the cornerstones of our service. We track flights, plan for traffic, and always arrive on time.",
     },
     {
-        icon: <Heart size={32} />,
+        icon: <HeartIcon size={32} />,
         title: "Service with Heart",
         description: "We understand the spiritual significance of Umrah and Hajj. Our team is trained to serve pilgrims with respect, patience, and genuine care. It's not just a job — it's a service to the Ummah.",
     },
     {
-        icon: <CreditCard size={32} />,
+        icon: <CreditCardIcon size={32} />,
         title: "Transparent Pricing",
         description: "No surprises, no hidden fees. We believe in honest, upfront pricing. The price you're quoted is the price you pay, regardless of traffic conditions or route changes.",
     },
     {
-        icon: <Languages size={32} />,
+        icon: <LanguagesIcon size={32} />,
         title: "Multilingual Support",
         description: "We serve pilgrims from all over the world. Our team and drivers speak Arabic, English, Urdu, Hindi, Turkish, and more. Language is never a barrier with us.",
     },
     {
-        icon: <Award size={32} />,
+        icon: <AwardIcon size={32} />,
         title: "Excellence",
         description: "We continuously strive to exceed expectations. From vehicle cleanliness to driver professionalism, every detail matters to us. Our 4.9/5 rating speaks for itself.",
     },
@@ -89,7 +89,7 @@ export default function About() {
                         </div>
                         <div className={styles.storyImage}>
                             <div className={styles.imageBox}>
-                                <Landmark size={64} className={styles.storyIcon} />
+                                <LandmarkIcon size={64} className={styles.storyIcon} />
                                 <h3 style={{ color: 'var(--white)', margin: '1rem 0 0.5rem' }}>Serving the Holy Cities</h3>
                                 <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.95rem', margin: 0 }}>Since 2014</p>
                             </div>
@@ -103,14 +103,14 @@ export default function About() {
                 <div className="container">
                     <div className="grid-2" style={{ maxWidth: '900px', margin: '0 auto' }}>
                         <div className={styles.missionCard}>
-                            <div className={styles.missionIcon}><Target size={40} /></div>
+                            <div className={styles.missionIcon}><TargetIcon size={40} /></div>
                             <h3>Our Mission</h3>
                             <p>
                                 To provide every pilgrim and traveler in Saudi Arabia with safe, comfortable, and reliable transportation services. We aim to remove the stress of travel so our customers can focus on what truly matters — their spiritual journey and personal experience.
                             </p>
                         </div>
                         <div className={styles.missionCard}>
-                            <div className={styles.missionIcon}><Eye size={40} /></div>
+                            <div className={styles.missionIcon}><EyeIcon size={40} /></div>
                             <h3>Our Vision</h3>
                             <p>
                                 To become the #1 trusted taxi and transport service across Saudi Arabia. We envision a future where every pilgrim arriving in the Kingdom has access to world-class, affordable, and caring transportation from the moment they land to the moment they depart.

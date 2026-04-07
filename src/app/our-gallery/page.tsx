@@ -68,23 +68,14 @@ export default function OurGallery() {
                         gap: '1.5rem',
                     }}>
                         {galleryItems.map((item, i) => (
-                            <div key={i} style={{
+                            <div key={i} className="hover-card gallery-card" style={{
                                 borderRadius: 'var(--radius-lg)',
                                 overflow: 'hidden',
                                 boxShadow: 'var(--shadow-md)',
                                 background: 'var(--white)',
                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                                 cursor: 'pointer',
-                            }}
-                                onMouseEnter={e => {
-                                    (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-8px)';
-                                    (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-xl)';
-                                }}
-                                onMouseLeave={e => {
-                                    (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
-                                    (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-md)';
-                                }}
-                            >
+                            }}>
                                 {/* Image Placeholder */}
                                 <div style={{
                                     height: '200px',

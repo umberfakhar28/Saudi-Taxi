@@ -65,7 +65,7 @@
 .platformName {
     font-size: 0.9rem;
     font-weight: 800;
-    color: var(--text-dark);
+    color: var(--text-main);
 }
 
 .platformNameGoogle::after {

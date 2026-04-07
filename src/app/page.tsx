@@ -1,86 +1,162 @@
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
 import Features from "@/components/Features";
-import KeyTakeaways from "@/components/KeyTakeaways";
-import TrustBadges from "@/components/TrustBadges";
 import FAQSection from "@/components/FAQSection";
 import Link from "next/link";
-import { Landmark, Plane, Car } from "lucide-react";
+import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Makkah Taxi Service | Reliable Taxi Service in Makkah & Jeddah",
-  description: "Book reliable taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, Jeddah to Makkah transport. Professional drivers, 24/7 availability.",
+  description:
+    "Book reliable taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, Jeddah to Makkah transport. Professional drivers, 24/7 availability.",
 };
+
+/* =======================================================================
+   DATA
+   ======================================================================= */
 
 const services = [
   {
-    icon: <Landmark size={48} />,
+    icon: <LandmarkIcon size={26} />,
     title: "Umrah Taxi Services",
-    description: "Direct transport between Holy sites. Our licensed drivers ensure a comfortable, safe, and efficient journey for all Umrah pilgrims.",
+    description:
+      "Direct transport between Holy sites. Our licensed drivers ensure a comfortable, safe, and efficient journey for all Umrah pilgrims.",
     link: "/umrah-taxi-services",
+    highlights: ["Makkah · Madinah · Jeddah", "Licensed Drivers", "Fixed Fare"],
   },
   {
-    icon: <Plane size={48} />,
+    icon: <PlaneIcon size={26} />,
     title: "Airport Transfers",
-    description: "Instant Jeddah Airport (KAIA) pickups. We provide 24/7 meet-and-greet services with real-time flight tracking for zero wait time.",
+    description:
+      "Instant Jeddah Airport (KAIA) pickups with 24/7 meet-and-greet services and real-time flight tracking for zero wait time.",
     link: "/airport-transfer-for-umrah",
+    highlights: ["KAIA · REHF", "Flight Tracking", "Meet & Greet"],
   },
   {
-    icon: <Car size={48} />,
+    icon: <CarIcon size={26} />,
     title: "Jeddah to Makkah",
-    description: "The fastest way to reach Makkah from Jeddah. Enjoy fixed-rate, direct transfers with professional chauffeurs in premium vehicles.",
+    description:
+      "The fastest way to reach Makkah from Jeddah. Enjoy fixed-rate, direct transfers with professional chauffeurs in premium vehicles.",
     link: "/jeddah-to-makkah-taxi-service",
+    highlights: ["~1.5 hrs", "No Hidden Fees", "Premium Cars"],
+  },
+  {
+    icon: <HotelIcon size={26} />,
+    title: "Hotel Transfers",
+    description:
+      "Seamless hotel-to-hotel and hotel-to-Haram transfers. We handle your luggage so you can focus on your pilgrimage.",
+    link: "/hotel-transfers",
+    highlights: ["Door-to-Door", "Luggage Help", "24/7"],
+  },
+  {
+    icon: <CompassIcon size={26} />,
+    title: "Ziyarat Services",
+    description:
+      "Guided visits to important Islamic historical sites in and around Makkah and Madinah with knowledgeable, courteous drivers.",
+    link: "/ziyarat-services-in-saudi-arabia",
+    highlights: ["Historic Sites", "Guided Routes", "Group Options"],
+  },
+  {
+    icon: <CarIcon size={26} />,
+    title: "Private Taxi",
+    description:
+      "Exclusive private vehicle bookings for families and groups. Your car, your schedule — full comfort and privacy guaranteed.",
+    link: "/private-taxi",
+    highlights: ["Exclusive Vehicle", "Flexible Hours", "Family Friendly"],
   },
 ];
 
 const stats = [
   { number: "15,000+", label: "Happy Pilgrims" },
-  { number: "10+", label: "Years Experience" },
-  { number: "24/7", label: "Availability" },
-  { number: "100%", label: "Satisfaction Rate" },
+  { number: "10+",     label: "Years Experience" },
+  { number: "24/7",    label: "Availability" },
+  { number: "100%",    label: "Satisfaction Rate" },
 ];
 
-const routes = [
-  { from: "Jeddah Airport", to: "Makkah", price: "150 SAR", time: "~1.5 hrs" },
-  { from: "Jeddah City", to: "Makkah", price: "200 SAR", time: "~1.5 hrs" },
-  { from: "Makkah", to: "Madinah", price: "600 SAR", time: "~4.5 hrs" },
-  { from: "Makkah", to: "Jeddah Airport", price: "150 SAR", time: "~1.5 hrs" },
+
+const whyUs = [
+  "Ministry-licensed fleet — every vehicle fully insured",
+  "Fixed fares displayed upfront — no surge pricing",
+  "English, Arabic & Urdu-speaking drivers",
+  "Real-time WhatsApp updates for every booking",
+  "Modern SUVs, Sedans and Minivans available",
+  "Accepts cash, card, and online payment",
 ];
+
+/* =======================================================================
+   PAGE
+   ======================================================================= */
 
 export default function Home() {
   return (
     <main>
+      {/* ═══════════════════════════════════════════════════════════════════
+          HERO — Balance: 2-col asymmetric layout
+          ═══════════════════════════════════════════════════════════════════ */}
       <Hero />
-      <SocialProof />
-      <div className="container">
-        <KeyTakeaways
-          items={[
-            "Fixed Prices: No hidden charges or peak hour surcharges.",
-            "24/7 Service: Available for Jeddah Airport transfers and Holy City travel anytime.",
-            "Licensed Fleet: All vehicles are modern, insured, and Ministry authorized.",
-            "Professional Drivers: Local experts with multilingual communication skills."
-          ]}
-        />
-      </div>
-      <Features />
-      <TrustBadges />
 
-      {/* Services Section */}
-      <section className="section-lg bg-light">
+      {/* ═══════════════════════════════════════════════════════════════════
+          SOCIAL PROOF — Repetition: consistent logo/badge strip
+          ═══════════════════════════════════════════════════════════════════ */}
+      <SocialProof />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          SERVICES GRID
+          Balance: Even 3-column grid
+          Proximity: Icon → Title → Desc → Highlights grouped inside each card
+          Contrast: Card heading (dark green, large) vs body text (muted, small)
+          Repetition: Every card: same icon box, same heading size, same highlight pills
+          ═══════════════════════════════════════════════════════════════════ */}
+      <section className="section-lg bg-subtle" id="services">
         <div className="container">
-          <h2 className="section-title">Professional Transportation Services</h2>
-          <p className="section-subtitle">
-            Get the most reliable transportation in Saudi Arabia. We provide direct Jeddah Airport transfers and Holy City taxi services with 100% fixed pricing.
-          </p>
+
+          {/* Section header — Alignment: centered */}
+          <div className="section-header centered">
+            <span className="section-eyebrow">What We Offer</span>
+            <h2 className="section-title">Professional Transportation Services</h2>
+            <p className="section-subtitle">
+              Fixed-rate, reliable transport across Saudi Arabia. Every ride is
+              tracked, insured, and operated by Ministry-licensed professionals.
+            </p>
+          </div>
+
+          {/* Grid — Balance: 3 equal columns */}
           <div className="grid-3">
             {services.map((service, i) => (
-              <div key={i} className="card" style={{ textAlign: 'center' }}>
-                <div style={{ color: 'var(--accent)', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>{service.icon}</div>
-                <h3 style={{ color: 'var(--primary)', marginBottom: '0.75rem', fontSize: '1.3rem' }}>{service.title}</h3>
-                <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>{service.description}</p>
-                <Link href={service.link} className="btn btn-outline-gold btn-sm">
-                  Learn More
+              <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+
+                {/* Icon box (Repetition: same size/style on every card) */}
+                <div className="card-icon">
+                  {service.icon}
+                </div>
+
+                {/* Heading — Contrast: primary colour, larger than body */}
+                <h3>{service.title}</h3>
+
+                {/* Body — Contrast: muted vs heading */}
+                <p>{service.description}</p>
+
+                {/* Highlight pills — Proximity: grouped together below body */}
+                <div className="flex flex-wrap gap-2" style={{ marginBottom: 'var(--space-6)' }}>
+                  {service.highlights.map((h, j) => (
+                    <span
+                      key={j}
+                      className="badge badge-green"
+                      style={{ fontSize: 'var(--text-xs)' }}
+                    >
+                      {h}
+                    </span>
+                  ))}
+                </div>
+
+                {/* CTA — Repetition: same outline-gold style across all service cards */}
+                <Link
+                  href={service.link}
+                  className="btn btn-outline-gold btn-sm"
+                  style={{ marginTop: 'auto', alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                >
+                  Learn More <ArrowRightIcon size={14} />
                 </Link>
               </div>
             ))}
@@ -88,141 +164,231 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section style={{
-        background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
-        padding: '4rem 0',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-          opacity: 0.05,
-        }} />
+      {/* ═══════════════════════════════════════════════════════════════════
+          STATS BANNER
+          Balance: 4 equal-weight stat blocks — symmetric layout
+          Contrast: Gold number vs muted label vs dark background
+          Repetition: Same stat block format (number → label) for every stat
+          ═══════════════════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          background: 'linear-gradient(135deg, var(--primary-dark), var(--primary-mid))',
+          padding: 'var(--space-16) 0',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Decorative dot overlay — Alignment: positioned absolutely, doesn't affect content flow */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+            opacity: 0.05,
+            pointerEvents: 'none',
+          }}
+        />
         <div className="container">
-          <div className="grid-4" style={{ textAlign: 'center' }}>
+          <div className="grid-4" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
             {stats.map((stat, i) => (
-              <div key={i} style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{
-                  fontSize: '3rem',
-                  fontWeight: 700,
-                  color: 'var(--accent)',
-                  fontFamily: 'var(--font-heading)',
-                  lineHeight: 1,
-                  marginBottom: '0.5rem',
-                }}>
-                  {stat.number}
-                </div>
-                <div style={{
-                  color: 'rgba(255,255,255,0.8)',
-                  fontSize: '1rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '2px',
-                }}>
-                  {stat.label}
-                </div>
+              <div key={i}>
+                {/* Number — Contrast: gold, largest element in the block */}
+                <div className="stat-number">{stat.number}</div>
+                {/* Label — Contrast: light, smaller, uppercase */}
+                <div className="stat-label">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Popular Routes */}
-      <section className="section-lg">
+      {/* ═══════════════════════════════════════════════════════════════════
+          FEATURES — from Features component (Repetition: consistent feature cards)
+          ═══════════════════════════════════════════════════════════════════ */}
+      <Features />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          WHY CHOOSE US — Balance: 60/40 asymmetric split
+          Left (60%): explanatory text + checklist
+          Right (40%): strong pull-quote + CTA
+          ═══════════════════════════════════════════════════════════════════ */}
+      <section className="section-lg bg-subtle">
         <div className="container">
-          <h2 className="section-title">Popular Routes & Prices</h2>
-          <p className="section-subtitle">
-            Transparent pricing with no hidden fees. All prices are inclusive of tolls, fuel, and professional driver services.
-          </p>
-          <div style={{
-            overflowX: 'auto',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-lg)',
-          }}>
-            <table style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              background: 'var(--white)',
-              minWidth: '500px',
-            }}>
-              <thead>
-                <tr style={{
-                  background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
-                  color: 'var(--white)',
-                }}>
-                  <th style={{ padding: '1.2rem 1.5rem', textAlign: 'left', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.5px' }}>From</th>
-                  <th style={{ padding: '1.2rem 1.5rem', textAlign: 'left', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.5px' }}>To</th>
-                  <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.5px' }}>Est. Time</th>
-                  <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.5px' }}>Starting From</th>
-                </tr>
-              </thead>
-              <tbody>
-                {routes.map((route, i) => (
-                  <tr key={i} style={{
-                    borderBottom: '1px solid var(--gray-200)',
-                    transition: 'background 0.2s',
-                  }}>
-                    <td style={{ padding: '1.1rem 1.5rem', fontWeight: 500 }}>{route.from}</td>
-                    <td style={{ padding: '1.1rem 1.5rem', fontWeight: 500 }}>{route.to}</td>
-                    <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>{route.time}</td>
-                    <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center' }}>
-                      <span style={{
-                        background: 'linear-gradient(135deg, var(--accent), var(--accent-light))',
-                        color: 'var(--primary)',
-                        padding: '0.4rem 1rem',
-                        borderRadius: '20px',
-                        fontWeight: 700,
-                        fontSize: '0.9rem',
-                      }}>
-                        {route.price}
-                      </span>
-                    </td>
-                  </tr>
+          <div className="grid-60-40">
+
+            {/* Left column — Alignment: left-aligned text block */}
+            <div>
+              <div className="section-header">
+                <span className="section-eyebrow">Our Promise</span>
+                <h2 className="section-title">
+                  Why Thousands Choose Saudi Taxi
+                </h2>
+              </div>
+              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>
+                We've been serving Umrah pilgrims and travellers in Saudi Arabia for
+                over a decade. Every aspect of our service is designed around your
+                comfort and peace of mind.
+              </p>
+
+              {/* Checklist — Proximity: each item is a self-contained unit; consistent spacing */}
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                {whyUs.map((item, i) => (
+                  <li
+                    key={i}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 'var(--space-3)',
+                      fontSize: 'var(--text-base)',
+                      color: 'var(--text-body)',
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {/* Icon — Contrast: green checkmark pops against grey text */}
+                    <CheckCircleIcon
+                      size={20}
+                      style={{ color: 'var(--primary)', marginTop: '2px', flexShrink: 0 }}
+                    />
+                    {item}
+                  </li>
                 ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="text-center mt-3">
-            <Link href="/prices" className="btn btn-primary">
-              View All Prices
-            </Link>
+              </ul>
+            </div>
+
+            {/* Right column — Balance: pull-quote card to counterweight the list */}
+            <div
+              style={{
+                background: 'linear-gradient(145deg, var(--primary-dark), var(--primary))',
+                borderRadius: 'var(--radius-xl)',
+                padding: 'var(--space-12)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                gap: 'var(--space-8)',
+                color: 'var(--white)',
+                boxShadow: 'var(--shadow-xl)',
+              }}
+            >
+              {/* Pull quote — Contrast: large italic quote vs smaller attribution */}
+              <blockquote>
+                <div
+                  style={{
+                    fontSize: 'var(--text-6xl)',
+                    lineHeight: 1,
+                    color: 'var(--accent)',
+                    fontFamily: 'var(--font-heading)',
+                    marginBottom: 'var(--space-4)',
+                  }}
+                >
+                  "
+                </div>
+                <p
+                  style={{
+                    fontSize: 'var(--text-xl)',
+                    lineHeight: 1.6,
+                    color: 'rgba(255,255,255,0.9)',
+                    fontStyle: 'italic',
+                    marginBottom: 'var(--space-4)',
+                  }}
+                >
+                  The most reliable taxi we've used during Umrah. Driver was on time,
+                  courteous, and the car was spotless. Highly recommended.
+                </p>
+                {/* Proximity: attribution immediately below its quote */}
+                <footer
+                  style={{
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--accent)',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                  }}
+                >
+                  — Brother Ahmed, Pakistan
+                </footer>
+              </blockquote>
+
+              {/* Divider — Visual breathing room */}
+              <div className="divider-gold" />
+
+              {/* CTA — Contrast: gold on dark, highest visible action inside card */}
+              <Link href="/quote" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
+                Get Quote
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
+
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          FAQ — Repetition: consistent accordion style
+          ═══════════════════════════════════════════════════════════════════ */}
       <FAQSection />
 
-      {/* CTA Section */}
-      <section style={{
-        background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%)',
-        padding: '5rem 0',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
-          backgroundSize: '30px 30px',
-          opacity: 0.04,
-        }} />
+      {/* ═══════════════════════════════════════════════════════════════════
+          FINAL CTA BANNER
+          Balance: centered text block + two side-by-side buttons
+          Contrast: white heading & text on dark green gradient background
+          ═══════════════════════════════════════════════════════════════════ */}
+      <section
+        style={{
+          background: 'linear-gradient(140deg, var(--primary-dark) 0%, var(--primary-mid) 60%, var(--primary-light) 100%)',
+          padding: 'var(--space-20) 0',
+          textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Background decoration — Alignment: positioned absolutely, not in content flow */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
+            backgroundSize: '30px 30px',
+            opacity: 0.05,
+            pointerEvents: 'none',
+          }}
+        />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <h2 style={{ color: 'var(--white)', marginBottom: '1rem', fontSize: '2.5rem' }}>Ready to Book Your Ride?</h2>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-            Book your comfortable and reliable taxi service today. Available 24/7 for all your transportation needs in Saudi Arabia.
+          {/* Badge — Repetition: same pill badge */}
+          <div
+            className="badge badge-dark"
+            style={{ display: 'inline-flex', marginBottom: 'var(--space-6)' }}
+          >
+            24/7 Available — Call or WhatsApp Anytime
+          </div>
+
+          {/* Heading — Contrast: white, 4xl, bold vs dark green bg */}
+          <h2
+            style={{
+              color: 'var(--white)',
+              fontSize: 'var(--text-4xl)',
+              marginBottom: 'var(--space-4)',
+            }}
+          >
+            Ready to Book Your Ride?
+          </h2>
+
+          {/* Body — Contrast: slightly muted vs heading */}
+          <p
+            style={{
+              color: 'rgba(255,255,255,0.78)',
+              fontSize: 'var(--text-lg)',
+              maxWidth: 580,
+              margin: '0 auto var(--space-10)',
+              lineHeight: 1.8,
+            }}
+          >
+            Book your comfortable, reliable taxi service today. Available 24/7
+            across Makkah, Jeddah, and Madinah with fixed, transparent pricing.
           </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/booking" className="btn btn-primary btn-lg">
+
+          {/* CTA group — Balance: two equal-weight buttons */}
+          <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/book-online" className="btn btn-primary btn-lg">
               Book Now
             </Link>
             <Link href="/contact-us" className="btn btn-outline btn-lg">

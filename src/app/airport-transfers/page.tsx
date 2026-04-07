@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Plane, Users, Clock, Tag, ShieldCheck, MapPin, ChevronRight, MessageCircle } from "lucide-react";
+import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
     title: "Airport Transfers Saudi Arabia | Jeddah Airport Taxi | Saudi Taxi",
@@ -9,32 +9,32 @@ export const metadata: Metadata = {
 
 const benefits = [
     {
-        icon: <Users size={32} />,
+        icon: <UserIcon size={32} />,
         title: "Meet & Greet Service",
         description: "Your driver will be waiting at the arrivals hall with a name board. Easy identification, no confusion, even for first-time visitors.",
     },
     {
-        icon: <Clock size={32} />,
+        icon: <ClockIcon size={32} />,
         title: "Real-Time Flight Tracking",
         description: "We monitor your flight status in real-time. If your flight is early or delayed, we adjust accordingly — at no extra cost.",
     },
     {
-        icon: <Plane size={32} />,
+        icon: <PlaneIcon size={32} />,
         title: "Domestic & International",
         description: "Seamless transfers from both Terminal 1 and North Terminal at Jeddah Airport to your hotel in Makkah or Madinah.",
     },
     {
-        icon: <ShieldCheck size={32} />,
+        icon: <ShieldIcon size={32} />,
         title: "Licensed & Insured",
         description: "All vehicles are Ministry-licensed and fully insured. Travel with peace of mind knowing you are in safe hands.",
     },
     {
-        icon: <Tag size={32} />,
+        icon: <TagIcon size={32} />,
         title: "Pre-Booked Fixed Price",
         description: "No meters, no surprises. Confirm your price when you book and pay exactly that. Transparent pricing you can trust.",
     },
     {
-        icon: <MapPin size={32} />,
+        icon: <MapPinIcon size={32} />,
         title: "Door-to-Door Service",
         description: "We take you directly from the airport arrivals to your hotel lobby. No walking with heavy luggage or searching for shuttles.",
     },
@@ -70,7 +70,7 @@ export default function AirportTransfers() {
                     Reliable taxi services from Jeddah and Madinah airports. Fixed prices, professional drivers, and 24/7 availability.
                 </p>
                 <div className="breadcrumb">
-                    <Link href="/">Home</Link> <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Airport Transfers</span>
+                    <Link href="/">Home</Link> <ChevronRightIcon size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Airport Transfers</span>
                 </div>
             </section>
 
@@ -178,7 +178,7 @@ export default function AirportTransfers() {
                             Book Now
                         </Link>
                         <a href="https://wa.me/966123456789" className="btn btn-outline btn-lg" style={{ minWidth: '200px', color: 'var(--white)', borderColor: 'rgba(255,255,255,0.5)' }}>
-                            <MessageCircle size={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> WhatsApp Us
+                            <MessageIcon size={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> WhatsApp Us
                         </a>
                     </div>
                 </div>

@@ -1,12 +1,12 @@
 import styles from './TrustBadges.module.css';
-import { ShieldCheck, Award, FileCheck, CheckCircle2 } from 'lucide-react';
+import { ShieldIcon, AwardIcon, FileCheckIcon, CheckCircleIcon } from './Icons';
 
 const TrustBadges = () => {
     const badges = [
-        { icon: <ShieldCheck size={24} />, text: "Ministry Licensed" },
-        { icon: <Award size={24} />, text: "Top Service 2024" },
-        { icon: <FileCheck size={24} />, text: "Full Insurance" },
-        { icon: <CheckCircle2 size={24} />, text: "Verified Drivers" },
+        { icon: <ShieldIcon size={24} />, text: "Ministry Licensed" },
+        { icon: <AwardIcon size={24} />, text: "Top Service 2024" },
+        { icon: <FileCheckIcon size={24} />, text: "Full Insurance" },
+        { icon: <CheckCircleIcon size={24} />, text: "Verified Drivers" },
     ];
 
     return (
