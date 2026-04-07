@@ -2,33 +2,33 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Phone, MessageCircle, Mail, MapPin, Clock, Globe, Calendar, ChevronRight } from "lucide-react";
+import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "./contact.module.css";
 
 const contactInfo = [
     {
-        icon: <Phone size={32} />,
+        icon: <PhoneIcon size={32} />,
         title: "Phone",
         details: ["+966 12 345 6789", "+966 50 123 4567"],
         action: "tel:+966123456789",
         linkText: "Call Now",
     },
     {
-        icon: <MessageCircle size={32} />,
+        icon: <MessageIcon size={32} />,
         title: "WhatsApp",
         details: ["+966 50 123 4567", "Available 24/7"],
         action: "https://wa.me/966501234567",
         linkText: "Chat Now",
     },
     {
-        icon: <Mail size={32} />,
+        icon: <MailIcon size={32} />,
         title: "Email",
         details: ["info@makkahtaxiservice.com", "booking@makkahtaxiservice.com"],
         action: "mailto:info@makkahtaxiservice.com",
         linkText: "Send Email",
     },
     {
-        icon: <MapPin size={32} />,
+        icon: <MapPinIcon size={32} />,
         title: "Office",
         details: ["Makkah, Saudi Arabia", "Al-Aziziyah District"],
         action: "#",
@@ -82,7 +82,7 @@ export default function ContactUs() {
                                     <p key={j} className={styles.contactDetail}>{detail}</p>
                                 ))}
                                 <a href={info.action} className={styles.contactLink} target={info.action.startsWith('http') ? '_blank' : undefined} rel={info.action.startsWith('http') ? 'noopener noreferrer' : undefined}>
-                                    {info.linkText} <ChevronRight size={16} />
+                                    {info.linkText} <ChevronRightIcon size={16} />
                                 </a>
                             </div>
                         ))}
@@ -101,21 +101,21 @@ export default function ContactUs() {
                             </p>
                             <div className={styles.infoList}>
                                 <div className={styles.infoItem}>
-                                    <div className={styles.infoIconWrapper}><Clock size={20} /></div>
+                                    <div className={styles.infoIconWrapper}><ClockIcon size={20} /></div>
                                     <div>
                                         <strong>Response Time</strong>
                                         <p>Within 30 minutes (business hours)</p>
                                     </div>
                                 </div>
                                 <div className={styles.infoItem}>
-                                    <div className={styles.infoIconWrapper}><Globe size={20} /></div>
+                                    <div className={styles.infoIconWrapper}><GlobeIcon size={20} /></div>
                                     <div>
                                         <strong>Languages</strong>
                                         <p>Arabic, English, Urdu, Hindi</p>
                                     </div>
                                 </div>
                                 <div className={styles.infoItem}>
-                                    <div className={styles.infoIconWrapper}><Calendar size={20} /></div>
+                                    <div className={styles.infoIconWrapper}><CalendarIcon size={20} /></div>
                                     <div>
                                         <strong>Availability</strong>
                                         <p>24/7, 365 days a year</p>
@@ -236,7 +236,7 @@ export default function ContactUs() {
                             Book Now
                         </Link>
                         <a href="https://wa.me/966501234567" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
-                            <MessageCircle size={20} style={{ marginRight: '8px' }} /> WhatsApp
+                            <MessageIcon size={20} style={{ marginRight: '8px' }} /> WhatsApp
                         </a>
                     </div>
                 </div>

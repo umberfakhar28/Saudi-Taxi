@@ -1,5 +1,5 @@
 import styles from './KeyTakeaways.module.css';
-import { Target } from 'lucide-react';
+import { TargetIcon } from './Icons';
 
 interface KeyTakeawaysProps {
     items: string[];
@@ -10,7 +10,7 @@ const KeyTakeaways = ({ items }: KeyTakeawaysProps) => {
         <div className={styles.wrapper}>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <Target size={20} className={styles.icon} />
+                    <TargetIcon size={20} className={styles.icon} />
                     <span className={styles.title}>TL;DR: Key Takeaways</span>
                 </div>
                 <ul className={styles.list}>

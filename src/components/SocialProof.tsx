@@ -1,12 +1,12 @@
 import styles from './SocialProof.module.css';
-import { Star, ShieldCheck, Award, ThumbsUp } from 'lucide-react';
+import { StarIcon, ShieldIcon, AwardIcon, ThumbsUpIcon } from './Icons';
 
 const SocialProof = () => {
     const platforms = [
-        { name: "Google", rating: "4.9/5", icon: <Star className={styles.starIcon} size={16} /> },
-        { name: "TripAdvisor", rating: "Top Rated", icon: <Award className={styles.awardIcon} size={16} /> },
-        { name: "Yelp", rating: "Highly Recommended", icon: <ThumbsUp className={styles.thumbsIcon} size={16} /> },
-        { name: "Trusted Travels", rating: "Certified", icon: <ShieldCheck className={styles.shieldIcon} size={16} /> },
+        { name: "Google", rating: "4.9/5", icon: <StarIcon className={styles.starIcon} size={16} /> },
+        { name: "TripAdvisor", rating: "Top Rated", icon: <AwardIcon className={styles.awardIcon} size={16} /> },
+        { name: "Yelp", rating: "Highly Recommended", icon: <ThumbsUpIcon className={styles.thumbsIcon} size={16} /> },
+        { name: "Trusted Travels", rating: "Certified", icon: <ShieldIcon className={styles.shieldIcon} size={16} /> },
     ];
 
     return (
