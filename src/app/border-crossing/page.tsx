@@ -50,6 +50,13 @@ const borders = [
         note: "Southern crossing into Oman. GCC residents with Omani visa or GCC passport can cross.",
         highlights: ["Omani visa required (non-GCC)", "Scenic desert route", "Fuel stations en route", "Coordinate with Omani authorities"],
     },
+    {
+        name: "Abu Samra / Salwa (Qatar)",
+        route: "Saudi Arabia ↔ Qatar (Doha)",
+        distance: "~100 km from Hofuf / ~580 km from Riyadh",
+        note: "Primary land border with Qatar. Extensively modernised for high traffic volumes.",
+        highlights: ["Hayya card / Visa entry", "Efficient processing", "Direct route to Doha", "Open 24 hours"],
+    },
 ];
 
 const inclusions = [
@@ -194,7 +201,7 @@ export default function BorderCrossing() {
                                 </p>
 
                                 {/* Highlights */}
-                                <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                                <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginBottom: 'var(--space-6)' }}>
                                     {border.highlights.map((h, j) => (
                                         <li key={j} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--text-body)' }}>
                                             <CheckCircleIcon size={13} style={{ color: 'var(--accent-dark)', flexShrink: 0 }} />
@@ -202,6 +209,19 @@ export default function BorderCrossing() {
                                         </li>
                                     ))}
                                 </ul>
+
+                                {border.name.includes("Bahrain") && (
+                                    <Link href="/saudi-arabia-to-bahrain-taxi-service" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
+                                )}
+                                {border.name.includes("UAE") && (
+                                    <Link href="/saudi-arabia-to-uae-taxi-service" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
+                                )}
+                                {border.name.includes("Jordan") && (
+                                    <Link href="/saudi-arabia-to-jordan-land-transfer" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
+                                )}
+                                {border.name.includes("Qatar") && (
+                                    <Link href="/saudi-arabia-to-qatar-taxi-service" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
+                                )}
                             </div>
                         ))}
                     </div>
