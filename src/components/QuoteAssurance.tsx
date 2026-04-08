@@ -1,41 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-const parts = [
-    "✅ 01. All quotes are fixed & final",
-    "02. no meters, no surge pricing,",
-    "03. no surprises. Fuel, tolls & driver service included."
+const items = [
+    "All quotes are fixed & final",
+    "No meters, no surge pricing,",
+    "No surprises. Fuel, tolls & driver service included."
 ];
 
 export default function QuoteAssurance() {
-    const [index, setIndex] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setIndex((prev) => (prev + 1) % parts.length);
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
-
     return (
         <section style={{ 
             background: 'var(--primary)', 
-            padding: '1.25rem 0',
-            overflow: 'hidden',
+            padding: '1.5rem 0',
             borderBottom: '1px solid rgba(255,255,255,0.1)'
         }}>
-            <div className="container text-center">
+            <div className="container">
                 <div style={{ 
+                    display: 'flex', 
+                    flexWrap: 'wrap',
+                    gap: '2rem', 
+                    justifyContent: 'center', 
                     fontStyle: 'italic', 
-                    fontSize: '1.1rem', 
+                    fontSize: '0.95rem',
                     fontWeight: 500,
-                    color: 'var(--secondary)',
-                    minHeight: '1.5rem',
-                    transition: 'all 0.5s ease-in-out',
-                    animation: 'fadeIn 0.5s ease-out'
-                }} key={index}>
-                    {parts[index]}
+                    color: 'var(--secondary)'
+                }}>
+                    {items.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '1.2rem' }}>✅</span> {item}
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

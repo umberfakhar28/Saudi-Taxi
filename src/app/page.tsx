@@ -104,11 +104,6 @@ export default function Home() {
       <SocialProof />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          QUICK BOOKING FORM — Replaced Services Grid
-          ═══════════════════════════════════════════════════════════════════ */}
-      <QuickBookingForm />
-
-      {/* ═══════════════════════════════════════════════════════════════════
           STATS BANNER
           Balance: 4 equal-weight stat blocks — symmetric layout
           Contrast: Gold number vs muted label vs dark background

@@ -115,47 +115,60 @@ const Hero = () => {
             </div>
 
             {/* ============================================================
-                RIGHT COLUMN — Feature Card
-                (Balance: rich visual weight counterbalances text column)
+                RIGHT COLUMN — Feature Card with Booking Form
                 ============================================================ */}
             <div className={styles.visual}>
-                <div className={styles.featureCard}>
-
-                    {/* Card heading */}
-                    <h3>
-                        <CarIcon size={22} />
-                        Our Services
+                <div className={styles.featureCard} style={{ background: 'rgba(255,255,255,1)', backdropFilter: 'none', border: 'none' }}>
+                    
+                    <h3 style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.4rem' }}>
+                        <CarIcon size={24} style={{ color: 'var(--accent)' }} />
+                        Quick Booking
                     </h3>
 
-                    {/* Service list — Proximity: items grouped, consistent spacing */}
-                    <div className={styles.serviceList}>
+                    <form 
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const target = e.target as any;
+                            const message = `Assalamu Alaikum, I would like to book a ride.%0AFrom: ${target.pickup.value}%0ATo: ${target.dropoff.value}%0ADate: ${target.date.value}`;
+                            window.open(`https://wa.me/966501234567?text=${message}`, '_blank');
+                        }}
+                        style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+                    >
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Pickup</label>
+                            <input name="pickup" type="text" className="form-input" placeholder="Airport, Hotel, etc." required style={{ padding: '10px 14px', fontSize: '0.9rem' }} />
+                        </div>
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Dropoff</label>
+                            <input name="dropoff" type="text" className="form-input" placeholder="Destination" required style={{ padding: '10px 14px', fontSize: '0.9rem' }} />
+                        </div>
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Date</label>
+                            <input name="date" type="date" className="form-input" required style={{ padding: '10px 14px', fontSize: '0.9rem' }} />
+                        </div>
+                        <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%', padding: '14px' }}>
+                            Check Rates & Book
+                        </button>
+                    </form>
+
+                    <div style={{ 
+                        marginTop: '1.5rem', 
+                        paddingTop: '1rem', 
+                        borderTop: '1px solid var(--gray-100)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem'
+                    }}>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                            Our Services
+                        </div>
                         {services.map((s, i) => (
-                            <div key={i} className={styles.serviceItem}>
-                                <div className={styles.serviceItemIcon}>
-                                    {s.icon}
-                                </div>
-                                <div className={styles.serviceItemText}>
-                                    <span className={styles.serviceItemName}>{s.name}</span>
-                                    <span className={styles.serviceItemDesc}>{s.desc}</span>
-                                </div>
+                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+                                <span style={{ color: 'var(--accent)', fontWeight: 700 }}>✓</span>
+                                <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{s.name}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>({s.desc})</span>
                             </div>
                         ))}
-                    </div>
-
-                    {/* Inline stats — Repetition: same gold number format as Stats section */}
-                    <div className={styles.cardStats}>
-                        <div className={styles.cardStat}>
-                            <strong>15K+</strong>
-                            <span>Pilgrims</span>
-                        </div>
-                        <div className={styles.cardStat}>
-                            <strong>10+</strong>
-                            <span>Yrs Exp.</span>
-                        </div>
-                        <div className={styles.cardStat}>
-                            <strong>100%</strong>
-                            <span>Satisfied</span>
-                        </div>
                     </div>
                 </div>
             </div>
