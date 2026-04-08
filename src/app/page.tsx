@@ -6,6 +6,7 @@ import Link from "next/link";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
 import type { Metadata } from "next";
 import AnimatedCounter from "@/components/AnimatedCounter";
+import QuickBookingForm from "@/components/QuickBookingForm";
 
 export const metadata: Metadata = {
   title: "Makkah Taxi Service | Reliable Taxi Service in Makkah & Jeddah",
@@ -103,67 +104,9 @@ export default function Home() {
       <SocialProof />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          SERVICES GRID
-          Balance: Even 3-column grid
-          Proximity: Icon → Title → Desc → Highlights grouped inside each card
-          Contrast: Card heading (dark green, large) vs body text (muted, small)
-          Repetition: Every card: same icon box, same heading size, same highlight pills
+          QUICK BOOKING FORM — Replaced Services Grid
           ═══════════════════════════════════════════════════════════════════ */}
-      <section className="section-lg bg-subtle" id="services">
-        <div className="container">
-
-          {/* Section header — Alignment: centered */}
-          <div className="section-header centered">
-            <span className="section-eyebrow">What We Offer</span>
-            <h2 className="section-title">Professional Transportation Services</h2>
-            <p className="section-subtitle">
-              Fixed-rate, reliable transport across Saudi Arabia. Every ride is
-              tracked, insured, and operated by Ministry-licensed professionals.
-            </p>
-          </div>
-
-          {/* Grid — Balance: 3 equal columns */}
-          <div className="grid-3">
-            {services.map((service, i) => (
-              <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-
-                {/* Icon box (Repetition: same size/style on every card) */}
-                <div className="card-icon">
-                  {service.icon}
-                </div>
-
-                {/* Heading — Contrast: primary colour, larger than body */}
-                <h3>{service.title}</h3>
-
-                {/* Body — Contrast: muted vs heading */}
-                <p>{service.description}</p>
-
-                {/* Highlight pills — Proximity: grouped together below body */}
-                <div className="flex flex-wrap gap-2" style={{ marginBottom: 'var(--space-6)' }}>
-                  {service.highlights.map((h, j) => (
-                    <span
-                      key={j}
-                      className="badge badge-green"
-                      style={{ fontSize: 'var(--text-xs)' }}
-                    >
-                      {h}
-                    </span>
-                  ))}
-                </div>
-
-                {/* CTA — Repetition: same outline-gold style across all service cards */}
-                <Link
-                  href={service.link}
-                  className="btn btn-outline-gold btn-sm"
-                  style={{ marginTop: 'auto', alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                >
-                  Learn More <ArrowRightIcon size={14} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <QuickBookingForm />
 
       {/* ═══════════════════════════════════════════════════════════════════
           STATS BANNER

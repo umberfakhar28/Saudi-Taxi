@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CheckCircleIcon, PlaneIcon, CarIcon, LandmarkIcon, HotelIcon, CompassIcon, MessageIcon, PhoneIcon } from "@/components/Icons";
+import QuoteAssurance from "@/components/QuoteAssurance";
 
 export const metadata: Metadata = {
-    title: "Get a Quote | Makkah Taxi Service",
+    title: "Get a Quote | Saudi Taxi Service",
     description: "Request a free quote for taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, inter-city travel. Fixed rates, no hidden charges.",
 };
 
@@ -68,13 +69,7 @@ export default function Quote() {
             </section>
 
             {/* Assurance banner */}
-            <section style={{ background: 'var(--accent)', padding: '1.75rem 0' }}>
-                <div className="container text-center">
-                    <p style={{ margin: 0, color: '#0d1f2d', fontWeight: 600, fontSize: '1rem' }}>
-                        ✅ All quotes are <strong>fixed & final</strong> — no meters, no surge pricing, no surprises. Fuel, tolls & driver service included.
-                    </p>
-                </div>
-            </section>
+            <QuoteAssurance />
 
             {/* Services we quote for */}
             <section className="section-lg">
