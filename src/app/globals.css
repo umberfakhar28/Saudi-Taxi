@@ -40,6 +40,11 @@
   --accent-text:    #ffffff;     /* White text on green */
   --accent-subtle:  rgba(34, 197, 94, 0.10);
 
+  /* Gold / Secondary Accent */
+  --secondary:       #fbbf24;    /* Vibrant Gold/Amber */
+  --secondary-light: #fcd34d;    /* Lighter Gold */
+  --secondary-dark:  #d97706;    /* Darker Gold */
+
   /* Semantic */
   --danger:  #ef4444;
   --success: #22c55e;

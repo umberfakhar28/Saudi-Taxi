@@ -5,6 +5,7 @@ import FAQSection from "@/components/FAQSection";
 import Link from "next/link";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
 import type { Metadata } from "next";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 export const metadata: Metadata = {
   title: "Makkah Taxi Service | Reliable Taxi Service in Makkah & Jeddah",
@@ -193,8 +194,10 @@ export default function Home() {
           <div className="grid-4" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
             {stats.map((stat, i) => (
               <div key={i}>
-                {/* Number — Contrast: gold, largest element in the block */}
-                <div className="stat-number">{stat.number}</div>
+                {/* Number — Contrast: gold for visibility, dynamic animation */}
+                <div className="stat-number" style={{ color: 'var(--secondary)' }}>
+                  <AnimatedCounter end={stat.number} />
+                </div>
                 {/* Label — Contrast: light, smaller, uppercase */}
                 <div className="stat-label">{stat.label}</div>
               </div>

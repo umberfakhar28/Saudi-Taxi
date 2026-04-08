@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 export const metadata: Metadata = {
     title: "About Us | Saudi Taxi Service - Your Trusted Transport Partner in Saudi Arabia",
@@ -76,13 +77,31 @@ export default function AboutUs() {
             </section>
 
             {/* Stats */}
-            <section style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', padding: '4rem 0' }}>
+            <section style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', padding: '5rem 0' }}>
                 <div className="container">
                     <div className="grid-4" style={{ textAlign: 'center' }}>
                         {stats.map((stat, i) => (
                             <div key={i}>
-                                <div style={{ fontSize: '2.8rem', fontWeight: 700, color: 'var(--secondary)', fontFamily: 'var(--font-heading)', lineHeight: 1, marginBottom: '0.5rem' }}>{stat.number}</div>
-                                <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '2px' }}>{stat.label}</div>
+                                <div style={{ 
+                                    fontSize: '3.2rem', 
+                                    fontWeight: 700, 
+                                    color: 'var(--secondary)', 
+                                    fontFamily: 'var(--font-heading)', 
+                                    lineHeight: 1, 
+                                    marginBottom: '0.75rem',
+                                    textShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                                }}>
+                                    <AnimatedCounter end={stat.number} />
+                                </div>
+                                <div style={{ 
+                                    color: 'rgba(255,255,255,0.9)', 
+                                    fontSize: '1rem', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '2px',
+                                    fontWeight: 500
+                                }}>
+                                    {stat.label}
+                                </div>
                             </div>
                         ))}
                     </div>

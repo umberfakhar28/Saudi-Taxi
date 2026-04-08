@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import AnimatedCounter from "@/components/AnimatedCounter";
 import styles from "./testimonials.module.css";
 
 export const metadata: Metadata = {
-    title: "Testimonials | What Our Customers Say | Makkah Taxi Service",
+    title: "Testimonials | What Our Customers Say | Saudi Taxi Service",
     description: "Read testimonials from satisfied customers who used our taxi services in Makkah, Jeddah & Madinah. Real reviews from real pilgrims.",
 };
 
@@ -105,28 +106,30 @@ export default function Testimonials() {
 
             {/* Stats */}
             <section style={{
-                background: 'var(--accent)',
-                padding: '3rem 0',
+                background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)',
+                padding: '4rem 0',
+                borderBottom: '1px solid var(--gray-200)',
             }}>
                 <div className="container">
                     <div className="grid-4" style={{ textAlign: 'center' }}>
                         {stats.map((stat, i) => (
                             <div key={i}>
                                 <div style={{
-                                    fontSize: '2.5rem',
+                                    fontSize: '2.8rem',
                                     fontWeight: 700,
-                                    color: 'var(--primary)',
+                                    color: 'var(--secondary)',
                                     fontFamily: 'var(--font-heading)',
                                     lineHeight: 1,
-                                    marginBottom: '0.5rem',
+                                    marginBottom: '0.75rem',
                                 }}>
-                                    {stat.number}
+                                    <AnimatedCounter end={stat.number} />
                                 </div>
                                 <div style={{
-                                    color: 'var(--text-muted)',
-                                    fontSize: '0.95rem',
+                                    color: 'rgba(255,255,255,0.7)',
+                                    fontSize: '0.9rem',
                                     textTransform: 'uppercase',
-                                    letterSpacing: '1px',
+                                    letterSpacing: '2px',
+                                    fontWeight: 600,
                                 }}>
                                     {stat.label}
                                 </div>
