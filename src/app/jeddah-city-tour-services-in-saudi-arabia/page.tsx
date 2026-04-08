@@ -66,10 +66,11 @@ export default function JeddahCityTour() {
                     <h2 className="section-title">Jeddah Tour Packages</h2>
                     <p className="section-subtitle">All packages include private vehicle, driver/guide, and flexible itinerary.</p>
                     <div className="grid-3">
-                        {tourPackages.map((pkg, i) => (
-                            <div key={i} className="card" style={{
+                        {tourPackages.map((pkg, j) => (
+                            <div key={j} className="card" style={{
                                 textAlign: 'center', position: 'relative',
                                 border: pkg.popular ? '2px solid var(--secondary)' : undefined,
+                                overflow: pkg.popular ? 'visible' : undefined,
                             }}>
                                 {pkg.popular && (
                                     <div style={{

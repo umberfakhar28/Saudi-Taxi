@@ -145,7 +145,7 @@ const Navbar = () => {
                     <Link href="/our-gallery" className={styles.link} onClick={close}>Gallery</Link>
                     <Link href="/about-us"  className={styles.link} onClick={close}>About</Link>
                     <Link href="/contact-us" className={styles.link} onClick={close}>
-                        <PhoneIcon size={14} />Contact
+                        Contact
                     </Link>
 
                     {/* ---- CTA (Contrast: gold, rightmost = highest priority) ---- */}
