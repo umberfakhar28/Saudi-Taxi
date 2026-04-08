@@ -80,6 +80,7 @@ export default function AlulaTourTaxi() {
                             <div key={i} className="card" style={{
                                 textAlign: 'center', position: 'relative',
                                 border: pkg.popular ? '2px solid var(--secondary)' : undefined,
+                                overflow: 'visible',
                             }}>
                                 {pkg.popular && (
                                     <div style={{
