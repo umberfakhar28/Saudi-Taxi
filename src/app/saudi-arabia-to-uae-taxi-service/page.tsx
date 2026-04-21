@@ -39,7 +39,7 @@ export default function SaudiToUae() {
                                         "Professional chauffeurs with GCC-wide experience",
                                         "Modern fleet of SUVs and luxury sedans",
                                         "Assistance with customs and immigration procedures",
-                                        "Fixed, transparent pricing inclusive of all border fees",
+                                        "Transparent pricing inclusive of all border fees",
                                         "Direct hotel-to-hotel or airport-to-hotel service",
                                     ].map((li, i) => (
                                         <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', fontSize: '1rem', color: 'var(--text-main)' }}>

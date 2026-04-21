@@ -4,7 +4,7 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 
 export const metadata: Metadata = {
     title: "Airport Transfers Saudi Arabia | Jeddah Airport Taxi | Saudi Taxi",
-    description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Fixed prices, 24/7 availability.",
+    description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Reliable and 24/7 availability.",
 };
 
 const benefits = [
@@ -30,8 +30,8 @@ const benefits = [
     },
     {
         icon: <TagIcon size={32} />,
-        title: "Pre-Booked Fixed Price",
-        description: "No meters, no surprises. Confirm your price when you book and pay exactly that. Transparent pricing you can trust.",
+        title: "Transparent Quoting",
+        description: "No meters, no surprises. Confirm your rate when you book via our quote system. Transparent pricing you can trust.",
     },
     {
         icon: <MapPinIcon size={32} />,
@@ -45,17 +45,17 @@ const airports = [
         name: "Jeddah Airport (KAIA)",
         code: "JED",
         routes: [
-            { to: "Makkah Hotels", price: "150 SAR", time: "~1.5 hrs" },
-            { to: "Madinah Hotels", price: "600 SAR", time: "~4.5 hrs" },
-            { to: "Jeddah City Hotels", price: "80 SAR", time: "~30 min" },
+            { to: "Makkah Hotels", price: "Check Rates", time: "~1.5 hrs" },
+            { to: "Madinah Hotels", price: "Check Rates", time: "~4.5 hrs" },
+            { to: "Jeddah City Hotels", price: "Check Rates", time: "~30 min" },
         ],
     },
     {
         name: "Madinah Airport (PMBA)",
         code: "MED",
         routes: [
-            { to: "Madinah Hotels", price: "80 SAR", time: "~20 min" },
-            { to: "Makkah Hotels", price: "600 SAR", time: "~4.5 hrs" },
+            { to: "Madinah Hotels", price: "Check Rates", time: "~20 min" },
+            { to: "Makkah Hotels", price: "Check Rates", time: "~4.5 hrs" },
         ],
     },
 ];
@@ -67,7 +67,7 @@ export default function AirportTransfers() {
             <section className="page-hero">
                 <h1>Professional Airport Transfers</h1>
                 <p>
-                    Reliable taxi services from Jeddah and Madinah airports. Fixed prices, professional drivers, and 24/7 availability.
+                    Reliable taxi services from Jeddah and Madinah airports. Professional drivers and 24/7 availability.
                 </p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> <ChevronRightIcon size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Airport Transfers</span>
@@ -102,7 +102,7 @@ export default function AirportTransfers() {
             {/* Airport Routes */}
             <section className="section-lg">
                 <div className="container">
-                    <h2 className="section-title">Popular Routes & Fixed Prices</h2>
+                    <h2 className="section-title">Popular Routes & Quick Quotes</h2>
                     <div className="grid-2" style={{ maxWidth: '1000px', margin: '3rem auto 0' }}>
                         {airports.map((airport, i) => (
                             <div key={i} style={{

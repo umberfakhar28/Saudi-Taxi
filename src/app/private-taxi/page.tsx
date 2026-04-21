@@ -18,14 +18,14 @@ const features = [
 const packages = [
     {
         title: "Half Day (4 hrs)",
-        price: "200 SAR",
+        price: "Get a Quote",
         vehicle: "Sedan",
         kms: "Up to 80 km",
         icon: "🚗",
     },
     {
         title: "Full Day (10 hrs)",
-        price: "450 SAR",
+        price: "Get a Quote",
         vehicle: "Sedan",
         kms: "Up to 200 km",
         icon: "🚘",
@@ -33,7 +33,7 @@ const packages = [
     },
     {
         title: "Full Day SUV (10 hrs)",
-        price: "650 SAR",
+        price: "Get a Quote",
         vehicle: "SUV / Minivan",
         kms: "Up to 200 km",
         icon: "🚙",
@@ -81,7 +81,7 @@ export default function PrivateTaxi() {
             <section className="section-lg bg-light">
                 <div className="container">
                     <h2 className="section-title">Private Taxi Packages</h2>
-                    <p className="section-subtitle">All-inclusive packages with fixed prices — driver, fuel and vehicle all included.</p>
+                    <p className="section-subtitle">All-inclusive packages with transparent pricing — driver, fuel and vehicle all included.</p>
                     <div className="grid-3" style={{ maxWidth: '900px', margin: '0 auto' }}>
                         {packages.map((pkg, i) => (
                             <div key={i} className="card" style={{

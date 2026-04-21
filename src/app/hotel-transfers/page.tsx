@@ -10,18 +10,18 @@ const features = [
     { icon: "🏨", title: "Door-to-Door Service", description: "We pick you up directly from your hotel lobby and drop you precisely at your destination — no walking, no confusion." },
     { icon: "⏱️", title: "Punctual & Reliable", description: "We value your time. Our drivers are always on time, ensuring you never miss a prayer, tour, or departure." },
     { icon: "🛞", title: "All Vehicle Sizes", description: "From sedans for solo travelers to large minivans for groups — we have the right vehicle for every need." },
-    { icon: "💵", title: "Fixed Rates", description: "No meter surprises. All hotel transfer rates are fixed and agreed upon before your journey begins." },
+    { icon: "💵", title: "Transparent Pricing", description: "No meter surprises. All hotel transfer rates are agreed upon via quote before your journey begins." },
     { icon: "🗺️", title: "City-Wide Coverage", description: "We cover all major hotels in Makkah, Madinah, Jeddah and surrounding areas." },
     { icon: "☎️", title: "24/7 Support", description: "Our team is available round the clock. Reach us any time via phone, WhatsApp or our booking form." },
 ];
 
 const routes = [
-    { route: "Airport → Makkah Hotels", price: "150 SAR", vehicle: "Sedan / SUV" },
-    { route: "Airport → Madinah Hotels", price: "550 SAR", vehicle: "Sedan / SUV" },
-    { route: "Makkah → Madinah Hotels", price: "600 SAR", vehicle: "Sedan / SUV" },
-    { route: "Jeddah City → Makkah Hotels", price: "200 SAR", vehicle: "Sedan / SUV" },
-    { route: "Makkah → Jeddah Hotels", price: "200 SAR", vehicle: "Sedan / SUV" },
-    { route: "Madinah → Jeddah Airport", price: "550 SAR", vehicle: "Sedan / SUV" },
+    { route: "Airport → Makkah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
+    { route: "Airport → Madinah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
+    { route: "Makkah → Madinah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
+    { route: "Jeddah City → Makkah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
+    { route: "Makkah → Jeddah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
+    { route: "Madinah → Jeddah Airport", price: "Check Rates", vehicle: "Sedan / SUV" },
 ];
 
 const hotels = ["Makkah Clock Royal Tower — A Fairmont Hotel", "Hilton Makkah Convention Hotel", "Swissôtel Al Maqam Makkah", "Dar Al-Tawasol Makkah", "Movenpick Hotel & Residences Hajar Tower", "Anwar Al Madinah Mövenpick Hotel", "Pullman Zamzam Madina", "InterContinental Madinah-Dar Al Iman", "Sheraton Makkah Jabal Al Kaaba Hotel", "Conrad Makkah"];
@@ -64,7 +64,7 @@ export default function HotelTransfers() {
                                 <tr style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', color: 'var(--white)' }}>
                                     <th style={{ padding: '1.2rem 1.5rem', textAlign: 'left', fontWeight: 600, fontSize: '0.9rem' }}>Route</th>
                                     <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>Vehicle</th>
-                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>Starting From</th>
+                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>Pricing</th>
                                 </tr>
                             </thead>
                             <tbody>

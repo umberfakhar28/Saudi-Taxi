@@ -4,7 +4,7 @@ import { CarIcon, MapPinIcon, ShieldIcon, MessageIcon, ChevronRightIcon, Compass
 
 export const metadata: Metadata = {
     title: "Makkah to Madinah Taxi Service | Intercity Transfer | Saudi Taxi",
-    description: "Reliable and comfortable taxi service from Makkah to Madinah. Enjoy a seamless intercity transfer with professional drivers, fixed rates, and a range of premium vehicles.",
+    description: "Reliable and comfortable taxi service from Makkah to Madinah. Enjoy a seamless intercity transfer with professional drivers and a range of premium vehicles.",
 };
 
 export default function MakkahToMadinah() {
@@ -43,8 +43,8 @@ export default function MakkahToMadinah() {
                             <div className="card" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                                 <ShieldIcon size={32} style={{ color: 'var(--secondary)' }} />
                                 <div>
-                                    <h3 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Fixed Fare, No Hidden Costs</h3>
-                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Confirm your price at booking. Includes fuel, tolls, and driver service.</p>
+                                    <h3 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Transparent Pricing</h3>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Request a quote for your journey. Includes fuel, tolls, and driver service.</p>
                                 </div>
                             </div>
                             <div className="card" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>

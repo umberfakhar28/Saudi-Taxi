@@ -10,9 +10,9 @@ const services = [
     {
         icon: "✈️",
         title: "Airport Transfers",
-        description: "Professional meet & greet airport pickup and drop-off at Jeddah's King Abdulaziz International Airport (KAIA). Flight tracking, fixed prices, 24/7 availability.",
+        description: "Professional meet & greet airport pickup and drop-off at Jeddah's King Abdulaziz International Airport (KAIA). Flight tracking and 24/7 availability.",
         link: "/airport-transfers",
-        features: ["Meet & Greet Service", "Flight Tracking", "Fixed Prices", "24/7 Available"],
+        features: ["Meet & Greet Service", "Flight Tracking", "24/7 Available"],
     },
     {
         icon: "🏨",
@@ -68,7 +68,7 @@ const services = [
 const whyChooseUs = [
     { icon: "🛡️", title: "Safe & Licensed", description: "All vehicles are roadworthy, insured and maintained. Drivers are licensed and background-checked." },
     { icon: "💎", title: "Premium Fleet", description: "Modern sedans, SUVs and minivans to suit any group size and travel preference." },
-    { icon: "💰", title: "Fixed Transparent Pricing", description: "No hidden fees, no surge pricing. Your quoted price is your final price." },
+    { icon: "💰", title: "Transparent Booking", description: "No hidden fees or unexpected charges. Get a custom quote for your specific journey." },
     { icon: "🌐", title: "Multilingual Support", description: "Arabic, English, Urdu and Hindi — we speak your language." },
 ];
 

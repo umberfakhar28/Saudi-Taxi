@@ -3,14 +3,14 @@ import type { Metadata } from "next";
 import styles from "./jeddah-makkah.module.css";
 
 export const metadata: Metadata = {
-    title: "Jeddah to Makkah Taxi Service | Direct Transfer & Fixed Prices",
-    description: "Book a reliable Jeddah to Makkah taxi service. Direct transfers from Jeddah Airport or city center to Makkah. Fixed prices, professional drivers, 24/7 service.",
+    title: "Jeddah to Makkah Taxi Service | Direct Transfer & Reliable Service",
+    description: "Book a reliable Jeddah to Makkah taxi service. Direct transfers from Jeddah Airport or city center to Makkah. Professional drivers, 24/7 service.",
 };
 
 const features = [
     {
         icon: "💰",
-        title: "Fixed Prices",
+        title: "Transparent Quoting",
         description: "Know exactly what you'll pay before you ride. No surge pricing, no hidden fees, just honest transparent pricing.",
     },
     {
@@ -44,24 +44,24 @@ const pricingOptions = [
     {
         vehicle: "Standard Sedan",
         capacity: "Up to 3 passengers",
-        airportToMakkah: "150 SAR",
-        cityToMakkah: "200 SAR",
+        airportToMakkah: "Check Rates",
+        cityToMakkah: "Check Rates",
         features: ["Air Conditioning", "Luggage Space", "Water Bottles", "Phone Charger"],
         popular: false,
     },
     {
         vehicle: "Premium Sedan",
         capacity: "Up to 3 passengers",
-        airportToMakkah: "250 SAR",
-        cityToMakkah: "300 SAR",
+        airportToMakkah: "Check Rates",
+        cityToMakkah: "Check Rates",
         features: ["Luxury Vehicle", "Extra Leg Room", "WiFi", "Refreshments", "Priority Service"],
         popular: true,
     },
     {
         vehicle: "Family Van / SUV",
         capacity: "Up to 6 passengers",
-        airportToMakkah: "350 SAR",
-        cityToMakkah: "400 SAR",
+        airportToMakkah: "Check Rates",
+        cityToMakkah: "Check Rates",
         features: ["Spacious Interior", "Extra Luggage", "Child Seats Available", "Water & Snacks"],
         popular: false,
     },
@@ -74,7 +74,7 @@ export default function JeddahToMakkah() {
             <section className="page-hero">
                 <h1>Jeddah to Makkah Taxi Service</h1>
                 <p>
-                    Direct, comfortable transfers from Jeddah Airport or city center to Makkah. Fixed prices, professional drivers, available 24/7.
+                    Direct, comfortable transfers from Jeddah Airport or city center to Makkah. Professional drivers, available 24/7.
                 </p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Jeddah to Makkah Taxi Service</span>
@@ -103,8 +103,8 @@ export default function JeddahToMakkah() {
                                     <p>1–1.5 hours</p>
                                 </div>
                                 <div className={styles.routeCard}>
-                                    <h4>💰 Starting From</h4>
-                                    <p>150 SAR</p>
+                                    <h4>💰 Pricing</h4>
+                                    <p>Check Rates</p>
                                 </div>
                                 <div className={styles.routeCard}>
                                     <h4>🕐 Available</h4>
@@ -138,9 +138,9 @@ export default function JeddahToMakkah() {
             {/* Pricing */}
             <section className="section-lg">
                 <div className="container">
-                    <h2 className="section-title">Jeddah to Makkah Taxi Prices</h2>
+                    <h2 className="section-title">Jeddah to Makkah Taxi Routes</h2>
                     <p className="section-subtitle">
-                        Choose the vehicle that suits your needs. All prices are fixed with no hidden charges.
+                        Choose the vehicle that suits your needs. Transparent pricing with no hidden charges.
                     </p>
                     <div className="grid-3">
                         {pricingOptions.map((option, i) => (

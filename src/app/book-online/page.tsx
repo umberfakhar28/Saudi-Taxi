@@ -27,14 +27,57 @@ export default function BookOnline() {
         notes: '',
     });
     const [submitted, setSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSubmitted(true);
+        setIsSubmitting(true);
+
+        try {
+            const { createClient } = await import("@/utils/supabase/client");
+            const supabase = createClient();
+
+            const bookingData = {
+                customer_name: formData.name,
+                customer_email: formData.email,
+                customer_phone: formData.phone,
+                service_type: formData.service,
+                pickup_location: formData.from,
+                dropoff_location: formData.to,
+                travel_date: formData.date,
+                travel_time: formData.time,
+                passengers_count: parseInt(formData.passengers),
+                special_notes: formData.notes,
+                status: 'pending'
+            };
+
+            // 1. Save to Supabase
+            const { error: dbError } = await supabase
+                .from('bookings')
+                .insert([bookingData]);
+
+            if (dbError) throw dbError;
+
+            // 2. Send Emails
+            await fetch('/api/emails/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'new_booking',
+                    bookingData
+                })
+            });
+
+            setSubmitted(true);
+        } catch (error: any) {
+            alert("Error submitting booking: " + error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -175,7 +218,9 @@ export default function BookOnline() {
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
                                             <button type="button" className="btn btn-outline-gold" onClick={() => setStep(2)}>← Back</button>
-                                            <button type="submit" className="btn btn-primary btn-lg">Confirm Booking ✓</button>
+                                            <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
+                                                {isSubmitting ? 'Processing...' : 'Confirm Booking ✓'}
+                                            </button>
                                         </div>
                                     </div>
                                 )}

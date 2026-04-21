@@ -11,8 +11,8 @@ export default function FleetPage() {
             image: "/images/camry.jpg", // Placeholder
             passengers: 4,
             luggage: 2,
-            price: "150 SAR",
-            unit: "/ day"
+            price: "Check Rates",
+            unit: ""
         },
         {
             id: 2,
@@ -21,8 +21,8 @@ export default function FleetPage() {
             image: "/images/lexus.jpg",
             passengers: 4,
             luggage: 3,
-            price: "350 SAR",
-            unit: "/ day"
+            price: "Check Rates",
+            unit: ""
         },
         {
             id: 3,
@@ -31,8 +31,8 @@ export default function FleetPage() {
             image: "/images/yukon.jpg",
             passengers: 7,
             luggage: 5,
-            price: "500 SAR",
-            unit: "/ day"
+            price: "Check Rates",
+            unit: ""
         },
         {
             id: 4,
@@ -41,8 +41,8 @@ export default function FleetPage() {
             image: "/images/sclass.jpg",
             passengers: 3,
             luggage: 2,
-            price: "1200 SAR",
-            unit: "/ day"
+            price: "Check Rates",
+            unit: ""
         },
         {
             id: 5,
@@ -51,8 +51,8 @@ export default function FleetPage() {
             image: "/images/bmw7.jpg",
             passengers: 3,
             luggage: 2,
-            price: "1100 SAR",
-            unit: "/ day"
+            price: "Check Rates",
+            unit: ""
         },
         {
             id: 6,
@@ -61,8 +61,8 @@ export default function FleetPage() {
             image: "/images/hiace.jpg",
             passengers: 12,
             luggage: 10,
-            price: "600 SAR",
-            unit: "/ day"
+            price: "Check Rates",
+            unit: ""
         }
     ];
 

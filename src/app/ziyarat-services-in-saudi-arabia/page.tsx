@@ -34,21 +34,21 @@ const packages = [
     {
         title: "Makkah Ziyarat Tour",
         duration: "Full Day (8-10 hrs)",
-        price: "350 SAR",
+        price: "Get a Quote",
         includes: ["Jabal Al-Nour", "Jabal Thawr", "Arafat & Mina", "Muzdalifah", "Jannat Al-Mualla", "Historic Sites"],
         icon: "🕌",
     },
     {
         title: "Madinah Ziyarat Tour",
         duration: "Full Day (8-10 hrs)",
-        price: "350 SAR",
+        price: "Get a Quote",
         includes: ["Masjid Quba", "Masjid Qiblatayn", "Mount Uhud", "Jannat Al-Baqi", "Seven Mosques", "Dates Market"],
         icon: "🌙",
     },
     {
         title: "Makkah + Taif Tour",
         duration: "2 Days",
-        price: "700 SAR",
+        price: "Get a Quote",
         includes: ["Full Makkah Ziyarat", "Taif Scenic Drive", "Al-Shafa Garden", "Rose Farms Visit", "Taif Souq"],
         icon: "🌹",
     },
@@ -94,7 +94,7 @@ export default function ZiyaratServices() {
                                     ))}
                                 </ul>
                                 <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--secondary)', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>
-                                    {pkg.price} <span style={{ fontSize: '0.9rem', fontWeight: 400, color: 'var(--text-muted)' }}>/ vehicle</span>
+                                    {pkg.price}
                                 </div>
                                 <Link href="/book-online" className="btn btn-primary" style={{ width: '100%', display: 'block' }}>Book This Tour</Link>
                             </div>

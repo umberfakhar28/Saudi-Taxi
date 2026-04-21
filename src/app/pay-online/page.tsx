@@ -7,7 +7,7 @@ const paymentMethods = [
     { icon: "💳", name: "Credit / Debit Card", description: "Visa, Mastercard, American Express" },
     { icon: "🏦", name: "Bank Transfer", description: "Direct bank transfer to our Saudi account" },
     { icon: "📱", name: "Saudi Pay", description: "Pay via STC Pay, Mada or similar" },
-    { icon: "💵", name: "Cash on Arrival", description: "Pay the driver in Saudi Riyals (SAR)" },
+    { icon: "💵", name: "Cash on Arrival", description: "Pay the driver in Saudi Riyals" },
 ];
 
 export default function PayOnline() {
@@ -103,7 +103,7 @@ export default function PayOnline() {
                                     </div>
                                     <div className="grid-2">
                                         <div className="form-group">
-                                            <label className="form-label">Amount (SAR) *</label>
+                                            <label className="form-label">Amount *</label>
                                             <input type="number" name="amount" className="form-input" placeholder="0.00" value={formData.amount} onChange={handleChange} required />
                                         </div>
                                         <div className="form-group">

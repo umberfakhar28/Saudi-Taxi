@@ -4,7 +4,7 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 
 export const metadata: Metadata = {
     title: "King Fahd International Airport (KFIA) Taxi Service | Dammam | Saudi Taxi",
-    description: "Reliable airport taxi services from Dammam King Fahd International Airport (KFIA). Fixed rates, professional drivers, and 24/7 coverage for the Eastern Province.",
+    description: "Reliable airport taxi services from Dammam King Fahd International Airport (KFIA). Professional drivers, and 24/7 coverage for the Eastern Province.",
 };
 
 export default function DammamAirportTaxi() {
@@ -38,7 +38,7 @@ export default function DammamAirportTaxi() {
                                 <h3 style={{ fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1rem' }}>Service Highlights</h3>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.95rem' }}>
                                     <li>✓ 24/7 Availability for all flight arrivals</li>
-                                    <li>✓ Fixed rates to Dammam, Khobar, and Jubail</li>
+                                    <li>✓ Professional service to Dammam, Khobar, and Jubail</li>
                                     <li>✓ Flight tracking for timely pickups</li>
                                     <li>✓ Large SUVs for families and groups</li>
                                 </ul>

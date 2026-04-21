@@ -47,7 +47,7 @@ export default function AbhaAirportTaxi() {
                             </div>
                             <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                                 <TagIcon size={24} style={{ color: 'var(--secondary)' }} />
-                                <span style={{ fontWeight: 600 }}>Fixed, Transparent Rates</span>
+                                <span style={{ fontWeight: 600 }}>Transparent Quoting</span>
                             </div>
                         </div>
                     </div>

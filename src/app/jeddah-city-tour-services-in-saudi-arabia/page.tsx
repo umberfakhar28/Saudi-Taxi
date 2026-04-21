@@ -11,7 +11,7 @@ const attractions = [
     { icon: "🌊", name: "Jeddah Corniche", description: "A stunning 30km coastal promenade along the Red Sea, featuring parks, cafes and the iconic King Fahd Fountain." },
     { icon: "🕌", name: "Al-Rahma Floating Mosque", description: "The Mercy Mosque that appears to float on the Red Sea — one of Jeddah's most photographed landmarks." },
     { icon: "🛍️", name: "Jeddah Souq Al-Alawi", description: "A bustling traditional market in the heart of Al-Balad, selling spices, perfumes, gold, fabrics and souvenirs." },
-    { icon: "🏛️", name: "Jeddah Regional Museum", description: "Discover 7,000 years of Saudi history through fascinating artifacts, manuscripts and archaeological exhibits." },
+    { icon: "🏛️", name: "Jeddah Regional Museum", description: "Discover 7,000 years of history through fascinating artifacts, manuscripts and archaeological exhibits." },
     { icon: "🌺", name: "Al-Shallal Theme Park", description: "A waterfront entertainment complex with rides, an ice rink, restaurants and stunning Red Sea views." },
     { icon: "🦁", name: "Fakieh Aquarium", description: "The popular marine attraction featuring Red Sea fish, dolphins, sharks and entertaining shows." },
     { icon: "🌅", name: "King Fahd Fountain", description: "The world's tallest fountain, shooting water 312 meters into the air — spectacular at night." },
@@ -132,7 +132,7 @@ export default function JeddahCityTour() {
                         {[
                             { tip: "Best Time to Visit", detail: "October to April offers the most pleasant weather. Avoid outdoor tours during summer midday (June–September)." },
                             { tip: "Dress Code", detail: "Jeddah is relatively cosmopolitan, but modest clothing is still recommended, especially when visiting mosques and Al-Balad." },
-                            { tip: "Currency", detail: "Saudi Riyal (SAR). Most places accept credit cards, but having some cash is useful in traditional souqs." },
+                            { tip: "Currency", detail: "Saudi Riyal. Most places accept credit cards, but having some cash is useful in traditional souqs." },
                             { tip: "Language", detail: "Arabic is the official language. English is widely understood in hotels, malls and tourist areas. Our drivers speak both." },
                         ].map((item, i) => (
                             <div key={i} style={{ background: 'var(--white)', borderRadius: 'var(--radius-md)', padding: '1.25rem 1.5rem', boxShadow: 'var(--shadow-sm)' }}>

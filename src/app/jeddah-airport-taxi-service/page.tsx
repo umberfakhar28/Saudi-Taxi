@@ -4,7 +4,7 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 
 export const metadata: Metadata = {
     title: "Jeddah King Abdulaziz International Airport (KAIA) Taxi | Saudi Taxi",
-    description: "Premium airport taxi services from Jeddah Airport (KAIA). Reliable transfers to Makkah, Madinah, and any destination in Jeddah with fixed rates and professional drivers.",
+    description: "Premium airport taxi services from Jeddah Airport (KAIA). Reliable transfers to Makkah, Madinah, and any destination in Jeddah with professional drivers.",
 };
 
 export default function JeddahAirportTaxi() {
@@ -32,7 +32,7 @@ export default function JeddahAirportTaxi() {
                             <div className="card" style={{ marginTop: '2rem', borderLeft: '4px solid var(--secondary)' }}>
                                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                     <li>✓ Meet & Greet at all KAIA terminals</li>
-                                    <li>✓ Fixed prices to Makkah (150 SAR) and Madinah (600 SAR)</li>
+                                    <li>✓ Best rates to Makkah and Madinah</li>
                                     <li>✓ 24/7 availability for all domestic and international flights</li>
                                     <li>✓ Fleet of premium SUVs, Sedans and Vans</li>
                                 </ul>

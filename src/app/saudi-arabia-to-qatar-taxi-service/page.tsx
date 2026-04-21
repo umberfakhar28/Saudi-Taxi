@@ -37,8 +37,8 @@ export default function SaudiToQatar() {
                             
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                 <div className="card" style={{ padding: '1.5rem' }}>
-                                    <h4 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>Fixed Pricing</h4>
-                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>All-inclusive rates with no hidden border fees.</p>
+                                    <h4 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>Transparent Pricing</h4>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>Clear, agreed-upon rates with no hidden border fees.</p>
                                 </div>
                                 <div className="card" style={{ padding: '1.5rem' }}>
                                     <h4 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>24/7 Service</h4>

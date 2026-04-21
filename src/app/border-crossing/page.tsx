@@ -4,7 +4,7 @@ import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIco
 
 export const metadata: Metadata = {
     title: "Border Crossing Taxi Service | Saudi Arabia | Makkah Taxi Service",
-    description: "Reliable taxi and transport service for Saudi Arabia border crossings. Routes via Bahrain Causeway, Jordan border (Durra), UAE and more. Licensed drivers, fixed rates.",
+    description: "Reliable taxi and transport service for Saudi Arabia border crossings. Routes via Bahrain Causeway, Jordan border (Durra), UAE and more. Licensed drivers, professional service.",
 };
 
 const borders = [
@@ -64,7 +64,7 @@ const inclusions = [
     "Experienced drivers familiar with border procedures",
     "Assistance with vehicle documentation at crossings",
     "Sedan, SUV and Van options for all group sizes",
-    "Fixed rates — no hidden fees at borders",
+    "Transparent pricing — get a custom quote",
     "Real-time WhatsApp updates throughout journey",
     "Comfortable vehicles for long-distance travel",
     "Pick-up from hotel, home or airport",
@@ -78,7 +78,7 @@ export default function BorderCrossing() {
                 <h1>Border Crossing Service</h1>
                 <p>
                     Safe, reliable transfer service across Saudi Arabia&apos;s land borders.
-                    Licensed drivers, fixed rates, and full journey coordination.
+                    Licensed drivers and full journey coordination.
                 </p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Border Crossing</span>
@@ -89,7 +89,7 @@ export default function BorderCrossing() {
             <section style={{ background: 'linear-gradient(135deg, var(--accent-dark), var(--accent))', padding: '1.75rem 0' }}>
                 <div className="container">
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-6)', justifyContent: 'center', alignItems: 'center' }}>
-                        {["Licensed & Insured Fleet", "Document Assistance", "Fixed Rates — No Surprises", "24/7 Support"].map((item, i) => (
+                        {["Licensed & Insured Fleet", "Document Assistance", "Transparent Quoting", "24/7 Support"].map((item, i) => (
                             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: '#0d1f2d', fontWeight: 700, fontSize: 'var(--text-sm)' }}>
                                 <ShieldIcon size={16} />
                                 {item}

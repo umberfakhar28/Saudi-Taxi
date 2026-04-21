@@ -46,7 +46,7 @@ export default function MadinaAirportTaxi() {
                                 <ul style={{ fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                     <li>• Meet & Greet at arrivals hall</li>
                                     <li>• Assistance with Hajj/Umrah luggage</li>
-                                    <li>• Fixed pricing — no hidden border or airport fees</li>
+                                    <li>• Transparent pricing — no hidden border or airport fees</li>
                                     <li>• Multilingual drivers available</li>
                                 </ul>
                             </div>
@@ -57,14 +57,14 @@ export default function MadinaAirportTaxi() {
                                     <div style={{ fontWeight: 700, color: 'var(--primary)' }}>Madinah Airport ↔ Al-Masjid an-Nabawi Area</div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Typical Time: 20–30 mins</div>
                                 </div>
-                                <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>From 80 SAR</span>
+                                <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>Check Rates</span>
                             </div>
                             <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div>
                                     <div style={{ fontWeight: 700, color: 'var(--primary)' }}>Madinah Airport ↔ Makkah City</div>
                                     <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Typical Time: 4.5 hrs</div>
                                 </div>
-                                <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>From 600 SAR</span>
+                                <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>Check Rates</span>
                             </div>
                             <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div>

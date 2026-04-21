@@ -39,7 +39,7 @@ export default function SaudiToJordan() {
                                 {[
                                     "Specialized Hajj & Umrah overland support",
                                     "Private air-conditioned SUVs and Vans",
-                                    "Fixed rates with no border surcharges",
+                                    "Transparent pricing with no border surcharges",
                                     "24/7 coordination and tracking",
                                 ].map((text, i) => (
                                     <li key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', color: 'var(--text-main)', fontWeight: 500 }}>

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Airport Transfer for Umrah | Jeddah Airport Taxi Service",
-    description: "Book reliable airport transfer for Umrah from Jeddah King Abdulaziz International Airport. Meet & greet, flight tracking, fixed prices. Available 24/7.",
+    description: "Book reliable airport transfer for Umrah from Jeddah King Abdulaziz International Airport. Meet & greet, flight tracking, and transparent quoting. Available 24/7.",
 };
 
 const benefits = [
@@ -29,8 +29,8 @@ const benefits = [
     },
     {
         icon: "🔒",
-        title: "Pre-Booked Fixed Price",
-        description: "No meters, no surprises. Confirm your price when you book and pay exactly that. Transparent pricing you can trust.",
+        title: "Transparent Quoting",
+        description: "No meters, no surprises. Confirm your rate when you book via our quote system. Transparent pricing you can trust.",
     },
     {
         icon: "❄️",
@@ -44,17 +44,17 @@ const airports = [
         name: "Jeddah King Abdulaziz International Airport (KAIA)",
         code: "JED",
         routes: [
-            { to: "Makkah Hotels", price: "From 150 SAR", time: "~1.5 hrs" },
-            { to: "Madinah", price: "From 700 SAR", time: "~4 hrs" },
-            { to: "Jeddah City Hotels", price: "From 80 SAR", time: "~30 min" },
+            { to: "Makkah Hotels", price: "Check Rates", time: "~1.5 hrs" },
+            { to: "Madinah", price: "Check Rates", time: "~4 hrs" },
+            { to: "Jeddah City Hotels", price: "Check Rates", time: "~30 min" },
         ],
     },
     {
         name: "Madinah Prince Mohammad Airport",
         code: "MED",
         routes: [
-            { to: "Madinah Hotels", price: "From 80 SAR", time: "~20 min" },
-            { to: "Makkah", price: "From 700 SAR", time: "~4.5 hrs" },
+            { to: "Madinah Hotels", price: "Check Rates", time: "~20 min" },
+            { to: "Makkah", price: "Check Rates", time: "~4.5 hrs" },
         ],
     },
 ];
@@ -110,9 +110,9 @@ export default function AirportTransfer() {
             {/* Airport Routes */}
             <section className="section-lg">
                 <div className="container">
-                    <h2 className="section-title">Airport Transfer Routes & Prices</h2>
+                    <h2 className="section-title">Airport Transfer Routes & Pricing</h2>
                     <p className="section-subtitle">
-                        Fixed prices for all airport transfer routes. No hidden fees, no meter charges.
+                        Transparent pricing for all airport transfer routes. No hidden fees, no meter charges.
                     </p>
                     <div className="grid-2" style={{ maxWidth: '1000px', margin: '0 auto' }}>
                         {airports.map((airport, i) => (

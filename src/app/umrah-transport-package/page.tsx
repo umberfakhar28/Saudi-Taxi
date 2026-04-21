@@ -3,14 +3,14 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Umrah Transport Package | Complete Transportation for Umrah | Saudi Taxi",
-    description: "Complete Umrah transport packages covering airport pickup, Makkah & Madinah hotel transfers, Ziyarat tours and inter-city travel. All-inclusive fixed pricing.",
+    description: "Complete Umrah transport packages covering airport pickup, Makkah & Madinah hotel transfers, Ziyarat tours and inter-city travel. All-inclusive and reliable.",
 };
 
 const packages = [
     {
         title: "Basic Umrah Package",
         duration: "7 Days",
-        price: "850 SAR",
+        price: "Get a Quote",
         icon: "🌙",
         includes: [
             "Airport pickup from Jeddah",
@@ -24,7 +24,7 @@ const packages = [
     {
         title: "Standard Umrah Package",
         duration: "14 Days",
-        price: "1,500 SAR",
+        price: "Get a Quote",
         icon: "🕌",
         includes: [
             "Airport pickup from Jeddah",
@@ -40,7 +40,7 @@ const packages = [
     {
         title: "Premium Umrah Package",
         duration: "21 Days",
-        price: "2,200 SAR",
+        price: "Get a Quote",
         icon: "⭐",
         includes: [
             "Airport pickup from Jeddah",
@@ -78,7 +78,7 @@ const faqs = [
     { q: "How many people does the package cover?", a: "Our standard packages cover 1-4 passengers. For larger groups, we offer minivans and multiple vehicle options — please request a group quote." },
     { q: "What if my flight is delayed?", a: "We monitor all arriving flights and adjust your pickup time accordingly at no extra charge." },
     { q: "Do you provide child seats?", a: "Yes, child seats are available upon request. Please mention this when booking." },
-    { q: "What payment methods do you accept?", a: "We accept cash (SAR), bank transfer and major credit cards. Payment can be made upon arrival or in advance." },
+    { q: "What payment methods do you accept?", a: "We accept cash (local currency), bank transfer and major credit cards. Payment can be made upon arrival or in advance." },
 ];
 
 export default function UmrahTransportPackage() {
@@ -113,7 +113,7 @@ export default function UmrahTransportPackage() {
             <section className="section-lg bg-light">
                 <div className="container">
                     <h2 className="section-title">Choose Your Umrah Package</h2>
-                    <p className="section-subtitle">All prices are per vehicle (1-4 passengers). Contact us for group pricing.</p>
+                    <p className="section-subtitle">Packages are customized to your group size. Contact us for latest group pricing.</p>
                     <div className="grid-3">
                         {packages.map((pkg, i) => (
                             <div key={i} className="card" style={{
@@ -142,7 +142,7 @@ export default function UmrahTransportPackage() {
                                     ))}
                                 </ul>
                                 <div style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--secondary)', fontFamily: 'var(--font-heading)', marginBottom: '1.5rem' }}>
-                                    {pkg.price} <span style={{ fontSize: '0.85rem', fontWeight: 400, color: 'var(--text-muted)' }}>/ vehicle</span>
+                                    {pkg.price}
                                 </div>
                                 <Link href="/book-online" className={`btn ${pkg.popular ? 'btn-primary' : 'btn-outline-gold'}`} style={{ width: '100%', display: 'block' }}>
                                     Book This Package

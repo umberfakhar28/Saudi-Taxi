@@ -4,7 +4,7 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 
 export const metadata: Metadata = {
     title: "Riyadh King Khalid International Airport (KKIA) Taxi | Saudi Taxi",
-    description: "Reliable and professional airport transfer services from Riyadh King Khalid International Airport (KKIA). Fixed prices, 24/7 availability, and professional drivers.",
+    description: "Reliable and professional airport transfer services from Riyadh King Khalid International Airport (KKIA). 24/7 availability, and professional drivers.",
 };
 
 const benefits = [
@@ -20,7 +20,7 @@ const benefits = [
     },
     {
         icon: <TagIcon size={32} />,
-        title: "All-Inclusive Fixed Rates",
+        title: "Transparent Quoting",
         description: "Enjoy transparent pricing from KKIA to any location in Riyadh or beyond. No hidden fees or unexpected surcharges.",
     },
 ];
@@ -55,7 +55,7 @@ export default function RiyadhAirportTaxi() {
                 <div className="container">
                     <div className="grid-2">
                         <div>
-                            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Fixed Rates to Riyadh Destinations</h2>
+                            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Transparent Pricing to Riyadh Destinations</h2>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 We provide cost-effective and premium transport solutions from KKIA. Our fleet includes luxury sedans, family SUVs, and spacious vans to accommodate all group sizes and luggage requirements.
                             </p>

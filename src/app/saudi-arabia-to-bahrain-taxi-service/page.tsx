@@ -11,7 +11,6 @@ const features = [
     { title: "24/7 Availability", desc: "Round-the-clock pickups from any city in Saudi Arabia for your trip to Bahrain." },
     { title: "Door-to-Door", desc: "Pick up from your home, hotel, or airport and drop off anywhere in Bahrain." },
     { title: "Causeway Expertise", desc: "Drivers familiar with King Fahd Causeway procedures and peak hours." },
-    { title: "Fixed Rates", desc: "Enjoy transparent pricing with no hidden fees or surge charges at the border." },
 ];
 
 export default function SaudiToBahrain() {
@@ -48,7 +47,7 @@ export default function SaudiToBahrain() {
                                     <li>• Distance: ~25 km (Causeway length)</li>
                                     <li>• Typical Duration: 1–2 hours (traffic dependent)</li>
                                     <li>• Requirements: Valid Passport & Visa (or GCC ID)</li>
-                                    <li>• Insurance: Vehicle border insurance included</li>
+                                    <li>• Vehicle border insurance included</li>
                                 </ul>
                             </div>
                         </div>
@@ -65,6 +64,15 @@ export default function SaudiToBahrain() {
                                     </div>
                                 </div>
                             ))}
+                            <div style={{ display: 'flex', gap: '1rem', padding: '1.5rem', background: 'var(--white)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)' }}>
+                                <div style={{ color: 'var(--secondary)', flexShrink: 0 }}>
+                                    <CheckCircleIcon size={24} />
+                                </div>
+                                <div>
+                                    <h4 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>Transparent Pricing</h4>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>Clear, agreed-upon rates with no hidden border fees.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

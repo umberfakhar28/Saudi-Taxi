@@ -66,8 +66,8 @@ export default function TaifAirportTaxi() {
             <section style={{ background: 'var(--primary-dark)', padding: '5rem 0', textAlign: 'center' }}>
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Book Your Taif Airport Transfer</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.8)', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-                        Safe, fixed-price mountain transfers. WhatsApp us for a custom quote or use our online form.
+                    <p style={{ color: 'rgba(255,255,255,0.8)', maxWidth: '600px', margin: '0 auto 2rem' }}>
+                        Safe and reliable mountain transfers. WhatsApp us for a custom quote or use our online form.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
