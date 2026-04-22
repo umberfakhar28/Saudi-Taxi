@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client';
 import { Search, Plus, Filter, FileText, CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 import { formatSAR } from '@/utils/pricing';
+import Link from 'next/link';
 
 export default function QuotesPage() {
     const [quotes, setQuotes] = useState<any[]>([]);
@@ -51,9 +52,9 @@ export default function QuotesPage() {
                     <button onClick={fetchQuotes} className="admin-btn-secondary">
                         <RefreshCw size={15} /> Refresh
                     </button>
-                    <button className="admin-btn-primary">
+                    <Link href="/admin/quotes/new" className="admin-btn-primary">
                         <Plus size={15} /> New Quote
-                    </button>
+                    </Link>
                 </div>
             </div>
 

@@ -9,9 +9,13 @@ import {
     Settings,
     LogOut,
     Car,
-    MessageSquare,
     Globe,
     ChevronRight,
+    FileText,
+    Receipt,
+    BarChart3,
+    Calendar,
+    Zap,
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import './admin.css';
@@ -36,14 +40,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             items: [
                 { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, desc: 'Overview & Stats' },
                 { name: 'Bookings', href: '/admin/bookings', icon: CalendarCheck, desc: 'Manage Rides' },
-                { name: 'Calendar', href: '/admin/calendar', icon: CalendarCheck, desc: 'Schedule View' },
+                { name: 'Calendar', href: '/admin/calendar', icon: Calendar, desc: 'Schedule View' },
             ],
         },
         {
             label: 'Sales & Billing',
             items: [
-                { name: 'Quotes', href: '/admin/quotes', icon: MessageSquare, desc: 'Pricing Estimates' },
-                { name: 'Invoices', href: '/admin/invoices', icon: CalendarCheck, desc: 'Billing & Payments' },
+                { name: 'Quotes', href: '/admin/quotes', icon: FileText, desc: 'Pricing Estimates' },
+                { name: 'Invoices', href: '/admin/invoices', icon: Receipt, desc: 'Billing & Payments' },
             ],
         },
         {
@@ -51,19 +55,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             items: [
                 { name: 'Fleet', href: '/admin/fleet', icon: Car, desc: 'Vehicles' },
                 { name: 'Customers', href: '/admin/customers', icon: Users, desc: 'Client Database' },
-                { name: 'Reviews', href: '/admin/reviews', icon: MessageSquare, desc: 'Testimonials' },
             ],
         },
         {
             label: 'System',
             items: [
-                { name: 'Automation', href: '/admin/automation', icon: Settings, desc: 'Pricing Rules' },
+                { name: 'Reports', href: '/admin/reports', icon: BarChart3, desc: 'Analytics & Export' },
+                { name: 'Automation', href: '/admin/automation', icon: Zap, desc: 'Pricing Rules' },
                 { name: 'Settings', href: '/admin/settings', icon: Settings, desc: 'Configuration' },
             ],
         },
     ];
 
-    const currentPage = navGroups.flatMap(g => g.items).find(i => i.href === pathname);
+    const allItems = navGroups.flatMap(g => g.items);
+    const currentPage = allItems.find(i => pathname.startsWith(i.href));
 
     return (
         <div className="admin-shell">
@@ -85,7 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <span className="admin-nav-label">{group.label}</span>
                             {group.items.map(item => {
                                 const Icon = item.icon;
-                                const active = pathname === item.href;
+                                const active = pathname.startsWith(item.href);
                                 return (
                                     <Link
                                         key={item.name}
