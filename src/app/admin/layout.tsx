@@ -36,6 +36,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             items: [
                 { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, desc: 'Overview & Stats' },
                 { name: 'Bookings', href: '/admin/bookings', icon: CalendarCheck, desc: 'Manage Rides' },
+                { name: 'Calendar', href: '/admin/calendar', icon: CalendarCheck, desc: 'Schedule View' },
+            ],
+        },
+        {
+            label: 'Sales & Billing',
+            items: [
+                { name: 'Quotes', href: '/admin/quotes', icon: MessageSquare, desc: 'Pricing Estimates' },
+                { name: 'Invoices', href: '/admin/invoices', icon: CalendarCheck, desc: 'Billing & Payments' },
             ],
         },
         {
@@ -49,6 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {
             label: 'System',
             items: [
+                { name: 'Automation', href: '/admin/automation', icon: Settings, desc: 'Pricing Rules' },
                 { name: 'Settings', href: '/admin/settings', icon: Settings, desc: 'Configuration' },
             ],
         },

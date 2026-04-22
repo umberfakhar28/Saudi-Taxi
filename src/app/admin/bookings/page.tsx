@@ -40,6 +40,7 @@ export default function BookingsPage() {
 
     const updateStatus = async (id: string, newStatus: string) => {
         await supabase.from('bookings').update({ status: newStatus }).eq('id', id);
+        
         if (newStatus === 'confirmed') {
             await fetch('/api/emails/send', {
                 method: 'POST',
@@ -47,6 +48,30 @@ export default function BookingsPage() {
                 body: JSON.stringify({ type: 'booking_confirmed', bookingId: id }),
             });
         }
+        
+        if (newStatus === 'completed') {
+            const booking = bookings.find(b => b.id === id);
+            if (booking) {
+                // Generate Invoice
+                const invoiceNumber = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+                await supabase.from('invoices').insert({
+                    invoice_number: invoiceNumber,
+                    booking_id: booking.id,
+                    customer_name: booking.customer_name,
+                    customer_email: booking.customer_email,
+                    customer_phone: booking.customer_phone,
+                    pickup_location: booking.pickup_location,
+                    dropoff_location: booking.dropoff_location,
+                    travel_date: booking.travel_date,
+                    service_type: booking.service_type,
+                    subtotal: booking.quote_amount || 0,
+                    total_amount: booking.quote_amount || 0,
+                    status: 'unpaid',
+                    due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days from now
+                });
+            }
+        }
+        
         fetchBookings();
     };
 
