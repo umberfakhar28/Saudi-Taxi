@@ -57,7 +57,7 @@ export function DashboardCharts({ bookingsByStatus, revenueTrend, bookingTrend }
                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                 ))}
                             </Pie>
-                            <RechartsTooltip formatter={(value: number) => pieView === 'revenue' ? `SAR ${value.toFixed(2)}` : value} />
+                            <RechartsTooltip formatter={(value: any) => pieView === 'revenue' ? `SAR ${Number(value).toFixed(2)}` : value} />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
