@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Search, Filter, RefreshCw, ExternalLink, ChevronDown, X, Download, Trash, CheckSquare, Square, FileText, MessageCircle, AlertTriangle, Eye, Edit, FilePlus, ChevronLeft, ChevronRight } from 'lucide-react';
-import { format, isToday, isThisWeek, isWithinInterval, startOfDay, endOfDay, addDays } from 'date-fns';
+import { Search, RefreshCw, ChevronDown, X, Download, Trash, CheckSquare, Square, FileText, MessageCircle, AlertTriangle, Eye, Edit, FilePlus, ChevronLeft, ChevronRight, Calendar, Mail, Share2 } from 'lucide-react';
+import { format, isWithinInterval, startOfDay, endOfDay, addDays, parseISO } from 'date-fns';
 
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
 const PAYMENT_OPTIONS = ['all', 'paid', 'unpaid', 'partially_paid'];
@@ -15,7 +15,9 @@ export default function BookingsPage() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [paymentFilter, setPaymentFilter] = useState('all');
-    const [dateFilter, setDateFilter] = useState('all');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
+    const [showCalendar, setShowCalendar] = useState(false);
     
     // Sorting & Pagination
     const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
@@ -27,18 +29,21 @@ export default function BookingsPage() {
     
     // Modals & Dropdowns
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
     const [editModal, setEditModal] = useState<any | null>(null);
     const [notesModal, setNotesModal] = useState<any | null>(null);
     const [viewModal, setViewModal] = useState<any | null>(null);
+    const [invoiceModal, setInvoiceModal] = useState<any | null>(null);
+    const [newBookingModal, setNewBookingModal] = useState(false);
+    const [newBooking, setNewBooking] = useState<any>({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending' });
     const [notes, setNotes] = useState('');
     
-    const dropdownRef = useRef<HTMLDivElement>(null);
     const supabase = createClient();
 
     const fetchBookings = useCallback(async () => {
         setLoading(true);
         // We join with invoices to get payment status
-        const { data, error } = await supabase.from('bookings').select('*, invoices(id, status, invoice_number, total_amount, paid_amount)').order('created_at', { ascending: false });
+        const { data, error } = await supabase.from('bookings').select('*, booking_number, invoices(id, status, invoice_number, total_amount, paid_amount)').order('created_at', { ascending: false });
         if (!error && data) {
             setBookings(data);
         }
@@ -48,11 +53,9 @@ export default function BookingsPage() {
     useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
     useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setOpenDropdown(null);
-        };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+        const handler = (e: MouseEvent) => { setOpenDropdown(null); setShowCalendar(false); };
+        document.addEventListener('click', handler);
+        return () => document.removeEventListener('click', handler);
     }, []);
 
     // Derived properties for bookings (to simplify filtering/sorting)
@@ -72,49 +75,40 @@ export default function BookingsPage() {
     // Filtering
     const filteredBookings = useMemo(() => {
         let result = processedBookings;
-
-        if (statusFilter !== 'all') {
-            result = result.filter(b => b.status === statusFilter);
-        }
-        if (paymentFilter !== 'all') {
-            result = result.filter(b => b.payment_status === paymentFilter);
-        }
-        if (dateFilter !== 'all') {
+        if (statusFilter !== 'all') result = result.filter(b => b.status === statusFilter);
+        if (paymentFilter !== 'all') result = result.filter(b => b.payment_status === paymentFilter);
+        if (dateFrom || dateTo) {
             result = result.filter(b => {
                 if (!b.travel_date) return false;
-                const d = new Date(b.travel_date);
-                if (dateFilter === 'today') return isToday(d);
-                if (dateFilter === 'this_week') return isThisWeek(d);
+                const d = startOfDay(parseISO(b.travel_date));
+                if (dateFrom && d < startOfDay(parseISO(dateFrom))) return false;
+                if (dateTo && d > endOfDay(parseISO(dateTo))) return false;
                 return true;
             });
         }
         if (search) {
             const s = search.toLowerCase();
-            result = result.filter(b => 
-                b.customer_name?.toLowerCase().includes(s) || 
-                b.customer_phone?.includes(s) || 
+            result = result.filter(b =>
+                b.customer_name?.toLowerCase().includes(s) ||
+                b.customer_phone?.includes(s) ||
                 b.customer_email?.toLowerCase().includes(s) ||
-                b.pickup_location?.toLowerCase().includes(s) || 
+                b.pickup_location?.toLowerCase().includes(s) ||
                 b.dropoff_location?.toLowerCase().includes(s) ||
                 b.id?.toLowerCase().includes(s) ||
+                b.booking_number?.toLowerCase().includes(s) ||
                 (b.service_type || '').toLowerCase().includes(s)
             );
         }
-
-        // Sorting
         result.sort((a, b) => {
-            let valA = a[sortConfig.key];
-            let valB = b[sortConfig.key];
+            let valA = a[sortConfig.key], valB = b[sortConfig.key];
             if (sortConfig.key === 'customer') { valA = a.customer_name; valB = b.customer_name; }
             if (sortConfig.key === 'date') { valA = a.travel_date; valB = b.travel_date; }
-
             if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
             if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
         });
-
         return result;
-    }, [processedBookings, search, statusFilter, paymentFilter, dateFilter, sortConfig]);
+    }, [processedBookings, search, statusFilter, paymentFilter, dateFrom, dateTo, sortConfig]);
 
     // Pagination
     const paginatedBookings = useMemo(() => {
@@ -178,15 +172,20 @@ export default function BookingsPage() {
     };
 
     const generateInvoice = async (b: any) => {
-        const invNum = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const { error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() });
-        if (!error) {
-            alert('Invoice generated successfully!');
-            fetchBookings();
-        } else {
-            alert('Error: Invoice may already exist.');
-        }
         setOpenDropdown(null);
+        // If booking already has an invoice, just open it in modal
+        if (b.invoice_id) {
+            const { data: existing } = await supabase.from('invoices').select('*').eq('id', b.invoice_id).single();
+            if (existing) { setInvoiceModal({ ...b, invoice_number: existing.invoice_number, invoice_db_id: existing.id, total_amount: existing.total_amount }); return; }
+        }
+        const invNum = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+        const { data: invData, error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() }).select().single();
+        if (!error && invData) {
+            await fetchBookings();
+            setInvoiceModal({ ...b, invoice_number: invNum, invoice_db_id: invData.id });
+        } else {
+            alert('Failed to create invoice. Please try again.');
+        }
     };
 
     const sendEmail = async (type: string, b: any) => {
@@ -204,6 +203,18 @@ export default function BookingsPage() {
         if (!editModal) return;
         await supabase.from('bookings').update({ customer_name: editModal.customer_name, customer_phone: editModal.customer_phone, customer_email: editModal.customer_email, service_type: editModal.service_type, pickup_location: editModal.pickup_location, dropoff_location: editModal.dropoff_location, travel_date: editModal.travel_date, travel_time: editModal.travel_time, passengers_count: parseInt(editModal.passengers_count) || 1, quote_amount: parseFloat(editModal.quote_amount) || null, internal_notes: editModal.internal_notes }).eq('id', editModal.id);
         setEditModal(null); fetchBookings();
+    };
+
+    const createBooking = async () => {
+        if (!newBooking.customer_name || !newBooking.pickup_location || !newBooking.dropoff_location) {
+            alert('Please fill in customer name, pickup and dropoff locations.'); return;
+        }
+        const { error } = await supabase.from('bookings').insert({ ...newBooking, passengers_count: parseInt(newBooking.passengers_count) || 1, quote_amount: parseFloat(newBooking.quote_amount) || null });
+        if (!error) {
+            setNewBookingModal(false);
+            setNewBooking({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending' });
+            fetchBookings();
+        } else { alert('Error creating booking.'); }
     };
 
     // Bulk Actions
@@ -383,7 +394,7 @@ export default function BookingsPage() {
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button onClick={() => exportCSV(filteredBookings)} className="admin-btn-secondary"><Download size={15} /> Export CSV</button>
                     <button onClick={fetchBookings} className="admin-btn-secondary"><RefreshCw size={15} /> Refresh</button>
-                    <a href="/book-online" target="_blank" className="admin-btn-primary"><FilePlus size={15} /> New Booking</a>
+                    <button onClick={(e) => { e.stopPropagation(); setNewBookingModal(true); }} className="admin-btn-primary"><FilePlus size={15} /> New Booking</button>
                 </div>
             </div>
 
@@ -404,14 +415,40 @@ export default function BookingsPage() {
                     <input type="text" style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.2rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }} placeholder="Search ID, name, phone, email, location..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
                 </div>
                 
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                    <select value={dateFilter} onChange={e => { setDateFilter(e.target.value); setPage(1); }} style={{ padding: '0.6rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', background: '#f8fafc', color: '#334155', fontWeight: 500 }}>
-                        <option value="all">Any Date</option>
-                        <option value="today">Travel Today</option>
-                        <option value="this_week">Travel This Week</option>
-                    </select>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                    {/* Calendar Date Range Filter */}
+                    <div style={{ position: 'relative' }} onClick={e => e.stopPropagation()}>
+                        <button
+                            onClick={() => setShowCalendar(v => !v)}
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.55rem 0.9rem', borderRadius: 8, border: `1.5px solid ${(dateFrom || dateTo) ? '#fbbf24' : '#cbd5e1'}`, background: (dateFrom || dateTo) ? '#fffbeb' : '#f8fafc', fontSize: '0.8rem', fontWeight: 600, color: (dateFrom || dateTo) ? '#92400e' : '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                        >
+                            <Calendar size={14} />
+                            {dateFrom || dateTo ? `${dateFrom || '…'} → ${dateTo || '…'}` : 'Date Range'}
+                            {(dateFrom || dateTo) && <span onClick={e => { e.stopPropagation(); setDateFrom(''); setDateTo(''); setPage(1); }} style={{ marginLeft: 4, color: '#ef4444', fontWeight: 800, cursor: 'pointer' }}>×</span>}
+                        </button>
+                        {showCalendar && (
+                            <div style={{ position: 'absolute', top: '110%', left: 0, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', zIndex: 999, padding: '1rem', minWidth: 280 }}>
+                                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.8px' }}>Filter by Travel Date</div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                                    <div>
+                                        <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>From</label>
+                                        <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(1); }} style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>To</label>
+                                        <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(1); }} style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', boxSizing: 'border-box' }} />
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                                    {[{l:'Today',f:format(new Date(),'yyyy-MM-dd'),t:format(new Date(),'yyyy-MM-dd')},{l:'This Week',f:format(addDays(new Date(),-6),'yyyy-MM-dd'),t:format(new Date(),'yyyy-MM-dd')},{l:'This Month',f:format(new Date(new Date().getFullYear(),new Date().getMonth(),1),'yyyy-MM-dd'),t:format(new Date(new Date().getFullYear(),new Date().getMonth()+1,0),'yyyy-MM-dd')}].map(q => (
+                                        <button key={q.l} onClick={() => { setDateFrom(q.f); setDateTo(q.t); setPage(1); }} style={{ flex:1, padding:'0.3rem 0.4rem', borderRadius:6, border:'1px solid #e2e8f0', background:'#f8fafc', fontSize:'0.7rem', fontWeight:600, color:'#475569', cursor:'pointer' }}>{q.l}</button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
-                    <select value={paymentFilter} onChange={e => { setPaymentFilter(e.target.value); setPage(1); }} style={{ padding: '0.6rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', background: '#f8fafc', color: '#334155', fontWeight: 500 }}>
+                    <select value={paymentFilter} onChange={e => { setPaymentFilter(e.target.value); setPage(1); }} style={{ padding: '0.55rem 0.8rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', background: '#f8fafc', color: '#334155', fontWeight: 500 }}>
                         <option value="all">Any Payment Status</option>
                         <option value="paid">Paid</option>
                         <option value="unpaid">Unpaid</option>
@@ -471,7 +508,7 @@ export default function BookingsPage() {
                                     </button>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace', fontWeight: 600 }}>{b.id.substring(0, 8).toUpperCase()}</div>
+                                    <div style={{ fontSize: '0.72rem', color: '#1e293b', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.5px' }}>{b.booking_number || b.id.substring(0,8).toUpperCase()}</div>
                                     <div style={{ display: 'flex', gap: '0.2rem', marginTop: 4 }}>
                                         {b.is_upcoming && b.status !== 'completed' && b.status !== 'cancelled' && <span title="Upcoming within 24-48h"><AlertTriangle size={12} color="#f59e0b" /></span>}
                                         {b.payment_status === 'unpaid' && <span title="Unpaid"><AlertTriangle size={12} color="#ef4444" /></span>}
@@ -511,34 +548,10 @@ export default function BookingsPage() {
                                         {b.status === 'confirmed' && <button onClick={() => updateStatus(b.id, 'completed')} title="Mark Completed" style={{ background: '#e0e7ff', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#4f46e5' }}><CheckSquare size={14} /></button>}
                                     </div>
                                     
-                                    <div style={{ position: 'relative' }} ref={openDropdown === b.id ? dropdownRef : undefined}>
-                                        <button className="admin-btn-secondary" style={{ padding: '0.35rem 0.6rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap', marginLeft: 'auto' }} onClick={() => setOpenDropdown(openDropdown === b.id ? null : b.id)}>
+                                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                                        <button className="admin-btn-secondary" style={{ padding: '0.35rem 0.6rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap', marginLeft: 'auto' }} onClick={(e) => { e.stopPropagation(); const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); setDropdownPos({ top: rect.bottom + window.scrollY + 4, right: window.innerWidth - rect.right }); setOpenDropdown(openDropdown === b.id ? null : b.id); }}>
                                             Actions <ChevronDown size={12} />
                                         </button>
-                                        {openDropdown === b.id && (
-                                            <div style={{ position: 'absolute', right: 0, top: '110%', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.1)', zIndex: 100, minWidth: 220, overflow: 'hidden', textAlign: 'left' }}>
-                                                <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>Billing & Invoice</div>
-                                                <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 Generate Invoice</button>
-                                                {b.invoice_id && <button onClick={() => window.open(`/admin/invoices/${b.invoice_id}`, '_blank')} className="dropdown-item">👁️ View Invoice</button>}
-                                                {b.invoice_id && b.payment_status !== 'paid' && <button onClick={async () => { await supabase.from('invoices').update({ status: 'paid' }).eq('booking_id', b.id); alert('Marked paid'); setOpenDropdown(null); fetchBookings(); }} className="dropdown-item">✅ Mark Invoice Paid</button>}
-
-                                                <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Booking Status</div>
-                                                <button onClick={() => updateStatus(b.id, 'pending')} className="dropdown-item text-amber-600">Mark Pending</button>
-                                                <button onClick={() => updateStatus(b.id, 'confirmed')} className="dropdown-item text-blue-600">Confirm Booking</button>
-                                                <button onClick={() => updateStatus(b.id, 'completed')} className="dropdown-item text-indigo-600">Mark Completed</button>
-                                                <button onClick={() => updateStatus(b.id, 'cancelled')} className="dropdown-item text-red-600">Cancel Booking</button>
-                                                <button onClick={() => duplicateTrip(b)} className="dropdown-item">📋 Duplicate Trip</button>
-
-                                                <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Communication</div>
-                                                <button onClick={() => sendEmail('booking_confirmed', b)} className="dropdown-item">📩 Email Confirmation</button>
-                                                <button onClick={() => { window.open(`https://wa.me/${b.customer_phone.replace(/\D/g, '')}?text=Hello ${b.customer_name}, regarding your booking with Saudi Taxi...`, '_blank'); setOpenDropdown(null); }} className="dropdown-item">💬 WhatsApp Customer</button>
-
-                                                <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>More</div>
-                                                <button onClick={() => { setNotesModal(b); setNotes(b.internal_notes || ''); setOpenDropdown(null); }} className="dropdown-item">📝 Internal Notes</button>
-                                                <button onClick={() => addTag(b.id, 'VIP')} className="dropdown-item">🏷️ Toggle VIP Tag</button>
-                                                <button onClick={() => addTag(b.id, 'Urgent')} className="dropdown-item">🏷️ Toggle Urgent Tag</button>
-                                            </div>
-                                        )}
                                     </div>
                                 </td>
                             </tr>
@@ -573,17 +586,160 @@ export default function BookingsPage() {
                 )}
             </div>
 
+            {/* ── Portal Dropdown (fixed, never clipped) ── */}
+            {openDropdown && paginatedBookings.map(b => b.id === openDropdown ? (
+                <div key={`dd-${b.id}`} onClick={e => e.stopPropagation()} style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.15)', zIndex: 9999, minWidth: 230, overflow: 'hidden', textAlign: 'left', animation: 'fadeIn 0.15s' }}>
+                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>Billing &amp; Invoice</div>
+                    <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 Generate Invoice</button>
+                    {b.invoice_id && <button onClick={() => { setInvoiceModal(b); setOpenDropdown(null); }} className="dropdown-item">👁️ View Invoice</button>}
+                    {b.invoice_id && b.payment_status !== 'paid' && <button onClick={async () => { await supabase.from('invoices').update({ status: 'paid' }).eq('booking_id', b.id); setOpenDropdown(null); fetchBookings(); }} className="dropdown-item">✅ Mark Invoice Paid</button>}
+                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Booking Status</div>
+                    <button onClick={() => updateStatus(b.id, 'pending')} className="dropdown-item text-amber-600">Mark Pending</button>
+                    <button onClick={() => updateStatus(b.id, 'confirmed')} className="dropdown-item text-blue-600">Confirm Booking</button>
+                    <button onClick={() => updateStatus(b.id, 'completed')} className="dropdown-item text-indigo-600">Mark Completed</button>
+                    <button onClick={() => updateStatus(b.id, 'cancelled')} className="dropdown-item text-red-600">Cancel Booking</button>
+                    <button onClick={() => duplicateTrip(b)} className="dropdown-item">📋 Duplicate Trip</button>
+                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Communication</div>
+                    <button onClick={() => sendEmail('booking_confirmed', b)} className="dropdown-item">📩 Email Confirmation</button>
+                    <button onClick={() => { window.open(`https://wa.me/${b.customer_phone.replace(/\D/g, '')}?text=Hello ${b.customer_name}, regarding your booking with Saudi Taxi...`, '_blank'); setOpenDropdown(null); }} className="dropdown-item">💬 WhatsApp Customer</button>
+                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>More</div>
+                    <button onClick={() => { setNotesModal(b); setNotes(b.internal_notes || ''); setOpenDropdown(null); }} className="dropdown-item">📝 Internal Notes</button>
+                    <button onClick={() => addTag(b.id, 'VIP')} className="dropdown-item">🏷️ Toggle VIP Tag</button>
+                    <button onClick={() => addTag(b.id, 'Urgent')} className="dropdown-item">🏷️ Toggle Urgent Tag</button>
+                </div>
+            ) : null)}
+
+            {/* ── Invoice PDF Modal ── */}
+            {invoiceModal && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => setInvoiceModal(null)}>
+                    <div style={{ background: '#fff', borderRadius: 18, width: '100%', maxWidth: 820, maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.3)' }} onClick={e => e.stopPropagation()}>
+                        {/* Header */}
+                        <div style={{ padding: '1.25rem 1.75rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a' }}>
+                            <div>
+                                <div style={{ fontWeight: 800, fontSize: '1rem', color: '#fff' }}>Invoice — {invoiceModal.invoice_number}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{invoiceModal.customer_name} · {invoiceModal.booking_number}</div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                                <button onClick={() => { const url = `/admin/invoices/${invoiceModal.invoice_id || invoiceModal.invoice_db_id}`; window.open(url, '_blank'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#1e293b', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Download size={14} /> Download</button>
+                                <button onClick={() => sendEmail('invoice', invoiceModal)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Mail size={14} /> Email</button>
+                                <button onClick={() => { const msg = `Invoice ${invoiceModal.invoice_number} for ${invoiceModal.customer_name}. Amount: SAR ${invoiceModal.quote_amount || 0}. Booking: ${invoiceModal.booking_number}`; window.open(`https://wa.me/${(invoiceModal.customer_phone||'').replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#25D366', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Share2 size={14} /> WhatsApp</button>
+                                <button onClick={() => setInvoiceModal(null)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: '#fff', display: 'flex' }}><X size={18} /></button>
+                            </div>
+                        </div>
+                        {/* Invoice Preview */}
+                        <div style={{ flex: 1, overflow: 'auto', background: '#f8fafc', padding: '2rem' }}>
+                            <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '2.5rem', maxWidth: 700, margin: '0 auto' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+                                    <div>
+                                        <div style={{ fontWeight: 900, fontSize: '1.8rem', color: '#0f172a', letterSpacing: '-0.5px' }}>INVOICE</div>
+                                        <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: 4, fontFamily: 'monospace' }}>{invoiceModal.invoice_number}</div>
+                                    </div>
+                                    <div style={{ textAlign: 'right' }}>
+                                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#f59e0b' }}>Saudi Taxi</div>
+                                        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>Jeddah, Saudi Arabia<br/>+966 XXX XXX XXXX</div>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                                    <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
+                                        <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Bill To</div>
+                                        <div style={{ fontWeight: 700, color: '#1e293b' }}>{invoiceModal.customer_name}</div>
+                                        <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 4 }}>{invoiceModal.customer_phone}</div>
+                                        <div style={{ fontSize: '0.82rem', color: '#64748b' }}>{invoiceModal.customer_email}</div>
+                                    </div>
+                                    <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
+                                        <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
+                                        <div style={{ fontSize: '0.82rem', color: '#334155' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {invoiceModal.pickup_location}</div>
+                                        <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {invoiceModal.dropoff_location}</div>
+                                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{invoiceModal.travel_date ? format(new Date(invoiceModal.travel_date), 'dd MMM yyyy') : '—'} · {invoiceModal.service_type}</div>
+                                    </div>
+                                </div>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1.5rem' }}>
+                                    <thead><tr style={{ background: '#0f172a', color: '#fff' }}>
+                                        <th style={{ padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.78rem', fontWeight: 700, borderRadius: '8px 0 0 8px' }}>Description</th>
+                                        <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontSize: '0.78rem', fontWeight: 700, borderRadius: '0 8px 8px 0' }}>Amount</th>
+                                    </tr></thead>
+                                    <tbody><tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                        <td style={{ padding: '1rem', fontSize: '0.85rem', color: '#334155' }}>{invoiceModal.service_type || 'Transportation Service'}<br/><span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Booking Ref: {invoiceModal.booking_number}</span></td>
+                                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>SAR {invoiceModal.quote_amount || 0}</td>
+                                    </tr></tbody>
+                                </table>
+                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    <div style={{ background: '#0f172a', color: '#fff', padding: '1rem 1.5rem', borderRadius: 10, minWidth: 200 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Subtotal</span><span>SAR {invoiceModal.quote_amount || 0}</span></div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>SAR {invoiceModal.quote_amount || 0}</span></div>
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1rem', borderTop: '1px solid #f1f5f9', fontSize: '0.78rem', color: '#94a3b8' }}>
+                                    Thank you for choosing Saudi Taxi. Safe travels! 🚗
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── New Booking Modal ── */}
+            {newBookingModal && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => setNewBookingModal(false)}>
+                    <div style={{ background: '#f8fafc', borderRadius: 18, width: '100%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 30px 60px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+                        <div style={{ background: '#0f172a', padding: '1.5rem 2rem', borderRadius: '18px 18px 0 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div>
+                                <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>New Booking</div>
+                                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>Create a booking directly from admin</div>
+                            </div>
+                            <button onClick={() => setNewBookingModal(false)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: '#fff', display: 'flex' }}><X size={18} /></button>
+                        </div>
+                        <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                {[
+                                    { key: 'customer_name', label: 'Customer Name *', span: true },
+                                    { key: 'customer_phone', label: 'Phone *' },
+                                    { key: 'customer_email', label: 'Email' },
+                                    { key: 'service_type', label: 'Service Type' },
+                                    { key: 'pickup_location', label: 'Pickup Location *', span: true },
+                                    { key: 'dropoff_location', label: 'Dropoff Location *', span: true },
+                                    { key: 'travel_date', label: 'Travel Date', type: 'date' },
+                                    { key: 'travel_time', label: 'Travel Time', type: 'time' },
+                                    { key: 'passengers_count', label: 'Passengers', type: 'number' },
+                                    { key: 'quote_amount', label: 'Quote (SAR)', type: 'number' },
+                                    { key: 'car_type', label: 'Car Type' },
+                                ].map(f => (
+                                    <div key={f.key} style={{ gridColumn: (f as any).span ? '1/-1' : 'auto' }}>
+                                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>{f.label}</label>
+                                        <input type={f.type || 'text'} value={newBooking[f.key] || ''} onChange={e => setNewBooking({ ...newBooking, [f.key]: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem', paddingLeft: '1rem' }} />
+                                    </div>
+                                ))}
+                                <div>
+                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>Status</label>
+                                    <select value={newBooking.status} onChange={e => setNewBooking({ ...newBooking, status: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem' }}>
+                                        <option value="pending">Pending</option>
+                                        <option value="confirmed">Confirmed</option>
+                                    </select>
+                                </div>
+                                <div style={{ gridColumn: '1/-1' }}>
+                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>Special Notes</label>
+                                    <textarea value={newBooking.special_notes || ''} onChange={e => setNewBooking({ ...newBooking, special_notes: e.target.value })} rows={3} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', padding: '0.65rem 1rem' }} placeholder="Any special requests or notes..." />
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', paddingTop: '0.5rem', borderTop: '1px solid #e2e8f0' }}>
+                                <button onClick={() => setNewBookingModal(false)} className="admin-btn-secondary">Cancel</button>
+                                <button onClick={createBooking} className="admin-btn-primary"><FilePlus size={15} /> Create Booking</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <style dangerouslySetInnerHTML={{__html: `
-                .dropdown-item {
-                    display: block; width: 100%; padding: 0.6rem 1rem; text-align: left; background: none; border: none; cursor: pointer; font-size: 0.8rem; color: #334155; font-weight: 500;
-                }
+                .dropdown-item { display: block; width: 100%; padding: 0.6rem 1rem; text-align: left; background: none; border: none; cursor: pointer; font-size: 0.8rem; color: #334155; font-weight: 500; }
                 .dropdown-item:hover { background: #f8fafc; color: #0f172a; }
                 .text-amber-600 { color: #d97706 !important; }
                 .text-blue-600 { color: #2563eb !important; }
                 .text-indigo-600 { color: #4f46e5 !important; }
                 .text-red-600 { color: #dc2626 !important; }
-                @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+                @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
             `}} />
         </div>
     );
 }
+
