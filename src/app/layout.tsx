@@ -19,6 +19,11 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "Saudi Taxi & Rental | Premium Transport Services",
   description: "Luxury taxi and car rental services across Saudi Arabia. Book your premium ride today.",
+  verification: {
+    other: {
+      "msvalidate.01": ["995aadf700384f5c8ef4ad71bc79ab65"],
+    },
+  },
 };
 
 export default function RootLayout({
