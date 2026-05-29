@@ -87,8 +87,24 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // This will refresh the session if it's expired
-  const { data: { user } } = await supabase.auth.getUser();
+  // Refresh session — wrapped in try/catch so a paused/unreachable
+  // Supabase project never crashes public pages.
+  let user: { email?: string } | null = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Supabase unavailable (e.g. project paused).
+    // Allow public routes through; send admin routes to login.
+    if (
+      request.nextUrl.pathname.startsWith("/admin") &&
+      request.nextUrl.pathname !== "/admin/login"
+    ) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+    response.headers.set("Link", AGENT_LINK_HEADER);
+    return response;
+  }
 
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
