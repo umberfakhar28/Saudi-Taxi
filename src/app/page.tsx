@@ -4,15 +4,16 @@ import Features from "@/components/Features";
 import FAQSection from "@/components/FAQSection";
 import Link from "next/link";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import QuickBookingForm from "@/components/QuickBookingForm";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
   title: "Makkah Taxi Service | Reliable Taxi Service in Makkah & Jeddah",
-  description:
-    "Book reliable taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, Jeddah to Makkah transport. Professional drivers, 24/7 availability.",
-};
+  description: "Book reliable taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, Jeddah to Makkah transport. Professional drivers, 24/7 availability.",
+  path: "/",
+  keywords: ["Saudi taxi", "Makkah taxi", "Saudi Arabia taxi service", "Gulf Trip Service", "Jeddah taxi", "Umrah transport"],
+});
 
 /* =======================================================================
    DATA

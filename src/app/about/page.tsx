@@ -1,12 +1,15 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { ShieldIcon, TrendingUpIcon, HeartIcon, CreditCardIcon, LanguagesIcon, AwardIcon, LandmarkIcon, TargetIcon, EyeIcon } from "@/components/Icons";
 import styles from "./about.module.css";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "About Us | Makkah Taxi Service - Your Trusted Transport Partner",
     description: "Learn about Makkah Taxi Service - over 10 years of reliable taxi and transport services for Umrah pilgrims in Makkah, Madinah & Jeddah.",
-};
+    path: "/about",
+    keywords: ["about Gulf Trip Service", "Saudi taxi company", "Umrah transport Saudi Arabia", "Makkah taxi service"],
+    noindex: true,
+});
 
 const values = [
     {

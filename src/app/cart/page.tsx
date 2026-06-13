@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Cart | Saudi Taxi Service",
     description: "Review your selected Saudi Taxi services before checkout.",
-};
+    path: "/cart",
+    keywords: ["cart Saudi taxi", "review booking cart", "taxi booking review"],
+});
 
 export default function Cart() {
     return (

@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "About Us | Saudi Taxi Service - Your Trusted Transport Partner in Saudi Arabia",
     description: "Learn about Saudi Taxi Service — over 10 years of professional, reliable taxi and transport services for Umrah pilgrims, tourists and travelers across Saudi Arabia.",
-};
+    path: "/about-us",
+    keywords: ["about Gulf Trip Service", "Saudi taxi company", "Umrah transport Saudi Arabia", "Makkah taxi service"],
+});
 
 const values = [
     { icon: "🛡️", title: "Safety First", description: "Your safety is our top priority. All our vehicles are regularly maintained, fully insured, and equipped with modern safety features. Our drivers undergo thorough background checks and safety training." },

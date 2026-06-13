@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Abha International Airport Taxi Service | Asir Region | Saudi Taxi",
     description: "Reliable airport taxi services from Abha International Airport. Fixed rates, safe mountain travel, and 24/7 service across the Asir region.",
-};
+    path: "/abha-airport-taxi-service",
+    keywords: ["Abha airport taxi", "Abha airport transfer", "Asir region taxi", "Abha international airport"],
+});
 
 export default function AbhaAirportTaxi() {
     return (

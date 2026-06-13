@@ -1,12 +1,14 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, PlaneIcon, CarIcon, LandmarkIcon, HotelIcon, CompassIcon, MessageIcon, PhoneIcon } from "@/components/Icons";
 import QuoteAssurance from "@/components/QuoteAssurance";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Get a Quote | Saudi Taxi Service",
     description: "Request a free quote for taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, inter-city travel. Fixed rates, no hidden charges.",
-};
+    path: "/quote",
+    keywords: ["taxi quote Saudi Arabia", "get fare estimate", "Saudi taxi price", "taxi fare quote"],
+});
 
 const services = [
     {

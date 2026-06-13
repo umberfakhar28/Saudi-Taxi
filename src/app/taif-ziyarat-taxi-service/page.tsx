@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Taif Ziyarat Taxi Service | Taif Tour from Makkah | Saudi Taxi",
     description: "Professional Taif Ziyarat and city tour taxi service from Makkah and Jeddah. Visit rose farms, Al-Shafa gardens, Taif Zoo and historic sites. Book your Taif trip today.",
-};
+    path: "/taif-ziyarat-taxi-service",
+    keywords: ["Taif Ziyarat taxi", "Taif tour taxi", "Taif sightseeing", "Taif from Makkah tour"],
+});
 
 const attractions = [
     { icon: "🌹", name: "Al-Gaith Rose Farm", description: "Taif is famous for its Damask roses — the source of the world's finest rose water and oud. Tour the enchanting rose farms during bloom season (March–May)." },

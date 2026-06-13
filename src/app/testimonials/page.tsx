@@ -1,12 +1,14 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import styles from "./testimonials.module.css";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Testimonials | What Our Customers Say | Saudi Taxi Service",
     description: "Read testimonials from satisfied customers who used our taxi services in Makkah, Jeddah & Madinah. Real reviews from real pilgrims.",
-};
+    path: "/testimonials",
+    keywords: ["taxi testimonials", "customer reviews Saudi Arabia", "Umrah taxi reviews", "Saudi taxi reviews"],
+});
 
 const testimonials = [
     {

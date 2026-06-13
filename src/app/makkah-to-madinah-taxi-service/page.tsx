@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { CarIcon, MapPinIcon, ShieldIcon, MessageIcon, ChevronRightIcon, CompassIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Makkah to Madinah Taxi Service | Intercity Transfer | Saudi Taxi",
     description: "Reliable and comfortable taxi service from Makkah to Madinah. Enjoy a seamless intercity transfer with professional drivers and a range of premium vehicles.",
-};
+    path: "/makkah-to-madinah-taxi-service",
+    keywords: ["Makkah to Madinah taxi", "Makkah to Madinah transfer", "intercity transfer Saudi Arabia", "Makkah to Madinah car"],
+});
 
 export default function MakkahToMadinah() {
     return (

@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "AlUla Tour Taxi Service | Reliable AlUla Tours | Saudi Taxi",
     description: "Reliable taxi and tour service to AlUla — Saudi Arabia's ancient wonder. Explore Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Book your AlUla tour now.",
-};
+    path: "/reliable-alula-tour-taxi-service-in-saudi-arabia",
+    keywords: ["AlUla tour taxi", "Hegra tour transfer", "AlUla sightseeing", "AlUla private tour"],
+});
 
 const attractions = [
     { icon: "🏛️", name: "Hegra (Al-Hijr / Madain Saleh)", description: "Saudi Arabia's first UNESCO World Heritage Site — magnificent Nabataean tombs carved into rose-colored sandstone cliffs, dating back 2,000 years." },

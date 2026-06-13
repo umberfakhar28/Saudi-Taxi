@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Airport Transfers Saudi Arabia | Jeddah Airport Taxi | Saudi Taxi",
     description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Reliable and 24/7 availability.",
-};
+    path: "/airport-transfers",
+    keywords: ["airport transfer Saudi Arabia", "Jeddah airport taxi", "KAIA transfer", "Makkah airport transfer"],
+});
 
 const benefits = [
     {

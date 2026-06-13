@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Our Services | Saudi Taxi - Taxi & Transport Services in Saudi Arabia",
     description: "Explore all taxi and transport services offered by Saudi Taxi — airport transfers, hotel transfers, Umrah packages, Ziyarat tours, private taxis and more across Saudi Arabia.",
-};
+    path: "/our-services",
+    keywords: ["taxi services Saudi Arabia", "Umrah taxi", "airport transfer", "intercity transport", "Makkah taxi service"],
+});
 
 const services = [
     {

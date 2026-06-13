@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, StarIcon, MessageIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Wedding Transportation Services Saudi Arabia | Luxury Event Transport | Saudi Taxi",
     description: "Premium wedding transportation services in Saudi Arabia. Luxury bridal cars, guest shuttles, and event logistics for your special day. Professional and elegant service.",
-};
+    path: "/wedding-transportation",
+    keywords: ["wedding transportation Saudi Arabia", "luxury bridal car", "wedding taxi", "guest shuttle Saudi Arabia"],
+});
 
 export default function WeddingTransportation() {
     return (

@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Our Gallery | Saudi Taxi Service - Photos of Fleet & Holy Sites",
     description: "Browse our gallery featuring our fleet of vehicles, the Holy sites of Makkah and Madinah, and our satisfied customers from around the world.",
-};
+    path: "/our-gallery",
+    keywords: ["taxi fleet gallery", "Makkah gallery", "Madinah gallery Saudi Arabia", "Saudi taxi photos"],
+});
 
 const categories = ["All", "Fleet", "Makkah", "Madinah", "Jeddah", "AlUla", "Taif"];
 

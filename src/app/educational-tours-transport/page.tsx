@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, MessageIcon, ChevronRightIcon, CompassIcon, LandmarkIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Educational Tours Transportation Saudi Arabia | Student Trips | Saudi Taxi",
     description: "Specialized transportation services for educational tours and student field trips in Saudi Arabia. Safe, reliable, and coordinated transport for schools and universities.",
-};
+    path: "/educational-tours-transport",
+    keywords: ["educational tour transport", "student field trip", "school trip bus", "educational transport Saudi"],
+});
 
 export default function EducationalToursTransport() {
     return (

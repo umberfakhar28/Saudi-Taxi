@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Thank You | Saudi Taxi Service",
     description: "Thank you for booking with Saudi Taxi. Your booking has been received and we will confirm shortly.",
-};
+    path: "/thank-you",
+    keywords: ["thank you booking Saudi taxi", "booking confirmation", "taxi booking received"],
+});
 
 export default function ThankYou() {
     return (

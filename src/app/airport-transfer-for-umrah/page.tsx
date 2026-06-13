@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Airport Transfer for Umrah | Jeddah Airport Taxi Service",
     description: "Book reliable airport transfer for Umrah from Jeddah King Abdulaziz International Airport. Meet & greet, flight tracking, and transparent quoting. Available 24/7.",
-};
+    path: "/airport-transfer-for-umrah",
+    keywords: ["Umrah airport transfer", "Jeddah airport to Makkah", "Hajj airport transfer", "Umrah transportation"],
+});
 
 const benefits = [
     {

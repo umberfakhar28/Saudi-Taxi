@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Lato } from "next/font/google";
 import Script from "next/script";
 import PublicLayout from "@/components/PublicLayout";
+import { SITE_CONFIG } from "@/lib/seo";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -18,8 +19,22 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "Saudi Taxi & Rental | Premium Transport Services",
-  description: "Luxury taxi and car rental services across Saudi Arabia. Book your premium ride today.",
+  title: {
+    default: "Saudi Taxi & Rental | Premium Transport Services",
+    template: `%s | ${SITE_CONFIG.siteName}`,
+  },
+  description:
+    "Luxury taxi and car rental services across Saudi Arabia. Book your premium ride today.",
+  metadataBase: new URL(SITE_CONFIG.baseUrl),
+  alternates: { canonical: SITE_CONFIG.baseUrl },
+  openGraph: {
+    siteName: SITE_CONFIG.siteName,
+    locale: SITE_CONFIG.locale,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
   verification: {
     other: {
       "msvalidate.01": ["995aadf700384f5c8ef4ad71bc79ab65"],

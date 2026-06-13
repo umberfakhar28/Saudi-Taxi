@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Privacy Policy | Saudi Taxi Service",
     description: "Read our privacy policy to understand how Saudi Taxi Service collects, uses and protects your personal information.",
-};
+    path: "/privacy-policy",
+    keywords: ["privacy policy", "data protection Saudi taxi service", "Gulf Trip Service privacy"],
+});
 
 export default function PrivacyPolicy() {
     return (

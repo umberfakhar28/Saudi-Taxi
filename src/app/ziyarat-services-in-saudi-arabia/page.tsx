@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Ziyarat Services in Saudi Arabia | Holy Sites Tour | Saudi Taxi",
     description: "Explore the holy and historical sites of Makkah and Madinah with our professional Ziyarat tour services. Experienced guides, comfortable vehicles, flexible itineraries.",
-};
+    path: "/ziyarat-services-in-saudi-arabia",
+    keywords: ["Ziyarat services", "holy sites tour", "Makkah Madinah Ziyarat taxi", "Ziyarat tour Saudi Arabia"],
+});
 
 const makkahZiyarat = [
     { name: "Masjid Al-Haram", description: "The Grand Mosque surrounding the Holy Kaaba — the most sacred site in Islam." },

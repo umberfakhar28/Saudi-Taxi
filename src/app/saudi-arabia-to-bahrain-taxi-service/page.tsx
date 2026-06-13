@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Saudi Arabia to Bahrain Taxi Service | King Fahd Causeway | Saudi Taxi",
     description: "Premium taxi service from Saudi Arabia to Bahrain via King Fahd Causeway. Door-to-door transfers, licensed drivers, and assistance with border procedures. Book your Bahrain trip today.",
-};
+    path: "/saudi-arabia-to-bahrain-taxi-service",
+    keywords: ["Saudi to Bahrain taxi", "King Fahd Causeway transfer", "Bahrain border taxi", "Saudi to Bahrain car"],
+});
 
 const features = [
     { title: "24/7 Availability", desc: "Round-the-clock pickups from any city in Saudi Arabia for your trip to Bahrain." },

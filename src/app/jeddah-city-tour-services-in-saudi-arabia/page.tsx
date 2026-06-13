@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Jeddah City Tour Services | Guided Jeddah Tour | Saudi Taxi",
     description: "Explore the vibrant city of Jeddah with our expert-guided city tour. Al-Balad Old Town, Jeddah Corniche, Floating Mosque, markets and more. Book your Jeddah tour today.",
-};
+    path: "/jeddah-city-tour-services-in-saudi-arabia",
+    keywords: ["Jeddah city tour", "Jeddah guided tour", "Jeddah sightseeing taxi", "Jeddah tour guide"],
+});
 
 const attractions = [
     { icon: "🏛️", name: "Al-Balad Historic District", description: "UNESCO World Heritage Site — explore centuries-old coral buildings, traditional souqs and historic merchant houses." },

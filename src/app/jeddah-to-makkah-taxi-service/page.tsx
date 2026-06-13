@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import styles from "./jeddah-makkah.module.css";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Jeddah to Makkah Taxi Service | Direct Transfer & Reliable Service",
     description: "Book a reliable Jeddah to Makkah taxi service. Direct transfers from Jeddah Airport or city center to Makkah. Professional drivers, 24/7 service.",
-};
+    path: "/jeddah-to-makkah-taxi-service",
+    keywords: ["Jeddah to Makkah taxi", "Jeddah to Makkah transfer", "Jeddah to Makkah car", "Jeddah to Makkah transport"],
+});
 
 const features = [
     {

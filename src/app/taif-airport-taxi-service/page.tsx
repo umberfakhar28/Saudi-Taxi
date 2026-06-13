@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Taif Regional Airport Taxi Service | Saudi Taxi",
     description: "Reliable and professional airport taxi services from Taif Airport (TIF). Fixed rates, specialized in mountain routes and transfers to Makkah.",
-};
+    path: "/taif-airport-taxi-service",
+    keywords: ["Taif airport taxi", "Taif airport transfer", "Taif regional airport", "Taif to Makkah taxi"],
+});
 
 export default function TaifAirportTaxi() {
     return (

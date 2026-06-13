@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, ClockIcon, MessageIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Corporate Transportation Services Saudi Arabia | Executive Travel | Saudi Taxi",
     description: "Premium corporate transportation services in Saudi Arabia. Executive transfers, staff shuttles, and event transport with professional drivers and high-end vehicles.",
-};
+    path: "/corporate-transportation-services",
+    keywords: ["corporate transport Saudi Arabia", "executive taxi", "business car hire", "corporate travel Saudi Arabia"],
+});
 
 const solutions = [
     {

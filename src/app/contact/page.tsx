@@ -1,5 +1,14 @@
 
 import styles from './contact.module.css';
+import { generatePageMetadata } from "@/lib/seo";
+
+export const metadata = generatePageMetadata({
+    title: "Contact Us | Makkah Taxi Service - 24/7 Support",
+    description: "Contact Makkah Taxi Service via phone, WhatsApp, or email. Get a quote, book a ride, or ask questions. Available 24/7 for all your transport needs.",
+    path: "/contact",
+    keywords: ["contact Gulf Trip Service", "Saudi taxi customer support", "Makkah taxi phone number"],
+    noindex: true,
+});
 
 export default function ContactPage() {
     return (

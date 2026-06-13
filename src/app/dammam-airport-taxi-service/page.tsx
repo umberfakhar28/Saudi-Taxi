@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "King Fahd International Airport (KFIA) Taxi Service | Dammam | Saudi Taxi",
     description: "Reliable airport taxi services from Dammam King Fahd International Airport (KFIA). Professional drivers, and 24/7 coverage for the Eastern Province.",
-};
+    path: "/dammam-airport-taxi-service",
+    keywords: ["Dammam airport taxi", "KFIA airport transfer", "King Fahd airport taxi", "Eastern Province taxi"],
+});
 
 export default function DammamAirportTaxi() {
     return (

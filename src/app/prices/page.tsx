@@ -1,11 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 import { MessageIcon, CheckCircleIcon, ShieldIcon, CarIcon } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Transparent Pricing & Quotes | Saudi Taxi Service",
     description: "Learn about our transparent quoting system. We provide honest, upfront rates for all taxi services in Makkah, Jeddah and Madinah with no hidden fees.",
-};
+    path: "/prices",
+    keywords: ["taxi prices Saudi Arabia", "transparent pricing", "taxi fare Saudi", "Saudi taxi rates"],
+});
 
 const pillars = [
     {

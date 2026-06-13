@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Hotel Transfers Saudi Arabia | Taxi to Hotel from Airport | Saudi Taxi",
     description: "Comfortable and reliable hotel transfer services in Makkah, Madinah and Jeddah. Door-to-door transfers between airports, hotels and holy sites across Saudi Arabia.",
-};
+    path: "/hotel-transfers",
+    keywords: ["hotel transfer Makkah", "hotel transfer Madinah", "hotel taxi Saudi Arabia", "door to door transfer Saudi"],
+});
 
 const features = [
     { icon: "🏨", title: "Door-to-Door Service", description: "We pick you up directly from your hotel lobby and drop you precisely at your destination — no walking, no confusion." },

@@ -1,10 +1,12 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = generatePageMetadata({
     title: "Private Taxi Saudi Arabia | Hire Private Cab | Saudi Taxi Service",
     description: "Hire a private taxi in Saudi Arabia for personal comfort, privacy and flexibility. Available for local trips, inter-city travel and long-distance journeys.",
-};
+    path: "/private-taxi",
+    keywords: ["private taxi Saudi Arabia", "hire private driver Makkah", "private car hire", "private taxi Makkah"],
+});
 
 const features = [
     { icon: "🔒", title: "100% Private", description: "Your vehicle is exclusively for you and your group. No shared rides, no strangers." },
