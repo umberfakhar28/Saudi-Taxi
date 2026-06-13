@@ -35,6 +35,13 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/favicon.svg" }],
+  },
   verification: {
     other: {
       "msvalidate.01": ["995aadf700384f5c8ef4ad71bc79ab65"],

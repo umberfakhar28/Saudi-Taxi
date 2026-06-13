@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a5c3a"/>
+      <stop offset="100%" stop-color="#0f3d26"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="20" fill="url(#bg)"/>
+  <!-- Car body -->
+  <path d="M22 55c-2.2 0-4 1.8-4 4v6c0 2.2 1.8 4 4 4h4v-4h-4v-6h56v6h-4v4h4c2.2 0 4-1.8 4-4v-6c0-2.2-1.8-4-4-4l-6-10c-1.5-2.5-4.2-4-7-4H35c-2.8 0-5.5 1.5-7 4z" fill="#d4af37"/>
+  <!-- Car windows -->
+  <path d="M35 41h12v8H30zm16 0h12v8H46zm14 0h6l4 8H60z" fill="#f5f5dc" opacity="0.9"/>
+  <!-- Wheels -->
+  <circle cx="30" cy="65" r="6" fill="#333"/>
+  <circle cx="30" cy="65" r="3" fill="#999"/>
+  <circle cx="70" cy="65" r="6" fill="#333"/>
+  <circle cx="70" cy="65" r="3" fill="#999"/>
+  <!-- Star -->
+  <path d="M50 8l3 9h10l-8 6 3 9-8-6-8 6 3-9-8-6h10z" fill="#d4af37"/>
+</svg>
