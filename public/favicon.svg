@@ -1,20 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a5c3a"/>
-      <stop offset="100%" stop-color="#0f3d26"/>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a5c"/>
+      <stop offset="100%" stop-color="#f5a623"/>
+    </linearGradient>
+    <linearGradient id="duneLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a853"/>
+      <stop offset="100%" stop-color="#b8862d"/>
+    </linearGradient>
+    <linearGradient id="duneRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c49a3c"/>
+      <stop offset="100%" stop-color="#a07020"/>
+    </linearGradient>
+    <linearGradient id="roadGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#555"/>
+      <stop offset="100%" stop-color="#333"/>
     </linearGradient>
   </defs>
-  <rect width="100" height="100" rx="20" fill="url(#bg)"/>
-  <!-- Car body -->
-  <path d="M22 55c-2.2 0-4 1.8-4 4v6c0 2.2 1.8 4 4 4h4v-4h-4v-6h56v6h-4v4h4c2.2 0 4-1.8 4-4v-6c0-2.2-1.8-4-4-4l-6-10c-1.5-2.5-4.2-4-7-4H35c-2.8 0-5.5 1.5-7 4z" fill="#d4af37"/>
-  <!-- Car windows -->
-  <path d="M35 41h12v8H30zm16 0h12v8H46zm14 0h6l4 8H60z" fill="#f5f5dc" opacity="0.9"/>
-  <!-- Wheels -->
-  <circle cx="30" cy="65" r="6" fill="#333"/>
-  <circle cx="30" cy="65" r="3" fill="#999"/>
-  <circle cx="70" cy="65" r="6" fill="#333"/>
-  <circle cx="70" cy="65" r="3" fill="#999"/>
-  <!-- Star -->
-  <path d="M50 8l3 9h10l-8 6 3 9-8-6-8 6 3-9-8-6h10z" fill="#d4af37"/>
+
+  <!-- Sky background -->
+  <rect width="100" height="100" fill="url(#sky)" rx="20"/>
+
+  <!-- Sun -->
+  <circle cx="80" cy="18" r="10" fill="#ffd700" opacity="0.9"/>
+
+  <!-- Left dune -->
+  <path d="M-5 55 Q15 20 40 55 Q45 65 50 100 L-5 100Z" fill="url(#duneLeft)"/>
+
+  <!-- Right dune -->
+  <path d="M105 55 Q85 15 60 55 Q55 65 50 100 L105 100Z" fill="url(#duneRight)"/>
+
+  <!-- Road between dunes -->
+  <path d="M45 100 L40 65 L42 55 L50 45 L58 55 L60 65 L55 100Z" fill="url(#roadGrad)"/>
+  <!-- Road center line -->
+  <path d="M50 45 L50 100" stroke="#ffd700" stroke-width="1.5" stroke-dasharray="3,3" fill="none"/>
+
+  <!-- Car on road -->
+  <g transform="translate(38, 58)">
+    <rect x="0" y="3" width="24" height="10" rx="3" fill="#e74c3c"/>
+    <rect x="3" y="0" width="18" height="5" rx="2" fill="#c0392b"/>
+    <rect x="5" y="1" width="5" height="3" rx="1" fill="#a8d8ea" opacity="0.8"/>
+    <rect x="12" y="1" width="5" height="3" rx="1" fill="#a8d8ea" opacity="0.8"/>
+    <circle cx="6" cy="15" r="2.5" fill="#222"/>
+    <circle cx="6" cy="15" r="1" fill="#999"/>
+    <circle cx="18" cy="15" r="2.5" fill="#222"/>
+    <circle cx="18" cy="15" r="1" fill="#999"/>
+  </g>
+
+  <!-- Start pin -->
+  <g transform="translate(18, 28)">
+    <path d="M0 0C-6 0 -10 5 -10 10C-10 18 0 28 0 28C0 28 10 18 10 10C10 5 6 0 0 0Z" fill="#27ae60"/>
+    <circle cx="0" cy="10" r="3" fill="white"/>
+  </g>
+
+  <!-- End pin -->
+  <g transform="translate(68, 22)">
+    <path d="M0 0C-6 0 -10 5 -10 10C-10 18 0 28 0 28C0 28 10 18 10 10C10 5 6 0 0 0Z" fill="#e74c3c"/>
+    <circle cx="0" cy="10" r="3" fill="white"/>
+  </g>
 </svg>
