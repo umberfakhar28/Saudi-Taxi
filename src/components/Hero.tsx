@@ -74,8 +74,8 @@ const Hero = () => {
                 {/* H1 — Contrast: largest element, highest visual weight */}
                 {/* Proximity: directly follows badge, no wasted space */}
                 <h1 className={styles.title}>
-                    #1 Rated Taxi in<br />
-                    <em>Makkah to Jeddah</em>
+                    Book Reliable Taxi Services<br />
+                    <em>Across Saudi Arabia Online</em>
                 </h1>
 
                 {/* Subtitle — Contrast: muted vs H1, proximity: tight below title */}
