@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import {
-    MenuIcon, XIcon, ChevronDownIcon, MapPinIcon,
+    MenuIcon, XIcon, ChevronDownIcon,
     PlaneIcon, HotelIcon, CarIcon, PackageIcon, CompassIcon,
     MapIcon, MountainIcon, TreePineIcon,
     PhoneIcon,
@@ -52,11 +52,7 @@ const Navbar = () => {
 
                 {/* ---- LOGO (Balance: anchors the left side) ---- */}
                 <Link href="/" className={styles.logo} onClick={close}>
-                    <MapPinIcon className={styles.logoIcon} size={22} />
-                    <span>
-                        Saudi Taxi
-                        <span className={styles.logoSub}>Gulf Trip Service</span>
-                    </span>
+                    <span className={styles.logoSub}>Gulf Trip Service</span>
                 </Link>
 
                 {/* ---- HAMBURGER — mobile toggle ---- */}
