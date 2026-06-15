@@ -52,6 +52,7 @@ const Navbar = () => {
 
                 {/* ---- LOGO (Balance: anchors the left side) ---- */}
                 <Link href="/" className={styles.logo} onClick={close}>
+                    <CarIcon size={22} className={styles.logoIcon} />
                     <span className={styles.logoSub}>Gulf Trip Service</span>
                 </Link>
 
