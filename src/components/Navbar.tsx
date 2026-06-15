@@ -55,7 +55,7 @@ const Navbar = () => {
                     <MapPinIcon className={styles.logoIcon} size={22} />
                     <span>
                         Saudi Taxi
-                        <span className={styles.logoSub}>Holy City Transport</span>
+                        <span className={styles.logoSub}>Gulf Trip Service</span>
                     </span>
                 </Link>
 
