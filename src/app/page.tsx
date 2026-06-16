@@ -2,6 +2,7 @@ import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
 import Features from "@/components/Features";
 import FAQSection from "@/components/FAQSection";
+import VehiclesSection from "@/components/VehiclesSection";
 import Link from "next/link";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
 import { generatePageMetadata } from "@/lib/seo";
@@ -263,6 +264,11 @@ export default function Home() {
       </section>
 
 
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          VEHICLES — Vehicle showcase with images, descriptions & CTA
+          ═══════════════════════════════════════════════════════════════════ */}
+      <VehiclesSection />
 
       {/* ═══════════════════════════════════════════════════════════════════
           FAQ — Repetition: consistent accordion style
