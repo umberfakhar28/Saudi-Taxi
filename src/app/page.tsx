@@ -73,7 +73,7 @@ const services = [
 ];
 
 const stats = [
-  { number: "15,000+", label: "Happy Pilgrims" },
+  { number: "15,000+", label: "Happy Travelers" },
   { number: "10+",     label: "Years Experience" },
   { number: "24/7",    label: "Availability" },
   { number: "100%",    label: "Satisfaction Rate" },

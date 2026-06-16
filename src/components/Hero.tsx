@@ -68,7 +68,7 @@ const Hero = () => {
                 {/* Badge — Repetition: same pill style as section eyebrows */}
                 <div className={styles.badge}>
                     <ShieldIcon size={14} className={styles.badgeIcon} />
-                    Trusted by 15,000+ Pilgrims
+                    Trusted by 15,000+ Travelers
                 </div>
 
                 {/* H1 — Contrast: largest element, highest visual weight */}
