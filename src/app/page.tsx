@@ -3,6 +3,7 @@ import SocialProof from "@/components/SocialProof";
 import Features from "@/components/Features";
 import FAQSection from "@/components/FAQSection";
 import VehiclesSection from "@/components/VehiclesSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import Link from "next/link";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
 import { generatePageMetadata } from "@/lib/seo";
@@ -269,6 +270,11 @@ export default function Home() {
           VEHICLES — Vehicle showcase with images, descriptions & CTA
           ═══════════════════════════════════════════════════════════════════ */}
       <VehiclesSection />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          TESTIMONIALS — Real customer stories
+          ═══════════════════════════════════════════════════════════════════ */}
+      <TestimonialsSection />
 
       {/* ═══════════════════════════════════════════════════════════════════
           FAQ — Repetition: consistent accordion style
