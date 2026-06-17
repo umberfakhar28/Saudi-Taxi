@@ -4,7 +4,7 @@
   ✅ ALIGNMENT:  All nav links baseline-aligned; dropdown items left-aligned
   ✅ PROXIMITY:  Related dropdown links grouped under their parent
   ✅ REPETITION: Same link style, same transition, same underline effect throughout
-  ✅ CONTRAST:   White links on dark green bg; gold CTA button unmissable vs dark
+  ✅ CONTRAST:   White links on Midnight Navy bg; Gold CTA button unmissable vs dark
 */
 
 .navbar {
@@ -12,16 +12,16 @@
     top: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(0, 30, 0, 0.96);
+    background: rgba(15, 23, 42, 0.97);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(212,175,55,0.15);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.12);
     height: var(--nav-height);
     transition: background var(--ease-base), box-shadow var(--ease-base);
 }
 
 .navbar.scrolled {
-    background: rgba(0, 20, 0, 0.99);
+    background: rgba(15, 23, 42, 0.99);
     box-shadow: 0 4px 24px rgba(0,0,0,0.35);
 }
 
@@ -154,7 +154,7 @@
     visibility: hidden;
     transition: opacity var(--ease-base), transform var(--ease-base), visibility var(--ease-base);
     z-index: 200;
-    border-top: 3px solid var(--accent);  /* Contrast: gold top border anchors dropdown */
+    border-top: 3px solid var(--primary);  /* Contrast: Emerald top border anchors dropdown */
 }
 
 .dropdownMenuOpen {
@@ -208,7 +208,7 @@
 /* ---- CTA Button — Contrast: gold, the most prominent element ---- */
 .cta {
     background: linear-gradient(135deg, var(--accent), var(--accent-light));
-    color: var(--primary-dark) !important;  /* Contrast: dark text on bright gold */
+    color: var(--accent-text) !important;  /* Contrast: Navy text on bright Gold */
     padding: 9px 22px;
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
@@ -269,7 +269,7 @@
         top: 0; right: 0;
         width: min(300px, 85vw);
         height: 100dvh;
-        background: linear-gradient(170deg, var(--primary-dark), var(--primary-mid));
+        background: linear-gradient(170deg, var(--navy-dark), var(--navy));
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;

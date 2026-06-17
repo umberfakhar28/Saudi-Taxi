@@ -9,7 +9,7 @@
 */
 
 .features {
-    background: linear-gradient(135deg, #f0f7f0 0%, #e8f5e8 100%);
+    background: var(--bg-base);
     padding: var(--space-20) 0;
 }
 
@@ -34,9 +34,9 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2.5px;
-    color: var(--accent-dark);
-    background: var(--accent-subtle);
-    border: 1px solid rgba(34,197,94,0.3);
+    color: var(--primary);
+    background: var(--primary-subtle);
+    border: 1px solid rgba(14, 90, 70, 0.2);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-full);
     margin-bottom: var(--space-4);
@@ -50,13 +50,13 @@
     position: relative;
 }
 
-/* Gold underline — Repetition: same underline used in every section title */
+/* Emerald underline — Repetition: same underline used in every section title */
 .title::after {
     content: '';
     display: block;
     width: 56px;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    background: var(--primary);
     margin: var(--space-3) auto 0;
     border-radius: var(--radius-full);
 }
@@ -118,14 +118,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary);             /* Contrast: green icon on light green tint bg */
+    color: var(--primary);             /* Contrast: Emerald icon on subtle Emerald bg */
     margin: 0 auto var(--space-5);     /* Proximity: icon close to title below it */
     transition: background var(--ease-base), color var(--ease-base);
 }
 
 .card:hover .icon {
-    background: var(--accent-subtle);
-    color: var(--accent-dark);         /* Contrast: changes to gold on hover */
+    background: var(--primary);
+    color: var(--white);               /* Reverses to white icon on Emerald bg */
 }
 
 /* Card Title — Contrast: dark green, medium-large */

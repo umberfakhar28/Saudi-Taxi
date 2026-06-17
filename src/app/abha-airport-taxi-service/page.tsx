@@ -56,7 +56,7 @@ export default function AbhaAirportTaxi() {
                 </div>
             </section>
 
-            <section style={{ background: 'var(--primary-dark)', padding: '5rem 0', textAlign: 'center' }}>
+            <section style={{ background: 'var(--navy-dark)', padding: '5rem 0', textAlign: 'center' }}>
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Reserve Your Abha Airport Taxi</h2>
                     <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>

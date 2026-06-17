@@ -1,55 +1,73 @@
 /* ===================================================
-   SAUDI TAXI — Global Design System
+   GULF TRIP SERVICE — Premium Transportation Brand
+   Color System: 60% Off White | 30% Emerald Green | 10% Gold
    Five Design Principles: Balance | Alignment | Proximity | Repetition | Contrast
    =================================================== */
 
 /* ===== DESIGN TOKENS ===== */
 :root {
-  /* ------- Colors (New Scheme: Vibrant Green + Dark Navy + White) ------- */
-  --bg-base:   #ffffff;
-  --bg-subtle: #f0fdf4;          /* Very light green tint (60%) */
-  --bg-dark:   #0f172a;          /* Deep navy/charcoal */
-  --white:     #ffffff;
+  /* ------- Brand Colors ------- */
+
+  /* 60% — Backgrounds: Off White & White */
+  --bg-base:   #F8FAFC;          /* Off White */
+  --bg-subtle: #F1F5F9;          /* Slightly deeper off white for contrast sections */
+  --bg-white:  #FFFFFF;          /* Pure white for cards */
+  --bg-dark:   #0F172A;          /* Midnight Navy for dark sections */
+  --white:     #FFFFFF;
   --black:     #000000;
 
-  /* Text — HIGH CONTRAST (Principle: Contrast) */
-  --text-main:        #0f172a;   /* Near-black navy */
-  --text-body:        #334155;   /* Slate for body */
-  --text-muted:       #64748b;   /* Muted slate */
-  --text-light:       #f8fafc;   /* Off-white */
-  --text-placeholder: #94a3b8;   /* Placeholder text */
+  /* Text — Charcoal family for premium readability */
+  --text-main:        #1E293B;   /* Charcoal — primary headings */
+  --text-body:        #475569;   /* Slate — body paragraphs */
+  --text-muted:       #94A3B8;   /* Muted slate — secondary info */
+  --text-light:       #F8FAFC;   /* Off White — on dark backgrounds */
+  --text-placeholder: #CBD5E1;   /* Placeholder text */
+  --text-heading:     #1E293B;   /* Alias for heading text */
+  --text-dark:        #1E293B;   /* Alias for dark text */
 
   /* Neutral palette */
-  --gray-50:  #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
+  --gray-50:  #F8FAFC;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-300: #CBD5E1;
+  --gray-400: #94A3B8;
 
-  /* 30% — Primary / Structural: Dark Navy (Used for structural backgrounds & headings) */
-  --primary:        #0f172a;     /* Deep Navy */
-  --primary-light:  #1e293b;     /* Lighter Navy */
-  --primary-dark:   #020617;     /* Darker Navy */
-  --primary-mid:    #0f172a;     /* Mid Navy */
-  --primary-subtle: rgba(15, 23, 42, 0.05);
+  /* 30% — Primary Brand Color: Emerald Green (#0E5A46)
+     Used for branded sections, icons, headings, links, highlights */
+  --primary:         #0E5A46;    /* Emerald Green */
+  --primary-light:   #1A7A62;    /* Lighter Emerald */
+  --primary-dark:    #0A4535;    /* Darker Emerald */
+  --primary-mid:     #0E5A46;    /* Mid Emerald (same as primary) */
+  --primary-subtle:  rgba(14, 90, 70, 0.08);
+  --primary-text:    #FFFFFF;    /* White text on Emerald */
 
-  /* 10% — Accent / CTA: Vibrant Bright Green (Call to Actions & Highlights) */
-  --accent:         #22c55e;     /* Vivid green */
-  --accent-light:   #4ade80;     /* Lighter bright green */
-  --accent-dark:    #16a34a;     /* Darker bright green for borders/text */
-  --accent-text:    #ffffff;     /* White text on green */
-  --accent-subtle:  rgba(34, 197, 94, 0.10);
+  /* 10% — Accent / CTA: Gold (#D4AF37)
+     Reserved for important calls-to-action and conversion-focused elements */
+  --accent:         #D4AF37;     /* Gold */
+  --accent-light:   #E0C55A;     /* Lighter Gold */
+  --accent-dark:    #B8962E;     /* Darker Gold */
+  --accent-text:    #0F172A;     /* Midnight Navy text on Gold (= high contrast) */
+  --accent-subtle:  rgba(212, 175, 55, 0.10);
 
-  /* Gold / Secondary Accent */
-  --secondary:       #fbbf24;    /* Vibrant Gold/Amber */
-  --secondary-light: #fcd34d;    /* Lighter Gold */
-  --secondary-dark:  #d97706;    /* Darker Gold */
+  /* Structural: Midnight Navy (#0F172A)
+     Used for header/nav, footer, and dark section backgrounds */
+  --navy:           #0F172A;     /* Midnight Navy */
+  --navy-light:     #1E293B;     /* Lighter Navy */
+  --navy-dark:      #020617;     /* Darker Navy */
+  --navy-subtle:    rgba(15, 23, 42, 0.05);
+  --navy-text:      #FFFFFF;     /* White text on Navy */
+
+  /* Legacy aliases (backward compatibility) */
+  --secondary:       var(--accent);       /* Gold — was #fbbf24 */
+  --secondary-light: var(--accent-light); /* Lighter Gold */
+  --secondary-dark:  var(--accent-dark);  /* Darker Gold */
+  --primary-transparent: rgba(14, 90, 70, 0.1);
 
   /* Semantic */
-  --danger:  #ef4444;
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --info:    #3b82f6;
+  --danger:  #EF4444;
+  --success: #0E5A46;        /* Brand Emerald for success states */
+  --warning: #D4AF37;        /* Brand Gold for warning states */
+  --info:    #3B82F6;
 
   /* ------- Typography (Principle: Repetition + Contrast) ------- */
   --font-heading: var(--font-playfair), 'Georgia', serif;
@@ -103,8 +121,10 @@
   --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.13);
   --shadow-xl: 0 16px 56px rgba(0,0,0,0.16);
-  --shadow-accent: 0 4px 20px rgba(34,197,94,0.25);
-  --shadow-accent-lg: 0 8px 30px rgba(34,197,94,0.35);
+  --shadow-accent: 0 4px 20px rgba(14,90,70,0.25);
+  --shadow-accent-lg: 0 8px 30px rgba(14,90,70,0.35);
+  --shadow-gold: 0 4px 20px rgba(212,175,55,0.30);
+  --shadow-gold-lg: 0 8px 30px rgba(212,175,55,0.40);
 
   /* ------- Border Radius ------- */
   --radius-sm:   4px;
@@ -243,9 +263,9 @@ ul { list-style: none; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2.5px;
-  color: var(--accent-dark);
-  background: var(--accent-subtle);
-  border: 1px solid rgba(34,197,94,0.3);
+  color: var(--primary);
+  background: var(--primary-subtle);
+  border: 1px solid rgba(14, 90, 70, 0.2);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   margin-bottom: var(--space-4);
@@ -258,13 +278,13 @@ ul { list-style: none; }
   position: relative;
 }
 
-/* Gold underline accent — reinforces brand (Repetition Principle) */
+/* Emerald underline accent — reinforces brand (Repetition Principle) */
 .section-title::after {
   content: '';
   display: block;
   width: 56px;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  background: var(--primary);
   margin-top: var(--space-3);
   border-radius: var(--radius-full);
 }
@@ -287,7 +307,7 @@ ul { list-style: none; }
    =================================================================== */
 .page-hero {
   padding: 10rem 0 5rem;
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 60%, var(--primary-light) 100%);
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%);
   color: var(--white);
   text-align: center;
   position: relative;
@@ -300,7 +320,7 @@ ul { list-style: none; }
   inset: 0;
   background-image: radial-gradient(var(--accent) 1px, transparent 1px);
   background-size: 44px 44px;
-  opacity: 0.07;
+  opacity: 0.1;
   pointer-events: none;
 }
 
@@ -375,7 +395,7 @@ ul { list-style: none; }
   top: 0; left: -100%;
   width: 60%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
   transition: left var(--ease-slow);
 }
 
@@ -383,18 +403,18 @@ ul { list-style: none; }
   left: 140%;
 }
 
-/* --- Primary CTA: Vivid Green (Accent color) --- */
+/* --- Primary CTA (Gold) — Highest importance: Gold bg + Navy text --- */
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-light));
-  color: var(--white);
+  color: var(--accent-text);
   border-color: transparent;
-  box-shadow: var(--shadow-accent);
+  box-shadow: var(--shadow-gold);
 }
 
 .btn-primary:hover {
   background: linear-gradient(135deg, var(--accent-light), var(--accent));
   transform: translateY(-2px);
-  box-shadow: var(--shadow-accent-lg);
+  box-shadow: var(--shadow-gold-lg);
 }
 
 .btn-primary:active {
@@ -403,7 +423,15 @@ ul { list-style: none; }
   box-shadow: none;
 }
 
-/* --- Secondary CTA: Deep Navy --- */
+.btn-primary:disabled,
+.btn-primary[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- Secondary CTA (Emerald Green) — Medium importance: Emerald bg + White text --- */
 .btn-secondary {
   background: var(--primary);
   color: var(--white);
@@ -413,7 +441,19 @@ ul { list-style: none; }
 .btn-secondary:hover {
   background: var(--primary-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,77,0,0.3);
+  box-shadow: 0 8px 24px rgba(14, 90, 70, 0.30);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px) scale(0.98);
+  background: var(--primary-dark);
+}
+
+.btn-secondary:disabled,
+.btn-secondary[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Added hover utility for cards (like Gallery app) */
@@ -434,11 +474,15 @@ ul { list-style: none; }
 
 .btn-outline:hover {
   background: var(--white);
-  color: var(--primary);
+  color: var(--navy);
   border-color: var(--white);
 }
 
-/* --- Outline --- */
+.btn-outline:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* --- Outline Gold (on any background) --- */
 .btn-outline-gold {
   background: transparent;
   color: var(--accent);
@@ -447,7 +491,27 @@ ul { list-style: none; }
 
 .btn-outline-gold:hover {
   background: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn-outline-gold:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* --- Outline Emerald (on light backgrounds) --- */
+.btn-outline-emerald {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-emerald:hover {
+  background: var(--primary);
   color: var(--white);
+}
+
+.btn-outline-emerald:active {
+  transform: translateY(1px) scale(0.98);
 }
 
 /* --- Sizes --- */
@@ -484,7 +548,7 @@ ul { list-style: none; }
   top: 0; left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  background: var(--primary);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--ease-base);
@@ -514,8 +578,8 @@ ul { list-style: none; }
 }
 
 .card:hover .card-icon {
-  background: var(--accent-subtle);
-  color: var(--accent-dark);
+  background: var(--primary-subtle);
+  color: var(--primary);
 }
 
 .card h3 {
@@ -606,8 +670,8 @@ ul { list-style: none; }
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(212,175,55,0.14);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(14, 90, 70, 0.14);
 }
 
 .form-textarea {
@@ -635,7 +699,7 @@ ul { list-style: none; }
 .bg-primary   { background-color: var(--primary); color: var(--white); }
 .bg-subtle    { background-color: var(--bg-subtle); }
 .bg-dark      { background-color: var(--bg-dark); color: var(--white); }
-.bg-green-tint { background-color: #f0f7f0; }
+.bg-subtle-alt { background-color: var(--bg-subtle); }
 
 /* Flex */
 .flex         { display: flex; }
@@ -679,7 +743,14 @@ ul { list-style: none; }
 .divider-gold {
   width: 64px;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  background: var(--accent);
+  border-radius: var(--radius-full);
+}
+
+.divider-emerald {
+  width: 64px;
+  height: 3px;
+  background: var(--primary);
   border-radius: var(--radius-full);
 }
 
@@ -700,20 +771,20 @@ ul { list-style: none; }
 
 .badge-gold {
   background: var(--accent-subtle);
-  border: 1px solid rgba(212,175,55,0.35);
+  border: 1px solid rgba(212, 175, 55, 0.35);
   color: var(--accent-dark);
 }
 
-.badge-green {
+.badge-emerald {
   background: var(--primary-subtle);
-  border: 1px solid rgba(0,77,0,0.15);
+  border: 1px solid rgba(14, 90, 70, 0.2);
   color: var(--primary);
 }
 
 .badge-dark {
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.2);
-  color: var(--accent-light);
+  color: var(--accent);
 }
 
 /* ===================================================================

@@ -43,7 +43,7 @@
 }
 
 .imagePlaceholder {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
     color: var(--white);
     padding: 4rem 2rem;
     text-align: center;

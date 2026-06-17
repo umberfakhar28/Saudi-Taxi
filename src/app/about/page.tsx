@@ -185,7 +185,7 @@ export default function About() {
 
             {/* CTA */}
             <section style={{
-                background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)',
+                background: 'linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%)',
                 padding: '5rem 0',
                 textAlign: 'center',
             }}>

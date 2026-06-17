@@ -9,7 +9,7 @@ const items = [
 export default function QuoteAssurance() {
     return (
         <section style={{ 
-            background: 'var(--primary)', 
+            background: 'var(--navy)', 
             padding: '1.5rem 0',
             borderBottom: '1px solid rgba(255,255,255,0.1)'
         }}>
@@ -22,7 +22,7 @@ export default function QuoteAssurance() {
                     fontStyle: 'italic', 
                     fontSize: '0.95rem',
                     fontWeight: 500,
-                    color: 'var(--secondary)'
+                    color: 'var(--accent)'
                 }}>
                     {items.map((item, i) => (
                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

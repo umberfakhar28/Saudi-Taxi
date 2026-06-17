@@ -28,9 +28,9 @@
 }
 
 .categoryTabActive {
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
     color: var(--white);
-    border-color: var(--primary);
+    border-color: var(--navy);
 }
 
 .categoryTabActive:hover {
@@ -78,7 +78,7 @@
 }
 
 .faqQuestion:hover {
-    background: rgba(0, 77, 0, 0.02);
+    background: rgba(14, 90, 70, 0.02);
 }
 
 .questionText {

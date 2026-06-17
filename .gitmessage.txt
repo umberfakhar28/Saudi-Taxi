@@ -1,0 +1,16 @@
+Rebrand color system: Emerald + Midnight Navy + Gold (60/30/10)
+
+Complete brand color transformation for premium GCC transportation positioning:
+- Globals: 60/30/10 token system (Off White/Emerald/Gold), Navy for structure
+- Navbar: Midnight Navy bg, gold hover, Emerald dropdown borders
+- Hero: Off White bg, Emerald headings, Gold primary CTA
+- Buttons: Gold primary (Navy text), Emerald secondary (White text)
+- Cards/Forms: Emerald focus states, Emerald top-bars, Emerald icon hover
+- Footer: Navy bg w/ CSS variables (removed hardcoded hex)
+- Page sections: Navy structural backgrounds, Emerald brand accents
+- Admin: Gold logo/badges, Emerald active nav, Gold CTAs
+- Fixed ~30 page files with Navy backgrounds for CTA/sections
+- Removed all hardcoded rgba(0,77,0) → rgba(14,90,70)
+- Removed undefined --shadow-gold references
+
+Co-authored-by: CommandCodeBot <noreply@commandcode.ai>

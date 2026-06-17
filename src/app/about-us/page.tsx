@@ -64,14 +64,14 @@ export default function AboutUs() {
                             <Link href="/book-online" className="btn btn-primary">Book Your Ride</Link>
                         </div>
                         <div style={{
-                            background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
+                            background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))',
                             borderRadius: 'var(--radius-lg)',
                             padding: '3rem',
                             textAlign: 'center',
                             color: 'var(--white)',
                         }}>
                             <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🕌</div>
-                            <h3 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>Serving the Holy Cities</h3>
+                            <h3 style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>Serving the Holy Cities</h3>
                             <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0 }}>Since 2014 — Your trusted transport partner in Saudi Arabia</p>
                         </div>
                     </div>
@@ -79,7 +79,7 @@ export default function AboutUs() {
             </section>
 
             {/* Stats */}
-            <section style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', padding: '5rem 0' }}>
+            <section style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', padding: '5rem 0' }}>
                 <div className="container">
                     <div className="grid-4" style={{ textAlign: 'center' }}>
                         {stats.map((stat, i) => (
@@ -186,7 +186,7 @@ export default function AboutUs() {
             </section>
 
             {/* CTA */}
-            <section style={{ background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)', padding: '5rem 0', textAlign: 'center' }}>
+            <section style={{ background: 'linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%)', padding: '5rem 0', textAlign: 'center' }}>
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Experience Our Service Today</h2>
                     <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>

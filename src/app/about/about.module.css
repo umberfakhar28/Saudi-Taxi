@@ -21,7 +21,7 @@
 }
 
 .imageBox {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
     border-radius: var(--radius-lg);
     padding: 4rem 3rem;
     text-align: center;

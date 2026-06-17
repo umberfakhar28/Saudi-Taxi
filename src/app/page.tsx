@@ -114,7 +114,7 @@ export default function Home() {
           ═══════════════════════════════════════════════════════════════════ */}
       <section
         style={{
-          background: 'linear-gradient(135deg, var(--primary-dark), var(--primary-mid))',
+          background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))',
           padding: 'var(--space-16) 0',
           position: 'relative',
           overflow: 'hidden',
@@ -136,7 +136,7 @@ export default function Home() {
             {stats.map((stat, i) => (
               <div key={i}>
                 {/* Number — Contrast: gold for visibility, dynamic animation */}
-                <div className="stat-number" style={{ color: 'var(--secondary)' }}>
+                <div className="stat-number" style={{ color: 'var(--accent)' }}>
                   <AnimatedCounter end={stat.number} />
                 </div>
                 {/* Label — Contrast: light, smaller, uppercase */}
@@ -203,7 +203,7 @@ export default function Home() {
             {/* Right column — Balance: pull-quote card to counterweight the list */}
             <div
               style={{
-                background: 'linear-gradient(145deg, var(--primary-dark), var(--primary))',
+                background: 'linear-gradient(145deg, var(--navy-dark), var(--navy))',
                 borderRadius: 'var(--radius-xl)',
                 padding: 'var(--space-12)',
                 display: 'flex',
@@ -288,7 +288,7 @@ export default function Home() {
           ═══════════════════════════════════════════════════════════════════ */}
       <section
         style={{
-          background: 'linear-gradient(140deg, var(--primary-dark) 0%, var(--primary-mid) 60%, var(--primary-light) 100%)',
+          background: 'linear-gradient(140deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%)',
           padding: 'var(--space-20) 0',
           textAlign: 'center',
           position: 'relative',

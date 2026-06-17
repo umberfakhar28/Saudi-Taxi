@@ -1,6 +1,6 @@
 .footer {
-    background: linear-gradient(180deg, #0d1f2d, #091520);
-    color: #d0dde8;
+    background: var(--navy);
+    color: rgba(255, 255, 255, 0.82);
     padding: 5rem 0 0;
     border-top: 4px solid var(--accent);
     font-size: 0.9rem;
@@ -34,7 +34,7 @@
 }
 
 .text {
-    color: #adc4d6;
+    color: rgba(255, 255, 255, 0.6);
     line-height: 1.8;
     margin-bottom: 1.5rem;
 }
@@ -81,7 +81,7 @@
 }
 
 .link {
-    color: #adc4d6;
+    color: rgba(255, 255, 255, 0.6);
     transition: all 0.3s ease;
     font-size: 0.9rem;
 }
@@ -101,7 +101,7 @@
 }
 
 .copyright {
-    color: #7a9ab0;
+    color: rgba(255, 255, 255, 0.35);
     font-size: 0.8rem;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .bottomLink {
-    color: #7a9ab0;
+    color: rgba(255, 255, 255, 0.35);
     font-size: 0.8rem;
     transition: all 0.3s ease;
 }
@@ -123,7 +123,7 @@
 }
 
 .divider {
-    color: #4a6275;
+    color: rgba(255, 255, 255, 0.15);
     font-size: 0.7rem;
 }
 

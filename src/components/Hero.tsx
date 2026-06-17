@@ -122,8 +122,8 @@ const Hero = () => {
             <div className={styles.visual}>
                 <div className={styles.featureCard} style={{ background: 'rgba(255,255,255,1)', backdropFilter: 'none', border: 'none' }}>
                     
-                    <h3 style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.4rem' }}>
-                        <CarIcon size={24} style={{ color: 'var(--accent)' }} />
+                    <h3 style={{ color: 'var(--text-main)', marginBottom: '1.5rem', fontSize: '1.4rem' }}>
+                        <CarIcon size={24} style={{ color: 'var(--primary)' }} />
                         Quick Booking
                     </h3>
 

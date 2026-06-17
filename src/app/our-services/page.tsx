@@ -113,7 +113,7 @@ export default function OurServices() {
                                     {svc.features.map((feat, j) => (
                                         <span key={j} style={{
                                             padding: '0.3rem 0.8rem',
-                                            background: 'rgba(0, 77, 0, 0.08)',
+                                            background: 'rgba(14, 90, 70, 0.08)',
                                             color: 'var(--primary)',
                                             borderRadius: 'var(--radius-xl)',
                                             fontSize: '0.8rem',

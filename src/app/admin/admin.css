@@ -36,16 +36,16 @@
 .admin-logo-badge {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    background: linear-gradient(135deg, #D4AF37, #E0C55A);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
     font-size: 0.95rem;
-    color: #0f172a;
+    color: #0F172A;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.35);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
 }
 .admin-logo-title {
     font-size: 1rem;
@@ -101,12 +101,12 @@
     color: rgba(255, 255, 255, 0.9);
 }
 .admin-nav-item.active {
-    background: rgba(251, 191, 36, 0.12);
-    color: #fbbf24;
+    background: rgba(14, 90, 70, 0.10);
+    color: #0E5A46;
 }
 .admin-nav-item.active .admin-nav-icon {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
+    background: rgba(14, 90, 70, 0.15);
+    color: #0E5A46;
 }
 .admin-nav-icon {
     width: 34px;
@@ -327,7 +327,7 @@
     background: #f8fafc;
     transition: border-color 0.15s;
 }
-.admin-search-input:focus { border-color: #fbbf24; background: #fff; }
+.admin-search-input:focus { border-color: #D4AF37; background: #fff; }
 .admin-filter-select {
     padding: 0.65rem 1rem;
     border-radius: 8px;
@@ -358,8 +358,8 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.65rem 1.25rem;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #0f172a;
+    background: linear-gradient(135deg, #D4AF37, #E0C55A);
+    color: #0F172A;
     border: none;
     border-radius: 10px;
     font-size: 0.875rem;
@@ -370,7 +370,7 @@
 }
 .admin-btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(251,191,36,0.45);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.45);
 }
 .admin-btn-secondary {
     display: inline-flex;
