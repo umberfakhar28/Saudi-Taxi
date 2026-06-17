@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "AlUla Tour Taxi Service | Reliable AlUla Tours | Saudi Taxi",
+    title: "AlUla Tour Taxi Service | Reliable AlUla Tours | Gulf Trip Service",
     description: "Reliable taxi and tour service to AlUla — Saudi Arabia's ancient wonder. Explore Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Book your AlUla tour now.",
     path: "/reliable-alula-tour-taxi-service-in-saudi-arabia",
     keywords: ["AlUla tour taxi", "Hegra tour transfer", "AlUla sightseeing", "AlUla private tour"],

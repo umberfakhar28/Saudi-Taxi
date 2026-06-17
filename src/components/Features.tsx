@@ -58,7 +58,7 @@ const Features = () => {
                 <div className={styles.header}>
                     <span className={styles.eyebrow}>Our Advantages</span>
                     {/* Title — Contrast: large dark green on light green tint bg */}
-                    <h2 className={styles.title}>Why Choose Saudi Taxi</h2>
+                    <h2 className={styles.title}>Why Choose Gulf Trip Service</h2>
                     <p className={styles.subtitle}>
                         Every element of our service is built around your comfort, safety,
                         and peace of mind — from first booking to final drop-off.

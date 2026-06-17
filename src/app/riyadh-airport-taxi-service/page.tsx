@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Riyadh King Khalid International Airport (KKIA) Taxi | Saudi Taxi",
+    title: "Riyadh King Khalid International Airport (KKIA) Taxi | Gulf Trip Service",
     description: "Reliable and professional airport transfer services from Riyadh King Khalid International Airport (KKIA). 24/7 availability, and professional drivers.",
     path: "/riyadh-airport-taxi-service",
     keywords: ["Riyadh airport taxi", "KKIA taxi", "Riyadh airport transfer", "King Khalid airport taxi"],

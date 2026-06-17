@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Border Crossing Taxi Service | Saudi Arabia | Makkah Taxi Service",
+    title: "Border Crossing Taxi Service | Saudi Arabia | Gulf Trip Service",
     description: "Reliable taxi and transport service for Saudi Arabia border crossings. Routes via Bahrain Causeway, Jordan border (Durra), UAE and more. Licensed drivers, professional service.",
     path: "/border-crossing",
     keywords: ["border crossing taxi Saudi Arabia", "Saudi border transfer", "cross border taxi", "Saudi Arabia to GCC taxi"],

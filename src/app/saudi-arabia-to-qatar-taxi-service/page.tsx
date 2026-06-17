@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to Qatar Taxi Service | Salwa Border Crossing | Saudi Taxi",
+    title: "Saudi Arabia to Qatar Taxi Service | Salwa Border Crossing | Gulf Trip Service",
     description: "Reliable and premium taxi service from Saudi Arabia to Qatar. Direct transfers via the Salwa border crossing. Perfect for business, tourism and family travel. Book your Qatar trip today.",
     path: "/saudi-arabia-to-qatar-taxi-service",
     keywords: ["Saudi to Qatar taxi", "Salwa crossing transfer", "Saudi to Doha taxi", "Qatar border taxi"],

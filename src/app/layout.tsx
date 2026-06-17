@@ -20,7 +20,7 @@ const lato = Lato({
 
 export const metadata: Metadata = {
   title: {
-    default: "Saudi Taxi & Rental | Premium Transport Services",
+    default: "Gulf Trip Service & Rental | Premium Transport Services",
     template: `%s | ${SITE_CONFIG.siteName}`,
   },
   description:

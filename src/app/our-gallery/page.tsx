@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Our Gallery | Saudi Taxi Service - Photos of Fleet & Holy Sites",
+    title: "Our Gallery | Gulf Trip Service - Photos of Fleet & Holy Sites",
     description: "Browse our gallery featuring our fleet of vehicles, the Holy sites of Makkah and Madinah, and our satisfied customers from around the world.",
     path: "/our-gallery",
     keywords: ["taxi fleet gallery", "Makkah gallery", "Madinah gallery Saudi Arabia", "Saudi taxi photos"],

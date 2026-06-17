@@ -4,7 +4,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import styles from "./testimonials.module.css";
 
 export const metadata = generatePageMetadata({
-    title: "Testimonials | What Our Customers Say | Saudi Taxi Service",
+    title: "Testimonials | What Our Customers Say | Gulf Trip Service",
     description: "Read testimonials from satisfied customers who used our taxi services in Makkah, Jeddah & Madinah. Real reviews from real pilgrims.",
     path: "/testimonials",
     keywords: ["taxi testimonials", "customer reviews Saudi Arabia", "Umrah taxi reviews", "Saudi taxi reviews"],
@@ -24,7 +24,7 @@ const testimonials = [
         location: "Kuala Lumpur, Malaysia",
         rating: 5,
         service: "Umrah Taxi Package",
-        text: "We used Makkah Taxi Service for our entire Umrah trip — airport pickup, hotel transfers, and Ziyarat tours. The driver was knowledgeable, patient, and treated our family like his own. Will definitely use again, InshaAllah.",
+        text: "We used Gulf Trip Service for our entire Umrah trip — airport pickup, hotel transfers, and Ziyarat tours. The driver was knowledgeable, patient, and treated our family like his own. Will definitely use again, InshaAllah.",
         date: "December 2025",
     },
     {

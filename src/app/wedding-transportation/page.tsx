@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, StarIcon, MessageIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Wedding Transportation Services Saudi Arabia | Luxury Event Transport | Saudi Taxi",
+    title: "Wedding Transportation Services Saudi Arabia | Luxury Event Transport | Gulf Trip Service",
     description: "Premium wedding transportation services in Saudi Arabia. Luxury bridal cars, guest shuttles, and event logistics for your special day. Professional and elegant service.",
     path: "/wedding-transportation",
     keywords: ["wedding transportation Saudi Arabia", "luxury bridal car", "wedding taxi", "guest shuttle Saudi Arabia"],
@@ -31,7 +31,7 @@ export default function WeddingTransportation() {
                         <div>
                             <h2 className="section-title">Luxury Transport for Unforgettable Weddings</h2>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-                                Your wedding day is a once-in-a-lifetime event, and every detail matters. Saudi Taxi provides premium wedding transportation services that combine elegance with absolute reliability. We ensure that you and your guests arrive in style, comfort, and perfect timing.
+                                Your wedding day is a once-in-a-lifetime event, and every detail matters. Gulf Trip Service provides premium wedding transportation services that combine elegance with absolute reliability. We ensure that you and your guests arrive in style, comfort, and perfect timing.
                             </p>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 Our fleet of premium sedans and SUVs is ideal for bridal parties, while our luxury vans and buses can seamlessly transport large groups of guests between hotels and venues.

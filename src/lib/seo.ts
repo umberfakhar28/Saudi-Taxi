@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const SITE_CONFIG = {
   baseUrl: "https://gulftripservice.com",
   siteName: "Gulf Trip Service",
-  defaultTitle: "Saudi Taxi & Rental | Premium Transport Services",
+  defaultTitle: "Gulf Trip Service & Rental | Premium Transport Services",
   defaultDescription:
     "Luxury taxi and car rental services across Saudi Arabia. Book your premium ride today.",
   locale: "en_US",

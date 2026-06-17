@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, MessageIcon, ChevronRightIcon, ClockIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "School Bus Services Saudi Arabia | Safe Student Transport | Saudi Taxi",
+    title: "School Bus Services Saudi Arabia | Safe Student Transport | Gulf Trip Service",
     description: "Safe and reliable school bus services in Saudi Arabia. Professional drivers, monitored routes, and modern fleet ensuring the highest standards of student safety.",
     path: "/school-buses-services",
     keywords: ["school bus Saudi Arabia", "student transport", "school transportation", "school bus service Saudi"],
@@ -31,7 +31,7 @@ export default function SchoolBusesServices() {
                         <div>
                             <h2 className="section-title">Our Commitment to Student Safety</h2>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-                                Saudi Taxi provides comprehensive school bus services that parents and educational institutions can trust. We understand that student transportation is a serious responsibility, which is why we implement the highest safety standards in the industry.
+                                Gulf Trip Service provides comprehensive school bus services that parents and educational institutions can trust. We understand that student transportation is a serious responsibility, which is why we implement the highest safety standards in the industry.
                             </p>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 Every vehicle in our dedicated school fleet undergoes rigorous daily inspections and is operated by experienced, background-checked drivers who are specifically trained for student transport.
@@ -69,7 +69,7 @@ export default function SchoolBusesServices() {
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Reliable Transport for Educational Institutions</h2>
                     <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-                        Partner with Saudi Taxi for your school&apos;s transportation needs. Contact us to discuss route planning and specialized fleet options.
+                        Partner with Gulf Trip Service for your school&apos;s transportation needs. Contact us to discuss route planning and specialized fleet options.
                     </p>
                     <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
                         <Link href="/contact-us" className="btn btn-primary btn-lg">Contact Form</Link>

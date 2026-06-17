@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = 'Saudi Taxi <onboarding@resend.dev>';
+const FROM = 'Gulf Trip Service <onboarding@resend.dev>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'umberfakhar10@gmail.com';
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
             const { data: r1 } = await resend.emails.send({ from: FROM, to: ADMIN_EMAIL, subject, html: adminHtml });
             await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, 'sent');
 
-            const custSubject = `Booking Request Received – Saudi Taxi`;
+            const custSubject = `Booking Request Received – Gulf Trip Service`;
             const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Booking Received!</p></div>
                 <p style="color:#475569;">Assalamu Alaikum <strong>${b.customer_name}</strong>,</p>
@@ -73,13 +73,13 @@ export async function POST(req: Request) {
 
         // ─── BOOKING CONFIRMED ─────────────────────────────────────────
         if (type === 'booking_confirmed' && b) {
-            const subject = `Your Booking is Confirmed – Saudi Taxi`;
+            const subject = `Your Booking is Confirmed – Gulf Trip Service`;
             const html = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#10b981;font-weight:700;font-size:1.1rem;margin:0;">🎉 Booking Confirmed!</p></div>
                 <p style="color:#475569;">Assalamu Alaikum <strong>${b.customer_name}</strong>,</p>
                 <p style="color:#475569;">Great news! Your booking has been <strong>confirmed</strong>. Here are your trip details:</p>
                 ${buildBookingRows(b)}
-                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You'll receive a reminder 24 hours before your trip. Thank you for choosing Saudi Taxi.</p>
+                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You'll receive a reminder 24 hours before your trip. Thank you for choosing Gulf Trip Service.</p>
             </div></div>`;
             const { data: r } = await resend.emails.send({ from: FROM, to: b.customer_email, subject, html });
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, 'sent');
@@ -88,11 +88,11 @@ export async function POST(req: Request) {
 
         // ─── BOOKING COMPLETED ─────────────────────────────────────────
         if (type === 'booking_completed' && b) {
-            const subject = `Trip Completed – Thank You! | Saudi Taxi`;
+            const subject = `Trip Completed – Thank You! | Gulf Trip Service`;
             const html = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">🚗 Trip Completed</p></div>
                 <p style="color:#475569;">Dear <strong>${b.customer_name}</strong>,</p>
-                <p style="color:#475569;">Thank you for travelling with Saudi Taxi! We hope you had a great experience. An invoice has been generated for your records.</p>
+                <p style="color:#475569;">Thank you for travelling with Gulf Trip Service! We hope you had a great experience. An invoice has been generated for your records.</p>
                 <p style="color:#94a3b8;font-size:0.85rem;">We'd love to hear your feedback. Book your next trip at any time.</p>
             </div></div>`;
             const { data: r } = await resend.emails.send({ from: FROM, to: b.customer_email, subject, html });
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
         if (type === 'quote_sent' && quoteData) {
             const q = quoteData;
             const finalAmount = q.admin_override_amount ?? q.total_amount;
-            const subject = `Your Price Quote – Saudi Taxi`;
+            const subject = `Your Price Quote – Gulf Trip Service`;
             const html = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📋 Price Quote</p></div>
                 <p style="color:#475569;">Dear <strong>${q.customer_name}</strong>,</p>

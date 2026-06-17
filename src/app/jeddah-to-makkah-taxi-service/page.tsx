@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import styles from "./jeddah-makkah.module.css";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah to Makkah Taxi Service | Direct Transfer & Reliable Service",
+    title: "Jeddah to Gulf Trip Service | Direct Transfer & Reliable Service",
     description: "Book a reliable Jeddah to Makkah taxi service. Direct transfers from Jeddah Airport or city center to Makkah. Professional drivers, 24/7 service.",
     path: "/jeddah-to-makkah-taxi-service",
     keywords: ["Jeddah to Makkah taxi", "Jeddah to Makkah transfer", "Jeddah to Makkah car", "Jeddah to Makkah transport"],
@@ -74,12 +74,12 @@ export default function JeddahToMakkah() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Jeddah to Makkah Taxi Service</h1>
+                <h1>Jeddah to Gulf Trip Service</h1>
                 <p>
                     Direct, comfortable transfers from Jeddah Airport or city center to Makkah. Professional drivers, available 24/7.
                 </p>
                 <div className="breadcrumb">
-                    <Link href="/">Home</Link> / <span>Jeddah to Makkah Taxi Service</span>
+                    <Link href="/">Home</Link> / <span>Jeddah to Gulf Trip Service</span>
                 </div>
             </section>
 

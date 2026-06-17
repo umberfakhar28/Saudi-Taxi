@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to Jordan Taxi Service | Overland Border Crossing | Saudi Taxi",
+    title: "Saudi Arabia to Jordan Taxi Service | Overland Border Crossing | Gulf Trip Service",
     description: "Safe and reliable taxi service from Saudi Arabia to Jordan. Specialized in overland border crossings for Hajj pilgrims, families, and business travellers. Fixed rates and expert drivers.",
     path: "/saudi-arabia-to-jordan-land-transfer",
     keywords: ["Saudi to Jordan taxi", "Durra border crossing", "Jordan overland transfer", "Saudi to Jordan car"],

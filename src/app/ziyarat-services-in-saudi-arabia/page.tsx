@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Ziyarat Services in Saudi Arabia | Holy Sites Tour | Saudi Taxi",
+    title: "Ziyarat Services in Saudi Arabia | Holy Sites Tour | Gulf Trip Service",
     description: "Explore the holy and historical sites of Makkah and Madinah with our professional Ziyarat tour services. Experienced guides, comfortable vehicles, flexible itineraries.",
     path: "/ziyarat-services-in-saudi-arabia",
     keywords: ["Ziyarat services", "holy sites tour", "Makkah Madinah Ziyarat taxi", "Ziyarat tour Saudi Arabia"],

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Privacy Policy | Saudi Taxi Service",
-    description: "Read our privacy policy to understand how Saudi Taxi Service collects, uses and protects your personal information.",
+    title: "Privacy Policy | Gulf Trip Service",
+    description: "Read our privacy policy to understand how Gulf Trip Service collects, uses and protects your personal information.",
     path: "/privacy-policy",
     keywords: ["privacy policy", "data protection Saudi taxi service", "Gulf Trip Service privacy"],
 });
@@ -30,7 +30,7 @@ export default function PrivacyPolicy() {
                         {[
                             {
                                 title: "1. Introduction",
-                                content: "Welcome to Saudi Taxi Service ('we,' 'our,' or 'us'). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services or visit our website at saudiataxi.com."
+                                content: "Welcome to Gulf Trip Service ('we,' 'our,' or 'us'). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services or visit our website at gulftripservice.com."
                             },
                             {
                                 title: "2. Information We Collect",
@@ -70,7 +70,7 @@ export default function PrivacyPolicy() {
                             },
                             {
                                 title: "11. Contact Us",
-                                content: "If you have any questions or concerns about this Privacy Policy, please contact us at: Email: info@saudiataxi.com | Phone: +966 50 123 4567 | Address: Saudi Arabia"
+                                content: "If you have any questions or concerns about this Privacy Policy, please contact us at: Email: info@gulftripservice.com | Phone: +966 50 123 4567 | Address: Saudi Arabia"
                             },
                         ].map((section, i) => (
                             <div key={i} style={{ marginBottom: '2.5rem' }}>
@@ -88,7 +88,7 @@ export default function PrivacyPolicy() {
                             borderLeft: '4px solid var(--secondary)',
                         }}>
                             <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                                By using Saudi Taxi Service, you consent to the terms of this Privacy Policy. If you do not agree with this policy, please do not use our services.
+                                By using Gulf Trip Service, you consent to the terms of this Privacy Policy. If you do not agree with this policy, please do not use our services.
                             </p>
                         </div>
                     </div>

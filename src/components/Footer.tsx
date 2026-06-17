@@ -9,7 +9,7 @@ const Footer = () => {
                 <div className={styles.grid}>
                     <div className={styles.column}>
                         <h4 className={styles.heading}>
-                            <NavigationIcon className={styles.logoIcon} size={20} /> Saudi Taxi Service
+                            <NavigationIcon className={styles.logoIcon} size={20} /> Gulf Trip Service
                         </h4>
                         <p className={styles.text}>
                             Your trusted partner for reliable taxi and transportation services across Saudi Arabia. Serving Umrah pilgrims, tourists and travelers with comfort, safety and dedication since 2014.
@@ -21,7 +21,7 @@ const Footer = () => {
                             <a href="tel:+966501234567" className={styles.socialLink} aria-label="Phone">
                                 <PhoneIcon size={18} />
                             </a>
-                            <a href="mailto:info@saudiataxi.com" className={styles.socialLink} aria-label="Email">
+                            <a href="mailto:info@gulftripservice.com" className={styles.socialLink} aria-label="Email">
                                 <MailIcon size={18} />
                             </a>
                         </div>
@@ -69,7 +69,7 @@ const Footer = () => {
                             </li>
                             <li className={styles.listItem}>
                                 <MailIcon className={styles.contactIcon} size={18} />
-                                <a href="mailto:info@saudiataxi.com" className={styles.link}>info@saudiataxi.com</a>
+                                <a href="mailto:info@gulftripservice.com" className={styles.link}>info@gulftripservice.com</a>
                             </li>
                             <li className={styles.listItem}>
                                 <ClockIcon className={styles.contactIcon} size={18} />
@@ -81,7 +81,7 @@ const Footer = () => {
 
                 <div className={styles.bottom}>
                     <div className={styles.copyright}>
-                        &copy; {new Date().getFullYear()} Saudi Taxi Service. All Rights Reserved.
+                        &copy; {new Date().getFullYear()} Gulf Trip Service. All Rights Reserved.
                     </div>
                     <div className={styles.bottomLinks}>
                         <Link href="/privacy-policy" className={styles.bottomLink}>Privacy Policy</Link>

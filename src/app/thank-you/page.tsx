@@ -2,8 +2,8 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Thank You | Saudi Taxi Service",
-    description: "Thank you for booking with Saudi Taxi. Your booking has been received and we will confirm shortly.",
+    title: "Thank You | Gulf Trip Service",
+    description: "Thank you for booking with Gulf Trip Service. Your booking has been received and we will confirm shortly.",
     path: "/thank-you",
     keywords: ["thank you booking Saudi taxi", "booking confirmation", "taxi booking received"],
 });

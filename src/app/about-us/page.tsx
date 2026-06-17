@@ -3,8 +3,8 @@ import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 
 export const metadata = generatePageMetadata({
-    title: "About Us | Saudi Taxi Service - Your Trusted Transport Partner in Saudi Arabia",
-    description: "Learn about Saudi Taxi Service — over 10 years of professional, reliable taxi and transport services for Umrah pilgrims, tourists and travelers across Saudi Arabia.",
+    title: "About Us | Gulf Trip Service - Your Trusted Transport Partner in Saudi Arabia",
+    description: "Learn about Gulf Trip Service — over 10 years of professional, reliable taxi and transport services for Umrah pilgrims, tourists and travelers across Saudi Arabia.",
     path: "/about-us",
     keywords: ["about Gulf Trip Service", "Saudi taxi company", "Umrah transport Saudi Arabia", "Makkah taxi service"],
 });
@@ -39,7 +39,7 @@ export default function AboutUs() {
     return (
         <main>
             <section className="page-hero">
-                <h1>About Saudi Taxi Service</h1>
+                <h1>About Gulf Trip Service</h1>
                 <p>Dedicated to serving pilgrims and travelers with reliable, comfortable, and affordable transportation since 2014.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>About Us</span>
@@ -53,7 +53,7 @@ export default function AboutUs() {
                         <div>
                             <h2>Our Story</h2>
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.8' }}>
-                                Saudi Taxi was founded with a simple mission: to make transportation hassle-free for Umrah and Hajj pilgrims visiting the Holy Cities of Makkah and Madinah.
+                                Gulf Trip Service was founded with a simple mission: to make transportation hassle-free for Umrah and Hajj pilgrims visiting the Holy Cities of Makkah and Madinah.
                             </p>
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.8' }}>
                                 What started as a small operation has grown into one of the most trusted taxi services in Saudi Arabia. We recognized that pilgrims — many visiting for the first time — needed a reliable, transparent, and caring transport service they could trust completely.
@@ -190,7 +190,7 @@ export default function AboutUs() {
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Experience Our Service Today</h2>
                     <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-                        Join the 15,000+ satisfied customers who trust Saudi Taxi for their transportation needs.
+                        Join the 15,000+ satisfied customers who trust Gulf Trip Service for their transportation needs.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book a Ride</Link>

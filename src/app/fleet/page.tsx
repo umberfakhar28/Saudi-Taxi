@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Our Fleet | Saudi Taxi - Premium Vehicles for Every Journey",
+    title: "Our Fleet | Gulf Trip Service - Premium Vehicles for Every Journey",
     description: "Explore our fleet of premium vehicles in Saudi Arabia. From luxury sedans to family SUVs and minivans. Reliable, comfortable, and well-maintained for your journey.",
     path: "/fleet",
     keywords: ["taxi fleet Saudi Arabia", "luxury sedan taxi", "SUV hire", "minivan Saudi Arabia", "premium taxi fleet"],

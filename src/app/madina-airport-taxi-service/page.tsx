@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Madinah Airport Taxi Service | Prince Mohammad Bin Abdulaziz Airport | Saudi Taxi",
+    title: "Madinah Airport Taxi Service | Prince Mohammad Bin Abdulaziz Airport | Gulf Trip Service",
     description: "Expert airport taxi services from Madinah Airport (MED) to hotels near Al-Masjid an-Nabawi and beyond. Fixed rates, licensed drivers, and 24/7 service.",
     path: "/madina-airport-taxi-service",
     keywords: ["Madinah airport taxi", "Madinah airport transfer", "Prince Mohammad Airport taxi", "MED airport taxi"],

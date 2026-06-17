@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, MessageIcon, ChevronRightIcon, CompassIcon, LandmarkIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Educational Tours Transportation Saudi Arabia | Student Trips | Saudi Taxi",
+    title: "Educational Tours Transportation Saudi Arabia | Student Trips | Gulf Trip Service",
     description: "Specialized transportation services for educational tours and student field trips in Saudi Arabia. Safe, reliable, and coordinated transport for schools and universities.",
     path: "/educational-tours-transport",
     keywords: ["educational tour transport", "student field trip", "school trip bus", "educational transport Saudi"],
@@ -31,7 +31,7 @@ export default function EducationalToursTransport() {
                         <div>
                             <h2 className="section-title">Coordinated Transport for Learning</h2>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-                                Educational tours are vital for student growth, and having a reliable transportation partner is essential for a successful trip. Saudi Taxi specializes in providing safe, coordinated transport for schools, colleges, and universities visiting historic and educational sites across the Kingdom.
+                                Educational tours are vital for student growth, and having a reliable transportation partner is essential for a successful trip. Gulf Trip Service specializes in providing safe, coordinated transport for schools, colleges, and universities visiting historic and educational sites across the Kingdom.
                             </p>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 We manage the logistics of moving large groups of students and faculty, ensuring everyone remains together, on schedule, and safe throughout the tour.

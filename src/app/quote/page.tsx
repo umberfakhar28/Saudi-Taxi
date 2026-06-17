@@ -4,7 +4,7 @@ import { CheckCircleIcon, PlaneIcon, CarIcon, LandmarkIcon, HotelIcon, CompassIc
 import QuoteAssurance from "@/components/QuoteAssurance";
 
 export const metadata = generatePageMetadata({
-    title: "Get a Quote | Saudi Taxi Service",
+    title: "Get a Quote | Gulf Trip Service",
     description: "Request a free quote for taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, inter-city travel. Fixed rates, no hidden charges.",
     path: "/quote",
     keywords: ["taxi quote Saudi Arabia", "get fare estimate", "Saudi taxi price", "taxi fare quote"],

@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { MessageIcon, CheckCircleIcon, ShieldIcon, CarIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Transparent Pricing & Quotes | Saudi Taxi Service",
+    title: "Transparent Pricing & Quotes | Gulf Trip Service",
     description: "Learn about our transparent quoting system. We provide honest, upfront rates for all taxi services in Makkah, Jeddah and Madinah with no hidden fees.",
     path: "/prices",
     keywords: ["taxi prices Saudi Arabia", "transparent pricing", "taxi fare Saudi", "Saudi taxi rates"],
@@ -47,7 +47,7 @@ export default function Prices() {
                     <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
                         <h2 className="section-title">Our Pricing Philosophy</h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '3rem' }}>
-                            At Saudi Taxi Service, we have moved away from static price lists to a dynamic, quote-based system. This allows us to provide you with the most competitive rates based on your specific requirements, vehicle preference, and travel dates.
+                            At Gulf Trip Service, we have moved away from static price lists to a dynamic, quote-based system. This allows us to provide you with the most competitive rates based on your specific requirements, vehicle preference, and travel dates.
                         </p>
                         
                         <div className="grid-3">

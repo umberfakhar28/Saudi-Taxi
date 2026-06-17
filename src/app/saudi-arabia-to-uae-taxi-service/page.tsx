@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to UAE Taxi | Land Transfer to Dubai & Abu Dhabi | Saudi Taxi",
+    title: "Saudi Arabia to UAE Taxi | Land Transfer to Dubai & Abu Dhabi | Gulf Trip Service",
     description: "Premium taxi service from Saudi Arabia to UAE (Dubai, Abu Dhabi). Safe overland transfers via Al Batha border crossing. Comfortable family vehicles and professional drivers.",
     path: "/saudi-arabia-to-uae-taxi-service",
     keywords: ["Saudi to UAE taxi", "Saudi to Dubai taxi", "Saudi to Abu Dhabi taxi", "Al Batha border crossing"],

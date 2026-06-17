@@ -78,7 +78,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="admin-logo">
                     <div className="admin-logo-badge">ST</div>
                     <div>
-                        <div className="admin-logo-title">Saudi Taxi</div>
+                        <div className="admin-logo-title">Gulf Trip Service</div>
                         <div className="admin-logo-sub">Admin Portal</div>
                     </div>
                 </div>

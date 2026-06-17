@@ -4,8 +4,8 @@ import { ShieldIcon, TrendingUpIcon, HeartIcon, CreditCardIcon, LanguagesIcon, A
 import styles from "./about.module.css";
 
 export const metadata = generatePageMetadata({
-    title: "About Us | Makkah Taxi Service - Your Trusted Transport Partner",
-    description: "Learn about Makkah Taxi Service - over 10 years of reliable taxi and transport services for Umrah pilgrims in Makkah, Madinah & Jeddah.",
+    title: "About Us | Gulf Trip Service - Your Trusted Transport Partner",
+    description: "Learn about Gulf Trip Service - over 10 years of reliable taxi and transport services for Umrah pilgrims in Makkah, Madinah & Jeddah.",
     path: "/about",
     keywords: ["about Gulf Trip Service", "Saudi taxi company", "Umrah transport Saudi Arabia", "Makkah taxi service"],
     noindex: true,
@@ -65,7 +65,7 @@ export default function About() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>About Makkah Taxi Service</h1>
+                <h1>About Gulf Trip Service</h1>
                 <p>
                     Dedicated to serving pilgrims and travelers with reliable, comfortable, and affordable transportation since 2014.
                 </p>
@@ -81,7 +81,7 @@ export default function About() {
                         <div className={styles.storyContent}>
                             <h2>Our Story</h2>
                             <p>
-                                Makkah Taxi Service was founded in 2014 with a simple mission: to make transportation hassle-free for Umrah and Hajj pilgrims visiting the Holy Cities of Makkah and Madinah.
+                                Gulf Trip Service was founded in 2014 with a simple mission: to make transportation hassle-free for Umrah and Hajj pilgrims visiting the Holy Cities of Makkah and Madinah.
                             </p>
                             <p>
                                 What started as a small operation with just 3 vehicles has grown into one of the most trusted taxi services in Saudi Arabia's Hejaz region. Our founder, Mohammed Al-Harbi, recognized that pilgrims — many visiting Saudi Arabia for the first time — needed a reliable, transparent, and caring transport service they could trust completely.
@@ -165,7 +165,7 @@ export default function About() {
                 <div className="container">
                     <h2 className="section-title">Our Leadership Team</h2>
                     <p className="section-subtitle">
-                        Meet the passionate people behind Makkah Taxi Service.
+                        Meet the passionate people behind Gulf Trip Service.
                     </p>
                     <div className="grid-3" style={{ maxWidth: '1000px', margin: '0 auto' }}>
                         {team.map((member, i) => (
@@ -192,7 +192,7 @@ export default function About() {
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Experience Our Service Today</h2>
                     <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-                        Join the 15,000+ satisfied customers who trust Makkah Taxi Service for their transportation needs.
+                        Join the 15,000+ satisfied customers who trust Gulf Trip Service for their transportation needs.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Link href="/booking" className="btn btn-primary btn-lg">

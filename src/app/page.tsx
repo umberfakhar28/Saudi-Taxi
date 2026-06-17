@@ -11,7 +11,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import QuickBookingForm from "@/components/QuickBookingForm";
 
 export const metadata = generatePageMetadata({
-  title: "Makkah Taxi Service | Reliable Taxi Service in Makkah & Jeddah",
+  title: "Gulf Trip Service | Reliable Taxi Service in Makkah & Jeddah",
   description: "Book reliable taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, Jeddah to Makkah transport. Professional drivers, 24/7 availability.",
   path: "/",
   keywords: ["Saudi taxi", "Makkah taxi", "Saudi Arabia taxi service", "Gulf Trip Service", "Jeddah taxi", "Umrah transport"],
@@ -166,7 +166,7 @@ export default function Home() {
               <div className="section-header">
                 <span className="section-eyebrow">Our Promise</span>
                 <h2 className="section-title">
-                  Why Thousands Choose Saudi Taxi
+                  Why Thousands Choose Gulf Trip Service
                 </h2>
               </div>
               <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>

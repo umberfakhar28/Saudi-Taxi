@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Taif Ziyarat Taxi Service | Taif Tour from Makkah | Saudi Taxi",
+    title: "Taif Ziyarat Taxi Service | Taif Tour from Makkah | Gulf Trip Service",
     description: "Professional Taif Ziyarat and city tour taxi service from Makkah and Jeddah. Visit rose farms, Al-Shafa gardens, Taif Zoo and historic sites. Book your Taif trip today.",
     path: "/taif-ziyarat-taxi-service",
     keywords: ["Taif Ziyarat taxi", "Taif tour taxi", "Taif sightseeing", "Taif from Makkah tour"],

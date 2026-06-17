@@ -601,7 +601,7 @@ export default function BookingsPage() {
                     <button onClick={() => duplicateTrip(b)} className="dropdown-item">📋 Duplicate Trip</button>
                     <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Communication</div>
                     <button onClick={() => sendEmail('booking_confirmed', b)} className="dropdown-item">📩 Email Confirmation</button>
-                    <button onClick={() => { window.open(`https://wa.me/${b.customer_phone.replace(/\D/g, '')}?text=Hello ${b.customer_name}, regarding your booking with Saudi Taxi...`, '_blank'); setOpenDropdown(null); }} className="dropdown-item">💬 WhatsApp Customer</button>
+                    <button onClick={() => { window.open(`https://wa.me/${b.customer_phone.replace(/\D/g, '')}?text=Hello ${b.customer_name}, regarding your booking with Gulf Trip Service...`, '_blank'); setOpenDropdown(null); }} className="dropdown-item">💬 WhatsApp Customer</button>
                     <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>More</div>
                     <button onClick={() => { setNotesModal(b); setNotes(b.internal_notes || ''); setOpenDropdown(null); }} className="dropdown-item">📝 Internal Notes</button>
                     <button onClick={() => addTag(b.id, 'VIP')} className="dropdown-item">🏷️ Toggle VIP Tag</button>
@@ -635,7 +635,7 @@ export default function BookingsPage() {
                                         <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: 4, fontFamily: 'monospace' }}>{invoiceModal.invoice_number}</div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#f59e0b' }}>Saudi Taxi</div>
+                                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#f59e0b' }}>Gulf Trip Service</div>
                                         <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>Jeddah, Saudi Arabia<br/>+966 XXX XXX XXXX</div>
                                     </div>
                                 </div>
@@ -670,7 +670,7 @@ export default function BookingsPage() {
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1rem', borderTop: '1px solid #f1f5f9', fontSize: '0.78rem', color: '#94a3b8' }}>
-                                    Thank you for choosing Saudi Taxi. Safe travels! 🚗
+                                    Thank you for choosing Gulf Trip Service. Safe travels! 🚗
                                 </div>
                             </div>
                         </div>

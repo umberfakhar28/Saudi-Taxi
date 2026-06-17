@@ -3,8 +3,8 @@ import styles from './contact.module.css';
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Contact Us | Makkah Taxi Service - 24/7 Support",
-    description: "Contact Makkah Taxi Service via phone, WhatsApp, or email. Get a quote, book a ride, or ask questions. Available 24/7 for all your transport needs.",
+    title: "Contact Us | Gulf Trip Service - 24/7 Support",
+    description: "Contact Gulf Trip Service via phone, WhatsApp, or email. Get a quote, book a ride, or ask questions. Available 24/7 for all your transport needs.",
     path: "/contact",
     keywords: ["contact Gulf Trip Service", "Saudi taxi customer support", "Makkah taxi phone number"],
     noindex: true,
@@ -36,7 +36,7 @@ export default function ContactPage() {
 
                         <div className={styles.contactItem}>
                             <strong>✉️ Email:</strong>
-                            <p>support@sauditaxi.com</p>
+                            <p>support@gulftripservice.com</p>
                         </div>
 
                         <div className={styles.map}>

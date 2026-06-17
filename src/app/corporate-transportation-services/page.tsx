@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, ClockIcon, MessageIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
 
 export const metadata = generatePageMetadata({
-    title: "Corporate Transportation Services Saudi Arabia | Executive Travel | Saudi Taxi",
+    title: "Corporate Transportation Services Saudi Arabia | Executive Travel | Gulf Trip Service",
     description: "Premium corporate transportation services in Saudi Arabia. Executive transfers, staff shuttles, and event transport with professional drivers and high-end vehicles.",
     path: "/corporate-transportation-services",
     keywords: ["corporate transport Saudi Arabia", "executive taxi", "business car hire", "corporate travel Saudi Arabia"],
@@ -46,7 +46,7 @@ export default function CorporateTransportation() {
                         <div>
                             <h2 className="section-title">Professional Business Travel Solutions</h2>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-                                Saudi Taxi provides comprehensive corporate transportation services designed to meet the high standards of modern business. We understand that punctuality, professionalism, and reliability are the cornerstones of successful corporate travel.
+                                Gulf Trip Service provides comprehensive corporate transportation services designed to meet the high standards of modern business. We understand that punctuality, professionalism, and reliability are the cornerstones of successful corporate travel.
                             </p>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 From individual executive transfers in luxury sedans to group transport for large events, we manage every detail of the journey so you can focus on your business objectives.
@@ -73,7 +73,7 @@ export default function CorporateTransportation() {
             <section className="section-lg bg-light">
                 <div className="container">
                     <div className="section-header centered">
-                        <h2 className="section-title">Why Partner with Saudi Taxi?</h2>
+                        <h2 className="section-title">Why Partner with Gulf Trip Service?</h2>
                     </div>
                     <div className="grid-3">
                         <div className="card text-center">

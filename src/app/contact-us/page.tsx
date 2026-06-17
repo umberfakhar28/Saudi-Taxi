@@ -23,8 +23,8 @@ const contactInfo = [
     {
         icon: <MailIcon size={32} />,
         title: "Email",
-        details: ["info@makkahtaxiservice.com", "booking@makkahtaxiservice.com"],
-        action: "mailto:info@makkahtaxiservice.com",
+        details: ["info@gulftripservice.com", "booking@gulftripservice.com"],
+        action: "mailto:info@gulftripservice.com",
         linkText: "Send Email",
     },
     {

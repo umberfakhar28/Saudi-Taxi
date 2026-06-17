@@ -38,7 +38,7 @@ export default function PayOnline() {
         <main>
             <section className="page-hero">
                 <h1>Pay Online</h1>
-                <p>Securely pay for your Saudi Taxi booking online. Quick, safe and convenient.</p>
+                <p>Securely pay for your Gulf Trip Service booking online. Quick, safe and convenient.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Pay Online</span>
                 </div>
