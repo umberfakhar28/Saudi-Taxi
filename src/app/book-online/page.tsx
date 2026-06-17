@@ -4,12 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 
 const services = [
-    { id: "airport-transfer", label: "Airport Transfer", icon: "✈️", price: "150 SAR" },
-    { id: "hotel-transfer", label: "Hotel Transfer", icon: "🏨", price: "80 SAR" },
-    { id: "private-taxi", label: "Private Taxi", icon: "🚗", price: "200 SAR" },
-    { id: "umrah-package", label: "Umrah Transport Package", icon: "🕌", price: "350 SAR" },
-    { id: "ziyarat", label: "Ziyarat Tour", icon: "🌙", price: "300 SAR" },
-    { id: "jeddah-tour", label: "Jeddah City Tour", icon: "🌆", price: "250 SAR" },
+    { id: "airport-transfer", label: "Airport Transfer", icon: "✈️" },
+    { id: "hotel-transfer", label: "Hotel Transfer", icon: "🏨" },
+    { id: "private-taxi", label: "Private Taxi", icon: "🚗" },
+    { id: "umrah-package", label: "Umrah Transport Package", icon: "🕌" },
+    { id: "ziyarat", label: "Ziyarat Tour", icon: "🌙" },
+    { id: "jeddah-tour", label: "Jeddah City Tour", icon: "🌆" },
 ];
 
 export default function BookOnline() {
@@ -146,7 +146,6 @@ export default function BookOnline() {
                                                     <span style={{ fontSize: '1.8rem' }}>{svc.icon}</span>
                                                     <div>
                                                         <div style={{ fontWeight: 600, color: 'var(--text-dark)', fontSize: '0.95rem' }}>{svc.label}</div>
-                                                        <div style={{ color: 'var(--secondary)', fontWeight: 700, fontSize: '0.85rem' }}>From {svc.price}</div>
                                                     </div>
                                                 </label>
                                             ))}
