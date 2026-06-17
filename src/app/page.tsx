@@ -217,7 +217,7 @@ export default function Home() {
                     fontSize: 'var(--text-6xl)',
                     lineHeight: 1,
                     color: 'var(--accent)',
-                    fontFamily: 'var(--font-heading)',
+                    fontFamily: '"matterFont", Arial, sans-serif',
                     marginBottom: 'var(--space-4)',
                   }}
                 >

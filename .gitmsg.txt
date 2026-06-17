@@ -1,9 +1,11 @@
-Fix: glass card form contrast, spacing, and responsive cleanup
+Typography: replace Playfair Display + Lato with Matter font family
 
-- Form inputs: bumped bg to 15% white with 25% border for higher
-  contrast against hero image; label text to 80% white opacity
-- Gap between form button and service cards: changed serviceList from
-  margin-bottom to margin-top to prevent button touching cards
-- Removed duplicate responsive blocks in Hero.module.css
+- Added @font-face declarations for Matter_Regular (400), Matter_Medium (500),
+  Matter_SemiBold (600) in globals.css
+- Updated --font-heading and --font-body to use "matterFont", Arial, sans-serif
+- Removed Playfair_Display and Lato imports from layout.tsx
+- Removed playfair.variable / lato.variable className from <body>
+- Replaced hardcoded Georgia/Cambria serif in admin.css with matterFont
+- Updated single inline font-family reference in page.tsx pull-quote
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>

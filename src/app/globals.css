@@ -4,6 +4,31 @@
    Five Design Principles: Balance | Alignment | Proximity | Repetition | Contrast
    =================================================== */
 
+/* ===== FONT FACE — Matter ===== */
+@font-face {
+  font-family: "matterFont";
+  src: url("/fonts/Matter_Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "matterFont";
+  src: url("/fonts/Matter_Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "matterFont";
+  src: url("/fonts/Matter_SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ===== DESIGN TOKENS ===== */
 :root {
   /* ------- Brand Colors ------- */
@@ -70,8 +95,8 @@
   --info:    #3B82F6;
 
   /* ------- Typography (Principle: Repetition + Contrast) ------- */
-  --font-heading: var(--font-playfair), 'Georgia', serif;
-  --font-body:    var(--font-lato), 'Helvetica Neue', sans-serif;
+  --font-heading: "matterFont", Arial, sans-serif;
+  --font-body:    "matterFont", Arial, sans-serif;
 
   /* Type Scale — creates clear hierarchy (Principle: Contrast) */
   --text-xs:   0.75rem;   /* 12px */
