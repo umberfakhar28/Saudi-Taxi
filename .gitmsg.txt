@@ -1,7 +1,9 @@
-Fix hero image: replace cat image with proper luxury car photo
+Fix: glass card opacity and social proof label contrast
 
-The previous hero-luxury-car.jpg was incorrect content. Replaced with a
-high-quality Unsplash photo of a luxury car on the road, suitable for a
-premium transportation brand hero section.
+- Hero featureCard: navy glass base (rgba(15,23,42,0.75)) instead of
+  nearly-transparent white, form inputs bumped to 12% white bg with
+  20% border for better readability against the hero image
+- Social proof label: changed from var(--text-muted) to var(--text-body)
+  for higher contrast on white background
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>
