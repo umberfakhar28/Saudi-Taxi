@@ -107,14 +107,10 @@ export default function Home() {
       <SocialProof />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          STATS BANNER
-          Balance: 4 equal-weight stat blocks — symmetric layout
-          Contrast: Gold number vs muted label vs dark background
-          Repetition: Same stat block format (number → label) for every stat
+          STATS BANNER — Navy with gold accents
           ═══════════════════════════════════════════════════════════════════ */}
-      <section
+      <section className="bg-navy-gradient"
         style={{
-          background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))',
           padding: 'var(--space-16) 0',
           position: 'relative',
           overflow: 'hidden',
@@ -157,7 +153,7 @@ export default function Home() {
           Left (60%): explanatory text + checklist
           Right (40%): strong pull-quote + CTA
           ═══════════════════════════════════════════════════════════════════ */}
-      <section className="section-lg bg-subtle">
+      <section className="section-lg" style={{ background: 'var(--bg-subtle)' }}>
         <div className="container">
           <div className="grid-60-40">
 

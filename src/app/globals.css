@@ -700,6 +700,9 @@ ul { list-style: none; }
 .bg-subtle    { background-color: var(--bg-subtle); }
 .bg-dark      { background-color: var(--bg-dark); color: var(--white); }
 .bg-subtle-alt { background-color: var(--bg-subtle); }
+.bg-emerald   { background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light)); color: var(--white); }
+.bg-emerald-gradient { background: linear-gradient(140deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%); color: var(--white); }
+.bg-navy-gradient { background: linear-gradient(140deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%); color: var(--white); }
 
 /* Flex */
 .flex         { display: flex; }

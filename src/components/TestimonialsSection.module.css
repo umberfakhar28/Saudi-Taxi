@@ -1,7 +1,18 @@
 .section {
+  background: linear-gradient(140deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
   padding: var(--space-16) 0;
-  background: var(--bg-subtle);
   overflow: hidden;
+  position: relative;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.06;
+  pointer-events: none;
 }
 
 .grid {
@@ -21,8 +32,8 @@
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
-  border-left-color: var(--secondary);
+  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(212, 175, 55, 0.1);
+  border-left-color: var(--accent);
 }
 
 /* ── header (avatar + name/location) ── */

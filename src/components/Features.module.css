@@ -9,8 +9,20 @@
 */
 
 .features {
-    background: var(--bg-base);
+    background: linear-gradient(140deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
     padding: var(--space-20) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.features::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+    background-size: 44px 44px;
+    opacity: 0.06;
+    pointer-events: none;
 }
 
 .container {
@@ -34,36 +46,36 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2.5px;
-    color: var(--primary);
-    background: var(--primary-subtle);
-    border: 1px solid rgba(14, 90, 70, 0.2);
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-full);
     margin-bottom: var(--space-4);
 }
 
-/* Title — Contrast: large, dark green vs light background */
+/* Title */
 .title {
     font-size: var(--text-4xl);
-    color: var(--primary);
+    color: var(--white);
     margin-bottom: var(--space-4);
     position: relative;
 }
 
-/* Emerald underline — Repetition: same underline used in every section title */
+/* Gold underline accent */
 .title::after {
     content: '';
     display: block;
     width: 56px;
     height: 3px;
-    background: var(--primary);
+    background: var(--accent);
     margin: var(--space-3) auto 0;
     border-radius: var(--radius-full);
 }
 
 .subtitle {
     font-size: var(--text-lg);
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.75);
     line-height: 1.8;
 }
 
@@ -74,27 +86,27 @@
     gap: var(--space-6);
 }
 
-/* Card — Repetition: same anatomy as every other card on the site */
+/* Card */
 .card {
-    background: var(--white);          /* Contrast: white card pops on green tint bg */
+    background: var(--white);
     padding: var(--space-10) var(--space-8);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
-    text-align: center;                /* Alignment: content centered in each column */
+    text-align: center;
     transition: transform var(--ease-base), box-shadow var(--ease-base);
     position: relative;
     overflow: hidden;
     border: 1px solid var(--gray-100);
 }
 
-/* Gold top bar — Repetition: same reveal animation as global .card */
+/* Gold top bar */
 .card::before {
     content: '';
     position: absolute;
     top: 0; left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform var(--ease-base);
@@ -109,7 +121,7 @@
     transform: scaleX(1);
 }
 
-/* Icon wrapper — Repetition: same 64px box as global .card-icon */
+/* Icon wrapper */
 .icon {
     width: 64px;
     height: 64px;
@@ -118,25 +130,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary);             /* Contrast: Emerald icon on subtle Emerald bg */
-    margin: 0 auto var(--space-5);     /* Proximity: icon close to title below it */
+    color: var(--primary);
+    margin: 0 auto var(--space-5);
     transition: background var(--ease-base), color var(--ease-base);
 }
 
 .card:hover .icon {
     background: var(--primary);
-    color: var(--white);               /* Reverses to white icon on Emerald bg */
+    color: var(--white);
 }
 
-/* Card Title — Contrast: dark green, medium-large */
+/* Card Title */
 .cardTitle {
     font-size: var(--text-xl);
     color: var(--primary);
-    margin-bottom: var(--space-3);     /* Proximity: very close to body text below */
+    margin-bottom: var(--space-3);
     font-weight: 700;
 }
 
-/* Card Text — Contrast: muted vs title */
+/* Card Text */
 .cardText {
     color: var(--text-muted);
     line-height: 1.75;

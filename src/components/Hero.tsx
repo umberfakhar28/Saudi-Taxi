@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import {
     ShieldIcon,
     MessageIcon,
@@ -13,30 +14,6 @@ import {
     StarIcon,
 } from './Icons';
 import styles from './Hero.module.css';
-
-/*
-  HERO — Balance Principle: Two-column layout.
-  Left: text content (lighter visual weight)
-  Right: feature card (heavier density, balances the left)
-
-  Alignment Principle:
-  - Left column: strict left-alignment for readability
-  - Right column: structured card with internal left-alignment
-
-  Proximity Principle:
-  - Badge → Title → Subtitle grouped with tight spacing
-  - A larger gap separates CTAs from the trust strip
-  - Service items are visually grouped inside the card
-
-  Repetition Principle:
-  - Same badge pill style as site-wide
-  - Same button styles (ctaButton = btn-primary, ctaSecondary = btn-outline)
-
-  Contrast Principle:
-  - H1 is 3.8rem / white on dark green = maximum contrast
-  - Gold CTA vs dark background = unmissable
-  - Muted subtitle text vs bright heading = hierarchy
-*/
 
 const services = [
     {
@@ -59,33 +36,35 @@ const services = [
 const Hero = () => {
     return (
         <section className={styles.hero}>
-            {/* ============================================================
-                LEFT COLUMN — Text Content
-                (Alignment: all text left-aligned for clean scanability)
-                ============================================================ */}
-            <div className={styles.content}>
+            {/* Full-screen background image with navy overlay */}
+            <div className={styles.heroBg}>
+                <Image
+                    src="/images/hero-luxury-car.jpg"
+                    alt="Premium transportation service"
+                    fill
+                    priority
+                    sizes="100vw"
+                />
+            </div>
 
-                {/* Badge — Repetition: same pill style as section eyebrows */}
+            {/* LEFT COLUMN — Text Content */}
+            <div className={styles.content}>
                 <div className={styles.badge}>
                     <ShieldIcon size={14} className={styles.badgeIcon} />
                     Trusted by 15,000+ Travelers
                 </div>
 
-                {/* H1 — Contrast: largest element, highest visual weight */}
-                {/* Proximity: directly follows badge, no wasted space */}
                 <h1 className={styles.title}>
-                    Book Reliable Taxi Services<br />
-                    <em>Across Saudi Arabia Online</em>
+                    Premium Taxi Services<br />
+                    <em>Across Saudi Arabia</em>
                 </h1>
 
-                {/* Subtitle — Contrast: muted vs H1, proximity: tight below title */}
                 <p className={styles.subtitle}>
                     Fixed-rate, reliable taxi services for Umrah pilgrims and travellers.
                     Jeddah Airport transfers and Holy City transport — 24/7 with zero
                     hidden fees.
                 </p>
 
-                {/* CTAs — Balance: two equal-weight actions */}
                 <div className={styles.ctaGroup}>
                     <Link href="/book-online" className={styles.ctaButton}>
                         <StarIcon size={16} />
@@ -102,7 +81,6 @@ const Hero = () => {
                     </a>
                 </div>
 
-                {/* Trust strip — Proximity: separated from CTAs by border + space */}
                 <div className={styles.trustStrip}>
                     <span className={styles.trustItem}>
                         <ClockIcon size={15} /> 24/7 Available
@@ -116,14 +94,12 @@ const Hero = () => {
                 </div>
             </div>
 
-            {/* ============================================================
-                RIGHT COLUMN — Feature Card with Booking Form
-                ============================================================ */}
+            {/* RIGHT COLUMN — Glass Booking Card */}
             <div className={styles.visual}>
-                <div className={styles.featureCard} style={{ background: 'rgba(255,255,255,1)', backdropFilter: 'none', border: 'none' }}>
+                <div className={styles.featureCard}>
                     
-                    <h3 style={{ color: 'var(--text-main)', marginBottom: '1.5rem', fontSize: '1.4rem' }}>
-                        <CarIcon size={24} style={{ color: 'var(--primary)' }} />
+                    <h3>
+                        <CarIcon size={24} />
                         Quick Booking
                     </h3>
 
@@ -137,38 +113,32 @@ const Hero = () => {
                         style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
                     >
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Pickup</label>
-                            <input name="pickup" type="text" className="form-input" placeholder="Airport, Hotel, etc." required style={{ padding: '10px 14px', fontSize: '0.9rem' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>Pickup</label>
+                            <input name="pickup" type="text" className="form-input" placeholder="Airport, Hotel, etc." required style={{ padding: '10px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }} />
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Dropoff</label>
-                            <input name="dropoff" type="text" className="form-input" placeholder="Destination" required style={{ padding: '10px 14px', fontSize: '0.9rem' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>Dropoff</label>
+                            <input name="dropoff" type="text" className="form-input" placeholder="Destination" required style={{ padding: '10px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }} />
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Date</label>
-                            <input name="date" type="date" className="form-input" required style={{ padding: '10px 14px', fontSize: '0.9rem' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>Date</label>
+                            <input name="date" type="date" className="form-input" required style={{ padding: '10px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }} />
                         </div>
                         <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%', padding: '14px' }}>
                             Check Rates & Book
                         </button>
                     </form>
 
-                    <div style={{ 
-                        marginTop: '1.5rem', 
-                        paddingTop: '1rem', 
-                        borderTop: '1px solid var(--gray-100)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem'
-                    }}>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
-                            Our Services
-                        </div>
+                    <div className={styles.serviceList}>
                         {services.map((s, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
-                                <span style={{ color: 'var(--accent)', fontWeight: 700 }}>✓</span>
-                                <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{s.name}</span>
-                                <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>({s.desc})</span>
+                            <div key={i} className={styles.serviceItem}>
+                                <div className={styles.serviceItemIcon}>
+                                    {s.icon}
+                                </div>
+                                <div className={styles.serviceItemText}>
+                                    <span className={styles.serviceItemName}>{s.name}</span>
+                                    <span className={styles.serviceItemDesc}>{s.desc}</span>
+                                </div>
                             </div>
                         ))}
                     </div>
