@@ -1,18 +1,7 @@
-Visual redesign: premium transportation hero, brand section rhythm, visual depth
+Fix hero image: replace cat image with proper luxury car photo
 
-- Hero: Full-screen luxury vehicle image with navy gradient overlay, glass
-  booking card with backdrop-filter blur, gold gradient title text, translucent
-  form inputs, accent border strip
-- Features section: Emerald gradient background with gold dot pattern overlay,
-  white cards with gold top bars, brand-aware typography
-- Testimonials: Emerald gradient background with gold accent elements,
-  white cards with gold left-border on hover
-- FAQ: Light Gray (--bg-subtle) for section rhythm
-- Page template: Alternating section backgrounds (Hero→image, SocialProof→white,
-  Stats→navy, Features→emerald, WhyChoose→gray, Vehicles→white,
-  Testimonials→emerald, FAQ→gray, CTA→navy)
-- globals.css: Added .bg-emerald, .bg-emerald-gradient, .bg-navy-gradient
-  utility classes
-- Added /public/images/hero-luxury-car.jpg Unsplash hero image
+The previous hero-luxury-car.jpg was incorrect content. Replaced with a
+high-quality Unsplash photo of a luxury car on the road, suitable for a
+premium transportation brand hero section.
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>
