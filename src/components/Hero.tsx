@@ -110,19 +110,19 @@ const Hero = () => {
                             const message = `Assalamu Alaikum, I would like to book a ride.%0AFrom: ${target.pickup.value}%0ATo: ${target.dropoff.value}%0ADate: ${target.date.value}`;
                             window.open(`https://wa.me/966501234567?text=${message}`, '_blank');
                         }}
-                        style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+                        style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
                     >
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>Pickup</label>
-                            <input name="pickup" type="text" className="form-input" placeholder="Airport, Hotel, etc." required style={{ padding: '10px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)' }}>Pickup</label>
+                            <input name="pickup" type="text" className="form-input" placeholder="Airport, Hotel, etc." required style={{ padding: '12px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff' }} />
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>Dropoff</label>
-                            <input name="dropoff" type="text" className="form-input" placeholder="Destination" required style={{ padding: '10px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)' }}>Dropoff</label>
+                            <input name="dropoff" type="text" className="form-input" placeholder="Destination" required style={{ padding: '12px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff' }} />
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>Date</label>
-                            <input name="date" type="date" className="form-input" required style={{ padding: '10px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)' }}>Date</label>
+                            <input name="date" type="date" className="form-input" required style={{ padding: '12px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff' }} />
                         </div>
                         <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%', padding: '14px' }}>
                             Check Rates & Book

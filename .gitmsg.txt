@@ -1,9 +1,9 @@
-Fix: glass card opacity and social proof label contrast
+Fix: glass card form contrast, spacing, and responsive cleanup
 
-- Hero featureCard: navy glass base (rgba(15,23,42,0.75)) instead of
-  nearly-transparent white, form inputs bumped to 12% white bg with
-  20% border for better readability against the hero image
-- Social proof label: changed from var(--text-muted) to var(--text-body)
-  for higher contrast on white background
+- Form inputs: bumped bg to 15% white with 25% border for higher
+  contrast against hero image; label text to 80% white opacity
+- Gap between form button and service cards: changed serviceList from
+  margin-bottom to margin-top to prevent button touching cards
+- Removed duplicate responsive blocks in Hero.module.css
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>

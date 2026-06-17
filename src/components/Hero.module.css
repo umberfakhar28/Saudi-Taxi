@@ -259,7 +259,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    margin-bottom: var(--space-8);
+    margin-top: var(--space-6);
 }
 
 .serviceItem {
@@ -402,74 +402,6 @@
     .ctaSecondary {
         width: 100%;
         justify-content: center;
-    }
-
-    .featureCard {
-        padding: var(--space-6);
-    }
-}
-
-/* ---- Keyframes ---- */
-@keyframes heroFadeInLeft {
-    from { opacity: 0; transform: translateX(-28px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes heroFadeInRight {
-    from { opacity: 0; transform: translateX(28px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-
-/* ===== RESPONSIVE (Alignment: stack to single col on mobile) ===== */
-@media (max-width: 960px) {
-    .hero {
-        grid-template-columns: 1fr;    /* Balance: stacked on mobile */
-        padding-top: calc(var(--nav-height) + var(--space-8));
-    }
-
-    .content {
-        padding: var(--space-12) var(--space-6) var(--space-8);
-        align-items: center;          /* Alignment: centered on mobile */
-        text-align: center;
-    }
-
-    .subtitle {
-        max-width: 480px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .ctaGroup {
-        justify-content: center;
-    }
-
-    .trustStrip {
-        justify-content: center;
-    }
-
-    .visual {
-        padding: 0 var(--space-6) var(--space-16);
-    }
-
-    .featureCard {
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .title {
-        font-size: 2rem;
-    }
-
-    .ctaButton,
-    .ctaSecondary {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .cardStats {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-2);
     }
 
     .featureCard {
