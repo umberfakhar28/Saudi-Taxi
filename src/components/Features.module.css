@@ -9,7 +9,7 @@
 */
 
 .features {
-    background: linear-gradient(140deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+    background: var(--bg-base);
     padding: var(--space-20) 0;
     position: relative;
     overflow: hidden;
@@ -21,7 +21,7 @@
     inset: 0;
     background-image: radial-gradient(var(--accent) 1px, transparent 1px);
     background-size: 44px 44px;
-    opacity: 0.06;
+    opacity: 0.04;
     pointer-events: none;
 }
 
@@ -47,8 +47,8 @@
     text-transform: uppercase;
     letter-spacing: 2.5px;
     color: var(--accent);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-full);
     margin-bottom: var(--space-4);
@@ -57,7 +57,7 @@
 /* Title */
 .title {
     font-size: var(--text-4xl);
-    color: var(--white);
+    color: var(--text-main);
     margin-bottom: var(--space-4);
     position: relative;
 }
@@ -75,7 +75,7 @@
 
 .subtitle {
     font-size: var(--text-lg);
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--text-muted);
     line-height: 1.8;
 }
 
@@ -88,7 +88,7 @@
 
 /* Card */
 .card {
-    background: var(--white);
+    background: var(--bg-card);
     padding: var(--space-10) var(--space-8);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
@@ -96,7 +96,7 @@
     transition: transform var(--ease-base), box-shadow var(--ease-base);
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--gray-100);
+    border: 1px solid rgba(212, 175, 55, 0.06);
 }
 
 /* Gold top bar */
@@ -115,6 +115,7 @@
 .card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-xl);
+    border-color: rgba(212, 175, 55, 0.12);
 }
 
 .card:hover::before {
@@ -125,27 +126,27 @@
 .icon {
     width: 64px;
     height: 64px;
-    background: var(--primary-subtle);
+    background: rgba(212, 175, 55, 0.08);
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary);
+    color: var(--accent);
     margin: 0 auto var(--space-5);
     transition: background var(--ease-base), color var(--ease-base);
 }
 
 .card:hover .icon {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--accent);
+    color: var(--accent-text);
 }
 
 /* Card Title */
 .cardTitle {
     font-size: var(--text-xl);
-    color: var(--primary);
+    color: var(--text-main);
     margin-bottom: var(--space-3);
-    font-weight: 700;
+    font-weight: 600;
 }
 
 /* Card Text */

@@ -26,7 +26,7 @@
 
 .checkList li {
     font-size: 0.95rem;
-    color: var(--text-dark);
+    color: var(--text-body);
     font-weight: 500;
 }
 
@@ -74,8 +74,8 @@
     justify-content: center;
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-    color: var(--primary);
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--accent-text);
     font-size: 1.5rem;
     font-weight: 800;
     border-radius: 50%;
@@ -85,7 +85,7 @@
 }
 
 .processTitle {
-    color: var(--primary);
+    color: var(--text-main);
     font-size: 1.15rem;
     margin-bottom: 0.75rem;
 }

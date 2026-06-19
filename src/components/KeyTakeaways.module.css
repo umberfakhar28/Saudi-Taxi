@@ -1,10 +1,12 @@
 .wrapper {
-    background-color: var(--bg-subtle);
+    background-color: var(--bg-card);
     border-left: 4px solid var(--accent);
     padding: 1.5rem;
     margin: 2rem 0;
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(212, 175, 55, 0.08);
+    border-left: 4px solid var(--accent);
 }
 
 .header {
@@ -23,7 +25,7 @@
     font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--primary);
+    color: var(--accent);
 }
 
 .list {
@@ -37,7 +39,7 @@
 
 .item {
     font-size: 0.95rem;
-    color: var(--text-main);
+    color: var(--text-body);
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;

@@ -33,7 +33,6 @@ export default function QuickBookingForm() {
                     padding: '3rem', 
                     maxWidth: '1000px', 
                     margin: '0 auto',
-                    background: 'var(--white)',
                     boxShadow: 'var(--shadow-xl)',
                     borderRadius: 'var(--radius-xl)'
                 }}>
@@ -109,7 +108,7 @@ export default function QuickBookingForm() {
                         justifyContent: 'center', 
                         gap: '2rem',
                         flexWrap: 'wrap',
-                        borderTop: '1px solid var(--gray-100)',
+                        borderTop: '1px solid rgba(212, 175, 55, 0.08)',
                         paddingTop: '1.5rem'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>

@@ -1,28 +1,30 @@
 .contactCard {
-    background: var(--white);
+    background: var(--bg-card);
     border-radius: var(--radius-lg);
     padding: 2.5rem 2rem;
     text-align: center;
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
-    border-bottom: 4px solid transparent;
+    border: 1px solid rgba(212, 175, 55, 0.06);
+    border-bottom: 3px solid transparent;
 }
 
 .contactCard:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
-    border-bottom-color: var(--secondary);
+    border-bottom-color: var(--accent);
+    border-color: rgba(212, 175, 55, 0.12);
 }
 
 .contactIcon {
-    color: var(--secondary);
+    color: var(--accent);
     margin-bottom: 1rem;
     display: flex;
     justify-content: center;
 }
 
 .contactTitle {
-    color: var(--primary);
+    color: var(--text-main);
     font-size: 1.15rem;
     margin-bottom: 0.75rem;
 }
@@ -38,14 +40,14 @@
     align-items: center;
     gap: 0.5rem;
     margin-top: 1rem;
-    color: var(--secondary);
+    color: var(--accent);
     font-weight: 600;
     font-size: 0.9rem;
     transition: all 0.3s ease;
 }
 
 .contactLink:hover {
-    color: var(--secondary-dark);
+    color: var(--accent-light);
     transform: translateX(5px);
 }
 
@@ -81,8 +83,8 @@
 }
 
 .infoIconWrapper {
-    background: rgba(212, 175, 55, 0.1);
-    color: var(--secondary);
+    background: rgba(212, 175, 55, 0.08);
+    color: var(--accent);
     padding: 0.6rem;
     border-radius: 8px;
     display: flex;
@@ -92,7 +94,7 @@
 
 .infoItem strong {
     display: block;
-    color: var(--text-dark);
+    color: var(--text-main);
     font-size: 0.95rem;
     margin-bottom: 0.2rem;
 }
@@ -105,10 +107,11 @@
 
 /* Form */
 .form {
-    background: var(--white);
+    background: var(--bg-card);
     padding: 2.5rem;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(212, 175, 55, 0.06);
 }
 
 /* Responsive */

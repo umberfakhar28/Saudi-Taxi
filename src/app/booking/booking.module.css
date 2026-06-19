@@ -1,5 +1,5 @@
 .header {
-    background-color: var(--navy);
+    background-color: var(--bg-base);
     color: var(--white);
     padding: 8rem 0 4rem;
     text-align: center;
@@ -9,6 +9,7 @@
     font-size: 3rem;
     margin-bottom: 1rem;
     font-family: var(--font-heading);
+    color: var(--text-main);
 }
 
 .subtitle {
@@ -23,13 +24,14 @@
 }
 
 .form {
-    background: var(--white);
+    background: var(--bg-card);
     padding: 3rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    border: 1px solid rgba(212, 175, 55, 0.08);
 }
 
 .row {
@@ -46,7 +48,7 @@
 .label {
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--text-dark);
+    color: var(--text-body);
 }
 
 .input,
@@ -54,27 +56,29 @@
 .textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border: 1.5px solid var(--gray-300);
+    border-radius: var(--radius-md);
     font-size: 1rem;
     transition: border-color 0.3s;
+    background: var(--bg-subtle);
+    color: var(--text-main);
 }
 
 .input:focus,
 .select:focus,
 .textarea:focus {
-    border-color: var(--secondary);
+    border-color: var(--accent);
     outline: none;
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
 .submitBtn {
-    background-color: var(--secondary);
-    color: var(--primary);
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--accent-text);
     font-weight: 700;
     padding: 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 1.1rem;
     cursor: pointer;
     margin-top: 1rem;
@@ -84,9 +88,8 @@
 }
 
 .submitBtn:hover {
-    background-color: var(--secondary-light);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    box-shadow: var(--shadow-gold-lg);
 }
 
 @media (max-width: 768px) {

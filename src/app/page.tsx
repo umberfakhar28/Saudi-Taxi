@@ -107,16 +107,16 @@ export default function Home() {
       <SocialProof />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          STATS BANNER — Navy with gold accents
+          STATS BANNER — Deep navy with gold accents
           ═══════════════════════════════════════════════════════════════════ */}
-      <section className="bg-navy-gradient"
+      <section className="bg-dark"
         style={{
           padding: 'var(--space-16) 0',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Decorative dot overlay — Alignment: positioned absolutely, doesn't affect content flow */}
+        {/* Decorative dot overlay */}
         <div
           style={{
             position: 'absolute',
@@ -131,11 +131,11 @@ export default function Home() {
           <div className="grid-4" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
             {stats.map((stat, i) => (
               <div key={i}>
-                {/* Number — Contrast: gold for visibility, dynamic animation */}
+                {/* Number — gold for maximum contrast */}
                 <div className="stat-number" style={{ color: 'var(--accent)' }}>
                   <AnimatedCounter end={stat.number} />
                 </div>
-                {/* Label — Contrast: light, smaller, uppercase */}
+                {/* Label — muted slate for hierarchy */}
                 <div className="stat-label">{stat.label}</div>
               </div>
             ))}

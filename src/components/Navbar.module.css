@@ -145,16 +145,17 @@
     top: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%) translateY(6px);
-    background: var(--white);
+    background: var(--bg-card);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xl);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
     min-width: 220px;
     padding: var(--space-2) 0;
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--ease-base), transform var(--ease-base), visibility var(--ease-base);
     z-index: 200;
-    border-top: 3px solid var(--primary);  /* Contrast: Emerald top border anchors dropdown */
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    border-top: 3px solid var(--accent);
 }
 
 .dropdownMenuOpen {
@@ -170,8 +171,8 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: var(--text-placeholder);
-    border-bottom: 1px solid var(--gray-100);
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
     margin-bottom: var(--space-1);
 }
 
@@ -189,16 +190,16 @@
 }
 
 .dropdownItem svg {
-    color: var(--primary);
+    color: var(--accent);
     opacity: 0.7;
     flex-shrink: 0;
     transition: opacity var(--ease-fast);
 }
 
 .dropdownItem:hover {
-    background: var(--primary-subtle);
-    color: var(--primary);
-    padding-left: calc(var(--space-5) + 6px); /* Micro-animation: slight indent on hover */
+    background: rgba(212, 175, 55, 0.08);
+    color: var(--accent);
+    padding-left: calc(var(--space-5) + 6px);
 }
 
 .dropdownItem:hover svg {

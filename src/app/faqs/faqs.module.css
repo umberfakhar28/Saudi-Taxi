@@ -11,9 +11,9 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.8rem 1.5rem;
-    border: 2px solid var(--gray-300);
+    border: 1.5px solid var(--gray-300);
     border-radius: 30px;
-    background: var(--white);
+    background: var(--bg-card);
     color: var(--text-muted);
     font-weight: 600;
     font-size: 0.9rem;
@@ -23,18 +23,18 @@
 }
 
 .categoryTab:hover {
-    border-color: var(--secondary);
-    color: var(--primary);
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 .categoryTabActive {
-    background: linear-gradient(135deg, var(--navy), var(--navy-light));
-    color: var(--white);
-    border-color: var(--navy);
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--accent-text);
+    border-color: var(--accent);
 }
 
 .categoryTabActive:hover {
-    color: var(--white);
+    color: var(--accent-text);
 }
 
 .tabIcon {
@@ -48,18 +48,18 @@
 }
 
 .faqItem {
-    background: var(--white);
+    background: var(--bg-card);
     border-radius: var(--radius-md);
     margin-bottom: 0.75rem;
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid var(--gray-200);
+    border: 1px solid rgba(212, 175, 55, 0.06);
 }
 
 .faqItemOpen {
     box-shadow: var(--shadow-md);
-    border-color: var(--secondary);
+    border-color: rgba(212, 175, 55, 0.15);
 }
 
 .faqQuestion {
@@ -78,20 +78,20 @@
 }
 
 .faqQuestion:hover {
-    background: rgba(14, 90, 70, 0.02);
+    background: rgba(212, 175, 55, 0.04);
 }
 
 .questionText {
     font-weight: 600;
     font-size: 1.05rem;
-    color: var(--primary);
+    color: var(--text-main);
     line-height: 1.4;
 }
 
 .toggleIcon {
     font-size: 1.5rem;
     font-weight: 300;
-    color: var(--secondary);
+    color: var(--accent);
     flex-shrink: 0;
     width: 30px;
     height: 30px;
@@ -99,7 +99,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(212, 175, 55, 0.08);
     transition: all 0.3s ease;
 }
 
