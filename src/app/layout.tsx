@@ -3,7 +3,21 @@ import Script from "next/script";
 import PublicLayout from "@/components/PublicLayout";
 import { SITE_CONFIG } from "@/lib/seo";
 import { localBusinessSchema, jsonLd } from "@/lib/jsonld";
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+})
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -44,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <head>
         <script
           type="application/ld+json"

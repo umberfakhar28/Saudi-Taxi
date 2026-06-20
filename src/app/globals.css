@@ -30,74 +30,47 @@
   font-display: swap;
 }
 
-/* ===== DESIGN TOKENS — Deep Forest Green + Warm Ivory + Brushed Gold ===== */
+/* ===== MODERN DESIGN SYSTEM — Dark Neutral Theme + Blue Accents ===== */
 :root {
-  /*
-   * WHY THIS PALETTE:
-   *
-   * DEEP FOREST GREEN backgrounds — Harrods, Bentley, and the Ritz all use
-   * deep bottle green as their signature colour. It reads as prestigious,
-   * trustworthy, and warm — the opposite of cold corporate navy.
-   * Against a dark green base, gold glows rather than blending in.
-   *
-   * WARM IVORY text — cream text on green is the classic luxury print
-   * combination (hotel menus, first-class stationery). It's softer than
-   * white, reducing eye strain on dark backgrounds.
-   *
-   * BRUSHED GOLD accent — unchanged in hue, but dramatically improved in
-   * impact now that it contrasts against green rather than near-black navy.
-   *
-   * BACKGROUND LADDER (5 stops, all warm):
-   *   --bg-dark    #091A10  deepest forest (footer, hero underlay)
-   *   --bg-base    #0D2318  primary page background
-   *   --bg-subtle  #112A1E  alternate sections
-   *   --bg-card    #183626  cards — clearly elevated
-   *   --bg-elevated #1F4230  dropdowns, modals
-   */
+  /* ===== CORE BACKGROUND SYSTEM ===== */
+  --bg-primary:    #0A0A0A;      /* Deepest dark */
+  --bg-secondary:  #18181B;      /* Primary dark */
+  --bg-tertiary:   #111827;      /* Alternate dark */
 
-  /* ------- Accent: Brushed Gold ------- */
-  --primary:         #C8A84B;
-  --primary-light:   #DEC068;
-  --primary-dark:    #A88835;
-  --primary-mid:     #C8A84B;
-  --primary-subtle:  rgba(200, 168, 75, 0.10);
-  --primary-text:    #091A10;
+  /* ===== SURFACE SYSTEM ===== */
+  --surface-1:     #1F1F23;      /* Cards */
+  --surface-2:     #27272A;      /* Elevated surfaces */
 
-  --accent:         #C8A84B;
-  --accent-light:   #DEC068;
-  --accent-dark:    #A88835;
-  --accent-text:    #091A10;
-  --accent-subtle:  rgba(200, 168, 75, 0.10);
+  /* ===== TEXT SYSTEM ===== */
+  --text-primary:  #FAFAFA;      /* White-ish */
+  --text-secondary: #E5E7EB;     /* Light grey */
+  --text-muted:    #6B7280;      /* Muted grey */
 
-  /* ------- NEW LUXURY COLOR SYSTEM ------- */
-  /* Core Background System */
-  --bg-primary:    #0D2B1F;
-  --bg-secondary:  #163A2C;
-  --bg-tertiary:   #1A4032;
+  /* ===== ACCENT SYSTEM - BLUE ONLY ===== */
+  --accent-primary:    #2563EB;  /* Primary blue */
+  --accent-hover:      #3B82F6;  /* Lighter blue */
+  --accent-light:      #60A5FA;  /* Very light blue */
+  --accent-subtle:     rgba(37, 99, 235, 0.10);
+  --accent-on-light:   #0A0A0A;
 
-  /* Surface System */
-  --surface-1:     #214A39;
-  --surface-2:     #2A5A44;
+  /* ===== NEUTRAL PALETTE ===== */
+  --gray-50:  #FAFAFA;
+  --gray-100: #18181B;
+  --gray-200: #27272A;
+  --gray-300: #3F3F46;
+  --gray-400: #52525B;
+  --gray-500: #71717A;
+  --gray-600: #A1A1AA;
+  --gray-700: #D4D4D8;
+  --gray-800: #E4E4E7;
+  --gray-900: #FAFAFA;
 
-  /* Text System */
-  --text-primary:  #FAF7F0;
-  --text-muted:    #D8D2C4;
-
-  /* Accent System */
-  --accent-primary:    #C8A84B;
-  --accent-hover:      #B89B3D; /* Slightly darker gold */
-  --accent-light-hover: #DEC068;
-  --accent-on-light:    #091A10; /* Dark text for gold on light backgrounds */
-
-  /* Legacy variable mapping for safe migration */
-  --bg-dark:     var(--bg-primary);
-  --bg-base:     var(--bg-secondary);
-  --bg-subtle:   var(--bg-tertiary);
-  --bg-card:     var(--surface-1);
-  --bg-elevated: var(--surface-2);
-  --bg-white:    var(--surface-1);
-  --white:       #FAF7F0;
-  --black:       #0D2B1F;
+  /* ===== SHADOWS - SUBTLE, MODERN ===== */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-xl:  0 16px 64px rgba(0, 0, 0, 0.7);
 
   --text-main:        var(--text-primary);
   --text-body:        #C8D5C0;
@@ -125,56 +98,16 @@
   --bg-base:     #0D2318;
   --bg-subtle:   #112A1E;
   --bg-card:     #183626;
-  --bg-elevated: #1F4230;
-  --bg-white:    #183626;
-  --white:       #FFFFFF;
-  --black:       #000000;
+  --bg-elevated: var(--surface-2);
+  --bg-white:    var(--surface-1);
+  --white:       #FAFAFA;
+  --black:       #0A0A0A;
 
-  /* ------- Text — Warm Ivory Hierarchy ------- */
-  --text-main:        #FAF7F0;   /* Warm ivory — primary headings */
-  --text-body:        #C8D5C0;   /* Warm sage — body paragraphs */
-  --text-muted:       #7A9E82;   /* Muted green-grey — secondary info */
-  --text-light:       #EDE9E0;   /* Near-ivory for subtle contrast */
-  --text-placeholder: #4A6E52;   /* Input placeholders */
-  --text-heading:     #FAF7F0;
-  --text-dark:        #C8D5C0;
+  /* ===== TYPOGRAPHY - INTER/PLUS JAKARTA SANS ===== */
+  --font-heading: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-body:    "Inter", system-ui, -apple-system, sans-serif;
 
-  /* ------- Neutral Palette ------- */
-  --gray-50:  #FAF7F0;
-  --gray-100: #1F4230;
-  --gray-200: #2A5240;
-  --gray-300: #3A6450;
-  --gray-400: #527A60;
-
-  /* ------- Structural: Forest Green ------- */
-  --navy:           #0D2318;
-  --navy-light:     #112A1E;
-  --navy-dark:      #091A10;
-  --navy-subtle:    rgba(9, 26, 16, 0.60);
-  --navy-text:      #FAF7F0;
-
-  /* ------- Borders ------- */
-  --border-subtle:  rgba(200, 168, 75, 0.14);
-  --border-gold:    rgba(200, 168, 75, 0.30);
-  --border-strong:  rgba(200, 168, 75, 0.50);
-  --border-white:   rgba(250, 247, 240, 0.10);
-
-  /* ------- Semantic Colors ------- */
-  --danger:  #E05252;
-  --success: #2ECC71;
-  --warning: #C8A84B;
-  --info:    #4A9EDB;
-
-  /* Legacy aliases */
-  --secondary:       var(--accent);
-  --secondary-light: var(--accent-light);
-  --secondary-dark:  var(--accent-dark);
-
-  /* ------- Typography ------- */
-  --font-heading: "matterFont", Arial, sans-serif;
-  --font-body:    "matterFont", Arial, sans-serif;
-
-  /* Type Scale */
+  /* ===== TYPE SCALE ===== */
   --text-xs:   0.75rem;   /* 12px */
   --text-sm:   0.875rem;  /* 14px */
   --text-base: 1rem;      /* 16px */
@@ -186,7 +119,7 @@
   --text-5xl:  3rem;      /* 48px */
   --text-6xl:  3.75rem;   /* 60px */
 
-  /* ------- Spacing Scale ------- */
+  /* ===== SPACING SCALE ===== */
   --space-1:  0.25rem;    /* 4px */
   --space-2:  0.5rem;     /* 8px */
   --space-3:  0.75rem;    /* 12px */
@@ -201,30 +134,26 @@
   --space-24: 6rem;       /* 96px */
   --space-32: 8rem;       /* 128px */
 
-  /* Legacy aliases */
-  --spacing-xs:  var(--space-1);
-  --spacing-sm:  var(--space-2);
-  --spacing-md:  var(--space-4);
-  --spacing-lg:  var(--space-8);
-  --spacing-xl:  var(--space-16);
-  --spacing-2xl: var(--space-24);
-
-  /* ------- Layout ------- */
+  /* ===== LAYOUT ===== */
   --container-width: 1200px;
   --nav-height: 76px;
   --section-pad: var(--space-20);
   --section-pad-lg: var(--space-24);
 
-  /* ------- Shadows — Navy-tinted (not raw black) ------- */
-  /* Tinted shadows feel "made of the same material" as the surface.
-     Raw black shadows look pasted on. Navy tint = cohesion + depth. */
-  --shadow-xs: 0 1px 3px rgba(4, 16, 8, 0.50);
-  --shadow-sm: 0 2px 8px rgba(4, 16, 8, 0.55);
-  --shadow-md: 0 4px 20px rgba(4, 16, 8, 0.60);
-  --shadow-lg: 0 8px 36px rgba(4, 16, 8, 0.65);
-  --shadow-xl: 0 16px 56px rgba(4, 16, 8, 0.70);
-  --shadow-gold:    0 4px 20px rgba(200, 168, 75, 0.30);
-  --shadow-gold-lg: 0 8px 36px rgba(200, 168, 75, 0.42);
+  /* ===== BORDER RADIUS - SOFTER, MODERN ===== */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-full: 9999px;
+
+  /* ===== SHADOWS - SUBTLE, MODERN ===== */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-xl:  0 16px 64px rgba(0, 0, 0, 0.7);
   /* Inset glow for card surfaces */
   --shadow-inset-gold: inset 0 1px 0 rgba(200, 168, 75, 0.12);
 
@@ -244,6 +173,21 @@
   --transition-fast: var(--ease-fast);
   --transition-base: var(--ease-base);
   --transition-slow: var(--ease-slow);
+}
+
+/* ===== ACCESSIBILITY - FOCUS STATES ===== */
+*:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ===================================================================
@@ -266,14 +210,14 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-base);
-  color: var(--text-body);
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
   line-height: 1.7;
   overflow-x: hidden;
 }
 
 /* ===================================================================
-   TYPOGRAPHY — Luxury Corporate
+   TYPOGRAPHY — Modern Professional
    Clean, sophisticated, high-readability — like a premium brand manual.
    =================================================================== */
 h1, h2, h3, h4, h5, h6 {
@@ -292,7 +236,7 @@ h5 { font-size: var(--text-lg); }
 h6 { font-size: var(--text-base); font-weight: 600; }
 
 p {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   line-height: 1.75;
   margin-bottom: var(--space-4);
 }
@@ -361,8 +305,8 @@ ul { list-style: none; }
   text-transform: uppercase;
   letter-spacing: 2.5px;
   color: var(--accent-primary);
-  background: rgba(200, 168, 75, 0.08);
-  border: 1px solid var(--border-gold);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.20);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   margin-bottom: var(--space-4);
@@ -381,7 +325,7 @@ ul { list-style: none; }
   display: block;
   width: 56px;
   height: 3px;
-  background: var(--accent);
+  background: var(--accent-primary);
   margin-top: var(--space-3);
   border-radius: var(--radius-full);
 }
@@ -404,8 +348,8 @@ ul { list-style: none; }
 .page-hero {
   padding: 10rem 0 5rem;
   background:
-    linear-gradient(160deg, #091A10 0%, #0D2318 45%, #112A1E 100%);
-  color: var(--white);
+    linear-gradient(160deg, #0A0A0A 0%, #111827 45%, #1A1A1E 100%);
+  color: var(--text-primary);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -417,8 +361,8 @@ ul { list-style: none; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200, 168, 75, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(46, 204, 113, 0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(37, 99, 235, 0.04) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -426,7 +370,7 @@ ul { list-style: none; }
 .page-hero .dotPattern {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(201, 168, 76, 0.18) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(37, 99, 235, 0.18) 1px, transparent 1px);
   background-size: 44px 44px;
   opacity: 0.35;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
@@ -440,7 +384,7 @@ ul { list-style: none; }
   left: 0;
   width: 100%;
   height: 80px;
-  background: var(--bg-base);
+  background: var(--bg-secondary);
   clip-path: polygon(0 60%, 100% 0, 100% 100%, 0% 100%);
 }
 
@@ -513,16 +457,16 @@ ul { list-style: none; }
 
 /* --- Primary CTA: Gold Background + Navy Text --- */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-light-hover));
-  color: var(--accent-text);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+  color: var(--accent-on-light);
   border-color: transparent;
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--accent-light-hover), var(--accent-primary));
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-primary));
   transform: translateY(-2px);
-  box-shadow: var(--shadow-gold-lg);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:active {
@@ -548,9 +492,9 @@ ul { list-style: none; }
 
 .btn-secondary:hover {
   background: var(--accent-primary);
-  color: var(--accent-text);
+  color: var(--accent-on-light);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.35);
 }
 
 .btn-secondary:active {
@@ -573,7 +517,7 @@ ul { list-style: none; }
 
 .btn-outline:hover {
   background: var(--white);
-  color: var(--navy);
+  color: var(--bg-primary);
   border-color: var(--white);
 }
 
@@ -590,7 +534,7 @@ ul { list-style: none; }
 
 .btn-outline-gold:hover {
   background: var(--accent-primary);
-  color: var(--accent-text);
+  color: var(--accent-on-light);
 }
 
 .btn-outline-gold:active {
@@ -614,22 +558,22 @@ ul { list-style: none; }
 .card {
   background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md), var(--shadow-inset-gold);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(37, 99, 235, 0.08);
   padding: var(--space-10) var(--space-8);
   transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Gold top-accent bar */
+/* Blue top-accent bar */
 .card::before {
   content: '';
   position: absolute;
   top: 0; left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--ease-base);
@@ -637,8 +581,8 @@ ul { list-style: none; }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-xl), var(--shadow-inset-gold);
-  border-color: var(--border-gold);
+  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(37, 99, 235, 0.12);
+  border-color: rgba(37, 99, 235, 0.15);
   background: linear-gradient(160deg, var(--surface-2) 0%, var(--bg-tertiary) 100%);
 }
 
@@ -650,7 +594,7 @@ ul { list-style: none; }
 .card-icon {
   width: 64px;
   height: 64px;
-  background: rgba(200, 168, 75, 0.10);
+  background: rgba(37, 99, 235, 0.10);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -658,12 +602,12 @@ ul { list-style: none; }
   color: var(--accent-primary);
   margin-bottom: var(--space-6);
   transition: background var(--ease-base), color var(--ease-base);
-  border: 1px solid rgba(200, 168, 75, 0.18);
+  border: 1px solid rgba(37, 99, 235, 0.18);
 }
 
 .card:hover .card-icon {
-  background: rgba(200, 168, 75, 0.18);
-  color: var(--accent-light-hover);
+  background: rgba(37, 99, 235, 0.18);
+  color: var(--accent-hover);
 }
 
 .card h3 {
@@ -735,34 +679,34 @@ ul { list-style: none; }
 .form-textarea {
   width: 100%;
   padding: 13px 18px;
-  border: 1.5px solid rgba(58, 80, 104, 0.70);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
   font-size: var(--text-base);
   font-family: var(--font-body);
-  color: var(--text-main);
-  background: var(--bg-elevated);
+  color: var(--text-primary);
+  background: var(--surface-2);
   transition: border-color var(--ease-base), box-shadow var(--ease-base), background var(--ease-base);
   outline: none;
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
-  color: var(--text-placeholder);
+  color: var(--text-muted);
 }
 
 .form-input:hover,
 .form-select:hover,
 .form-textarea:hover {
-  border-color: rgba(201, 168, 76, 0.30);
-  background: var(--bg-card);
+  border-color: rgba(37, 99, 235, 0.30);
+  background: var(--surface-1);
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.16), 0 1px 4px rgba(4, 8, 20, 0.40);
-  background: var(--bg-card);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16), 0 1px 4px rgba(0, 0, 0, 0.40);
+  background: var(--surface-1);
 }
 
 .form-textarea {
@@ -781,7 +725,7 @@ ul { list-style: none; }
 .text-accent  { color: var(--accent-primary); }
 .text-muted   { color: var(--text-muted); }
 .text-white   { color: var(--text-primary); }
-.text-dark    { color: var(--text-body); }
+.text-dark    { color: var(--text-secondary); }
 
 .bg-primary   { background-color: var(--accent-primary); color: var(--accent-on-light); }
 .bg-subtle    { background-color: var(--bg-tertiary); }
@@ -819,14 +763,14 @@ ul { list-style: none; }
 .divider {
   width: 100%;
   height: 1px;
-  background: rgba(212, 175, 55, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   margin: var(--space-8) 0;
 }
 
 .divider-gold {
   width: 64px;
   height: 3px;
-  background: var(--accent);
+  background: var(--accent-primary);
   border-radius: var(--radius-full);
 }
 
@@ -846,15 +790,15 @@ ul { list-style: none; }
 }
 
 .badge-gold {
-  background: rgba(201, 168, 76, 0.10);
-  border: 1px solid rgba(201, 168, 76, 0.32);
-  color: var(--accent);
+  background: rgba(37, 99, 235, 0.10);
+  border: 1px solid rgba(37, 99, 235, 0.32);
+  color: var(--accent-primary);
 }
 
 .badge-dark {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.12);
-  color: var(--accent);
+  color: var(--accent-primary);
 }
 
 /* ===================================================================
@@ -883,16 +827,16 @@ ul { list-style: none; }
 .price-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--bg-card);
+  background: var(--surface-1);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .price-table thead tr {
-  background: linear-gradient(135deg, #080E1C, #0C1526);
-  color: var(--text-main);
+  background: linear-gradient(135deg, #0A0A0A, #111827);
+  color: var(--text-primary);
 }
 
 .price-table th {
@@ -911,24 +855,24 @@ ul { list-style: none; }
 }
 
 .price-table tbody tr {
-  border-bottom: 1px solid rgba(201, 168, 76, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: background var(--ease-fast);
 }
 
 .price-table tbody tr:hover {
-  background: rgba(201, 168, 76, 0.05);
+  background: rgba(37, 99, 235, 0.05);
 }
 
 .price-table td {
   padding: 1rem 1.5rem;
   font-size: var(--text-base);
-  color: var(--text-body);
+  color: var(--text-secondary);
 }
 
 .price-badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-light-hover));
-  color: var(--accent-text);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+  color: var(--accent-on-light);
   padding: 4px 16px;
   border-radius: var(--radius-full);
   font-weight: 700;
