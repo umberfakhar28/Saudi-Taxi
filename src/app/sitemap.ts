@@ -252,5 +252,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...servicePages,
     ...borderCrossingPages,
     ...cityTourPages,
+    // Long-form content articles
+    { url: `${BASE_URL}/jeddah-to-makkah-guide`,    lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
+    { url: `${BASE_URL}/jeddah-airport-taxi-guide`,  lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
+    { url: `${BASE_URL}/makkah-to-madinah-guide`,    lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
+    { url: `${BASE_URL}/makkah-umrah-taxi-guide`,    lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
+    { url: `${BASE_URL}/madinah-umrah-taxi-guide`,   lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
+    { url: `${BASE_URL}/riyadh-to-dammam-guide`,     lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.70 },
   ];
 }

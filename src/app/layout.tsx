@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import PublicLayout from "@/components/PublicLayout";
 import { SITE_CONFIG } from "@/lib/seo";
+import { localBusinessSchema, jsonLd } from "@/lib/jsonld";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -44,6 +45,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd(localBusinessSchema()) }}
+        />
+      </head>
       <body>
         <PublicLayout>
           {children}
