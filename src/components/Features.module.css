@@ -19,9 +19,10 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(201, 168, 76, 0.16) 1px, transparent 1px);
     background-size: 44px 44px;
-    opacity: 0.04;
+    opacity: 0.28;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 80%);
     pointer-events: none;
 }
 
@@ -47,8 +48,8 @@
     text-transform: uppercase;
     letter-spacing: 2.5px;
     color: var(--accent);
-    background: rgba(212, 175, 55, 0.08);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    background: rgba(201, 168, 76, 0.08);
+    border: 1px solid rgba(201, 168, 76, 0.24);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-full);
     margin-bottom: var(--space-4);
@@ -88,25 +89,25 @@
 
 /* Card */
 .card {
-    background: var(--bg-card);
+    background: linear-gradient(160deg, var(--bg-card) 0%, #142034 100%);
     padding: var(--space-10) var(--space-8);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(201, 168, 76, 0.10);
     text-align: center;
-    transition: transform var(--ease-base), box-shadow var(--ease-base);
+    transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(201, 168, 76, 0.10);
 }
 
-/* Gold top bar */
+/* Gold top bar — gradient shimmer instead of solid */
 .card::before {
     content: '';
     position: absolute;
     top: 0; left: 0;
     width: 100%;
-    height: 3px;
-    background: var(--accent);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform var(--ease-base);
@@ -114,8 +115,8 @@
 
 .card:hover {
     transform: translateY(-6px);
-    box-shadow: var(--shadow-xl);
-    border-color: rgba(212, 175, 55, 0.12);
+    box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(201, 168, 76, 0.14);
+    border-color: rgba(201, 168, 76, 0.20);
 }
 
 .card:hover::before {
@@ -126,19 +127,21 @@
 .icon {
     width: 64px;
     height: 64px;
-    background: rgba(212, 175, 55, 0.08);
+    background: rgba(201, 168, 76, 0.09);
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--accent);
     margin: 0 auto var(--space-5);
-    transition: background var(--ease-base), color var(--ease-base);
+    transition: background var(--ease-base), color var(--ease-base), border-color var(--ease-base);
+    border: 1px solid rgba(201, 168, 76, 0.18);
 }
 
 .card:hover .icon {
     background: var(--accent);
     color: var(--accent-text);
+    border-color: var(--accent);
 }
 
 /* Card Title */

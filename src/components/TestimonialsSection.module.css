@@ -9,9 +9,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(201, 168, 76, 0.16) 1px, transparent 1px);
   background-size: 44px 44px;
-  opacity: 0.04;
+  opacity: 0.30;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 80%);
   pointer-events: none;
 }
 
@@ -22,19 +23,19 @@
 }
 
 .card {
-  background: var(--bg-card);
+  background: linear-gradient(160deg, var(--bg-card) 0%, #142034 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-6) var(--space-6) var(--space-7);
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(212, 175, 55, 0.06);
-  border-left: 4px solid transparent;
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.10);
+  border-left: 3px solid transparent;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
-  border-color: rgba(212, 175, 55, 0.12);
+  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(201, 168, 76, 0.12);
+  border-color: rgba(201, 168, 76, 0.18);
   border-left-color: var(--accent);
 }
 

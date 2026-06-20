@@ -1,7 +1,8 @@
 /* ===================================================
    GULF TRIP SERVICE — Luxury Chauffeur Brand
-   Color System: 70% Midnight Navy | 20% Slate/Light Gray | 10% Luxury Gold
+   Color System: 70% Deep Obsidian | 20% Midnight Slate | 10% Champagne Gold
    Design Principles: Balance | Alignment | Proximity | Repetition | Contrast
+   v2 — Refined luxury palette with luminance depth, champagne gold, cinematic shadows
    =================================================== */
 
 /* ===== FONT FACE — Matter ===== */
@@ -29,60 +30,92 @@
   font-display: swap;
 }
 
-/* ===== DESIGN TOKENS — Luxury Color System ===== */
+/* ===== DESIGN TOKENS — Refined Luxury System v2 ===== */
 :root {
-  /* ------- Primary Brand: Luxury Gold (#D4AF37) ------- */
-  --primary:         #D4AF37;     /* Gold — the hero accent, CTAs, highlights */
-  --primary-light:   #E0C55A;     /* Lighter Gold for hover states */
-  --primary-dark:    #B8962E;     /* Darker Gold for active states */
-  --primary-mid:     #D4AF37;
-  --primary-subtle:  rgba(212, 175, 55, 0.10);
-  --primary-text:    #0F172A;     /* Midnight Navy text on Gold */
+  /*
+   * GOLD: Shifted from brassy #D4AF37 → champagne #C9A84C
+   * Why: #D4AF37 reads "taxi" and "warning". #C9A84C sits between
+   * Rolls-Royce champagne and Bentley gold — warmer than white gold,
+   * cooler than yellow gold. Adds perceived quality instantly.
+   *
+   * BACKGROUNDS: Three distinct luminance stops instead of two
+   * Why: Sections need to "breathe" — visitors must feel the page
+   * has depth and intentional zoning, not one flat dark mass.
+   *   --bg-dark  #080E1C  → deepest (footer, hero underlay)
+   *   --bg-base  #0C1526  → primary content background
+   *   --bg-subtle #131F35 → alternate sections (slight lift)
+   *   --bg-card  #192640  → cards (visible elevation above sections)
+   *   --bg-elevated #1E2F4A → raised modals, dropdowns
+   *
+   * BORDERS: Raised from 0.06–0.08 → 0.14–0.18 opacity
+   * Why: Invisible borders create undefined edges. Premium UI uses
+   * crisp, subtle borders to communicate craftsmanship.
+   *
+   * SHADOWS: Tinted with deep navy + gold, not raw black
+   * Why: Black shadows look cheap on dark surfaces. Navy-tinted
+   * shadows feel like the element is "made of the same material"
+   * as the background — the Apple/Vercel approach.
+   */
+
+  /* ------- Primary Brand: Champagne Gold ------- */
+  --primary:         #C9A84C;     /* Champagne Gold — premium, not brassy */
+  --primary-light:   #DFC06A;     /* Hover: warm lift */
+  --primary-dark:    #A88835;     /* Active: deep amber */
+  --primary-mid:     #C9A84C;
+  --primary-subtle:  rgba(201, 168, 76, 0.10);
+  --primary-text:    #080E1C;     /* Near-black on Gold for max contrast */
 
   /* ------- Accent (Alias for backward compat) ------- */
-  --accent:         #D4AF37;
-  --accent-light:   #E0C55A;
-  --accent-dark:    #B8962E;
-  --accent-text:    #0F172A;
-  --accent-subtle:  rgba(212, 175, 55, 0.10);
+  --accent:         #C9A84C;
+  --accent-light:   #DFC06A;
+  --accent-dark:    #A88835;
+  --accent-text:    #080E1C;
+  --accent-subtle:  rgba(201, 168, 76, 0.10);
 
-  /* ------- Backgrounds — Navy Family ------- */
-  --bg-base:   #0F172A;          /* Midnight Navy — primary site background */
-  --bg-subtle: #1E293B;          /* Lighter Navy — contrasting sections */
-  --bg-card:   #162033;          /* Card / component background */
-  --bg-dark:   #020617;          /* Deepest Navy — footer, dark blocks */
-  --bg-white:  #162033;          /* Card background (overrides old white refs) */
+  /* ------- Backgrounds — 5-stop Luminance Ladder ------- */
+  --bg-dark:   #080E1C;          /* Deepest obsidian — footer, hero base, darkest blocks */
+  --bg-base:   #0C1526;          /* Primary page background — slightly lifted from pure black */
+  --bg-subtle: #131F35;          /* Alternate sections — perceivable contrast from base */
+  --bg-card:   #192640;          /* Cards — clearly elevated above sections */
+  --bg-elevated: #1E2F4A;        /* Dropdowns, modals, active panels */
+  --bg-white:  #192640;          /* Legacy alias → card surface */
   --white:     #FFFFFF;
   --black:     #000000;
 
-  /* ------- Text — Premium Readability on Dark ------- */
-  --text-main:        #FFFFFF;    /* White — primary headings */
-  --text-body:        #CBD5E1;    /* Light Slate — body paragraphs */
-  --text-muted:       #94A3B8;    /* Muted Slate — secondary info */
-  --text-light:       #F8FAFC;    /* Off-white for subtle contrast */
-  --text-placeholder: #64748B;    /* Input placeholder on dark */
-  --text-heading:     #FFFFFF;    /* White headings */
-  --text-dark:        #CBD5E1;    /* Light text on dark backgrounds */
+  /* ------- Text — Refined Readability Hierarchy ------- */
+  --text-main:        #F0EEE8;    /* Warm off-white — softer than pure white, still crisp */
+  --text-body:        #B8C4D4;    /* Cool slate — comfortable for long reading */
+  --text-muted:       #7A8CA3;    /* Secondary info — clearly subordinate */
+  --text-light:       #E8E6DF;    /* Near-white for subtle contrast */
+  --text-placeholder: #4A5A6E;    /* Input placeholders */
+  --text-heading:     #F0EEE8;    /* Warm white headings */
+  --text-dark:        #B8C4D4;    /* Light text alias */
 
-  /* ------- Neutral Palette — Navy-based ------- */
-  --gray-50:  #F8FAFC;
-  --gray-100: #1E293B;
-  --gray-200: #334155;
-  --gray-300: #475569;
-  --gray-400: #64748B;
+  /* ------- Neutral Palette ------- */
+  --gray-50:  #F0EEE8;
+  --gray-100: #1E2F4A;
+  --gray-200: #2A3D55;
+  --gray-300: #3A5068;
+  --gray-400: #5A7080;
 
-  /* ------- Structural: Midnight Navy ------- */
-  --navy:           #0F172A;
-  --navy-light:     #1E293B;
-  --navy-dark:      #020617;
-  --navy-subtle:    rgba(15, 23, 42, 0.50);
-  --navy-text:      #FFFFFF;
+  /* ------- Structural: Deep Navy ------- */
+  --navy:           #0C1526;
+  --navy-light:     #131F35;
+  --navy-dark:      #080E1C;
+  --navy-subtle:    rgba(8, 14, 28, 0.60);
+  --navy-text:      #F0EEE8;
+
+  /* ------- Borders — Crisp, Intentional ------- */
+  --border-subtle:  rgba(201, 168, 76, 0.14);   /* Default card/section border */
+  --border-gold:    rgba(201, 168, 76, 0.28);   /* Emphasis border */
+  --border-strong:  rgba(201, 168, 76, 0.45);   /* Active/focus border */
+  --border-white:   rgba(240, 238, 232, 0.10);  /* Dividers on dark */
 
   /* ------- Semantic Colors ------- */
-  --danger:  #EF4444;
-  --success: #22C55E;            /* Green — for success states */
-  --warning: #D4AF37;            /* Gold — for warning states */
-  --info:    #3B82F6;
+  --danger:  #E05252;
+  --success: #2ECC71;
+  --warning: #C9A84C;
+  --info:    #4A9EDB;
 
   /* Legacy alias for backward compat */
   --secondary:       var(--accent);
@@ -134,14 +167,18 @@
   --section-pad: var(--space-20);
   --section-pad-lg: var(--space-24);
 
-  /* ------- Shadows ------- */
-  --shadow-xs: 0 1px 3px rgba(0,0,0,0.30);
-  --shadow-sm: 0 2px 6px rgba(0,0,0,0.35);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.40);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.45);
-  --shadow-xl: 0 16px 56px rgba(0,0,0,0.50);
-  --shadow-gold: 0 4px 20px rgba(212,175,55,0.25);
-  --shadow-gold-lg: 0 8px 30px rgba(212,175,55,0.35);
+  /* ------- Shadows — Navy-tinted (not raw black) ------- */
+  /* Tinted shadows feel "made of the same material" as the surface.
+     Raw black shadows look pasted on. Navy tint = cohesion + depth. */
+  --shadow-xs: 0 1px 3px rgba(4, 8, 20, 0.50);
+  --shadow-sm: 0 2px 8px rgba(4, 8, 20, 0.55);
+  --shadow-md: 0 4px 20px rgba(4, 8, 20, 0.60);
+  --shadow-lg: 0 8px 36px rgba(4, 8, 20, 0.65);
+  --shadow-xl: 0 16px 56px rgba(4, 8, 20, 0.70);
+  --shadow-gold:    0 4px 20px rgba(201, 168, 76, 0.30);
+  --shadow-gold-lg: 0 8px 36px rgba(201, 168, 76, 0.42);
+  /* Inset glow for card surfaces */
+  --shadow-inset-gold: inset 0 1px 0 rgba(201, 168, 76, 0.12);
 
   /* ------- Border Radius ------- */
   --radius-sm:   4px;
@@ -276,8 +313,8 @@ ul { list-style: none; }
   text-transform: uppercase;
   letter-spacing: 2.5px;
   color: var(--accent);
-  background: rgba(212, 175, 55, 0.08);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--border-gold);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   margin-bottom: var(--space-4);
@@ -318,20 +355,33 @@ ul { list-style: none; }
    =================================================================== */
 .page-hero {
   padding: 10rem 0 5rem;
-  background: linear-gradient(135deg, #020617 0%, #0F172A 50%, #1E293B 100%);
+  background:
+    linear-gradient(160deg, #080E1C 0%, #0C1526 45%, #131F35 100%);
   color: var(--white);
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
+/* Cinematic vignette — darkens edges so text always pops */
 .page-hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(74, 158, 219, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Dot texture — kept but slightly more visible */
+.page-hero .dotPattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(201, 168, 76, 0.18) 1px, transparent 1px);
   background-size: 44px 44px;
-  opacity: 0.08;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
   pointer-events: none;
 }
 
@@ -349,7 +399,7 @@ ul { list-style: none; }
 .page-hero h1 {
   font-size: var(--text-5xl);
   margin-bottom: var(--space-4);
-  color: var(--white);
+  color: var(--text-main);
   position: relative;
   z-index: 1;
   animation: fadeInDown 0.7s ease-out;
@@ -360,7 +410,7 @@ ul { list-style: none; }
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto;
-  color: rgba(255,255,255,0.88);
+  color: var(--text-body);
   position: relative;
   z-index: 1;
   animation: fadeInDown 0.7s ease-out 0.15s both;
@@ -511,17 +561,17 @@ ul { list-style: none; }
 }
 
 /* ===================================================================
-   CARDS — Luxury Dark Cards
+   CARDS — Luxury Dark Cards with Surface Depth
    =================================================================== */
 .card {
-  background: var(--bg-card);
+  background: linear-gradient(160deg, var(--bg-card) 0%, #152238 100%);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md), var(--shadow-inset-gold);
   padding: var(--space-10) var(--space-8);
-  transition: transform var(--ease-base), box-shadow var(--ease-base);
+  transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(212, 175, 55, 0.08);
+  border: 1px solid var(--border-subtle);
 }
 
 /* Gold top-accent bar */
@@ -530,8 +580,8 @@ ul { list-style: none; }
   position: absolute;
   top: 0; left: 0;
   width: 100%;
-  height: 3px;
-  background: var(--accent);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--ease-base);
@@ -539,8 +589,8 @@ ul { list-style: none; }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
-  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: var(--shadow-xl), var(--shadow-inset-gold);
+  border-color: var(--border-gold);
 }
 
 .card:hover::before {
@@ -551,7 +601,7 @@ ul { list-style: none; }
 .card-icon {
   width: 64px;
   height: 64px;
-  background: rgba(212, 175, 55, 0.08);
+  background: rgba(201, 168, 76, 0.10);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -559,10 +609,11 @@ ul { list-style: none; }
   color: var(--accent);
   margin-bottom: var(--space-6);
   transition: background var(--ease-base), color var(--ease-base);
+  border: 1px solid rgba(201, 168, 76, 0.18);
 }
 
 .card:hover .card-icon {
-  background: rgba(212, 175, 55, 0.15);
+  background: rgba(201, 168, 76, 0.18);
   color: var(--accent-light);
 }
 
@@ -635,13 +686,13 @@ ul { list-style: none; }
 .form-textarea {
   width: 100%;
   padding: 13px 18px;
-  border: 1.5px solid var(--gray-300);
+  border: 1.5px solid rgba(58, 80, 104, 0.70);
   border-radius: var(--radius-md);
   font-size: var(--text-base);
   font-family: var(--font-body);
-  color: var(--white);
-  background: var(--bg-card);
-  transition: border-color var(--ease-base), box-shadow var(--ease-base);
+  color: var(--text-main);
+  background: var(--bg-elevated);
+  transition: border-color var(--ease-base), box-shadow var(--ease-base), background var(--ease-base);
   outline: none;
 }
 
@@ -650,11 +701,19 @@ ul { list-style: none; }
   color: var(--text-placeholder);
 }
 
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+  border-color: rgba(201, 168, 76, 0.30);
+  background: var(--bg-card);
+}
+
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.14);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.16), 0 1px 4px rgba(4, 8, 20, 0.40);
+  background: var(--bg-card);
 }
 
 .form-textarea {
@@ -738,14 +797,14 @@ ul { list-style: none; }
 }
 
 .badge-gold {
-  background: rgba(212, 175, 55, 0.10);
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(201, 168, 76, 0.10);
+  border: 1px solid rgba(201, 168, 76, 0.32);
   color: var(--accent);
 }
 
 .badge-dark {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
   color: var(--accent);
 }
 
@@ -779,12 +838,12 @@ ul { list-style: none; }
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  border: 1px solid rgba(212, 175, 55, 0.08);
+  border: 1px solid var(--border-subtle);
 }
 
 .price-table thead tr {
-  background: linear-gradient(135deg, #020617, #0F172A);
-  color: var(--white);
+  background: linear-gradient(135deg, #080E1C, #0C1526);
+  color: var(--text-main);
 }
 
 .price-table th {
@@ -803,12 +862,12 @@ ul { list-style: none; }
 }
 
 .price-table tbody tr {
-  border-bottom: 1px solid rgba(212, 175, 55, 0.06);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.07);
   transition: background var(--ease-fast);
 }
 
 .price-table tbody tr:hover {
-  background: rgba(212, 175, 55, 0.04);
+  background: rgba(201, 168, 76, 0.05);
 }
 
 .price-table td {
