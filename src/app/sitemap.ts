@@ -246,6 +246,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  const cityPages: MetadataRoute.Sitemap = [
+    "riyadh","jeddah","makkah","madinah","dammam","khobar",
+    "jubail","taif","abha","yanbu","alula","neom","tabuk",
+  ].map((city) => ({ url: `${BASE_URL}/services/${city}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.80 }));
+
+  const guidePages: MetadataRoute.Sitemap = [
+    "king-khalid-airport","king-abdulaziz-airport","umrah-transportation",
+    "hajj-transportation","business-travel","family-travel",
+  ].map((slug) => ({ url: `${BASE_URL}/guides/${slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 }));
+
+  const blogPages: MetadataRoute.Sitemap = [
+    "airport-transfer-tips","private-vs-rental-car","umrah-travel-planning",
+    "top-attractions-riyadh","jeddah-hidden-gems","alula-complete-guide",
+    "benefits-private-airport-transfer","hajj-transport-guide",
+    "family-saudi-destinations","vip-transport-saudi",
+    "riyadh-to-jeddah-travel","safe-travel-tips-saudi",
+  ].map((slug) => ({ url: `${BASE_URL}/blog/${slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.70 }));
+
   return [
     ...staticPages,
     ...airportTransferPages,
@@ -259,5 +277,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/makkah-umrah-taxi-guide`,    lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
     { url: `${BASE_URL}/madinah-umrah-taxi-guide`,   lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
     { url: `${BASE_URL}/riyadh-to-dammam-guide`,     lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.70 },
+    // Blog
+    { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.80 },
+    ...blogPages,
+    // City pages
+    ...cityPages,
+    // Guide pages
+    ...guidePages,
   ];
 }

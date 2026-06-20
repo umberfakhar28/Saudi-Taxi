@@ -11,7 +11,6 @@ import {
     CarIcon,
     PlaneIcon,
     LandmarkIcon,
-    StarIcon,
 } from './Icons';
 import styles from './Hero.module.css';
 
@@ -55,41 +54,42 @@ const Hero = () => {
                 </div>
 
                 <h1 className={styles.title}>
-                    Premium Taxi Services<br />
-                    <em>Across Saudi Arabia</em>
+                    Saudi Arabia&apos;s Most Trusted<br />
+                    <em>Luxury Transfer Service</em>
                 </h1>
 
                 <p className={styles.subtitle}>
-                    Fixed-rate, reliable taxi services for Umrah pilgrims and travellers.
-                    Jeddah Airport transfers and Holy City transport — 24/7 with zero
-                    hidden fees.
+                    Airport transfers, intercity travel, Umrah &amp; Hajj transport — 
+                    across all of Saudi Arabia. Professional chauffeurs, fixed rates, 
+                    zero hidden fees. Available 24/7.
                 </p>
 
                 <div className={styles.ctaGroup}>
                     <Link href="/book-online" className={styles.ctaButton}>
-                        <StarIcon size={16} />
+                        <CarIcon size={16} />
                         Book Your Ride
                     </Link>
-                    <a
-                        href="https://wa.me/966123456789"
-                        className={styles.ctaSecondary}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <MessageIcon size={18} />
-                        WhatsApp Us
-                    </a>
+                    <Link href="/quote" className={styles.ctaSecondary}>
+                        <TagIcon size={16} />
+                        Get Instant Quote
+                    </Link>
                 </div>
 
                 <div className={styles.trustStrip}>
                     <span className={styles.trustItem}>
-                        <ClockIcon size={15} /> 24/7 Available
+                        <PlaneIcon size={15} /> Flight Tracking
                     </span>
                     <span className={styles.trustItem}>
-                        <TagIcon size={15} /> Fixed Prices
+                        <ClockIcon size={15} /> 24/7 Service
                     </span>
                     <span className={styles.trustItem}>
-                        <UserIcon size={15} /> Professional Drivers
+                        <TagIcon size={15} /> Fixed Pricing
+                    </span>
+                    <span className={styles.trustItem}>
+                        <ShieldIcon size={15} /> Licensed Fleet
+                    </span>
+                    <span className={styles.trustItem}>
+                        <UserIcon size={15} /> 15,000+ Customers
                     </span>
                 </div>
             </div>

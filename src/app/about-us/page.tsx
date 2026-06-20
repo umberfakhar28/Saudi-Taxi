@@ -185,6 +185,37 @@ export default function AboutUs() {
                 </div>
             </section>
 
+            {/* E-E-A-T: Certifications & Trust Signals */}
+            <section className="section" style={{ background: 'var(--bg-subtle)' }}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Verified & Trusted</span>
+                        <h2 className="section-title">Certifications & Industry Standing</h2>
+                        <p className="section-subtitle">Our credentials demonstrate the professional standards we uphold for every customer.</p>
+                    </div>
+                    <div className="grid-4" style={{ marginBottom: 'var(--space-16)' }}>
+                        {[
+                            { icon: '🏛️', title: 'Ministry Licensed', desc: 'All vehicles registered with the Saudi Ministry of Transport' },
+                            { icon: '🛡️', title: 'Fully Insured', desc: 'Comprehensive third-party insurance on every vehicle in our fleet' },
+                            { icon: '✅', title: 'Driver Certified', desc: 'Every driver holds a valid Saudi professional driving licence' },
+                            { icon: '🌍', title: '50+ Countries Served', desc: 'Trusted by international travelers from over 50 countries' },
+                        ].map((item, i) => (
+                            <div key={i} className="card" style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-4)' }}>{item.icon}</div>
+                                <h3 style={{ color: 'var(--accent)', fontSize: 'var(--text-base)', marginBottom: 'var(--space-2)' }}>{item.title}</h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginBottom: 0 }}>{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                    {/* Aggregate Rating Display */}
+                    <div style={{ maxWidth: 600, margin: '0 auto', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-8)', textAlign: 'center', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ fontSize: 'var(--text-5xl)', fontWeight: 700, color: 'var(--accent)', lineHeight: 1 }}>4.9</div>
+                        <div style={{ color: 'var(--accent)', fontSize: '1.5rem', margin: 'var(--space-2) 0' }}>★★★★★</div>
+                        <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginBottom: 0 }}>Based on 847+ verified customer reviews across Google, TripAdvisor, and direct bookings</p>
+                    </div>
+                </div>
+            </section>
+
             {/* CTA */}
             <section style={{ background: 'linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%)', padding: '5rem 0', textAlign: 'center' }}>
                 <div className="container">
