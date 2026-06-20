@@ -12,17 +12,17 @@
     top: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(8, 14, 28, 0.96);
+    background: rgba(9, 26, 16, 0.96);
     backdrop-filter: blur(16px) saturate(1.6);
     -webkit-backdrop-filter: blur(16px) saturate(1.6);
-    border-bottom: 1px solid rgba(201, 168, 76, 0.14);
+    border-bottom: 1px solid rgba(200, 168, 75, 0.14);
     height: var(--nav-height);
     transition: background var(--ease-base), box-shadow var(--ease-base);
 }
 
 .navbar.scrolled {
-    background: rgba(8, 14, 28, 0.99);
-    box-shadow: 0 4px 28px rgba(4, 8, 20, 0.55), 0 1px 0 rgba(201, 168, 76, 0.10);
+    background: rgba(9, 26, 16, 0.99);
+    box-shadow: 0 4px 28px rgba(4, 16, 8, 0.55), 0 1px 0 rgba(200, 168, 75, 0.10);
 }
 
 /* ---- Container: Balance — logo | links | CTA in 3 zones ---- */
@@ -145,16 +145,16 @@
     top: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%) translateY(6px);
-    background: var(--bg-elevated, #1E2F4A);
+    background: var(--bg-elevated, #1F4230);
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 56px rgba(4, 8, 20, 0.65), 0 1px 0 rgba(201, 168, 76, 0.08);
+    box-shadow: 0 20px 56px rgba(4, 16, 8, 0.65), 0 1px 0 rgba(200, 168, 75, 0.08);
     min-width: 220px;
     padding: var(--space-2) 0;
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--ease-base), transform var(--ease-base), visibility var(--ease-base);
     z-index: 200;
-    border: 1px solid rgba(201, 168, 76, 0.16);
+    border: 1px solid rgba(200, 168, 75, 0.16);
     border-top: 2px solid var(--accent);
 }
 

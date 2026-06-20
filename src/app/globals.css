@@ -1,8 +1,8 @@
 /* ===================================================
    GULF TRIP SERVICE — Luxury Chauffeur Brand
-   Color System: 70% Deep Obsidian | 20% Midnight Slate | 10% Champagne Gold
-   Design Principles: Balance | Alignment | Proximity | Repetition | Contrast
-   v2 — Refined luxury palette with luminance depth, champagne gold, cinematic shadows
+   Color System: Deep Forest Green | Warm Ivory | Brushed Gold
+   Inspired by: Harrods, Bentley, The Ritz, Emirates First Class
+   v3 — Warm, prestigious, inviting — moves away from cold navy
    =================================================== */
 
 /* ===== FONT FACE — Matter ===== */
@@ -30,94 +30,142 @@
   font-display: swap;
 }
 
-/* ===== DESIGN TOKENS — Refined Luxury System v2 ===== */
+/* ===== DESIGN TOKENS — Deep Forest Green + Warm Ivory + Brushed Gold ===== */
 :root {
   /*
-   * GOLD: Shifted from brassy #D4AF37 → champagne #C9A84C
-   * Why: #D4AF37 reads "taxi" and "warning". #C9A84C sits between
-   * Rolls-Royce champagne and Bentley gold — warmer than white gold,
-   * cooler than yellow gold. Adds perceived quality instantly.
+   * WHY THIS PALETTE:
    *
-   * BACKGROUNDS: Three distinct luminance stops instead of two
-   * Why: Sections need to "breathe" — visitors must feel the page
-   * has depth and intentional zoning, not one flat dark mass.
-   *   --bg-dark  #080E1C  → deepest (footer, hero underlay)
-   *   --bg-base  #0C1526  → primary content background
-   *   --bg-subtle #131F35 → alternate sections (slight lift)
-   *   --bg-card  #192640  → cards (visible elevation above sections)
-   *   --bg-elevated #1E2F4A → raised modals, dropdowns
+   * DEEP FOREST GREEN backgrounds — Harrods, Bentley, and the Ritz all use
+   * deep bottle green as their signature colour. It reads as prestigious,
+   * trustworthy, and warm — the opposite of cold corporate navy.
+   * Against a dark green base, gold glows rather than blending in.
    *
-   * BORDERS: Raised from 0.06–0.08 → 0.14–0.18 opacity
-   * Why: Invisible borders create undefined edges. Premium UI uses
-   * crisp, subtle borders to communicate craftsmanship.
+   * WARM IVORY text — cream text on green is the classic luxury print
+   * combination (hotel menus, first-class stationery). It's softer than
+   * white, reducing eye strain on dark backgrounds.
    *
-   * SHADOWS: Tinted with deep navy + gold, not raw black
-   * Why: Black shadows look cheap on dark surfaces. Navy-tinted
-   * shadows feel like the element is "made of the same material"
-   * as the background — the Apple/Vercel approach.
+   * BRUSHED GOLD accent — unchanged in hue, but dramatically improved in
+   * impact now that it contrasts against green rather than near-black navy.
+   *
+   * BACKGROUND LADDER (5 stops, all warm):
+   *   --bg-dark    #091A10  deepest forest (footer, hero underlay)
+   *   --bg-base    #0D2318  primary page background
+   *   --bg-subtle  #112A1E  alternate sections
+   *   --bg-card    #183626  cards — clearly elevated
+   *   --bg-elevated #1F4230  dropdowns, modals
    */
 
-  /* ------- Primary Brand: Champagne Gold ------- */
-  --primary:         #C9A84C;     /* Champagne Gold — premium, not brassy */
-  --primary-light:   #DFC06A;     /* Hover: warm lift */
-  --primary-dark:    #A88835;     /* Active: deep amber */
-  --primary-mid:     #C9A84C;
-  --primary-subtle:  rgba(201, 168, 76, 0.10);
-  --primary-text:    #080E1C;     /* Near-black on Gold for max contrast */
+  /* ------- Accent: Brushed Gold ------- */
+  --primary:         #C8A84B;
+  --primary-light:   #DEC068;
+  --primary-dark:    #A88835;
+  --primary-mid:     #C8A84B;
+  --primary-subtle:  rgba(200, 168, 75, 0.10);
+  --primary-text:    #091A10;
 
-  /* ------- Accent (Alias for backward compat) ------- */
-  --accent:         #C9A84C;
-  --accent-light:   #DFC06A;
+  --accent:         #C8A84B;
+  --accent-light:   #DEC068;
   --accent-dark:    #A88835;
-  --accent-text:    #080E1C;
-  --accent-subtle:  rgba(201, 168, 76, 0.10);
+  --accent-text:    #091A10;
+  --accent-subtle:  rgba(200, 168, 75, 0.10);
 
-  /* ------- Backgrounds — 5-stop Luminance Ladder ------- */
-  --bg-dark:   #080E1C;          /* Deepest obsidian — footer, hero base, darkest blocks */
-  --bg-base:   #0C1526;          /* Primary page background — slightly lifted from pure black */
-  --bg-subtle: #131F35;          /* Alternate sections — perceivable contrast from base */
-  --bg-card:   #192640;          /* Cards — clearly elevated above sections */
-  --bg-elevated: #1E2F4A;        /* Dropdowns, modals, active panels */
-  --bg-white:  #192640;          /* Legacy alias → card surface */
-  --white:     #FFFFFF;
-  --black:     #000000;
+  /* ------- NEW LUXURY COLOR SYSTEM ------- */
+  /* Core Background System */
+  --bg-primary:    #0D2B1F;
+  --bg-secondary:  #163A2C;
+  --bg-tertiary:   #1A4032;
 
-  /* ------- Text — Refined Readability Hierarchy ------- */
-  --text-main:        #F0EEE8;    /* Warm off-white — softer than pure white, still crisp */
-  --text-body:        #B8C4D4;    /* Cool slate — comfortable for long reading */
-  --text-muted:       #7A8CA3;    /* Secondary info — clearly subordinate */
-  --text-light:       #E8E6DF;    /* Near-white for subtle contrast */
-  --text-placeholder: #4A5A6E;    /* Input placeholders */
-  --text-heading:     #F0EEE8;    /* Warm white headings */
-  --text-dark:        #B8C4D4;    /* Light text alias */
+  /* Surface System */
+  --surface-1:     #214A39;
+  --surface-2:     #2A5A44;
+
+  /* Text System */
+  --text-primary:  #FAF7F0;
+  --text-muted:    #D8D2C4;
+
+  /* Accent System */
+  --accent-primary:    #C8A84B;
+  --accent-hover:      #B89B3D; /* Slightly darker gold */
+  --accent-light-hover: #DEC068;
+  --accent-on-light:    #091A10; /* Dark text for gold on light backgrounds */
+
+  /* Legacy variable mapping for safe migration */
+  --bg-dark:     var(--bg-primary);
+  --bg-base:     var(--bg-secondary);
+  --bg-subtle:   var(--bg-tertiary);
+  --bg-card:     var(--surface-1);
+  --bg-elevated: var(--surface-2);
+  --bg-white:    var(--surface-1);
+  --white:       #FAF7F0;
+  --black:       #0D2B1F;
+
+  --text-main:        var(--text-primary);
+  --text-body:        #C8D5C0;
+  --text-light:       var(--text-primary);
+  --text-placeholder: #5A8A6A;
+
+  --navy:           var(--bg-primary);
+  --navy-light:     var(--bg-secondary);
+  --navy-dark:      var(--bg-primary);
+  --navy-subtle:    rgba(13, 43, 31, 0.60);
+  --navy-text:      var(--text-primary);
+
+  --accent:         var(--accent-primary);
+  --accent-light:   var(--accent-light-hover);
+  --accent-dark:    var(--accent-hover);
+  --accent-text:    #091A10;
+  --accent-subtle:  var(--accent-subtle);
+
+  --secondary:       var(--accent);
+  --secondary-light: var(--accent-light);
+  --secondary-dark:  var(--accent-dark);
+
+  /* ------- Backgrounds — Forest Green Ladder ------- */
+  --bg-dark:     #091A10;
+  --bg-base:     #0D2318;
+  --bg-subtle:   #112A1E;
+  --bg-card:     #183626;
+  --bg-elevated: #1F4230;
+  --bg-white:    #183626;
+  --white:       #FFFFFF;
+  --black:       #000000;
+
+  /* ------- Text — Warm Ivory Hierarchy ------- */
+  --text-main:        #FAF7F0;   /* Warm ivory — primary headings */
+  --text-body:        #C8D5C0;   /* Warm sage — body paragraphs */
+  --text-muted:       #7A9E82;   /* Muted green-grey — secondary info */
+  --text-light:       #EDE9E0;   /* Near-ivory for subtle contrast */
+  --text-placeholder: #4A6E52;   /* Input placeholders */
+  --text-heading:     #FAF7F0;
+  --text-dark:        #C8D5C0;
 
   /* ------- Neutral Palette ------- */
-  --gray-50:  #F0EEE8;
-  --gray-100: #1E2F4A;
-  --gray-200: #2A3D55;
-  --gray-300: #3A5068;
-  --gray-400: #5A7080;
+  --gray-50:  #FAF7F0;
+  --gray-100: #1F4230;
+  --gray-200: #2A5240;
+  --gray-300: #3A6450;
+  --gray-400: #527A60;
 
-  /* ------- Structural: Deep Navy ------- */
-  --navy:           #0C1526;
-  --navy-light:     #131F35;
-  --navy-dark:      #080E1C;
-  --navy-subtle:    rgba(8, 14, 28, 0.60);
-  --navy-text:      #F0EEE8;
+  /* ------- Structural: Forest Green ------- */
+  --navy:           #0D2318;
+  --navy-light:     #112A1E;
+  --navy-dark:      #091A10;
+  --navy-subtle:    rgba(9, 26, 16, 0.60);
+  --navy-text:      #FAF7F0;
 
-  /* ------- Borders — Crisp, Intentional ------- */
-  --border-subtle:  rgba(201, 168, 76, 0.14);   /* Default card/section border */
-  --border-gold:    rgba(201, 168, 76, 0.28);   /* Emphasis border */
-  --border-strong:  rgba(201, 168, 76, 0.45);   /* Active/focus border */
-  --border-white:   rgba(240, 238, 232, 0.10);  /* Dividers on dark */
+  /* ------- Borders ------- */
+  --border-subtle:  rgba(200, 168, 75, 0.14);
+  --border-gold:    rgba(200, 168, 75, 0.30);
+  --border-strong:  rgba(200, 168, 75, 0.50);
+  --border-white:   rgba(250, 247, 240, 0.10);
 
   /* ------- Semantic Colors ------- */
   --danger:  #E05252;
   --success: #2ECC71;
-  --warning: #C9A84C;
+  --warning: #C8A84B;
   --info:    #4A9EDB;
 
-  /* Legacy alias for backward compat */
+  /* Legacy aliases */
   --secondary:       var(--accent);
   --secondary-light: var(--accent-light);
   --secondary-dark:  var(--accent-dark);
@@ -170,15 +218,15 @@
   /* ------- Shadows — Navy-tinted (not raw black) ------- */
   /* Tinted shadows feel "made of the same material" as the surface.
      Raw black shadows look pasted on. Navy tint = cohesion + depth. */
-  --shadow-xs: 0 1px 3px rgba(4, 8, 20, 0.50);
-  --shadow-sm: 0 2px 8px rgba(4, 8, 20, 0.55);
-  --shadow-md: 0 4px 20px rgba(4, 8, 20, 0.60);
-  --shadow-lg: 0 8px 36px rgba(4, 8, 20, 0.65);
-  --shadow-xl: 0 16px 56px rgba(4, 8, 20, 0.70);
-  --shadow-gold:    0 4px 20px rgba(201, 168, 76, 0.30);
-  --shadow-gold-lg: 0 8px 36px rgba(201, 168, 76, 0.42);
+  --shadow-xs: 0 1px 3px rgba(4, 16, 8, 0.50);
+  --shadow-sm: 0 2px 8px rgba(4, 16, 8, 0.55);
+  --shadow-md: 0 4px 20px rgba(4, 16, 8, 0.60);
+  --shadow-lg: 0 8px 36px rgba(4, 16, 8, 0.65);
+  --shadow-xl: 0 16px 56px rgba(4, 16, 8, 0.70);
+  --shadow-gold:    0 4px 20px rgba(200, 168, 75, 0.30);
+  --shadow-gold-lg: 0 8px 36px rgba(200, 168, 75, 0.42);
   /* Inset glow for card surfaces */
-  --shadow-inset-gold: inset 0 1px 0 rgba(201, 168, 76, 0.12);
+  --shadow-inset-gold: inset 0 1px 0 rgba(200, 168, 75, 0.12);
 
   /* ------- Border Radius ------- */
   --radius-sm:   4px;
@@ -232,7 +280,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   line-height: 1.15;
-  color: var(--text-main);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
@@ -244,7 +292,7 @@ h5 { font-size: var(--text-lg); }
 h6 { font-size: var(--text-base); font-weight: 600; }
 
 p {
-  color: var(--text-body);
+  color: var(--text-muted);
   line-height: 1.75;
   margin-bottom: var(--space-4);
 }
@@ -312,8 +360,8 @@ ul { list-style: none; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2.5px;
-  color: var(--accent);
-  background: rgba(201, 168, 76, 0.08);
+  color: var(--accent-primary);
+  background: rgba(200, 168, 75, 0.08);
   border: 1px solid var(--border-gold);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
@@ -322,7 +370,7 @@ ul { list-style: none; }
 
 .section-title {
   font-size: var(--text-4xl);
-  color: var(--text-main);
+  color: var(--text-primary);
   margin-bottom: var(--space-4);
   position: relative;
 }
@@ -356,21 +404,21 @@ ul { list-style: none; }
 .page-hero {
   padding: 10rem 0 5rem;
   background:
-    linear-gradient(160deg, #080E1C 0%, #0C1526 45%, #131F35 100%);
+    linear-gradient(160deg, #091A10 0%, #0D2318 45%, #112A1E 100%);
   color: var(--white);
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-/* Cinematic vignette — darkens edges so text always pops */
+/* Cinematic vignette */
 .page-hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(74, 158, 219, 0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200, 168, 75, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(46, 204, 113, 0.04) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -399,7 +447,7 @@ ul { list-style: none; }
 .page-hero h1 {
   font-size: var(--text-5xl);
   margin-bottom: var(--space-4);
-  color: var(--text-main);
+  color: var(--text-primary);
   position: relative;
   z-index: 1;
   animation: fadeInDown 0.7s ease-out;
@@ -410,7 +458,7 @@ ul { list-style: none; }
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto;
-  color: var(--text-body);
+  color: var(--text-muted);
   position: relative;
   z-index: 1;
   animation: fadeInDown 0.7s ease-out 0.15s both;
@@ -465,21 +513,21 @@ ul { list-style: none; }
 
 /* --- Primary CTA: Gold Background + Navy Text --- */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-light-hover));
   color: var(--accent-text);
   border-color: transparent;
   box-shadow: var(--shadow-gold);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  background: linear-gradient(135deg, var(--accent-light-hover), var(--accent-primary));
   transform: translateY(-2px);
   box-shadow: var(--shadow-gold-lg);
 }
 
 .btn-primary:active {
   transform: translateY(1px) scale(0.98);
-  background: var(--accent-dark);
+  background: var(--accent-hover);
   box-shadow: none;
 }
 
@@ -494,12 +542,12 @@ ul { list-style: none; }
 /* --- Secondary CTA: Gold Outline + Transparent --- */
 .btn-secondary {
   background: transparent;
-  color: var(--accent);
-  border-color: var(--accent);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
 }
 
 .btn-secondary:hover {
-  background: var(--accent);
+  background: var(--accent-primary);
   color: var(--accent-text);
   transform: translateY(-2px);
   box-shadow: var(--shadow-gold);
@@ -536,12 +584,12 @@ ul { list-style: none; }
 /* --- Outline Gold (on any background) --- */
 .btn-outline-gold {
   background: transparent;
-  color: var(--accent);
-  border-color: var(--accent);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
 }
 
 .btn-outline-gold:hover {
-  background: var(--accent);
+  background: var(--accent-primary);
   color: var(--accent-text);
 }
 
@@ -564,7 +612,7 @@ ul { list-style: none; }
    CARDS — Luxury Dark Cards with Surface Depth
    =================================================================== */
 .card {
-  background: linear-gradient(160deg, var(--bg-card) 0%, #152238 100%);
+  background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md), var(--shadow-inset-gold);
   padding: var(--space-10) var(--space-8);
@@ -591,6 +639,7 @@ ul { list-style: none; }
   transform: translateY(-6px);
   box-shadow: var(--shadow-xl), var(--shadow-inset-gold);
   border-color: var(--border-gold);
+  background: linear-gradient(160deg, var(--surface-2) 0%, var(--bg-tertiary) 100%);
 }
 
 .card:hover::before {
@@ -601,25 +650,25 @@ ul { list-style: none; }
 .card-icon {
   width: 64px;
   height: 64px;
-  background: rgba(201, 168, 76, 0.10);
+  background: rgba(200, 168, 75, 0.10);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
+  color: var(--accent-primary);
   margin-bottom: var(--space-6);
   transition: background var(--ease-base), color var(--ease-base);
-  border: 1px solid rgba(201, 168, 76, 0.18);
+  border: 1px solid rgba(200, 168, 75, 0.18);
 }
 
 .card:hover .card-icon {
-  background: rgba(201, 168, 76, 0.18);
-  color: var(--accent-light);
+  background: rgba(200, 168, 75, 0.18);
+  color: var(--accent-light-hover);
 }
 
 .card h3 {
   font-size: var(--text-xl);
-  color: var(--text-main);
+  color: var(--text-primary);
   margin-bottom: var(--space-3);
 }
 
@@ -728,16 +777,16 @@ ul { list-style: none; }
 .text-center { text-align: center; }
 .text-right  { text-align: right; }
 
-.text-primary { color: var(--accent); }
-.text-accent  { color: var(--accent); }
+.text-primary { color: var(--accent-primary); }
+.text-accent  { color: var(--accent-primary); }
 .text-muted   { color: var(--text-muted); }
-.text-white   { color: var(--white); }
+.text-white   { color: var(--text-primary); }
 .text-dark    { color: var(--text-body); }
 
-.bg-primary   { background-color: var(--accent); color: var(--accent-text); }
-.bg-subtle    { background-color: var(--bg-subtle); }
-.bg-dark      { background-color: var(--bg-dark); color: var(--white); }
-.bg-gold-mid  { background: linear-gradient(135deg, var(--navy-dark), var(--navy), var(--navy-light)); color: var(--white); }
+.bg-primary   { background-color: var(--accent-primary); color: var(--accent-on-light); }
+.bg-subtle    { background-color: var(--bg-tertiary); }
+.bg-dark      { background-color: var(--bg-primary); color: var(--text-primary); }
+.bg-gold-mid  { background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), var(--bg-tertiary)); color: var(--text-primary); }
 
 /* Flex */
 .flex         { display: flex; }
@@ -815,7 +864,7 @@ ul { list-style: none; }
   font-family: var(--font-heading);
   font-size: var(--text-5xl);
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-primary);
   line-height: 1;
   margin-bottom: var(--space-2);
 }
@@ -853,7 +902,7 @@ ul { list-style: none; }
   letter-spacing: 1px;
   text-transform: uppercase;
   text-align: left;
-  color: var(--accent);
+  color: var(--accent-primary);
 }
 
 .price-table th.center,
@@ -878,7 +927,7 @@ ul { list-style: none; }
 
 .price-badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-light-hover));
   color: var(--accent-text);
   padding: 4px 16px;
   border-radius: var(--radius-full);

@@ -28,22 +28,22 @@
     background:
         linear-gradient(
             105deg,
-            rgba(4, 8, 20, 0.94) 0%,
-            rgba(8, 14, 28, 0.82) 35%,
-            rgba(12, 21, 38, 0.55) 65%,
-            rgba(12, 21, 38, 0.35) 100%
+            rgba(13, 43, 31, 0.94) 0%,
+            rgba(22, 58, 44, 0.82) 35%,
+            rgba(26, 64, 50, 0.55) 65%,
+            rgba(26, 64, 50, 0.35) 100%
         );
     z-index: 1;
 }
 
-/* Champagne gold key light + cool fill light — cinematic depth */
+/* Gold key light + cool green fill — cinematic depth */
 .heroBg::after {
     content: '';
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse 55% 60% at 0% 30%, rgba(201, 168, 76, 0.09) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 40% at 100% 70%, rgba(74, 158, 219, 0.05) 0%, transparent 60%);
+        radial-gradient(ellipse 55% 60% at 0% 30%, rgba(200, 168, 75, 0.09) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 100% 70%, rgba(46, 204, 113, 0.05) 0%, transparent 60%);
     z-index: 2;
 }
 
@@ -230,15 +230,15 @@
 }
 
 .featureCard {
-    background: rgba(19, 31, 53, 0.88);
+    background: rgba(17, 42, 30, 0.88);
     backdrop-filter: blur(28px) saturate(1.4);
     -webkit-backdrop-filter: blur(28px) saturate(1.4);
-    border: 1px solid rgba(201, 168, 76, 0.18);
+    border: 1px solid rgba(200, 168, 75, 0.18);
     border-radius: var(--radius-xl);
     padding: var(--space-10);
     width: 100%;
     max-width: 420px;
-    box-shadow: 0 24px 64px rgba(4, 8, 20, 0.50), inset 0 1px 0 rgba(201, 168, 76, 0.12);
+    box-shadow: 0 24px 64px rgba(4, 16, 8, 0.50), inset 0 1px 0 rgba(200, 168, 75, 0.12);
 }
 
 .featureCard h3 {
