@@ -136,7 +136,7 @@ export default function Home() {
                   <AnimatedCounter end={stat.number} />
                 </div>
                 {/* Label — muted slate for hierarchy */}
-                <div className="stat-label">{stat.label}</div>
+                <div className="stat-label" style={{ color: 'rgba(255,255,255,0.65)' }}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -217,7 +217,7 @@ export default function Home() {
                     fontSize: 'var(--text-6xl)',
                     lineHeight: 1,
                     color: 'var(--accent)',
-                    fontFamily: '"matterFont", Arial, sans-serif',
+                    fontFamily: 'var(--font-heading)',
                     marginBottom: 'var(--space-4)',
                   }}
                 >

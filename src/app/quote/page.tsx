@@ -175,7 +175,7 @@ export default function Quote() {
                         <Link
                             href="/contact-us"
                             style={{
-                                background: 'linear-gradient(135deg, #0d2137, #1a3a52)',
+                                background: 'linear-gradient(135deg, var(--bg-primary), var(--navy-light))',
                                 borderRadius: 'var(--radius-xl)',
                                 padding: 'var(--space-10) var(--space-8)',
                                 display: 'flex',
@@ -244,7 +244,7 @@ export default function Quote() {
 
             {/* Final CTA */}
             <section style={{
-                background: 'linear-gradient(140deg, #0d2137 0%, #1a3a52 60%, #1e5f6e 100%)',
+                background: 'linear-gradient(140deg, var(--bg-primary) 0%, var(--bg-dark) 60%, var(--navy-light) 100%)',
                 padding: 'var(--space-20) 0',
                 textAlign: 'center',
                 position: 'relative',

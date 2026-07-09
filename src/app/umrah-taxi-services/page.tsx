@@ -100,7 +100,7 @@ export default function UmrahTaxiServices() {
                                 <li>✅ Free cancellation up to 24 hours</li>
                             </ul>
                             <div style={{ marginTop: '2rem' }}>
-                                <Link href="/booking" className="btn btn-primary">
+                                <Link href="/book-online" className="btn btn-primary">
                                     Book Your Umrah Taxi
                                 </Link>
                             </div>
@@ -168,7 +168,7 @@ export default function UmrahTaxiServices() {
                         Join thousands of satisfied pilgrims who trust us for their Umrah transportation needs.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/booking" className="btn btn-primary btn-lg">
+                        <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book Now
                         </Link>
                         <Link href="/prices" className="btn btn-outline btn-lg">

@@ -54,12 +54,12 @@
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(36, 84, 232, 0.06);
 }
 
 .faqItemOpen {
     box-shadow: var(--shadow-md);
-    border-color: rgba(212, 175, 55, 0.15);
+    border-color: rgba(36, 84, 232, 0.15);
 }
 
 .faqQuestion {
@@ -78,7 +78,7 @@
 }
 
 .faqQuestion:hover {
-    background: rgba(212, 175, 55, 0.04);
+    background: rgba(36, 84, 232, 0.04);
 }
 
 .questionText {
@@ -99,7 +99,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(212, 175, 55, 0.08);
+    background: rgba(36, 84, 232, 0.08);
     transition: all 0.3s ease;
 }
 

@@ -232,7 +232,7 @@ export default function ContactUs() {
                         Skip the form — book directly through our quick booking page or WhatsApp.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/booking" className="btn btn-primary btn-lg">
+                        <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book Now
                         </Link>
                         <a href="https://wa.me/966501234567" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">

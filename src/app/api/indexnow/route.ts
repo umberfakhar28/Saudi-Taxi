@@ -14,6 +14,7 @@ const ALL_URLS = [
   `${BASE_URL}/faqs`,
   `${BASE_URL}/testimonials`,
   `${BASE_URL}/our-gallery`,
+  `${BASE_URL}/prices`,
   `${BASE_URL}/privacy-policy`,
   `${BASE_URL}/book-online`,
   `${BASE_URL}/quote`,

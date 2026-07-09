@@ -34,7 +34,7 @@ export default function ThankYou() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         margin: '0 auto 2rem',
                         fontSize: '3rem',
-                        boxShadow: '0 8px 30px rgba(212,175,55,0.4)',
+                        boxShadow: '0 8px 30px rgba(36, 84, 232,0.4)',
                         animation: 'pulse 2s infinite',
                     }}>
                         ✅

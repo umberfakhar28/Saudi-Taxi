@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
     title: "Jeddah City Tour Services | Guided Jeddah Tour | Gulf Trip Service",
@@ -159,6 +160,17 @@ export default function JeddahCityTour() {
                     </div>
                 </div>
             </section>
+
+            <RelatedLinks
+                title="More Jeddah Taxi Services"
+                links={[
+                    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+                    { href: "/jeddah-airport-taxi-guide", label: "Jeddah Airport Taxi Guide" },
+                    { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
+                    { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
+                    { href: "/services/jeddah", label: "Jeddah Taxi Services Overview" },
+                ]}
+            />
         </main>
     );
 }

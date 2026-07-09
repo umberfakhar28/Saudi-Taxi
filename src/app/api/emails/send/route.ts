@@ -3,7 +3,10 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = 'Gulf Trip Service <onboarding@resend.dev>';
+// onboarding@resend.dev is Resend's shared sandbox domain — it's rate-limited
+// and lands in spam more often. Verify gulftripservice.com in the Resend
+// dashboard, then set RESEND_FROM_EMAIL in .env.local to switch over.
+const FROM = process.env.RESEND_FROM_EMAIL || 'Gulf Trip Service <onboarding@resend.dev>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'umberfakhar10@gmail.com';
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 

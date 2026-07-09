@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./VehiclesSection.module.css";
 
 const vehicles = [
@@ -6,8 +7,8 @@ const vehicles = [
     id: 1,
     name: "Toyota Camry",
     category: "Standard",
-    image:
-      "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&q=80",
+    image: "/images/fleet-sedan2.jpg",
+    objectPosition: "20% center",
     desc1: "Smooth, fuel-efficient rides perfect for city commutes and airport transfers — dependable comfort every trip.",
     desc2:
       "Best suited for <strong>solo travelers &amp; small groups</strong> seeking reliability.",
@@ -16,8 +17,8 @@ const vehicles = [
     id: 2,
     name: "Lexus ES",
     category: "Premium",
-    image:
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&q=80",
+    image: "/images/chauffeur.jpg",
+    objectPosition: "center 30%",
     desc1: "Premium leather interior with whisper-quiet cabin, turning every journey into a first-class experience.",
     desc2:
       "Best suited for <strong>executives &amp; couples</strong> who value refined comfort.",
@@ -26,8 +27,8 @@ const vehicles = [
     id: 3,
     name: "GMC Yukon",
     category: "SUV",
-    image:
-      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&q=80",
+    image: "/images/fleet-suv.jpg",
+    objectPosition: "center top",
     desc1: "Commanding 7-seat SUV with generous cargo room — built for long journeys and rugged road conditions.",
     desc2:
       "Best suited for <strong>families &amp; groups</strong> exploring inter-city destinations.",
@@ -36,8 +37,8 @@ const vehicles = [
     id: 4,
     name: "Mercedes S-Class",
     category: "Luxury",
-    image:
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80",
+    image: "/images/interior.jpg",
+    objectPosition: "center center",
     desc1: "Iconic luxury sedan with massage seats, ambient lighting, and executive-class privacy on the road.",
     desc2:
       "Best suited for <strong>VIP travelers &amp; special occasions</strong> demanding the finest.",
@@ -46,8 +47,8 @@ const vehicles = [
     id: 5,
     name: "BMW 7 Series",
     category: "Luxury",
-    image:
-      "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80",
+    image: "/images/fleet-sedan.jpg",
+    objectPosition: "center top",
     desc1: "Dynamic performance meets handcrafted luxury — a bold, elegant ride for the discerning traveler.",
     desc2:
       "Best suited for <strong>professionals &amp; luxury seekers</strong> who appreciate prestige.",
@@ -56,8 +57,8 @@ const vehicles = [
     id: 6,
     name: "Toyota HiAce",
     category: "Van",
-    image:
-      "https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=600&q=80",
+    image: "/images/fleet-van.jpg",
+    objectPosition: "center top",
     desc1: "Spacious 12-passenger van with enormous luggage capacity — the ultimate group travel solution.",
     desc2:
       "Best suited for <strong>large groups &amp; full Umrah party transfers</strong> all together.",
@@ -82,11 +83,13 @@ export default function VehiclesSection() {
           {vehicles.map((car) => (
             <div key={car.id} className={styles.card}>
               <div className={styles.imageWrapper}>
-                <img
+                <Image
                   src={car.image}
-                  alt={car.name}
+                  alt={`${car.name} — ${car.category} vehicle`}
+                  fill
                   className={styles.image}
-                  loading="lazy"
+                  style={{ objectPosition: car.objectPosition }}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 <span className={styles.badge}>{car.category}</span>
               </div>
@@ -102,7 +105,7 @@ export default function VehiclesSection() {
                 />
                 <div className={styles.spacer} />
                 <Link
-                  href={`/booking?car=${car.id}`}
+                  href={`/book-online?car=${car.id}`}
                   className={styles.cta}
                 >
                   Book Now

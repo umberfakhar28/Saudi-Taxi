@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
+import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
     title: "Jeddah King Abdulaziz International Airport (KAIA) Taxi | Gulf Trip Service",
@@ -72,6 +73,17 @@ export default function JeddahAirportTaxi() {
                     </div>
                 </div>
             </section>
+
+            <RelatedLinks
+                title="More Jeddah Taxi Services"
+                links={[
+                    { href: "/jeddah-airport-taxi-guide", label: "Jeddah Airport Taxi Guide" },
+                    { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
+                    { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
+                    { href: "/services/jeddah", label: "Jeddah Taxi Services Overview" },
+                    { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tours" },
+                ]}
+            />
         </main>
     );
 }

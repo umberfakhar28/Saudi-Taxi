@@ -45,7 +45,7 @@
     font-size: 0.95rem;
     color: #0F172A;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+    box-shadow: 0 4px 12px rgba(36, 84, 232, 0.35);
 }
 .admin-logo-title {
     font-size: 1rem;
@@ -101,11 +101,11 @@
     color: rgba(255, 255, 255, 0.9);
 }
 .admin-nav-item.active {
-    background: rgba(212, 175, 55, 0.12);
+    background: rgba(36, 84, 232, 0.12);
     color: #D4AF37;
 }
 .admin-nav-item.active .admin-nav-icon {
-    background: rgba(212, 175, 55, 0.18);
+    background: rgba(36, 84, 232, 0.18);
     color: #D4AF37;
 }
 .admin-nav-icon {
@@ -370,7 +370,7 @@
 }
 .admin-btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.45);
+    box-shadow: 0 4px 16px rgba(36, 84, 232, 0.45);
 }
 .admin-btn-secondary {
     display: inline-flex;

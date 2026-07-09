@@ -195,7 +195,7 @@ export default function About() {
                         Join the 15,000+ satisfied customers who trust Gulf Trip Service for their transportation needs.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/booking" className="btn btn-primary btn-lg">
+                        <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book a Ride
                         </Link>
                         <Link href="/contact-us" className="btn btn-outline btn-lg">

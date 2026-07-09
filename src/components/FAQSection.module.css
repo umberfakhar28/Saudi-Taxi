@@ -16,7 +16,7 @@
 .accordionItem {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(36, 84, 232, 0.06);
     border-left: 4px solid transparent;
     box-shadow: var(--shadow-sm);
     overflow: hidden;
@@ -44,7 +44,7 @@
 }
 
 .accordionTrigger:hover {
-    background: rgba(212, 175, 55, 0.04);
+    background: rgba(36, 84, 232, 0.04);
 }
 
 .accordionQuestion {

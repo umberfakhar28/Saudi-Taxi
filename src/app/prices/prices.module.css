@@ -3,7 +3,7 @@
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
     background: var(--bg-card);
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(36, 84, 232, 0.06);
 }
 
 .priceTable {
@@ -37,12 +37,12 @@
 }
 
 .priceTable tbody tr {
-    border-bottom: 1px solid rgba(212, 175, 55, 0.06);
+    border-bottom: 1px solid rgba(36, 84, 232, 0.06);
     transition: background 0.2s ease;
 }
 
 .priceTable tbody tr:hover {
-    background: rgba(212, 175, 55, 0.04);
+    background: rgba(36, 84, 232, 0.04);
 }
 
 .priceTable td {
@@ -65,7 +65,7 @@
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
     position: relative;
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(36, 84, 232, 0.06);
     display: flex;
     flex-direction: column;
 }
@@ -73,7 +73,7 @@
 .packageCard:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
-    border-color: rgba(212, 175, 55, 0.12);
+    border-color: rgba(36, 84, 232, 0.12);
 }
 
 .packageRecommended {
@@ -99,7 +99,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 12px rgba(36, 84, 232, 0.3);
 }
 
 .packageName {
@@ -124,7 +124,7 @@
     font-size: 0.9rem;
     margin-bottom: 2rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+    border-bottom: 1px solid rgba(36, 84, 232, 0.08);
 }
 
 .packageFeatures {

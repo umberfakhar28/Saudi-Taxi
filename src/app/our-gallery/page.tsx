@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
@@ -10,24 +11,24 @@ export const metadata = generatePageMetadata({
 
 const categories = ["All", "Fleet", "Makkah", "Madinah", "Jeddah", "AlUla", "Taif"];
 
-const galleryItems = [
+const galleryItems: { emoji: string; title: string; category: string; caption: string; image?: string; objectPosition?: string }[] = [
     { emoji: "🕌", title: "Masjid Al-Haram", category: "Makkah", caption: "The Grand Mosque and Holy Kaaba" },
-    { emoji: "🚗", title: "Mercedes E-Class", category: "Fleet", caption: "Our premium business class sedan" },
+    { emoji: "🚗", title: "Mercedes E-Class", category: "Fleet", caption: "Our premium business class sedan", image: "/images/fleet-sedan2.jpg", objectPosition: "20% center" },
     { emoji: "🌙", title: "Prophet's Mosque", category: "Madinah", caption: "Masjid Al-Nabawi at dawn" },
-    { emoji: "🚐", title: "Toyota Hiace", category: "Fleet", caption: "Our 12-seater group minivan" },
+    { emoji: "🚐", title: "Toyota Hiace", category: "Fleet", caption: "Our 12-seater group minivan", image: "/images/fleet-van.jpg", objectPosition: "center top" },
     { emoji: "🏔️", title: "Jabal Al-Nour", category: "Makkah", caption: "Cave of Hira where revelation began" },
-    { emoji: "🌅", title: "Jeddah Corniche", category: "Jeddah", caption: "The beautiful Red Sea waterfront" },
-    { emoji: "🚙", title: "Toyota Land Cruiser", category: "Fleet", caption: "Our luxury 7-seater SUV" },
+    { emoji: "🌅", title: "Jeddah Corniche", category: "Jeddah", caption: "The beautiful Red Sea waterfront", image: "/images/city-jeddah.jpg", objectPosition: "center center" },
+    { emoji: "🚙", title: "Toyota Land Cruiser", category: "Fleet", caption: "Our luxury 7-seater SUV", image: "/images/fleet-suv.jpg", objectPosition: "center top" },
     { emoji: "🌿", title: "Jannat Al-Baqi", category: "Madinah", caption: "The sacred cemetery of Madinah" },
     { emoji: "🏜️", title: "Elephant Rock AlUla", category: "AlUla", caption: "The iconic natural rock formation" },
     { emoji: "🌹", title: "Taif Rose Farm", category: "Taif", caption: "The famous rose gardens of Taif" },
     { emoji: "🕌", title: "Masjid Quba", category: "Madinah", caption: "The first mosque built in Islam" },
-    { emoji: "🚗", title: "Toyota Camry", category: "Fleet", caption: "Our comfortable economy sedan" },
+    { emoji: "🚗", title: "Toyota Camry", category: "Fleet", caption: "Our comfortable economy sedan", image: "/images/fleet-sedan.jpg", objectPosition: "center top" },
     { emoji: "⛰️", title: "Mount Uhud", category: "Madinah", caption: "Historic site of the Battle of Uhud" },
     { emoji: "🌊", title: "Jeddah Floating Mosque", category: "Jeddah", caption: "Al-Rahma Mosque on the Red Sea" },
     { emoji: "🏰", title: "Al-Balad Old Town", category: "Jeddah", caption: "UNESCO World Heritage Old Town of Jeddah" },
     { emoji: "🌄", title: "Hegra (Madain Saleh)", category: "AlUla", caption: "Ancient Nabataean tombs of Hegra" },
-    { emoji: "🚐", title: "GMC Savana", category: "Fleet", caption: "Our executive 8-seater passenger van" },
+    { emoji: "🚐", title: "GMC Savana", category: "Fleet", caption: "Our executive 8-seater passenger van", image: "/images/chauffeur.jpg", objectPosition: "center 30%" },
     { emoji: "🏔️", title: "Al-Shafa, Taif", category: "Taif", caption: "Cool mountains of Al-Shafa above Makkah" },
     { emoji: "🌃", title: "Makkah Skyline", category: "Makkah", caption: "Makkah Clock Tower and Holy Mosque at night" },
 ];
@@ -78,24 +79,37 @@ export default function OurGallery() {
                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                                 cursor: 'pointer',
                             }}>
-                                {/* Image Placeholder */}
                                 <div style={{
                                     height: '200px',
-                                    background: `linear-gradient(135deg, var(--primary-dark), var(--primary))`,
-                                    display: 'flex', flexDirection: 'column',
-                                    alignItems: 'center', justifyContent: 'center',
                                     position: 'relative',
                                     overflow: 'hidden',
+                                    background: item.image ? undefined : `linear-gradient(135deg, var(--primary-dark), var(--primary))`,
+                                    display: item.image ? undefined : 'flex',
+                                    flexDirection: item.image ? undefined : 'column',
+                                    alignItems: item.image ? undefined : 'center',
+                                    justifyContent: item.image ? undefined : 'center',
                                 }}>
-                                    <div style={{
-                                        position: 'absolute', inset: 0,
-                                        backgroundImage: 'radial-gradient(var(--secondary) 1px, transparent 1px)',
-                                        backgroundSize: '30px 30px', opacity: 0.06,
-                                    }} />
-                                    <span style={{ fontSize: '4rem', position: 'relative', zIndex: 1 }}>{item.emoji}</span>
+                                    {item.image ? (
+                                        <Image
+                                            src={item.image}
+                                            alt={`${item.title} — ${item.caption}`}
+                                            fill
+                                            style={{ objectFit: 'cover', objectPosition: item.objectPosition }}
+                                            sizes="(max-width: 768px) 100vw, 300px"
+                                        />
+                                    ) : (
+                                        <>
+                                            <div style={{
+                                                position: 'absolute', inset: 0,
+                                                backgroundImage: 'radial-gradient(var(--secondary) 1px, transparent 1px)',
+                                                backgroundSize: '30px 30px', opacity: 0.06,
+                                            }} />
+                                            <span style={{ fontSize: '4rem', position: 'relative', zIndex: 1 }}>{item.emoji}</span>
+                                        </>
+                                    )}
                                     <div style={{
                                         position: 'absolute', top: '0.75rem', right: '0.75rem',
-                                        background: 'rgba(212, 175, 55, 0.9)', color: 'var(--primary)',
+                                        background: 'rgba(36, 84, 232, 0.9)', color: 'var(--primary)',
                                         padding: '0.2rem 0.7rem', borderRadius: '20px',
                                         fontSize: '0.75rem', fontWeight: 700, zIndex: 1,
                                     }}>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
 
@@ -76,6 +77,23 @@ export default function AirportTransfers() {
                 </div>
             </section>
 
+            <section style={{ padding: 'var(--space-8) 0 0' }}>
+                <div className="container">
+                    <div style={{
+                        position: 'relative', width: '100%', height: '360px',
+                        borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-xl)',
+                    }}>
+                        <Image
+                            src="/images/airport-terminal.jpg"
+                            alt="Modern airport terminal — Gulf Trip Service airport transfers"
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            sizes="(max-width: 768px) 100vw, 1200px"
+                        />
+                    </div>
+                </div>
+            </section>
+
             {/* Intro */}
             <section className="section-lg">
                 <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
@@ -142,7 +160,7 @@ export default function AirportTransfers() {
                                                 borderRadius: '30px',
                                                 fontWeight: 800,
                                                 fontSize: '0.9rem',
-                                                boxShadow: '0 4px 10px rgba(212, 175, 55, 0.2)'
+                                                boxShadow: '0 4px 10px rgba(36, 84, 232, 0.2)'
                                             }}>
                                                 {route.price}
                                             </span>

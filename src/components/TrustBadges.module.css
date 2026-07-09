@@ -1,7 +1,7 @@
 .section {
     padding: 3rem 0;
     background-color: var(--bg-base);
-    border-top: 1px solid rgba(212, 175, 55, 0.06);
+    border-top: 1px solid rgba(36, 84, 232, 0.06);
 }
 
 .grid {
@@ -26,7 +26,7 @@
 
 .iconWrapper {
     color: var(--accent);
-    background-color: rgba(212, 175, 55, 0.08);
+    background-color: rgba(36, 84, 232, 0.08);
     padding: 1rem;
     border-radius: 50%;
     display: flex;

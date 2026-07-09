@@ -62,12 +62,12 @@ export default function TestimonialsSection() {
       <div className="container">
         {/* Section header */}
         <div className="section-header centered">
-          <span className="section-eyebrow" style={{ color: 'var(--accent)', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>Testimonials</span>
-          <h2 className="section-title" style={{ color: 'var(--white)' }}>
+          <span className="section-eyebrow">Testimonials</span>
+          <h2 className="section-title">
             Real Stories From Our Riders
           </h2>
           <div className="divider-gold" style={{ margin: '1rem auto 1.5rem' }} />
-          <p className="section-subtitle" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          <p className="section-subtitle">
             Genuine feedback from pilgrims and travelers who trusted us with their journey.
           </p>
         </div>

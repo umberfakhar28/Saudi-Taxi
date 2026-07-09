@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import {
     ShieldIcon,
     MessageIcon,
@@ -35,17 +34,6 @@ const services = [
 const Hero = () => {
     return (
         <section className={styles.hero}>
-            {/* Full-screen background image with navy overlay */}
-            <div className={styles.heroBg}>
-                <Image
-                    src="/images/hero-luxury-car.jpg"
-                    alt="Premium transportation service"
-                    fill
-                    priority
-                    sizes="100vw"
-                />
-            </div>
-
             {/* LEFT COLUMN — Text Content */}
             <div className={styles.content}>
                 <div className={styles.badge}>
@@ -113,16 +101,16 @@ const Hero = () => {
                         style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
                     >
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)' }}>Pickup</label>
-                            <input name="pickup" type="text" className="form-input" placeholder="Airport, Hotel, etc." required style={{ padding: '12px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem' }}>Pickup</label>
+                            <input name="pickup" type="text" className="form-input" placeholder="Airport, Hotel, etc." required style={{ padding: '12px 14px', fontSize: '0.9rem' }} />
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)' }}>Dropoff</label>
-                            <input name="dropoff" type="text" className="form-input" placeholder="Destination" required style={{ padding: '12px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem' }}>Dropoff</label>
+                            <input name="dropoff" type="text" className="form-input" placeholder="Destination" required style={{ padding: '12px 14px', fontSize: '0.9rem' }} />
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
-                            <label className="form-label" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)' }}>Date</label>
-                            <input name="date" type="date" className="form-input" required style={{ padding: '12px 14px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#fff' }} />
+                            <label className="form-label" style={{ fontSize: '0.8rem' }}>Date</label>
+                            <input name="date" type="date" className="form-input" required style={{ padding: '12px 14px', fontSize: '0.9rem' }} />
                         </div>
                         <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem', width: '100%', padding: '14px' }}>
                             Check Rates & Book

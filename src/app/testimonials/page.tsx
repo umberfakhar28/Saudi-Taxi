@@ -187,7 +187,7 @@ export default function Testimonials() {
                     <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
                         Experience the service that thousands of pilgrims trust. Book your ride today.
                     </p>
-                    <Link href="/booking" className="btn btn-primary btn-lg">
+                    <Link href="/book-online" className="btn btn-primary btn-lg">
                         Book Your Ride
                     </Link>
                 </div>

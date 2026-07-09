@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import PublicLayout from "@/components/PublicLayout";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { SITE_CONFIG } from "@/lib/seo";
 import { localBusinessSchema, jsonLd } from "@/lib/jsonld";
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
@@ -46,6 +47,11 @@ export const metadata: Metadata = {
     ],
   },
   verification: {
+    // Set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION in .env.local once you
+    // create a Google Search Console property (HTML tag method).
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    }),
     other: {
       "msvalidate.01": ["995aadf700384f5c8ef4ad71bc79ab65"],
     },
@@ -66,6 +72,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <GoogleAnalytics />
         <PublicLayout>
           {children}
         </PublicLayout>

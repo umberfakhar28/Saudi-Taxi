@@ -4,7 +4,7 @@
   ✅ ALIGNMENT:  All nav links baseline-aligned; dropdown items left-aligned
   ✅ PROXIMITY:  Related dropdown links grouped under their parent
   ✅ REPETITION: Same link style, same transition, same underline effect throughout
-  ✅ CONTRAST:   White links on Midnight Navy bg; Gold CTA button unmissable vs dark
+  ✅ CONTRAST:   Charcoal links on white bg; Blue CTA button unmissable
 */
 
 .navbar {
@@ -12,17 +12,17 @@
     top: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(9, 26, 16, 0.96);
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(16px) saturate(1.6);
     -webkit-backdrop-filter: blur(16px) saturate(1.6);
-    border-bottom: 1px solid rgba(200, 168, 75, 0.14);
+    border-bottom: 1px solid rgba(20, 23, 31, 0.08);
     height: var(--nav-height);
     transition: background var(--ease-base), box-shadow var(--ease-base);
 }
 
 .navbar.scrolled {
-    background: rgba(9, 26, 16, 0.99);
-    box-shadow: 0 4px 28px rgba(4, 16, 8, 0.55), 0 1px 0 rgba(200, 168, 75, 0.10);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 28px rgba(16, 18, 26, 0.08), 0 1px 0 rgba(36, 84, 232, 0.10);
 }
 
 /* ---- Container: Balance — logo | links | CTA in 3 zones ---- */
@@ -64,7 +64,7 @@
     font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: 400;
-    color: rgba(255,255,255,0.45);
+    color: var(--text-muted);
     letter-spacing: 2px;
     text-transform: uppercase;
     display: block;
@@ -84,7 +84,7 @@
 /* Base link style (Repetition: identical across all nav items) */
 .link {
     position: relative;
-    color: rgba(255,255,255,0.82);     /* Contrast: readable but not as bright as logo */
+    color: var(--text-secondary);      /* Contrast: readable but not as bright as logo */
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -118,7 +118,7 @@
 }
 
 .link:hover {
-    color: var(--white);
+    color: var(--accent);
 }
 
 .link:hover::after {
@@ -145,16 +145,16 @@
     top: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%) translateY(6px);
-    background: var(--bg-elevated, #1F4230);
+    background: var(--surface-1);
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 56px rgba(4, 16, 8, 0.65), 0 1px 0 rgba(200, 168, 75, 0.08);
+    box-shadow: var(--shadow-xl);
     min-width: 220px;
     padding: var(--space-2) 0;
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--ease-base), transform var(--ease-base), visibility var(--ease-base);
     z-index: 200;
-    border: 1px solid rgba(200, 168, 75, 0.16);
+    border: 1px solid rgba(20, 23, 31, 0.08);
     border-top: 2px solid var(--accent);
 }
 
@@ -172,7 +172,7 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: var(--text-muted);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+    border-bottom: 1px solid rgba(36, 84, 232, 0.08);
     margin-bottom: var(--space-1);
 }
 
@@ -197,7 +197,7 @@
 }
 
 .dropdownItem:hover {
-    background: rgba(201, 168, 76, 0.09);
+    background: rgba(36, 84, 232, 0.09);
     color: var(--accent);
     padding-left: calc(var(--space-5) + 6px);
 }
@@ -234,14 +234,14 @@
     display: none;
     align-items: center;
     justify-content: center;
-    color: var(--white);
+    color: var(--text-primary);
     padding: var(--space-2);
     border-radius: var(--radius-sm);
     transition: background var(--ease-fast);
 }
 
 .hamburger:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(20, 23, 31, 0.06);
 }
 
 /* ===== RESPONSIVE ===== */
@@ -318,7 +318,7 @@
         box-shadow: none;
         background: rgba(0,0,0,0.25);
         border-radius: var(--radius-md);
-        border-top: 2px solid rgba(212,175,55,0.3);
+        border-top: 2px solid rgba(36, 84, 232,0.3);
         margin: var(--space-2) 0;
         padding: var(--space-2) 0;
         min-width: unset;

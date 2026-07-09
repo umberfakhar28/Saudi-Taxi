@@ -187,7 +187,7 @@ export default function AirportTransfer() {
                                     borderRadius: '50%',
                                     fontSize: '2rem',
                                     marginBottom: '1.5rem',
-                                    boxShadow: '0 8px 25px rgba(212, 175, 55, 0.3)',
+                                    boxShadow: '0 8px 25px rgba(36, 84, 232, 0.3)',
                                 }}>{item.icon}</div>
                                 <h3 style={{ color: 'var(--primary)', fontSize: '1.15rem', marginBottom: '0.75rem' }}>{item.title}</h3>
                                 <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '0.95rem' }}>{item.desc}</p>
@@ -209,7 +209,7 @@ export default function AirportTransfer() {
                         Pre-book your airport pickup and arrive at your destination stress-free and on time.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/booking" className="btn btn-primary btn-lg">
+                        <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book Transfer
                         </Link>
                         <a href="https://wa.me/966123456789" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">

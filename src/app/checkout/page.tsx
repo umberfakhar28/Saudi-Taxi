@@ -36,9 +36,9 @@ export default function Checkout() {
                 }}>
                     <div style={{ maxWidth: '500px' }}>
                         <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✅</div>
-                        <h1 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Order Confirmed!</h1>
+                        <h1 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Booking Request Received</h1>
                         <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2rem' }}>
-                            Your booking has been confirmed. A confirmation will be sent to <strong>{formData.email}</strong>.
+                            Your card was not charged — online payment isn&apos;t live yet. Our team will contact <strong>{formData.email}</strong> to confirm your booking and arrange payment.
                         </p>
                         <Link href="/" className="btn btn-primary btn-lg">Back to Home</Link>
                     </div>
@@ -59,6 +59,19 @@ export default function Checkout() {
 
             <section className="section-lg bg-light">
                 <div className="container" style={{ maxWidth: '900px' }}>
+                    <div style={{
+                        marginBottom: '2rem', padding: '1.25rem 1.5rem',
+                        background: 'var(--accent-subtle)', borderRadius: 'var(--radius-md)',
+                        border: '1px solid var(--accent-primary)',
+                        display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
+                    }}>
+                        <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>⚠️</span>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                            <strong style={{ color: 'var(--accent-primary)' }}>Online card payment isn&apos;t live yet.</strong>{' '}
+                            Submitting this form sends a booking request to our team — it does not charge your card.
+                            We&apos;ll follow up to confirm your booking and arrange payment.
+                        </p>
+                    </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2rem', alignItems: 'start' }}>
 
                         {/* Left: Checkout Form */}
@@ -102,7 +115,7 @@ export default function Checkout() {
                             </div>
 
                             <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-                                🔒 Complete Booking
+                                🔒 Submit Booking Request
                             </button>
                         </form>
 
@@ -131,9 +144,9 @@ export default function Checkout() {
                                 </div>
                             </div>
 
-                            <div style={{ marginTop: '1rem', padding: '1rem 1.25rem', background: 'rgba(212,175,55,0.1)', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--secondary)' }}>
+                            <div style={{ marginTop: '1rem', padding: '1rem 1.25rem', background: 'rgba(36, 84, 232,0.1)', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--secondary)' }}>
                                 <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                                    🔒 Secure, encrypted checkout. Your info is never shared.
+                                    🔒 Your info is never shared. Card charging goes live soon — for now this submits a request to our team.
                                 </p>
                             </div>
 

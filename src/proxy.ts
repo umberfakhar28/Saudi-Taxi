@@ -2,20 +2,6 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /* ─────────────────────────────────────────────────────────────────────────
-   RFC 8288 Link header — advertise all agent-discovery well-known endpoints
-   ───────────────────────────────────────────────────────────────────────── */
-const AGENT_LINK_HEADER = [
-  '</.well-known/api-catalog>; rel="api-catalog"',
-  '</.well-known/openid-configuration>; rel="openid-configuration"',
-  '</.well-known/oauth-authorization-server>; rel="oauth-authorization-server"',
-  '</.well-known/oauth-protected-resource>; rel="oauth-protected-resource"',
-  '</.well-known/mcp/server-card.json>; rel="mcp-server-card"',
-  '</.well-known/agent-skills/index.json>; rel="agent-skills"',
-  '</auth.md>; rel="auth-instructions"',
-  '</docs>; rel="service-doc"',
-].join(", ");
-
-/* ─────────────────────────────────────────────────────────────────────────
    Lightweight HTML → Markdown converter for content negotiation.
    Strips tags, converts headings/links/lists to Markdown syntax.
    ───────────────────────────────────────────────────────────────────────── */
@@ -102,7 +88,6 @@ export async function proxy(request: NextRequest) {
     ) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-    response.headers.set("Link", AGENT_LINK_HEADER);
     return response;
   }
 
@@ -155,18 +140,11 @@ export async function proxy(request: NextRequest) {
           "Vary": "Accept",
         },
       });
-      // Still add Link headers
-      mdResponse.headers.set("Link", AGENT_LINK_HEADER);
       return mdResponse;
     } catch {
       // Fall through to normal response if markdown conversion fails
     }
   }
-
-  /* ───────────────────────────────────────────────────────────────────────
-     RFC 8288 — Add Link headers to every response
-     ─────────────────────────────────────────────────────────────────────── */
-  response.headers.set("Link", AGENT_LINK_HEADER);
 
   return response;
 }

@@ -37,19 +37,20 @@
     background: var(--bg-card);
     transition: all 0.3s ease;
     position: relative;
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(36, 84, 232, 0.06);
 }
 
 .carCard:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
-    border-color: rgba(212, 175, 55, 0.12);
+    border-color: rgba(36, 84, 232, 0.12);
 }
 
 .imageContainer {
     height: 240px;
     background-color: var(--bg-subtle);
     overflow: hidden;
+    position: relative;
 }
 
 .carImage {
@@ -88,7 +89,7 @@
     justify-content: space-between;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+    border-bottom: 1px solid rgba(36, 84, 232, 0.08);
     color: var(--text-muted);
     font-size: 0.9rem;
 }

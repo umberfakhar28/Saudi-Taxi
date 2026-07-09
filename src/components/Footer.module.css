@@ -1,8 +1,8 @@
 .footer {
     background: linear-gradient(180deg, var(--bg-dark) 0%, #050A15 100%);
-    color: var(--text-body);
+    color: rgba(255, 255, 255, 0.65);
     padding: 5rem 0 0;
-    border-top: 1px solid rgba(201, 168, 76, 0.18);
+    border-top: 1px solid rgba(36, 84, 232, 0.18);
     font-size: 0.9rem;
     position: relative;
 }
@@ -13,7 +13,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.50), transparent);
+    background: linear-gradient(90deg, transparent, rgba(36, 84, 232, 0.50), transparent);
 }
 
 .grid {
@@ -62,7 +62,7 @@
     width: 40px;
     height: 40px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(201, 168, 76, 0.14);
+    border: 1px solid rgba(36, 84, 232, 0.14);
     border-radius: 50%;
     font-size: 1.1rem;
     transition: all 0.3s ease;
@@ -74,7 +74,7 @@
     color: var(--accent-text);
     border-color: var(--accent);
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(201, 168, 76, 0.35);
+    box-shadow: 0 6px 20px rgba(36, 84, 232, 0.35);
 }
 
 .list {
@@ -110,7 +110,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(201, 168, 76, 0.10);
+    border-top: 1px solid rgba(36, 84, 232, 0.10);
     padding: 2rem 0;
 }
 

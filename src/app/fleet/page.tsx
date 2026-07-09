@@ -1,6 +1,7 @@
 
 import styles from './fleet.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
@@ -16,7 +17,8 @@ export default function FleetPage() {
             id: 1,
             name: "Toyota Camry",
             category: "Standard",
-            image: "/images/camry.jpg", // Placeholder
+            image: "/images/fleet-sedan2.jpg",
+            objectPosition: "20% center",
             passengers: 4,
             luggage: 2,
             price: "Check Rates",
@@ -26,7 +28,8 @@ export default function FleetPage() {
             id: 2,
             name: "Lexus ES",
             category: "Premium",
-            image: "/images/lexus.jpg",
+            image: "/images/chauffeur.jpg",
+            objectPosition: "center 30%",
             passengers: 4,
             luggage: 3,
             price: "Check Rates",
@@ -36,7 +39,8 @@ export default function FleetPage() {
             id: 3,
             name: "GMC Yukon",
             category: "SUV",
-            image: "/images/yukon.jpg",
+            image: "/images/fleet-suv.jpg",
+            objectPosition: "center top",
             passengers: 7,
             luggage: 5,
             price: "Check Rates",
@@ -46,7 +50,8 @@ export default function FleetPage() {
             id: 4,
             name: "Mercedes S-Class",
             category: "Luxury",
-            image: "/images/sclass.jpg",
+            image: "/images/interior.jpg",
+            objectPosition: "center center",
             passengers: 3,
             luggage: 2,
             price: "Check Rates",
@@ -56,7 +61,8 @@ export default function FleetPage() {
             id: 5,
             name: "BMW 7 Series",
             category: "Luxury",
-            image: "/images/bmw7.jpg",
+            image: "/images/fleet-sedan.jpg",
+            objectPosition: "center top",
             passengers: 3,
             luggage: 2,
             price: "Check Rates",
@@ -66,7 +72,8 @@ export default function FleetPage() {
             id: 6,
             name: "Toyota HiAce",
             category: "Van",
-            image: "/images/hiace.jpg",
+            image: "/images/fleet-van.jpg",
+            objectPosition: "center top",
             passengers: 12,
             luggage: 10,
             price: "Check Rates",
@@ -86,10 +93,14 @@ export default function FleetPage() {
                     {fleet.map((car) => (
                         <div key={car.id} className={styles.carCard}>
                             <div className={styles.imageContainer}>
-                                {/* Using a div with background color as placeholder if image fails, or next/image */}
-                                <div style={{ width: '100%', height: '100%', background: '#ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
-                                    {car.name} Image
-                                </div>
+                                <Image
+                                    src={car.image}
+                                    alt={`${car.name} — ${car.category} vehicle in the Gulf Trip Service fleet`}
+                                    fill
+                                    className={styles.carImage}
+                                    style={{ objectPosition: car.objectPosition }}
+                                    sizes="(max-width: 768px) 100vw, 350px"
+                                />
                             </div>
                             <div className={styles.carDetails}>
                                 <span className={styles.category}>{car.category}</span>
@@ -103,7 +114,7 @@ export default function FleetPage() {
                                         <span className={styles.price}>{car.price}</span>
                                         <span className={styles.unit}>{car.unit}</span>
                                     </div>
-                                    <Link href={`/booking?car=${car.id}`} className={styles.bookBtn}>
+                                    <Link href={`/book-online?car=${car.id}`} className={styles.bookBtn}>
                                         Book Now
                                     </Link>
                                 </div>

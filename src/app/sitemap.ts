@@ -1,268 +1,211 @@
 import { MetadataRoute } from "next";
+import fs from "fs";
+import path from "path";
 
 const BASE_URL = "https://gulftripservice.com";
+
+/**
+ * Real last-modified date for a route, taken from its page.tsx mtime,
+ * so the sitemap doesn't lie to crawlers by claiming every page changed
+ * on every build. Falls back to a fixed date if the file can't be read.
+ */
+function lastMod(routePath: string): Date {
+  const filePath = path.join(process.cwd(), "src", "app", routePath, "page.tsx");
+  try {
+    return fs.statSync(filePath).mtime;
+  } catch {
+    return new Date("2026-01-01");
+  }
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
-      lastModified: new Date(),
+      lastModified: lastMod(""),
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
       url: `${BASE_URL}/about-us`,
-      lastModified: new Date(),
+      lastModified: lastMod("/about-us"),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/contact-us`,
-      lastModified: new Date(),
+      lastModified: lastMod("/contact-us"),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/our-services`,
-      lastModified: new Date(),
+      lastModified: lastMod("/our-services"),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/fleet`,
-      lastModified: new Date(),
+      lastModified: lastMod("/fleet"),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/faqs`,
-      lastModified: new Date(),
+      lastModified: lastMod("/faqs"),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${BASE_URL}/testimonials`,
-      lastModified: new Date(),
+      lastModified: lastMod("/testimonials"),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${BASE_URL}/our-gallery`,
-      lastModified: new Date(),
+      lastModified: lastMod("/our-gallery"),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
+      url: `${BASE_URL}/prices`,
+      lastModified: lastMod("/prices"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${BASE_URL}/privacy-policy`,
-      lastModified: new Date(),
+      lastModified: lastMod("/privacy-policy"),
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${BASE_URL}/book-online`,
-      lastModified: new Date(),
+      lastModified: lastMod("/book-online"),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/quote`,
-      lastModified: new Date(),
+      lastModified: lastMod("/quote"),
       changeFrequency: "weekly",
       priority: 0.9,
     },
   ];
 
   const airportTransferPages: MetadataRoute.Sitemap = [
-    {
-      url: `${BASE_URL}/airport-transfers`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${BASE_URL}/jeddah-airport-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${BASE_URL}/riyadh-airport-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${BASE_URL}/madina-airport-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/abha-airport-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/dammam-airport-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/taif-airport-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/airport-transfer-for-umrah`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-  ];
+    { slug: "/airport-transfers", priority: 0.85 },
+    { slug: "/jeddah-airport-taxi-service", priority: 0.85 },
+    { slug: "/riyadh-airport-taxi-service", priority: 0.85 },
+    { slug: "/madina-airport-taxi-service", priority: 0.8 },
+    { slug: "/abha-airport-taxi-service", priority: 0.8 },
+    { slug: "/dammam-airport-taxi-service", priority: 0.8 },
+    { slug: "/taif-airport-taxi-service", priority: 0.8 },
+    { slug: "/airport-transfer-for-umrah", priority: 0.8 },
+  ].map(({ slug, priority }) => ({
+    url: `${BASE_URL}${slug}`,
+    lastModified: lastMod(slug),
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
 
   const servicePages: MetadataRoute.Sitemap = [
-    {
-      url: `${BASE_URL}/umrah-taxi-services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${BASE_URL}/umrah-transport-package`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${BASE_URL}/hotel-transfers`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/private-taxi`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/corporate-transportation-services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/wedding-transportation`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.75,
-    },
-    {
-      url: `${BASE_URL}/school-buses-services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.75,
-    },
-    {
-      url: `${BASE_URL}/educational-tours-transport`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.75,
-    },
-  ];
+    { slug: "/umrah-taxi-services", priority: 0.85 },
+    { slug: "/umrah-transport-package", priority: 0.85 },
+    { slug: "/hotel-transfers", priority: 0.8 },
+    { slug: "/private-taxi", priority: 0.8 },
+    { slug: "/corporate-transportation-services", priority: 0.8 },
+    { slug: "/wedding-transportation", priority: 0.75 },
+    { slug: "/school-buses-services", priority: 0.75 },
+    { slug: "/educational-tours-transport", priority: 0.75 },
+  ].map(({ slug, priority }) => ({
+    url: `${BASE_URL}${slug}`,
+    lastModified: lastMod(slug),
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
 
   const borderCrossingPages: MetadataRoute.Sitemap = [
-    {
-      url: `${BASE_URL}/border-crossing`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/saudi-arabia-to-bahrain-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/saudi-arabia-to-qatar-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/saudi-arabia-to-uae-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/saudi-arabia-to-jordan-land-transfer`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-  ];
+    { slug: "/border-crossing", priority: 0.8 },
+    { slug: "/saudi-arabia-to-bahrain-taxi-service", priority: 0.8 },
+    { slug: "/saudi-arabia-to-qatar-taxi-service", priority: 0.8 },
+    { slug: "/saudi-arabia-to-uae-taxi-service", priority: 0.8 },
+    { slug: "/saudi-arabia-to-jordan-land-transfer", priority: 0.8 },
+  ].map(({ slug, priority }) => ({
+    url: `${BASE_URL}${slug}`,
+    lastModified: lastMod(slug),
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
 
   const cityTourPages: MetadataRoute.Sitemap = [
-    {
-      url: `${BASE_URL}/jeddah-city-tour-services-in-saudi-arabia`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.78,
-    },
-    {
-      url: `${BASE_URL}/jeddah-to-makkah-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.78,
-    },
-    {
-      url: `${BASE_URL}/makkah-to-madinah-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.78,
-    },
-    {
-      url: `${BASE_URL}/taif-ziyarat-taxi-service`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.78,
-    },
-    {
-      url: `${BASE_URL}/ziyarat-services-in-saudi-arabia`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.78,
-    },
-    {
-      url: `${BASE_URL}/reliable-alula-tour-taxi-service-in-saudi-arabia`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.78,
-    },
+    { slug: "/jeddah-city-tour-services-in-saudi-arabia", priority: 0.78 },
+    { slug: "/jeddah-to-makkah-taxi-service", priority: 0.78 },
+    { slug: "/makkah-to-madinah-taxi-service", priority: 0.78 },
+    { slug: "/taif-ziyarat-taxi-service", priority: 0.78 },
+    { slug: "/ziyarat-services-in-saudi-arabia", priority: 0.78 },
+    { slug: "/reliable-alula-tour-taxi-service-in-saudi-arabia", priority: 0.78 },
+  ].map(({ slug, priority }) => ({
+    url: `${BASE_URL}${slug}`,
+    lastModified: lastMod(slug),
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
+
+  const longFormGuideSlugs = [
+    "/jeddah-to-makkah-guide",
+    "/jeddah-airport-taxi-guide",
+    "/makkah-to-madinah-guide",
+    "/makkah-umrah-taxi-guide",
+    "/madinah-umrah-taxi-guide",
   ];
+  const longFormGuides: MetadataRoute.Sitemap = longFormGuideSlugs.map((slug) => ({
+    url: `${BASE_URL}${slug}`,
+    lastModified: lastMod(slug),
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
+  longFormGuides.push({
+    url: `${BASE_URL}/riyadh-to-dammam-guide`,
+    lastModified: lastMod("/riyadh-to-dammam-guide"),
+    changeFrequency: "monthly" as const,
+    priority: 0.70,
+  });
 
   const cityPages: MetadataRoute.Sitemap = [
-    "riyadh","jeddah","makkah","madinah","dammam","khobar",
-    "jubail","taif","abha","yanbu","alula","neom","tabuk",
-  ].map((city) => ({ url: `${BASE_URL}/services/${city}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.80 }));
+    "riyadh", "jeddah", "makkah", "madinah", "dammam", "khobar",
+    "jubail", "taif", "abha", "yanbu", "alula", "neom", "tabuk",
+  ].map((city) => ({
+    url: `${BASE_URL}/services/${city}`,
+    lastModified: lastMod(`/services/${city}`),
+    changeFrequency: "monthly" as const,
+    priority: 0.80,
+  }));
 
   const guidePages: MetadataRoute.Sitemap = [
-    "king-khalid-airport","king-abdulaziz-airport","umrah-transportation",
-    "hajj-transportation","business-travel","family-travel",
-  ].map((slug) => ({ url: `${BASE_URL}/guides/${slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 }));
+    "king-khalid-airport", "king-abdulaziz-airport", "umrah-transportation",
+    "hajj-transportation", "business-travel", "family-travel",
+  ].map((slug) => ({
+    url: `${BASE_URL}/guides/${slug}`,
+    lastModified: lastMod(`/guides/${slug}`),
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
 
-  const blogPages: MetadataRoute.Sitemap = [
-    "airport-transfer-tips","private-vs-rental-car","umrah-travel-planning",
-    "top-attractions-riyadh","jeddah-hidden-gems","alula-complete-guide",
-    "benefits-private-airport-transfer","hajj-transport-guide",
-    "family-saudi-destinations","vip-transport-saudi",
-    "riyadh-to-jeddah-travel","safe-travel-tips-saudi",
-  ].map((slug) => ({ url: `${BASE_URL}/blog/${slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.70 }));
+  const blogSlugs = [
+    "airport-transfer-tips", "private-vs-rental-car", "umrah-travel-planning",
+    "top-attractions-riyadh", "jeddah-hidden-gems", "alula-complete-guide",
+    "benefits-private-airport-transfer", "hajj-transport-guide",
+    "family-saudi-destinations", "vip-transport-saudi",
+    "riyadh-to-jeddah-travel", "safe-travel-tips-saudi",
+  ];
+  const blogPages: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
+    url: `${BASE_URL}/blog/${slug}`,
+    lastModified: lastMod(`/blog/${slug}`),
+    changeFrequency: "monthly" as const,
+    priority: 0.70,
+  }));
 
   return [
     ...staticPages,
@@ -270,19 +213,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...servicePages,
     ...borderCrossingPages,
     ...cityTourPages,
-    // Long-form content articles
-    { url: `${BASE_URL}/jeddah-to-makkah-guide`,    lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
-    { url: `${BASE_URL}/jeddah-airport-taxi-guide`,  lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
-    { url: `${BASE_URL}/makkah-to-madinah-guide`,    lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
-    { url: `${BASE_URL}/makkah-umrah-taxi-guide`,    lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
-    { url: `${BASE_URL}/madinah-umrah-taxi-guide`,   lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.75 },
-    { url: `${BASE_URL}/riyadh-to-dammam-guide`,     lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.70 },
-    // Blog
-    { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.80 },
+    ...longFormGuides,
+    { url: `${BASE_URL}/blog`, lastModified: lastMod("/blog"), changeFrequency: "weekly" as const, priority: 0.80 },
     ...blogPages,
-    // City pages
     ...cityPages,
-    // Guide pages
     ...guidePages,
   ];
 }

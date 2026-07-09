@@ -92,7 +92,7 @@ export default function BorderCrossing() {
                 <div className="container">
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-6)', justifyContent: 'center', alignItems: 'center' }}>
                         {["Licensed & Insured Fleet", "Document Assistance", "Transparent Quoting", "24/7 Support"].map((item, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: '#0d1f2d', fontWeight: 700, fontSize: 'var(--text-sm)' }}>
+                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--accent-on-light)', fontWeight: 700, fontSize: 'var(--text-sm)' }}>
                                 <ShieldIcon size={16} />
                                 {item}
                             </div>
@@ -131,10 +131,11 @@ export default function BorderCrossing() {
                         </div>
 
                         <div style={{
-                            background: 'linear-gradient(145deg, #0d2137, #1a3a52)',
+                            background: 'linear-gradient(145deg, var(--surface-1), var(--bg-tertiary))',
+                            border: '1px solid rgba(20, 23, 31, 0.07)',
                             borderRadius: 'var(--radius-xl)',
                             padding: 'var(--space-10)',
-                            color: 'var(--white)',
+                            color: 'var(--text-primary)',
                             boxShadow: 'var(--shadow-xl)',
                         }}>
                             <h3 style={{ color: 'var(--accent)', marginBottom: 'var(--space-6)', fontSize: 'var(--text-xl)' }}>
@@ -143,7 +144,7 @@ export default function BorderCrossing() {
                             </h3>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                                 {inclusions.map((item, i) => (
-                                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.88)', lineHeight: 1.6 }}>
+                                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                                         <CheckCircleIcon size={16} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 2 }} />
                                         {item}
                                     </li>
@@ -234,32 +235,32 @@ export default function BorderCrossing() {
             <section className="section-lg">
                 <div className="container">
                     <div style={{
-                        background: 'linear-gradient(145deg, #fff7ed, #fffbf5)',
-                        border: '1px solid #fbbf24',
-                        borderLeft: '5px solid #f59e0b',
+                        background: 'linear-gradient(145deg, var(--surface-1), var(--bg-tertiary))',
+                        border: '1px solid var(--accent-subtle)',
+                        borderLeft: '5px solid var(--accent-primary)',
                         borderRadius: 'var(--radius-xl)',
                         padding: 'var(--space-10)',
                     }}>
-                        <h3 style={{ color: '#92400e', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+                        <h3 style={{ color: 'var(--accent-primary)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
                             <ClockIcon size={22} /> Important Before You Travel
                         </h3>
                         <div className="grid-2" style={{ gap: 'var(--space-8)' }}>
                             <div>
-                                <h4 style={{ color: '#78350f', marginBottom: 'var(--space-3)', fontSize: 'var(--text-base)' }}>Documents Required</h4>
+                                <h4 style={{ color: 'var(--text-primary)', marginBottom: 'var(--space-3)', fontSize: 'var(--text-base)' }}>Documents Required</h4>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                                     {["Valid passport (6+ months validity)", "Saudi residence permit (Iqama) if applicable", "Destination country visa (check in advance)", "Vehicle registration (if using own car)", "Health insurance documentation"].map((d, i) => (
-                                        <li key={i} style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: '#92400e', alignItems: 'flex-start' }}>
-                                            <span style={{ color: '#f59e0b', flexShrink: 0 }}>•</span> {d}
+                                        <li key={i} style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--text-body)', alignItems: 'flex-start' }}>
+                                            <span style={{ color: 'var(--accent-primary)', flexShrink: 0 }}>•</span> {d}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
                             <div>
-                                <h4 style={{ color: '#78350f', marginBottom: 'var(--space-3)', fontSize: 'var(--text-base)' }}>Our Advice</h4>
+                                <h4 style={{ color: 'var(--text-primary)', marginBottom: 'var(--space-3)', fontSize: 'var(--text-base)' }}>Our Advice</h4>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                                     {["Check latest travel advisories before booking", "Allow extra time for border formalities", "Notify us of any special requirements", "Book at least 48 hours ahead for border trips", "WhatsApp us for latest crossing conditions"].map((d, i) => (
-                                        <li key={i} style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: '#92400e', alignItems: 'flex-start' }}>
-                                            <span style={{ color: '#f59e0b', flexShrink: 0 }}>•</span> {d}
+                                        <li key={i} style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--text-body)', alignItems: 'flex-start' }}>
+                                            <span style={{ color: 'var(--accent-primary)', flexShrink: 0 }}>•</span> {d}
                                         </li>
                                     ))}
                                 </ul>
@@ -271,7 +272,7 @@ export default function BorderCrossing() {
 
             {/* CTA Banner */}
             <section style={{
-                background: 'linear-gradient(140deg, #0d2137 0%, #1a3a52 60%, #1e5f6e 100%)',
+                background: 'linear-gradient(140deg, var(--bg-primary) 0%, var(--bg-dark) 60%, var(--navy-light) 100%)',
                 padding: 'var(--space-20) 0',
                 textAlign: 'center',
                 position: 'relative',

@@ -1,5 +1,6 @@
 import { generatePageMetadata } from "@/lib/seo";
 import CityServicePage from "@/components/CityServicePage";
+import RelatedLinks from "@/components/RelatedLinks";
 import { jeddah } from "@/lib/cityData1";
 
 export const metadata = generatePageMetadata({
@@ -10,5 +11,19 @@ export const metadata = generatePageMetadata({
 });
 
 export default function JeddahPage() {
-  return <CityServicePage data={jeddah} />;
+  return (
+    <>
+      <CityServicePage data={jeddah} />
+      <RelatedLinks
+        title="More Jeddah Taxi Services"
+        links={[
+          { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+          { href: "/jeddah-airport-taxi-guide", label: "Jeddah Airport Taxi Guide" },
+          { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
+          { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
+          { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tours" },
+        ]}
+      />
+    </>
+  );
 }

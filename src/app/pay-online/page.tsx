@@ -38,7 +38,7 @@ export default function PayOnline() {
         <main>
             <section className="page-hero">
                 <h1>Pay Online</h1>
-                <p>Securely pay for your Gulf Trip Service booking online. Quick, safe and convenient.</p>
+                <p>Submit a payment request for your Gulf Trip Service booking. Our team will confirm and arrange payment with you.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Pay Online</span>
                 </div>
@@ -46,15 +46,29 @@ export default function PayOnline() {
 
             <section className="section-lg">
                 <div className="container" style={{ maxWidth: '900px' }}>
+                    <div style={{
+                        marginBottom: '2rem', padding: '1.25rem 1.5rem',
+                        background: 'var(--accent-subtle)', borderRadius: 'var(--radius-md)',
+                        border: '1px solid var(--accent-primary)',
+                        display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
+                    }}>
+                        <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>⚠️</span>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                            <strong style={{ color: 'var(--accent-primary)' }}>Online card payment isn&apos;t live yet.</strong>{' '}
+                            Submitting this form sends a payment request to our team — it does not charge your card.
+                            To pay right now, please use bank transfer, Saudi Pay, cash on arrival, or{' '}
+                            <a href="https://wa.me/966501234567" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>WhatsApp us</a>.
+                        </p>
+                    </div>
                     {submitted ? (
                         <div className="card" style={{ textAlign: 'center', padding: '4rem' }}>
                             <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✅</div>
-                            <h2 style={{ color: 'var(--primary)' }}>Payment Successful!</h2>
+                            <h2 style={{ color: 'var(--primary)' }}>Payment Request Submitted</h2>
                             <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
-                                Thank you, <strong>{formData.name}</strong>. Your payment has been received.
+                                Thank you, <strong>{formData.name}</strong>. Your card was not charged — online payment isn&apos;t live yet.
                             </p>
                             <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-                                A confirmation receipt will be sent to <strong>{formData.email}</strong>.
+                                Our team will contact <strong>{formData.email}</strong> shortly to confirm and arrange payment.
                             </p>
                             <Link href="/" className="btn btn-primary">Back to Home</Link>
                         </div>
@@ -84,11 +98,11 @@ export default function PayOnline() {
 
                                 <div style={{
                                     marginTop: '2rem', padding: '1.25rem',
-                                    background: 'rgba(212,175,55,0.1)', borderRadius: 'var(--radius-md)',
+                                    background: 'rgba(36, 84, 232,0.1)', borderRadius: 'var(--radius-md)',
                                     borderLeft: '4px solid var(--secondary)',
                                 }}>
                                     <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                                        🔒 <strong>Secure Payment</strong> — Your payment details are encrypted and processed securely. We never store card information.
+                                        🔒 <strong>Secure Payment</strong> — When online card payment goes live, details will be encrypted and processed securely. We never store card information.
                                     </p>
                                 </div>
                             </div>
@@ -134,7 +148,7 @@ export default function PayOnline() {
                                         </div>
                                     </div>
                                     <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-                                        🔒 Pay Securely
+                                        🔒 Submit Payment Request
                                     </button>
                                 </form>
                             </div>

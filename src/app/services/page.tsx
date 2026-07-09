@@ -51,7 +51,7 @@ export default function ServicesPage() {
                         <div className={styles.content}>
                             <h2 className={styles.serviceTitle}>{service.title}</h2>
                             <p className={styles.serviceText}>{service.description}</p>
-                            <Link href="/booking" className={styles.link}>
+                            <Link href="/book-online" className={styles.link}>
                                 Book This Service
                             </Link>
                         </div>

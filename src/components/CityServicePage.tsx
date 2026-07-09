@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export interface CityData {
@@ -14,6 +15,7 @@ export interface CityData {
   pickupPoints: string[];
   faqs: { q: string; a: string }[];
   reviews: { name: string; origin: string; text: string }[];
+  heroImage?: string;
 }
 
 export default function CityServicePage({ data }: { data: CityData }) {
@@ -46,6 +48,30 @@ export default function CityServicePage({ data }: { data: CityData }) {
             </div>
           </div>
         </section>
+
+        {data.heroImage && (
+          <section style={{ padding: "var(--space-8) 0 0" }}>
+            <div className="container">
+              <div style={{
+                position: "relative",
+                width: "100%",
+                height: "360px",
+                borderRadius: "var(--radius-xl)",
+                overflow: "hidden",
+                boxShadow: "var(--shadow-xl)",
+              }}>
+                <Image
+                  src={data.heroImage}
+                  alt={`${data.city} skyline, Saudi Arabia`}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                  priority={false}
+                />
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Why Visit */}
         <section className="section-lg">

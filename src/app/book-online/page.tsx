@@ -140,7 +140,7 @@ export default function BookOnline() {
                                                     padding: '1.2rem 1.5rem', borderRadius: 'var(--radius-md)',
                                                     border: `2px solid ${formData.service === svc.id ? 'var(--secondary)' : 'var(--gray-300)'}`,
                                                     cursor: 'pointer', transition: 'all 0.2s',
-                                                    background: formData.service === svc.id ? 'rgba(212,175,55,0.08)' : 'var(--white)',
+                                                    background: formData.service === svc.id ? 'rgba(36, 84, 232,0.08)' : 'var(--white)',
                                                 }}>
                                                     <input type="radio" name="service" value={svc.id} checked={formData.service === svc.id} onChange={handleChange} style={{ display: 'none' }} />
                                                     <span style={{ fontSize: '1.8rem' }}>{svc.icon}</span>

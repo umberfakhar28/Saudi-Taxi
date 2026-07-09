@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import styles from "./jeddah-makkah.module.css";
+import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah to Gulf Trip Service | Direct Transfer & Reliable Service",
+    title: "Jeddah to Makkah Taxi | Direct Transfer & Reliable Service",
     description: "Book a reliable Jeddah to Makkah taxi service. Direct transfers from Jeddah Airport or city center to Makkah. Professional drivers, 24/7 service.",
     path: "/jeddah-to-makkah-taxi-service",
     keywords: ["Jeddah to Makkah taxi", "Jeddah to Makkah transfer", "Jeddah to Makkah car", "Jeddah to Makkah transport"],
@@ -74,12 +75,12 @@ export default function JeddahToMakkah() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Jeddah to Gulf Trip Service</h1>
+                <h1>Jeddah to Makkah Taxi</h1>
                 <p>
                     Direct, comfortable transfers from Jeddah Airport or city center to Makkah. Professional drivers, available 24/7.
                 </p>
                 <div className="breadcrumb">
-                    <Link href="/">Home</Link> / <span>Jeddah to Gulf Trip Service</span>
+                    <Link href="/">Home</Link> / <span>Jeddah to Makkah Taxi</span>
                 </div>
             </section>
 
@@ -163,7 +164,7 @@ export default function JeddahToMakkah() {
                                         <li key={j}>✓ {f}</li>
                                     ))}
                                 </ul>
-                                <Link href="/booking" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>
+                                <Link href="/book-online" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>
                                     Book This Vehicle
                                 </Link>
                             </div>
@@ -209,7 +210,7 @@ export default function JeddahToMakkah() {
                         Reliable, comfortable, and affordable. Book your transfer today and travel stress-free.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/booking" className="btn btn-primary btn-lg">
+                        <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book Now
                         </Link>
                         <a href="https://wa.me/966123456789" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
@@ -218,6 +219,17 @@ export default function JeddahToMakkah() {
                     </div>
                 </div>
             </section>
+
+            <RelatedLinks
+                title="More Jeddah Taxi Services"
+                links={[
+                    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+                    { href: "/jeddah-airport-taxi-guide", label: "Jeddah Airport Taxi Guide" },
+                    { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
+                    { href: "/services/jeddah", label: "Jeddah Taxi Services Overview" },
+                    { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tours" },
+                ]}
+            />
         </main>
     );
 }

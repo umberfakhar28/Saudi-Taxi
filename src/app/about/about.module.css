@@ -37,13 +37,13 @@
     box-shadow: var(--shadow-md);
     text-align: center;
     transition: all 0.3s ease;
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(36, 84, 232, 0.06);
 }
 
 .missionCard:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-xl);
-    border-color: rgba(212, 175, 55, 0.12);
+    border-color: rgba(36, 84, 232, 0.12);
 }
 
 .missionCard h3 {
@@ -123,13 +123,13 @@
     text-align: center;
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
-    border: 1px solid rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(36, 84, 232, 0.06);
 }
 
 .teamCard:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-xl);
-    border-color: rgba(212, 175, 55, 0.12);
+    border-color: rgba(36, 84, 232, 0.12);
 }
 
 .teamAvatar {
@@ -145,7 +145,7 @@
     font-weight: 700;
     font-family: var(--font-heading);
     margin: 0 auto 1.5rem;
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 6px 20px rgba(36, 84, 232, 0.2);
 }
 
 .teamName {

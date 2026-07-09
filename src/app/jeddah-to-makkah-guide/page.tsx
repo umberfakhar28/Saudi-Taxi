@@ -1,5 +1,6 @@
 import { generatePageMetadata } from "@/lib/seo";
 import { readContentFile } from "@/lib/readContent";
+import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
   title: "Taxi from Jeddah to Makkah | 100km | 60–90 Min | Book Now",
@@ -10,5 +11,19 @@ export const metadata = generatePageMetadata({
 
 export default function JeddahToMakkahGuide() {
   const html = readContentFile("jeddah-to-makkah-taxi.html");
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return (
+    <>
+      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <RelatedLinks
+        title="More Jeddah Taxi Services"
+        links={[
+          { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+          { href: "/jeddah-airport-taxi-guide", label: "Jeddah Airport Taxi Guide" },
+          { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
+          { href: "/services/jeddah", label: "Jeddah Taxi Services Overview" },
+          { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tours" },
+        ]}
+      />
+    </>
+  );
 }

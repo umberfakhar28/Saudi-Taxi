@@ -25,6 +25,7 @@ export const riyadh: CityData = {
     { name: "Sarah K.", origin: "Tourist, UK", text: "Exploring Diriyah was so easy with Gulf Trip Service. Fixed price, no stress." },
     { name: "Mohammed T.", origin: "Corporate Client", text: "We use Gulf Trip for all executive airport transfers. Reliable every single time." },
   ],
+  heroImage: "/images/city-riyadh.jpg",
 };
 
 export const jeddah: CityData = {
@@ -52,6 +53,7 @@ export const jeddah: CityData = {
     { name: "James O.", origin: "Tourist, USA", text: "Booked a Jeddah city tour. Driver was knowledgeable and the car was luxurious." },
     { name: "Tariq M.", origin: "Business Traveler, UAE", text: "Regular Jeddah–Makkah transfers for my clients. Always on time, always professional." },
   ],
+  heroImage: "/images/city-jeddah.jpg",
 };
 
 export const makkah: CityData = {
