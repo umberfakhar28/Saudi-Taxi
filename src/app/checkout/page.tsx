@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 const bookingSummary = {
     service: "Airport Transfer — Jeddah Airport → Makkah",
@@ -152,7 +153,7 @@ export default function Checkout() {
 
                             <div style={{ marginTop: '1rem', textAlign: 'center' }}>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Questions? Contact us:</p>
-                                <a href="https://wa.me/966501234567" className="btn btn-outline-gold btn-sm" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+                                <a href={WHATSAPP_URL} className="btn btn-outline-gold btn-sm" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
                             </div>
                         </div>
                     </div>

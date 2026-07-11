@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
   title: "خدمة عبور الحدود بالتاكسي | السعودية",
@@ -115,7 +116,7 @@ export default function ArabicBorderCrossing() {
                 ننسّق أوقات الاستلام، ونفهم إجراءات الحدود، ونضمن رحلة سلسة من الباب إلى الباب.
               </p>
               <div style={{ display: "flex", gap: "var(--space-4)", flexWrap: "wrap" }}>
-                <a href="https://wa.me/966501234567" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                <a href={WHATSAPP_URL} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                   <MessageIcon size={18} /> اطلب عرض سعر
                 </a>
                 <Link href="/ar/contact-us" className="btn btn-secondary">اتصل بنا</Link>
@@ -226,7 +227,7 @@ export default function ArabicBorderCrossing() {
             تواصل معنا الآن لنرتب لك رحلة النقل، ونقدم النصح حول الوثائق، ونضمن رحلة سلسة عبر الحدود.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="https://wa.me/966501234567" className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+            <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
             <Link href="/quote" className="btn btn-outline btn-lg">احصل على عرض سعر</Link>

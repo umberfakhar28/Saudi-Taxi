@@ -12,6 +12,7 @@ import {
     LandmarkIcon,
 } from './Icons';
 import styles from './Hero.module.css';
+import { waLink } from '@/lib/contact';
 
 const services = [
     {
@@ -95,8 +96,8 @@ const Hero = () => {
                         onSubmit={(e) => {
                             e.preventDefault();
                             const target = e.target as any;
-                            const message = `Assalamu Alaikum, I would like to book a ride.%0AFrom: ${target.pickup.value}%0ATo: ${target.dropoff.value}%0ADate: ${target.date.value}`;
-                            window.open(`https://wa.me/966501234567?text=${message}`, '_blank');
+                            const message = `Assalamu Alaikum, I would like to book a ride.\nFrom: ${target.pickup.value}\nTo: ${target.dropoff.value}\nDate: ${target.date.value}`;
+                            window.open(waLink(message), '_blank');
                         }}
                         style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
                     >

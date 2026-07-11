@@ -3,6 +3,7 @@ import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ClockIcon, ShieldIcon, MessageIcon, GlobeIcon } from "@/components/Icons";
 import RelatedLinks from "@/components/RelatedLinks";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export interface RouteData {
   slug: string;
@@ -229,7 +230,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
               Fixed rates, professional drivers, and 24/7 availability for {data.origin} to {data.destination}.
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="https://wa.me/966501234567" className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+              <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> WhatsApp Quote
               </a>
               <Link href="/book-online" className="btn btn-secondary btn-lg">Book Online</Link>

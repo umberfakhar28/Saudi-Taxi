@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Saudi Arabia to UAE Taxi Service",
@@ -102,7 +103,7 @@ export default function SaudiToUae() {
                         Ready for a comfortable ride across the border? Send us a message on WhatsApp for instant rates.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a href="https://wa.me/966501234567" className="btn btn-primary btn-lg">
+                        <a href={WHATSAPP_URL} className="btn btn-primary btn-lg">
                             <MessageIcon size={18} /> WhatsApp UAE Quote
                         </a>
                         <Link href="/quote" className="btn btn-outline btn-lg">Contact Form</Link>

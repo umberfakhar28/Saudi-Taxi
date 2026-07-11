@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons';
 import Logo from './Logo';
 import styles from './Footer.module.css';
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from '@/lib/contact';
 
 const ArabicFooter = () => {
     return (
@@ -16,10 +17,10 @@ const ArabicFooter = () => {
                             شريكك الموثوق لخدمات النقل والتاكسي في جميع أنحاء المملكة العربية السعودية. نخدم معتمري العمرة والسياح والمسافرين براحة وأمان منذ عام 2014.
                         </p>
                         <div className={styles.socialLinks}>
-                            <a href="https://wa.me/966501234567" className={styles.socialLink} aria-label="واتساب" target="_blank" rel="noopener noreferrer">
+                            <a href={WHATSAPP_URL} className={styles.socialLink} aria-label="واتساب" target="_blank" rel="noopener noreferrer">
                                 <MessageIcon size={18} />
                             </a>
-                            <a href="tel:+966501234567" className={styles.socialLink} aria-label="هاتف">
+                            <a href={TEL_URL} className={styles.socialLink} aria-label="هاتف">
                                 <PhoneIcon size={18} />
                             </a>
                             <a href="mailto:info@gulftripservice.com" className={styles.socialLink} aria-label="بريد إلكتروني">
@@ -57,11 +58,11 @@ const ArabicFooter = () => {
                             </li>
                             <li className={styles.listItem}>
                                 <PhoneIcon className={styles.contactIcon} size={18} />
-                                <a href="tel:+966501234567" className={styles.link} dir="ltr">+966 50 123 4567</a>
+                                <a href={TEL_URL} className={styles.link} dir="ltr">{PHONE_DISPLAY}</a>
                             </li>
                             <li className={styles.listItem}>
                                 <MessageIcon className={styles.contactIcon} size={18} />
-                                <a href="https://wa.me/966501234567" className={styles.link} target="_blank" rel="noopener noreferrer">تواصل عبر واتساب</a>
+                                <a href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">تواصل عبر واتساب</a>
                             </li>
                             <li className={styles.listItem}>
                                 <MailIcon className={styles.contactIcon} size={18} />

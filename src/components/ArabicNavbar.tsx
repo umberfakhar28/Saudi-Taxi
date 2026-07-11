@@ -7,6 +7,7 @@ import { MenuIcon, XIcon } from './Icons';
 import Logo from './Logo';
 import { englishPathFor } from '@/lib/bilingualPages';
 import styles from './Navbar.module.css';
+import { WHATSAPP_URL } from '@/lib/contact';
 
 const links = [
     { href: '/ar', label: 'الرئيسية' },
@@ -49,7 +50,7 @@ const ArabicNavbar = () => {
                         English
                     </Link>
 
-                    <a href="https://wa.me/966501234567" className={styles.cta} onClick={close}>
+                    <a href={WHATSAPP_URL} className={styles.cta} onClick={close}>
                         احجز الآن
                     </a>
                 </div>

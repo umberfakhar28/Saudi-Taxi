@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { MessageIcon, CheckCircleIcon, ShieldIcon, CarIcon } from "@/components/Icons";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Transparent Pricing & Quotes | Gulf Trip Service",
@@ -79,7 +80,7 @@ export default function Prices() {
                             Contact our 24/7 support team on WhatsApp or use our online form to receive a detailed quote within minutes.
                         </p>
                         <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <a href="https://wa.me/966501234567" className="btn btn-primary btn-lg">
+                            <a href={WHATSAPP_URL} className="btn btn-primary btn-lg">
                                 <MessageIcon size={20} /> Get Quote on WhatsApp
                             </a>
                             <Link href="/quote" className="btn btn-outline btn-lg">Online Quote Form</Link>

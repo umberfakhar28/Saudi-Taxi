@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { PHONE_DISPLAY } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Privacy Policy | Gulf Trip Service",
@@ -70,7 +71,7 @@ export default function PrivacyPolicy() {
                             },
                             {
                                 title: "11. Contact Us",
-                                content: "If you have any questions or concerns about this Privacy Policy, please contact us at: Email: info@gulftripservice.com | Phone: +966 50 123 4567 | Address: Saudi Arabia"
+                                content: `If you have any questions or concerns about this Privacy Policy, please contact us at: Email: info@gulftripservice.com | Phone: ${PHONE_DISPLAY} | Address: Saudi Arabia`
                             },
                         ].map((section, i) => (
                             <div key={i} style={{ marginBottom: '2.5rem' }}>

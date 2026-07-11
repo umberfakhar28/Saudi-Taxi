@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "./faqs.module.css";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 const faqCategories = [
     {
@@ -170,7 +171,7 @@ export default function FAQs() {
                         <Link href="/contact-us" className="btn btn-primary">
                             Contact Us
                         </Link>
-                        <a href="https://wa.me/966123456789" className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">
                             💬 WhatsApp Us
                         </a>
                     </div>

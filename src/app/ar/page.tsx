@@ -3,6 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { homeFaqsAr } from "@/lib/homeFaqs";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, GlobeIcon, MessageIcon } from "@/components/Icons";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
   title: "تاكسي في السعودية | نقل العمرة والمطارات ودول الخليج",
@@ -57,7 +58,7 @@ export default function ArabicHome() {
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", flexWrap: "wrap", marginTop: "var(--space-6)" }}>
             <Link href="/book-online" className="btn btn-primary btn-lg">احجز رحلتك</Link>
-            <a href="https://wa.me/966501234567" className="btn btn-secondary btn-lg" target="_blank" rel="noopener noreferrer">
+            <a href={WHATSAPP_URL} className="btn btn-secondary btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
           </div>

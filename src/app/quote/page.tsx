@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, PlaneIcon, CarIcon, LandmarkIcon, HotelIcon, CompassIcon, MessageIcon, PhoneIcon } from "@/components/Icons";
 import QuoteAssurance from "@/components/QuoteAssurance";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Get a Quote | Gulf Trip Service",
@@ -145,7 +146,7 @@ export default function Quote() {
                     {/* CTA cards */}
                     <div className="grid-2" style={{ maxWidth: 760, margin: '0 auto' }}>
                         <a
-                            href="https://wa.me/966501234567?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20a%20taxi%20service"
+                            href={waLink("Hi, I'd like a quote for a taxi service")}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
@@ -264,7 +265,7 @@ export default function Quote() {
                         Contact us now via WhatsApp or our contact form and get your personalised, fixed-price quote within minutes.
                     </p>
                     <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a href="https://wa.me/966501234567" className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
                             💬 WhatsApp Us
                         </a>
                         <Link href="/contact-us" className="btn btn-outline btn-lg">

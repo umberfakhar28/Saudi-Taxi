@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import styles from "./jeddah-makkah.module.css";
 import RelatedLinks from "@/components/RelatedLinks";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Jeddah to Makkah Taxi Service",
@@ -213,7 +214,7 @@ export default function JeddahToMakkah() {
                         <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book Now
                         </Link>
-                        <a href="https://wa.me/966123456789" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
                             WhatsApp Us
                         </a>
                     </div>

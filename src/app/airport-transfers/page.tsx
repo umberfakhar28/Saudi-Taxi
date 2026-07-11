@@ -1,72 +1,49 @@
 import Link from "next/link";
 import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
-import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { PlaneIcon, ChevronRightIcon } from "@/components/Icons";
+import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import BookingWidget from "@/components/BookingWidget";
+import RoutesGrid from "@/components/RoutesGrid";
+import IncludedStrip from "@/components/IncludedStrip";
+import HowItWorksSteps from "@/components/HowItWorksSteps";
+import PolicyStrip from "@/components/PolicyStrip";
+import ReviewsStrip, { type ReviewItem } from "@/components/ReviewsStrip";
+import StickyMobileBar from "@/components/StickyMobileBar";
+import RelatedLinks from "@/components/RelatedLinks";
+import { AIRPORTS, AIRPORT_ROUTES } from "@/lib/airportRoutesData";
+import { AIRPORT_FAQS } from "@/lib/airportFaqs";
 
 export const metadata = generatePageMetadata({
-    title: "Airport Transfers in Saudi Arabia",
-    description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Reliable and 24/7 availability.",
+    title: "Airport Transfers — JED, MED, DMM, RUH",
+    description: "Book airport transfers from Jeddah, Madinah, Dammam and Riyadh airports to Makkah, Madinah, Riyadh, Dammam and Bahrain. Fixed rates via WhatsApp, 24/7.",
     path: "/airport-transfers",
-    keywords: ["airport transfer Saudi Arabia", "Jeddah airport taxi", "KAIA transfer", "Makkah airport transfer"],
+    keywords: ["airport transfer Saudi Arabia", "Jeddah airport taxi", "Madinah airport taxi", "Dammam airport taxi", "Riyadh airport taxi", "KAIA transfer"],
 });
 
+// Reviews genuinely tagged/about airport transfers in the existing testimonials
+// data (src/components/TestimonialsSection.tsx) — not fabricated. Only one entry
+// in that source is explicitly tagged "Airport Transfer"; shown as-is rather
+// than padded out with unrelated reviews.
+const airportReviews: ReviewItem[] = [
+    {
+        name: "Omar Sheikh",
+        location: "Karachi, Pakistan",
+        rating: 5,
+        service: "Airport Transfer",
+        text: "Arrived at Jeddah airport at 2 AM and the driver was already waiting with a smile. Helped with all our bags, drove smoothly, and the AC was perfect. Made our first Umrah stress-free from the moment we landed.",
+    },
+];
+
 const schemas = [
-    serviceSchema({ name: "Airport Transfers in Saudi Arabia", description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Reliable and 24/7 availability.", url: "/airport-transfers", areaServed: ["Saudi Arabia"] }),
+    serviceSchema({
+        name: "Airport Transfers in Saudi Arabia",
+        description: "Professional airport transfer services from Jeddah, Madinah, Dammam and Riyadh airports across Saudi Arabia and to GCC cross-border destinations.",
+        url: "/airport-transfers",
+        areaServed: ["Jeddah", "Madinah", "Dammam", "Riyadh", "Saudi Arabia"],
+    }),
+    faqSchema(AIRPORT_FAQS.map((f) => ({ question: f.q, answer: f.a }))),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Airport Transfers", path: "/airport-transfers" }]),
-];
-
-const benefits = [
-    {
-        icon: <UserIcon size={32} />,
-        title: "Meet & Greet Service",
-        description: "Your driver will be waiting at the arrivals hall with a name board. Easy identification, no confusion, even for first-time visitors.",
-    },
-    {
-        icon: <ClockIcon size={32} />,
-        title: "Real-Time Flight Tracking",
-        description: "We monitor your flight status in real-time. If your flight is early or delayed, we adjust accordingly — at no extra cost.",
-    },
-    {
-        icon: <PlaneIcon size={32} />,
-        title: "Domestic & International",
-        description: "Seamless transfers from both Terminal 1 and North Terminal at Jeddah Airport to your hotel in Makkah or Madinah.",
-    },
-    {
-        icon: <ShieldIcon size={32} />,
-        title: "Licensed & Insured",
-        description: "All vehicles are Ministry-licensed and fully insured. Travel with peace of mind knowing you are in safe hands.",
-    },
-    {
-        icon: <TagIcon size={32} />,
-        title: "Transparent Quoting",
-        description: "No meters, no surprises. Confirm your rate when you book via our quote system. Transparent pricing you can trust.",
-    },
-    {
-        icon: <MapPinIcon size={32} />,
-        title: "Door-to-Door Service",
-        description: "We take you directly from the airport arrivals to your hotel lobby. No walking with heavy luggage or searching for shuttles.",
-    },
-];
-
-const airports = [
-    {
-        name: "Jeddah Airport (KAIA)",
-        code: "JED",
-        routes: [
-            { to: "Makkah Hotels", price: "Check Rates", time: "~1.5 hrs" },
-            { to: "Madinah Hotels", price: "Check Rates", time: "~4.5 hrs" },
-            { to: "Jeddah City Hotels", price: "Check Rates", time: "~30 min" },
-        ],
-    },
-    {
-        name: "Madinah Airport (PMBA)",
-        code: "MED",
-        routes: [
-            { to: "Madinah Hotels", price: "Check Rates", time: "~20 min" },
-            { to: "Makkah Hotels", price: "Check Rates", time: "~4.5 hrs" },
-        ],
-    },
 ];
 
 export default function AirportTransfers() {
@@ -76,9 +53,10 @@ export default function AirportTransfers() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Professional Airport Transfers</h1>
+                <h1>Airport Transfers Across Saudi Arabia</h1>
                 <p>
-                    Reliable taxi services from Jeddah and Madinah airports. Professional drivers and 24/7 availability.
+                    Reliable taxi transfers from Jeddah, Madinah, Dammam, and Riyadh airports — meet-and-greet
+                    pickup, real-time flight tracking, and 24/7 availability across the Kingdom and beyond.
                 </p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> <ChevronRightIcon size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Airport Transfers</span>
@@ -93,93 +71,105 @@ export default function AirportTransfers() {
                     }}>
                         <Image
                             src="/images/airport-terminal.jpg"
-                            alt="Modern airport terminal — Gulf Trip Service airport transfers"
+                            alt="Airport arrivals terminal — meet-and-greet pickup point for Gulf Trip Service airport transfers in Jeddah, Madinah, Dammam and Riyadh"
                             fill
                             style={{ objectFit: 'cover' }}
                             sizes="(max-width: 768px) 100vw, 1200px"
+                            priority
                         />
                     </div>
                 </div>
             </section>
 
             {/* Intro */}
-            <section className="section-lg">
+            <section className="section-lg" style={{ paddingBottom: 0 }}>
                 <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
-                    <h2 className="section-title">Hassle-Free Arrival in Saudi Arabia</h2>
+                    <h2 className="section-title">Hassle-Free Arrival, Anywhere in Saudi Arabia</h2>
                     <p className="section-subtitle">
-                        Avoid the stress of airport crowds and unreliable transport. Our pre-arranged airport transfer service ensures a comfortable journey to the Holy Cities.
+                        Avoid the stress of airport crowds and unreliable transport. Our pre-arranged airport
+                        transfer service covers Jeddah (JED), Madinah (MED), Dammam (DMM), and Riyadh (RUH) —
+                        with a driver waiting for you the moment you land.
                     </p>
                 </div>
             </section>
 
-            {/* Benefits Grid */}
-            <section className="section-lg bg-light">
+            {/* Booking Widget */}
+            <section className="section-lg">
                 <div className="container">
-                    <div className="grid-3">
-                        {benefits.map((benefit, i) => (
-                            <div key={i} className="card" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
-                                <div style={{ color: 'var(--accent)', marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>{benefit.icon}</div>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '1.25rem', marginBottom: '1rem' }}>{benefit.title}</h3>
-                                <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '0.95rem', margin: 0 }}>{benefit.description}</p>
+                    <BookingWidget />
+                </div>
+            </section>
+
+            {/* What's included */}
+            <IncludedStrip />
+
+            {/* Policy strip */}
+            <PolicyStrip />
+
+            {/* Per-airport sections */}
+            {AIRPORTS.map((airport) => {
+                const routes = AIRPORT_ROUTES.filter((r) => r.airportCode === airport.code);
+                return (
+                    <section key={airport.code} className="section-lg" id={`airport-${airport.code.toLowerCase()}`}>
+                        <div className="container">
+                            <div style={{ marginBottom: 'var(--space-8)' }}>
+                                <span className="section-eyebrow">{airport.code}</span>
+                                <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+                                    <PlaneIcon size={26} style={{ color: 'var(--accent)' }} />
+                                    {airport.name} — {airport.fullName}
+                                </h2>
+                                <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-base)', maxWidth: 760, lineHeight: 1.8 }}>
+                                    {airport.intro}
+                                </p>
+                            </div>
+                            <RoutesGrid routes={routes} />
+                            <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap', marginTop: 'var(--space-6)' }}>
+                                {airport.relatedLinks.map((l) => (
+                                    <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">
+                                        {l.label}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                );
+            })}
+
+            {/* How it works */}
+            <HowItWorksSteps />
+
+            {/* Reviews */}
+            <ReviewsStrip items={airportReviews} title="What Airport Transfer Riders Say" />
+
+            {/* FAQ */}
+            <section className="section" style={{ background: "var(--bg-subtle)" }}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">FAQ</span>
+                        <h2 className="section-title">Airport Transfer — Frequently Asked Questions</h2>
+                    </div>
+                    <div style={{ maxWidth: 780, margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+                        {AIRPORT_FAQS.map((f, i) => (
+                            <div key={i} className="card" style={{ padding: "var(--space-6) var(--space-8)" }}>
+                                <h3 style={{ color: "var(--accent)", fontSize: "var(--text-base)", marginBottom: "var(--space-3)" }}>{f.q}</h3>
+                                <p style={{ color: "var(--text-body)", marginBottom: 0 }}>{f.a}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Airport Routes */}
-            <section className="section-lg">
-                <div className="container">
-                    <h2 className="section-title">Popular Routes & Quick Quotes</h2>
-                    <div className="grid-2" style={{ maxWidth: '1000px', margin: '3rem auto 0' }}>
-                        {airports.map((airport, i) => (
-                            <div key={i} style={{
-                                background: 'var(--white)',
-                                borderRadius: 'var(--radius-lg)',
-                                boxShadow: 'var(--shadow-lg)',
-                                overflow: 'hidden',
-                                border: '1px solid var(--gray-200)'
-                            }}>
-                                <div style={{
-                                    background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
-                                    padding: '1.5rem 2rem',
-                                    color: 'var(--white)',
-                                }}>
-                                    <h3 style={{ color: 'var(--accent)', margin: 0, fontSize: '1.2rem' }}>{airport.name}</h3>
-                                    <span style={{ opacity: 0.8, fontSize: '0.85rem' }}>Airport Code: {airport.code}</span>
-                                </div>
-                                <div style={{ padding: '1.5rem 2rem' }}>
-                                    {airport.routes.map((route, j) => (
-                                        <div key={j} style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            padding: '1.25rem 0',
-                                            borderBottom: j < airport.routes.length - 1 ? '1px solid var(--gray-100)' : 'none',
-                                        }}>
-                                            <div>
-                                                <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-main)' }}>To {route.to}</div>
-                                                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Travel Time: {route.time}</div>
-                                            </div>
-                                            <span style={{
-                                                background: 'linear-gradient(135deg, var(--accent), var(--accent-light))',
-                                                color: 'var(--primary-dark)',
-                                                padding: '0.5rem 1.25rem',
-                                                borderRadius: '30px',
-                                                fontWeight: 800,
-                                                fontSize: '0.9rem',
-                                                boxShadow: '0 4px 10px rgba(36, 84, 232, 0.2)'
-                                            }}>
-                                                {route.price}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            {/* Related links */}
+            <RelatedLinks
+                title="Explore More Transfer Options"
+                links={[
+                    { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+                    { href: "/border-crossing", label: "GCC Border Crossing Routes" },
+                    { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
+                    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+                    { href: "/our-services", label: "All Services" },
+                ]}
+            />
 
             {/* CTA Section */}
             <section style={{
@@ -191,7 +181,7 @@ export default function AirportTransfers() {
             }}>
                 <div style={{
                     position: 'absolute',
-                    top: 0, left: 0, width: '100%', height: '100%',
+                    top: 0, insetInlineStart: 0, width: '100%', height: '100%',
                     backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
                     backgroundSize: '40px 40px',
                     opacity: 0.05
@@ -202,15 +192,17 @@ export default function AirportTransfers() {
                         Book your airport transfer now and have a professional driver waiting for you.
                     </p>
                     <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg" style={{ minWidth: '200px' }}>
+                        <a href="#booking-widget" className="btn btn-primary btn-lg" style={{ minWidth: '200px' }}>
+                            Check Rates
+                        </a>
+                        <Link href="/book-online" className="btn btn-outline btn-lg" style={{ minWidth: '200px', color: 'var(--white)', borderColor: 'rgba(255,255,255,0.5)' }}>
                             Book Now
                         </Link>
-                        <a href="https://wa.me/966123456789" className="btn btn-outline btn-lg" style={{ minWidth: '200px', color: 'var(--white)', borderColor: 'rgba(255,255,255,0.5)' }}>
-                            <MessageIcon size={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> WhatsApp Us
-                        </a>
                     </div>
                 </div>
             </section>
+
+            <StickyMobileBar />
         </main>
         </>
     );

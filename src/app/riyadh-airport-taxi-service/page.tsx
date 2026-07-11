@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Riyadh Airport (KKIA) Taxi Service",
@@ -100,7 +101,7 @@ export default function RiyadhAirportTaxi() {
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
-                        <a href="https://wa.me/966123456789" className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
+                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                             <MessageIcon size={18} style={{ marginRight: '8px' }} /> WhatsApp Us
                         </a>
                     </div>

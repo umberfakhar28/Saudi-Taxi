@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "./contact.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 const schemas = [
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact-us" }]),
@@ -14,15 +15,15 @@ const contactInfo = [
     {
         icon: <PhoneIcon size={32} />,
         title: "Phone",
-        details: ["+966 12 345 6789", "+966 50 123 4567"],
-        action: "tel:+966123456789",
+        details: [PHONE_DISPLAY, PHONE_DISPLAY],
+        action: TEL_URL,
         linkText: "Call Now",
     },
     {
         icon: <MessageIcon size={32} />,
         title: "WhatsApp",
-        details: ["+966 50 123 4567", "Available 24/7"],
-        action: "https://wa.me/966501234567",
+        details: [PHONE_DISPLAY, "Available 24/7"],
+        action: WHATSAPP_URL,
         linkText: "Chat Now",
     },
     {
@@ -242,7 +243,7 @@ export default function ContactUs() {
                         <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book Now
                         </Link>
-                        <a href="https://wa.me/966501234567" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
                             <MessageIcon size={20} style={{ marginRight: '8px' }} /> WhatsApp
                         </a>
                     </div>

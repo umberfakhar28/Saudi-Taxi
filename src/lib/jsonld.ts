@@ -6,10 +6,12 @@
  * in each page's <head> using Next.js Script or dangerouslySetInnerHTML.
  */
 
+import { PHONE_E164, EMAIL as CONTACT_EMAIL } from "./contact";
+
 const BASE_URL = "https://gulftripservice.com";
 const BRAND    = "Gulf Trip Service";
-const PHONE    = "+966501234567";
-const EMAIL    = "info@gulftripservice.com";
+const PHONE    = PHONE_E164;
+const EMAIL    = CONTACT_EMAIL;
 // City-level only — no verified street address exists in the codebase, and the
 // footer's public-facing NAP is city-level ("Makkah, Saudi Arabia"), so we match
 // that rather than fabricate a street. (Previously this said "Jeddah" with a made

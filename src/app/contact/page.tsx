@@ -1,6 +1,7 @@
 
 import styles from './contact.module.css';
 import { generatePageMetadata } from "@/lib/seo";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Contact Us",
@@ -31,7 +32,7 @@ export default function ContactPage() {
 
                         <div className={styles.contactItem}>
                             <strong>📞 Phone:</strong>
-                            <p>+966 12 345 6789</p>
+                            <p>{PHONE_DISPLAY}</p>
                         </div>
 
                         <div className={styles.contactItem}>

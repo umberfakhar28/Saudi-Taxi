@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CarIcon, MapPinIcon, CalendarIcon, PhoneIcon, ArrowRightIcon } from "./Icons";
+import { waLink } from "@/lib/contact";
 
 export default function QuickBookingForm() {
     const [formData, setFormData] = useState({
@@ -14,8 +15,8 @@ export default function QuickBookingForm() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Construct WhatsApp message or redirect to booking page
-        const message = `Assalamu Alaikum, I would like to book a ride.%0AFrom: ${formData.pickup}%0ATo: ${formData.dropoff}%0ADate: ${formData.date}%0APhone: ${formData.phone}`;
-        window.open(`https://wa.me/966501234567?text=${message}`, '_blank');
+        const message = `Assalamu Alaikum, I would like to book a ride.\nFrom: ${formData.pickup}\nTo: ${formData.dropoff}\nDate: ${formData.date}\nPhone: ${formData.phone}`;
+        window.open(waLink(message), '_blank');
     };
 
     return (

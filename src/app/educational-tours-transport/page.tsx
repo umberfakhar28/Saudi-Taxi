@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, MessageIcon, ChevronRightIcon, CompassIcon, LandmarkIcon } from "@/components/Icons";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Educational Tours Transportation",
@@ -87,7 +88,7 @@ export default function EducationalToursTransport() {
                     </p>
                     <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
                         <Link href="/contact-us" className="btn btn-primary btn-lg">Contact Form</Link>
-                        <a href="https://wa.me/966501234567" className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
+                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                             <MessageIcon size={18} style={{ marginRight: '8px' }} /> WhatsApp Enquiries
                         </a>
                     </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 const services = [
     { id: "airport-transfer", label: "Airport Transfer", icon: "✈️" },
@@ -102,7 +103,7 @@ export default function BookOnline() {
                             </p>
                             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <Link href="/" className="btn btn-primary">Back to Home</Link>
-                                <a href="https://wa.me/966501234567" className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">💬 WhatsApp Us</a>
+                                <a href={WHATSAPP_URL} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">💬 WhatsApp Us</a>
                             </div>
                         </div>
                     ) : (
@@ -230,7 +231,7 @@ export default function BookOnline() {
                     {/* WhatsApp Alternative */}
                     <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
                         <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>Prefer to book instantly via WhatsApp?</p>
-                        <a href="https://wa.me/966501234567" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             💬 Book via WhatsApp
                         </a>
                     </div>

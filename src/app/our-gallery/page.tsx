@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Our Gallery",
@@ -142,7 +143,7 @@ export default function OurGallery() {
                         <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
                             We share photos and videos of our fleet and tours on WhatsApp. Message us to get the full gallery!
                         </p>
-                        <a href="https://wa.me/966501234567" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             💬 Message Us on WhatsApp
                         </a>
                     </div>

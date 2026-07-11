@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "@/app/contact-us/contact.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 const schemas = [
     breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "اتصل بنا", path: "/ar/contact-us" }]),
@@ -14,15 +15,15 @@ const contactInfo = [
     {
         icon: <PhoneIcon size={32} />,
         title: "الهاتف",
-        details: ["+966 12 345 6789", "+966 50 123 4567"],
-        action: "tel:+966123456789",
+        details: [PHONE_DISPLAY, PHONE_DISPLAY],
+        action: TEL_URL,
         linkText: "اتصل الآن",
     },
     {
         icon: <MessageIcon size={32} />,
         title: "واتساب",
-        details: ["+966 50 123 4567", "متوفرون على مدار الساعة"],
-        action: "https://wa.me/966501234567",
+        details: [PHONE_DISPLAY, "متوفرون على مدار الساعة"],
+        action: WHATSAPP_URL,
         linkText: "تواصل الآن",
     },
     {
@@ -241,7 +242,7 @@ export default function ArabicContactUs() {
                         <Link href="/book-online" className="btn btn-primary btn-lg">
                             احجز الآن
                         </Link>
-                        <a href="https://wa.me/966501234567" className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
                             <MessageIcon size={20} style={{ marginInlineEnd: '8px' }} /> واتساب
                         </a>
                     </div>
