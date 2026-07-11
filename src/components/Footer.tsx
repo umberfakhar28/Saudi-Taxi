@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { NavigationIcon, MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons';
+import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons';
+import Logo from './Logo';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -8,9 +9,9 @@ const Footer = () => {
             <div className="container">
                 <div className={styles.grid}>
                     <div className={styles.column}>
-                        <h4 className={styles.heading}>
-                            <NavigationIcon className={styles.logoIcon} size={20} /> Gulf Trip Service
-                        </h4>
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <Logo size={32} variant="white" />
+                        </div>
                         <p className={styles.text}>
                             Your trusted partner for reliable taxi and transportation services across Saudi Arabia. Serving Umrah pilgrims, tourists and travelers with comfort, safety and dedication since 2014.
                         </p>

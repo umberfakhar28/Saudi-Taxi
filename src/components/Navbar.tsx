@@ -8,6 +8,7 @@ import {
     MapIcon, MountainIcon, TreePineIcon,
     PhoneIcon,
 } from './Icons';
+import Logo from './Logo';
 import styles from './Navbar.module.css';
 
 /*
@@ -62,9 +63,8 @@ const Navbar = () => {
             <div className={styles.container}>
 
                 {/* ---- LOGO (Balance: anchors the left side) ---- */}
-                <Link href="/" className={styles.logo} onClick={close}>
-                    <CarIcon size={22} className={styles.logoIcon} />
-                    <span className={styles.logoSub}>Gulf Trip Service</span>
+                <Link href="/" className={styles.logo} onClick={close} aria-label="Gulf Trip Service — Home">
+                    <Logo size={38} variant="color" />
                 </Link>
 
                 {/* ---- HAMBURGER — mobile toggle ---- */}
