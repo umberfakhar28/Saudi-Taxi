@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
+import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
     title: "Border Crossing Taxi Service | Saudi Arabia | Gulf Trip Service",
@@ -225,6 +226,9 @@ export default function BorderCrossing() {
                                 {border.name.includes("Qatar") && (
                                     <Link href="/saudi-arabia-to-qatar-taxi-service" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
                                 )}
+                                {border.name.includes("Kuwait") && (
+                                    <Link href="/khafji-to-kuwait-taxi-service" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -269,6 +273,22 @@ export default function BorderCrossing() {
                     </div>
                 </div>
             </section>
+
+            {/* Specific route pages */}
+            <RelatedLinks
+                title="Popular Specific Cross-Border Routes"
+                links={[
+                    { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport → Bahrain" },
+                    { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain → Dammam" },
+                    { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport → Qatar" },
+                    { href: "/qatar-to-riyadh-taxi-service", label: "Qatar → Riyadh" },
+                    { href: "/dammam-airport-to-riyadh-taxi-service", label: "Dammam Airport → Riyadh" },
+                    { href: "/dammam-airport-to-khafji-taxi-service", label: "Dammam Airport → Khafji" },
+                    { href: "/khafji-to-kuwait-taxi-service", label: "Khafji → Kuwait" },
+                    { href: "/dammam-to-kuwait-taxi-service", label: "Dammam → Kuwait" },
+                    { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh → Bahrain" },
+                ]}
+            />
 
             {/* CTA Banner */}
             <section style={{

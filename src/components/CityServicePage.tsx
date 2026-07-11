@@ -11,7 +11,7 @@ export interface CityData {
   challenge: string;
   benefit: string;
   airport?: { name: string; code: string; distance: string };
-  popularRoutes: { from: string; to: string; time: string }[];
+  popularRoutes: { from: string; to: string; time: string; href?: string }[];
   pickupPoints: string[];
   faqs: { q: string; a: string }[];
   reviews: { name: string; origin: string; text: string }[];
@@ -119,17 +119,28 @@ export default function CityServicePage({ data }: { data: CityData }) {
               <h2 className="section-title">Popular Routes from {data.city}</h2>
             </div>
             <div className="grid-3">
-              {data.popularRoutes.map((r, i) => (
-                <div key={i} className="card" style={{ textAlign: "center" }}>
-                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>FROM</p>
-                  <h3 style={{ color: "var(--accent)", fontSize: "var(--text-xl)" }}>{r.from}</h3>
-                  <p style={{ color: "var(--text-muted)", margin: "var(--space-2) 0" }}>↓</p>
-                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>TO</p>
-                  <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{r.to}</h3>
-                  <div className="divider" style={{ margin: "var(--space-4) 0" }} />
-                  <p style={{ color: "var(--accent)", fontWeight: 700 }}>⏱ {r.time}</p>
-                </div>
-              ))}
+              {data.popularRoutes.map((r, i) => {
+                const content = (
+                  <>
+                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>FROM</p>
+                    <h3 style={{ color: "var(--accent)", fontSize: "var(--text-xl)" }}>{r.from}</h3>
+                    <p style={{ color: "var(--text-muted)", margin: "var(--space-2) 0" }}>↓</p>
+                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>TO</p>
+                    <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{r.to}</h3>
+                    <div className="divider" style={{ margin: "var(--space-4) 0" }} />
+                    <p style={{ color: "var(--accent)", fontWeight: 700 }}>⏱ {r.time}</p>
+                  </>
+                );
+                return r.href ? (
+                  <Link key={i} href={r.href} className="card" style={{ textAlign: "center", display: "block" }}>
+                    {content}
+                  </Link>
+                ) : (
+                  <div key={i} className="card" style={{ textAlign: "center" }}>
+                    {content}
+                  </div>
+                );
+              })}
             </div>
             <div style={{ textAlign: "center", marginTop: "var(--space-10)" }}>
               <Link href="/quote" className="btn btn-primary btn-lg">Get a Quote for Your Route</Link>

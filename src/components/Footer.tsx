@@ -40,6 +40,19 @@ const Footer = () => {
                     </div>
 
                     <div className={styles.column}>
+                        <h4 className={styles.heading}>Cross-Border Routes</h4>
+                        <ul className={styles.list}>
+                            <li className={styles.listItem}><Link href="/dammam-airport-to-bahrain-taxi-service" className={styles.link}>Dammam Airport → Bahrain</Link></li>
+                            <li className={styles.listItem}><Link href="/dammam-airport-to-qatar-taxi-service" className={styles.link}>Dammam Airport → Qatar</Link></li>
+                            <li className={styles.listItem}><Link href="/dammam-airport-to-riyadh-taxi-service" className={styles.link}>Dammam Airport → Riyadh</Link></li>
+                            <li className={styles.listItem}><Link href="/dammam-airport-to-khafji-taxi-service" className={styles.link}>Dammam Airport → Khafji</Link></li>
+                            <li className={styles.listItem}><Link href="/bahrain-to-dammam-taxi-service" className={styles.link}>Bahrain → Dammam</Link></li>
+                            <li className={styles.listItem}><Link href="/qatar-to-riyadh-taxi-service" className={styles.link}>Qatar → Riyadh</Link></li>
+                            <li className={styles.listItem}><Link href="/khafji-to-kuwait-taxi-service" className={styles.link}>Khafji → Kuwait</Link></li>
+                        </ul>
+                    </div>
+
+                    <div className={styles.column}>
                         <h4 className={styles.heading}>Tours & Quick Links</h4>
                         <ul className={styles.list}>
                             <li className={styles.listItem}><Link href="/jeddah-city-tour-services-in-saudi-arabia" className={styles.link}>Jeddah City Tour</Link></li>

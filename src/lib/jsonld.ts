@@ -8,7 +8,7 @@
 
 const BASE_URL = "https://gulftripservice.com";
 const BRAND    = "Gulf Trip Service";
-const PHONE    = "+966-XX-XXXXXXX"; // replace with real number
+const PHONE    = "+966501234567";
 const EMAIL    = "info@gulftripservice.com";
 const ADDRESS  = {
   "@type":           "PostalAddress",

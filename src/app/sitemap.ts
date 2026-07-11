@@ -139,6 +139,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 
+  const crossBorderRoutePages: MetadataRoute.Sitemap = [
+    { slug: "/dammam-airport-to-bahrain-taxi-service", priority: 0.8 },
+    { slug: "/dammam-airport-to-khafji-taxi-service", priority: 0.75 },
+    { slug: "/dammam-airport-to-qatar-taxi-service", priority: 0.8 },
+    { slug: "/dammam-airport-to-riyadh-taxi-service", priority: 0.78 },
+    { slug: "/bahrain-to-dammam-taxi-service", priority: 0.8 },
+    { slug: "/qatar-to-riyadh-taxi-service", priority: 0.78 },
+    { slug: "/khafji-to-kuwait-taxi-service", priority: 0.75 },
+    { slug: "/riyadh-to-bahrain-taxi-service", priority: 0.78 },
+    { slug: "/dammam-to-kuwait-taxi-service", priority: 0.75 },
+  ].map(({ slug, priority }) => ({
+    url: `${BASE_URL}${slug}`,
+    lastModified: lastMod(slug),
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
+
   const cityTourPages: MetadataRoute.Sitemap = [
     { slug: "/jeddah-city-tour-services-in-saudi-arabia", priority: 0.78 },
     { slug: "/jeddah-to-makkah-taxi-service", priority: 0.78 },
@@ -212,6 +229,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...airportTransferPages,
     ...servicePages,
     ...borderCrossingPages,
+    ...crossBorderRoutePages,
     ...cityTourPages,
     ...longFormGuides,
     { url: `${BASE_URL}/blog`, lastModified: lastMod("/blog"), changeFrequency: "weekly" as const, priority: 0.80 },

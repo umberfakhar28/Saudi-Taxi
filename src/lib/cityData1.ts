@@ -121,13 +121,15 @@ export const dammam: CityData = {
   airport: { name: "King Fahd International Airport", code: "DMM", distance: "35 km from Dammam city centre" },
   popularRoutes: [
     { from: "Dammam Airport (DMM)", to: "Khobar / Dhahran", time: "30–40 min" },
-    { from: "Dammam", to: "Riyadh", time: "~4 hrs" },
-    { from: "Dammam", to: "Bahrain (King Fahd Causeway)", time: "~1 hr" },
+    { from: "Dammam Airport", to: "Riyadh", time: "~4 hrs", href: "/dammam-airport-to-riyadh-taxi-service" },
+    { from: "Dammam Airport", to: "Bahrain (King Fahd Causeway)", time: "~1–1.5 hrs", href: "/dammam-airport-to-bahrain-taxi-service" },
+    { from: "Dammam Airport", to: "Qatar (Salwa Border)", time: "~5–6 hrs", href: "/dammam-airport-to-qatar-taxi-service" },
+    { from: "Dammam Airport", to: "Khafji", time: "~2–2.5 hrs", href: "/dammam-airport-to-khafji-taxi-service" },
   ],
   pickupPoints: ["King Fahd International Airport", "Saudi Aramco HQ, Dhahran", "Khobar Corniche", "Half Moon Bay", "King Fahd Causeway", "Jubail Industrial City"],
   faqs: [
     { q: "Do you cover the Dammam–Khobar–Dhahran tri-city area?", a: "Yes — all three cities are covered under a single booking with no additional city surcharge." },
-    { q: "Can you take me to the Bahrain border at King Fahd Causeway?", a: "Yes — we provide Dammam to Causeway border transfer. We do not cross into Bahrain but will drop you at the Saudi border exit." },
+    { q: "Can you take me to the Bahrain border at King Fahd Causeway?", a: "Yes — see our dedicated Dammam Airport to Bahrain taxi service page for a coordinated transfer across the King Fahd Causeway." },
     { q: "Do you serve Jubail Industrial City?", a: "Yes, Jubail is within our Eastern Province service zone. Corporate accounts available for Jubail-based companies." },
   ],
   reviews: [

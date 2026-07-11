@@ -35,15 +35,26 @@ const tourLinks = [
     { href: '/taif-ziyarat-taxi-service',                         icon: <TreePineIcon size={14} />, label: 'Taif Ziyarat Tour' },
 ];
 
+const borderRouteLinks = [
+    { href: '/border-crossing',                          icon: <MapIcon size={14} />, label: 'All Border Crossings' },
+    { href: '/dammam-airport-to-bahrain-taxi-service',    icon: <PlaneIcon size={14} />, label: 'Dammam Airport → Bahrain' },
+    { href: '/dammam-airport-to-qatar-taxi-service',      icon: <PlaneIcon size={14} />, label: 'Dammam Airport → Qatar' },
+    { href: '/bahrain-to-dammam-taxi-service',             icon: <MapIcon size={14} />, label: 'Bahrain → Dammam' },
+    { href: '/qatar-to-riyadh-taxi-service',               icon: <MapIcon size={14} />, label: 'Qatar → Riyadh' },
+    { href: '/khafji-to-kuwait-taxi-service',              icon: <MapIcon size={14} />, label: 'Khafji → Kuwait' },
+];
+
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
     const [toursOpen, setToursOpen] = useState(false);
+    const [borderOpen, setBorderOpen] = useState(false);
 
     const close = () => {
         setMenuOpen(false);
         setServicesOpen(false);
         setToursOpen(false);
+        setBorderOpen(false);
     };
 
     return (
@@ -125,6 +136,39 @@ const Navbar = () => {
                         <div className={`${styles.dropdownMenu} ${toursOpen ? styles.dropdownMenuOpen : ''}`}>
                             <div className={styles.dropdownLabel}>Day Tours</div>
                             {tourLinks.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={styles.dropdownItem}
+                                    onClick={close}
+                                >
+                                    {item.icon}
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* CROSS-BORDER DROPDOWN — Proximity: GCC route links grouped separately */}
+                    <div
+                        className={styles.dropdown}
+                        onMouseEnter={() => setBorderOpen(true)}
+                        onMouseLeave={() => setBorderOpen(false)}
+                    >
+                        <button
+                            className={styles.link}
+                            onClick={() => setBorderOpen(!borderOpen)}
+                            aria-expanded={borderOpen}
+                        >
+                            Cross-Border
+                            <ChevronDownIcon
+                                className={`${styles.arrow} ${borderOpen ? styles.arrowRotate : ''}`}
+                                size={14}
+                            />
+                        </button>
+                        <div className={`${styles.dropdownMenu} ${borderOpen ? styles.dropdownMenuOpen : ''}`}>
+                            <div className={styles.dropdownLabel}>GCC Routes</div>
+                            {borderRouteLinks.map((item) => (
                                 <Link
                                     key={item.href}
                                     href={item.href}
