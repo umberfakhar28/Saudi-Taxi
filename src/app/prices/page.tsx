@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { MessageIcon, CheckCircleIcon, ShieldIcon, CarIcon } from "@/components/Icons";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
     title: "Transparent Pricing & Quotes | Gulf Trip Service",
@@ -8,6 +9,10 @@ export const metadata = generatePageMetadata({
     path: "/prices",
     keywords: ["taxi prices Saudi Arabia", "transparent pricing", "taxi fare Saudi", "Saudi taxi rates"],
 });
+
+const schemas = [
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Pricing Policy", path: "/prices" }]),
+];
 
 const pillars = [
     {
@@ -29,6 +34,8 @@ const pillars = [
 
 export default function Prices() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -102,5 +109,6 @@ export default function Prices() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

@@ -4,7 +4,7 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah King Abdulaziz International Airport (KAIA) Taxi | Gulf Trip Service",
+    title: "Jeddah Airport (KAIA) Taxi Service",
     description: "Premium airport taxi services from Jeddah Airport (KAIA). Reliable transfers to Makkah, Madinah, and any destination in Jeddah with professional drivers.",
     path: "/jeddah-airport-taxi-service",
     keywords: ["Jeddah airport taxi", "KAIA taxi", "Jeddah airport transfer Makkah", "Jeddah airport to Makkah"],

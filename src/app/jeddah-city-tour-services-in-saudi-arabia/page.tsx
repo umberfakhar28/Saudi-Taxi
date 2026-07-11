@@ -1,13 +1,19 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import RelatedLinks from "@/components/RelatedLinks";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah City Tour Services | Guided Jeddah Tour | Gulf Trip Service",
+    title: "Jeddah City Tour Services",
     description: "Explore the vibrant city of Jeddah with our expert-guided city tour. Al-Balad Old Town, Jeddah Corniche, Floating Mosque, markets and more. Book your Jeddah tour today.",
     path: "/jeddah-city-tour-services-in-saudi-arabia",
     keywords: ["Jeddah city tour", "Jeddah guided tour", "Jeddah sightseeing taxi", "Jeddah tour guide"],
 });
+
+const schemas = [
+    serviceSchema({ name: "Jeddah City Tour Services", description: "Explore the vibrant city of Jeddah with our expert-guided city tour. Al-Balad Old Town, Jeddah Corniche, Floating Mosque, markets and more. Book your Jeddah tour today.", url: "/jeddah-city-tour-services-in-saudi-arabia", areaServed: ["Jeddah"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Jeddah City Tour", path: "/jeddah-city-tour-services-in-saudi-arabia" }]),
+];
 
 const attractions = [
     { icon: "🏛️", name: "Al-Balad Historic District", description: "UNESCO World Heritage Site — explore centuries-old coral buildings, traditional souqs and historic merchant houses." },
@@ -44,6 +50,8 @@ const tourPackages = [
 
 export default function JeddahCityTour() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Jeddah City Tour Services in Saudi Arabia</h1>
@@ -172,5 +180,6 @@ export default function JeddahCityTour() {
                 ]}
             />
         </main>
+        </>
     );
 }

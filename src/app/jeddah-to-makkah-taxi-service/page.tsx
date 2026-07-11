@@ -4,7 +4,7 @@ import styles from "./jeddah-makkah.module.css";
 import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah to Makkah Taxi | Direct Transfer & Reliable Service",
+    title: "Jeddah to Makkah Taxi Service",
     description: "Book a reliable Jeddah to Makkah taxi service. Direct transfers from Jeddah Airport or city center to Makkah. Professional drivers, 24/7 service.",
     path: "/jeddah-to-makkah-taxi-service",
     keywords: ["Jeddah to Makkah taxi", "Jeddah to Makkah transfer", "Jeddah to Makkah car", "Jeddah to Makkah transport"],

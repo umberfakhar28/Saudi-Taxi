@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, StarIcon, MessageIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Wedding Transportation Services Saudi Arabia | Luxury Event Transport | Gulf Trip Service",
+    title: "Wedding Transportation Services",
     description: "Premium wedding transportation services in Saudi Arabia. Luxury bridal cars, guest shuttles, and event logistics for your special day. Professional and elegant service.",
     path: "/wedding-transportation",
     keywords: ["wedding transportation Saudi Arabia", "luxury bridal car", "wedding taxi", "guest shuttle Saudi Arabia"],
 });
 
+const schemas = [
+    serviceSchema({ name: "Wedding Transportation Services", description: "Premium wedding transportation services in Saudi Arabia. Luxury bridal cars, guest shuttles, and event logistics for your special day. Professional and elegant service.", url: "/wedding-transportation", areaServed: ["Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Wedding Transportation", path: "/wedding-transportation" }]),
+];
+
 export default function WeddingTransportation() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -86,5 +94,6 @@ export default function WeddingTransportation() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

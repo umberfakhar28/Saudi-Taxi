@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Taif Ziyarat Taxi Service | Taif Tour from Makkah | Gulf Trip Service",
+    title: "Taif Ziyarat Taxi Service",
     description: "Professional Taif Ziyarat and city tour taxi service from Makkah and Jeddah. Visit rose farms, Al-Shafa gardens, Taif Zoo and historic sites. Book your Taif trip today.",
     path: "/taif-ziyarat-taxi-service",
     keywords: ["Taif Ziyarat taxi", "Taif tour taxi", "Taif sightseeing", "Taif from Makkah tour"],
 });
+
+const schemas = [
+    serviceSchema({ name: "Taif Ziyarat Taxi Service", description: "Professional Taif Ziyarat and city tour taxi service from Makkah and Jeddah. Visit rose farms, Al-Shafa gardens, Taif Zoo and historic sites. Book your Taif trip today.", url: "/taif-ziyarat-taxi-service", areaServed: ["Taif"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Taif Ziyarat Taxi", path: "/taif-ziyarat-taxi-service" }]),
+];
 
 const attractions = [
     { icon: "🌹", name: "Al-Gaith Rose Farm", description: "Taif is famous for its Damask roses — the source of the world's finest rose water and oud. Tour the enchanting rose farms during bloom season (March–May)." },
@@ -52,6 +58,8 @@ const seasons = [
 
 export default function TaifZiyaratTaxi() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Taif Ziyarat Taxi Service</h1>
@@ -165,5 +173,6 @@ export default function TaifZiyaratTaxi() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

@@ -1,13 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Our Gallery | Gulf Trip Service - Photos of Fleet & Holy Sites",
+    title: "Our Gallery",
     description: "Browse our gallery featuring our fleet of vehicles, the Holy sites of Makkah and Madinah, and our satisfied customers from around the world.",
     path: "/our-gallery",
     keywords: ["taxi fleet gallery", "Makkah gallery", "Madinah gallery Saudi Arabia", "Saudi taxi photos"],
 });
+
+const schemas = [
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Our Gallery", path: "/our-gallery" }]),
+];
 
 const categories = ["All", "Fleet", "Makkah", "Madinah", "Jeddah", "AlUla", "Taif"];
 
@@ -35,6 +40,8 @@ const galleryItems: { emoji: string; title: string; category: string; caption: s
 
 export default function OurGallery() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Our Gallery</h1>
@@ -153,5 +160,6 @@ export default function OurGallery() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

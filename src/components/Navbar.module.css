@@ -360,3 +360,39 @@
         font-size: var(--text-sm);
     }
 }
+
+/* ===== RTL (Arabic) overrides — additive only, zero effect under dir="ltr" =====
+   The mobile drawer and hover-indent effects below use physical left/right
+   properties that don't auto-mirror under dir="rtl". These overrides flip
+   just those specific rules so the same Navbar/CSS module is safely reusable
+   for the Arabic site without touching (or risking) any existing LTR rule. */
+[dir="rtl"] .dropdownItem:hover {
+    padding-left: var(--space-5);
+    padding-right: calc(var(--space-5) + 6px);
+}
+
+@media (max-width: 900px) {
+    [dir="rtl"] .navLinks {
+        right: auto;
+        left: 0;
+        box-shadow: 4px 0 32px rgba(0, 0, 0, 0.4);
+    }
+
+    [dir="rtl"] .navLinksOpen {
+        transform: translateX(0);
+    }
+
+    [dir="rtl"] .navLinks:not(.navLinksOpen) {
+        transform: translateX(-100%);
+    }
+
+    [dir="rtl"] .link:hover {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    [dir="rtl"] .dropdownItem:hover {
+        padding-left: var(--space-4);
+        padding-right: var(--space-5);
+    }
+}

@@ -8,10 +8,6 @@ interface AnimatedCounterProps {
 }
 
 export default function AnimatedCounter({ end, duration = 2000 }: AnimatedCounterProps) {
-    const [count, setCount] = useState(0);
-    const countRef = useRef<HTMLSpanElement>(null);
-    const hasAnimated = useRef(false);
-
     // Extract number and suffix
     const match = end.match(/(\d+\.?\d*)/);
     const numericPart = match ? parseFloat(match[0]) : 0;
@@ -19,11 +15,19 @@ export default function AnimatedCounter({ end, duration = 2000 }: AnimatedCounte
     const isDecimal = end.includes(".");
     const decimals = isDecimal ? end.split(".")[1].split(/[^0-9]/)[0].length : 0;
 
+    // Start at the FINAL value so server-rendered HTML (and no-JS clients)
+    // always show the real number — the count-up is a client-only enhancement
+    // that only kicks in once the element scrolls into view.
+    const [count, setCount] = useState(numericPart);
+    const countRef = useRef<HTMLSpanElement>(null);
+    const hasAnimated = useRef(false);
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting && !hasAnimated.current) {
                     hasAnimated.current = true;
+                    setCount(0);
                     let startTimestamp: number | null = null;
                     const step = (timestamp: number) => {
                         if (!startTimestamp) startTimestamp = timestamp;

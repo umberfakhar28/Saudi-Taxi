@@ -2,13 +2,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import GuidePage from "@/components/GuidePage";
 
 export const metadata = generatePageMetadata({
-  title: "Hajj Transportation Guide | Getting Around the Holy Sites | Gulf Trip Service",
+  title: "Hajj Transportation Guide",
   description: "Complete guide to Hajj transportation — Mina, Arafat, Muzdalifah transfers, Jeddah airport logistics, group transport, and booking tips for Hajj pilgrims.",
   path: "/guides/hajj-transportation",
   keywords: ["Hajj transportation guide", "Mina Arafat Muzdalifah transfer", "Hajj taxi service", "group transport Hajj"],
 });
 
 const data = {
+  path: "/guides/hajj-transportation",
   title: "Hajj Transportation Guide",
   subtitle: "A comprehensive guide to navigating the logistics of Hajj — from Jeddah Airport to the five sacred days across Mina, Arafat, and Muzdalifah.",
   eyebrow: "Hajj Guide",

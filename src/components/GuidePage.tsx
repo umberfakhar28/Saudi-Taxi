@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export interface GuideSection {
   heading: string;
@@ -9,6 +10,7 @@ export interface GuideData {
   title: string;
   subtitle: string;
   eyebrow: string;
+  path: string;
   sections: GuideSection[];
   faqs: { q: string; a: string }[];
   ctaText: string;
@@ -16,8 +18,24 @@ export interface GuideData {
 }
 
 export default function GuidePage({ data }: { data: GuideData }) {
+  const schemas = [
+    serviceSchema({
+      name: data.title,
+      description: data.subtitle,
+      url: data.path,
+      areaServed: ["Saudi Arabia"],
+    }),
+    faqSchema(data.faqs.map((f) => ({ question: f.q, answer: f.a }))),
+    breadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Guides", path: "/our-services" },
+      { name: data.title, path: data.path },
+    ]),
+  ];
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       <section className="page-hero">
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <span className="section-eyebrow">{data.eyebrow}</span>

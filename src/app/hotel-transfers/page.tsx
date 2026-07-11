@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Hotel Transfers Saudi Arabia | Taxi to Hotel from Airport | Gulf Trip Service",
+    title: "Hotel Transfers in Saudi Arabia",
     description: "Comfortable and reliable hotel transfer services in Makkah, Madinah and Jeddah. Door-to-door transfers between airports, hotels and holy sites across Saudi Arabia.",
     path: "/hotel-transfers",
     keywords: ["hotel transfer Makkah", "hotel transfer Madinah", "hotel taxi Saudi Arabia", "door to door transfer Saudi"],
 });
+
+const schemas = [
+    serviceSchema({ name: "Hotel Transfer Services in Saudi Arabia", description: "Comfortable and reliable hotel transfer services in Makkah, Madinah and Jeddah. Door-to-door transfers between airports, hotels and holy sites across Saudi Arabia.", url: "/hotel-transfers", areaServed: ["Makkah", "Madinah", "Jeddah"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Hotel Transfers", path: "/hotel-transfers" }]),
+];
 
 const features = [
     { icon: "🏨", title: "Door-to-Door Service", description: "We pick you up directly from your hotel lobby and drop you precisely at your destination — no walking, no confusion." },
@@ -30,6 +36,8 @@ const hotels = ["Makkah Clock Royal Tower — A Fairmont Hotel", "Hilton Makkah 
 
 export default function HotelTransfers() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Hotel Transfer Services in Saudi Arabia</h1>
@@ -128,5 +136,6 @@ export default function HotelTransfers() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

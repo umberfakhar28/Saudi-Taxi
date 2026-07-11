@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import styles from "./umrah-taxi.module.css";
 
 export const metadata = generatePageMetadata({
-    title: "Umrah Taxi Services | Reliable Transport for Umrah Pilgrims",
+    title: "Umrah Taxi Services",
     description: "Professional Umrah taxi services in Makkah & Madinah. Airport transfers, inter-city travel, and Ziyarat tours. Book your reliable Umrah transport today.",
     path: "/umrah-taxi-services",
     keywords: ["Umrah taxi", "Makkah taxi", "Umrah transport", "Umrah transfer Saudi Arabia", "Umrah transportation"],

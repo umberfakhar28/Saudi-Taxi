@@ -1,28 +1,37 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to Bahrain Taxi Service | King Fahd Causeway | Gulf Trip Service",
-    description: "Premium taxi service from Saudi Arabia to Bahrain via King Fahd Causeway. Door-to-door transfers, licensed drivers, and assistance with border procedures. Book your Bahrain trip today.",
+    title: "Saudi Arabia to Bahrain Taxi",
+    description: "Taxi to Bahrain from anywhere in Saudi Arabia — Riyadh, Khobar, Jubail, Dammam or your city — via King Fahd Causeway. Door-to-door pickup, licensed drivers. Book today.",
     path: "/saudi-arabia-to-bahrain-taxi-service",
     keywords: ["Saudi to Bahrain taxi", "King Fahd Causeway transfer", "Bahrain border taxi", "Saudi to Bahrain car"],
 });
 
+const schemas = [
+    serviceSchema({ name: "Saudi Arabia to Bahrain Taxi", description: "Taxi to Bahrain from anywhere in Saudi Arabia — Riyadh, Khobar, Jubail, Dammam or your city — via King Fahd Causeway. Door-to-door pickup, licensed drivers. Book today.", url: "/saudi-arabia-to-bahrain-taxi-service", areaServed: ["Bahrain", "Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }, { name: "Bahrain", path: "/saudi-arabia-to-bahrain-taxi-service" }]),
+];
+
 const features = [
-    { title: "24/7 Availability", desc: "Round-the-clock pickups from any city in Saudi Arabia for your trip to Bahrain." },
-    { title: "Door-to-Door", desc: "Pick up from your home, hotel, or airport and drop off anywhere in Bahrain." },
+    { title: "Pickup From Any Saudi City", desc: "Riyadh, Khobar, Jubail, Dhahran, Dammam city — or wherever you're starting from." },
+    { title: "Door-to-Door", desc: "Pick up from your home, hotel, or office and drop off anywhere in Bahrain." },
     { title: "Causeway Expertise", desc: "Drivers familiar with King Fahd Causeway procedures and peak hours." },
 ];
 
 export default function SaudiToBahrain() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Saudi Arabia to Bahrain Taxi</h1>
+                <h1>Saudi Arabia to Bahrain Taxi — Any City Pickup</h1>
                 <p>
-                    Premium land transfer service across the King Fahd Causeway. 
+                    Premium land transfer service across the King Fahd Causeway, with pickup
+                    from Riyadh, Khobar, Jubail, Dammam city, or anywhere else in Saudi Arabia.
                     Comfortable, private vehicles for family and business travel.
                 </p>
                 <div className="breadcrumb">
@@ -35,14 +44,21 @@ export default function SaudiToBahrain() {
                 <div className="container">
                     <div className="grid-2">
                         <div>
-                            <h2 className="section-title">King Fahd Causeway Transfers</h2>
+                            <h2 className="section-title">King Fahd Causeway Transfers From Any City</h2>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
-                                The King Fahd Causeway is the primary land link between the Eastern Province of Saudi Arabia and the Island Kingdom of Bahrain. Whether you are travelling for business in Manama, a weekend getaway, or family visits, our professional taxi service ensures a smooth journey.
+                                The King Fahd Causeway is the primary land link between the Eastern Province of Saudi Arabia and the Island Kingdom of Bahrain. Wherever your journey starts — Riyadh, Khobar, Jubail, Dammam city, or another Saudi city — our professional taxi service picks you up and takes you all the way to the causeway.
                             </p>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-8)' }}>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
                                 Our drivers assist with vehicle documentation and guide you through the border procedures. We offer a range of vehicles from luxury sedans to spacious SUVs and vans, perfect for all group sizes.
                             </p>
-                            
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-8)' }}>
+                                Flying into King Fahd International Airport first? Our{" "}
+                                <Link href="/dammam-airport-to-bahrain-taxi-service" style={{ color: 'var(--accent)', fontWeight: 600 }}>
+                                    Dammam Airport to Bahrain transfer
+                                </Link>{" "}
+                                is built specifically for that route, with meet-and-greet pickup and flight tracking.
+                            </p>
+
                             <div className="card" style={{ borderLeft: '4px solid var(--secondary)', background: 'var(--bg-subtle)' }}>
                                 <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>Key Information</h3>
                                 <ul style={{ fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -96,5 +112,6 @@ export default function SaudiToBahrain() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

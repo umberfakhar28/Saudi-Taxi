@@ -5,16 +5,18 @@ import FAQSection from "@/components/FAQSection";
 import VehiclesSection from "@/components/VehiclesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Link from "next/link";
-import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
+import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon, GlobeIcon } from "@/components/Icons";
 import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import QuickBookingForm from "@/components/QuickBookingForm";
+import { homeFaqs } from "@/lib/homeFaqs";
+import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-  title: "Gulf Trip Service | Reliable Taxi Service in Makkah & Jeddah",
-  description: "Book reliable taxi services in Makkah, Jeddah & Madinah. Airport transfers, Umrah taxi, Jeddah to Makkah transport. Professional drivers, 24/7 availability.",
+  title: "Saudi Arabia Taxi & GCC Transfers",
+  description: "Premium taxi service in Makkah, Jeddah, Madinah, Riyadh and Dammam, plus GCC cross-border transfers to Bahrain and Qatar. Fixed rates, 24/7 availability.",
   path: "/",
-  keywords: ["Saudi taxi", "Makkah taxi", "Saudi Arabia taxi service", "Gulf Trip Service", "Jeddah taxi", "Umrah transport"],
+  hreflangPath: "/",
 });
 
 /* =======================================================================
@@ -93,9 +95,15 @@ const whyUs = [
    PAGE
    ======================================================================= */
 
+const homeSchemas = [
+  faqSchema(homeFaqs),
+  breadcrumbSchema([{ name: "Home", path: "/" }]),
+];
+
 export default function Home() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(homeSchemas) }} />
       {/* ═══════════════════════════════════════════════════════════════════
           HERO — Balance: 2-col asymmetric layout
           ═══════════════════════════════════════════════════════════════════ */}
@@ -261,6 +269,55 @@ export default function Home() {
       </section>
 
 
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          GCC CROSS-BORDER — supports /border-crossing + route pages beyond
+          the Makkah/Jeddah/Madinah core, covering the Eastern Province and
+          cross-border transfers to Bahrain and Qatar.
+          ═══════════════════════════════════════════════════════════════════ */}
+      <section className="section-lg">
+        <div className="container">
+          <div className="grid-60-40">
+            <div>
+              <div className="section-header">
+                <span className="section-eyebrow">Beyond the Holy Cities</span>
+                <h2 className="section-title">Eastern Province &amp; GCC Cross-Border Transfers</h2>
+              </div>
+              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
+                Beyond Makkah, Jeddah and Madinah, we run daily routes across the Eastern
+                Province — Dammam, Khobar and Dhahran — and connect travelers overland to
+                neighboring GCC countries. Direct transfers to Bahrain via the King Fahd
+                Causeway and to Qatar via the Salwa border, with meet-and-greet pickup from
+                Dammam&apos;s King Fahd International Airport or any Saudi city.
+              </p>
+              <Link href="/border-crossing" className="btn btn-secondary">
+                Explore Border Crossing Routes
+              </Link>
+            </div>
+            <div
+              className="card"
+              style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}
+            >
+              <div className="card-icon"><GlobeIcon size={22} /></div>
+              <h3>Popular GCC Routes</h3>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                {[
+                  { href: '/dammam-airport-to-bahrain-taxi-service', label: 'Dammam Airport → Bahrain' },
+                  { href: '/dammam-airport-to-qatar-taxi-service', label: 'Dammam Airport → Qatar' },
+                  { href: '/bahrain-to-dammam-taxi-service', label: 'Bahrain → Dammam' },
+                  { href: '/qatar-to-riyadh-taxi-service', label: 'Qatar → Riyadh' },
+                ].map((r) => (
+                  <li key={r.href}>
+                    <Link href={r.href} style={{ color: 'var(--accent)', fontWeight: 600, fontSize: 'var(--text-sm)' }}>
+                      {r.label} →
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
           VEHICLES — Vehicle showcase with images, descriptions & CTA

@@ -2,13 +2,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import GuidePage from "@/components/GuidePage";
 
 export const metadata = generatePageMetadata({
-  title: "Family Travel Guide Across Saudi Arabia | Safe & Comfortable Transport | Gulf Trip Service",
+  title: "Family Travel Guide in Saudi Arabia",
   description: "Family travel guide for Saudi Arabia — child seats, luggage, safe routes, AlUla with kids, Abha mountain trips, and tips for traveling with elderly family members.",
   path: "/guides/family-travel",
   keywords: ["family travel Saudi Arabia", "family taxi Saudi Arabia", "child seat taxi Saudi", "AlUla family trip", "Abha family travel"],
 });
 
 const data = {
+  path: "/guides/family-travel",
   title: "Family Travel Guide Across Saudi Arabia",
   subtitle: "Comfortable, safe, and stress-free family transportation across Saudi Arabia — with child seats, spacious vehicles, and drivers who understand family travel.",
   eyebrow: "Family Travel Guide",

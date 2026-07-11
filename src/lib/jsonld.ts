@@ -10,12 +10,14 @@ const BASE_URL = "https://gulftripservice.com";
 const BRAND    = "Gulf Trip Service";
 const PHONE    = "+966501234567";
 const EMAIL    = "info@gulftripservice.com";
+// City-level only — no verified street address exists in the codebase, and the
+// footer's public-facing NAP is city-level ("Makkah, Saudi Arabia"), so we match
+// that rather than fabricate a street. (Previously this said "Jeddah" with a made
+// -up street, which conflicted with the footer's Makkah claim — real NAP bug.)
 const ADDRESS  = {
   "@type":           "PostalAddress",
-  streetAddress:     "King Abdulaziz Road",
-  addressLocality:   "Jeddah",
+  addressLocality:   "Makkah",
   addressRegion:     "Makkah Province",
-  postalCode:        "21577",
   addressCountry:    "SA",
 };
 
@@ -30,16 +32,16 @@ export function localBusinessSchema() {
     name: BRAND,
     url: BASE_URL,
     logo: `${BASE_URL}/logo.svg`,
-    image: `${BASE_URL}/images/hero-luxury-car.jpg`,
+    image: `${BASE_URL}/og/default.jpg`,
     description:
-      "Premium taxi and chauffeur services across Saudi Arabia — Makkah, Madinah, Jeddah, airport transfers, Umrah transport, intercity routes, and border crossings.",
+      "Premium taxi and chauffeur services across Saudi Arabia — Makkah, Madinah, Jeddah, airport transfers, Umrah transport, intercity routes, and GCC cross-border transfers to Bahrain and Qatar.",
     telephone: PHONE,
     email: EMAIL,
     address: ADDRESS,
     geo: {
       "@type": "GeoCoordinates",
-      latitude: 21.4858,
-      longitude: 39.1925,
+      latitude: 21.3891,
+      longitude: 39.8579,
     },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
@@ -60,6 +62,8 @@ export function localBusinessSchema() {
       { "@type": "City", name: "Dammam" },
       { "@type": "City", name: "Taif" },
       { "@type": "Country", name: "Saudi Arabia" },
+      { "@type": "Country", name: "Bahrain" },
+      { "@type": "Country", name: "Qatar" },
     ],
     sameAs: [
       "https://www.facebook.com/gulftripservice",
@@ -122,7 +126,47 @@ export function faqSchema(faqs: { question: string; answer: string }[]) {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   4. BreadcrumbList schema
+   4. BlogPosting schema (blog posts)
+   ───────────────────────────────────────────────────────────── */
+export function blogPostingSchema({
+  headline,
+  description,
+  url,
+  datePublished,
+  image,
+}: {
+  headline: string;
+  description: string;
+  url: string;
+  datePublished?: string;
+  image?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline,
+    description,
+    url: `${BASE_URL}${url}`,
+    image: image ? `${BASE_URL}${image}` : `${BASE_URL}/og/default.jpg`,
+    ...(datePublished && { datePublished }),
+    author: {
+      "@type": "Organization",
+      name: BRAND,
+      url: BASE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: BRAND,
+      logo: {
+        "@type": "ImageObject",
+        url: `${BASE_URL}/logo.svg`,
+      },
+    },
+  };
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5. BreadcrumbList schema
    ───────────────────────────────────────────────────────────── */
 export function breadcrumbSchema(
   crumbs: { name: string; path: string }[]

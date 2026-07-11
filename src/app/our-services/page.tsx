@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Our Services | Gulf Trip Service - Taxi & Transport Services in Saudi Arabia",
+    title: "Our Services",
     description: "Explore all taxi and transport services offered by Gulf Trip Service — airport transfers, hotel transfers, Umrah packages, Ziyarat tours, private taxis and more across Saudi Arabia.",
     path: "/our-services",
     keywords: ["taxi services Saudi Arabia", "Umrah taxi", "airport transfer", "intercity transport", "Makkah taxi service"],
 });
+
+const schemas = [
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Our Services", path: "/our-services" }]),
+];
 
 const services = [
     {
@@ -76,6 +81,8 @@ const whyChooseUs = [
 
 export default function OurServices() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Our Services</h1>
@@ -162,5 +169,6 @@ export default function OurServices() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

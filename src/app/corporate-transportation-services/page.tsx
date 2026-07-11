@@ -1,13 +1,19 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, ClockIcon, MessageIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Corporate Transportation Services Saudi Arabia | Executive Travel | Gulf Trip Service",
+    title: "Corporate Transportation Services",
     description: "Premium corporate transportation services in Saudi Arabia. Executive transfers, staff shuttles, and event transport with professional drivers and high-end vehicles.",
     path: "/corporate-transportation-services",
     keywords: ["corporate transport Saudi Arabia", "executive taxi", "business car hire", "corporate travel Saudi Arabia"],
 });
+
+const schemas = [
+    serviceSchema({ name: "Corporate Transportation Services", description: "Premium corporate transportation services in Saudi Arabia. Executive transfers, staff shuttles, and event transport with professional drivers and high-end vehicles.", url: "/corporate-transportation-services", areaServed: ["Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Corporate Transportation", path: "/corporate-transportation-services" }]),
+];
 
 const solutions = [
     {
@@ -26,6 +32,8 @@ const solutions = [
 
 export default function CorporateTransportation() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -111,5 +119,6 @@ export default function CorporateTransportation() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

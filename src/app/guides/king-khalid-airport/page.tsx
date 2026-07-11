@@ -2,13 +2,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import GuidePage from "@/components/GuidePage";
 
 export const metadata = generatePageMetadata({
-  title: "Complete Guide to King Khalid International Airport (RUH) | Gulf Trip Service",
+  title: "King Khalid Airport Guide (RUH)",
   description: "Everything you need to know about King Khalid International Airport in Riyadh — terminals, taxi services, transport options, tips, and how to book your transfer.",
   path: "/guides/king-khalid-airport",
   keywords: ["King Khalid Airport guide", "RUH airport taxi", "Riyadh airport transport", "King Khalid International Airport terminals"],
 });
 
 const data = {
+  path: "/guides/king-khalid-airport",
   title: "Complete Guide to King Khalid International Airport (RUH)",
   subtitle: "Everything you need to know about Riyadh's international airport — terminals, transfers, waiting areas, and getting into the city.",
   eyebrow: "Airport Guide",

@@ -1,8 +1,8 @@
 import { generatePageMetadata } from "@/lib/seo";
-import { jsonLd } from "@/lib/jsonld";
+import { jsonLd, breadcrumbSchema } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-  title: "About Us | Gulf Trip Service — Saudi Arabia's Trusted Transport Partner Since 2014",
+  title: "About Us",
   description: "Learn about Gulf Trip Service — 10+ years serving Umrah pilgrims, tourists, and business travelers across Saudi Arabia. Licensed fleet, certified drivers, 15,000+ happy customers.",
   path: "/about-us",
   keywords: ["about Gulf Trip Service", "Saudi taxi company", "Umrah transport company Saudi Arabia", "licensed taxi Saudi Arabia"],
@@ -27,10 +27,18 @@ const reviewSchema = {
   ],
 };
 
+const schemas = [
+  reviewSchema,
+  breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "About Us", path: "/about-us" },
+  ]),
+];
+
 export default function AboutUsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(reviewSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       {children}
     </>
   );

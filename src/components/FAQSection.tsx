@@ -3,39 +3,7 @@
 import { useState } from 'react';
 import styles from './FAQSection.module.css';
 import { ChevronDownIcon } from './Icons';
-
-const faqs = [
-    {
-        question: "How much is a taxi from Jeddah Airport to Makkah?",
-        answer:
-            "Our fixed price from Jeddah Airport (KAIA) to Makkah starts from 150 SAR — all-inclusive with no hidden fees or surge pricing.",
-    },
-    {
-        question: "What happens if my flight is delayed?",
-        answer:
-            "We track your flight in real-time. If there is a delay, your driver automatically adjusts the pickup time at no extra cost. Your driver will be waiting in the arrivals hall with a name board.",
-    },
-    {
-        question: "Can I book a taxi for Umrah inter-city travel?",
-        answer:
-            "Yes — we specialise in Umrah transport between Makkah and Madinah, and Ziyarat tours to historical sites. Book a one-way trip or a full package for your entire stay.",
-    },
-    {
-        question: "Are child seats available in your vehicles?",
-        answer:
-            "Yes, child seats are available upon request during the booking process. We prioritise family safety on every journey.",
-    },
-    {
-        question: "Can I pay in cash or by card?",
-        answer:
-            "We accept cash (SAR), card payments, and online bank transfer. Payment method can be selected when booking.",
-    },
-    {
-        question: "How far in advance should I book?",
-        answer:
-            "We recommend booking at least 24 hours in advance, especially during Hajj and Umrah seasons. However, we also accept same-day bookings subject to availability.",
-    },
-];
+import { homeFaqs as faqs } from '@/lib/homeFaqs';
 
 const FAQSection = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);

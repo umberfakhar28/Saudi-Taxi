@@ -2,13 +2,20 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
 import RelatedLinks from "@/components/RelatedLinks";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Border Crossing Taxi Service | Saudi Arabia | Gulf Trip Service",
+    title: "Border Crossing Taxi Service",
     description: "Reliable taxi and transport service for Saudi Arabia border crossings. Routes via Bahrain Causeway, Jordan border (Durra), UAE and more. Licensed drivers, professional service.",
     path: "/border-crossing",
     keywords: ["border crossing taxi Saudi Arabia", "Saudi border transfer", "cross border taxi", "Saudi Arabia to GCC taxi"],
+    hreflangPath: "/border-crossing",
 });
+
+const schemas = [
+    serviceSchema({ name: "Border Crossing Taxi Service", description: "Reliable taxi and transport service for Saudi Arabia border crossings. Routes via Bahrain Causeway, Jordan border (Durra), UAE and more. Licensed drivers, professional service.", url: "/border-crossing", areaServed: ["Saudi Arabia", "Bahrain", "Jordan", "UAE", "Kuwait", "Qatar", "Oman"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }]),
+];
 
 const borders = [
     {
@@ -75,6 +82,8 @@ const inclusions = [
 
 export default function BorderCrossing() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -323,5 +332,6 @@ export default function BorderCrossing() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

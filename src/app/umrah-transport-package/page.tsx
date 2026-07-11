@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Umrah Transport Package | Complete Transportation for Umrah | Gulf Trip Service",
+    title: "Umrah Transport Package",
     description: "Complete Umrah transport packages covering airport pickup, Makkah & Madinah hotel transfers, Ziyarat tours and inter-city travel. All-inclusive and reliable.",
     path: "/umrah-transport-package",
     keywords: ["Umrah transport package", "Umrah taxi package", "Umrah transfer package", "all-inclusive Umrah transport"],

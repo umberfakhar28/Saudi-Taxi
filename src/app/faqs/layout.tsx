@@ -1,5 +1,5 @@
 import { generatePageMetadata } from "@/lib/seo";
-import { faqSchema, jsonLd } from "@/lib/jsonld";
+import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
     title: "Frequently Asked Questions | Gulf Trip Service",
@@ -20,12 +20,20 @@ const SCHEMA_FAQS = [
     { question: "Are your prices fixed or metered?", answer: "All prices are fixed and agreed at booking. There are no meters, no surge pricing, and no hidden charges." },
 ];
 
+const schemas = [
+    faqSchema(SCHEMA_FAQS),
+    breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "FAQs", path: "/faqs" },
+    ]),
+];
+
 export default function FAQsLayout({ children }: { children: React.ReactNode }) {
     return (
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema(SCHEMA_FAQS)) }}
+                dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }}
             />
             {children}
         </>

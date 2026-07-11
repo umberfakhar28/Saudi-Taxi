@@ -4,7 +4,7 @@ import { ShieldIcon, TrendingUpIcon, HeartIcon, CreditCardIcon, LanguagesIcon, A
 import styles from "./about.module.css";
 
 export const metadata = generatePageMetadata({
-    title: "About Us | Gulf Trip Service - Your Trusted Transport Partner",
+    title: "About Us",
     description: "Learn about Gulf Trip Service - over 10 years of reliable taxi and transport services for Umrah pilgrims in Makkah, Madinah & Jeddah.",
     path: "/about",
     keywords: ["about Gulf Trip Service", "Saudi taxi company", "Umrah transport Saudi Arabia", "Makkah taxi service"],

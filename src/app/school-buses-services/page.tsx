@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { UserIcon, ShieldIcon, MessageIcon, ChevronRightIcon, ClockIcon } from "@/components/Icons";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "School Bus Services Saudi Arabia | Safe Student Transport | Gulf Trip Service",
+    title: "School Bus Services Saudi Arabia",
     description: "Safe and reliable school bus services in Saudi Arabia. Professional drivers, monitored routes, and modern fleet ensuring the highest standards of student safety.",
     path: "/school-buses-services",
     keywords: ["school bus Saudi Arabia", "student transport", "school transportation", "school bus service Saudi"],
 });
 
+const schemas = [
+    serviceSchema({ name: "School Bus Services Saudi Arabia", description: "Safe and reliable school bus services in Saudi Arabia. Professional drivers, monitored routes, and modern fleet ensuring the highest standards of student safety.", url: "/school-buses-services", areaServed: ["Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "School Bus Services", path: "/school-buses-services" }]),
+];
+
 export default function SchoolBusesServices() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -80,5 +88,6 @@ export default function SchoolBusesServices() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

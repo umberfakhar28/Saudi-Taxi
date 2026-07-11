@@ -22,20 +22,26 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Gulf Trip Service & Rental | Premium Transport Services",
+    default: SITE_CONFIG.defaultTitle,
     template: `%s | ${SITE_CONFIG.siteName}`,
   },
-  description:
-    "Luxury taxi and car rental services across Saudi Arabia. Book your premium ride today.",
+  description: SITE_CONFIG.defaultDescription,
   metadataBase: new URL(SITE_CONFIG.baseUrl),
   alternates: { canonical: SITE_CONFIG.baseUrl },
   openGraph: {
     siteName: SITE_CONFIG.siteName,
     locale: SITE_CONFIG.locale,
     type: "website",
+    images: [{
+      url: `${SITE_CONFIG.baseUrl}${SITE_CONFIG.defaultOgImage}`,
+      width: 1200,
+      height: 630,
+      alt: SITE_CONFIG.siteName,
+    }],
   },
   twitter: {
     card: "summary_large_image",
+    images: [`${SITE_CONFIG.baseUrl}${SITE_CONFIG.defaultOgImage}`],
   },
   icons: {
     icon: [

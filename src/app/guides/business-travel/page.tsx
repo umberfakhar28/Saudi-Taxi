@@ -2,13 +2,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import GuidePage from "@/components/GuidePage";
 
 export const metadata = generatePageMetadata({
-  title: "Business Travel Guide in Saudi Arabia | Executive Transport | Gulf Trip Service",
+  title: "Business Travel Guide in Saudi Arabia",
   description: "Guide for business travelers in Saudi Arabia — Riyadh, Jeddah, Dammam corporate transport, KAFD, Aramco, and Vision 2030 project logistics.",
   path: "/guides/business-travel",
   keywords: ["business travel Saudi Arabia", "corporate taxi Riyadh", "executive transfer Saudi Arabia", "KAFD corporate transport"],
 });
 
 const data = {
+  path: "/guides/business-travel",
   title: "Business Travel Guide in Saudi Arabia",
   subtitle: "Everything corporate travelers need to know about getting around Saudi Arabia efficiently — from Riyadh KAFD to Aramco HQ in Dhahran.",
   eyebrow: "Business Travel Guide",

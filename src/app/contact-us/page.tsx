@@ -4,6 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "./contact.module.css";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+
+const schemas = [
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact-us" }]),
+];
 
 const contactInfo = [
     {
@@ -58,6 +63,8 @@ export default function ContactUs() {
     };
 
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -242,5 +249,6 @@ export default function ContactUs() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

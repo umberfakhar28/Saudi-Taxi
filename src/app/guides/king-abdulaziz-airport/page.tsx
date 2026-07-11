@@ -2,13 +2,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import GuidePage from "@/components/GuidePage";
 
 export const metadata = generatePageMetadata({
-  title: "Complete Guide to King Abdulaziz International Airport Jeddah (JED) | Gulf Trip Service",
+  title: "King Abdulaziz Airport Guide (JED)",
   description: "Full guide to KAIA Jeddah — terminals, taxi transfers to Makkah & Madinah, facilities, Umrah pilgrim tips, and how to book your airport transfer.",
   path: "/guides/king-abdulaziz-airport",
   keywords: ["King Abdulaziz Airport guide", "KAIA taxi", "Jeddah airport transfer Makkah", "JED airport guide"],
 });
 
 const data = {
+  path: "/guides/king-abdulaziz-airport",
   title: "Complete Guide to King Abdulaziz International Airport, Jeddah (JED)",
   subtitle: "The primary gateway for Umrah pilgrims worldwide — terminals, transfer options to Makkah and Madinah, facilities, and expert travel tips.",
   eyebrow: "Airport Guide",

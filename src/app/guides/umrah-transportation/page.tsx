@@ -2,13 +2,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import GuidePage from "@/components/GuidePage";
 
 export const metadata = generatePageMetadata({
-  title: "Complete Umrah Transportation Guide | How to Travel Between Holy Cities | Gulf Trip Service",
+  title: "Umrah Transportation Guide",
   description: "The definitive guide to Umrah transportation — Jeddah airport to Makkah, Makkah to Madinah, Ziyarat tours, hotel transfers, and booking tips for pilgrims.",
   path: "/guides/umrah-transportation",
   keywords: ["Umrah transportation guide", "Umrah taxi guide", "Makkah Madinah transfer Umrah", "how to travel for Umrah Saudi Arabia"],
 });
 
 const data = {
+  path: "/guides/umrah-transportation",
   title: "Complete Umrah Transportation Guide",
   subtitle: "Everything pilgrims need to know about getting around Saudi Arabia for Umrah — from arrival at Jeddah Airport to Makkah, Madinah, and every holy site in between.",
   eyebrow: "Pilgrim Guide",

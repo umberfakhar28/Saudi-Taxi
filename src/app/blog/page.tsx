@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-  title: "Travel Blog | Saudi Arabia Transportation Tips & Guides | Gulf Trip Service",
+  title: "Travel Blog & Transportation Tips",
   description: "Expert travel tips, airport guides, Umrah transportation advice, and destination content for Saudi Arabia travelers — by Gulf Trip Service.",
   path: "/blog",
   keywords: ["Saudi Arabia travel blog", "Umrah travel tips", "Saudi transportation guide", "Riyadh Jeddah travel"],

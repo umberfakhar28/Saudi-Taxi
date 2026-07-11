@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 
 export const metadata = generatePageMetadata({
-    title: "About Us | Gulf Trip Service - Your Trusted Transport Partner in Saudi Arabia",
+    title: "About Us",
     description: "Learn about Gulf Trip Service — over 10 years of professional, reliable taxi and transport services for Umrah pilgrims, tourists and travelers across Saudi Arabia.",
     path: "/about-us",
     keywords: ["about Gulf Trip Service", "Saudi taxi company", "Umrah transport Saudi Arabia", "Makkah taxi service"],

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import styles from "./testimonials.module.css";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
     title: "Testimonials | What Our Customers Say | Gulf Trip Service",
@@ -9,6 +10,10 @@ export const metadata = generatePageMetadata({
     path: "/testimonials",
     keywords: ["taxi testimonials", "customer reviews Saudi Arabia", "Umrah taxi reviews", "Saudi taxi reviews"],
 });
+
+const schemas = [
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Testimonials", path: "/testimonials" }]),
+];
 
 const testimonials = [
     {
@@ -94,6 +99,8 @@ const stats = [
 
 export default function Testimonials() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -193,5 +200,6 @@ export default function Testimonials() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

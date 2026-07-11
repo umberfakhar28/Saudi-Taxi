@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { serviceSchema, breadcrumbSchema, faqSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "AlUla Tour Taxi Service | Reliable AlUla Tours | Gulf Trip Service",
+    title: "AlUla Tour Taxi Service",
     description: "Reliable taxi and tour service to AlUla — Saudi Arabia's ancient wonder. Explore Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Book your AlUla tour now.",
     path: "/reliable-alula-tour-taxi-service-in-saudi-arabia",
     keywords: ["AlUla tour taxi", "Hegra tour transfer", "AlUla sightseeing", "AlUla private tour"],
@@ -51,8 +52,16 @@ const faqs = [
     { q: "Is AlUla safe to visit?", a: "Absolutely. AlUla is a premier Saudi tourism destination with excellent infrastructure, security and hospitality. It is one of the safest destinations in the world." },
 ];
 
+const schemas = [
+    serviceSchema({ name: "AlUla Tour Taxi Service", description: "Reliable taxi and tour service to AlUla — Saudi Arabia's ancient wonder. Explore Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Book your AlUla tour now.", url: "/reliable-alula-tour-taxi-service-in-saudi-arabia", areaServed: ["AlUla"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "AlUla Tour", path: "/reliable-alula-tour-taxi-service-in-saudi-arabia" }]),
+    faqSchema(faqs.map(({ q, a }) => ({ question: q, answer: a }))),
+];
+
 export default function AlulaTourTaxi() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Reliable AlUla Tour Taxi Service in Saudi Arabia</h1>
@@ -165,5 +174,6 @@ export default function AlulaTourTaxi() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Ziyarat Services in Saudi Arabia | Holy Sites Tour | Gulf Trip Service",
+    title: "Ziyarat Services in Saudi Arabia",
     description: "Explore the holy and historical sites of Makkah and Madinah with our professional Ziyarat tour services. Experienced guides, comfortable vehicles, flexible itineraries.",
     path: "/ziyarat-services-in-saudi-arabia",
     keywords: ["Ziyarat services", "holy sites tour", "Makkah Madinah Ziyarat taxi", "Ziyarat tour Saudi Arabia"],
 });
+
+const schemas = [
+    serviceSchema({ name: "Ziyarat Services in Saudi Arabia", description: "Explore the holy and historical sites of Makkah and Madinah with our professional Ziyarat tour services. Experienced guides, comfortable vehicles, flexible itineraries.", url: "/ziyarat-services-in-saudi-arabia", areaServed: ["Makkah", "Madinah"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Ziyarat Services", path: "/ziyarat-services-in-saudi-arabia" }]),
+];
 
 const makkahZiyarat = [
     { name: "Masjid Al-Haram", description: "The Grand Mosque surrounding the Holy Kaaba — the most sacred site in Islam." },
@@ -58,6 +64,8 @@ const packages = [
 
 export default function ZiyaratServices() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Ziyarat Services in Saudi Arabia</h1>
@@ -165,5 +173,6 @@ export default function ZiyaratServices() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

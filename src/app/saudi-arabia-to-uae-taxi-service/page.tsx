@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to UAE Taxi | Land Transfer to Dubai & Abu Dhabi | Gulf Trip Service",
+    title: "Saudi Arabia to UAE Taxi Service",
     description: "Premium taxi service from Saudi Arabia to UAE (Dubai, Abu Dhabi). Safe overland transfers via Al Batha border crossing. Comfortable family vehicles and professional drivers.",
     path: "/saudi-arabia-to-uae-taxi-service",
     keywords: ["Saudi to UAE taxi", "Saudi to Dubai taxi", "Saudi to Abu Dhabi taxi", "Al Batha border crossing"],
 });
 
+const schemas = [
+    serviceSchema({ name: "Saudi Arabia to UAE Taxi Service", description: "Premium taxi service from Saudi Arabia to UAE (Dubai, Abu Dhabi). Safe overland transfers via Al Batha border crossing. Comfortable family vehicles and professional drivers.", url: "/saudi-arabia-to-uae-taxi-service", areaServed: ["UAE", "Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }, { name: "UAE", path: "/saudi-arabia-to-uae-taxi-service" }]),
+];
+
 export default function SaudiToUae() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -102,5 +110,6 @@ export default function SaudiToUae() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Private Taxi Saudi Arabia | Hire Private Cab | Gulf Trip Service",
+    title: "Private Taxi Saudi Arabia",
     description: "Hire a private taxi in Saudi Arabia for personal comfort, privacy and flexibility. Available for local trips, inter-city travel and long-distance journeys.",
     path: "/private-taxi",
     keywords: ["private taxi Saudi Arabia", "hire private driver Makkah", "private car hire", "private taxi Makkah"],
 });
+
+const schemas = [
+    serviceSchema({ name: "Private Taxi Services in Saudi Arabia", description: "Hire a private taxi in Saudi Arabia for personal comfort, privacy and flexibility. Available for local trips, inter-city travel and long-distance journeys.", url: "/private-taxi", areaServed: ["Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Private Taxi", path: "/private-taxi" }]),
+];
 
 const features = [
     { icon: "🔒", title: "100% Private", description: "Your vehicle is exclusively for you and your group. No shared rides, no strangers." },
@@ -53,6 +59,8 @@ const useCases = [
 
 export default function PrivateTaxi() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
                 <h1>Private Taxi Services in Saudi Arabia</h1>
@@ -153,5 +161,6 @@ export default function PrivateTaxi() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

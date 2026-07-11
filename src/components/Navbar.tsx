@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
     MenuIcon, XIcon, ChevronDownIcon,
     PlaneIcon, HotelIcon, CarIcon, PackageIcon, CompassIcon,
@@ -9,6 +10,7 @@ import {
     PhoneIcon,
 } from './Icons';
 import Logo from './Logo';
+import { arabicPathFor } from '@/lib/bilingualPages';
 import styles from './Navbar.module.css';
 
 /*
@@ -46,6 +48,7 @@ const borderRouteLinks = [
 ];
 
 const Navbar = () => {
+    const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
     const [toursOpen, setToursOpen] = useState(false);
@@ -187,6 +190,11 @@ const Navbar = () => {
                     <Link href="/about-us"  className={styles.link} onClick={close}>About</Link>
                     <Link href="/contact-us" className={styles.link} onClick={close}>
                         Contact
+                    </Link>
+
+                    {/* ---- LANGUAGE SWITCHER ---- */}
+                    <Link href={arabicPathFor(pathname)} className={styles.link} onClick={close} lang="ar">
+                        العربية
                     </Link>
 
                     {/* ---- CTA (Contrast: gold, rightmost = highest priority) ---- */}

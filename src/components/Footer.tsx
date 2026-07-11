@@ -71,7 +71,7 @@ const Footer = () => {
                         <ul className={styles.list}>
                             <li className={styles.listItem}>
                                 <MapPinIcon className={styles.contactIcon} size={18} />
-                                <span className={styles.link}>Makkah, Saudi Arabia</span>
+                                <span className={styles.link}>Makkah, Makkah Province, Saudi Arabia</span>
                             </li>
                             <li className={styles.listItem}>
                                 <PhoneIcon className={styles.contactIcon} size={18} />

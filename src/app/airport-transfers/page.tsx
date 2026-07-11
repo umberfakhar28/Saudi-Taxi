@@ -2,13 +2,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Airport Transfers Saudi Arabia | Jeddah Airport Taxi | Gulf Trip Service",
+    title: "Airport Transfers in Saudi Arabia",
     description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Reliable and 24/7 availability.",
     path: "/airport-transfers",
     keywords: ["airport transfer Saudi Arabia", "Jeddah airport taxi", "KAIA transfer", "Makkah airport transfer"],
 });
+
+const schemas = [
+    serviceSchema({ name: "Airport Transfers in Saudi Arabia", description: "Professional airport transfer services from Jeddah King Abdulaziz International Airport (KAIA) to Makkah, Madinah, and beyond. Reliable and 24/7 availability.", url: "/airport-transfers", areaServed: ["Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Airport Transfers", path: "/airport-transfers" }]),
+];
 
 const benefits = [
     {
@@ -65,6 +71,8 @@ const airports = [
 
 export default function AirportTransfers() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
@@ -204,5 +212,6 @@ export default function AirportTransfers() {
                 </div>
             </section>
         </main>
+        </>
     );
 }

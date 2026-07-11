@@ -1,16 +1,33 @@
 import Link from "next/link";
+import { blogPostingSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export interface BlogPostData {
   title: string;
   category: string;
   date: string;
   excerpt: string;
+  path: string;
   body: { heading?: string; text: string }[];
 }
 
 export default function BlogPost({ data }: { data: BlogPostData }) {
+  const schemas = [
+    blogPostingSchema({
+      headline: data.title,
+      description: data.excerpt,
+      url: data.path,
+      datePublished: data.date,
+    }),
+    breadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Blog", path: "/blog" },
+      { name: data.title, path: data.path },
+    ]),
+  ];
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       <section className="page-hero">
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <span className="section-eyebrow">{data.category}</span>

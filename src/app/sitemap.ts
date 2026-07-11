@@ -25,6 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: lastMod(""),
       changeFrequency: "weekly",
       priority: 1.0,
+      alternates: { languages: { en: BASE_URL, ar: `${BASE_URL}/ar` } },
     },
     {
       url: `${BASE_URL}/about-us`,
@@ -37,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: lastMod("/contact-us"),
       changeFrequency: "monthly",
       priority: 0.8,
+      alternates: { languages: { en: `${BASE_URL}/contact-us`, ar: `${BASE_URL}/ar/contact-us` } },
     },
     {
       url: `${BASE_URL}/our-services`,
@@ -137,6 +139,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: lastMod(slug),
     changeFrequency: "monthly" as const,
     priority,
+    ...(slug === "/border-crossing" && {
+      alternates: { languages: { en: `${BASE_URL}${slug}`, ar: `${BASE_URL}/ar${slug}` } },
+    }),
   }));
 
   const crossBorderRoutePages: MetadataRoute.Sitemap = [
@@ -149,11 +154,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { slug: "/khafji-to-kuwait-taxi-service", priority: 0.75 },
     { slug: "/riyadh-to-bahrain-taxi-service", priority: 0.78 },
     { slug: "/dammam-to-kuwait-taxi-service", priority: 0.75 },
-  ].map(({ slug, priority }) => ({
+  ].map(({ slug, priority }) => {
+    const hasArabic = slug === "/dammam-airport-to-bahrain-taxi-service" || slug === "/dammam-airport-to-qatar-taxi-service";
+    return {
+      url: `${BASE_URL}${slug}`,
+      lastModified: lastMod(slug),
+      changeFrequency: "monthly" as const,
+      priority,
+      ...(hasArabic && {
+        alternates: { languages: { en: `${BASE_URL}${slug}`, ar: `${BASE_URL}/ar${slug}` } },
+      }),
+    };
+  });
+
+  const arPages: MetadataRoute.Sitemap = [
+    { slug: "/ar", enSlug: "/", priority: 0.95 },
+    { slug: "/ar/border-crossing", enSlug: "/border-crossing", priority: 0.75 },
+    { slug: "/ar/dammam-airport-to-bahrain-taxi-service", enSlug: "/dammam-airport-to-bahrain-taxi-service", priority: 0.75 },
+    { slug: "/ar/dammam-airport-to-qatar-taxi-service", enSlug: "/dammam-airport-to-qatar-taxi-service", priority: 0.75 },
+    { slug: "/ar/contact-us", enSlug: "/contact-us", priority: 0.7 },
+  ].map(({ slug, enSlug, priority }) => ({
     url: `${BASE_URL}${slug}`,
     lastModified: lastMod(slug),
     changeFrequency: "monthly" as const,
     priority,
+    alternates: { languages: { en: `${BASE_URL}${enSlug}`, ar: `${BASE_URL}${slug}` } },
   }));
 
   const cityTourPages: MetadataRoute.Sitemap = [
@@ -236,5 +261,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogPages,
     ...cityPages,
     ...guidePages,
+    ...arPages,
   ];
 }

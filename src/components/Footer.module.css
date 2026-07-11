@@ -182,3 +182,9 @@
         text-align: center;
     }
 }
+
+/* ===== RTL (Arabic) override — additive only, zero effect under dir="ltr" ===== */
+[dir="rtl"] .link:hover {
+    padding-left: 0;
+    padding-right: 4px;
+}

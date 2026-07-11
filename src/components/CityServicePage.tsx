@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export interface CityData {
   slug: string;
@@ -26,6 +26,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
       url: `/services/${data.slug}`,
       areaServed: [data.city],
     }),
+    faqSchema(data.faqs.map((f) => ({ question: f.q, answer: f.a }))),
     breadcrumbSchema([
       { name: "Home", path: "/" },
       { name: "Services", path: "/our-services" },

@@ -1,23 +1,31 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
+import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to Qatar Taxi Service | Salwa Border Crossing | Gulf Trip Service",
-    description: "Reliable and premium taxi service from Saudi Arabia to Qatar. Direct transfers via the Salwa border crossing. Perfect for business, tourism and family travel. Book your Qatar trip today.",
+    title: "Saudi Arabia to Qatar Taxi Service",
+    description: "Taxi to Qatar from anywhere in Saudi Arabia — Riyadh, Dammam, Al-Ahsa or your city — via the Salwa border. Direct door-to-door transfers to Doha. Book today.",
     path: "/saudi-arabia-to-qatar-taxi-service",
     keywords: ["Saudi to Qatar taxi", "Salwa crossing transfer", "Saudi to Doha taxi", "Qatar border taxi"],
 });
 
+const schemas = [
+    serviceSchema({ name: "Saudi Arabia to Qatar Taxi Service", description: "Taxi to Qatar from anywhere in Saudi Arabia — Riyadh, Dammam, Al-Ahsa or your city — via the Salwa border. Direct door-to-door transfers to Doha. Book today.", url: "/saudi-arabia-to-qatar-taxi-service", areaServed: ["Qatar", "Saudi Arabia"] }),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }, { name: "Qatar", path: "/saudi-arabia-to-qatar-taxi-service" }]),
+];
+
 export default function SaudiToQatar() {
     return (
+        <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Saudi Arabia to Qatar Transfer</h1>
+                <h1>Saudi Arabia to Qatar Taxi — Any City Pickup</h1>
                 <p>
-                    Safe and comfortable land transfers via the Salwa border. 
-                    Direct service from Riyadh, Dammam, or any Saudi city to Doha.
+                    Safe and comfortable land transfers via the Salwa border, with pickup
+                    from Riyadh, Dammam, Al-Ahsa, or any other Saudi city — direct to Doha.
                 </p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <Link href="/border-crossing">Border Crossing</Link> / <span>Qatar</span>
@@ -29,14 +37,21 @@ export default function SaudiToQatar() {
                 <div className="container">
                     <div className="grid-2">
                         <div>
-                            <h2 className="section-title">Salwa Border Crossing Transfers</h2>
+                            <h2 className="section-title">Salwa Border Crossing Transfers From Any City</h2>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
-                                The Salwa border is the key land crossing between Saudi Arabia and the State of Qatar. Our professional taxi service provides a seamless connection between the two nations, offering door-to-door transfers that are both reliable and comfortable.
+                                The Salwa border is the key land crossing between Saudi Arabia and the State of Qatar. Wherever your journey starts — Riyadh, Dammam, Al-Ahsa, or another Saudi city — our professional taxi service provides a seamless connection all the way to Doha.
                             </p>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-8)' }}>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
                                 Whether you are heading to Doha for a business meeting, a sporting event, or visiting family, our drivers ensure a smooth transit across the border. We handle all vehicle-related formalities, allowing you to relax during the journey.
                             </p>
-                            
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-8)' }}>
+                                Flying into Dammam Airport first? Our{" "}
+                                <Link href="/dammam-airport-to-qatar-taxi-service" style={{ color: 'var(--accent)', fontWeight: 600 }}>
+                                    Dammam Airport to Qatar transfer
+                                </Link>{" "}
+                                is built specifically for that route, with meet-and-greet pickup and flight tracking.
+                            </p>
+
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                 <div className="card" style={{ padding: '1.5rem' }}>
                                     <h4 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>Transparent Pricing</h4>
@@ -93,5 +108,6 @@ export default function SaudiToQatar() {
                 </div>
             </section>
         </main>
+        </>
     );
 }
