@@ -7,7 +7,7 @@ import {
     MenuIcon, XIcon, ChevronDownIcon,
     PlaneIcon, HotelIcon, CarIcon, PackageIcon, CompassIcon,
     MapIcon, MountainIcon, TreePineIcon,
-    PhoneIcon,
+    UserIcon, EyeIcon, MailIcon, GlobeIcon,
 } from './Icons';
 import Logo from './Logo';
 import { arabicPathFor } from '@/lib/bilingualPages';
@@ -15,11 +15,11 @@ import styles from './Navbar.module.css';
 
 /*
   NAVBAR — 5 Design Principles:
-  Balance:    Logo (left) | Nav links (center) | Book Now CTA (right)
+  Balance:    Logo (left) | Services / Cross Border / Company (center) | Language + Book Now (right)
   Alignment:  All links baseline-aligned; dropdown items strictly left-aligned
-  Proximity:  Services grouped under "Services"; Tours under "Tours"; related dropdowns separated by label
+  Proximity:  Services + Tours grouped under "Services"; GCC routes under "Cross Border"; info pages under "Company"
   Repetition: Identical .link class for every nav item; identical .dropdownItem for every dropdown entry
-  Contrast:   White links on dark green; gold CTA vs dark background; gold top-border on dropdowns
+  Contrast:   Light links on dark blue header bg; gold CTA vs surrounding chrome
 */
 
 const serviceLinks = [
@@ -29,7 +29,6 @@ const serviceLinks = [
     { href: '/private-taxi',               icon: <CarIcon size={14} />,     label: 'Private Taxi' },
     { href: '/umrah-transport-package',    icon: <PackageIcon size={14} />, label: 'Umrah Transport' },
     { href: '/ziyarat-services-in-saudi-arabia', icon: <CompassIcon size={14} />, label: 'Ziyarat Services' },
-    { href: '/border-crossing',            icon: <MapIcon size={14} />,     label: 'Border Crossing' },
 ];
 
 const tourLinks = [
@@ -47,45 +46,39 @@ const borderRouteLinks = [
     { href: '/khafji-to-kuwait-taxi-service',              icon: <MapIcon size={14} />, label: 'Khafji → Kuwait' },
 ];
 
+const aboutLinks = [
+    { href: '/about-us',    icon: <UserIcon size={14} />, label: 'About Us' },
+    { href: '/our-gallery', icon: <EyeIcon size={14} />,  label: 'Gallery' },
+    { href: '/contact-us',  icon: <MailIcon size={14} />, label: 'Contact Us' },
+];
+
 const Navbar = () => {
     const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
-    const [toursOpen, setToursOpen] = useState(false);
     const [borderOpen, setBorderOpen] = useState(false);
+    const [aboutOpen, setAboutOpen] = useState(false);
 
     const close = () => {
         setMenuOpen(false);
         setServicesOpen(false);
-        setToursOpen(false);
         setBorderOpen(false);
+        setAboutOpen(false);
     };
 
     return (
-        <nav className={styles.navbar}>
+        <nav className={`${styles.navbar} ${styles.navbarShifted}`}>
             <div className={styles.container}>
 
-                {/* ---- LOGO (Balance: anchors the left side) ---- */}
+                {/* ---- LOGO (Balance: anchors the left side; also serves as the Home link) ---- */}
                 <Link href="/" className={styles.logo} onClick={close} aria-label="Gulf Trip Service — Home">
-                    <Logo size={38} variant="color" />
+                    <Logo size={38} variant="white" />
                 </Link>
 
-                {/* ---- HAMBURGER — mobile toggle ---- */}
-                <button
-                    className={styles.hamburger}
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                    aria-expanded={menuOpen}
-                >
-                    {menuOpen ? <XIcon size={26} /> : <MenuIcon size={26} />}
-                </button>
-
-                {/* ---- NAV LINKS (Balance: centered between logo and CTA) ---- */}
+                {/* ---- NAV LINKS (Balance: centered between logo and language/CTA actions) ---- */}
                 <div className={`${styles.navLinks} ${menuOpen ? styles.navLinksOpen : ''}`}>
 
-                    <Link href="/" className={styles.link} onClick={close}>Home</Link>
-
-                    {/* SERVICES DROPDOWN — Proximity: all service links grouped */}
+                    {/* SERVICES DROPDOWN — Proximity: services + day tours grouped together */}
                     <div
                         className={styles.dropdown}
                         onMouseEnter={() => setServicesOpen(true)}
@@ -103,7 +96,6 @@ const Navbar = () => {
                             />
                         </button>
                         <div className={`${styles.dropdownMenu} ${servicesOpen ? styles.dropdownMenuOpen : ''}`}>
-                            {/* Proximity: label groups the items below it */}
                             <div className={styles.dropdownLabel}>Transport Services</div>
                             {serviceLinks.map((item) => (
                                 <Link
@@ -116,27 +108,6 @@ const Navbar = () => {
                                     {item.label}
                                 </Link>
                             ))}
-                        </div>
-                    </div>
-
-                    {/* TOURS DROPDOWN — Proximity: tour links grouped separately */}
-                    <div
-                        className={styles.dropdown}
-                        onMouseEnter={() => setToursOpen(true)}
-                        onMouseLeave={() => setToursOpen(false)}
-                    >
-                        <button
-                            className={styles.link}
-                            onClick={() => setToursOpen(!toursOpen)}
-                            aria-expanded={toursOpen}
-                        >
-                            Tours
-                            <ChevronDownIcon
-                                className={`${styles.arrow} ${toursOpen ? styles.arrowRotate : ''}`}
-                                size={14}
-                            />
-                        </button>
-                        <div className={`${styles.dropdownMenu} ${toursOpen ? styles.dropdownMenuOpen : ''}`}>
                             <div className={styles.dropdownLabel}>Day Tours</div>
                             {tourLinks.map((item) => (
                                 <Link
@@ -152,7 +123,7 @@ const Navbar = () => {
                         </div>
                     </div>
 
-                    {/* CROSS-BORDER DROPDOWN — Proximity: GCC route links grouped separately */}
+                    {/* CROSS BORDER DROPDOWN — Proximity: GCC route links grouped separately */}
                     <div
                         className={styles.dropdown}
                         onMouseEnter={() => setBorderOpen(true)}
@@ -163,7 +134,7 @@ const Navbar = () => {
                             onClick={() => setBorderOpen(!borderOpen)}
                             aria-expanded={borderOpen}
                         >
-                            Cross-Border
+                            Cross Border
                             <ChevronDownIcon
                                 className={`${styles.arrow} ${borderOpen ? styles.arrowRotate : ''}`}
                                 size={14}
@@ -185,22 +156,71 @@ const Navbar = () => {
                         </div>
                     </div>
 
-                    <Link href="/quote" className={styles.link} onClick={close}>Quote</Link>
-                    <Link href="/our-gallery" className={styles.link} onClick={close}>Gallery</Link>
-                    <Link href="/about-us"  className={styles.link} onClick={close}>About</Link>
-                    <Link href="/contact-us" className={styles.link} onClick={close}>
-                        Contact
-                    </Link>
+                    {/* ABOUT US DROPDOWN — Proximity: informational pages grouped together */}
+                    <div
+                        className={styles.dropdown}
+                        onMouseEnter={() => setAboutOpen(true)}
+                        onMouseLeave={() => setAboutOpen(false)}
+                    >
+                        <button
+                            className={styles.link}
+                            onClick={() => setAboutOpen(!aboutOpen)}
+                            aria-expanded={aboutOpen}
+                        >
+                            Company
+                            <ChevronDownIcon
+                                className={`${styles.arrow} ${aboutOpen ? styles.arrowRotate : ''}`}
+                                size={14}
+                            />
+                        </button>
+                        <div className={`${styles.dropdownMenu} ${aboutOpen ? styles.dropdownMenuOpen : ''}`}>
+                            {aboutLinks.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={styles.dropdownItem}
+                                    onClick={close}
+                                >
+                                    {item.icon}
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
 
-                    {/* ---- LANGUAGE SWITCHER ---- */}
-                    <Link href={arabicPathFor(pathname)} className={styles.link} onClick={close} lang="ar">
+                    {/* Language switcher — mobile only; desktop shows it in .navActions instead */}
+                    <Link
+                        href={arabicPathFor(pathname)}
+                        className={`${styles.link} ${styles.mobileLangItem}`}
+                        onClick={close}
+                        lang="ar"
+                    >
+                        <GlobeIcon size={14} />
                         العربية
                     </Link>
+                </div>
 
-                    {/* ---- CTA (Contrast: gold, rightmost = highest priority) ---- */}
-                    <Link href="/book-online" className={styles.cta} onClick={close}>
-                        Book Now
-                    </Link>
+                {/* ---- RIGHT GROUP — hamburger (mobile) + actions (language switcher + CTA), anchored top-right ---- */}
+                <div className={styles.rightGroup}>
+                    <div className={styles.navActions}>
+                        <Link href={arabicPathFor(pathname)} className={styles.langSwitcher} lang="ar">
+                            <GlobeIcon size={14} />
+                            العربية
+                        </Link>
+                        <Link href="/book-online" className={styles.cta} onClick={close}>
+                            Book Now
+                        </Link>
+                    </div>
+
+                    {/* ---- HAMBURGER — mobile toggle ---- */}
+                    <button
+                        className={styles.hamburger}
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                        aria-expanded={menuOpen}
+                    >
+                        {menuOpen ? <XIcon size={26} /> : <MenuIcon size={26} />}
+                    </button>
                 </div>
             </div>
         </nav>

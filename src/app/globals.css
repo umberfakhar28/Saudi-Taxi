@@ -123,6 +123,7 @@
   /* ===== LAYOUT ===== */
   --container-width: 1200px;
   --nav-height: 76px;
+  --topbar-height: 38px;
   --section-pad: var(--space-20);
   --section-pad-lg: var(--space-24);
 

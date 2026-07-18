@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import TopBar from './TopBar';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
@@ -15,6 +16,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
     return (
         <>
+            <TopBar />
             <Navbar />
             {children}
             <Footer />

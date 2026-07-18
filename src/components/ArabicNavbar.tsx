@@ -26,7 +26,7 @@ const ArabicNavbar = () => {
         <nav className={styles.navbar}>
             <div className={styles.container}>
                 <Link href="/ar" className={styles.logo} onClick={close} aria-label="Gulf Trip Service — الصفحة الرئيسية">
-                    <Logo size={38} variant="color" />
+                    <Logo size={38} variant="white" />
                 </Link>
 
                 <button
