@@ -1,0 +1,203 @@
+.section {
+    padding: var(--space-16) 0;
+    background: var(--bg-base);
+}
+
+/* ---- Carousel shell: arrows flank a horizontally-scrolling track ---- */
+.carousel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.track {
+    flex: 1;
+    display: flex;
+    gap: var(--space-6);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: var(--space-2) var(--space-1) var(--space-4);
+    /* Hide scrollbar visually — native touch/trackpad swipe still works */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.track::-webkit-scrollbar {
+    display: none;
+}
+
+.arrow {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1.5px solid rgba(36, 84, 232, 0.18);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.arrow:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--accent-text);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+/* ---- Card — same visual language as the existing fleet grid ---- */
+.card {
+    flex: 0 0 calc(25% - var(--space-6) * 3 / 4);
+    scroll-snap-align: start;
+    background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(36, 84, 232, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(36, 84, 232, 0.10);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(36, 84, 232, 0.12);
+    border-color: rgba(36, 84, 232, 0.20);
+}
+
+.imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: var(--bg-subtle);
+}
+
+.image {
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card:hover .image {
+    transform: scale(1.08);
+}
+
+.badge {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    background: var(--accent);
+    color: var(--accent-text);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+}
+
+.content {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+}
+
+.name {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.desc {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+}
+
+.cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin-top: var(--space-3);
+    align-self: flex-start;
+}
+
+.cta:hover {
+    background: var(--accent);
+    color: var(--accent-text);
+    transform: translateY(-2px);
+}
+
+.ctaArrow {
+    transition: transform 0.2s ease;
+}
+
+.cta:hover .ctaArrow {
+    transform: translateX(4px);
+}
+
+/* ---- Responsive visible-card counts: 4 desktop / 3 laptop / 2 tablet / 1 mobile ---- */
+@media (max-width: 1200px) {
+    .card {
+        flex-basis: calc(33.333% - var(--space-6) * 2 / 3);
+    }
+}
+
+@media (max-width: 992px) {
+    .card {
+        flex-basis: calc(50% - var(--space-6) / 2);
+    }
+
+    .arrow {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+@media (max-width: 640px) {
+    .section {
+        padding: var(--space-12) 0;
+    }
+
+    .card {
+        flex-basis: 88%;
+    }
+
+    .imageWrapper {
+        height: 200px;
+    }
+
+    .carousel {
+        gap: var(--space-2);
+    }
+
+    .arrow {
+        width: 34px;
+        height: 34px;
+    }
+}

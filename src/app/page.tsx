@@ -3,6 +3,7 @@ import SocialProof from "@/components/SocialProof";
 import Features from "@/components/Features";
 import FAQSection from "@/components/FAQSection";
 import VehiclesSection from "@/components/VehiclesSection";
+import VehicleTypeCarousel from "@/components/VehicleTypeCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Link from "next/link";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon, GlobeIcon } from "@/components/Icons";
@@ -113,6 +114,11 @@ export default function Home() {
           SOCIAL PROOF — Repetition: consistent logo/badge strip
           ═══════════════════════════════════════════════════════════════════ */}
       <SocialProof />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BOOK BY VEHICLE TYPE — carousel of vehicles from /public/vehicles
+          ═══════════════════════════════════════════════════════════════════ */}
+      <VehicleTypeCarousel />
 
       {/* ═══════════════════════════════════════════════════════════════════
           STATS BANNER — Deep navy with gold accents

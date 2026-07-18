@@ -1,31 +1,39 @@
 import styles from './SocialProof.module.css';
-import { StarIcon, ShieldIcon, AwardIcon, ThumbsUpIcon } from './Icons';
+import { StarIcon, CheckCircleIcon } from './Icons';
+
+/* Simplified Trustpilot watermark — five-star row + wordmark, in Trustpilot's
+   own brand green. A third-party brand mark like this keeps its own brand
+   color regardless of the site's theme (same convention as a "Sign in with
+   Google" button keeping Google's colors). */
+const TrustpilotMark = () => (
+    <span className={styles.trustpilotMark}>
+        <span className={styles.trustpilotStars}>
+            {Array.from({ length: 5 }).map((_, i) => (
+                <StarIcon key={i} size={12} />
+            ))}
+        </span>
+        <span className={styles.trustpilotWordmark}>Trustpilot</span>
+    </span>
+);
 
 const SocialProof = () => {
-    const platforms = [
-        { name: "Google", rating: "4.9/5", icon: <StarIcon className={styles.starIcon} size={16} /> },
-        { name: "TripAdvisor", rating: "Top Rated", icon: <AwardIcon className={styles.awardIcon} size={16} /> },
-        { name: "Yelp", rating: "Highly Recommended", icon: <ThumbsUpIcon className={styles.thumbsIcon} size={16} /> },
-        { name: "Trusted Travels", rating: "Certified", icon: <ShieldIcon className={styles.shieldIcon} size={16} /> },
-    ];
-
     return (
         <div className={styles.socialProof}>
             <div className={styles.container}>
-                <p className={styles.label}>As Featured & Highly Rated On</p>
-                <div className={styles.grid}>
-                    {platforms.map((platform, index) => (
-                        <div key={index} className={styles.platform}>
-                            <div className={styles.platformIcon}>{platform.icon}</div>
-                            <div className={styles.platformInfo}>
-                                <span className={platform.name === "Google" ? styles.platformNameGoogle : styles.platformName}>
-                                    {platform.name}
-                                </span>
-                                <span className={styles.platformRating}>{platform.rating}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <a
+                    href="https://taxiserviceksa.com/terms-conditions/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.trustNote}
+                >
+                    <CheckCircleIcon size={15} />
+                    Free cancellation up to 24 hours before pickup
+                </a>
+
+                <a href="#" target="_blank" rel="noopener noreferrer" className={styles.trustpilot}>
+                    Review us on
+                    <TrustpilotMark />
+                </a>
             </div>
         </div>
     );

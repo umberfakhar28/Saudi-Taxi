@@ -195,6 +195,12 @@ export const ChevronRightIcon = ({ size = 24, className = "", style }: IconProps
     </svg>
 );
 
+export const ChevronLeftIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={style}>
+        <path d="M14 18l1.41-1.41L10.83 12l4.58-4.59L14 6l-6 6z"/>
+    </svg>
+);
+
 export const TrendingUpIcon = ({ size = 24, className = "", style }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={style}>
         <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
