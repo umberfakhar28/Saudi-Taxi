@@ -21,7 +21,7 @@ const SocialProof = () => {
         <div className={styles.socialProof}>
             <div className={styles.container}>
                 <a
-                    href="https://taxiserviceksa.com/terms-conditions/"
+                    href="/terms-conditions"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.trustNote}

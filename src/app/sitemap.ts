@@ -83,6 +83,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
+      url: `${BASE_URL}/terms-conditions`,
+      lastModified: lastMod("/terms-conditions"),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
       url: `${BASE_URL}/book-online`,
       lastModified: lastMod("/book-online"),
       changeFrequency: "weekly",
