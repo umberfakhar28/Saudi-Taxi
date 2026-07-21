@@ -160,6 +160,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { slug: "/khafji-to-kuwait-taxi-service", priority: 0.75 },
     { slug: "/riyadh-to-bahrain-taxi-service", priority: 0.78 },
     { slug: "/dammam-to-kuwait-taxi-service", priority: 0.75 },
+    { slug: "/kuwait-to-dammam-taxi-service", priority: 0.75 },
+    { slug: "/kuwait-to-riyadh-taxi-service", priority: 0.75 },
+    { slug: "/qatar-to-dammam-taxi-service", priority: 0.78 },
+    { slug: "/bahrain-to-riyadh-taxi-service", priority: 0.78 },
+    { slug: "/dammam-to-abu-dhabi-taxi-service", priority: 0.72 },
+    { slug: "/dammam-to-dubai-taxi-service", priority: 0.72 },
+    { slug: "/dubai-to-dammam-taxi-service", priority: 0.72 },
+    { slug: "/riyadh-to-dubai-taxi-service", priority: 0.72 },
+    { slug: "/dubai-to-riyadh-taxi-service", priority: 0.72 },
   ].map(({ slug, priority }) => {
     const hasArabic = slug === "/dammam-airport-to-bahrain-taxi-service" || slug === "/dammam-airport-to-qatar-taxi-service";
     return {
