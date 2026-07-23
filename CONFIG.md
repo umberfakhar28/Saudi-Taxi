@@ -10,19 +10,16 @@ Single source of truth for the site's phone/WhatsApp number and email.
 
 | Export | Value | Used for |
 |---|---|---|
-| `WHATSAPP_NUMBER` | `"966501234567"` | Digits only, for `wa.me/` links |
-| `PHONE_E164` | `"+966501234567"` | `tel:` links |
-| `PHONE_DISPLAY` | `"+966 50 123 4567"` | On-screen display text |
+| `WHATSAPP_NUMBER` | `"923268869669"` | Digits only, for `wa.me/` links |
+| `PHONE_E164` | `"+923268869669"` | `tel:` links |
+| `PHONE_DISPLAY` | `"+92 326 8869669"` | On-screen display text |
 | `EMAIL` | `"info@gulftripservice.com"` | `mailto:` links |
 | `WHATSAPP_URL` | derived | Base WhatsApp link |
 | `TEL_URL` | derived | Base tel link |
 | `waLink(message)` | function | Builds a `wa.me` link with a URL-encoded pre-filled message |
 
-**Owner action needed:** replace `WHATSAPP_NUMBER`/`PHONE_E164`/`PHONE_DISPLAY`
-with the real business number — every page that imports from this file
-updates automatically. Previously the number was hardcoded in ~56 places
-across the codebase with two different (conflicting) values; this file is
-now the only place it should be edited.
+This file is the only place the business phone/WhatsApp number should be
+edited — every page/component that imports from it updates automatically.
 
 ## `src/lib/airportTransferConfig.ts`
 
