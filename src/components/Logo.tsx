@@ -1,6 +1,6 @@
 /**
  * Gulf Trip Service brand mark.
- * Icon: a route line arcing over stylized causeway waves (King Fahd Causeway motif).
+ * Icon: a location pin rising out of Gulf waves — trip (pin) + gulf (waves).
  * viewBox is 0 0 100 100 throughout so the mark stays crisp from favicon (16–32px) to hero (300px+).
  */
 
@@ -34,34 +34,29 @@ export function LogoMark({
     >
       {!isWhite && <rect width="100" height="100" rx="24" fill={NAVY} />}
 
-      {/* Causeway / gulf waves */}
+      {/* Gulf waves rising toward the base */}
       <path
-        d="M-2 68 Q 15 56 32 68 T 66 68 T 100 68 V 102 H -2 Z"
+        d="M-4 66 Q 14 54 32 66 T 68 66 T 104 66 V 104 H -4 Z"
         fill={isWhite ? "#FFFFFF" : BLUE}
-        opacity={isWhite ? 0.22 : 0.28}
+        opacity={isWhite ? 0.14 : 0.3}
       />
       <path
-        d="M-2 78 Q 15 66 32 78 T 66 78 T 100 78 V 102 H -2 Z"
+        d="M-4 74 Q 14 62 32 74 T 68 74 T 104 74 V 104 H -4 Z"
         fill={isWhite ? "#FFFFFF" : BLUE}
-        opacity={isWhite ? 0.45 : 0.6}
+        opacity={isWhite ? 0.24 : 0.48}
+      />
+      <path
+        d="M-4 82 Q 14 70 32 82 T 68 82 T 104 82 V 104 H -4 Z"
+        fill={isWhite ? "#FFFFFF" : BLUE}
+        opacity={isWhite ? 0.4 : 0.75}
       />
 
-      {/* Route line curving over the causeway */}
+      {/* Location pin */}
       <path
-        d="M18 68 C 26 34, 46 20, 58 20 C 70 20, 80 30, 84 48"
-        stroke="#FFFFFF"
-        strokeWidth={7}
-        strokeLinecap="round"
+        d="M50 24 C 60.5 24 69 32.5 69 43 C 69 56 50 74 50 74 C 50 74 31 56 31 43 C 31 32.5 39.5 24 50 24 Z"
+        fill="#FFFFFF"
       />
-      <circle cx="18" cy="68" r="5.5" fill="#FFFFFF" />
-      <circle
-        cx="84"
-        cy="48"
-        r="6.5"
-        fill="none"
-        stroke={isWhite ? "#FFFFFF" : BLUE_LIGHT}
-        strokeWidth={3.4}
-      />
+      <circle cx="50" cy="43" r="7.5" fill={isWhite ? BLUE_LIGHT : BLUE} />
     </svg>
   );
 }

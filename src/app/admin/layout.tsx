@@ -18,6 +18,7 @@ import {
     Zap,
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
+import { LogoMark } from '@/components/Logo';
 import './admin.css';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -76,7 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <aside className="admin-sidebar">
                 {/* Logo */}
                 <div className="admin-logo">
-                    <div className="admin-logo-badge">ST</div>
+                    <LogoMark size={40} className="admin-logo-badge" />
                     <div>
                         <div className="admin-logo-title">Gulf Trip Service</div>
                         <div className="admin-logo-sub">Admin Portal</div>
