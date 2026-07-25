@@ -70,6 +70,20 @@ const vehicleTypes = [
         category: 'Minibus',
         desc: '22-seat minibus for full Umrah parties and large group tours — comfort at scale.',
     },
+    {
+        slug: 'toyota-coaster-18-seater',
+        image: '/vehicles/Coaster%2018%20seater.jpeg',
+        name: 'Toyota Coaster (18-Seater)',
+        category: 'Minibus',
+        desc: 'Spacious 18-seat coaster built for group and large-party transfers — comfortable seating with generous room for luggage.',
+    },
+    {
+        slug: 'toyota-hiace',
+        image: '/vehicles/Hi-ace%2012%20seater.jpeg',
+        name: 'Toyota Hiace',
+        category: 'Van',
+        desc: '12-seat van ideal for medium-size groups — reliable, roomy transfers for families and corporate parties alike.',
+    },
 ];
 
 const VehicleTypeCarousel = () => {
