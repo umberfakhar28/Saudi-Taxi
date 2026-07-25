@@ -23,7 +23,7 @@ export default function EducationalToursTransport() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Educational Tours Transportation</h1>
+                <h1>Educational Tour & Group Transport Service</h1>
                 <p>
                     Safe and inspiring journeys for students. 
                     Professional group transport solutions for educational trips across Saudi Arabia.

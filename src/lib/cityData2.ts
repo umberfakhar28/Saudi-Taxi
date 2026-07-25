@@ -3,6 +3,7 @@ import type { CityData } from "@/components/CityServicePage";
 export const khobar: CityData = {
   slug: "khobar",
   city: "Khobar",
+  h1: "Private Taxi, Airport Transfer & Chauffeur Service in Khobar",
   region: "Eastern Province",
   intro: "Premium taxi services in Al Khobar — business transfers, airport pickups from King Fahd International, and intercity routes across the Eastern Province.",
   whyVisit: "Al Khobar is the Eastern Province's commercial and leisure hub — home to the famous Khobar Corniche, upscale shopping malls, and proximity to Saudi Aramco's Dhahran headquarters. It's a key destination for business travelers and Gulf tourists alike.",
@@ -30,6 +31,7 @@ export const khobar: CityData = {
 export const jubail: CityData = {
   slug: "jubail",
   city: "Jubail",
+  h1: "Executive Car Service & Car Transfer in Jubail & Nearby Areas",
   region: "Eastern Province",
   intro: "Reliable taxi services in Jubail and Jubail Industrial City — corporate transfers, airport connections, and intercity routes for the Eastern Province's industrial capital.",
   whyVisit: "Jubail Industrial City is one of the world's largest industrial complexes, hosting major petrochemical companies, SABIC facilities, and hundreds of international contractors. It draws thousands of business travelers from around the globe each year.",
@@ -57,6 +59,7 @@ export const jubail: CityData = {
 export const taif: CityData = {
   slug: "taif",
   city: "Taif",
+  h1: "Private Taxi & Private Car Service in Taif — Professional & Reliable",
   region: "Makkah Province",
   intro: "Comfortable taxi services in Taif — transfers from Taif Regional Airport, Makkah day trips, rose farm excursions, and Al-Hada/Al-Shafa mountain resort transfers.",
   whyVisit: "Taif, the 'City of Roses,' sits 1,800m above sea level in the Hejaz mountains. Known for its fragrant rose farms (producing most of the world's rose water and oud oil), honey markets, and cool summer climate — it's one of Saudi Arabia's most beloved domestic tourism destinations.",
@@ -84,6 +87,7 @@ export const taif: CityData = {
 export const abha: CityData = {
   slug: "abha",
   city: "Abha",
+  h1: "Chauffeur Service & Executive Car Service in Abha & Nearby Areas",
   region: "Asir Province",
   intro: "Scenic taxi services in Abha and the Asir region — airport transfers, cable car excursions, mountain village tours, and connections to Jizan and Najran.",
   whyVisit: "Abha is Saudi Arabia's mountain tourism capital — situated at 2,200m above sea level in the Asir highlands. Its cool misty climate, dramatic escarpments, traditional Asiri villages, and the famous Abha cable car have made it one of Saudi Tourism's most marketed destinations.",

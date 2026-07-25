@@ -14,7 +14,7 @@ export default function MakkahToMadinah() {
     return (
         <main>
             <section className="page-hero">
-                <h1>Makkah to Madinah Taxi Service</h1>
+                <h1>Makkah to Madinah — Chauffeur & Intercity Car Service</h1>
                 <p>
                     Premium intercity transfers between the Holy Cities. 
                     Safe, comfortable, and reliable door-to-door transport for pilgrims and families.

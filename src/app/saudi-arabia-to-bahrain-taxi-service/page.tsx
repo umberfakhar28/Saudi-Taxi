@@ -29,7 +29,7 @@ export default function SaudiToBahrain() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Saudi Arabia to Bahrain Taxi — Any City Pickup</h1>
+                <h1>Saudi Arabia to Bahrain — Private Taxi & Cross-Border Transfer</h1>
                 <p>
                     Premium land transfer service across the King Fahd Causeway, with pickup
                     from Riyadh, Khobar, Jubail, Dammam city, or anywhere else in Saudi Arabia.

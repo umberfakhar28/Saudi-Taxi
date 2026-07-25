@@ -23,7 +23,7 @@ export default function WeddingTransportation() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Wedding Transportation Services</h1>
+                <h1>Wedding Car & Chauffeur Transportation Service</h1>
                 <p>
                     Elegant and reliable transport for your special day. 
                     From luxury bridal cars to guest shuttles, we handle all the logistics with care.

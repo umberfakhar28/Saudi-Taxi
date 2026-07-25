@@ -38,7 +38,7 @@ export default function ServicesPage() {
     return (
         <main>
             <div className={styles.hero}>
-                <h1 className={styles.title}>Our Services</h1>
+                <h1 className={styles.title}>Our Taxi, Transfer & Transport Service Range</h1>
                 <p>Tailored transport solutions for every need</p>
             </div>
 

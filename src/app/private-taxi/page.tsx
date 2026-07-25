@@ -64,7 +64,7 @@ export default function PrivateTaxi() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
-                <h1>Private Taxi Services in Saudi Arabia</h1>
+                <h1>Private Taxi & Chauffeur Service Across Saudi Arabia</h1>
                 <p>Your own dedicated vehicle and driver — flexible, comfortable and fully private. Available by the hour or for the full day.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Private Taxi</span>

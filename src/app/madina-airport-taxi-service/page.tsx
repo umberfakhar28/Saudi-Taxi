@@ -15,7 +15,7 @@ export default function MadinaAirportTaxi() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Madinah Airport Taxi Service</h1>
+                <h1>Airport Transfer, Private Taxi & Car Transfer to & from Madinah</h1>
                 <p>
                     Professional transfers from Prince Mohammad Bin Abdulaziz International Airport (MED). 
                     Reliable door-to-door service to your Madinah hotel.

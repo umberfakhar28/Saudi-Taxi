@@ -63,7 +63,7 @@ export default function TaifZiyaratTaxi() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
-                <h1>Taif Ziyarat Taxi Service</h1>
+                <h1>Taif Ziyarat Tour with Private Driver</h1>
                 <p>Journey to the City of Roses — Taif. Visit rose farms, mountain retreats and Islamic landmarks with our professional taxi service from Makkah and Jeddah.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Taif Ziyarat Taxi</span>

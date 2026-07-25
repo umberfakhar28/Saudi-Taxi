@@ -76,7 +76,7 @@ export default function JeddahToMakkah() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Jeddah to Makkah Taxi</h1>
+                <h1>Jeddah to Makkah — Private Taxi & Intercity Transfer</h1>
                 <p>
                     Direct, comfortable transfers from Jeddah Airport or city center to Makkah. Professional drivers, available 24/7.
                 </p>

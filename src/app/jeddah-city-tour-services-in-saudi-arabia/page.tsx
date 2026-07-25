@@ -55,7 +55,7 @@ export default function JeddahCityTour() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
-                <h1>Jeddah City Tour Services in Saudi Arabia</h1>
+                <h1>Jeddah City Tour by Private Car — Half & Full Day</h1>
                 <p>Discover the Pearl of the Red Sea — explore Jeddah&apos;s UNESCO heritage, stunning coastline and vibrant culture with our expert guides.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Jeddah City Tour</span>

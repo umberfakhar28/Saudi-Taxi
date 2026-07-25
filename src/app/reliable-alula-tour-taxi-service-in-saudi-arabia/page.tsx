@@ -65,7 +65,7 @@ export default function AlulaTourTaxi() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
-                <h1>Reliable AlUla Tour Taxi Service in Saudi Arabia</h1>
+                <h1>AlUla Private Day Tour & Chauffeur Service</h1>
                 <p>Explore the ancient wonders of AlUla — Hegra, Elephant Rock, and 200,000 years of history — with our reliable private taxi and tour service.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>AlUla Tour</span>

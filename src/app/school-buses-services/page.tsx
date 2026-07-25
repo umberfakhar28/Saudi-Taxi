@@ -23,7 +23,7 @@ export default function SchoolBusesServices() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>School Bus Services</h1>
+                <h1>School Bus & Student Transport Service</h1>
                 <p>
                     Safe, reliable student transportation across Saudi Arabia. 
                     Prioritizing safety, punctuality, and comfort for the next generation.

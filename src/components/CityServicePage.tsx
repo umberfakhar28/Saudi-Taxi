@@ -5,6 +5,7 @@ import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld
 export interface CityData {
   slug: string;
   city: string;
+  h1: string;
   region: string;
   intro: string;
   whyVisit: string;
@@ -42,7 +43,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
         <section className="page-hero">
           <div className="container" style={{ position: "relative", zIndex: 1 }}>
             <span className="section-eyebrow">Taxi Service</span>
-            <h1>Premium Taxi Service in {data.city}</h1>
+            <h1>{data.h1}</h1>
             <p>{data.intro}</p>
             <div className="breadcrumb">
               <Link href="/">Home</Link> / <Link href="/our-services">Services</Link> / <span>{data.city}</span>

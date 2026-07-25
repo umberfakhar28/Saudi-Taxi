@@ -3,6 +3,7 @@ import type { CityData } from "@/components/CityServicePage";
 export const riyadh: CityData = {
   slug: "riyadh",
   city: "Riyadh",
+  h1: "Private Taxi & Car Transfer in Riyadh — Available 24/7",
   region: "Riyadh Province",
   intro: "Premium taxi and chauffeur services across Riyadh — airport transfers, corporate travel, intercity routes, and 24/7 on-demand rides.",
   whyVisit: "Riyadh is Saudi Arabia's capital and economic powerhouse. Home to Vision 2030 mega-projects, the Kingdom Centre Tower, Diriyah heritage site, and a booming business district, it attracts millions of business travelers, tourists, and government visitors each year.",
@@ -31,6 +32,7 @@ export const riyadh: CityData = {
 export const jeddah: CityData = {
   slug: "jeddah",
   city: "Jeddah",
+  h1: "Airport Transfer & Chauffeur Service in Jeddah & Nearby Areas",
   region: "Makkah Province",
   intro: "Luxury taxi transfers in Jeddah — from King Abdulaziz Airport to the Corniche, Al-Balad, and all intercity routes including Makkah and Madinah.",
   whyVisit: "Jeddah is Saudi Arabia's gateway city — home to KAIA airport, the stunning Red Sea Corniche, UNESCO-listed Al-Balad historic district, and the world's tallest unsupported flagpole. It's the primary entry point for Umrah pilgrims worldwide.",
@@ -59,6 +61,7 @@ export const jeddah: CityData = {
 export const makkah: CityData = {
   slug: "makkah",
   city: "Makkah",
+  h1: "Chauffeur Service, Private Taxi & Car Transfer across Makkah",
   region: "Makkah Province",
   intro: "Dedicated taxi services in and around Makkah — hotel-to-Haram transfers, Ziyarat tours, Jeddah airport pickups, and intercity travel for Umrah and Hajj pilgrims.",
   whyVisit: "Makkah is the holiest city in Islam and the destination for over 10 million Umrah pilgrims annually. The Masjid al-Haram, Mina, Arafat, Muzdalifah, and surrounding Ziyarat sites make transportation a critical part of every pilgrim's journey.",
@@ -86,6 +89,7 @@ export const makkah: CityData = {
 export const madinah: CityData = {
   slug: "madinah",
   city: "Madinah",
+  h1: "Executive Car Service & Airport Transfer in Madinah — Book Anytime",
   region: "Madinah Province",
   intro: "Professional taxi services in Madinah — transfers from Prince Mohammad Bin Abdulaziz Airport, Prophet's Mosque vicinity hotels, and Ziyarat tours across the holy city.",
   whyVisit: "Madinah is the second holiest city in Islam, home to Al-Masjid an-Nabawi (the Prophet's Mosque) and numerous sacred historical sites. Every Umrah pilgrim and Hajj visitor typically spends several days here.",
@@ -113,6 +117,7 @@ export const madinah: CityData = {
 export const dammam: CityData = {
   slug: "dammam",
   city: "Dammam",
+  h1: "Private Car Service & Chauffeur Service across Dammam",
   region: "Eastern Province",
   intro: "Executive taxi services in Dammam and the Eastern Province — airport transfers from King Fahd International, corporate travel to Khobar and Jubail, and intercity routes to Riyadh.",
   whyVisit: "Dammam is the capital of the Eastern Province and the hub of Saudi Arabia's oil industry. Home to Saudi Aramco's global headquarters, King Fahd Causeway to Bahrain, and a rapidly developing tourism sector along the Arabian Gulf.",

@@ -69,7 +69,7 @@ export default function ZiyaratServices() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
         <main>
             <section className="page-hero">
-                <h1>Ziyarat Services in Saudi Arabia</h1>
+                <h1>Ziyarat Taxi & Guided Transfer Service</h1>
                 <p>Visit the revered holy and historical sites of Makkah and Madinah with knowledgeable guides and comfortable transportation.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Ziyarat Services</span>

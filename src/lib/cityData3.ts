@@ -3,6 +3,7 @@ import type { CityData } from "@/components/CityServicePage";
 export const yanbu: CityData = {
   slug: "yanbu",
   city: "Yanbu",
+  h1: "Airport Transfer, Private Taxi & Car Transfer in Yanbu",
   region: "Madinah Province",
   intro: "Professional taxi services in Yanbu — airport transfers, petrochemical industry corporate travel, Red Sea diving trip connections, and routes to Madinah and Jeddah.",
   whyVisit: "Yanbu is a dual-purpose city — a major petrochemical and industrial hub on the Red Sea coast, and an emerging leisure destination known for its pristine coral reefs, historic old town, and proximity to Madinah. Its deep-water port is one of the largest in the region.",
@@ -30,6 +31,7 @@ export const yanbu: CityData = {
 export const alula: CityData = {
   slug: "alula",
   city: "AlUla",
+  h1: "Executive Car Service & Private Taxi to & from AlUla",
   region: "Madinah Province",
   intro: "Dedicated taxi and tour transfers in AlUla — Hegra site visits, airport connections, resort hotel pickups, and full-day heritage exploration across Saudi Arabia's most spectacular archaeological landscape.",
   whyVisit: "AlUla is Saudi Arabia's cultural crown jewel — home to Hegra (Madain Saleh), the first Saudi UNESCO World Heritage Site, ancient Nabataean tombs, dramatic Elephant Rock, and the extraordinary Ashar Arts District. It is one of the most hyped travel destinations in the world.",
@@ -57,6 +59,7 @@ export const alula: CityData = {
 export const neom: CityData = {
   slug: "neom",
   city: "NEOM",
+  h1: "Private Car Service & Airport Transfer to & from NEOM",
   region: "Tabuk Province",
   intro: "Executive transfers to and from NEOM — construction contractor logistics, Sharma Airport connections, and access to The Line, Sindalah, and Aqaba Gulf coastal sites.",
   whyVisit: "NEOM is Saudi Arabia's most ambitious Vision 2030 project — a $500 billion futuristic city region spanning Tabuk Province's Red Sea coast. It encompasses The Line, Sindalah yacht island, Trojena ski resort, and Oxagon. It currently attracts thousands of international contractors, consultants, and media visitors.",
@@ -84,6 +87,7 @@ export const neom: CityData = {
 export const tabuk: CityData = {
   slug: "tabuk",
   city: "Tabuk",
+  h1: "Car Transfer & Airport Transfer across Tabuk — Book Anytime",
   region: "Tabuk Province",
   intro: "Reliable taxi services in Tabuk — Tabuk Airport transfers, NEOM connectivity, Wadi Disah and Qaraqir canyon day trips, and access to the Aqaba border.",
   whyVisit: "Tabuk is northwest Saudi Arabia's gateway city — a base for NEOM project access, the dramatic Wadi Disah canyon, ancient Tabuk Castle, and proximity to the Gulf of Aqaba coastline. It's growing rapidly as both a military hub and adventure tourism destination.",
