@@ -3,8 +3,8 @@ import { readContentFile } from "@/lib/readContent";
 import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
-  title: "Jeddah Airport Taxi Guide (KAIA)",
-  description: "Professional Jeddah Airport taxi from King Abdulaziz International (JED). 24/7 transfers to Makkah, Madinah & Jeddah city. Meet & greet, flight tracking, fixed prices.",
+  title: "Jeddah Airport (KAIA) Taxi Guide | 24/7 Transfers",
+  description: "Jeddah Airport taxi guide for King Abdulaziz International (JED): transfers to Makkah, Madinah and the city. Meet-and-greet, flight tracking, 24/7.",
   path: "/jeddah-airport-taxi-guide",
   keywords: ["jeddah airport taxi", "jeddah airport transfer", "king abdulaziz airport taxi", "JED to makkah taxi"],
 });

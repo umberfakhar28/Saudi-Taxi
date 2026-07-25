@@ -4,14 +4,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Taif Ziyarat Taxi Service",
-    description: "Professional Taif Ziyarat and city tour taxi service from Makkah and Jeddah. Visit rose farms, Al-Shafa gardens, Taif Zoo and historic sites. Book your Taif trip today.",
+    title: "Taif Ziyarat Taxi Service | Private Tour with Driver",
+    description: "Private Taif Ziyarat and city tour taxi from Makkah or Jeddah: rose farms, Al-Shafa gardens, Taif Zoo. Professional drivers, 24/7. Book on WhatsApp.",
     path: "/taif-ziyarat-taxi-service",
     keywords: ["Taif Ziyarat taxi", "Taif tour taxi", "Taif sightseeing", "Taif from Makkah tour"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Taif Ziyarat Taxi Service", description: "Professional Taif Ziyarat and city tour taxi service from Makkah and Jeddah. Visit rose farms, Al-Shafa gardens, Taif Zoo and historic sites. Book your Taif trip today.", url: "/taif-ziyarat-taxi-service", areaServed: ["Taif"] }),
+    serviceSchema({ name: "Taif Ziyarat Taxi Service | Private Tour with Driver", description: "Private Taif Ziyarat and city tour taxi from Makkah or Jeddah: rose farms, Al-Shafa gardens, Taif Zoo. Professional drivers, 24/7. Book on WhatsApp.", url: "/taif-ziyarat-taxi-service", areaServed: ["Taif"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Taif Ziyarat Taxi", path: "/taif-ziyarat-taxi-service" }]),
 ];
 

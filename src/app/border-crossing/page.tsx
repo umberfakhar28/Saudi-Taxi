@@ -6,15 +6,15 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Border Crossing Taxi Service",
-    description: "Reliable taxi and transport service for Saudi Arabia border crossings. Routes via Bahrain Causeway, Jordan border (Durra), UAE and more. Licensed drivers, professional service.",
+    title: "Saudi Arabia Border Crossing Taxi | All Routes 24/7",
+    description: "Cross-border taxi and private transfer from Saudi Arabia to Bahrain, Qatar, UAE, Kuwait and Jordan. Licensed drivers, meet-and-greet. Book on WhatsApp 24/7.",
     path: "/border-crossing",
     keywords: ["border crossing taxi Saudi Arabia", "Saudi border transfer", "cross border taxi", "Saudi Arabia to GCC taxi"],
     hreflangPath: "/border-crossing",
 });
 
 const schemas = [
-    serviceSchema({ name: "Border Crossing Taxi Service", description: "Reliable taxi and transport service for Saudi Arabia border crossings. Routes via Bahrain Causeway, Jordan border (Durra), UAE and more. Licensed drivers, professional service.", url: "/border-crossing", areaServed: ["Saudi Arabia", "Bahrain", "Jordan", "UAE", "Kuwait", "Qatar", "Oman"] }),
+    serviceSchema({ name: "Saudi Arabia Border Crossing Taxi | All Routes 24/7", description: "Cross-border taxi and private transfer from Saudi Arabia to Bahrain, Qatar, UAE, Kuwait and Jordan. Licensed drivers, meet-and-greet. Book on WhatsApp 24/7.", url: "/border-crossing", areaServed: ["Saudi Arabia", "Bahrain", "Jordan", "UAE", "Kuwait", "Qatar", "Oman"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }]),
 ];
 

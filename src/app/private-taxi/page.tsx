@@ -4,14 +4,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Private Taxi Saudi Arabia",
-    description: "Hire a private taxi in Saudi Arabia for personal comfort, privacy and flexibility. Available for local trips, inter-city travel and long-distance journeys.",
+    title: "Private Taxi Service in Saudi Arabia | Chauffeur & Car Hire",
+    description: "Private taxi and chauffeur hire across Saudi Arabia for local, inter-city and long-distance travel. Professional drivers, 24/7 availability. Book on WhatsApp.",
     path: "/private-taxi",
     keywords: ["private taxi Saudi Arabia", "hire private driver Makkah", "private car hire", "private taxi Makkah"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Private Taxi Services in Saudi Arabia", description: "Hire a private taxi in Saudi Arabia for personal comfort, privacy and flexibility. Available for local trips, inter-city travel and long-distance journeys.", url: "/private-taxi", areaServed: ["Saudi Arabia"] }),
+    serviceSchema({ name: "Private Taxi Services in Saudi Arabia", description: "Private taxi and chauffeur hire across Saudi Arabia for local, inter-city and long-distance travel. Professional drivers, 24/7 availability. Book on WhatsApp.", url: "/private-taxi", areaServed: ["Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Private Taxi", path: "/private-taxi" }]),
 ];
 

@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to Jordan Taxi Service",
-    description: "Safe and reliable taxi service from Saudi Arabia to Jordan. Specialized in overland border crossings for Hajj pilgrims, families, and business travellers. Fixed rates and expert drivers.",
+    title: "Saudi Arabia to Jordan Taxi | Land Border Transfer 24/7",
+    description: "Private overland taxi from Saudi Arabia to Jordan, popular with Hajj pilgrims and families. Licensed drivers, meet-and-greet, 24/7. Reserve on WhatsApp today.",
     path: "/saudi-arabia-to-jordan-land-transfer",
     keywords: ["Saudi to Jordan taxi", "Durra border crossing", "Jordan overland transfer", "Saudi to Jordan car"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Saudi Arabia to Jordan Taxi Service", description: "Safe and reliable taxi service from Saudi Arabia to Jordan. Specialized in overland border crossings for Hajj pilgrims, families, and business travellers. Fixed rates and expert drivers.", url: "/saudi-arabia-to-jordan-land-transfer", areaServed: ["Jordan", "Saudi Arabia"] }),
+    serviceSchema({ name: "Saudi Arabia to Jordan Taxi | Land Border Transfer 24/7", description: "Private overland taxi from Saudi Arabia to Jordan, popular with Hajj pilgrims and families. Licensed drivers, meet-and-greet, 24/7. Reserve on WhatsApp today.", url: "/saudi-arabia-to-jordan-land-transfer", areaServed: ["Jordan", "Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }, { name: "Jordan", path: "/saudi-arabia-to-jordan-land-transfer" }]),
 ];
 

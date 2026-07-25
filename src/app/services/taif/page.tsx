@@ -3,8 +3,8 @@ import CityServicePage from "@/components/CityServicePage";
 import { taif } from "@/lib/cityData2";
 
 export const metadata = generatePageMetadata({
-  title: "Taxi Service in Taif",
-  description: "Scenic taxi in Taif. Airport pickups, Makkah–Taif day trips, Al-Hada cable car transfers, rose farm tours, and mountain resort connections. Fixed rates 24/7.",
+  title: "Taif Airport Taxi & Private Transfers | Available 24/7",
+  description: "Book a private taxi, airport transfer or chauffeur in Taif. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/taif",
   keywords: ["Taif taxi", "Taif airport transfer", "Makkah to Taif taxi", "Taif rose farm tour", "Al-Hada taxi"],
 });

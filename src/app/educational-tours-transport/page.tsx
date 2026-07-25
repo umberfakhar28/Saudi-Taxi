@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Educational Tours Transportation",
-    description: "Specialized transportation services for educational tours and student field trips in Saudi Arabia. Safe, reliable, and coordinated transport for schools and universities.",
+    title: "Educational Tour Transport Service | Saudi Arabia",
+    description: "Coordinated transport for educational tours and student field trips across Saudi Arabia. Safe vehicles, professional drivers, 24/7. Reserve on WhatsApp today.",
     path: "/educational-tours-transport",
     keywords: ["educational tour transport", "student field trip", "school trip bus", "educational transport Saudi"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Educational Tours Transportation", description: "Specialized transportation services for educational tours and student field trips in Saudi Arabia. Safe, reliable, and coordinated transport for schools and universities.", url: "/educational-tours-transport", areaServed: ["Saudi Arabia"] }),
+    serviceSchema({ name: "Educational Tour Transport Service | Saudi Arabia", description: "Coordinated transport for educational tours and student field trips across Saudi Arabia. Safe vehicles, professional drivers, 24/7. Reserve on WhatsApp today.", url: "/educational-tours-transport", areaServed: ["Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Educational Tours", path: "/educational-tours-transport" }]),
 ];
 

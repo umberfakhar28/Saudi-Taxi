@@ -3,8 +3,8 @@ import { generatePageMetadata } from "@/lib/seo";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Airport Transfer for Umrah",
-    description: "Book reliable airport transfer for Umrah from Jeddah King Abdulaziz International Airport. Meet & greet, flight tracking, and transparent quoting. Available 24/7.",
+    title: "Airport Transfer for Umrah Pilgrims | 24/7 Service",
+    description: "Airport transfer for Umrah pilgrims from Jeddah King Abdulaziz Airport. Meet-and-greet, flight tracking, professional drivers. Reserve on WhatsApp today.",
     path: "/airport-transfer-for-umrah",
     keywords: ["Umrah airport transfer", "Jeddah airport to Makkah", "Hajj airport transfer", "Umrah transportation"],
 });

@@ -3,8 +3,8 @@ import { generatePageMetadata } from "@/lib/seo";
 import styles from "./umrah-taxi.module.css";
 
 export const metadata = generatePageMetadata({
-    title: "Umrah Taxi Services",
-    description: "Professional Umrah taxi services in Makkah & Madinah. Airport transfers, inter-city travel, and Ziyarat tours. Book your reliable Umrah transport today.",
+    title: "Umrah Taxi Services in Makkah & Madinah | 24/7",
+    description: "Professional Umrah taxi services in Makkah and Madinah. Airport transfers, inter-city travel, guided Ziyarat tours. Licensed drivers, 24/7. Book on WhatsApp.",
     path: "/umrah-taxi-services",
     keywords: ["Umrah taxi", "Makkah taxi", "Umrah transport", "Umrah transfer Saudi Arabia", "Umrah transportation"],
 });

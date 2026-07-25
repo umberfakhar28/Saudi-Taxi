@@ -3,8 +3,8 @@ import RoutePage from "@/components/RoutePage";
 import { dammamToAbuDhabi } from "@/lib/routeData";
 
 export const metadata = generatePageMetadata({
-  title: "Dammam to Abu Dhabi Taxi Service",
-  description: "Private long-distance overland transfer from Dammam to Abu Dhabi via the Al Batha (Ghuwaifat) border crossing. Executive vehicles for the ~950 km journey. Book now.",
+  title: "Taxi Dammam to Abu Dhabi | Cross-Border Car Service 24/7",
+  description: "Reliable Dammam to Abu Dhabi taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
   path: "/dammam-to-abu-dhabi-taxi-service",
   keywords: ["Dammam to Abu Dhabi taxi", "Saudi Arabia to Abu Dhabi transfer", "Ghuwaifat border taxi", "Dammam to UAE taxi"],
 });

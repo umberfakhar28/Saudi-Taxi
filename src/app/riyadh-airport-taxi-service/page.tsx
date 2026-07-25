@@ -4,8 +4,8 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Riyadh Airport (KKIA) Taxi Service",
-    description: "Reliable and professional airport transfer services from Riyadh King Khalid International Airport (KKIA). 24/7 availability, and professional drivers.",
+    title: "Riyadh Airport (KKIA) Taxi & Private Transfer",
+    description: "Book a private airport taxi in Riyadh. Meet-and-greet pickup, professional licensed drivers, 24/7 availability. Reserve your transfer on WhatsApp today.",
     path: "/riyadh-airport-taxi-service",
     keywords: ["Riyadh airport taxi", "KKIA taxi", "Riyadh airport transfer", "King Khalid airport taxi"],
 });

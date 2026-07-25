@@ -4,8 +4,8 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Abha Airport Taxi Service",
-    description: "Reliable airport taxi services from Abha International Airport. Fixed rates, safe mountain travel, and 24/7 service across the Asir region.",
+    title: "Abha Airport (TIF?) Taxi & Private Transfer",
+    description: "Book a private airport taxi in Abha. Meet-and-greet pickup, professional licensed drivers, 24/7 availability. Reserve your transfer on WhatsApp today.",
     path: "/abha-airport-taxi-service",
     keywords: ["Abha airport taxi", "Abha airport transfer", "Asir region taxi", "Abha international airport"],
 });

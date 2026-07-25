@@ -3,8 +3,8 @@ import RoutePage from "@/components/RoutePage";
 import { riyadhToBahrain } from "@/lib/routeData";
 
 export const metadata = generatePageMetadata({
-  title: "Riyadh to Bahrain Taxi Service",
-  description: "Private long-distance transfer from Riyadh across the King Fahd Causeway into Bahrain. Executive vehicles, coordinated border handover. Book your transfer today.",
+  title: "Taxi Riyadh to Bahrain | Cross-Border Car Service 24/7",
+  description: "Reliable Riyadh to Bahrain taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
   path: "/riyadh-to-bahrain-taxi-service",
   keywords: ["Riyadh to Bahrain taxi", "Riyadh to Manama transfer", "King Fahd Causeway taxi from Riyadh"],
 });

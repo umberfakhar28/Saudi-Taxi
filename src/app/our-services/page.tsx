@@ -3,8 +3,8 @@ import { generatePageMetadata } from "@/lib/seo";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
-    title: "Our Services",
-    description: "Explore all taxi and transport services offered by Gulf Trip Service — airport transfers, hotel transfers, Umrah packages, Ziyarat tours, private taxis and more across Saudi Arabia.",
+    title: "Our Taxi & Transport Services | Gulf Trip Service",
+    description: "Explore Gulf Trip Service's full range of taxi and transport services: airport transfers, Umrah packages, Ziyarat tours and private taxis. Book on WhatsApp.",
     path: "/our-services",
     keywords: ["taxi services Saudi Arabia", "Umrah taxi", "airport transfer", "intercity transport", "Makkah taxi service"],
 });

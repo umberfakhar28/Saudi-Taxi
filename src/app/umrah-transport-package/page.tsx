@@ -3,8 +3,8 @@ import { generatePageMetadata } from "@/lib/seo";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Umrah Transport Package",
-    description: "Complete Umrah transport packages covering airport pickup, Makkah & Madinah hotel transfers, Ziyarat tours and inter-city travel. All-inclusive and reliable.",
+    title: "Umrah Taxi & Transport Package | Makkah–Madinah Transfers",
+    description: "Complete Umrah transport package: airport pickup, Makkah and Madinah hotel transfers, guided Ziyarat tours. Licensed drivers, 24/7. Reserve on WhatsApp.",
     path: "/umrah-transport-package",
     keywords: ["Umrah transport package", "Umrah taxi package", "Umrah transfer package", "all-inclusive Umrah transport"],
 });

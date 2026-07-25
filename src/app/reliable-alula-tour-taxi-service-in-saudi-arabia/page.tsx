@@ -4,8 +4,8 @@ import { serviceSchema, breadcrumbSchema, faqSchema, jsonLd } from "@/lib/jsonld
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "AlUla Tour Taxi Service",
-    description: "Reliable taxi and tour service to AlUla — Saudi Arabia's ancient wonder. Explore Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Book your AlUla tour now.",
+    title: "AlUla Tour Taxi Service | Private Day Trip from Madinah",
+    description: "Private AlUla tour taxi from Madinah: Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Experienced drivers, flexible itinerary. Book on WhatsApp.",
     path: "/reliable-alula-tour-taxi-service-in-saudi-arabia",
     keywords: ["AlUla tour taxi", "Hegra tour transfer", "AlUla sightseeing", "AlUla private tour"],
 });
@@ -54,7 +54,7 @@ const faqs = [
 ];
 
 const schemas = [
-    serviceSchema({ name: "AlUla Tour Taxi Service", description: "Reliable taxi and tour service to AlUla — Saudi Arabia's ancient wonder. Explore Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Book your AlUla tour now.", url: "/reliable-alula-tour-taxi-service-in-saudi-arabia", areaServed: ["AlUla"] }),
+    serviceSchema({ name: "AlUla Tour Taxi Service | Private Day Trip from Madinah", description: "Private AlUla tour taxi from Madinah: Hegra, Elephant Rock, Jabal Ikmah and the Nabataean tombs. Experienced drivers, flexible itinerary. Book on WhatsApp.", url: "/reliable-alula-tour-taxi-service-in-saudi-arabia", areaServed: ["AlUla"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "AlUla Tour", path: "/reliable-alula-tour-taxi-service-in-saudi-arabia" }]),
     faqSchema(faqs.map(({ q, a }) => ({ question: q, answer: a }))),
 ];

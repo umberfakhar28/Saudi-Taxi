@@ -15,8 +15,8 @@ import { AIRPORTS, AIRPORT_ROUTES } from "@/lib/airportRoutesData";
 import { AIRPORT_FAQS } from "@/lib/airportFaqs";
 
 export const metadata = generatePageMetadata({
-    title: "Airport Transfers — JED, MED, DMM, RUH",
-    description: "Book airport transfers from Jeddah, Madinah, Dammam and Riyadh airports to Makkah, Madinah, Riyadh, Dammam and Bahrain. Fixed rates via WhatsApp, 24/7.",
+    title: "Airport Taxi & Private Transfers in Saudi Arabia | 24/7",
+    description: "Airport taxi and private transfers from Jeddah, Madinah, Dammam and Riyadh airports. Professional drivers, meet-and-greet, 24/7. Book on WhatsApp.",
     path: "/airport-transfers",
     keywords: ["airport transfer Saudi Arabia", "Jeddah airport taxi", "Madinah airport taxi", "Dammam airport taxi", "Riyadh airport taxi", "KAIA transfer"],
 });

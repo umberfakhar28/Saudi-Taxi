@@ -3,8 +3,8 @@ import CityServicePage from "@/components/CityServicePage";
 import { jubail } from "@/lib/cityData2";
 
 export const metadata = generatePageMetadata({
-  title: "Taxi Service in Jubail",
-  description: "Corporate taxi in Jubail Industrial City. Airport runs to King Fahd International, inter-site contractor transfers, Dammam & Khobar routes. Monthly accounts available.",
+  title: "Private Car Transfer & Chauffeur in Jubail — Book 24/7",
+  description: "Book a private taxi, airport transfer or chauffeur in Jubail. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/jubail",
   keywords: ["Jubail taxi", "Jubail Industrial City transfer", "Jubail airport taxi", "corporate taxi Jubail"],
 });

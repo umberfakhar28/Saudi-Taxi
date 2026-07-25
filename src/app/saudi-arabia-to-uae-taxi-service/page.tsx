@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to UAE Taxi Service",
-    description: "Premium taxi service from Saudi Arabia to UAE (Dubai, Abu Dhabi). Safe overland transfers via Al Batha border crossing. Comfortable family vehicles and professional drivers.",
+    title: "Saudi Arabia to UAE Taxi | Dubai & Abu Dhabi Transfer",
+    description: "Private overland taxi from Saudi Arabia to Dubai or Abu Dhabi via the Al Batha border. Professional drivers, 24/7 availability. Book on WhatsApp today.",
     path: "/saudi-arabia-to-uae-taxi-service",
     keywords: ["Saudi to UAE taxi", "Saudi to Dubai taxi", "Saudi to Abu Dhabi taxi", "Al Batha border crossing"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Saudi Arabia to UAE Taxi Service", description: "Premium taxi service from Saudi Arabia to UAE (Dubai, Abu Dhabi). Safe overland transfers via Al Batha border crossing. Comfortable family vehicles and professional drivers.", url: "/saudi-arabia-to-uae-taxi-service", areaServed: ["UAE", "Saudi Arabia"] }),
+    serviceSchema({ name: "Saudi Arabia to UAE Taxi | Dubai & Abu Dhabi Transfer", description: "Private overland taxi from Saudi Arabia to Dubai or Abu Dhabi via the Al Batha border. Professional drivers, 24/7 availability. Book on WhatsApp today.", url: "/saudi-arabia-to-uae-taxi-service", areaServed: ["UAE", "Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }, { name: "UAE", path: "/saudi-arabia-to-uae-taxi-service" }]),
 ];
 

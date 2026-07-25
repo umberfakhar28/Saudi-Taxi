@@ -5,8 +5,8 @@ import RelatedLinks from "@/components/RelatedLinks";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah to Makkah Taxi Service",
-    description: "Book a reliable Jeddah to Makkah taxi service. Direct transfers from Jeddah Airport or city center to Makkah. Professional drivers, 24/7 service.",
+    title: "Jeddah → Makkah Private Transfer & Chauffeur | Gulf Trip",
+    description: "Reliable Jeddah to Makkah taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
     path: "/jeddah-to-makkah-taxi-service",
     keywords: ["Jeddah to Makkah taxi", "Jeddah to Makkah transfer", "Jeddah to Makkah car", "Jeddah to Makkah transport"],
 });

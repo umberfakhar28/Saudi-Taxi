@@ -4,8 +4,8 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Madinah Airport Taxi Service",
-    description: "Expert airport taxi services from Madinah Airport (MED) to hotels near Al-Masjid an-Nabawi and beyond. Fixed rates, licensed drivers, and 24/7 service.",
+    title: "Madinah Airport (MED) Taxi & Private Transfer",
+    description: "Book a private airport taxi in Madinah. Meet-and-greet pickup, professional licensed drivers, 24/7 availability. Reserve your transfer on WhatsApp today.",
     path: "/madina-airport-taxi-service",
     keywords: ["Madinah airport taxi", "Madinah airport transfer", "Prince Mohammad Airport taxi", "MED airport taxi"],
 });

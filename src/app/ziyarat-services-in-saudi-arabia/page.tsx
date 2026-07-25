@@ -4,14 +4,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Ziyarat Services in Saudi Arabia",
-    description: "Explore the holy and historical sites of Makkah and Madinah with our professional Ziyarat tour services. Experienced guides, comfortable vehicles, flexible itineraries.",
+    title: "Ziyarat Taxi Service in Saudi Arabia | Guided Transfers",
+    description: "Guided Ziyarat taxi service to the holy and historical sites of Makkah and Madinah. Experienced drivers, flexible itineraries, 24/7. Book on WhatsApp today.",
     path: "/ziyarat-services-in-saudi-arabia",
     keywords: ["Ziyarat services", "holy sites tour", "Makkah Madinah Ziyarat taxi", "Ziyarat tour Saudi Arabia"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Ziyarat Services in Saudi Arabia", description: "Explore the holy and historical sites of Makkah and Madinah with our professional Ziyarat tour services. Experienced guides, comfortable vehicles, flexible itineraries.", url: "/ziyarat-services-in-saudi-arabia", areaServed: ["Makkah", "Madinah"] }),
+    serviceSchema({ name: "Ziyarat Taxi Service in Saudi Arabia | Guided Transfers", description: "Guided Ziyarat taxi service to the holy and historical sites of Makkah and Madinah. Experienced drivers, flexible itineraries, 24/7. Book on WhatsApp today.", url: "/ziyarat-services-in-saudi-arabia", areaServed: ["Makkah", "Madinah"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Ziyarat Services", path: "/ziyarat-services-in-saudi-arabia" }]),
 ];
 

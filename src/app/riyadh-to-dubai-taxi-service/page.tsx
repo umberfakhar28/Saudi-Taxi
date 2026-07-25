@@ -3,8 +3,8 @@ import RoutePage from "@/components/RoutePage";
 import { riyadhToDubai } from "@/lib/routeData";
 
 export const metadata = generatePageMetadata({
-  title: "Riyadh to Dubai Taxi Service",
-  description: "Private long-distance overland transfer from Riyadh to Dubai via the Al Batha (Ghuwaifat) border crossing. Executive vehicles for the ~1,100 km journey. Book now.",
+  title: "Riyadh to Dubai Taxi & Private Transfer | 24/7 Service",
+  description: "Reliable Riyadh to Dubai taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
   path: "/riyadh-to-dubai-taxi-service",
   keywords: ["Riyadh to Dubai taxi", "Saudi Arabia to Dubai transfer", "Ghuwaifat border taxi", "Riyadh to UAE taxi"],
 });

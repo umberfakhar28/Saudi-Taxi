@@ -3,8 +3,8 @@ import CityServicePage from "@/components/CityServicePage";
 import { abha } from "@/lib/cityData2";
 
 export const metadata = generatePageMetadata({
-  title: "Taxi Service in Abha",
-  description: "Premium taxi in Abha. Airport pickups, Habala village tours, Al-Soudah cable car transfers, Rijal Alma heritage trips, and Asir mountain exploration. Book now.",
+  title: "Private Taxi & Chauffeur Service in Abha | Gulf Trip Service",
+  description: "Book a private taxi, airport transfer or chauffeur in Abha. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/abha",
   keywords: ["Abha taxi", "Abha airport transfer", "Habala village tour taxi", "Asir mountain taxi", "Al-Soudah transfer"],
 });

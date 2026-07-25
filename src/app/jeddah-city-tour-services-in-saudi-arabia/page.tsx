@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah City Tour Services",
-    description: "Explore the vibrant city of Jeddah with our expert-guided city tour. Al-Balad Old Town, Jeddah Corniche, Floating Mosque, markets and more. Book your Jeddah tour today.",
+    title: "Jeddah City Tour by Private Taxi | Half & Full Day",
+    description: "Explore Jeddah on a private guided taxi tour: Al-Balad Old Town, Corniche, Floating Mosque and more. Professional drivers, flexible hours. Book on WhatsApp.",
     path: "/jeddah-city-tour-services-in-saudi-arabia",
     keywords: ["Jeddah city tour", "Jeddah guided tour", "Jeddah sightseeing taxi", "Jeddah tour guide"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Jeddah City Tour Services", description: "Explore the vibrant city of Jeddah with our expert-guided city tour. Al-Balad Old Town, Jeddah Corniche, Floating Mosque, markets and more. Book your Jeddah tour today.", url: "/jeddah-city-tour-services-in-saudi-arabia", areaServed: ["Jeddah"] }),
+    serviceSchema({ name: "Jeddah City Tour by Private Taxi | Half & Full Day", description: "Explore Jeddah on a private guided taxi tour: Al-Balad Old Town, Corniche, Floating Mosque and more. Professional drivers, flexible hours. Book on WhatsApp.", url: "/jeddah-city-tour-services-in-saudi-arabia", areaServed: ["Jeddah"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Jeddah City Tour", path: "/jeddah-city-tour-services-in-saudi-arabia" }]),
 ];
 

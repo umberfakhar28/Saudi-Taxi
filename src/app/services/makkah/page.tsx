@@ -3,8 +3,8 @@ import CityServicePage from "@/components/CityServicePage";
 import { makkah } from "@/lib/cityData1";
 
 export const metadata = generatePageMetadata({
-  title: "Taxi Service in Makkah",
-  description: "Dedicated taxi service in Makkah for Umrah and Hajj pilgrims. Hotel-to-Haram transfers, Jeddah Airport pickups, Ziyarat tours, and Makkah–Madinah intercity routes.",
+  title: "Private Car Transfer & Chauffeur in Makkah — Book 24/7",
+  description: "Book a private taxi, airport transfer or chauffeur in Makkah. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/makkah",
   keywords: ["Makkah taxi", "Umrah taxi Makkah", "Makkah Haram transfer", "Ziyarat taxi Makkah", "Jeddah to Makkah taxi"],
 });

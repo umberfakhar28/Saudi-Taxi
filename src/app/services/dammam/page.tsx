@@ -3,8 +3,8 @@ import CityServicePage from "@/components/CityServicePage";
 import { dammam } from "@/lib/cityData1";
 
 export const metadata = generatePageMetadata({
-  title: "Taxi Service in Dammam | Eastern Province",
-  description: "Executive taxi in Dammam. King Fahd Airport transfers, Khobar & Dhahran corporate rides, Riyadh intercity routes, and King Fahd Causeway connections. Fixed rates.",
+  title: "Private Taxi & Chauffeur Service in Dammam",
+  description: "Book a private taxi, airport transfer or chauffeur in Dammam. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/dammam",
   keywords: ["Dammam taxi", "King Fahd Airport taxi", "Dammam Khobar transfer", "Eastern Province taxi", "Dammam Riyadh taxi"],
 });

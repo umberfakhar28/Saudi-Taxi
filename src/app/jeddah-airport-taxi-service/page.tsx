@@ -5,8 +5,8 @@ import RelatedLinks from "@/components/RelatedLinks";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Jeddah Airport (KAIA) Taxi Service",
-    description: "Premium airport taxi services from Jeddah Airport (KAIA). Reliable transfers to Makkah, Madinah, and any destination in Jeddah with professional drivers.",
+    title: "Jeddah Airport (KAIA) Taxi & Private Transfer",
+    description: "Book a private airport taxi in Jeddah. Meet-and-greet pickup, professional licensed drivers, 24/7 availability. Reserve your transfer on WhatsApp today.",
     path: "/jeddah-airport-taxi-service",
     keywords: ["Jeddah airport taxi", "KAIA taxi", "Jeddah airport transfer Makkah", "Jeddah airport to Makkah"],
 });

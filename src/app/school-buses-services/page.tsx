@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "School Bus Services Saudi Arabia",
-    description: "Safe and reliable school bus services in Saudi Arabia. Professional drivers, monitored routes, and modern fleet ensuring the highest standards of student safety.",
+    title: "School Bus Transport Service in Saudi Arabia | Safe 24/7",
+    description: "Safe, reliable school bus transport service in Saudi Arabia with monitored routes and a modern fleet. Professional drivers, 24/7 support. Book on WhatsApp.",
     path: "/school-buses-services",
     keywords: ["school bus Saudi Arabia", "student transport", "school transportation", "school bus service Saudi"],
 });
 
 const schemas = [
-    serviceSchema({ name: "School Bus Services Saudi Arabia", description: "Safe and reliable school bus services in Saudi Arabia. Professional drivers, monitored routes, and modern fleet ensuring the highest standards of student safety.", url: "/school-buses-services", areaServed: ["Saudi Arabia"] }),
+    serviceSchema({ name: "School Bus Transport Service in Saudi Arabia | Safe 24/7", description: "Safe, reliable school bus transport service in Saudi Arabia with monitored routes and a modern fleet. Professional drivers, 24/7 support. Book on WhatsApp.", url: "/school-buses-services", areaServed: ["Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "School Bus Services", path: "/school-buses-services" }]),
 ];
 

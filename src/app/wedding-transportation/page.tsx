@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Wedding Transportation Services",
-    description: "Premium wedding transportation services in Saudi Arabia. Luxury bridal cars, guest shuttles, and event logistics for your special day. Professional and elegant service.",
+    title: "Wedding Transportation & Bridal Car Service | 24/7",
+    description: "Wedding transportation service in Saudi Arabia: luxury bridal cars, guest shuttles, event logistics. Professional, elegant drivers, 24/7. Book on WhatsApp.",
     path: "/wedding-transportation",
     keywords: ["wedding transportation Saudi Arabia", "luxury bridal car", "wedding taxi", "guest shuttle Saudi Arabia"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Wedding Transportation Services", description: "Premium wedding transportation services in Saudi Arabia. Luxury bridal cars, guest shuttles, and event logistics for your special day. Professional and elegant service.", url: "/wedding-transportation", areaServed: ["Saudi Arabia"] }),
+    serviceSchema({ name: "Wedding Transportation & Bridal Car Service | 24/7", description: "Wedding transportation service in Saudi Arabia: luxury bridal cars, guest shuttles, event logistics. Professional, elegant drivers, 24/7. Book on WhatsApp.", url: "/wedding-transportation", areaServed: ["Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Wedding Transportation", path: "/wedding-transportation" }]),
 ];
 

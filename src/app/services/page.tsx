@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-    title: "Our Services",
-    description: "Explore all taxi and transport services offered by Gulf Trip Service — airport transfers, hotel transfers, Umrah packages, Ziyarat tours, private taxis and more across Saudi Arabia.",
+    title: "Taxi & Transport Services Across Saudi Arabia | 24/7",
+    description: "Browse all Gulf Trip Service taxi and transport options across Saudi Arabia — airport transfers, hotel transfers, private taxi and more. Book on WhatsApp.",
     path: "/services",
     keywords: ["taxi services Saudi Arabia", "Umrah taxi", "airport transfer", "intercity transport"],
     noindex: true,

@@ -4,8 +4,8 @@ import { CarIcon, MapPinIcon, ShieldIcon, MessageIcon, ChevronRightIcon, Compass
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Makkah to Madinah Taxi Service",
-    description: "Reliable and comfortable taxi service from Makkah to Madinah. Enjoy a seamless intercity transfer with professional drivers and a range of premium vehicles.",
+    title: "Book Makkah to Madinah Taxi — Border Crossing Made Easy",
+    description: "Reliable Makkah to Madinah taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
     path: "/makkah-to-madinah-taxi-service",
     keywords: ["Makkah to Madinah taxi", "Makkah to Madinah transfer", "intercity transfer Saudi Arabia", "Makkah to Madinah car"],
 });

@@ -3,8 +3,8 @@ import RoutePage from "@/components/RoutePage";
 import { qatarToRiyadh } from "@/lib/routeData";
 
 export const metadata = generatePageMetadata({
-  title: "Qatar to Riyadh Taxi Service",
-  description: "Private door-to-door transfer from Doha, Qatar to Riyadh via the Salwa/Abu Samra border. One vehicle for the entire journey. Book your long-distance transfer today.",
+  title: "Qatar → Riyadh Private Transfer & Chauffeur | Gulf Trip",
+  description: "Reliable Qatar to Riyadh taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
   path: "/qatar-to-riyadh-taxi-service",
   keywords: ["Qatar to Riyadh taxi", "Doha to Riyadh taxi", "Salwa border transfer", "Qatar to Saudi Arabia taxi"],
 });

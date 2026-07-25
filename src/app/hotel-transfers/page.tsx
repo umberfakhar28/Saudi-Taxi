@@ -4,14 +4,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Hotel Transfers in Saudi Arabia",
-    description: "Comfortable and reliable hotel transfer services in Makkah, Madinah and Jeddah. Door-to-door transfers between airports, hotels and holy sites across Saudi Arabia.",
+    title: "Hotel Transfer Taxi Service | Makkah, Jeddah, Madinah",
+    description: "Door-to-door hotel transfer taxi service in Makkah, Madinah and Jeddah. Professional drivers, meet-and-greet, 24/7. Book your transfer on WhatsApp.",
     path: "/hotel-transfers",
     keywords: ["hotel transfer Makkah", "hotel transfer Madinah", "hotel taxi Saudi Arabia", "door to door transfer Saudi"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Hotel Transfer Services in Saudi Arabia", description: "Comfortable and reliable hotel transfer services in Makkah, Madinah and Jeddah. Door-to-door transfers between airports, hotels and holy sites across Saudi Arabia.", url: "/hotel-transfers", areaServed: ["Makkah", "Madinah", "Jeddah"] }),
+    serviceSchema({ name: "Hotel Transfer Services in Saudi Arabia", description: "Door-to-door hotel transfer taxi service in Makkah, Madinah and Jeddah. Professional drivers, meet-and-greet, 24/7. Book your transfer on WhatsApp.", url: "/hotel-transfers", areaServed: ["Makkah", "Madinah", "Jeddah"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Hotel Transfers", path: "/hotel-transfers" }]),
 ];
 

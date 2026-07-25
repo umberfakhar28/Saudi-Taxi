@@ -4,8 +4,8 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Dammam Airport (KFIA) Taxi Service",
-    description: "Reliable airport taxi services from Dammam King Fahd International Airport (KFIA). Professional drivers, and 24/7 coverage for the Eastern Province.",
+    title: "Dammam Airport (KFIA) Taxi & Private Transfer",
+    description: "Book a private airport taxi in Dammam. Meet-and-greet pickup, professional licensed drivers, 24/7 availability. Reserve your transfer on WhatsApp today.",
     path: "/dammam-airport-taxi-service",
     keywords: ["Dammam airport taxi", "KFIA airport transfer", "King Fahd airport taxi", "Eastern Province taxi"],
 });

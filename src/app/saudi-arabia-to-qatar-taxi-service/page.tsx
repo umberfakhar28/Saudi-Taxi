@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to Qatar Taxi Service",
-    description: "Taxi to Qatar from anywhere in Saudi Arabia — Riyadh, Dammam, Al-Ahsa or your city — via the Salwa border. Direct door-to-door transfers to Doha. Book today.",
+    title: "Saudi Arabia to Qatar Taxi | Salwa Border Transfer 24/7",
+    description: "Private taxi from anywhere in Saudi Arabia to Doha, Qatar via the Salwa border. Professional drivers, door-to-door service, 24/7. Reserve now on WhatsApp.",
     path: "/saudi-arabia-to-qatar-taxi-service",
     keywords: ["Saudi to Qatar taxi", "Salwa crossing transfer", "Saudi to Doha taxi", "Qatar border taxi"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Saudi Arabia to Qatar Taxi Service", description: "Taxi to Qatar from anywhere in Saudi Arabia — Riyadh, Dammam, Al-Ahsa or your city — via the Salwa border. Direct door-to-door transfers to Doha. Book today.", url: "/saudi-arabia-to-qatar-taxi-service", areaServed: ["Qatar", "Saudi Arabia"] }),
+    serviceSchema({ name: "Saudi Arabia to Qatar Taxi | Salwa Border Transfer 24/7", description: "Private taxi from anywhere in Saudi Arabia to Doha, Qatar via the Salwa border. Professional drivers, door-to-door service, 24/7. Reserve now on WhatsApp.", url: "/saudi-arabia-to-qatar-taxi-service", areaServed: ["Qatar", "Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }, { name: "Qatar", path: "/saudi-arabia-to-qatar-taxi-service" }]),
 ];
 

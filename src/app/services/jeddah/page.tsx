@@ -4,8 +4,8 @@ import RelatedLinks from "@/components/RelatedLinks";
 import { jeddah } from "@/lib/cityData1";
 
 export const metadata = generatePageMetadata({
-  title: "Taxi Service in Jeddah",
-  description: "Professional taxi in Jeddah. King Abdulaziz Airport (KAIA) transfers to Makkah, Madinah & city hotels. Al-Balad tours, Corniche pickups. 24/7, fixed rates.",
+  title: "Jeddah Taxi, Airport Transfer & Car Service | 24/7 | Gulf Trip",
+  description: "Book a private taxi, airport transfer or chauffeur in Jeddah. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/jeddah",
   keywords: ["Jeddah taxi", "Jeddah airport taxi", "KAIA transfer", "Jeddah to Makkah", "Jeddah city tour taxi"],
 });

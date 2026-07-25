@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Corporate Transportation Services",
-    description: "Premium corporate transportation services in Saudi Arabia. Executive transfers, staff shuttles, and event transport with professional drivers and high-end vehicles.",
+    title: "Corporate Taxi & Transportation Service | Saudi Arabia",
+    description: "Corporate transportation service in Saudi Arabia: executive transfers, staff shuttles, event transport. Professional drivers, 24/7. Reserve on WhatsApp today.",
     path: "/corporate-transportation-services",
     keywords: ["corporate transport Saudi Arabia", "executive taxi", "business car hire", "corporate travel Saudi Arabia"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Corporate Transportation Services", description: "Premium corporate transportation services in Saudi Arabia. Executive transfers, staff shuttles, and event transport with professional drivers and high-end vehicles.", url: "/corporate-transportation-services", areaServed: ["Saudi Arabia"] }),
+    serviceSchema({ name: "Corporate Taxi & Transportation Service | Saudi Arabia", description: "Corporate transportation service in Saudi Arabia: executive transfers, staff shuttles, event transport. Professional drivers, 24/7. Reserve on WhatsApp today.", url: "/corporate-transportation-services", areaServed: ["Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Corporate Transportation", path: "/corporate-transportation-services" }]),
 ];
 

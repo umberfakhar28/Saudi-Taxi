@@ -5,14 +5,14 @@ import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia to Bahrain Taxi",
-    description: "Taxi to Bahrain from anywhere in Saudi Arabia — Riyadh, Khobar, Jubail, Dammam or your city — via King Fahd Causeway. Door-to-door pickup, licensed drivers. Book today.",
+    title: "Saudi Arabia to Bahrain Taxi | Causeway Transfer 24/7",
+    description: "Private taxi from anywhere in Saudi Arabia to Bahrain via King Fahd Causeway. Licensed drivers, door-to-door, 24/7. Book your transfer on WhatsApp.",
     path: "/saudi-arabia-to-bahrain-taxi-service",
     keywords: ["Saudi to Bahrain taxi", "King Fahd Causeway transfer", "Bahrain border taxi", "Saudi to Bahrain car"],
 });
 
 const schemas = [
-    serviceSchema({ name: "Saudi Arabia to Bahrain Taxi", description: "Taxi to Bahrain from anywhere in Saudi Arabia — Riyadh, Khobar, Jubail, Dammam or your city — via King Fahd Causeway. Door-to-door pickup, licensed drivers. Book today.", url: "/saudi-arabia-to-bahrain-taxi-service", areaServed: ["Bahrain", "Saudi Arabia"] }),
+    serviceSchema({ name: "Saudi Arabia to Bahrain Taxi | Causeway Transfer 24/7", description: "Private taxi from anywhere in Saudi Arabia to Bahrain via King Fahd Causeway. Licensed drivers, door-to-door, 24/7. Book your transfer on WhatsApp.", url: "/saudi-arabia-to-bahrain-taxi-service", areaServed: ["Bahrain", "Saudi Arabia"] }),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }, { name: "Bahrain", path: "/saudi-arabia-to-bahrain-taxi-service" }]),
 ];
 

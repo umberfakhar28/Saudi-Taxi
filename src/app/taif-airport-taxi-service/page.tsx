@@ -4,8 +4,8 @@ import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, Chevro
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Taif Regional Airport Taxi Service | Gulf Trip Service",
-    description: "Reliable and professional airport taxi services from Taif Airport (TIF). Fixed rates, specialized in mountain routes and transfers to Makkah.",
+    title: "Taif Airport (TIF) Taxi & Private Transfer",
+    description: "Book a private airport taxi in Taif. Meet-and-greet pickup, professional licensed drivers, 24/7 availability. Reserve your transfer on WhatsApp today.",
     path: "/taif-airport-taxi-service",
     keywords: ["Taif airport taxi", "Taif airport transfer", "Taif regional airport", "Taif to Makkah taxi"],
 });
