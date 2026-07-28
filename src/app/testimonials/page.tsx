@@ -192,7 +192,7 @@ export default function Testimonials() {
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Join Our Satisfied Customers</h2>
                     <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-                        Experience the service that thousands of pilgrims trust. Book your ride today.
+                        Experience the service that thousands of pilgrims trust. Book your ride today. Not sure which vehicle fits your group? Check our <Link href="/fleet" style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}>fleet</Link> or our <Link href="/faqs" style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}>FAQs</Link> first.
                     </p>
                     <Link href="/book-online" className="btn btn-primary btn-lg">
                         Book Your Ride
