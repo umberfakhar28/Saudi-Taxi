@@ -45,6 +45,9 @@ export default function WeddingTransportation() {
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 Our fleet of premium sedans and SUVs is ideal for bridal parties, while our luxury vans and buses can seamlessly transport large groups of guests between hotels and venues.
                             </p>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
+                                We bring the same coordinated large-group planning to <Link href="/corporate-transportation-services" style={{ color: 'var(--accent)', fontWeight: 600 }}>corporate transportation</Link> and <Link href="/school-buses-services" style={{ color: 'var(--accent)', fontWeight: 600 }}>school transport</Link>, so if your event or organization needs regular group logistics beyond your wedding day, we already have the fleet for it.
+                            </p>
                             <div className="card" style={{ background: 'var(--bg-subtle)', borderLeft: '4px solid var(--secondary)' }}>
                                 <h3 style={{ fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '0.75rem' }}>Bespoke Wedding Packages</h3>
                                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', margin: 0 }}>

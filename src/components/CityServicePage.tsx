@@ -2,6 +2,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
+// Cities with their own dedicated airport-taxi landing page — the airport
+// card below links there instead of the generic /airport-transfers hub when
+// one exists. (madinah's page is spelled "madina" in its URL.)
+const CITY_AIRPORT_PAGE: Record<string, string> = {
+  riyadh: "/riyadh-airport-taxi-service",
+  jeddah: "/jeddah-airport-taxi-service",
+  dammam: "/dammam-airport-taxi-service",
+  abha: "/abha-airport-taxi-service",
+  madinah: "/madina-airport-taxi-service",
+  taif: "/taif-airport-taxi-service",
+};
+
 export interface CityData {
   slug: string;
   city: string;
@@ -109,7 +121,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
                     <h3>{data.airport.name}</h3>
                     <p>IATA: <strong style={{ color: "var(--accent)" }}>{data.airport.code}</strong></p>
                     <p>City distance: {data.airport.distance}</p>
-                    <Link href={`/airport-transfers`} className="btn btn-secondary" style={{ marginTop: "var(--space-4)" }}>Book Airport Transfer</Link>
+                    <Link href={CITY_AIRPORT_PAGE[data.slug] ?? "/airport-transfers"} className="btn btn-secondary" style={{ marginTop: "var(--space-4)" }}>Book Airport Transfer</Link>
                   </div>
                 )}
                 <div className="card">

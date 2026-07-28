@@ -43,6 +43,13 @@ const services = [
         features: ["Makkah Ziyarat", "Madinah Ziyarat", "Custom Itinerary", "Experienced Guides"],
     },
     {
+        icon: "🕋",
+        title: "Umrah Taxi Services",
+        description: "Day-to-day Umrah taxi coverage in Makkah and Madinah, from airport transfers to inter-city travel and guided Ziyarat tours, with licensed drivers on call 24/7.",
+        link: "/umrah-taxi-services",
+        features: ["Makkah & Madinah", "Airport Transfers", "24/7 Licensed Drivers"],
+    },
+    {
         icon: "🚗",
         title: "Private Taxi",
         description: "On-demand private taxi services across Saudi Arabia. Whether inter-city travel or local rides, enjoy comfort and privacy with your own dedicated vehicle.",
@@ -69,6 +76,34 @@ const services = [
         description: "Journey to the City of Roses — Taif. Visit rose farms, Al-Shafa gardens, Taif Zoo, Souq and beautiful mountain scenery above Makkah.",
         link: "/taif-ziyarat-taxi-service",
         features: ["Rose Farms", "Al-Shafa Gardens", "Mountain Scenery", "Taif Souq"],
+    },
+    {
+        icon: "💼",
+        title: "Corporate Transportation",
+        description: "Executive transfers, staff shuttles and event transport for businesses across Saudi Arabia, with professional drivers available around the clock.",
+        link: "/corporate-transportation-services",
+        features: ["Executive Transfers", "Staff Shuttles", "Event Transport"],
+    },
+    {
+        icon: "💍",
+        title: "Wedding Transportation",
+        description: "Luxury bridal cars, guest shuttles and full event logistics for weddings, handled by professional, elegantly presented drivers.",
+        link: "/wedding-transportation",
+        features: ["Luxury Bridal Cars", "Guest Shuttles", "Event Logistics"],
+    },
+    {
+        icon: "🚌",
+        title: "School Bus Services",
+        description: "Safe, reliable school bus transport with monitored routes and a modern fleet, backed by professional drivers and 24/7 support.",
+        link: "/school-buses-services",
+        features: ["Monitored Routes", "Modern Fleet", "24/7 Support"],
+    },
+    {
+        icon: "🎒",
+        title: "Educational Tours Transport",
+        description: "Coordinated transport for educational tours and student field trips across Saudi Arabia, in safe vehicles with professional drivers.",
+        link: "/educational-tours-transport",
+        features: ["Field Trips", "Safe Vehicles", "Professional Drivers"],
     },
 ];
 

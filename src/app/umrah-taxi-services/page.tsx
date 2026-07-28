@@ -91,6 +91,9 @@ export default function UmrahTaxiServices() {
                             <p>
                                 With over 10 years of experience serving Umrah pilgrims from around the world, we understand the unique needs of pilgrims. Our drivers are not only professional and experienced, but they are also familiar with the sacred sites and can guide you throughout your stay.
                             </p>
+                            <p>
+                                For city-specific detail, see our dedicated <Link href="/makkah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah Umrah taxi guide</Link> and <Link href="/madinah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah Umrah taxi guide</Link>.
+                            </p>
                             <ul className={styles.checkList}>
                                 <li>✅ Meet & greet at Jeddah Airport</li>
                                 <li>✅ Multilingual drivers (Arabic, English, Urdu)</li>

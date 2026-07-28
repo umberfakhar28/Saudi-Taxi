@@ -95,6 +95,15 @@ export default function UmrahTransportPackage() {
                 </div>
             </section>
 
+            {/* Guide links */}
+            <section className="section-lg" style={{ paddingBottom: 0 }}>
+                <div className="container">
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8, maxWidth: '760px' }}>
+                        Booking for a specific city? Our <Link href="/makkah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah Umrah taxi guide</Link> and <Link href="/madinah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah Umrah taxi guide</Link> cover the local pickup points and Ziyarat stops in more detail than a package overview can.
+                    </p>
+                </div>
+            </section>
+
             {/* What's Included */}
             <section className="section-lg">
                 <div className="container">
