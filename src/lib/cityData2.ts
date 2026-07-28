@@ -2,6 +2,7 @@ import type { CityData } from "@/components/CityServicePage";
 
 export const khobar: CityData = {
   slug: "khobar",
+  nearbyCities: [{ city: "Jubail", slug: "jubail" }, { city: "Riyadh", slug: "riyadh" }],
   city: "Khobar",
   h1: "Private Taxi, Airport Transfer & Chauffeur Service in Khobar",
   region: "Eastern Province",
@@ -30,6 +31,7 @@ export const khobar: CityData = {
 
 export const jubail: CityData = {
   slug: "jubail",
+  nearbyCities: [{ city: "Khobar", slug: "khobar" }, { city: "Dammam", slug: "dammam" }],
   city: "Jubail",
   h1: "Executive Car Service & Car Transfer in Jubail & Nearby Areas",
   region: "Eastern Province",
@@ -58,6 +60,7 @@ export const jubail: CityData = {
 
 export const taif: CityData = {
   slug: "taif",
+  nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Abha", slug: "abha" }],
   city: "Taif",
   h1: "Private Taxi & Private Car Service in Taif — Professional & Reliable",
   region: "Makkah Province",
@@ -86,6 +89,7 @@ export const taif: CityData = {
 
 export const abha: CityData = {
   slug: "abha",
+  nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Taif", slug: "taif" }],
   city: "Abha",
   h1: "Chauffeur Service & Executive Car Service in Abha & Nearby Areas",
   region: "Asir Province",

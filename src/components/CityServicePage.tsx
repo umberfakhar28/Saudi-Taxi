@@ -12,6 +12,9 @@ export interface CityData {
   challenge: string;
   benefit: string;
   airport?: { name: string; code: string; distance: string };
+  /** 2-3 sibling destinations this city is commonly paired with, for one
+   * contextual "nearby destinations" sentence — not a link list. */
+  nearbyCities: { city: string; slug: string }[];
   popularRoutes: { from: string; to: string; time: string; href?: string }[];
   pickupPoints: string[];
   faqs: { q: string; a: string }[];
@@ -85,7 +88,19 @@ export default function CityServicePage({ data }: { data: CityData }) {
                 <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{data.whyVisit}</p>
                 <h3 style={{ color: "var(--text-main)", marginBottom: "var(--space-4)", fontSize: "var(--text-xl)" }}>Transportation in {data.city}</h3>
                 <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{data.challenge}</p>
-                <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>{data.benefit}</p>
+                <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: data.nearbyCities.length ? "var(--space-6)" : 0 }}>{data.benefit}</p>
+                {data.nearbyCities.length > 0 && (
+                  <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
+                    Many riders combine {data.city} with a trip to{" "}
+                    {data.nearbyCities.map((n, i) => (
+                      <span key={n.slug}>
+                        {i > 0 && (i === data.nearbyCities.length - 1 ? " or " : ", ")}
+                        <Link href={`/services/${n.slug}`} style={{ color: "var(--accent)", fontWeight: 600 }}>{n.city}</Link>
+                      </span>
+                    ))}
+                    , both reachable with the same driver and vehicle.
+                  </p>
+                )}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
                 {data.airport && (
