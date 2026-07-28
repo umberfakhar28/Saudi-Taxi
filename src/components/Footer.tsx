@@ -46,22 +46,12 @@ const Footer = () => {
                         <ul className={styles.list}>
                             <li className={styles.listItem}><Link href="/dammam-airport-to-bahrain-taxi-service" className={styles.link}>Dammam Airport → Bahrain</Link></li>
                             <li className={styles.listItem}><Link href="/dammam-airport-to-qatar-taxi-service" className={styles.link}>Dammam Airport → Qatar</Link></li>
-                            <li className={styles.listItem}><Link href="/dammam-airport-to-riyadh-taxi-service" className={styles.link}>Dammam Airport → Riyadh</Link></li>
-                            <li className={styles.listItem}><Link href="/dammam-airport-to-khafji-taxi-service" className={styles.link}>Dammam Airport → Khafji</Link></li>
-                            <li className={styles.listItem}><Link href="/bahrain-to-dammam-taxi-service" className={styles.link}>Bahrain → Dammam</Link></li>
-                            <li className={styles.listItem}><Link href="/qatar-to-riyadh-taxi-service" className={styles.link}>Qatar → Riyadh</Link></li>
-                            <li className={styles.listItem}><Link href="/qatar-to-dammam-taxi-service" className={styles.link}>Qatar → Dammam</Link></li>
                             <li className={styles.listItem}><Link href="/khafji-to-kuwait-taxi-service" className={styles.link}>Khafji → Kuwait</Link></li>
-                            <li className={styles.listItem}><Link href="/dammam-to-kuwait-taxi-service" className={styles.link}>Dammam → Kuwait</Link></li>
-                            <li className={styles.listItem}><Link href="/kuwait-to-dammam-taxi-service" className={styles.link}>Kuwait → Dammam</Link></li>
-                            <li className={styles.listItem}><Link href="/kuwait-to-riyadh-taxi-service" className={styles.link}>Kuwait → Riyadh</Link></li>
-                            <li className={styles.listItem}><Link href="/riyadh-to-bahrain-taxi-service" className={styles.link}>Riyadh → Bahrain</Link></li>
-                            <li className={styles.listItem}><Link href="/bahrain-to-riyadh-taxi-service" className={styles.link}>Bahrain → Riyadh</Link></li>
-                            <li className={styles.listItem}><Link href="/dammam-to-abu-dhabi-taxi-service" className={styles.link}>Dammam → Abu Dhabi</Link></li>
-                            <li className={styles.listItem}><Link href="/dammam-to-dubai-taxi-service" className={styles.link}>Dammam → Dubai</Link></li>
-                            <li className={styles.listItem}><Link href="/dubai-to-dammam-taxi-service" className={styles.link}>Dubai → Dammam</Link></li>
                             <li className={styles.listItem}><Link href="/riyadh-to-dubai-taxi-service" className={styles.link}>Riyadh → Dubai</Link></li>
-                            <li className={styles.listItem}><Link href="/dubai-to-riyadh-taxi-service" className={styles.link}>Dubai → Riyadh</Link></li>
+                            <li className={styles.listItem}><Link href="/dammam-to-abu-dhabi-taxi-service" className={styles.link}>Dammam → Abu Dhabi</Link></li>
+                            {/* Full 18-route list lives on /site-map — this column stays a
+                                curated sample so the footer doesn't balloon past ~25 links. */}
+                            <li className={styles.listItem}><Link href="/site-map" className={styles.link}>View All Routes →</Link></li>
                         </ul>
                     </div>
 
