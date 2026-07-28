@@ -1,0 +1,1011 @@
+{
+  "generatedBy": "scripts/seo/generate-internal-links-config.js — re-run after adding/removing pages",
+  "clusters": [
+    "airport-transfers",
+    "arabic",
+    "blog",
+    "city-destinations",
+    "cross-border-routes",
+    "domestic-routes",
+    "guides",
+    "home",
+    "legal",
+    "other",
+    "services",
+    "tours",
+    "umrah-ziyarat",
+    "utility"
+  ],
+  "pages": {
+    "/": {
+      "cluster": "home",
+      "type": "home",
+      "anchorVariants": [
+        "",
+        " service",
+        "see "
+      ]
+    },
+    "/abha-airport-taxi-service": {
+      "cluster": "airport-transfers",
+      "type": "destination (city airport)",
+      "anchorVariants": [
+        "abha airport taxi service",
+        "abha airport taxi service service",
+        "see abha airport taxi service"
+      ]
+    },
+    "/about": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "about",
+        "about service",
+        "see about"
+      ]
+    },
+    "/about-us": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "about us",
+        "about us service",
+        "see about us"
+      ]
+    },
+    "/airport-transfer-for-umrah": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "airport transfer for umrah",
+        "airport transfer for umrah service",
+        "see airport transfer for umrah"
+      ]
+    },
+    "/airport-transfers": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "airport transfers",
+        "airport taxi service",
+        "meet-and-greet airport pickup"
+      ]
+    },
+    "/ar": {
+      "cluster": "arabic",
+      "type": "arabic",
+      "anchorVariants": [
+        "ar",
+        "ar service",
+        "see ar"
+      ]
+    },
+    "/ar/border-crossing": {
+      "cluster": "arabic",
+      "type": "arabic",
+      "anchorVariants": [
+        "ar/border crossing",
+        "ar/border crossing service",
+        "see ar/border crossing"
+      ]
+    },
+    "/ar/contact-us": {
+      "cluster": "arabic",
+      "type": "arabic",
+      "anchorVariants": [
+        "ar/contact us",
+        "ar/contact us service",
+        "see ar/contact us"
+      ]
+    },
+    "/ar/dammam-airport-to-bahrain-taxi-service": {
+      "cluster": "arabic",
+      "type": "arabic",
+      "anchorVariants": [
+        "ar/dammam airport to bahrain taxi service",
+        "ar/dammam airport to bahrain taxi service service",
+        "see ar/dammam airport to bahrain taxi service"
+      ]
+    },
+    "/ar/dammam-airport-to-qatar-taxi-service": {
+      "cluster": "arabic",
+      "type": "arabic",
+      "anchorVariants": [
+        "ar/dammam airport to qatar taxi service",
+        "ar/dammam airport to qatar taxi service service",
+        "see ar/dammam airport to qatar taxi service"
+      ]
+    },
+    "/bahrain-to-dammam-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "bahrain to dammam taxi service",
+        "bahrain to dammam taxi service service",
+        "see bahrain to dammam taxi service"
+      ]
+    },
+    "/bahrain-to-riyadh-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "bahrain to riyadh taxi service",
+        "bahrain to riyadh taxi service service",
+        "see bahrain to riyadh taxi service"
+      ]
+    },
+    "/blog": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "travel blog",
+        "travel tips and guides",
+        "destination stories"
+      ]
+    },
+    "/blog/airport-transfer-tips": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/airport transfer tips",
+        "blog/airport transfer tips service",
+        "see blog/airport transfer tips"
+      ]
+    },
+    "/blog/alula-complete-guide": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/alula complete guide",
+        "blog/alula complete guide service",
+        "see blog/alula complete guide"
+      ]
+    },
+    "/blog/benefits-private-airport-transfer": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/benefits private airport transfer",
+        "blog/benefits private airport transfer service",
+        "see blog/benefits private airport transfer"
+      ]
+    },
+    "/blog/family-saudi-destinations": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/family saudi destinations",
+        "blog/family saudi destinations service",
+        "see blog/family saudi destinations"
+      ]
+    },
+    "/blog/hajj-transport-guide": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/hajj transport guide",
+        "blog/hajj transport guide service",
+        "see blog/hajj transport guide"
+      ]
+    },
+    "/blog/jeddah-hidden-gems": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/jeddah hidden gems",
+        "blog/jeddah hidden gems service",
+        "see blog/jeddah hidden gems"
+      ]
+    },
+    "/blog/private-vs-rental-car": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/private vs rental car",
+        "blog/private vs rental car service",
+        "see blog/private vs rental car"
+      ]
+    },
+    "/blog/riyadh-to-jeddah-travel": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/riyadh to jeddah travel",
+        "blog/riyadh to jeddah travel service",
+        "see blog/riyadh to jeddah travel"
+      ]
+    },
+    "/blog/safe-travel-tips-saudi": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/safe travel tips saudi",
+        "blog/safe travel tips saudi service",
+        "see blog/safe travel tips saudi"
+      ]
+    },
+    "/blog/top-attractions-riyadh": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/top attractions riyadh",
+        "blog/top attractions riyadh service",
+        "see blog/top attractions riyadh"
+      ]
+    },
+    "/blog/umrah-travel-planning": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/umrah travel planning",
+        "blog/umrah travel planning service",
+        "see blog/umrah travel planning"
+      ]
+    },
+    "/blog/vip-transport-saudi": {
+      "cluster": "blog",
+      "type": "blog",
+      "anchorVariants": [
+        "blog/vip transport saudi",
+        "blog/vip transport saudi service",
+        "see blog/vip transport saudi"
+      ]
+    },
+    "/book-online": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "book online",
+        "book your ride",
+        "reserve a transfer"
+      ]
+    },
+    "/border-crossing": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border hub)",
+      "anchorVariants": [
+        "border crossing taxi service",
+        "all border crossing routes",
+        "GCC cross-border transfers"
+      ]
+    },
+    "/cart": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "cart",
+        "cart service",
+        "see cart"
+      ]
+    },
+    "/checkout": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "checkout",
+        "checkout service",
+        "see checkout"
+      ]
+    },
+    "/contact": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "contact",
+        "contact service",
+        "see contact"
+      ]
+    },
+    "/contact-us": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "contact us",
+        "contact us service",
+        "see contact us"
+      ]
+    },
+    "/corporate-transportation-services": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "corporate transportation services",
+        "corporate transportation services service",
+        "see corporate transportation services"
+      ]
+    },
+    "/dammam-airport-taxi-service": {
+      "cluster": "airport-transfers",
+      "type": "destination (city airport)",
+      "anchorVariants": [
+        "dammam airport taxi service",
+        "dammam airport taxi service service",
+        "see dammam airport taxi service"
+      ]
+    },
+    "/dammam-airport-to-bahrain-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dammam airport to bahrain taxi service",
+        "dammam airport to bahrain taxi service service",
+        "see dammam airport to bahrain taxi service"
+      ]
+    },
+    "/dammam-airport-to-khafji-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dammam airport to khafji taxi service",
+        "dammam airport to khafji taxi service service",
+        "see dammam airport to khafji taxi service"
+      ]
+    },
+    "/dammam-airport-to-qatar-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dammam airport to qatar taxi service",
+        "dammam airport to qatar taxi service service",
+        "see dammam airport to qatar taxi service"
+      ]
+    },
+    "/dammam-airport-to-riyadh-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dammam airport to riyadh taxi service",
+        "dammam airport to riyadh taxi service service",
+        "see dammam airport to riyadh taxi service"
+      ]
+    },
+    "/dammam-to-abu-dhabi-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dammam to abu dhabi taxi service",
+        "dammam to abu dhabi taxi service service",
+        "see dammam to abu dhabi taxi service"
+      ]
+    },
+    "/dammam-to-dubai-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dammam to dubai taxi service",
+        "dammam to dubai taxi service service",
+        "see dammam to dubai taxi service"
+      ]
+    },
+    "/dammam-to-kuwait-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dammam to kuwait taxi service",
+        "dammam to kuwait taxi service service",
+        "see dammam to kuwait taxi service"
+      ]
+    },
+    "/dubai-to-dammam-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dubai to dammam taxi service",
+        "dubai to dammam taxi service service",
+        "see dubai to dammam taxi service"
+      ]
+    },
+    "/dubai-to-riyadh-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "dubai to riyadh taxi service",
+        "dubai to riyadh taxi service service",
+        "see dubai to riyadh taxi service"
+      ]
+    },
+    "/educational-tours-transport": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "educational tours transport",
+        "educational tours transport service",
+        "see educational tours transport"
+      ]
+    },
+    "/faqs": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "faqs",
+        "faqs service",
+        "see faqs"
+      ]
+    },
+    "/fleet": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "our fleet",
+        "vehicle options",
+        "browse vehicles"
+      ]
+    },
+    "/guides/business-travel": {
+      "cluster": "guides",
+      "type": "guide",
+      "anchorVariants": [
+        "guides/business travel",
+        "guides/business travel service",
+        "see guides/business travel"
+      ]
+    },
+    "/guides/family-travel": {
+      "cluster": "guides",
+      "type": "guide",
+      "anchorVariants": [
+        "guides/family travel",
+        "guides/family travel service",
+        "see guides/family travel"
+      ]
+    },
+    "/guides/hajj-transportation": {
+      "cluster": "guides",
+      "type": "guide",
+      "anchorVariants": [
+        "guides/hajj transportation",
+        "guides/hajj transportation service",
+        "see guides/hajj transportation"
+      ]
+    },
+    "/guides/king-abdulaziz-airport": {
+      "cluster": "guides",
+      "type": "guide",
+      "anchorVariants": [
+        "guides/king abdulaziz airport",
+        "guides/king abdulaziz airport service",
+        "see guides/king abdulaziz airport"
+      ]
+    },
+    "/guides/king-khalid-airport": {
+      "cluster": "guides",
+      "type": "guide",
+      "anchorVariants": [
+        "guides/king khalid airport",
+        "guides/king khalid airport service",
+        "see guides/king khalid airport"
+      ]
+    },
+    "/guides/umrah-transportation": {
+      "cluster": "guides",
+      "type": "guide",
+      "anchorVariants": [
+        "guides/umrah transportation",
+        "guides/umrah transportation service",
+        "see guides/umrah transportation"
+      ]
+    },
+    "/hotel-transfers": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "hotel transfers",
+        "hotel transfers service",
+        "see hotel transfers"
+      ]
+    },
+    "/jeddah-airport-taxi-guide": {
+      "cluster": "umrah-ziyarat",
+      "type": "service (guide, duplicate content)",
+      "anchorVariants": [
+        "jeddah airport taxi guide",
+        "jeddah airport taxi guide service",
+        "see jeddah airport taxi guide"
+      ]
+    },
+    "/jeddah-airport-taxi-service": {
+      "cluster": "airport-transfers",
+      "type": "destination (city airport)",
+      "anchorVariants": [
+        "jeddah airport taxi service",
+        "jeddah airport taxi service service",
+        "see jeddah airport taxi service"
+      ]
+    },
+    "/jeddah-city-tour-services-in-saudi-arabia": {
+      "cluster": "tours",
+      "type": "service (tour)",
+      "anchorVariants": [
+        "jeddah city tour services in saudi arabia",
+        "jeddah city tour services in saudi arabia service",
+        "see jeddah city tour services in saudi arabia"
+      ]
+    },
+    "/jeddah-to-makkah-guide": {
+      "cluster": "domestic-routes",
+      "type": "service (route guide, duplicate content)",
+      "anchorVariants": [
+        "jeddah to makkah guide",
+        "jeddah to makkah guide service",
+        "see jeddah to makkah guide"
+      ]
+    },
+    "/jeddah-to-makkah-taxi-service": {
+      "cluster": "domestic-routes",
+      "type": "service (domestic route)",
+      "anchorVariants": [
+        "jeddah to makkah taxi service",
+        "jeddah to makkah taxi service service",
+        "see jeddah to makkah taxi service"
+      ]
+    },
+    "/khafji-to-kuwait-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "khafji to kuwait taxi service",
+        "khafji to kuwait taxi service service",
+        "see khafji to kuwait taxi service"
+      ]
+    },
+    "/kuwait-to-dammam-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "kuwait to dammam taxi service",
+        "kuwait to dammam taxi service service",
+        "see kuwait to dammam taxi service"
+      ]
+    },
+    "/kuwait-to-riyadh-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "kuwait to riyadh taxi service",
+        "kuwait to riyadh taxi service service",
+        "see kuwait to riyadh taxi service"
+      ]
+    },
+    "/madina-airport-taxi-service": {
+      "cluster": "airport-transfers",
+      "type": "destination (city airport)",
+      "anchorVariants": [
+        "madina airport taxi service",
+        "madina airport taxi service service",
+        "see madina airport taxi service"
+      ]
+    },
+    "/madinah-umrah-taxi-guide": {
+      "cluster": "umrah-ziyarat",
+      "type": "service (guide, duplicate content)",
+      "anchorVariants": [
+        "madinah umrah taxi guide",
+        "madinah umrah taxi guide service",
+        "see madinah umrah taxi guide"
+      ]
+    },
+    "/makkah-to-madinah-guide": {
+      "cluster": "domestic-routes",
+      "type": "service (route guide, duplicate content)",
+      "anchorVariants": [
+        "makkah to madinah guide",
+        "makkah to madinah guide service",
+        "see makkah to madinah guide"
+      ]
+    },
+    "/makkah-to-madinah-taxi-service": {
+      "cluster": "domestic-routes",
+      "type": "service (domestic route)",
+      "anchorVariants": [
+        "makkah to madinah taxi service",
+        "makkah to madinah taxi service service",
+        "see makkah to madinah taxi service"
+      ]
+    },
+    "/makkah-umrah-taxi-guide": {
+      "cluster": "umrah-ziyarat",
+      "type": "service (guide, duplicate content)",
+      "anchorVariants": [
+        "makkah umrah taxi guide",
+        "makkah umrah taxi guide service",
+        "see makkah umrah taxi guide"
+      ]
+    },
+    "/my-account": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "my account",
+        "my account service",
+        "see my account"
+      ]
+    },
+    "/our-gallery": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "our gallery",
+        "our gallery service",
+        "see our gallery"
+      ]
+    },
+    "/our-services": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "our services",
+        "full service directory",
+        "everything we offer"
+      ]
+    },
+    "/pay-online": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "pay online",
+        "pay online service",
+        "see pay online"
+      ]
+    },
+    "/prices": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "prices",
+        "prices service",
+        "see prices"
+      ]
+    },
+    "/privacy-policy": {
+      "cluster": "legal",
+      "type": "legal",
+      "anchorVariants": [
+        "privacy policy",
+        "privacy policy service",
+        "see privacy policy"
+      ]
+    },
+    "/private-taxi": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "private taxi",
+        "private taxi service",
+        "see private taxi"
+      ]
+    },
+    "/qatar-to-dammam-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "qatar to dammam taxi service",
+        "qatar to dammam taxi service service",
+        "see qatar to dammam taxi service"
+      ]
+    },
+    "/qatar-to-riyadh-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "qatar to riyadh taxi service",
+        "qatar to riyadh taxi service service",
+        "see qatar to riyadh taxi service"
+      ]
+    },
+    "/quote": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "get a quote",
+        "request a fare estimate",
+        "instant quote"
+      ]
+    },
+    "/reliable-alula-tour-taxi-service-in-saudi-arabia": {
+      "cluster": "tours",
+      "type": "service (tour)",
+      "anchorVariants": [
+        "reliable alula tour taxi service in saudi arabia",
+        "reliable alula tour taxi service in saudi arabia service",
+        "see reliable alula tour taxi service in saudi arabia"
+      ]
+    },
+    "/riyadh-airport-taxi-service": {
+      "cluster": "airport-transfers",
+      "type": "destination (city airport)",
+      "anchorVariants": [
+        "riyadh airport taxi service",
+        "riyadh airport taxi service service",
+        "see riyadh airport taxi service"
+      ]
+    },
+    "/riyadh-to-bahrain-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "riyadh to bahrain taxi service",
+        "riyadh to bahrain taxi service service",
+        "see riyadh to bahrain taxi service"
+      ]
+    },
+    "/riyadh-to-dammam-guide": {
+      "cluster": "domestic-routes",
+      "type": "service (route guide, duplicate content)",
+      "anchorVariants": [
+        "riyadh to dammam guide",
+        "riyadh to dammam guide service",
+        "see riyadh to dammam guide"
+      ]
+    },
+    "/riyadh-to-dubai-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border route)",
+      "anchorVariants": [
+        "riyadh to dubai taxi service",
+        "riyadh to dubai taxi service service",
+        "see riyadh to dubai taxi service"
+      ]
+    },
+    "/saudi-arabia-to-bahrain-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border hub)",
+      "anchorVariants": [
+        "saudi arabia to bahrain taxi service",
+        "saudi arabia to bahrain taxi service service",
+        "see saudi arabia to bahrain taxi service"
+      ]
+    },
+    "/saudi-arabia-to-jordan-land-transfer": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border hub)",
+      "anchorVariants": [
+        "saudi arabia to jordan land transfer",
+        "saudi arabia to jordan land transfer service",
+        "see saudi arabia to jordan land transfer"
+      ]
+    },
+    "/saudi-arabia-to-qatar-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border hub)",
+      "anchorVariants": [
+        "saudi arabia to qatar taxi service",
+        "saudi arabia to qatar taxi service service",
+        "see saudi arabia to qatar taxi service"
+      ]
+    },
+    "/saudi-arabia-to-uae-taxi-service": {
+      "cluster": "cross-border-routes",
+      "type": "service (cross-border hub)",
+      "anchorVariants": [
+        "saudi arabia to uae taxi service",
+        "saudi arabia to uae taxi service service",
+        "see saudi arabia to uae taxi service"
+      ]
+    },
+    "/school-buses-services": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "school buses services",
+        "school buses services service",
+        "see school buses services"
+      ]
+    },
+    "/services": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "services",
+        "services service",
+        "see services"
+      ]
+    },
+    "/services/abha": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/abha",
+        "services/abha service",
+        "see services/abha"
+      ]
+    },
+    "/services/alula": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/alula",
+        "services/alula service",
+        "see services/alula"
+      ]
+    },
+    "/services/dammam": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/dammam",
+        "services/dammam service",
+        "see services/dammam"
+      ]
+    },
+    "/services/jeddah": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/jeddah",
+        "services/jeddah service",
+        "see services/jeddah"
+      ]
+    },
+    "/services/jubail": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/jubail",
+        "services/jubail service",
+        "see services/jubail"
+      ]
+    },
+    "/services/khobar": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/khobar",
+        "services/khobar service",
+        "see services/khobar"
+      ]
+    },
+    "/services/madinah": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/madinah",
+        "services/madinah service",
+        "see services/madinah"
+      ]
+    },
+    "/services/makkah": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/makkah",
+        "services/makkah service",
+        "see services/makkah"
+      ]
+    },
+    "/services/neom": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/neom",
+        "services/neom service",
+        "see services/neom"
+      ]
+    },
+    "/services/riyadh": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/riyadh",
+        "services/riyadh service",
+        "see services/riyadh"
+      ]
+    },
+    "/services/tabuk": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/tabuk",
+        "services/tabuk service",
+        "see services/tabuk"
+      ]
+    },
+    "/services/taif": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/taif",
+        "services/taif service",
+        "see services/taif"
+      ]
+    },
+    "/services/yanbu": {
+      "cluster": "city-destinations",
+      "type": "destination (city hub)",
+      "anchorVariants": [
+        "services/yanbu",
+        "services/yanbu service",
+        "see services/yanbu"
+      ]
+    },
+    "/site-map": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "site map",
+        "site map service",
+        "see site map"
+      ]
+    },
+    "/taif-airport-taxi-service": {
+      "cluster": "airport-transfers",
+      "type": "destination (city airport)",
+      "anchorVariants": [
+        "taif airport taxi service",
+        "taif airport taxi service service",
+        "see taif airport taxi service"
+      ]
+    },
+    "/taif-ziyarat-taxi-service": {
+      "cluster": "tours",
+      "type": "service (tour)",
+      "anchorVariants": [
+        "taif ziyarat taxi service",
+        "taif ziyarat taxi service service",
+        "see taif ziyarat taxi service"
+      ]
+    },
+    "/terms-conditions": {
+      "cluster": "legal",
+      "type": "legal",
+      "anchorVariants": [
+        "terms conditions",
+        "terms conditions service",
+        "see terms conditions"
+      ]
+    },
+    "/testimonials": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "testimonials",
+        "testimonials service",
+        "see testimonials"
+      ]
+    },
+    "/thank-you": {
+      "cluster": "utility",
+      "type": "utility",
+      "anchorVariants": [
+        "thank you",
+        "thank you service",
+        "see thank you"
+      ]
+    },
+    "/umrah-taxi-services": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "umrah taxi services",
+        "umrah taxi services service",
+        "see umrah taxi services"
+      ]
+    },
+    "/umrah-transport-package": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "umrah transport package",
+        "umrah transport package service",
+        "see umrah transport package"
+      ]
+    },
+    "/wedding-transportation": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "wedding transportation",
+        "wedding transportation service",
+        "see wedding transportation"
+      ]
+    },
+    "/ziyarat-services-in-saudi-arabia": {
+      "cluster": "services",
+      "type": "service",
+      "anchorVariants": [
+        "ziyarat services in saudi arabia",
+        "ziyarat services in saudi arabia service",
+        "see ziyarat services in saudi arabia"
+      ]
+    }
+  }
+}
