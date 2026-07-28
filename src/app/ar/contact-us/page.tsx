@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import ArContactUsClient from "./ArContactUsClient";
 
 /**
@@ -13,6 +15,20 @@ export const metadata = generatePageMetadata({
     hreflangPath: "/contact-us",
 });
 
+const schemas = [
+    breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "اتصل بنا", path: "/ar/contact-us" }]),
+];
+
 export default function ArContactUsPage() {
-    return <ArContactUsClient />;
+    return (
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
+            <div className="container" style={{ paddingTop: 'var(--space-4)' }}>
+                <div className="breadcrumb">
+                    <Link href="/ar">الرئيسية</Link> / <span>اتصل بنا</span>
+                </div>
+            </div>
+            <ArContactUsClient />
+        </>
+    );
 }

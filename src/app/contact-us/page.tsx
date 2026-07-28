@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import ContactUsClient from "./ContactUsClient";
 
 /**
@@ -14,6 +16,20 @@ export const metadata = generatePageMetadata({
     hreflangPath: "/contact-us",
 });
 
+const schemas = [
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact-us" }]),
+];
+
 export default function ContactUsPage() {
-    return <ContactUsClient />;
+    return (
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
+            <div className="container" style={{ paddingTop: 'var(--space-4)' }}>
+                <div className="breadcrumb">
+                    <Link href="/">Home</Link> / <span>Contact Us</span>
+                </div>
+            </div>
+            <ContactUsClient />
+        </>
+    );
 }
