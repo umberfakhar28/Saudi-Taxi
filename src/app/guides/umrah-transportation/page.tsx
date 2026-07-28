@@ -30,6 +30,7 @@ const data = {
   ],
   ctaText: "Book Umrah Transport Package",
   ctaLink: "/umrah-transport-package",
+  relatedGuide: { href: "/guides/king-abdulaziz-airport", label: "King Abdulaziz International Airport guide" },
 };
 
 export default function UmrahTransportationGuide() {

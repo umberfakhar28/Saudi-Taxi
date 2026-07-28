@@ -28,6 +28,7 @@ const data = {
   ],
   ctaText: "Set Up a Corporate Account",
   ctaLink: "/contact-us",
+  relatedGuide: { href: "/guides/king-khalid-airport", label: "King Khalid International Airport guide" },
 };
 
 export default function BusinessTravelGuide() {

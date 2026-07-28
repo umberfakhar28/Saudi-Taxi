@@ -28,6 +28,7 @@ const data = {
   ],
   ctaText: "Book a Family Transfer",
   ctaLink: "/book-online",
+  relatedGuide: { href: "/guides/hajj-transportation", label: "Hajj Transportation guide" },
 };
 
 export default function FamilyTravelGuide() {

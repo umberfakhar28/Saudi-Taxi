@@ -83,6 +83,9 @@ export default function ZiyaratServices() {
                     <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '1.05rem' }}>
                         Ziyarat — the visitation of sacred sites — is a spiritually enriching experience for every Muslim. Our dedicated Ziyarat tour services provide comfortable, informative, and respectful visits to the blessed sites of Makkah and Madinah. Our experienced drivers serve as knowledgeable guides, sharing the history and significance of each site in your language.
                     </p>
+                    <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '1.05rem' }}>
+                        Traveling during Hajj season specifically? Our <Link href="/guides/hajj-transportation" style={{ color: 'var(--accent)', fontWeight: 600 }}>Hajj transportation guide</Link> covers logistics for Mina, Arafat and the other Hajj sites.
+                    </p>
                 </div>
             </section>
 

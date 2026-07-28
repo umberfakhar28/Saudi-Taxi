@@ -53,6 +53,9 @@ export default function HotelTransfers() {
                 <div className="container">
                     <h2 className="section-title">What Makes Our Hotel Transfers Special?</h2>
                     <p className="section-subtitle">We provide seamless transfer experiences tailored to pilgrims, tourists and business travelers.</p>
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8, maxWidth: '760px', margin: '0 auto var(--space-8)', textAlign: 'center' }}>
+                        Traveling with kids? Our <Link href="/guides/family-travel" style={{ color: 'var(--accent)', fontWeight: 600 }}>family travel guide</Link> has hotel and pacing tips for visiting Saudi Arabia with children.
+                    </p>
                     <div className="grid-3">
                         {features.map((f, i) => (
                             <div key={i} className="card" style={{ textAlign: 'center' }}>

@@ -63,6 +63,9 @@ export default function CorporateTransportation() {
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 The same coordinated approach carries over to other group and event work we do, from <Link href="/wedding-transportation" style={{ color: 'var(--accent)', fontWeight: 600 }}>wedding transportation</Link> to <Link href="/educational-tours-transport" style={{ color: 'var(--accent)', fontWeight: 600 }}>educational tour transport</Link> for schools and universities.
                             </p>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
+                                Planning a business trip yourself? Our <Link href="/guides/business-travel" style={{ color: 'var(--accent)', fontWeight: 600 }}>business travel guide</Link> covers what to expect beyond the ride itself.
+                            </p>
                         </div>
                         <div className="grid-1" style={{ gap: '1.5rem' }}>
                             {solutions.map((s, i) => (
