@@ -132,6 +132,13 @@ export default function OurServices() {
                 <div className="container">
                     <h2 className="section-title">Everything You Need to Travel Saudi Arabia</h2>
                     <p className="section-subtitle">From airport arrival to holy site visits — we cover every mile of your journey.</p>
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8, maxWidth: '760px', margin: '0 auto var(--space-8)', textAlign: 'center' }}>
+                        Coverage extends beyond the main hubs too, with dedicated local service in{' '}
+                        <Link href="/services/abha" style={{ color: 'var(--accent)', fontWeight: 600 }}>Abha</Link>,{' '}
+                        <Link href="/services/yanbu" style={{ color: 'var(--accent)', fontWeight: 600 }}>Yanbu</Link>,{' '}
+                        <Link href="/services/tabuk" style={{ color: 'var(--accent)', fontWeight: 600 }}>Tabuk</Link> and{' '}
+                        <Link href="/services/neom" style={{ color: 'var(--accent)', fontWeight: 600 }}>NEOM</Link>.
+                    </p>
                     <div className="grid-2">
                         {services.map((svc, i) => (
                             <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column' }}>

@@ -179,10 +179,17 @@ export default function Home() {
                   Why Thousands Choose Gulf Trip Service
                 </h2>
               </div>
-              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>
+              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-4)', lineHeight: 1.8 }}>
                 We've been serving Umrah pilgrims and travellers in Saudi Arabia for
                 over a decade. Every aspect of our service is designed around your
                 comfort and peace of mind.
+              </p>
+              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>
+                Beyond the Holy Cities, we run dedicated services in{' '}
+                <Link href="/services/madinah" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah</Link>,{' '}
+                <Link href="/services/makkah" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah</Link>,{' '}
+                <Link href="/services/taif" style={{ color: 'var(--accent)', fontWeight: 600 }}>Taif</Link> and{' '}
+                <Link href="/services/alula" style={{ color: 'var(--accent)', fontWeight: 600 }}>AlUla</Link>, with the same fixed-rate, pre-booked chauffeur model.
               </p>
 
               {/* Checklist — Proximity: each item is a self-contained unit; consistent spacing */}
