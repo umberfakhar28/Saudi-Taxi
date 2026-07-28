@@ -155,6 +155,17 @@ function parseDataFileLinks(file) {
     while ((pm = prRe.exec(body))) {
       if (pm[8]) hrefs.push({ href: pm[8], label: `${pm[2]} to ${pm[4]}` });
     }
+    // nearbyCities-style: { city, slug } — CityServicePage.tsx synthesizes
+    // the href as `/services/${slug}` rather than storing it literally.
+    const ncRe = /nearbyCities:\s*\[([^\]]*)\]/;
+    const ncMatch = body.match(ncRe);
+    if (ncMatch) {
+      const itemRe = /\{\s*city:\s*(["'])(.*?)\1,\s*slug:\s*(["'])(.*?)\3\s*\}/g;
+      let im;
+      while ((im = itemRe.exec(ncMatch[1]))) {
+        hrefs.push({ href: `/services/${im[4]}`, label: im[2] });
+      }
+    }
     objects.push({ name, hrefs, file, line: source.slice(0, m.index).split("\n").length });
   }
   return objects;
@@ -258,6 +269,28 @@ function parseItemsFromArrayBody(body) {
     if (!fields.label) fields.label = fields.title || fields.name || null;
     return Object.keys(fields).length ? fields : null;
   }).filter(Boolean);
+}
+
+// <RelatedLinks links={[{href, label}, ...]} /> — the array is a JSX prop
+// value at the call site, not a JSX `href=` attribute, so extractHrefAttrs
+// never sees it (it looks for `href=`, not the `href:` object key) and
+// RelatedLinks.tsx itself has no literal hrefs (they arrive via props). Parse
+// the inline array directly out of the page source instead.
+function findRelatedLinksProps(source, file) {
+  const out = [];
+  const re = /<RelatedLinks\b[^>]*\blinks=\{/g;
+  let m;
+  while ((m = re.exec(source))) {
+    const bracketStart = source.indexOf("[", m.index);
+    if (bracketStart === -1) continue;
+    const end = matchingBracketEnd(source, bracketStart);
+    const items = parseItemsFromArrayBody(source.slice(bracketStart + 1, end - 1));
+    const line = source.slice(0, m.index).split("\n").length;
+    for (const item of items) {
+      if (item.href) out.push({ href: item.href, dynamic: false, line, tagName: "Link", anchorText: item.label, file, section: "contextual", resolvedFrom: "RelatedLinks prop" });
+    }
+  }
+  return out;
 }
 
 // Anonymous inline arrays used directly in JSX: `{[ {...}, {...} ].map((r) => ...)}`
@@ -445,7 +478,7 @@ for (const { file, route } of pages) {
     const prevLine = source.split("\n")[l.line - 2] || "";
     if (/breadcrumb/i.test(lineText) || /className="breadcrumb"/.test(prevLine)) l.section = "breadcrumb";
     return l;
-  });
+  }).concat(findRelatedLinksProps(source, relFile));
 
   let templated = [];
   let templateKind = null;
