@@ -170,16 +170,15 @@ Link targets that couldn't be statically resolved to a literal path (the shared-
 
 ## Anchor text audit
 
-- Generic anchors ("click here" / "read more" / "learn more" / bare URL): **0** found.
+- Generic anchors ("click here" / "read more" / "learn more" / bare URL): **12** found.
 - Linked images with empty `alt`: **0** found.
-- Destinations receiving the identical exact-match anchor **more than 8 times** sitewide: **10**.
+- Destinations receiving the identical exact-match anchor **more than 8 times** sitewide: **9**.
 
 | Destination | Anchor (exact, lowercased) | Count |
 | --- | --- | --- |
 | `/book-online` | "book online" | 18 |
 | `/border-crossing` | "all border crossing routes" | 18 |
 | `/quote` | "get a quote for this route" | 18 |
-| `/book-online` | "book now" | 15 |
 | `/book-online` | "book your ride" | 15 |
 | `/quote` | "get a quote for your route" | 13 |
 | `/quote` | "get instant quote" | 13 |

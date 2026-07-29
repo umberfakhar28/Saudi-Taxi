@@ -393,12 +393,22 @@ function linksFromSource(source, file, defaultSection) {
         const inline = !items && inlineArrayMaps.find((s) => s.start <= a.exprStart && a.exprStart <= s.end && s.paramName === paramName);
         const resolvedItems = items || inline?.items;
         if (resolvedItems) {
+          // The JSX between the opening/closing tag is a single static template
+          // shared by every iteration of the .map() — extract it once so literal
+          // CTA text (e.g. "Learn More" wrapping a per-item `href`) is captured
+          // instead of being dropped. Falls back to a `label` field on the item
+          // for the genuinely data-driven-caption pattern (anchor text itself
+          // comes from `{item.label}`, which the tag/expression stripper can't
+          // recover).
+          const staticAnchor = extractAnchorText(source, a.exprStart, tagName);
           for (const item of resolvedItems) {
             const value = propMatch ? item[fieldName] : `${tplMatch[1]}${item[fieldName]}${tplMatch[4]}`;
             if (value == null) continue;
             out.push({
               href: value, dynamic: false, line: a.line, tagName,
-              anchorText: item.label, file, section: defaultSection,
+              anchorText: staticAnchor.text || item.label,
+              hasImage: staticAnchor.hasImage, imgAltEmpty: staticAnchor.imgAltEmpty,
+              file, section: defaultSection,
               resolvedFrom: items ? `${enclosing.arrayName}[] in ${file}` : `inline array in ${file}`,
             });
           }
@@ -772,7 +782,14 @@ const heavyLinkPages = pageInventory.filter((p) => p.outboundCount > 150);
 // ---------------------------------------------------------------------------
 // 8c. Anchor text audit — grouped by destination
 // ---------------------------------------------------------------------------
-const GENERIC_ANCHORS = new Set(["click here", "read more", "learn more", "here", "more info", "more information", "read", "view more", "see more"]);
+const GENERIC_ANCHORS = new Set([
+  "click here", "read more", "learn more", "here", "more info", "more information", "read",
+  "view more", "see more", "view details", "book now", "explore", "find out more",
+  "get started", "continue",
+]);
+// Trailing decorative glyphs (arrows, chevrons, dashes) that sit after the
+// visible CTA text and must not defeat an otherwise-exact generic-phrase match.
+const TRAILING_DECORATION = /[\s→›»➜➔↗↦›»\-–—>*]+$/;
 const anchorsByDest = {};
 for (const route of Object.keys(graph)) {
   const inboundContextual = graph[route].inbound.filter((l) => l.section === "contextual" && l.anchorText);
@@ -785,8 +802,10 @@ const overusedExactAnchors = [];
 for (const [route, list] of Object.entries(anchorsByDest)) {
   const byExact = {};
   for (const a of list) {
-    const norm = (a.anchorText || "").trim().toLowerCase();
-    if (GENERIC_ANCHORS.has(norm)) genericAnchorInstances.push({ dest: route, ...a });
+    const norm = (a.anchorText || "").trim().toLowerCase().replace(TRAILING_DECORATION, "").trim();
+    // Anchor text that is entirely a decorative glyph/arrow with no words at all.
+    const isBareIcon = norm === "" && (a.anchorText || "").trim() !== "";
+    if (GENERIC_ANCHORS.has(norm) || isBareIcon) genericAnchorInstances.push({ dest: route, ...a });
     if (/^https?:\/\//.test(a.anchorText || "") || /^\/[\w-]/.test((a.anchorText || "").trim())) bareUrlAnchorInstances.push({ dest: route, ...a });
     byExact[norm] = (byExact[norm] || 0) + 1;
   }
