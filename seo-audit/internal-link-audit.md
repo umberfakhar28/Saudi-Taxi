@@ -83,76 +83,13 @@ Max resolved depth: **3**. 28 pages have **no crawlable path from `/` at all** (
 
 ## Broken internal links (404s)
 
-**55** found.
-| Page | File:Line | href |
-| --- | --- | --- |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:137 | `/jeddah-airport-to-makkah/` |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:151 | `/jeddah-airport-to-madinah/` |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:165 | `/jeddah-airport-to-city-center/` |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:179 | `/jeddah-airport-to-taif/` |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:458 | `/jeddah-airport-to-makkah/` |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:463 | `/jeddah-airport-to-madinah/` |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:468 | `/jeddah-airport-to-city-center/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:71 | `/routes/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:197 | `/jeddah-airport-to-makkah/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:891 | `/jeddah-to-madinah-taxi/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:897 | `/jeddah-to-taif-taxi/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:903 | `/jeddah-to-riyadh-taxi/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:909 | `/jeddah-airport-to-makkah/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:915 | `/makkah-to-jeddah-taxi/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:921 | `/makkah-to-madinah-taxi/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:978 | `/makkah-umrah-taxi-service/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:980 | `/makkah-to-madinah-taxi/` |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:981 | `/routes/` |
-| /madinah-umrah-taxi-guide | content\madinah-umrah-taxi-service.html:55 | `/cities/` |
-| /madinah-umrah-taxi-guide | content\madinah-umrah-taxi-service.html:59 | `/cities/madinah/` |
-| /madinah-umrah-taxi-guide | content\madinah-umrah-taxi-service.html:135 | `/madinah-to-makkah-taxi/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:69 | `/routes/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:495 | `/madinah-ziyarat-taxi-service/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:506 | `/madinah-to-makkah-taxi/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:512 | `/jeddah-to-makkah-taxi/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:518 | `/jeddah-to-madinah-taxi/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:524 | `/makkah-umrah-taxi-service/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:530 | `/madinah-umrah-taxi-service/` |
-| /makkah-to-madinah-guide | content\makkah-to-madinah-taxi.html:536 | `/makkah-ziyarat-taxi-service/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:94 | `/cities/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:98 | `/cities/makkah/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:167 | `/jeddah-airport-to-makkah/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:180 | `/taif-airport-to-makkah/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:193 | `/madinah-to-makkah-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:223 | `/makkah-to-madinah-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:230 | `/makkah-to-jeddah-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:237 | `/makkah-to-taif-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:244 | `/makkah-to-riyadh-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:251 | `/makkah-to-dammam-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:266 | `/makkah-to-madinah-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:290 | `/jabal-al-nour-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:304 | `/jabal-thawr-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:318 | `/jannat-al-mualla-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:332 | `/birthplace-of-prophet-makkah/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:832 | `/makkah-to-madinah-taxi/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:838 | `/makkah-hajj-transportation/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:844 | `/makkah-ziyarat-taxi-service/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:850 | `/makkah-hotel-transfers/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:856 | `/madinah-umrah-taxi-service/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:915 | `/cities/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:916 | `/routes/` |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:918 | `/pilgrimage-transportation/` |
-| /riyadh-to-dammam-guide | content\riyadh-to-dammam-taxi.html:55 | `/routes/` |
-| /riyadh-to-dammam-guide | content\riyadh-to-dammam-taxi.html:341 | `/corporate-accounts/` |
-| /riyadh-to-dammam-guide | content\riyadh-to-dammam-taxi.html:414 | `/corporate-accounts/` |
-
+**0** found.
+None — every internal href resolves to a real route.
 
 ## Redirect-triggering internal links
 
-**4** found (wrong protocol, wrong www state, trailing slash, `/index.html`, or absolute-when-should-be-relative).
-| Page | File:Line | href | Issue |
-| --- | --- | --- | --- |
-| /jeddah-airport-taxi-guide | content\jeddah-airport-taxi-service.html:69 | `/airport-transfers/` | trailingSlashIssue |
-| /jeddah-to-makkah-guide | content\jeddah-to-makkah-taxi.html:979 | `/jeddah-airport-taxi-service/` | trailingSlashIssue |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:862 | `/jeddah-airport-taxi-service/` | trailingSlashIssue |
-| /makkah-umrah-taxi-guide | content\makkah-umrah-taxi-service.html:917 | `/airport-transfers/` | trailingSlashIssue |
-
+**0** found (wrong protocol, wrong www state, trailing slash, `/index.html`, or absolute-when-should-be-relative).
+None — every internal link already uses the canonical form (`https://gulftripservice.com`, no trailing slash) or is already root-relative.
 
 ## Internal links to noindex pages
 
