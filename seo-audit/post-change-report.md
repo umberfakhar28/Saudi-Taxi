@@ -137,3 +137,90 @@ The footer's "Cross-Border Routes" column was trimmed in an earlier commit on th
 - `npm run build` — clean, 110 static routes generated, 0 errors.
 - `npm run seo:links` — passes (0 broken links, 0 non-canonical hrefs, 0 `href="#"` in nav).
 - `npm run seo:audit` — regenerated `link-graph.json`, `internal-link-audit.md`, `config/internal-links.json`; generic-anchor instances now correctly reported as 12 (previously an inaccurate 0).
+
+---
+
+## content/ audit pass — bringing content/*.html into scope
+
+**Context:** `content/*.html` is 6 static HTML fragments (`jeddah-airport-taxi-service.html`, `jeddah-to-makkah-taxi.html`, `madinah-umrah-taxi-service.html`, `makkah-to-madinah-taxi.html`, `makkah-umrah-taxi-service.html`, `riyadh-to-dammam-taxi.html`) that live entirely outside `src/app`. They are read at render time by `readContentFile()` (`src/lib/readContent.ts`), which extracts only the `<body>` innerHTML and discards `<head>`, and injected into a guide page via `dangerouslySetInnerHTML`. The crawler's page walk only ever looked at `src/app/**/page.tsx`, so this markup — real `<a href>` links and `<img>` tags — was completely invisible to every prior audit. The earlier follow-up pass found redirect hops and one suspected broken link here only by manual grep, which is exactly why every "0" figure this audit reported for that directory was unverified rather than actually clean.
+
+### Task 1 — file → live URL mapping
+
+Derived from the actual call site rather than hardcoded, so a re-wired guide page stays correctly attributed:
+
+| content/ file | Calling page.tsx | Live route |
+| --- | --- | --- |
+| `jeddah-airport-taxi-service.html` | `src/app/jeddah-airport-taxi-guide/page.tsx` | `/jeddah-airport-taxi-guide` |
+| `jeddah-to-makkah-taxi.html` | `src/app/jeddah-to-makkah-guide/page.tsx` | `/jeddah-to-makkah-guide` |
+| `madinah-umrah-taxi-service.html` | `src/app/madinah-umrah-taxi-guide/page.tsx` | `/madinah-umrah-taxi-guide` |
+| `makkah-to-madinah-taxi.html` | `src/app/makkah-to-madinah-guide/page.tsx` | `/makkah-to-madinah-guide` |
+| `makkah-umrah-taxi-service.html` | `src/app/makkah-umrah-taxi-guide/page.tsx` | `/makkah-umrah-taxi-guide` |
+| `riyadh-to-dammam-taxi.html` | `src/app/riyadh-to-dammam-guide/page.tsx` | `/riyadh-to-dammam-guide` |
+
+`scripts/seo/build-link-graph.js` now regex-matches each page.tsx for its `readContentFile("...")` call to build this map, then parses the matching content file's `<body>` (same extraction `readContent.ts` performs, so `<head>` metadata that never renders can't produce false findings) and attributes its links/images to the live route — not to a synthetic `content/` graph node. Line numbers are offset-corrected to point at the real source line. The linked-image alt check was also extended to flag plain `<img>` tags with no `alt` attribute at all (previously only `alt=""` was caught, and only for `<Image>`, since JSX/React already enforces the prop there — this static HTML has no such guarantee).
+
+### Task 2 — corrected figures for content/*.html
+
+| Metric | Before (unverified "0") | After (verified) |
+| --- | --- | --- |
+| Broken internal links (404s) | 0 | 55 → **0** (all fixed, see Task 3) |
+| Redirect-triggering links | 0 | 4 → **0** (all fixed, see Task 3) |
+| Generic anchor instances | 0 | 0 (confirmed — genuinely clean) |
+| Linked images with empty/missing alt | 0 | 0 (confirmed — all 12 `<img>` tags in this directory already carry descriptive alt text) |
+| Hash-fragment links (`#booking`, `#booking-form`) | not tracked | 35 (legitimate same-page anchors to an on-page booking form; not an error) |
+
+Orphan/depth impact: **none.** Compared against the pre-Task-1 graph, the 6 guide pages' inbound-link counts and BFS depth are unchanged (all still depth 2, same inbound counts) — these edges are the guides' *outbound* links, so making them visible only grows those pages' outbound counts (e.g. `/jeddah-airport-taxi-guide` 50 → 56, `/makkah-umrah-taxi-guide` 45 → 51). No previously-orphaned page became reachable through them, and no page regressed, because every fixed link now points at a page that was already reachable through some other path.
+
+### Task 3 — fixes applied
+
+**4 redirect-triggering links** (trailing-slash 308s under Next's `trailingSlash: false` default) — slash dropped, no other change:
+
+| File | Line | Before | After |
+| --- | --- | --- | --- |
+| `content/jeddah-airport-taxi-service.html` | 69 | `/airport-transfers/` | `/airport-transfers` |
+| `content/jeddah-to-makkah-taxi.html` | 979 | `/jeddah-airport-taxi-service/` | `/jeddah-airport-taxi-service` |
+| `content/makkah-umrah-taxi-service.html` | 862 | `/jeddah-airport-taxi-service/` | `/jeddah-airport-taxi-service` |
+| `content/makkah-umrah-taxi-service.html` | 917 | `/airport-transfers/` | `/airport-transfers` |
+
+**55 broken links, 26 distinct hrefs.** Checked each against `src/lib/routeData.ts` (18 GCC cross-border routes — zero matches, none of the broken hrefs are cross-border) and `src/lib/airportRoutesData.ts`'s `AIRPORT_ROUTES[].href` fields (the only two sources the task authorized for automatic repointing):
+
+**Repointed — 2 distinct hrefs, 7 occurrences, unambiguous match:**
+
+| Broken href | Matches | Repointed to | Occurrences |
+| --- | --- | --- | --- |
+| `/jeddah-airport-to-makkah/` and `/jeddah-to-makkah-taxi/` | `AIRPORT_ROUTES` entry `jed-makkah` (Jeddah Airport → Makkah Hotels) | `/jeddah-to-makkah-taxi-service` | 6 |
+| `/jeddah-airport-to-city-center/` | `AIRPORT_ROUTES` entry `jed-city` (Jeddah Airport → Jeddah City Hotels) | `/jeddah-city-tour-services-in-saudi-arabia` | 2 |
+
+This resolves the specifically-flagged case, **`content/makkah-umrah-taxi-service.html:167`**: the anchor text ("Learn more about Jeddah Airport transfers →") was already fine, only the href was dead. Verified against a local production server (`next start` + `curl`) before fixing: `/jeddah-airport-to-makkah/` → `308` (Next's automatic trailing-slash redirect) → `/jeddah-airport-to-makkah` → **`404`**. Confirmed broken, now repointed to `/jeddah-to-makkah-taxi-service` (`200`).
+
+**Removed — 24 distinct hrefs, 48 occurrences, no match in either data file.** Some correspond to a route the data model defines but never gave a page (`jed-madinah` and `med-makkah` have no `href` — no dedicated Jeddah/Madinah-airport-to-Madinah/Makkah page exists), the rest reference pages that were never built at all (`/routes/`, `/cities/`, `/cities/madinah/`, `/cities/makkah/`, `/jeddah-airport-to-madinah/`, `/jeddah-airport-to-taif/`, `/jeddah-to-madinah-taxi/`, `/jeddah-to-taif-taxi/`, `/jeddah-to-riyadh-taxi/`, `/makkah-to-jeddah-taxi/`, `/makkah-to-madinah-taxi/`, `/makkah-umrah-taxi-service/`, `/madinah-to-makkah-taxi/`, `/madinah-ziyarat-taxi-service/`, `/madinah-umrah-taxi-service/`, `/makkah-ziyarat-taxi-service/`, `/taif-airport-to-makkah/`, `/makkah-to-taif-taxi/`, `/makkah-to-riyadh-taxi/`, `/makkah-to-dammam-taxi/`, `/jabal-al-nour-taxi/`, `/jabal-thawr-taxi/`, `/jannat-al-mualla-taxi/`, `/birthplace-of-prophet-makkah/`, `/makkah-hajj-transportation/`, `/makkah-hotel-transfers/`, `/pilgrimage-transportation/`, `/corporate-accounts/`). Per "do not guess," none were repointed to some other same-site page inferred from context — every one was removed, with the surrounding markup kept valid and grammatical by pattern, not improvised per instance:
+
+- **schema.org breadcrumbs** (`/routes/`, `/cities/`, `/cities/madinah/`, `/cities/makkah/`) — unwrapped `<a itemprop="item" href="...">` down to a plain `<span itemprop="name">`, exactly matching the pattern each of these same files already uses for its own current-page breadcrumb entry (the last `<li>`, which never had a link).
+- **route-card / related-card grids** — the `<a class="route-card">`/`<a class="related-card">` wrapper changed to `<div>` (same class, same visual card), so a grid of "related routes" doesn't end up with some cards clickable and others silently dead.
+- **footer "Quick Links" lists** — the whole `<li>` removed.
+- **inline CTA sentences** ("Route details →", "Madinah to Makkah route →", ziyarat-site "…details →" links) and **table "Book" cells** — the `<a>` removed; where it was the only content in a `<td>`, the cell is left empty rather than left holding dead label text.
+- **`riyadh-to-dammam-taxi.html`'s two `/corporate-accounts/` CTAs** — the standalone "Set Up Corporate Account" button block removed entirely (the section's FAQ already states "Contact us to set up your company account," so nothing is lost); the "Corporate Inquiry" link in the closing contact bar removed, leaving the working `tel:` link.
+
+Full per-occurrence line list is in commit `1d048ba` ("seo: fix broken links, redirect hops, and dead breadcrumb entries in content/*.html").
+
+**Alt text:** nothing to do — all 12 `<img>` tags in `content/*.html` (in `makkah-umrah-taxi-service.html` and `jeddah-to-makkah-taxi.html`) already carry descriptive, non-generic alt text (e.g. `"Jabal al-Nour Mountain where Prophet Muhammad received first revelation"`). None of them sit inside a broken (or any) `<a>`.
+
+**Generic anchors:** nothing to do — none found in this directory, confirmed by the crawler's now-corrected detection (see the fix earlier in this report).
+
+**Structural check:** `<a>`/`<div>`/`<li>`/`<td>` open/close tag counts verified balanced in all 6 files after editing (no mismatches from any of the edits above).
+
+### Task 4 — reconciling "132 routes" vs "110 static routes"
+
+Both figures came from my own build-output summaries, written at two different points in this branch's history, using two different counting methods — not from two different actual states of the app:
+
+- **"110 static routes"** (the more recent, correct figure) counts public, indexable pages only: every `○` (static) row in `next build`'s route table, excluding `/admin/**` (auth-gated, 12 routes), `/api/**` (server handlers, 4 routes), and Next's own metadata/system routes (`/_not-found`, `/icon.svg`, `/robots.txt`, `/sitemap.xml`, 4 routes). This is exactly the same 110 pages `scripts/seo/build-link-graph.js` enumerates (`pages.length` / `totalPublicPages` in `link-graph.json`) — the two have always agreed.
+- **"132 routes generated"** (the earlier figure, from the original Step 7 report, commit `59896d4`) was simply an inaccurate manual tally at the time — not a snapshot of a real prior state that later shrank.
+
+Verified rather than assumed: checked out commit `59896d4` (where "132" was written) in a separate git worktree, rebuilt it there, and applied the identical counting method used for today's "110." Historical breakdown: **130 total route-table rows = 110 public pages + 12 admin + 4 api + 4 metadata** — identical to today's build, both in total and in the exact set of 110 route paths (diffed programmatically: 0 added, 0 removed since that commit). **No route was lost between the two runs** — the real page count has been a stable 110 across this entire branch; "132" just never corresponded to anything real.
+
+### Verification
+
+- `npx tsc --noEmit` — clean.
+- `npm run build` — clean, 110 static routes generated (130 total build entries: 110 public + 12 admin + 4 api + 4 metadata), 0 errors.
+- `npm run seo:links` — passes (0 broken links, 0 non-canonical hrefs, 0 `href="#"` in nav).
+- `npm run seo:audit` — regenerated `link-graph.json`, `internal-link-audit.md`, `config/internal-links.json`; `content/*.html` now shows 0 broken links, 0 redirect-triggering links, 0 generic anchors, 0 empty/missing linked-image alt.
