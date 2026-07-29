@@ -166,7 +166,7 @@ export default function OurServices() {
                                     ))}
                                 </div>
                                 <Link href={svc.link} className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start', marginTop: 'auto' }}>
-                                    Learn More →
+                                    Learn More<span className="sr-only"> about {svc.title}</span> →
                                 </Link>
                             </div>
                         ))}

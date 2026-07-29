@@ -739,6 +739,24 @@ ul { list-style: none; }
 .mt-4 { margin-top: var(--space-16); }
 
 /* ===================================================================
+   ACCESSIBILITY — visually hidden but screen-reader readable.
+   Standard WCAG clip-rect pattern: keeps the element in the a11y tree
+   and focusable, removes it from visual layout without display:none
+   (which would also hide it from assistive tech).
+   =================================================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===================================================================
    DIVIDERS
    =================================================================== */
 .divider {
