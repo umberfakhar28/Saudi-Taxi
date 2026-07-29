@@ -124,7 +124,7 @@ export default function FleetPage() {
                                         <span className={styles.unit}>{car.unit}</span>
                                     </div>
                                     <Link href={`/book-online?car=${car.id}`} className={styles.bookBtn}>
-                                        Book Now
+                                        Book Now<span className="sr-only"> the {car.name}</span>
                                     </Link>
                                 </div>
                             </div>

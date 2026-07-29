@@ -157,7 +157,7 @@ export default function OurGallery() {
                     <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '500px', margin: '0 auto 2rem', fontSize: '1.05rem' }}>
                         Book your ride and explore the beauty and spirituality of Saudi Arabia with us.
                     </p>
-                    <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                    <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your ride</span></Link>
                 </div>
             </section>
         </main>

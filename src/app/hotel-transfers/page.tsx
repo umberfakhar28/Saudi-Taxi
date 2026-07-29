@@ -134,7 +134,7 @@ export default function HotelTransfers() {
                         Book in advance or last minute — we&apos;re always ready to take you where you need to go.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your hotel transfer</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
                     </div>
                 </div>

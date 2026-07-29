@@ -73,7 +73,7 @@ export default function TaifAirportTaxi() {
                         Safe and reliable mountain transfers. WhatsApp us for a custom quote or use our online form.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your Taif Airport taxi</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                             WhatsApp Us
                         </a>

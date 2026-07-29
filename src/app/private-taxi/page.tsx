@@ -125,7 +125,7 @@ export default function PrivateTaxi() {
                                     {pkg.price}
                                 </div>
                                 <Link href="/book-online" className={`btn ${pkg.popular ? 'btn-primary' : 'btn-outline-gold'}`} style={{ width: '100%', display: 'block' }}>
-                                    Book Now
+                                    Book Now<span className="sr-only"> the {pkg.title} package</span>
                                 </Link>
                             </div>
                         ))}

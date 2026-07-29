@@ -196,7 +196,7 @@ export default function AirportTransfers() {
                             Check Rates
                         </a>
                         <Link href="/book-online" className="btn btn-outline btn-lg" style={{ minWidth: '200px', color: 'var(--white)', borderColor: 'rgba(255,255,255,0.5)' }}>
-                            Book Now
+                            Book Now<span className="sr-only"> your airport transfer</span>
                         </Link>
                     </div>
                 </div>

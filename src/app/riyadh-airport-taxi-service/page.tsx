@@ -103,7 +103,7 @@ export default function RiyadhAirportTaxi() {
                         Reserve your professional taxi from KKIA today and enjoy a premium arrival experience in Riyadh.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your Riyadh Airport taxi</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                             <MessageIcon size={18} style={{ marginRight: '8px' }} /> WhatsApp Us
                         </a>
