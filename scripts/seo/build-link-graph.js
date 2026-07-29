@@ -112,7 +112,10 @@ function extractAnchorText(source, hrefExprStart, tagName) {
   if (closeIdx === -1) return { text: null, selfClosing: true };
   let inner = source.slice(openEnd, closeIdx);
   const hasImage = /<Image\b|<img\b/.test(inner);
-  const imgAltEmpty = /<Image\b(?![^>]*alt=)|alt=""/.test(inner);
+  // Missing-alt check covers both Next's <Image> (JSX, alt is a required prop
+  // so its absence is a real bug) and plain <img> (used by the static
+  // content/*.html guide fragments, which have no compiler enforcing alt).
+  const imgAltEmpty = /<Image\b(?![^>]*alt=)|<img\b(?![^>]*alt=)|alt=""/.test(inner);
   // strip JSX/HTML tags and expressions to approximate visible text
   let text = inner
     .replace(/<[^>]*>/g, " ")
@@ -479,10 +482,17 @@ const cityServicePageLinks = templateLinks(cityServicePageComp);
 // 5. Per-page link extraction
 // ---------------------------------------------------------------------------
 const pageResults = [];
+// filename (as passed to readContentFile()) -> the live route whose page.tsx
+// calls it. Derived from the call site itself, not hardcoded, so a renamed
+// or re-wired guide page stays correctly attributed.
+const contentFileToRoute = new Map();
 
 for (const { file, route } of pages) {
   const source = fs.readFileSync(file, "utf8");
   const relFile = path.relative(ROOT, file);
+
+  const contentFileMatch = source.match(/readContentFile\(\s*["']([^"']+)["']\s*\)/);
+  if (contentFileMatch) contentFileToRoute.set(contentFileMatch[1], route);
   const direct = linksFromSource(source, relFile, "contextual").map((l) => {
     const lineText = source.split("\n")[l.line - 1] || "";
     const prevLine = source.split("\n")[l.line - 2] || "";
@@ -565,6 +575,36 @@ for (const { file, route } of pages) {
     links: [...direct, ...templated, ...chromeLinks, ...extraDataLinks],
     nonCrawlable,
   });
+}
+
+// ---------------------------------------------------------------------------
+// 5b. content/*.html — static guide-body fragments injected via
+// readContentFile() (src/lib/readContent.ts) + dangerouslySetInnerHTML.
+// This markup lives entirely outside src/app, so the page.tsx walk above
+// never sees its <a href> links or <img> tags. Attribute each file's links
+// to the *live route* that renders it (contentFileToRoute, built above from
+// the actual readContentFile() call site) rather than creating a synthetic
+// content/ graph node — the file has no URL of its own.
+// ---------------------------------------------------------------------------
+const CONTENT_DIR = path.join(ROOT, "content");
+const unmappedContentFiles = [];
+if (fs.existsSync(CONTENT_DIR)) {
+  for (const fname of fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".html"))) {
+    const route = contentFileToRoute.get(fname);
+    if (!route) { unmappedContentFiles.push(fname); continue; }
+    const full = path.join(CONTENT_DIR, fname);
+    const raw = fs.readFileSync(full, "utf8");
+    const relFile = path.relative(ROOT, full);
+    // readContent.ts only injects the <body> innerHTML into the live page —
+    // <head> (title/meta/JSON-LD) is read but discarded at runtime, so it
+    // must be excluded here too or we'd flag links that never actually render.
+    const bodyMatch = raw.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    const source = bodyMatch ? bodyMatch[1] : raw;
+    const bodyOffset = bodyMatch ? raw.slice(0, raw.indexOf(bodyMatch[1])).split("\n").length - 1 : 0;
+    const links = linksFromSource(source, relFile, "contextual").map((l) => ({ ...l, line: l.line + bodyOffset }));
+    const pr = pageResults.find((p) => p.route === route);
+    if (pr) pr.links.push(...links);
+  }
 }
 
 // non-crawlable scan also across shared components (nav/footer/related)
@@ -851,6 +891,7 @@ const output = {
   bareUrlAnchorInstances,
   overusedExactAnchors,
   emptyAltLinkedImages,
+  unmappedContentFiles,
 };
 
 fs.writeFileSync(path.join(OUT_DIR, "link-graph.json"), JSON.stringify(output, null, 2));
@@ -871,4 +912,7 @@ console.log("Generic anchor instances:", genericAnchorInstances.length);
 console.log("Bare-URL anchor instances:", bareUrlAnchorInstances.length);
 console.log("Overused exact-match anchors (>8x to same dest):", overusedExactAnchors.length);
 console.log("Linked images with empty alt:", emptyAltLinkedImages.length);
+if (unmappedContentFiles.length) {
+  console.log("content/*.html with no readContentFile() caller (not attributed to any route):", unmappedContentFiles.join(", "));
+}
 console.log("\nWrote seo-audit/link-graph.json");
