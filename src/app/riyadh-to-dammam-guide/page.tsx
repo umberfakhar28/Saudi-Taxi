@@ -10,5 +10,5 @@ export const metadata = generatePageMetadata({
 
 export default function RiyadhToDammamGuide() {
   const html = readContentFile("riyadh-to-dammam-taxi.html");
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div className="guide-content" dangerouslySetInnerHTML={{ __html: html }} />;
 }

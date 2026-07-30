@@ -13,7 +13,7 @@ export default function JeddahAirportGuide() {
   const html = readContentFile("jeddah-airport-taxi-service.html");
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <div className="guide-content" dangerouslySetInnerHTML={{ __html: html }} />
       <RelatedLinks
         title="More Jeddah Taxi Services"
         links={[
