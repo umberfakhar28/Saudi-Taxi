@@ -6996,7 +6996,7 @@
           "section": "contextual",
           "anchorText": "Airport Transfers",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 908
+          "line": 859
         },
         {
           "from": "/my-account",
@@ -18050,21 +18050,21 @@
           "section": "contextual",
           "anchorText": "Book Economy",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 941
+          "line": 860
         },
         {
           "from": "/jeddah-to-makkah-guide",
           "section": "contextual",
           "anchorText": "Book SUV",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 949
+          "line": 867
         },
         {
           "from": "/jeddah-to-makkah-guide",
           "section": "contextual",
           "anchorText": "Book Luxury",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 956
+          "line": 873
         },
         {
           "from": "/jeddah-to-makkah-taxi-service",
@@ -18211,7 +18211,7 @@
           "section": "contextual",
           "anchorText": "Book Now your Makkah to Madinah taxi",
           "file": "content\\makkah-to-madinah-taxi.html",
-          "line": 557
+          "line": 525
         },
         {
           "from": "/makkah-to-madinah-taxi-service",
@@ -18253,14 +18253,14 @@
           "section": "contextual",
           "anchorText": "Book Jeddah-Makkah Transfer",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 871
+          "line": 822
         },
         {
           "from": "/makkah-umrah-taxi-guide",
           "section": "contextual",
           "anchorText": "Book Makkah-Madinah Transfer",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 872
+          "line": 823
         },
         {
           "from": "/my-account",
@@ -43344,7 +43344,7 @@
           "section": "contextual",
           "anchorText": "Book This Route",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 137,
+          "line": 129,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -43354,7 +43354,7 @@
           "section": "contextual",
           "anchorText": "Book This Route",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 164,
+          "line": 148,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -43364,7 +43364,7 @@
           "section": "contextual",
           "anchorText": "Book",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 456,
+          "line": 430,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -43374,7 +43374,7 @@
           "section": "contextual",
           "anchorText": "Book",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 465,
+          "line": 437,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -43409,7 +43409,7 @@
           "section": "contextual",
           "anchorText": "Jeddah Airport Taxi",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 978
+          "line": 895
         },
         {
           "from": "/jeddah-to-makkah-taxi-service",
@@ -43421,9 +43421,9 @@
         {
           "from": "/makkah-umrah-taxi-guide",
           "section": "contextual",
-          "anchorText": "Jeddah Airport Taxi Gateway airport services connecting JED to Makkah and Madinah. From SAR 150",
+          "anchorText": "Jeddah Airport Taxi Gateway airport services connecting JED to Makkah and Madinah.",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 855
+          "line": 807
         },
         {
           "from": "/services/jeddah",
@@ -44650,14 +44650,14 @@
           "section": "contextual",
           "anchorText": "Book This Route",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 164
+          "line": 148
         },
         {
           "from": "/jeddah-airport-taxi-guide",
           "section": "contextual",
           "anchorText": "Book",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 465
+          "line": 437
         },
         {
           "from": "/jeddah-airport-taxi-service",
@@ -46458,7 +46458,7 @@
           "section": "contextual",
           "anchorText": "Airport Transfer Details →",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 197,
+          "line": 189,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -46466,9 +46466,9 @@
         {
           "to": "/jeddah-to-makkah-taxi-service",
           "section": "contextual",
-          "anchorText": "Jeddah Airport to Makkah 100km | 60-90 min From SAR 150",
+          "anchorText": "Jeddah Airport to Makkah 100km | 60-90 min",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 909,
+          "line": 832,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -46478,7 +46478,7 @@
           "section": "contextual",
           "anchorText": "Book Economy",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 941,
+          "line": 860,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -46488,7 +46488,7 @@
           "section": "contextual",
           "anchorText": "Book SUV",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 949,
+          "line": 867,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -46498,7 +46498,7 @@
           "section": "contextual",
           "anchorText": "Book Luxury",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 956,
+          "line": 873,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -46508,7 +46508,7 @@
           "section": "contextual",
           "anchorText": "Jeddah Airport Taxi",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 978,
+          "line": 895,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -46550,14 +46550,14 @@
           "section": "contextual",
           "anchorText": "Book This Route",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 137
+          "line": 129
         },
         {
           "from": "/jeddah-airport-taxi-guide",
           "section": "contextual",
           "anchorText": "Book",
           "file": "content\\jeddah-airport-taxi-service.html",
-          "line": 456
+          "line": 430
         },
         {
           "from": "/jeddah-airport-taxi-service",
@@ -46585,28 +46585,28 @@
           "section": "contextual",
           "anchorText": "Airport Transfer Details →",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 197
+          "line": 189
         },
         {
           "from": "/jeddah-to-makkah-guide",
           "section": "contextual",
-          "anchorText": "Jeddah Airport to Makkah 100km | 60-90 min From SAR 150",
+          "anchorText": "Jeddah Airport to Makkah 100km | 60-90 min",
           "file": "content\\jeddah-to-makkah-taxi.html",
-          "line": 909
+          "line": 832
         },
         {
           "from": "/makkah-to-madinah-guide",
           "section": "contextual",
-          "anchorText": "Jeddah to Makkah 100km | 60-90 min From SAR 150",
+          "anchorText": "Jeddah to Makkah 100km | 60-90 min",
           "file": "content\\makkah-to-madinah-taxi.html",
-          "line": 511
+          "line": 488
         },
         {
           "from": "/makkah-umrah-taxi-guide",
           "section": "contextual",
           "anchorText": "Learn more about Jeddah Airport transfers →",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 167
+          "line": 162
         },
         {
           "from": "/services/jeddah",
@@ -51482,9 +51482,9 @@
         {
           "to": "/jeddah-to-makkah-taxi-service",
           "section": "contextual",
-          "anchorText": "Jeddah to Makkah 100km | 60-90 min From SAR 150",
+          "anchorText": "Jeddah to Makkah 100km | 60-90 min",
           "file": "content\\makkah-to-madinah-taxi.html",
-          "line": 511,
+          "line": 488,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -51494,7 +51494,7 @@
           "section": "contextual",
           "anchorText": "Book Now your Makkah to Madinah taxi",
           "file": "content\\makkah-to-madinah-taxi.html",
-          "line": 557,
+          "line": 525,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -52394,7 +52394,7 @@
           "section": "contextual",
           "anchorText": "Learn more about Jeddah Airport transfers →",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 167,
+          "line": 162,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -52402,9 +52402,9 @@
         {
           "to": "/jeddah-airport-taxi-service",
           "section": "contextual",
-          "anchorText": "Jeddah Airport Taxi Gateway airport services connecting JED to Makkah and Madinah. From SAR 150",
+          "anchorText": "Jeddah Airport Taxi Gateway airport services connecting JED to Makkah and Madinah.",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 855,
+          "line": 807,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -52414,7 +52414,7 @@
           "section": "contextual",
           "anchorText": "Book Jeddah-Makkah Transfer",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 871,
+          "line": 822,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -52424,7 +52424,7 @@
           "section": "contextual",
           "anchorText": "Book Makkah-Madinah Transfer",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 872,
+          "line": 823,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -52434,7 +52434,7 @@
           "section": "contextual",
           "anchorText": "Airport Transfers",
           "file": "content\\makkah-umrah-taxi-service.html",
-          "line": 908,
+          "line": 859,
           "tagName": "a",
           "hasImage": false,
           "imgAltEmpty": false
@@ -87618,205 +87618,205 @@
       },
       {
         "file": "content\\jeddah-airport-taxi-service.html",
-        "line": 111,
+        "line": 107,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 111,
+        "line": 106,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 289,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 298,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 307,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 316,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 325,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\madinah-umrah-taxi-service.html",
-        "line": 95,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\madinah-umrah-taxi-service.html",
-        "line": 293,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\madinah-umrah-taxi-service.html",
-        "line": 300,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\madinah-umrah-taxi-service.html",
-        "line": 307,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\madinah-umrah-taxi-service.html",
-        "line": 364,
-        "href": "#booking-form",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-to-madinah-taxi.html",
-        "line": 105,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-to-madinah-taxi.html",
         "line": 277,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
-        "file": "content\\makkah-to-madinah-taxi.html",
+        "file": "content\\jeddah-to-makkah-taxi.html",
         "line": 285,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
-        "file": "content\\makkah-to-madinah-taxi.html",
+        "file": "content\\jeddah-to-makkah-taxi.html",
         "line": 293,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
-        "file": "content\\makkah-to-madinah-taxi.html",
+        "file": "content\\jeddah-to-makkah-taxi.html",
         "line": 301,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 134,
+        "file": "content\\jeddah-to-makkah-taxi.html",
+        "line": 309,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 358,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 364,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 370,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 568,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 585,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 602,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 619,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 636,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 653,
-        "href": "#booking",
-        "pagesAffected": 1
-      },
-      {
-        "file": "content\\riyadh-to-dammam-taxi.html",
+        "file": "content\\madinah-umrah-taxi-service.html",
         "line": 91,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
-        "file": "content\\riyadh-to-dammam-taxi.html",
-        "line": 178,
+        "file": "content\\madinah-umrah-taxi-service.html",
+        "line": 279,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\madinah-umrah-taxi-service.html",
+        "line": 284,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\madinah-umrah-taxi-service.html",
+        "line": 289,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\madinah-umrah-taxi-service.html",
+        "line": 346,
+        "href": "#booking-form",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-to-madinah-taxi.html",
+        "line": 101,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-to-madinah-taxi.html",
+        "line": 266,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-to-madinah-taxi.html",
+        "line": 272,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-to-madinah-taxi.html",
+        "line": 278,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-to-madinah-taxi.html",
+        "line": 284,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 130,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 344,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 349,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 354,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 544,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 557,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 570,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 583,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 596,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\makkah-umrah-taxi-service.html",
+        "line": 609,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
         "file": "content\\riyadh-to-dammam-taxi.html",
-        "line": 193,
+        "line": 87,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
         "file": "content\\riyadh-to-dammam-taxi.html",
-        "line": 207,
+        "line": 173,
         "href": "#booking",
         "pagesAffected": 1
       },
       {
         "file": "content\\riyadh-to-dammam-taxi.html",
-        "line": 394,
+        "line": 187,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\riyadh-to-dammam-taxi.html",
+        "line": 200,
+        "href": "#booking",
+        "pagesAffected": 1
+      },
+      {
+        "file": "content\\riyadh-to-dammam-taxi.html",
+        "line": 385,
         "href": "#booking-form",
         "pagesAffected": 1
       },
       {
         "file": "content\\riyadh-to-dammam-taxi.html",
-        "line": 399,
+        "line": 389,
         "href": "#booking-form",
         "pagesAffected": 1
       },
       {
         "file": "content\\riyadh-to-dammam-taxi.html",
-        "line": 404,
+        "line": 393,
         "href": "#booking-form",
         "pagesAffected": 1
       }
@@ -89997,7 +89997,7 @@
         "anchorText": "Airport Transfers",
         "from": "/makkah-umrah-taxi-guide",
         "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 908
+        "line": 859
       },
       {
         "anchorText": "Learn More about →",
@@ -90355,19 +90355,19 @@
         "anchorText": "Book Economy",
         "from": "/jeddah-to-makkah-guide",
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 941
+        "line": 860
       },
       {
         "anchorText": "Book SUV",
         "from": "/jeddah-to-makkah-guide",
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 949
+        "line": 867
       },
       {
         "anchorText": "Book Luxury",
         "from": "/jeddah-to-makkah-guide",
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 956
+        "line": 873
       },
       {
         "anchorText": "Book This Vehicle",
@@ -90409,7 +90409,7 @@
         "anchorText": "Book Now your Makkah to Madinah taxi",
         "from": "/makkah-to-madinah-guide",
         "file": "content\\makkah-to-madinah-taxi.html",
-        "line": 557
+        "line": 525
       },
       {
         "anchorText": "Book Makkah to Madinah",
@@ -90421,13 +90421,13 @@
         "anchorText": "Book Jeddah-Makkah Transfer",
         "from": "/makkah-umrah-taxi-guide",
         "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 871
+        "line": 822
       },
       {
         "anchorText": "Book Makkah-Madinah Transfer",
         "from": "/makkah-umrah-taxi-guide",
         "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 872
+        "line": 823
       },
       {
         "anchorText": "Book Now your ride",
@@ -91329,7 +91329,7 @@
         "anchorText": "Jeddah Airport Taxi",
         "from": "/jeddah-to-makkah-guide",
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 978
+        "line": 895
       },
       {
         "anchorText": "Jeddah Airport (KAIA) Taxi",
@@ -91338,10 +91338,10 @@
         "line": 224
       },
       {
-        "anchorText": "Jeddah Airport Taxi Gateway airport services connecting JED to Makkah and Madinah. From SAR 150",
+        "anchorText": "Jeddah Airport Taxi Gateway airport services connecting JED to Makkah and Madinah.",
         "from": "/makkah-umrah-taxi-guide",
         "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 855
+        "line": 807
       },
       {
         "anchorText": "Jeddah Airport (KAIA) Taxi",
@@ -91367,13 +91367,13 @@
         "anchorText": "Book This Route",
         "from": "/jeddah-airport-taxi-guide",
         "file": "content\\jeddah-airport-taxi-service.html",
-        "line": 164
+        "line": 148
       },
       {
         "anchorText": "Book",
         "from": "/jeddah-airport-taxi-guide",
         "file": "content\\jeddah-airport-taxi-service.html",
-        "line": 465
+        "line": 437
       },
       {
         "anchorText": "Jeddah City Tours",
@@ -91461,13 +91461,13 @@
         "anchorText": "Book This Route",
         "from": "/jeddah-airport-taxi-guide",
         "file": "content\\jeddah-airport-taxi-service.html",
-        "line": 137
+        "line": 129
       },
       {
         "anchorText": "Book",
         "from": "/jeddah-airport-taxi-guide",
         "file": "content\\jeddah-airport-taxi-service.html",
-        "line": 456
+        "line": 430
       },
       {
         "anchorText": "Jeddah to Makkah Taxi",
@@ -91491,25 +91491,25 @@
         "anchorText": "Airport Transfer Details →",
         "from": "/jeddah-to-makkah-guide",
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 197
+        "line": 189
       },
       {
-        "anchorText": "Jeddah Airport to Makkah 100km | 60-90 min From SAR 150",
+        "anchorText": "Jeddah Airport to Makkah 100km | 60-90 min",
         "from": "/jeddah-to-makkah-guide",
         "file": "content\\jeddah-to-makkah-taxi.html",
-        "line": 909
+        "line": 832
       },
       {
-        "anchorText": "Jeddah to Makkah 100km | 60-90 min From SAR 150",
+        "anchorText": "Jeddah to Makkah 100km | 60-90 min",
         "from": "/makkah-to-madinah-guide",
         "file": "content\\makkah-to-madinah-taxi.html",
-        "line": 511
+        "line": 488
       },
       {
         "anchorText": "Learn more about Jeddah Airport transfers →",
         "from": "/makkah-umrah-taxi-guide",
         "file": "content\\makkah-umrah-taxi-service.html",
-        "line": 167
+        "line": 162
       },
       {
         "anchorText": "Jeddah to Makkah Taxi",
