@@ -134,11 +134,8 @@ Link targets that couldn't be statically resolved to a literal path (the shared-
 | `/umrah-taxi-services` | 1 |
 | `/bahrain-to-riyadh-taxi-service` | 2 |
 | `/dubai-to-riyadh-taxi-service` | 2 |
-| `/hotel-transfers` | 2 |
-| `/madinah-umrah-taxi-guide` | 2 |
 | `/makkah-to-madinah-guide` | 2 |
 | `/makkah-to-madinah-taxi-service` | 2 |
-| `/makkah-umrah-taxi-guide` | 2 |
 | `/our-services` | 2 |
 | `/private-taxi` | 2 |
 | `/qatar-to-dammam-taxi-service` | 2 |
@@ -151,6 +148,8 @@ Link targets that couldn't be statically resolved to a literal path (the shared-
 | `/dammam-airport-to-riyadh-taxi-service` | 3 |
 | `/dubai-to-dammam-taxi-service` | 3 |
 | `/educational-tours-transport` | 3 |
+| `/hotel-transfers` | 3 |
+| `/makkah-umrah-taxi-guide` | 3 |
 | `/riyadh-to-bahrain-taxi-service` | 3 |
 | `/school-buses-services` | 3 |
 | `/services/abha` | 3 |
@@ -163,6 +162,7 @@ Link targets that couldn't be statically resolved to a literal path (the shared-
 | `/airport-transfers` | 4 |
 | `/dammam-airport-taxi-service` | 4 |
 | `/dammam-to-abu-dhabi-taxi-service` | 4 |
+| `/dammam-to-dubai-taxi-service` | 4 |
 
 
 *(26 more rows in `link-graph.json` → `contextualCountsCommercial`.)*
