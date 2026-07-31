@@ -76,6 +76,13 @@ export default function PrivateTaxi() {
                 <div className="container">
                     <h2 className="section-title">Why Choose a Private Taxi?</h2>
                     <p className="section-subtitle">When you need comfort, flexibility and absolute privacy — private hire is the answer.</p>
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8, maxWidth: '760px', margin: '0 auto var(--space-8)', textAlign: 'center' }}>
+                        This isn&apos;t limited to the major hubs — private hire is also available in{' '}
+                        <Link href="/services/abha" style={{ color: 'var(--accent)', fontWeight: 600 }}>Abha</Link>,{' '}
+                        <Link href="/services/yanbu" style={{ color: 'var(--accent)', fontWeight: 600 }}>Yanbu</Link>,{' '}
+                        <Link href="/services/tabuk" style={{ color: 'var(--accent)', fontWeight: 600 }}>Tabuk</Link> and{' '}
+                        <Link href="/services/neom" style={{ color: 'var(--accent)', fontWeight: 600 }}>NEOM</Link>.
+                    </p>
                     <div className="grid-3">
                         {features.map((f, i) => (
                             <div key={i} className="card" style={{ textAlign: 'center' }}>
@@ -118,7 +125,7 @@ export default function PrivateTaxi() {
                                     {pkg.price}
                                 </div>
                                 <Link href="/book-online" className={`btn ${pkg.popular ? 'btn-primary' : 'btn-outline-gold'}`} style={{ width: '100%', display: 'block' }}>
-                                    Book Now
+                                    Book Now<span className="sr-only"> the {pkg.title} package</span>
                                 </Link>
                             </div>
                         ))}

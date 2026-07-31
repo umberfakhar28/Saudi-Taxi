@@ -61,7 +61,7 @@ export default function AbhaAirportTaxi() {
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Reserve Your Abha Airport Taxi</h2>
                     <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your Abha Airport taxi</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                             WhatsApp Enquiries
                         </a>

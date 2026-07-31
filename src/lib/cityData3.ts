@@ -2,6 +2,7 @@ import type { CityData } from "@/components/CityServicePage";
 
 export const yanbu: CityData = {
   slug: "yanbu",
+  nearbyCities: [{ city: "Madinah", slug: "madinah" }, { city: "AlUla", slug: "alula" }],
   city: "Yanbu",
   h1: "Airport Transfer, Private Taxi & Car Transfer in Yanbu",
   region: "Madinah Province",
@@ -30,6 +31,7 @@ export const yanbu: CityData = {
 
 export const alula: CityData = {
   slug: "alula",
+  nearbyCities: [{ city: "Tabuk", slug: "tabuk" }, { city: "NEOM", slug: "neom" }],
   city: "AlUla",
   h1: "Executive Car Service & Private Taxi to & from AlUla",
   region: "Madinah Province",
@@ -58,6 +60,7 @@ export const alula: CityData = {
 
 export const neom: CityData = {
   slug: "neom",
+  nearbyCities: [{ city: "AlUla", slug: "alula" }, { city: "Tabuk", slug: "tabuk" }],
   city: "NEOM",
   h1: "Private Car Service & Airport Transfer to & from NEOM",
   region: "Tabuk Province",
@@ -86,6 +89,7 @@ export const neom: CityData = {
 
 export const tabuk: CityData = {
   slug: "tabuk",
+  nearbyCities: [{ city: "AlUla", slug: "alula" }, { city: "NEOM", slug: "neom" }],
   city: "Tabuk",
   h1: "Car Transfer & Airport Transfer across Tabuk — Book Anytime",
   region: "Tabuk Province",

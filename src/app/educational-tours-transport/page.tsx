@@ -45,6 +45,9 @@ export default function EducationalToursTransport() {
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 We manage the logistics of moving large groups of students and faculty, ensuring everyone remains together, on schedule, and safe throughout the tour.
                             </p>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
+                                Schools running regular routes alongside occasional trips can also use our <Link href="/school-buses-services" style={{ color: 'var(--accent)', fontWeight: 600 }}>daily school bus service</Link>, and for institutional or business events we offer the same coordinated planning through <Link href="/corporate-transportation-services" style={{ color: 'var(--accent)', fontWeight: 600 }}>corporate transportation</Link>.
+                            </p>
                             <div className="card" style={{ background: 'var(--bg-subtle)' }}>
                                 <h3 style={{ fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '1rem' }}>Tour Coordination</h3>
                                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', margin: 0 }}>

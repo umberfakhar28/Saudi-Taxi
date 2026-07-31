@@ -50,6 +50,9 @@ export default function RiyadhAirportTaxi() {
                     <p className="section-subtitle">
                         Experience the finest airport transfer service in the capital. Whether you are visiting for business or leisure, our Riyadh Airport taxi service provides the ultimate comfort and efficiency.
                     </p>
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8 }}>
+                        For terminal maps, facilities and step-by-step arrival tips, see our full <Link href="/guides/king-khalid-airport" style={{ color: 'var(--accent)', fontWeight: 600 }}>King Khalid International Airport guide</Link>.
+                    </p>
                 </div>
             </section>
 
@@ -100,7 +103,7 @@ export default function RiyadhAirportTaxi() {
                         Reserve your professional taxi from KKIA today and enjoy a premium arrival experience in Riyadh.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your Riyadh Airport taxi</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                             <MessageIcon size={18} style={{ marginRight: '8px' }} /> WhatsApp Us
                         </a>

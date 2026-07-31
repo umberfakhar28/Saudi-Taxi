@@ -3,6 +3,7 @@ import styles from './fleet.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
     title: "Our Fleet",
@@ -81,11 +82,19 @@ export default function FleetPage() {
         }
     ];
 
+    const schemas = [
+        breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Fleet", path: "/fleet" }]),
+    ];
+
     return (
         <main>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
             <div className={styles.header}>
                 <h1 className={styles.title}>Our Fleet</h1>
                 <p className={styles.subtitle}>Choose from our range of premium vehicles</p>
+                <div className="breadcrumb">
+                    <Link href="/">Home</Link> / <span>Fleet</span>
+                </div>
             </div>
 
             <section className={`container ${styles.section}`}>
@@ -115,7 +124,7 @@ export default function FleetPage() {
                                         <span className={styles.unit}>{car.unit}</span>
                                     </div>
                                     <Link href={`/book-online?car=${car.id}`} className={styles.bookBtn}>
-                                        Book Now
+                                        Book Now<span className="sr-only"> the {car.name}</span>
                                     </Link>
                                 </div>
                             </div>

@@ -15,6 +15,8 @@ export interface GuideData {
   faqs: { q: string; a: string }[];
   ctaText: string;
   ctaLink: string;
+  /** One thematically-paired guide, for a single "see also" sentence. */
+  relatedGuide?: { href: string; label: string };
 }
 
 export default function GuidePage({ data }: { data: GuideData }) {
@@ -56,6 +58,11 @@ export default function GuidePage({ data }: { data: GuideData }) {
                 <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>{s.content}</p>
               </div>
             ))}
+            {data.relatedGuide && (
+              <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
+                See also our <Link href={data.relatedGuide.href} style={{ color: "var(--accent)", fontWeight: 600 }}>{data.relatedGuide.label}</Link>.
+              </p>
+            )}
           </div>
         </div>
       </section>

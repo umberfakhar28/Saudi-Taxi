@@ -73,7 +73,7 @@ export default function DammamAirportTaxi() {
                         Pre-book your Dammam Airport taxi now and have our driver waiting for you at the arrivals hall.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your Dammam Airport taxi</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                              WhatsApp Quote
                         </a>

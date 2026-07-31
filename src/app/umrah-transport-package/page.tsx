@@ -95,6 +95,18 @@ export default function UmrahTransportPackage() {
                 </div>
             </section>
 
+            {/* Guide links */}
+            <section className="section-lg" style={{ paddingBottom: 0 }}>
+                <div className="container">
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8, maxWidth: '760px' }}>
+                        Booking for a specific city? Our <Link href="/makkah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah Umrah taxi guide</Link> and <Link href="/madinah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah Umrah taxi guide</Link> cover the local pickup points and Ziyarat stops in more detail than a package overview can.
+                    </p>
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8, maxWidth: '760px', marginTop: 'var(--space-4)' }}>
+                        Traveling only between the two holy cities? See our dedicated <Link href="/makkah-to-madinah-taxi-service" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah to Madinah taxi service</Link> or the full <Link href="/makkah-to-madinah-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah to Madinah travel guide</Link> for that route alone.
+                    </p>
+                </div>
+            </section>
+
             {/* What's Included */}
             <section className="section-lg">
                 <div className="container">

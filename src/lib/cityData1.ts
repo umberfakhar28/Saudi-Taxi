@@ -2,6 +2,7 @@ import type { CityData } from "@/components/CityServicePage";
 
 export const riyadh: CityData = {
   slug: "riyadh",
+  nearbyCities: [{ city: "Dammam", slug: "dammam" }, { city: "Jeddah", slug: "jeddah" }],
   city: "Riyadh",
   h1: "Private Taxi & Car Transfer in Riyadh — Available 24/7",
   region: "Riyadh Province",
@@ -31,6 +32,7 @@ export const riyadh: CityData = {
 
 export const jeddah: CityData = {
   slug: "jeddah",
+  nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Madinah", slug: "madinah" }],
   city: "Jeddah",
   h1: "Airport Transfer & Chauffeur Service in Jeddah & Nearby Areas",
   region: "Makkah Province",
@@ -60,6 +62,7 @@ export const jeddah: CityData = {
 
 export const makkah: CityData = {
   slug: "makkah",
+  nearbyCities: [{ city: "Jeddah", slug: "jeddah" }, { city: "Taif", slug: "taif" }, { city: "Abha", slug: "abha" }],
   city: "Makkah",
   h1: "Chauffeur Service, Private Taxi & Car Transfer across Makkah",
   region: "Makkah Province",
@@ -88,6 +91,7 @@ export const makkah: CityData = {
 
 export const madinah: CityData = {
   slug: "madinah",
+  nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Yanbu", slug: "yanbu" }],
   city: "Madinah",
   h1: "Executive Car Service & Airport Transfer in Madinah — Book Anytime",
   region: "Madinah Province",
@@ -116,6 +120,7 @@ export const madinah: CityData = {
 
 export const dammam: CityData = {
   slug: "dammam",
+  nearbyCities: [{ city: "Khobar", slug: "khobar" }, { city: "Riyadh", slug: "riyadh" }, { city: "Jubail", slug: "jubail" }],
   city: "Dammam",
   h1: "Private Car Service & Chauffeur Service across Dammam",
   region: "Eastern Province",

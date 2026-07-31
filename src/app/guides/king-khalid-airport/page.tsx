@@ -29,6 +29,7 @@ const data = {
   ],
   ctaText: "Book RUH Airport Transfer",
   ctaLink: "/riyadh-airport-taxi-service",
+  relatedGuide: { href: "/guides/business-travel", label: "Business Travel in Saudi Arabia guide" },
 };
 
 export default function KingKhalidAirportGuide() {

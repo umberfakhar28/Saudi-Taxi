@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seo:links": "node scripts/seo/check-links.js",
+    "seo:audit": "node scripts/seo/build-link-graph.js && node scripts/seo/generate-audit-md.js && node scripts/seo/generate-internal-links-config.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",

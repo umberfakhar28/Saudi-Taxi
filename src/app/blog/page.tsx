@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export const metadata = generatePageMetadata({
   title: "Travel Blog & Transportation Tips",
@@ -25,14 +26,22 @@ export const posts = [
 
 const categories = [...new Set(posts.map((p) => p.category))];
 
+const schemas = [
+  breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Blog", path: "/blog" }]),
+];
+
 export default function BlogIndex() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       <section className="page-hero">
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <span className="section-eyebrow">Travel Blog</span>
           <h1>Saudi Arabia Travel & Transportation Blog</h1>
           <p>Expert guides, destination content, and transport tips from Gulf Trip Service.</p>
+          <div className="breadcrumb">
+            <Link href="/">Home</Link> / <span>Blog</span>
+          </div>
         </div>
       </section>
 

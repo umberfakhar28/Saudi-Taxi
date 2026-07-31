@@ -53,6 +53,9 @@ export default function HotelTransfers() {
                 <div className="container">
                     <h2 className="section-title">What Makes Our Hotel Transfers Special?</h2>
                     <p className="section-subtitle">We provide seamless transfer experiences tailored to pilgrims, tourists and business travelers.</p>
+                    <p style={{ color: 'var(--text-body)', lineHeight: 1.8, maxWidth: '760px', margin: '0 auto var(--space-8)', textAlign: 'center' }}>
+                        Traveling with kids? Our <Link href="/guides/family-travel" style={{ color: 'var(--accent)', fontWeight: 600 }}>family travel guide</Link> has hotel and pacing tips for visiting Saudi Arabia with children.
+                    </p>
                     <div className="grid-3">
                         {features.map((f, i) => (
                             <div key={i} className="card" style={{ textAlign: 'center' }}>
@@ -131,7 +134,7 @@ export default function HotelTransfers() {
                         Book in advance or last minute — we&apos;re always ready to take you where you need to go.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your hotel transfer</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
                     </div>
                 </div>

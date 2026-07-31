@@ -61,6 +61,9 @@ export default function AboutUs() {
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.8' }}>
                                 Today, we operate a fleet of 50+ vehicles, employ over 40 professional drivers, and have proudly served more than 15,000 customers from over 50 countries. Despite our growth, we remain committed to our founding values: safety, reliability, and heartfelt service.
                             </p>
+                            <p style={{ color: 'var(--text-muted)', lineHeight: '1.8' }}>
+                                For travel tips and destination guides drawn from that experience, visit our <Link href="/blog" style={{ color: 'var(--accent)', fontWeight: 600 }}>travel blog</Link>.
+                            </p>
                             <Link href="/book-online" className="btn btn-primary">Book Your Ride</Link>
                         </div>
                         <div style={{

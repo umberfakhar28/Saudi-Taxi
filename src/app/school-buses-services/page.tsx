@@ -45,6 +45,9 @@ export default function SchoolBusesServices() {
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
                                 Every vehicle in our dedicated school fleet undergoes rigorous daily inspections and is operated by experienced, background-checked drivers who are specifically trained for student transport.
                             </p>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
+                                For one-off trips beyond the daily school run, the same vetted drivers and fleet cover <Link href="/educational-tours-transport" style={{ color: 'var(--accent)', fontWeight: 600 }}>educational tour transport</Link>, and the same reliability standard applies across our other group services, including <Link href="/wedding-transportation" style={{ color: 'var(--accent)', fontWeight: 600 }}>wedding transportation</Link>.
+                            </p>
                         </div>
                         <div className="grid-1" style={{ gap: '1.5rem' }}>
                             <div className="card" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>

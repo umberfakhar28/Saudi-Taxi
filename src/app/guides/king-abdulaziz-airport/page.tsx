@@ -29,6 +29,7 @@ const data = {
   ],
   ctaText: "Book KAIA Airport Transfer",
   ctaLink: "/jeddah-airport-taxi-service",
+  relatedGuide: { href: "/guides/umrah-transportation", label: "Umrah Transportation guide" },
 };
 
 export default function KingAbdulazizAirportGuide() {

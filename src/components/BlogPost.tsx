@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { blogPostingSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { posts as allPosts } from "@/app/blog/page";
 
 export interface BlogPostData {
   title: string;
@@ -10,7 +11,19 @@ export interface BlogPostData {
   body: { heading?: string; text: string }[];
 }
 
+/** Same-category posts first, then fill to 4 with the rest — every post
+ * gets real related reading even if its own category has few members
+ * (e.g. the sole "Luxury Travel" post). Relevance-based, capped at 4. */
+function relatedPosts(currentSlug: string, category: string) {
+  const others = allPosts.filter((p) => p.slug !== currentSlug);
+  const sameCategory = others.filter((p) => p.category === category);
+  const rest = others.filter((p) => p.category !== category);
+  return [...sameCategory, ...rest].slice(0, 4);
+}
+
 export default function BlogPost({ data }: { data: BlogPostData }) {
+  const slug = data.path.replace("/blog/", "");
+  const related = relatedPosts(slug, data.category);
   const schemas = [
     blogPostingSchema({
       headline: data.title,
@@ -51,6 +64,20 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
                 </div>
               ))}
             </div>
+            {related.length > 0 && (
+              <div style={{ marginTop: "var(--space-16)" }}>
+                <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)", marginBottom: "var(--space-5)" }}>Related Reading</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-4)" }}>
+                  {related.map((p) => (
+                    <Link key={p.slug} href={`/blog/${p.slug}`} className="card" style={{ display: "block", textDecoration: "none" }}>
+                      <span className="badge badge-gold" style={{ marginBottom: "var(--space-3)", display: "inline-flex" }}>{p.category}</span>
+                      <h4 style={{ color: "var(--text-main)", fontSize: "var(--text-base)", lineHeight: 1.4, margin: 0 }}>{p.title}</h4>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div style={{ marginTop: "var(--space-16)", padding: "var(--space-8)", background: "var(--bg-card)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border-subtle)", textAlign: "center" }}>
               <h3 style={{ color: "var(--text-main)", marginBottom: "var(--space-3)" }}>Ready to Book Your Transfer?</h3>
               <p style={{ color: "var(--text-muted)", marginBottom: "var(--space-6)" }}>Professional, fixed-rate taxi service across Saudi Arabia — 24/7.</p>

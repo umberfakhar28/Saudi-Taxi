@@ -141,7 +141,7 @@ export default function OurGallery() {
                     }}>
                         <h2 style={{ color: 'var(--primary)', marginBottom: '0.75rem' }}>Want to See More?</h2>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                            We share photos and videos of our fleet and tours on WhatsApp. Message us to get the full gallery!
+                            We share photos and videos of our fleet and tours on WhatsApp. Message us to get the full gallery! You can also browse our full <Link href="/fleet" style={{ color: 'var(--accent)', fontWeight: 600 }}>vehicle fleet</Link> or read destination stories on our <Link href="/blog" style={{ color: 'var(--accent)', fontWeight: 600 }}>travel blog</Link>.
                         </p>
                         <a href={WHATSAPP_URL} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             💬 Message Us on WhatsApp
@@ -157,7 +157,7 @@ export default function OurGallery() {
                     <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '500px', margin: '0 auto 2rem', fontSize: '1.05rem' }}>
                         Book your ride and explore the beauty and spirituality of Saudi Arabia with us.
                     </p>
-                    <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                    <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your ride</span></Link>
                 </div>
             </section>
         </main>

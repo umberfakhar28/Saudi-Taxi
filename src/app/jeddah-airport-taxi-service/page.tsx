@@ -31,7 +31,7 @@ export default function JeddahAirportTaxi() {
                         <div>
                             <h2 className="section-title">Arrivals at King Abdulaziz International Airport</h2>
                             <p style={{ lineHeight: 1.8, color: 'var(--text-body)' }}>
-                                As the primary gateway for Umrah and Hajj pilgrims, Jeddah Airport (KAIA) is one of the busiest in the world. Our dedicated taxi service ensures that your arrival is stress-free, with a professional driver ready to greet you at Terminal 1 or the North Terminal.
+                                As the primary gateway for Umrah and Hajj pilgrims, Jeddah Airport (KAIA) is one of the busiest in the world. Our dedicated taxi service ensures that your arrival is stress-free, with a professional driver ready to greet you at Terminal 1 or the North Terminal. If you're arriving specifically for Umrah, see our <Link href="/airport-transfer-for-umrah" style={{ color: 'var(--accent)', fontWeight: 600 }}>airport transfer for Umrah</Link> page for pilgrim-specific pickup details, or our full <Link href="/guides/king-abdulaziz-airport" style={{ color: 'var(--accent)', fontWeight: 600 }}>King Abdulaziz International Airport guide</Link> for terminal maps and facilities.
                             </p>
                             <div className="card" style={{ marginTop: '2rem', borderLeft: '4px solid var(--secondary)' }}>
                                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -67,7 +67,7 @@ export default function JeddahAirportTaxi() {
                 <div className="container">
                     <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Book Your Jeddah Airport Transfer</h2>
                     <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your Jeddah Airport transfer</span></Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
                             WhatsApp Us
                         </a>

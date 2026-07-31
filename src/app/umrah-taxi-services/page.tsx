@@ -91,6 +91,9 @@ export default function UmrahTaxiServices() {
                             <p>
                                 With over 10 years of experience serving Umrah pilgrims from around the world, we understand the unique needs of pilgrims. Our drivers are not only professional and experienced, but they are also familiar with the sacred sites and can guide you throughout your stay.
                             </p>
+                            <p>
+                                For city-specific detail, see our dedicated <Link href="/makkah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah Umrah taxi guide</Link> and <Link href="/madinah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah Umrah taxi guide</Link>, or book the <Link href="/makkah-to-madinah-taxi-service" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah to Madinah taxi</Link> directly if that's the only leg you need. For a fuller planning checklist, our <Link href="/guides/umrah-transportation" style={{ color: 'var(--accent)', fontWeight: 600 }}>Umrah transportation guide</Link> walks through the whole journey.
+                            </p>
                             <ul className={styles.checkList}>
                                 <li>✅ Meet & greet at Jeddah Airport</li>
                                 <li>✅ Multilingual drivers (Arabic, English, Urdu)</li>
@@ -169,7 +172,7 @@ export default function UmrahTaxiServices() {
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">
-                            Book Now
+                            Book Now<span className="sr-only"> your Umrah transport</span>
                         </Link>
                         <Link href="/prices" className="btn btn-outline btn-lg">
                             View Prices

@@ -77,6 +77,9 @@ export default function TaifZiyaratTaxi() {
                     <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '1.05rem' }}>
                         Located 1,800 meters above sea level in the Hejaz mountains, Taif is one of Saudi Arabia&apos;s most beloved cities. Known as the &quot;City of Roses,&quot; Taif produces the world&apos;s finest Damask rose water and oud — fragrances used in Islamic tradition for centuries. The city also holds deep Islamic significance as the site where the Prophet Muhammad ﷺ visited during the early years of his prophethood. Our taxi service makes a journey to Taif from Makkah or Jeddah comfortable, safe and memorable.
                     </p>
+                    <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '1.05rem' }}>
+                        Flying in directly? We also run dedicated <Link href="/taif-airport-taxi-service" style={{ color: 'var(--secondary)', fontWeight: 600 }}>Taif Airport transfers</Link>, and the same mountain-air appeal extends south to Abha, where we offer the same <Link href="/abha-airport-taxi-service" style={{ color: 'var(--secondary)', fontWeight: 600 }}>door-to-door airport service</Link> for the Asir region.
+                    </p>
                 </div>
             </section>
 
