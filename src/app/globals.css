@@ -1085,13 +1085,25 @@ ul { list-style: none; }
 
 .guide-content .cta-buttons,
 .guide-content .cta-buttons-large,
-.guide-content .booking-options,
-.guide-content .contact-bar,
-.guide-content .package-options {
+.guide-content .contact-bar {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
   align-items: center;
+  margin-top: var(--space-6);
+}
+
+/* Quick-book rows (per-destination / per-package cards): grid, not flex —
+   grid's default row-stretch gives every card equal height and width
+   automatically, which a centered flex row doesn't. This is what was
+   making these read as short, cramped, inconsistent boxes. */
+.guide-content .booking-options,
+.guide-content .package-options,
+.guide-content .cta-boxes,
+.guide-content .packages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
   margin-top: var(--space-6);
 }
 .guide-content .final-cta .cta-buttons,
@@ -1181,7 +1193,7 @@ ul { list-style: none; }
 .guide-content :is(
   .route-card, .related-card, .ziyarat-card, .vehicle-card, .terminal-card,
   .district-card, .significance-card, .scenario-card, .info-section,
-  div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box
+  div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box, .cta-box
 ) {
   display: block;
   background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
@@ -1196,7 +1208,7 @@ ul { list-style: none; }
 .guide-content :is(
   .route-card, .related-card, .ziyarat-card, .vehicle-card, .terminal-card,
   .district-card, .significance-card, .scenario-card, .info-section,
-  div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box
+  div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box, .cta-box
 )::before {
   content: '';
   position: absolute;
@@ -1225,9 +1237,46 @@ ul { list-style: none; }
 }
 /* "Most popular" / "recommended" card highlight. */
 .guide-content .route-card.featured,
-.guide-content .package.recommended {
+.guide-content .package.recommended,
+.guide-content .cta-box.featured {
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-lg), 0 0 0 2px rgba(36, 84, 232, 0.15);
+}
+
+/* Quick-book row cards (booking-options / cta-boxes / package-options) —
+   equal height via flex-column with the button pinned to the bottom, so a
+   short card (e.g. no description line) doesn't look broken next to a
+   longer sibling. Grid's default row-stretch already equalizes the
+   container height; this controls the internal layout. */
+.guide-content .option,
+.guide-content .cta-box,
+.guide-content .package {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+}
+.guide-content .option > a:last-child,
+.guide-content .cta-box > a:last-child,
+.guide-content .package > a:last-child {
+  margin-top: auto;
+}
+
+/* Route/related cards keep left alignment (they're prose-led, not
+   centered like the quick-book cards above) but get the same
+   equal-height, button-pinned-to-bottom treatment within a grid row. */
+.guide-content .route-card,
+.guide-content .related-card,
+.guide-content .ziyarat-card {
+  display: flex;
+  flex-direction: column;
+}
+.guide-content .route-card > a.btn-primary,
+.guide-content .route-card > a.link-more,
+.guide-content .related-card > a.btn-primary {
+  margin-top: auto;
+  align-self: flex-start;
 }
 .guide-content .badge-popular {
   display: inline-block;
