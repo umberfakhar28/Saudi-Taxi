@@ -1100,32 +1100,113 @@ ul { list-style: none; }
   justify-content: center;
 }
 
-/* --- Cards: every repeating info block shares one visual language,
-   matching the site's real .card (surface, radius, shadow, padding). --- */
-.guide-content .route-card,
-.guide-content .related-card,
-.guide-content .ziyarat-card,
-.guide-content .vehicle-card,
-.guide-content .terminal-card,
-.guide-content .district-card,
-.guide-content .significance-card,
-.guide-content .scenario-card,
-.guide-content .info-section,
-.guide-content .benefit,
-.guide-content .feature,
-.guide-content .package,
-.guide-content .reason,
-.guide-content .trust-item,
-.guide-content .option,
-.guide-content .fact-box,
-.guide-content .faq-item {
+/* --- Section headings: same gold-underline accent as .section-title.
+   Content markup has no wrapping .section-header/.section-eyebrow div (no
+   eyebrow text exists to show without inventing copy), so this reproduces
+   just the title treatment directly on the bare <h2>. --- */
+.guide-content h2 {
+  position: relative;
+  margin-bottom: var(--space-6);
+}
+.guide-content h2::after {
+  content: '';
   display: block;
-  background: var(--surface-1);
+  width: 56px;
+  height: 3px;
+  background: var(--accent-primary);
+  margin-top: var(--space-3);
+  border-radius: var(--radius-full);
+}
+
+/* --- Quick-fact / stat strips (hero + trust-signals band), matching the
+   site's .stat-number/.stat-label pattern. --- */
+.guide-content .quick-facts,
+.guide-content .route-quick-facts,
+.guide-content .airport-quick-facts,
+.guide-content .trust-signals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-8);
+  margin: var(--space-8) 0;
+}
+.guide-content .fact {
+  text-align: center;
+}
+.guide-content .fact-value,
+.guide-content .fact-box .number,
+.guide-content .trust-item .number {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--accent-primary);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+.guide-content .fact-label,
+.guide-content .fact-box .label,
+.guide-content .trust-item .number + span {
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* --- Terminal badges (hero chip row) — reuses the sitewide .badge shape,
+   just adds the accent color variant since content markup uses bare
+   class="badge" with no modifier. Plain <span>s, not links, so no fake
+   click/active state is implied — a compact-info chip row, not tabs. --- */
+.guide-content .terminal-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: var(--space-6) 0;
+}
+.guide-content .terminal-badges .badge {
+  background: rgba(36, 84, 232, 0.10);
+  border: 1px solid rgba(36, 84, 232, 0.32);
+  color: var(--accent-primary);
+}
+
+/* --- Cards: every repeating info block shares one visual language,
+   matching the site's real .card (gradient surface, radius, shadow,
+   top accent-bar on hover, padding). .faq-item is excluded — it's a
+   <details> accordion row now, styled separately below. div.benefit is
+   tag-qualified because the same class also labels a plain <p> checkmark
+   note in makkah-to-madinah-taxi.html — only the real card should get
+   card chrome. --- */
+.guide-content :is(
+  .route-card, .related-card, .ziyarat-card, .vehicle-card, .terminal-card,
+  .district-card, .significance-card, .scenario-card, .info-section,
+  div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box
+) {
+  display: block;
+  background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
   border: 1px solid rgba(16, 18, 26, 0.07);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(36, 84, 232, 0.08);
   padding: var(--space-6);
-  transition: transform var(--ease-base), box-shadow var(--ease-base);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
+}
+.guide-content :is(
+  .route-card, .related-card, .ziyarat-card, .vehicle-card, .terminal-card,
+  .district-card, .significance-card, .scenario-card, .info-section,
+  div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box
+)::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--ease-base);
 }
 /* Only cards that are still real links get a hover lift / pointer cursor —
    the ones converted from <a> to <div> when their destination was removed
@@ -1134,8 +1215,118 @@ ul { list-style: none; }
 .guide-content a.related-card:hover,
 .guide-content a.ziyarat-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(36, 84, 232, 0.12);
   border-color: rgba(36, 84, 232, 0.15);
+}
+.guide-content a.route-card:hover::before,
+.guide-content a.related-card:hover::before,
+.guide-content a.ziyarat-card:hover::before {
+  transform: scaleX(1);
+}
+/* "Most popular" / "recommended" card highlight. */
+.guide-content .route-card.featured,
+.guide-content .package.recommended {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-lg), 0 0 0 2px rgba(36, 84, 232, 0.15);
+}
+.guide-content .badge-popular {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+  color: var(--accent-on-light);
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.guide-content .route-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.guide-content .route-details {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+/* The <p class="benefit"> checkmark note (distinct from div.benefit cards
+   above) — a highlighted inline note, not a card. */
+.guide-content p.benefit {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+/* --- Terminal card internals --- */
+.guide-content .terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.guide-content .terminal-type {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+.guide-content .terminal-info h4 {
+  font-size: var(--text-sm);
+  color: var(--accent-primary);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.guide-content .terminal-info h4:first-child { margin-top: 0; }
+
+/* --- Numbered process steps (Meet & Greet / booking steps), matching
+   HowItWorksSteps.tsx's circular icon-badge pattern. --- */
+.guide-content .meet-greet-process,
+.guide-content .booking-steps,
+.guide-content .steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-8);
+  margin: var(--space-8) 0;
+  text-align: center;
+}
+.guide-content .process-step,
+.guide-content .meet-greet-process > .step,
+.guide-content .booking-steps > .step,
+.guide-content .steps > .step {
+  text-align: center;
+}
+.guide-content .step-number {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-4);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  font-family: var(--font-heading);
+  border: 1px solid rgba(36, 84, 232, 0.18);
+}
+.guide-content .process-step h3,
+.guide-content .meet-greet-process > .step h3,
+.guide-content .booking-steps > .step h3,
+.guide-content .steps > .step h3 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-2);
 }
 
 /* --- Grids: one auto-fit layout covers every card/info grid in this
@@ -1154,45 +1345,122 @@ ul { list-style: none; }
 .guide-content .significance-grid,
 .guide-content .reasons-grid,
 .guide-content .benefits-list,
-.guide-content .faq-grid {
+.guide-content .faq-grid,
+.guide-content .schedule-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: var(--space-8);
   margin: var(--space-8) 0;
 }
-/* FAQ reads as a single-column, top-to-bottom list rather than a grid. */
+
+/* --- FAQ: CSS-only <details>/<summary> accordion, styled toward
+   FAQSection.tsx's interactive accordion (spacing, chevron indicator,
+   open-state look) — a deliberate divergence from /airport-transfers'
+   static always-open .card list, since this content is plain HTML with
+   no JS to drive a real React-style accordion. Native <details> toggle
+   behavior stands in for the click handler. --- */
 .guide-content .faq-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   margin: var(--space-8) 0;
 }
+.guide-content .faq-item {
+  background: var(--surface-1);
+  border: 1px solid rgba(16, 18, 26, 0.08);
+  border-radius: var(--radius-md);
+  padding: 0;
+  overflow: hidden;
+  transition: border-color var(--ease-base), box-shadow var(--ease-base);
+}
+.guide-content .faq-item[open] {
+  border-color: rgba(36, 84, 232, 0.25);
+  box-shadow: var(--shadow-sm);
+}
+.guide-content .faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  list-style: none;
+}
+.guide-content .faq-item summary::-webkit-details-marker { display: none; }
+.guide-content .faq-item[open] summary {
+  color: var(--accent-primary);
+  border-bottom: 1px solid rgba(16, 18, 26, 0.08);
+}
+/* Chevron indicator — rotates via the native [open] attribute, no JS. */
+.guide-content .faq-item summary::after {
+  content: '';
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform var(--ease-base), border-color var(--ease-base);
+  margin-top: -4px;
+}
+.guide-content .faq-item[open] summary::after {
+  transform: rotate(-135deg);
+  margin-top: 4px;
+  border-color: var(--accent-primary);
+}
+.guide-content .faq-item > p {
+  padding: var(--space-5) var(--space-6);
+  padding-top: var(--space-4);
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+.guide-content .faq-item > p + p {
+  padding-top: 0;
+}
 
-/* --- Tables: consistent cell padding/alignment (previously cramped). --- */
+/* --- Tables: consistent cell padding/alignment, matching the site's
+   .price-table pattern (branded uppercase header, row-hover tint). --- */
 .guide-content table {
   width: 100%;
   border-collapse: collapse;
-  margin: var(--space-8) 0;
-  box-shadow: var(--shadow-sm);
-  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(16, 18, 26, 0.07);
+  margin: var(--space-8) 0;
 }
-.guide-content th,
-.guide-content td {
-  padding: var(--space-3) var(--space-5);
-  text-align: start;
-  border-bottom: 1px solid rgba(16, 18, 26, 0.08);
+.guide-content thead tr {
+  background: var(--bg-tertiary);
 }
 .guide-content th {
-  background: var(--surface-2);
-  color: var(--text-primary);
-  font-weight: 700;
+  padding: 1.1rem 1.5rem;
   font-size: var(--text-xs);
-  letter-spacing: 0.6px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  text-align: start;
+  color: var(--accent-primary);
 }
-.guide-content tbody tr:last-child td { border-bottom: none; }
-.guide-content tbody tr:hover { background: var(--accent-subtle); }
+.guide-content tbody tr {
+  border-bottom: 1px solid rgba(16, 18, 26, 0.06);
+  transition: background var(--ease-fast);
+}
+.guide-content tbody tr:last-child { border-bottom: none; }
+.guide-content tbody tr:hover { background: rgba(36, 84, 232, 0.05); }
+.guide-content tr.recommended,
+.guide-content tr.popular {
+  background: var(--accent-subtle);
+}
+.guide-content td {
+  padding: 1rem 1.5rem;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+}
 
 /* --- Section rhythm + footer --- */
 .guide-content section {
@@ -1288,10 +1556,23 @@ ul { list-style: none; }
   .guide-content .reasons-grid,
   .guide-content .benefits-list,
   .guide-content .faq-grid,
+  .guide-content .schedule-options,
+  .guide-content .meet-greet-process,
+  .guide-content .booking-steps,
+  .guide-content .steps,
   .guide-content .footer-content,
   .guide-content .footer-grid {
     grid-template-columns: 1fr;
   }
+
+  .guide-content .quick-facts,
+  .guide-content .route-quick-facts,
+  .guide-content .airport-quick-facts,
+  .guide-content .trust-signals {
+    gap: var(--space-6);
+  }
+
+  .guide-content table { display: block; overflow-x: auto; }
 
   .guide-content section { padding: var(--space-10) 0; }
 }
