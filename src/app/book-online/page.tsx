@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { generatePageMetadata } from "@/lib/seo";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import BookOnlineClient from "./BookOnlineClient";
@@ -28,7 +29,12 @@ export default function BookOnlinePage() {
                     <Link href="/">Home</Link> / <span>Book Online</span>
                 </div>
             </div>
-            <BookOnlineClient />
+            {/* useSearchParams() (for the homepage search bar's prefill —
+                Homepage Hero + Multi-Mode Search addendum §2.4) requires a
+                Suspense boundary during static rendering. */}
+            <Suspense fallback={null}>
+                <BookOnlineClient />
+            </Suspense>
         </>
     );
 }

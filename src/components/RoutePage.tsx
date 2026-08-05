@@ -1,9 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { CheckCircleIcon, MapPinIcon, CarIcon, ClockIcon, ShieldIcon, MessageIcon, GlobeIcon } from "@/components/Icons";
+import { CheckCircleIcon, MapPinIcon, CarIcon, ClockIcon, ShieldIcon, MessageIcon, GlobeIcon, ArrowRightIcon } from "@/components/Icons";
 import RelatedLinks from "@/components/RelatedLinks";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+// Value import (not just the RouteData type) so the reverse-route callout
+// below can confirm `reverseSlug` resolves to a real, live page before
+// linking to it — reverseSlug is allowed to forward-reference a route that
+// doesn't exist yet (see the field's doc comment), so this check is what
+// keeps that safe instead of shipping a broken link.
+import { allRoutes } from "@/lib/routeData";
 
 export interface RouteData {
   slug: string;
@@ -29,6 +35,40 @@ export interface RouteData {
   faqs: { q: string; a: string }[];
   relatedRoutes: { href: string; label: string }[];
   ctaText: string;
+
+  // --- Execution Brief v3 D1 additions ---
+  /** Commercial-intent tags — drives nav curation (config/navigation.ts, W9)
+   * and the gap-analysis groupings in docs/page-gap-analysis.md. */
+  tags: ("umrah" | "airport" | "business" | "gcc" | "tourism")[];
+  /** 1 = top commercial intent, 2 = secondary/long-tail. */
+  priority: 1 | 2;
+  /** Slug of this corridor's opposite direction. May point at a page that
+   * doesn't exist yet (see docs/page-inventory.md, Missing reciprocals) —
+   * RoutePage only renders the reverse-route callout once the target is
+   * confirmed present in `allRoutes`, so a forward reference here is safe
+   * and becomes live automatically the day W7 adds that page. */
+  reverseSlug: string;
+  /** CityData slug for the origin, where a location page exists — not every
+   * origin (e.g. "Bahrain", "Qatar", "Kuwait") has one on this site. */
+  fromSlug?: string;
+  /** CityData slug for the destination, where a location page exists. */
+  toSlug?: string;
+  /** Arabic mirror of the page-critical strings. Omitted (not machine-
+   * translated as a placeholder) until a human writes it — see D3/W10. */
+  ar?: {
+    h1: string;
+    intro: string;
+    breadcrumbLabel: string;
+    ctaText: string;
+  };
+  /** Defaults to true when omitted — every pre-existing entry here is
+   * already live, human-written content. New W7 drafts start explicitly
+   * `false` until a human reviews them (see scripts/seo/check-data-layer.js). */
+  reviewed?: boolean;
+  /** Defaults to true when omitted (matches current sitewide behavior).
+   * Wired into config/navigation.ts in W9 — setting it now is prep, not yet
+   * functional. */
+  showInNav?: boolean;
 }
 
 export default function RoutePage({ data }: { data: RouteData }) {
@@ -46,6 +86,8 @@ export default function RoutePage({ data }: { data: RouteData }) {
       { name: data.breadcrumbLabel, path: `/${data.slug}` },
     ]),
   ];
+
+  const reverseRoute = allRoutes.find((r) => r.slug === data.reverseSlug);
 
   return (
     <>
@@ -108,6 +150,29 @@ export default function RoutePage({ data }: { data: RouteData }) {
             </div>
           </div>
         </section>
+
+        {/* Reverse-route callout — computed from data.reverseSlug, only
+            rendered once the target is confirmed live in allRoutes, so a
+            forward reference to a not-yet-built page (see D5/W7) never
+            ships as a broken link. */}
+        {reverseRoute && (
+          <section style={{ padding: "var(--space-6) 0 0" }}>
+            <div className="container">
+              <Link
+                href={`/${reverseRoute.slug}`}
+                className="card"
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "var(--space-4)", flexWrap: "wrap", padding: "var(--space-5) var(--space-8)" }}
+              >
+                <span style={{ color: "var(--text-body)", fontSize: "var(--text-base)" }}>
+                  Traveling the other way? See our <strong style={{ color: "var(--accent)" }}>{reverseRoute.origin} to {reverseRoute.destination}</strong> taxi service.
+                </span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent)", fontWeight: 700, whiteSpace: "nowrap" }}>
+                  View route <ArrowRightIcon size={16} />
+                </span>
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* Overview */}
         <section className="section-lg">
@@ -222,18 +287,18 @@ export default function RoutePage({ data }: { data: RouteData }) {
         <RelatedLinks title="Related Routes You May Need" links={data.relatedRoutes} />
 
         {/* CTA */}
-        <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--bg-base))", padding: "var(--space-20) 0", textAlign: "center" }}>
+        <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "var(--space-20) 0", textAlign: "center" }}>
           <div className="container">
             <span className="section-eyebrow">Book Now</span>
-            <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
-            <p style={{ color: "var(--text-body)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
+            <h2 style={{ color: "var(--white)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
+            <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
               Fixed rates, professional drivers, and 24/7 availability for {data.origin} to {data.destination}.
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
               <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> WhatsApp Quote
               </a>
-              <Link href="/book-online" className="btn btn-secondary btn-lg">Book Online</Link>
+              <Link href="/book-online" className="btn btn-outline btn-lg">Book Online</Link>
             </div>
           </div>
         </section>

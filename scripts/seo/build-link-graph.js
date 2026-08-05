@@ -32,6 +32,7 @@ const ROOT = path.resolve(__dirname, "..", "..");
 const APP_DIR = path.join(ROOT, "src", "app");
 const COMPONENTS_DIR = path.join(ROOT, "src", "components");
 const LIB_DIR = path.join(ROOT, "src", "lib");
+const CONFIG_DIR = path.join(ROOT, "src", "config");
 const OUT_DIR = path.join(ROOT, "seo-audit");
 
 // ---------------------------------------------------------------------------
@@ -181,25 +182,30 @@ const cityDataObjects = [1, 2, 3].flatMap((n) =>
 const allDataObjects = [...routeDataObjects, ...cityDataObjects];
 const dataObjectByName = Object.fromEntries(allDataObjects.map((o) => [o.name, o]));
 
-// airportRoutesData.ts: AIRPORTS[].relatedLinks (nested arrays) and
-// AIRPORT_ROUTES[].href — both rendered only by src/app/airport-transfers,
-// via AIRPORTS.map(...) + <RoutesGrid routes={...}>. Parsed directly rather
-// than generalizing the array-literal parser for one file's nested shape.
+// airportRoutesData.ts: AIRPORTS[].relatedLinks/relatedServices (nested
+// arrays), AIRPORTS[].pageHref/guidePageHref (single-string fields), and
+// AIRPORT_ROUTES[].href. Rendered by src/app/airport-transfers (via
+// AIRPORTS.map(...) + <RoutesGrid routes={...}>) AND by every page using the
+// shared <AirportPage> template (Airport Page Spec, Execution Brief v3 W2) —
+// attached to both below rather than generalizing the array-literal parser
+// for one file's nested shape.
 const airportRoutesLinks = (() => {
   const file = path.join(LIB_DIR, "airportRoutesData.ts");
   if (!fs.existsSync(file)) return [];
   const source = fs.readFileSync(file, "utf8");
   const lineOf = (idx) => source.slice(0, idx).split("\n").length;
   const links = [];
-  const relatedRe = /relatedLinks:\s*\[([^\]]*)\]/g;
+  const arrayFieldRe = /(?:relatedLinks|relatedServices):\s*\[([^\]]*)\]/g;
   let m;
-  while ((m = relatedRe.exec(source))) {
+  while ((m = arrayFieldRe.exec(source))) {
     const hrefRe = /\{\s*href:\s*(['"])(.*?)\1,\s*label:\s*(['"])(.*?)\3\s*\}/g;
     let hm;
     while ((hm = hrefRe.exec(m[1]))) links.push({ href: hm[2], label: hm[4], line: lineOf(m.index) });
   }
   const routeHrefRe = /\{\s*id:[^}]*?href:\s*(['"])(.*?)\1[^}]*?\}/g;
   while ((m = routeHrefRe.exec(source))) links.push({ href: m[2], label: null, line: lineOf(m.index) });
+  const singleFieldRe = /(?:pageHref|guidePageHref):\s*(['"])(.*?)\1/g;
+  while ((m = singleFieldRe.exec(source))) links.push({ href: m[2], label: null, line: lineOf(m.index) });
   return links;
 })();
 
@@ -428,10 +434,30 @@ function linksFromSource(source, file, defaultSection) {
   return out;
 }
 
+// Navbar.tsx/Footer.tsx (Execution Brief v3 W9) source their dropdown/column
+// link arrays from src/config/navigation.ts rather than declaring them
+// locally, so the array literals the .map() calls below resolve against
+// live in that file, not in the component's own source — prepend it here so
+// parseArrayLiterals still finds `const serviceLinks = [...]` etc. Same
+// "prepend the real data source" approach as airportRoutesLinks above.
+const navigationConfigSource = (() => {
+  const file = path.join(CONFIG_DIR, "navigation.ts");
+  const navSource = fs.existsSync(file) ? fs.readFileSync(file, "utf8") + "\n" : "";
+  // navigation.ts's tourLinks is `TOURS.map(...)`, referencing the day-tour
+  // data layer (src/lib/tourData.ts) rather than a local literal — append
+  // that file's source too so TOURS resolves the same way.
+  const tourFile = path.join(LIB_DIR, "tourData.ts");
+  const tourSource = fs.existsSync(tourFile) ? fs.readFileSync(tourFile, "utf8") + "\n" : "";
+  return navSource + tourSource;
+})();
+
 function componentLinks(name, section) {
   const c = readComponent(name);
   if (!c) return [];
-  return linksFromSource(c.source, path.relative(ROOT, c.file), section);
+  // Appended (not prepended) so line numbers reported for the component's
+  // own links stay accurate — parseArrayLiterals finds `const X = [...]`
+  // anywhere in the combined text regardless of order.
+  return linksFromSource(c.source + "\n" + navigationConfigSource, path.relative(ROOT, c.file), section);
 }
 
 // English chrome (PublicLayout: TopBar + Navbar + <page> + Footer) — applies
@@ -477,6 +503,8 @@ function templateLinks(comp) {
 
 const routePageLinks = templateLinks(routePageComp);
 const cityServicePageLinks = templateLinks(cityServicePageComp);
+const airportPageComp = readComponent("AirportPage");
+const airportPageLinks = templateLinks(airportPageComp);
 
 // ---------------------------------------------------------------------------
 // 5. Per-page link extraction
@@ -544,6 +572,13 @@ for (const { file, route } of pages) {
         }))
       );
     }
+  } else if (/<AirportPage\s+data=\{/.test(source)) {
+    // Individual airport pages (e.g. jeddah-airport-taxi-service/page.tsx)
+    // are thin wrappers with no literal hrefs of their own — everything
+    // comes from the shared AirportPage.tsx component plus the airport data
+    // layer (extraDataLinks below), same shape as RoutePage/CityServicePage.
+    templateKind = "AirportPage";
+    templated = [...airportPageLinks.breadcrumb, ...airportPageLinks.contextual];
   }
 
   // metadata / noindex detection
@@ -559,11 +594,11 @@ for (const { file, route } of pages) {
 
   const chromeLinks = route.startsWith("/ar") ? arChromeLinks : enChromeLinks;
 
-  const extraDataLinks = route === "/airport-transfers"
+  const extraDataLinks = (route === "/airport-transfers" || templateKind === "AirportPage")
     ? airportRoutesLinks.map((l) => ({
         href: l.href, dynamic: false, line: l.line, tagName: "Link",
         anchorText: l.label, section: "contextual",
-        file: "src/lib/airportRoutesData.ts", resolvedFrom: "AIRPORTS[]/AIRPORT_ROUTES[] (rendered by airport-transfers/page.tsx)",
+        file: "src/lib/airportRoutesData.ts", resolvedFrom: "AIRPORTS[]/AIRPORT_ROUTES[] (rendered by airport-transfers/page.tsx and every AirportPage-templated page)",
       }))
     : [];
 

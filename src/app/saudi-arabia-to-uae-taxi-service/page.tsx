@@ -3,6 +3,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import RelatedLinks from "@/components/RelatedLinks";
+import { allRoutes } from "@/lib/routeData";
+
+// W8 hub rebuild (docs/page-gap-analysis.md A4) — reads allRoutes directly so
+// a new Dubai/Abu Dhabi route page appears here automatically (ground rule 6).
+const uaeRoutes = allRoutes
+    .filter((r) => [r.origin, r.destination].some((s) => s.includes("Dubai") || s.includes("Abu Dhabi")))
+    .map((r) => ({ href: `/${r.slug}`, label: `${r.origin} → ${r.destination}` }));
 
 export const metadata = generatePageMetadata({
     title: "Saudi Arabia to UAE Taxi | Dubai & Abu Dhabi Transfer",
@@ -94,6 +102,9 @@ export default function SaudiToUae() {
                     </div>
                 </div>
             </section>
+
+            {/* All specific UAE routes (W8) */}
+            {uaeRoutes.length > 0 && <RelatedLinks title="All Saudi Arabia ↔ UAE Routes" links={uaeRoutes} />}
 
             {/* CTA */}
             <section style={{ background: 'var(--primary)', padding: '5rem 0', textAlign: 'center' }}>

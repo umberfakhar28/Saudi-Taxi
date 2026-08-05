@@ -2,6 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { serviceSchema, breadcrumbSchema, faqSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
     title: "AlUla Tour Taxi Service | Private Day Trip from Madinah",
@@ -160,6 +161,17 @@ export default function AlulaTourTaxi() {
                     </div>
                 </div>
             </section>
+
+            {/* Related links */}
+            <RelatedLinks
+                title="More Ways to Explore AlUla"
+                links={[
+                    { href: "/services/alula", label: "AlUla Taxi Service" },
+                    { href: "/services/madinah", label: "Madinah Taxi Service" },
+                    { href: "/madina-airport-taxi-service", label: "Madinah Airport Taxi" },
+                    { href: "/blog/alula-complete-guide", label: "AlUla Complete Travel Guide" },
+                ]}
+            />
 
             {/* CTA */}
             <section style={{ background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)', padding: '5rem 0', textAlign: 'center' }}>

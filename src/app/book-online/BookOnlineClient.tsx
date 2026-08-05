@@ -1,19 +1,36 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { HOURLY_DURATIONS } from "@/lib/searchBarConfig";
+import { TOURS } from "@/lib/tourData";
 
 const services = [
     { id: "airport-transfer", label: "Airport Transfer", icon: "✈️" },
     { id: "hotel-transfer", label: "Hotel Transfer", icon: "🏨" },
     { id: "private-taxi", label: "Private Taxi", icon: "🚗" },
     { id: "umrah-package", label: "Umrah Transport Package", icon: "🕌" },
+    { id: "hourly-driver", label: "Hourly Chauffeur", icon: "🕐" },
     { id: "ziyarat", label: "Ziyarat Tour", icon: "🌙" },
     { id: "jeddah-tour", label: "Jeddah City Tour", icon: "🌆" },
+    { id: "alula-tour", label: "AlUla Tour", icon: "🏜️" },
 ];
 
+// Maps the homepage search bar's Day Trips mode (src/lib/tourData.ts slugs)
+// onto this page's own service radio-button ids — the two lists evolved
+// independently (see investigation ahead of the Homepage Hero + Multi-Mode
+// Search addendum), so this is the one small bridge between them rather
+// than a full merge of either list.
+const DAYTRIP_SERVICE_ID: Record<string, string> = {
+    "jeddah-city-tour": "jeddah-tour",
+    "alula-tour": "alula-tour",
+    "taif-ziyarat-tour": "ziyarat",
+};
+
 export default function BookOnlineClient() {
+    const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         service: '',
@@ -29,6 +46,63 @@ export default function BookOnlineClient() {
     });
     const [submitted, setSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Prefill from the homepage search bar (or the WebMCP book_taxi tool,
+    // which already targeted these same from/to/date/passengers params
+    // before this page actually read them — see layout.tsx). A missing or
+    // unrecognized param is left at its default rather than blocking the
+    // rest of the prefill (Homepage Hero + Multi-Mode Search addendum §2.4).
+    useEffect(() => {
+        const mode = searchParams.get('mode');
+        if (!mode && !searchParams.get('from')) return; // nothing to prefill
+
+        const from = searchParams.get('from') ?? '';
+        const date = searchParams.get('date') ?? '';
+        const time = searchParams.get('time') ?? '';
+        const passengers = searchParams.get('passengers') ?? '1';
+        const luggage = searchParams.get('luggage');
+        const returnDate = searchParams.get('returnDate');
+        const returnTime = searchParams.get('returnTime');
+
+        let service = '';
+        let to = searchParams.get('to') ?? '';
+
+        if (mode === 'hourly') {
+            const durationValue = searchParams.get('duration');
+            const duration = HOURLY_DURATIONS.find((d) => d.value === durationValue);
+            service = 'hourly-driver';
+            to = duration ? `Hourly booking — ${duration.label}` : 'Hourly booking';
+        } else if (mode === 'daytrips') {
+            const dayTripSlug = searchParams.get('dayTrip');
+            const tour = TOURS.find((t) => t.slug === dayTripSlug);
+            service = (dayTripSlug && DAYTRIP_SERVICE_ID[dayTripSlug]) || '';
+            to = tour ? tour.label : to;
+        } else {
+            service = 'private-taxi';
+        }
+
+        const notesParts = [
+            luggage && luggage !== '0' ? `Luggage: ${luggage} bag(s)` : null,
+            returnDate ? `Return: ${returnDate}${returnTime ? ` at ${returnTime}` : ''}` : null,
+        ].filter(Boolean);
+
+        setFormData((prev) => ({
+            ...prev,
+            service: service || prev.service,
+            from: from || prev.from,
+            to: to || prev.to,
+            date: date || prev.date,
+            time: time || prev.time,
+            passengers: passengers || prev.passengers,
+            notes: notesParts.length ? notesParts.join(' | ') : prev.notes,
+        }));
+
+        // Service (and usually from/date) is already known from the search
+        // bar — land on Trip Details instead of asking the user to pick the
+        // service again from scratch.
+        setStep(2);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -152,7 +226,7 @@ export default function BookOnlineClient() {
                                             ))}
                                         </div>
                                         <div style={{ marginTop: '2rem', textAlign: 'right' }}>
-                                            <button type="button" className="btn btn-primary" onClick={() => formData.service && setStep(2)} style={{ opacity: formData.service ? 1 : 0.5 }}>
+                                            <button type="button" className="btn btn-primary" disabled={!formData.service} onClick={() => setStep(2)} style={{ opacity: formData.service ? 1 : 0.5, cursor: formData.service ? 'pointer' : 'not-allowed' }}>
                                                 Next: Trip Details →
                                             </button>
                                         </div>

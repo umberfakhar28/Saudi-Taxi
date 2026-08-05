@@ -1,101 +1,23 @@
-import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
-import { PlaneIcon, UserIcon, ClockIcon, TagIcon, ShieldIcon, MapPinIcon, ChevronRightIcon, MessageIcon } from "@/components/Icons";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import AirportPage from "@/components/AirportPage";
+import { AIRPORTS } from "@/lib/airportRoutesData";
 
+// Slug spelling note: this route is "madina" (no H) while every other
+// reference to the city on this site spells it "Madinah" — kept as-is per
+// the no-slug-changes rule (docs/page-inventory.md). Don't propagate this
+// spelling elsewhere; new pages/fields should always use "Madinah".
+//
+// Renders through the shared AirportPage template (Airport Page Spec,
+// addendum to Execution Brief v3 §W2) — see docs/page-inventory.md D1/D4.
 export const metadata = generatePageMetadata({
-    title: "Madinah Airport (MED) Taxi & Private Transfer",
-    description: "Book a private airport taxi in Madinah. Meet-and-greet pickup, professional licensed drivers, 24/7 availability. Reserve your transfer on WhatsApp today.",
+    title: "Madinah Airport (MED) Taxi & Private Transfer | 24/7",
+    description: "Private taxi from Prince Mohammad Bin Abdulaziz International Airport (MED) — meet & greet, flight tracking, direct transfers to Al-Masjid an-Nabawi hotels, Makkah, and Yanbu. Book on WhatsApp.",
     path: "/madina-airport-taxi-service",
     keywords: ["Madinah airport taxi", "Madinah airport transfer", "Prince Mohammad Airport taxi", "MED airport taxi"],
 });
 
+const madinah = AIRPORTS.find((a) => a.code === "MED")!;
+
 export default function MadinaAirportTaxi() {
-    return (
-        <main>
-            {/* Hero */}
-            <section className="page-hero">
-                <h1>Airport Transfer, Private Taxi & Car Transfer to & from Madinah</h1>
-                <p>
-                    Professional transfers from Prince Mohammad Bin Abdulaziz International Airport (MED). 
-                    Reliable door-to-door service to your Madinah hotel.
-                </p>
-                <div className="breadcrumb">
-                    <Link href="/">Home</Link> <ChevronRightIcon size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <Link href="/airport-transfers">Airport Transfers</Link> <ChevronRightIcon size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Madinah</span>
-                </div>
-            </section>
-
-            {/* Intro */}
-            <section className="section-lg">
-                <div className="container" style={{ textAlign: 'center', maxWidth: '850px' }}>
-                    <h2 className="section-title">Your Gateway to the Holy City of Madinah</h2>
-                    <p className="section-subtitle">
-                        Arriving at Prince Mohammad Bin Abdulaziz Airport should be the start of a peaceful visit. Our dedicated Madinah Airport taxi service ensures a smooth, respectful, and efficient journey to your destination.
-                    </p>
-                </div>
-            </section>
-
-            {/* Routes */}
-            <section className="section-lg bg-light">
-                <div className="container">
-                    <div className="grid-2">
-                        <div>
-                            <h2 style={{ color: 'var(--primary)', marginBottom: '1.25rem' }}>Direct Transfers to Madinah Hotels</h2>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
-                                We specialize in transferring pilgrims and visitors from the airport to hotels around Al-Masjid an-Nabawi. Our drivers are courteous and knowledgeable, assisting with luggage and providing a comfortable ride after your flight.
-                            </p>
-                            <div className="card" style={{ borderLeft: '4px solid var(--secondary)' }}>
-                                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.75rem', color: 'var(--primary)' }}>Service Features</h3>
-                                <ul style={{ fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <li>• Meet & Greet at arrivals hall</li>
-                                    <li>• Assistance with Hajj/Umrah luggage</li>
-                                    <li>• Transparent pricing — no hidden border or airport fees</li>
-                                    <li>• Multilingual drivers available</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="grid-1" style={{ gap: '1rem' }}>
-                            <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <div style={{ fontWeight: 700, color: 'var(--primary)' }}>Madinah Airport ↔ Al-Masjid an-Nabawi Area</div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Typical Time: 20–30 mins</div>
-                                </div>
-                                <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>Check Rates</span>
-                            </div>
-                            <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <div style={{ fontWeight: 700, color: 'var(--primary)' }}>Madinah Airport ↔ Makkah City</div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Typical Time: 4.5 hrs</div>
-                                </div>
-                                <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>Check Rates</span>
-                            </div>
-                            <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <div style={{ fontWeight: 700, color: 'var(--primary)' }}>Madinah Airport ↔ Yanbu</div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Typical Time: 2.5 hrs</div>
-                                </div>
-                                <span style={{ fontWeight: 800, color: 'var(--secondary)' }}>Contact for Price</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA */}
-            <section style={{ background: 'var(--primary)', padding: '5rem 0', textAlign: 'center' }}>
-                <div className="container">
-                    <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Reserve Your Madinah Airport Taxi</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-                        Book now to ensure a professional driver is ready to welcome you to the City of the Prophet.
-                    </p>
-                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your Madinah Airport taxi</span></Link>
-                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
-                            WhatsApp Us
-                        </a>
-                    </div>
-                </div>
-            </section>
-        </main>
-    );
+    return <AirportPage data={madinah} />;
 }

@@ -100,6 +100,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${BASE_URL}/site-map`,
+      lastModified: lastMod("/site-map"),
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+    {
+      url: `${BASE_URL}/locations`,
+      lastModified: lastMod("/locations"),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/routes`,
+      lastModified: lastMod("/routes"),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
   ];
 
   const airportTransferPages: MetadataRoute.Sitemap = [
@@ -111,6 +129,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { slug: "/dammam-airport-taxi-service", priority: 0.8 },
     { slug: "/taif-airport-taxi-service", priority: 0.8 },
     { slug: "/airport-transfer-for-umrah", priority: 0.8 },
+    // W7 P1 additions (docs/page-gap-analysis.md — city hub existed, airport page didn't)
+    { slug: "/tabuk-airport-taxi-service", priority: 0.75 },
+    { slug: "/yanbu-airport-taxi-service", priority: 0.75 },
+    { slug: "/alula-airport-taxi-service", priority: 0.78 },
   ].map(({ slug, priority }) => ({
     url: `${BASE_URL}${slug}`,
     lastModified: lastMod(slug),
@@ -169,6 +191,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { slug: "/dubai-to-dammam-taxi-service", priority: 0.72 },
     { slug: "/riyadh-to-dubai-taxi-service", priority: 0.72 },
     { slug: "/dubai-to-riyadh-taxi-service", priority: 0.72 },
+    // W7 P1/P1.5 GCC reciprocals (docs/page-gap-analysis.md)
+    { slug: "/riyadh-to-qatar-taxi-service", priority: 0.78 },
+    { slug: "/khafji-to-dammam-airport-taxi-service", priority: 0.72 },
+    { slug: "/kuwait-to-khafji-taxi-service", priority: 0.72 },
+    { slug: "/riyadh-to-kuwait-taxi-service", priority: 0.75 },
+    { slug: "/abu-dhabi-to-dammam-taxi-service", priority: 0.72 },
   ].map(({ slug, priority }) => {
     const hasArabic = slug === "/dammam-airport-to-bahrain-taxi-service" || slug === "/dammam-airport-to-qatar-taxi-service";
     return {
@@ -203,6 +231,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { slug: "/taif-ziyarat-taxi-service", priority: 0.78 },
     { slug: "/ziyarat-services-in-saudi-arabia", priority: 0.78 },
     { slug: "/reliable-alula-tour-taxi-service-in-saudi-arabia", priority: 0.78 },
+    // W7 P1 reciprocals + new corridors (docs/page-gap-analysis.md)
+    { slug: "/makkah-to-jeddah-taxi-service", priority: 0.78 },
+    { slug: "/madinah-to-makkah-taxi-service", priority: 0.78 },
+    { slug: "/dammam-to-riyadh-taxi-service", priority: 0.78 },
+    { slug: "/riyadh-to-dammam-airport-taxi-service", priority: 0.76 },
+    { slug: "/jeddah-airport-to-madinah-taxi-service", priority: 0.78 },
+    { slug: "/riyadh-to-makkah-taxi-service", priority: 0.75 },
+    { slug: "/madinah-to-jeddah-airport-taxi-service", priority: 0.72 },
+    { slug: "/makkah-to-riyadh-taxi-service", priority: 0.72 },
   ].map(({ slug, priority }) => ({
     url: `${BASE_URL}${slug}`,
     lastModified: lastMod(slug),
@@ -212,10 +249,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const longFormGuideSlugs = [
     "/jeddah-to-makkah-guide",
-    "/jeddah-airport-taxi-guide",
+    // /jeddah-airport-taxi-guide, /makkah-umrah-taxi-guide, and
+    // /madinah-umrah-taxi-guide removed: all 301'd under the D2 guide-
+    // consolidation (docs/page-inventory.md, W4) — their content now lives
+    // on the pages they redirect to, so they're sitemapped there instead.
     "/makkah-to-madinah-guide",
-    "/makkah-umrah-taxi-guide",
-    "/madinah-umrah-taxi-guide",
   ];
   const longFormGuides: MetadataRoute.Sitemap = longFormGuideSlugs.map((slug) => ({
     url: `${BASE_URL}${slug}`,
@@ -233,6 +271,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const cityPages: MetadataRoute.Sitemap = [
     "riyadh", "jeddah", "makkah", "madinah", "dammam", "khobar",
     "jubail", "taif", "abha", "yanbu", "alula", "neom", "tabuk",
+    // W7 P2 (docs/page-gap-analysis.md)
+    "al-ahsa", "dhahran", "khamis-mushait",
   ].map((city) => ({
     url: `${BASE_URL}/services/${city}`,
     lastModified: lastMod(`/services/${city}`),

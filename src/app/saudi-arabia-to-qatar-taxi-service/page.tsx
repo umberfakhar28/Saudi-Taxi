@@ -3,6 +3,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import RelatedLinks from "@/components/RelatedLinks";
+import { allRoutes } from "@/lib/routeData";
+
+// W8 hub rebuild (docs/page-gap-analysis.md A4) — reads allRoutes directly so
+// a new Qatar-related route page appears here automatically (ground rule 6).
+const qatarRoutes = allRoutes
+    .filter((r) => r.origin.includes("Qatar") || r.destination.includes("Qatar"))
+    .map((r) => ({ href: `/${r.slug}`, label: `${r.origin} → ${r.destination}` }));
 
 export const metadata = generatePageMetadata({
     title: "Saudi Arabia to Qatar Taxi | Salwa Border Transfer 24/7",
@@ -92,6 +100,9 @@ export default function SaudiToQatar() {
                     </div>
                 </div>
             </section>
+
+            {/* All specific Qatar routes (W8) */}
+            {qatarRoutes.length > 0 && <RelatedLinks title="All Saudi Arabia ↔ Qatar Routes" links={qatarRoutes} />}
 
             {/* CTA */}
             <section style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', padding: '5rem 0', textAlign: 'center' }}>

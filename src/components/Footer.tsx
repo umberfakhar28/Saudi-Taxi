@@ -3,6 +3,7 @@ import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons
 import Logo from './Logo';
 import styles from './Footer.module.css';
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from '@/lib/contact';
+import { locationLinks } from '@/config/navigation';
 
 const Footer = () => {
     return (
@@ -42,6 +43,18 @@ const Footer = () => {
                     </div>
 
                     <div className={styles.column}>
+                        <h4 className={styles.heading}>Locations</h4>
+                        <ul className={styles.list}>
+                            {locationLinks.map((item) => (
+                                <li key={item.href} className={styles.listItem}>
+                                    <Link href={item.href} className={styles.link}>{item.label}</Link>
+                                </li>
+                            ))}
+                            <li className={styles.listItem}><Link href="/locations" className={styles.link}>View All Locations →</Link></li>
+                        </ul>
+                    </div>
+
+                    <div className={styles.column}>
                         <h4 className={styles.heading}>Cross-Border Routes</h4>
                         <ul className={styles.list}>
                             <li className={styles.listItem}><Link href="/dammam-airport-to-bahrain-taxi-service" className={styles.link}>Dammam Airport → Bahrain</Link></li>
@@ -49,9 +62,10 @@ const Footer = () => {
                             <li className={styles.listItem}><Link href="/khafji-to-kuwait-taxi-service" className={styles.link}>Khafji → Kuwait</Link></li>
                             <li className={styles.listItem}><Link href="/riyadh-to-dubai-taxi-service" className={styles.link}>Riyadh → Dubai</Link></li>
                             <li className={styles.listItem}><Link href="/dammam-to-abu-dhabi-taxi-service" className={styles.link}>Dammam → Abu Dhabi</Link></li>
-                            {/* Full 18-route list lives on /site-map — this column stays a
-                                curated sample so the footer doesn't balloon past ~25 links. */}
-                            <li className={styles.listItem}><Link href="/site-map" className={styles.link}>View All Routes →</Link></li>
+                            {/* Full route list lives on /routes (Execution Brief v3 W8) —
+                                this column stays a curated sample so the footer doesn't
+                                balloon past ~25 links. */}
+                            <li className={styles.listItem}><Link href="/routes" className={styles.link}>View All Routes →</Link></li>
                         </ul>
                     </div>
 
@@ -62,6 +76,7 @@ const Footer = () => {
                             <li className={styles.listItem}><Link href="/reliable-alula-tour-taxi-service-in-saudi-arabia" className={styles.link}>AlUla Tour</Link></li>
                             <li className={styles.listItem}><Link href="/taif-ziyarat-taxi-service" className={styles.link}>Taif Ziyarat Tour</Link></li>
                             <li className={styles.listItem}><Link href="/our-gallery" className={styles.link}>Our Gallery</Link></li>
+                            <li className={styles.listItem}><Link href="/testimonials" className={styles.link}>Testimonials</Link></li>
                             <li className={styles.listItem}><Link href="/about-us" className={styles.link}>About Us</Link></li>
                             <li className={styles.listItem}><Link href="/contact-us" className={styles.link}>Contact Us</Link></li>
                             <li className={styles.listItem}><Link href="/privacy-policy" className={styles.link}>Privacy Policy</Link></li>
@@ -102,11 +117,15 @@ const Footer = () => {
                     <div className={styles.bottomLinks}>
                         <Link href="/privacy-policy" className={styles.bottomLink}>Privacy Policy</Link>
                         <span className={styles.divider}>|</span>
+                        <Link href="/terms-conditions" className={styles.bottomLink}>Terms & Conditions</Link>
+                        <span className={styles.divider}>|</span>
                         <Link href="/contact-us" className={styles.bottomLink}>Contact</Link>
                         <span className={styles.divider}>|</span>
                         <Link href="/about-us" className={styles.bottomLink}>About</Link>
                         <span className={styles.divider}>|</span>
                         <Link href="/book-online" className={styles.bottomLink}>Book Now</Link>
+                        <span className={styles.divider}>|</span>
+                        <Link href="/site-map" className={styles.bottomLink}>Site Map</Link>
                     </div>
                 </div>
             </div>

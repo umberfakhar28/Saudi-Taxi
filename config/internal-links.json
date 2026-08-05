@@ -53,6 +53,15 @@
         "see about us"
       ]
     },
+    "/abu-dhabi-to-dammam-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "abu dhabi to dammam taxi service",
+        "abu dhabi to dammam taxi service service",
+        "see abu dhabi to dammam taxi service"
+      ]
+    },
     "/airport-transfer-for-umrah": {
       "cluster": "services",
       "type": "service",
@@ -69,6 +78,15 @@
         "airport transfers",
         "airport taxi service",
         "meet-and-greet airport pickup"
+      ]
+    },
+    "/alula-airport-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "alula airport taxi service",
+        "alula airport taxi service service",
+        "see alula airport taxi service"
       ]
     },
     "/ar": {
@@ -386,6 +404,15 @@
         "see dammam to kuwait taxi service"
       ]
     },
+    "/dammam-to-riyadh-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "dammam to riyadh taxi service",
+        "dammam to riyadh taxi service service",
+        "see dammam to riyadh taxi service"
+      ]
+    },
     "/dubai-to-dammam-taxi-service": {
       "cluster": "cross-border-routes",
       "type": "service (cross-border route)",
@@ -512,6 +539,15 @@
         "see jeddah airport taxi service"
       ]
     },
+    "/jeddah-airport-to-madinah-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "jeddah airport to madinah taxi service",
+        "jeddah airport to madinah taxi service service",
+        "see jeddah airport to madinah taxi service"
+      ]
+    },
     "/jeddah-city-tour-services-in-saudi-arabia": {
       "cluster": "tours",
       "type": "service (tour)",
@@ -539,6 +575,15 @@
         "see jeddah to makkah taxi service"
       ]
     },
+    "/khafji-to-dammam-airport-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "khafji to dammam airport taxi service",
+        "khafji to dammam airport taxi service service",
+        "see khafji to dammam airport taxi service"
+      ]
+    },
     "/khafji-to-kuwait-taxi-service": {
       "cluster": "cross-border-routes",
       "type": "service (cross-border route)",
@@ -555,6 +600,15 @@
         "kuwait to dammam taxi service",
         "kuwait to dammam taxi service service",
         "see kuwait to dammam taxi service"
+      ]
+    },
+    "/kuwait-to-khafji-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "kuwait to khafji taxi service",
+        "kuwait to khafji taxi service service",
+        "see kuwait to khafji taxi service"
       ]
     },
     "/kuwait-to-riyadh-taxi-service": {
@@ -575,6 +629,24 @@
         "see madina airport taxi service"
       ]
     },
+    "/madinah-to-jeddah-airport-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "madinah to jeddah airport taxi service",
+        "madinah to jeddah airport taxi service service",
+        "see madinah to jeddah airport taxi service"
+      ]
+    },
+    "/madinah-to-makkah-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "madinah to makkah taxi service",
+        "madinah to makkah taxi service service",
+        "see madinah to makkah taxi service"
+      ]
+    },
     "/madinah-umrah-taxi-guide": {
       "cluster": "umrah-ziyarat",
       "type": "service (guide, duplicate content)",
@@ -582,6 +654,15 @@
         "madinah umrah taxi guide",
         "madinah umrah taxi guide service",
         "see madinah umrah taxi guide"
+      ]
+    },
+    "/makkah-to-jeddah-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "makkah to jeddah taxi service",
+        "makkah to jeddah taxi service service",
+        "see makkah to jeddah taxi service"
       ]
     },
     "/makkah-to-madinah-guide": {
@@ -600,6 +681,15 @@
         "makkah to madinah taxi service",
         "makkah to madinah taxi service service",
         "see makkah to madinah taxi service"
+      ]
+    },
+    "/makkah-to-riyadh-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "makkah to riyadh taxi service",
+        "makkah to riyadh taxi service service",
+        "see makkah to riyadh taxi service"
       ]
     },
     "/makkah-umrah-taxi-guide": {
@@ -728,6 +818,15 @@
         "see riyadh to bahrain taxi service"
       ]
     },
+    "/riyadh-to-dammam-airport-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "riyadh to dammam airport taxi service",
+        "riyadh to dammam airport taxi service service",
+        "see riyadh to dammam airport taxi service"
+      ]
+    },
     "/riyadh-to-dammam-guide": {
       "cluster": "domestic-routes",
       "type": "service (route guide, duplicate content)",
@@ -744,6 +843,33 @@
         "riyadh to dubai taxi service",
         "riyadh to dubai taxi service service",
         "see riyadh to dubai taxi service"
+      ]
+    },
+    "/riyadh-to-kuwait-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "riyadh to kuwait taxi service",
+        "riyadh to kuwait taxi service service",
+        "see riyadh to kuwait taxi service"
+      ]
+    },
+    "/riyadh-to-makkah-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "riyadh to makkah taxi service",
+        "riyadh to makkah taxi service service",
+        "see riyadh to makkah taxi service"
+      ]
+    },
+    "/riyadh-to-qatar-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "riyadh to qatar taxi service",
+        "riyadh to qatar taxi service service",
+        "see riyadh to qatar taxi service"
       ]
     },
     "/saudi-arabia-to-bahrain-taxi-service": {
@@ -809,6 +935,15 @@
         "see services/abha"
       ]
     },
+    "/services/al-ahsa": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "services/al ahsa",
+        "services/al ahsa service",
+        "see services/al ahsa"
+      ]
+    },
     "/services/alula": {
       "cluster": "city-destinations",
       "type": "destination (city hub)",
@@ -827,6 +962,15 @@
         "see services/dammam"
       ]
     },
+    "/services/dhahran": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "services/dhahran",
+        "services/dhahran service",
+        "see services/dhahran"
+      ]
+    },
     "/services/jeddah": {
       "cluster": "city-destinations",
       "type": "destination (city hub)",
@@ -843,6 +987,15 @@
         "services/jubail",
         "services/jubail service",
         "see services/jubail"
+      ]
+    },
+    "/services/khamis-mushait": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "services/khamis mushait",
+        "services/khamis mushait service",
+        "see services/khamis mushait"
       ]
     },
     "/services/khobar": {
@@ -926,6 +1079,15 @@
         "see site map"
       ]
     },
+    "/tabuk-airport-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "tabuk airport taxi service",
+        "tabuk airport taxi service service",
+        "see tabuk airport taxi service"
+      ]
+    },
     "/taif-airport-taxi-service": {
       "cluster": "airport-transfers",
       "type": "destination (city airport)",
@@ -996,6 +1158,15 @@
         "wedding transportation",
         "wedding transportation service",
         "see wedding transportation"
+      ]
+    },
+    "/yanbu-airport-taxi-service": {
+      "cluster": "other",
+      "type": "other",
+      "anchorVariants": [
+        "yanbu airport taxi service",
+        "yanbu airport taxi service service",
+        "see yanbu airport taxi service"
       ]
     },
     "/ziyarat-services-in-saudi-arabia": {

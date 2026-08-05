@@ -2,6 +2,14 @@ import type { CityData } from "@/components/CityServicePage";
 
 export const khobar: CityData = {
   slug: "khobar",
+  landmarks: [
+    { name: "Khobar Corniche", description: "A lively waterfront strip of cafés and walkways facing the Gulf, generally busier and more built-up than Dammam\'s own Corniche." },
+    { name: "Al Rashid Mall", description: "One of the Eastern Province\'s largest retail centres, a common meeting and pickup point for shoppers coming from Dammam or Dhahran." },
+    { name: "King Fahd Causeway approach", description: "Khobar sits closest to the causeway crossing into Bahrain, making it the natural staging point for weekend trips across the border." },
+  ],
+  seasonalNote: "Thursday and Friday evenings see a noticeable surge of traffic toward the King Fahd Causeway as residents head to Bahrain for the weekend — plan border-crossing pickups outside that window if you want to avoid the queue. Like the rest of the Eastern Province, summer humidity is significant.",
+  tags: ["business"],
+  priority: 2,
   nearbyCities: [{ city: "Jubail", slug: "jubail" }, { city: "Riyadh", slug: "riyadh" }],
   city: "Khobar",
   h1: "Private Taxi, Airport Transfer & Chauffeur Service in Khobar",
@@ -21,6 +29,10 @@ export const khobar: CityData = {
     { q: "Is Khobar covered in your Eastern Province service?", a: "Yes — Khobar is a primary service city. We cover all districts including Half Moon Bay and the Corniche." },
     { q: "Can I book a transfer from Khobar to Jubail?", a: "Yes, Khobar to Jubail Industrial City is a regular route — approximately 1 hour drive." },
     { q: "Do you have female-friendly vehicle options?", a: "Yes — all our vehicles are private and driven by vetted, licensed drivers. Female passengers travel in comfort and privacy." },
+    { q: "Can you take me across the King Fahd Causeway to Bahrain?", a: "Yes — Khobar sits closest to the causeway of any Eastern Province city, making it the natural starting point for a Bahrain crossing." },
+    { q: "Is Khobar busier than Dammam?", a: "Its Corniche and retail district (including Al Rashid Mall) tend to be livelier and more built-up than Dammam's equivalent areas, especially in the evenings." },
+    { q: "Is weekend traffic to Bahrain really that noticeable?", a: "Yes — Thursday and Friday evenings see a real surge toward the causeway as residents head over for the weekend. Booking outside that window avoids the queue entirely." },
+    { q: "How humid is Khobar in summer?", a: "Very — like the rest of the Eastern Province coast, humidity peaks from June through September, making evenings notably more pleasant than midday for the Corniche." },
   ],
   reviews: [
     { name: "Patricia M.", origin: "Expat, USA", text: "Reliable, clean, and professional. My go-to service for Khobar–Airport transfers." },
@@ -31,6 +43,14 @@ export const khobar: CityData = {
 
 export const jubail: CityData = {
   slug: "jubail",
+  landmarks: [
+    { name: "Jubail Industrial City", description: "One of the largest industrial cities in the world, built around petrochemical and steel manufacturing — most visitors here are on business rather than sightseeing." },
+    { name: "Jubail Corniche", description: "A quieter waterfront stretch than Dammam or Khobar\'s, popular with residents rather than tourists." },
+    { name: "Fanateer Beach", description: "A local beach area on Jubail\'s coastline, a common weekend destination for families based in the city." },
+  ],
+  seasonalNote: "Jubail\'s traffic patterns follow industrial shift changes rather than tourism — expect predictable surges around the Royal Commission and major plant gates at shift-change times on weekdays, and much quieter roads on Fridays.",
+  tags: ["business"],
+  priority: 2,
   nearbyCities: [{ city: "Khobar", slug: "khobar" }, { city: "Dammam", slug: "dammam" }],
   city: "Jubail",
   h1: "Executive Car Service & Car Transfer in Jubail & Nearby Areas",
@@ -50,6 +70,10 @@ export const jubail: CityData = {
     { q: "Do your drivers have access to Jubail Industrial City?", a: "Our drivers are familiar with all major entry gates and contractor procedures for the Industrial City." },
     { q: "Can you handle regular corporate shuttle contracts in Jubail?", a: "Yes — we offer monthly retainer contracts for companies needing recurring staff transfers in Jubail." },
     { q: "Is there a direct transfer from Jubail to Riyadh?", a: "Yes — approximately 3.5 hours via the Jubail–Dammam–Riyadh expressway. Book at least 24 hours in advance." },
+    { q: "Do your pickup times work around shift changes?", a: "Yes — Jubail's traffic follows industrial shift patterns rather than typical rush hours, and our drivers plan around the major plant gate shift-change times." },
+    { q: "Is Jubail mainly a business destination?", a: "Mostly, yes — most visitors are here for the Industrial City or Royal Commission work rather than tourism, though the Corniche and Fanateer Beach are popular with residents." },
+    { q: "Do you offer airport transfers to Jubail specifically?", a: "Jubail doesn't have its own airport, so most visitors connect via Dammam's King Fahd International Airport — we run this transfer regularly for contractor arrivals." },
+    { q: "Is Jubail quieter than Dammam or Khobar?", a: "Generally, yes — its Corniche and beach areas see far more residents than tourists, and traffic follows industrial shift patterns rather than typical weekend leisure surges." },
   ],
   reviews: [
     { name: "David H.", origin: "Contractor, Netherlands", text: "Used Gulf Trip for 3 months of Jubail–Airport transfers. Faultless every time." },
@@ -60,6 +84,15 @@ export const jubail: CityData = {
 
 export const taif: CityData = {
   slug: "taif",
+  landmarks: [
+    { name: "Al Hada Mountain Road", description: "A dramatic, switchback mountain road connecting Taif down toward Makkah, with a cable car offering views over the escarpment — best experienced with a driver used to the route." },
+    { name: "Taif Rose Fields", description: "The source of Taif\'s famous rose oil, with harvest season drawing visitors to see (and smell) the fields in bloom." },
+    { name: "Shubra Palace", description: "A 19th-century Ottoman-era palace in the city centre, now a small museum and one of Taif\'s few formal historic sites." },
+    { name: "Al Shafa", description: "A cooler, forested highland area above the city, popular as a summer escape from the heat of the coast." },
+  ],
+  seasonalNote: "The Taif rose harvest (roughly March into early April) draws visitors specifically for the bloom and the seasonal rose-water souks. Taif\'s elevation makes it noticeably cooler than Makkah or Jeddah in summer, so it sees a steady influx of domestic travelers escaping the coastal heat from June through August.",
+  tags: ["tourism"],
+  priority: 2,
   nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Abha", slug: "abha" }],
   city: "Taif",
   h1: "Private Taxi & Private Car Service in Taif — Professional & Reliable",
@@ -79,6 +112,8 @@ export const taif: CityData = {
     { q: "Can I do a Makkah–Taif day trip?", a: "Yes — this is one of our most popular routes. We offer round-trip day-trip packages from Makkah or Jeddah to Taif." },
     { q: "Is the road to Taif safe?", a: "The Al-Hada road is a beautiful mountain highway. Our drivers are experienced on this route year-round, including in winter fog conditions." },
     { q: "Do you cover the Al-Hada cable car area?", a: "Yes — Al-Hada and Al-Shafa are within our Taif service zone, including cable car entrance pickups." },
+    { q: "When is Taif's rose season?", a: "Roughly March into early April — the fields are in bloom and the rose-water souks are at their busiest, so book ahead if you're visiting specifically for the harvest." },
+    { q: "Is Taif cooler than Makkah or Jeddah?", a: "Yes, noticeably — the elevation makes a real difference, which is exactly why Taif sees a steady wave of domestic visitors escaping the coastal heat from June through August." },
   ],
   reviews: [
     { name: "Nora Al-Zahrani", origin: "Tourist, Riyadh", text: "The rose farm tour was magical. Our driver took us to hidden spots only locals know." },
@@ -89,7 +124,15 @@ export const taif: CityData = {
 
 export const abha: CityData = {
   slug: "abha",
-  nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Taif", slug: "taif" }],
+  landmarks: [
+    { name: "Al Souda", description: "The highest point in Saudi Arabia, with a cable car climbing through cloud forest — consistently the coolest spot in the country and one of the main reasons visitors come to Asir." },
+    { name: "Abha Lake Park", description: "A large park built around an artificial lake in the city, popular for evening walks and one of Abha\'s most central family destinations." },
+    { name: "Habala", description: "A former hanging village built into a cliff face, historically accessible only by rope — now reached by cable car and popular for the dramatic setting." },
+  ],
+  seasonalNote: "Abha\'s mountain elevation keeps it noticeably cooler than almost anywhere else in the Kingdom, which draws a steady wave of domestic tourism specifically in the summer months (June–August) as visitors escape the heat elsewhere — book ahead if traveling then, since hotels and drivers both get busier.",
+  tags: ["tourism"],
+  priority: 2,
+  nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Taif", slug: "taif" }, { city: "Khamis Mushait", slug: "khamis-mushait" }],
   city: "Abha",
   h1: "Chauffeur Service & Executive Car Service in Abha & Nearby Areas",
   region: "Asir Province",
@@ -108,6 +151,9 @@ export const abha: CityData = {
     { q: "Is Abha accessible year-round?", a: "Yes — though summer (June–September) is peak season. Roads can be misty in winter but are safe with experienced drivers." },
     { q: "Can you combine an Abha airport pickup with a tour?", a: "Yes — many guests book an airport pickup combined with a same-day Habala or Al-Soudah tour before hotel check-in." },
     { q: "Do you cover Rijal Alma from Abha?", a: "Yes — Rijal Alma is approximately 45 minutes from Abha and a popular add-on to any Asir itinerary." },
+    { q: "Why is Abha busier in summer than most Saudi cities?", a: "Its mountain elevation keeps temperatures well below the rest of the Kingdom, which draws a steady wave of domestic tourists specifically escaping the heat from June through August." },
+    { q: "Is Al Souda worth the trip from central Abha?", a: "Yes — it's the highest point in Saudi Arabia, with a cable car through cloud forest, and it's a fairly short, scenic drive from the city." },
+    { q: "Can you take me to Habala village?", a: "Yes — the former hanging village is now reached by cable car rather than rope, and it's a popular half-day trip from Abha for the dramatic cliffside setting alone." },
   ],
   reviews: [
     { name: "Sara M.", origin: "Tourist, Jordan", text: "The mountain views from our car were breathtaking. Driver knew every scenic stop." },

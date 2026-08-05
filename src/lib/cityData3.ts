@@ -1,7 +1,17 @@
 import type { CityData } from "@/components/CityServicePage";
+import { riyadh, jeddah, makkah, madinah, dammam } from "./cityData1";
+import { khobar, jubail, taif, abha } from "./cityData2";
 
 export const yanbu: CityData = {
   slug: "yanbu",
+  landmarks: [
+    { name: "Yanbu Al Bahr (Old Town)", description: "The historic coral-stone old town near the port, with narrow lanes and traditional architecture reminiscent of Jeddah\'s Al-Balad on a smaller scale." },
+    { name: "Yanbu Corniche", description: "A long, well-kept waterfront popular for evening walks, with some of the clearest water access on this stretch of the Red Sea coast." },
+    { name: "Red Sea reefs", description: "Yanbu is a genuine, less-crowded diving and snorkeling base compared to the larger Red Sea resort areas further south." },
+  ],
+  seasonalNote: "Yanbu runs on two overlapping economies — petrochemical industry traffic on weekdays, and a growing dive-tourism season roughly October through April when Red Sea water conditions are calmest. Summer heat and humidity make diving less comfortable and quieter for tourism generally.",
+  tags: ["tourism"],
+  priority: 2,
   nearbyCities: [{ city: "Madinah", slug: "madinah" }, { city: "AlUla", slug: "alula" }],
   city: "Yanbu",
   h1: "Airport Transfer, Private Taxi & Car Transfer in Yanbu",
@@ -21,6 +31,9 @@ export const yanbu: CityData = {
     { q: "Do you serve Yanbu Industrial City separately from the old town?", a: "Yes — both zones are covered under the same booking with no premium charge for the Industrial City." },
     { q: "Can you take me from Yanbu to Madinah for Umrah?", a: "Yes — Yanbu to Madinah is a popular route for residents making a quick Umrah trip, approximately 2.5 hours." },
     { q: "Do you cover dive site drop-offs on the Red Sea coast?", a: "Yes — we transfer to dive sites north and south of Yanbu along the Red Sea coast." },
+    { q: "When is diving season in Yanbu?", a: "Roughly October through April, when Red Sea conditions are calmest — summer heat and humidity make diving considerably less comfortable." },
+    { q: "Is Yanbu's old town worth a stop?", a: "Yes — Yanbu Al-Bahr has genuine coral-stone architecture and narrow historic lanes, a smaller-scale version of what you'd find in Jeddah's Al-Balad." },
+    { q: "Do you serve the Royal Commission residential area separately?", a: "No separate booking needed — the Royal Commission compound, the Industrial City, and the old town are all covered under the same standard fare." },
   ],
   reviews: [
     { name: "Carlos R.", origin: "Contractor, Spain", text: "Six months of Yanbu transfers — always on time. Best option in the region." },
@@ -31,6 +44,15 @@ export const yanbu: CityData = {
 
 export const alula: CityData = {
   slug: "alula",
+  landmarks: [
+    { name: "Hegra (Mada'in Salih)", description: "Saudi Arabia\'s first UNESCO World Heritage Site — monumental Nabataean tombs carved into sandstone outcrops, roughly 2,000 years old." },
+    { name: "Elephant Rock (Jabal AlFil)", description: "A naturally eroded sandstone formation shaped like an elephant, one of AlUla\'s most-photographed landmarks, especially at sunset." },
+    { name: "AlUla Old Town", description: "A mudbrick town abandoned in the mid-20th century, now partially restored and open to walk through." },
+    { name: "Maraya Concert Hall", description: "A mirrored, largely hidden-in-the-landscape concert venue that hosts AlUla\'s seasonal cultural events." },
+  ],
+  seasonalNote: "AlUla\'s main event season runs roughly October through March, when temperatures are comfortable and most of the region\'s festivals and concerts take place — this is when hotels, drivers, and tour slots are busiest. Summer heat makes outdoor sightseeing here far less practical, and visitor numbers drop off accordingly.",
+  tags: ["tourism"],
+  priority: 2,
   nearbyCities: [{ city: "Tabuk", slug: "tabuk" }, { city: "NEOM", slug: "neom" }],
   city: "AlUla",
   h1: "Executive Car Service & Private Taxi to & from AlUla",
@@ -50,6 +72,8 @@ export const alula: CityData = {
     { q: "Do I need a guide to visit Hegra, or just a driver?", a: "Hegra requires a licensed guide (bookable through Saudi Tourism). We provide the transport — a driver who knows the exact access roads and timing." },
     { q: "Can you do multi-day transfers across AlUla?", a: "Yes — many guests book us for their full 3–5 day AlUla itinerary including morning Hegra trips, afternoon Elephant Rock, and evening Ashar Arts District visits." },
     { q: "Do you cover the Sharaan Nature Reserve?", a: "Yes — we transfer to the Sharaan entry point and coordinate collection times with your guide." },
+    { q: "When is AlUla's event season?", a: "Roughly October through March — comfortable temperatures bring most of the region's festivals and concerts, and it's also when hotels, drivers, and tour slots get busiest." },
+    { q: "Is AlUla too hot to visit in summer?", a: "Outdoor sightseeing becomes far less practical in summer heat, which is why visitor numbers and event scheduling both drop off noticeably from around May through September." },
   ],
   reviews: [
     { name: "Isabella F.", origin: "Tourist, Italy", text: "Watching sunrise at Hegra from our private car was life-changing. Gulf Trip made it effortless." },
@@ -60,6 +84,14 @@ export const alula: CityData = {
 
 export const neom: CityData = {
   slug: "neom",
+  landmarks: [
+    { name: "The Line", description: "NEOM\'s linear city development — still under active construction, with most of the area not yet open to general visitors." },
+    { name: "Sindalah", description: "A small luxury island development off NEOM\'s coast, positioned as an early-opening leisure destination for the wider project." },
+    { name: "Trojena", description: "A mountain development planned around winter sports and cooler-climate tourism, part of NEOM\'s longer-term build-out." },
+  ],
+  seasonalNote: "NEOM is still a construction-driven destination rather than an established tourist city — most current travel here is workforce and business-related rather than leisure, and access to specific sites depends on which phase of the project is open at the time of your visit. Confirm your exact destination and access requirements before booking.",
+  tags: ["tourism"],
+  priority: 2,
   nearbyCities: [{ city: "AlUla", slug: "alula" }, { city: "Tabuk", slug: "tabuk" }],
   city: "NEOM",
   h1: "Private Car Service & Airport Transfer to & from NEOM",
@@ -79,6 +111,10 @@ export const neom: CityData = {
     { q: "Do you have access to NEOM construction zones?", a: "We work with pre-approved access rosters. Contractor clients provide their site clearance and we handle the transport logistics." },
     { q: "Can I connect from Tabuk Airport to NEOM?", a: "Yes — Tabuk International Airport is the main international hub. We run direct transfers from Tabuk to NEOM sites." },
     { q: "Do you cover Haql for Aqaba ferry connections?", a: "Yes — Haql to the Aqaba ferry is a regular route for international teams entering via Jordan." },
+    { q: "Is NEOM open for general tourism yet?", a: "Not broadly — most of the project is still under active construction, and current travel here is mostly workforce and business-related. Confirm your exact site and access requirements before booking." },
+    { q: "What is Sindalah?", a: "A small luxury island development off NEOM's coast, positioned as one of the project's earlier-opening leisure destinations." },
+    { q: "What is Trojena?", a: "A mountain development planned around winter sports and cooler-climate tourism — part of NEOM's longer-term build-out, still some way from general public access." },
+    { q: "Should I confirm my destination before booking a NEOM transfer?", a: "Yes — since access depends on which phase of the project is open at the time, always confirm your exact site and any access requirements with us before booking." },
   ],
   reviews: [
     { name: "Andrew B.", origin: "Project Consultant, UK", text: "Six-month NEOM contract — Gulf Trip handled all airport transfers without a single issue." },
@@ -89,6 +125,14 @@ export const neom: CityData = {
 
 export const tabuk: CityData = {
   slug: "tabuk",
+  landmarks: [
+    { name: "Tabuk Castle", description: "A restored Ottoman-era fort in the city centre, historically a waystation on the pilgrimage route north toward Madinah." },
+    { name: "Al-Disah Valley", description: "A dramatic desert valley of sandstone formations and palm groves south of the city, popular for camping and desert scenery." },
+    { name: "Tabuk Railway Station Museum", description: "A restored Hejaz Railway station, part of the historic line that once ran from Damascus toward Madinah." },
+  ],
+  seasonalNote: "Tabuk functions as a gateway city for NEOM workforce travel, so weekday airport and highway traffic tends to track project activity rather than tourism seasons. The region\'s winter (roughly November–February) is notably cooler than most of Saudi Arabia, making it the more comfortable season for visiting Al-Disah or other outdoor sites.",
+  tags: ["tourism"],
+  priority: 2,
   nearbyCities: [{ city: "AlUla", slug: "alula" }, { city: "NEOM", slug: "neom" }],
   city: "Tabuk",
   h1: "Car Transfer & Airport Transfer across Tabuk — Book Anytime",
@@ -108,6 +152,9 @@ export const tabuk: CityData = {
     { q: "Can I book a Wadi Disah day trip from Tabuk?", a: "Yes — we offer round-trip transfers to Wadi Disah and Qaraqir. The canyon is approximately 2 hours from Tabuk and requires a 4WD-capable vehicle." },
     { q: "Is Tabuk a good base for Aqaba trips?", a: "Yes — we transfer guests to the Aqaba border crossing (Durra) for ferry connections to Jordan and Egypt." },
     { q: "How far is Tabuk from NEOM Sharma Airport?", a: "Approximately 230km, typically 2.5–3 hours. We run this route regularly for contractors." },
+    { q: "Is Tabuk mostly NEOM-related traffic now?", a: "A large share of it, yes — Tabuk functions as a gateway city for NEOM workforce travel, so airport and highway patterns tend to track project activity more than tourist seasons." },
+    { q: "When is the best time to visit Al-Disah Valley?", a: "Winter, roughly November through February — the region is notably cooler then, which makes exploring the sandstone canyons and palm groves considerably more comfortable." },
+    { q: "Is the old Hejaz Railway station worth visiting?", a: "Yes — Tabuk's restored railway station museum is a genuine piece of the historic line that once ran toward Madinah, and it's a quick, easy stop in the city centre." },
   ],
   reviews: [
     { name: "Lucas V.", origin: "Adventure Traveler, France", text: "Wadi Disah from Tabuk in a proper 4WD. Spectacular. Driver was fantastic." },
@@ -115,3 +162,129 @@ export const tabuk: CityData = {
     { name: "Omar Al-Harbi", origin: "Local Guide, Tabuk", text: "We partner with Gulf Trip for all our guests' airport transfers. Never a complaint." },
   ],
 };
+
+export const alAhsa: CityData = {
+  slug: "al-ahsa",
+  tags: ["business"],
+  priority: 2,
+  reviewed: false,
+  landmarks: [
+    { name: "Al-Ahsa Oasis", description: "A UNESCO World Heritage Site and one of the largest oases in the world — millions of date palms fed by natural springs, with walking paths through the older palm groves." },
+    { name: "Qaisariah Souq (Hofuf)", description: "A historic covered market in Hofuf's old town, in continuous use for well over a century — spices, textiles, and traditional crafts." },
+    { name: "Jawatha Mosque", description: "One of the oldest mosque sites in the Eastern Province, with a history tracing back to the early Islamic period." },
+    { name: "Al-Qarah Mountain", description: "A distinctive rock formation on Al-Ahsa's edge, known for its natural rock-carved passages and cooler microclimate." },
+  ],
+  seasonalNote: "Al-Ahsa sees the heaviest visitor traffic during date-harvest season (roughly July–September) and around the annual Al-Ahsa Dates Festival, when the oasis and Qaisariah Souq are considerably busier than the rest of the year.",
+  nearbyCities: [{ city: "Dammam", slug: "dammam" }, { city: "Riyadh", slug: "riyadh" }],
+  city: "Al-Ahsa",
+  h1: "Private Taxi & Car Transfer in Al-Ahsa (Hofuf)",
+  region: "Eastern Province",
+  intro: "Taxi and private transfer services in Al-Ahsa and Hofuf — oasis and old-town sightseeing, business travel, and connections to Dammam, Riyadh, and the Qatar/Bahrain border corridors that already run directly through the region.",
+  whyVisit: "Al-Ahsa is one of the world's largest oases and a UNESCO World Heritage Site — millions of date palms, natural springs, the historic Qaisariah Souq in Hofuf's old town, and the distinctive Al-Qarah Mountain rock formations. It's also a well-known waypoint on the Riyadh–Dammam and Riyadh–Qatar/Bahrain highway corridors, which already pass directly through the area.",
+  challenge: "Al-Ahsa's sights are spread across a wide oasis area rather than a compact city centre, and public transport options are limited — a private driver who knows the oasis roads, the old town, and Al-Qarah makes it far easier to see everything in a single day.",
+  benefit: "We serve Al-Ahsa both as a genuine sightseeing destination and as a rest-stop/waypoint for the Riyadh–Dammam, Riyadh–Qatar, and Riyadh–Bahrain corridors that already run through the region — book a stop-and-see visit as part of a longer journey, or a dedicated day exploring the oasis.",
+  popularRoutes: [
+    { from: "Al-Ahsa", to: "Dammam", time: "~1 hr" },
+    { from: "Al-Ahsa", to: "Riyadh", time: "~2.5 hrs" },
+    { from: "Al-Ahsa", to: "Salwa / Qatar border", time: "~2 hrs" },
+  ],
+  pickupPoints: ["Hofuf city centre", "Qaisariah Souq", "Al-Ahsa Oasis entrances", "Al-Qarah Mountain", "King Fahd International Airport (via Dammam)"],
+  faqs: [
+    { q: "Is Al-Ahsa Oasis worth a dedicated day trip?", a: "Yes — between the oasis palm groves, Qaisariah Souq, and Al-Qarah Mountain, most visitors find a full day is well spent here rather than a quick pass-through." },
+    { q: "Can I stop in Al-Ahsa on the way between Riyadh and Dammam?", a: "Yes — Al-Ahsa already sits directly on this corridor, and we regularly build in a stop here for travelers who want to see the oasis rather than just pass through." },
+    { q: "Do you serve Al-Ahsa as a stop on GCC border routes?", a: "Yes — our Riyadh–Qatar and Riyadh–Bahrain services already route through Al-Ahsa, and a sightseeing stop can be added to either journey on request." },
+    { q: "When is the Al-Ahsa Dates Festival?", a: "Roughly during the July–September harvest season — exact dates vary by year, and this is when the oasis and souq are at their busiest." },
+    { q: "Is Al-Ahsa connected to Dammam's airport?", a: "Yes — King Fahd International Airport in Dammam is about an hour away and is the usual airport connection for Al-Ahsa visitors." },
+  ],
+  reviews: [
+    { name: "Fatima Al-Otaibi", origin: "Traveler, Saudi Arabia", text: "Finally visited the oasis properly instead of just driving through on the way to Dammam. Driver knew all the best palm-grove paths." },
+    { name: "Robert K.", origin: "Business Traveler, USA", text: "Added a half-day Al-Ahsa stop to our Riyadh–Dammam trip. Well worth it — the Qaisariah Souq was a highlight." },
+  ],
+};
+
+export const dhahran: CityData = {
+  slug: "dhahran",
+  tags: ["business"],
+  priority: 2,
+  reviewed: false,
+  landmarks: [
+    { name: "Ithra (King Abdulaziz Center for World Culture)", description: "A striking cultural centre — museum, cinema, and library — housed in one of the Eastern Province's most distinctive buildings, and Dhahran's best-known landmark." },
+    { name: "Saudi Aramco headquarters area", description: "The corporate heart of Dhahran, with the adjacent residential compound giving the district a distinct, campus-like character." },
+    { name: "KFUPM (King Fahd University of Petroleum and Minerals)", description: "One of the region's leading technical universities, drawing academic and conference visitors to Dhahran throughout the year." },
+  ],
+  seasonalNote: "Dhahran's traffic and visitor patterns track Saudi Aramco's and KFUPM's schedules more than any tourist season — expect weekday peaks around shift changes and academic-term start dates, and Ithra's exhibition calendar drives its own separate visitor surges throughout the year.",
+  nearbyCities: [{ city: "Dammam", slug: "dammam" }, { city: "Al-Khobar", slug: "khobar" }],
+  city: "Dhahran",
+  h1: "Private Taxi & Corporate Car Transfer in Dhahran",
+  region: "Eastern Province",
+  intro: "Taxi and corporate transfer services in Dhahran — Ithra visits, Saudi Aramco and KFUPM transfers, and connections across the Dammam–Khobar–Dhahran tri-city area.",
+  whyVisit: "Dhahran is the corporate and academic core of the Eastern Province's tri-city area — home to Saudi Aramco's headquarters, KFUPM, and Ithra, one of the region's most striking cultural venues. It sits within the same built-up metro area as Dammam and Khobar rather than as a standalone city.",
+  challenge: "Dhahran's Aramco and KFUPM compounds have their own access procedures, and visitors unfamiliar with the district can lose real time navigating between the corporate campuses, Ithra, and the surrounding residential areas.",
+  benefit: "We run regular transfers for Aramco and KFUPM visitors, conference attendees, and Ithra day-trippers, with drivers familiar with each compound's specific entry points and the wider Dammam–Khobar–Dhahran area.",
+  popularRoutes: [
+    { from: "Dhahran", to: "Dammam Airport (DMM)", time: "~30–40 min" },
+    { from: "Dhahran", to: "Al-Khobar", time: "~15 min" },
+    { from: "Dhahran", to: "Dammam city centre", time: "~20 min" },
+  ],
+  pickupPoints: ["Ithra (King Abdulaziz Center for World Culture)", "Saudi Aramco headquarters area", "KFUPM campus", "Dhahran residential compound", "King Fahd International Airport"],
+  faqs: [
+    { q: "Is Dhahran the same trip as booking Dammam?", a: "We treat the whole tri-city area — Dammam, Khobar, and Dhahran — as one coverage zone with no extra charge for crossing between them, so book whichever page is most convenient." },
+    { q: "Do you serve Saudi Aramco headquarters?", a: "Yes — this is one of our most regular Dhahran transfers, and drivers are familiar with the compound's visitor entry procedures." },
+    { q: "Can you pick up conference attendees at KFUPM?", a: "Yes — we regularly serve KFUPM conferences and academic visitors, including group bookings for larger events." },
+    { q: "Is Ithra worth visiting on its own, or only as part of a Dammam trip?", a: "It stands well on its own — Ithra runs its own changing exhibition and event calendar, so it's worth checking what's on before you visit, independent of any other Dammam-area plans." },
+    { q: "How far is Dhahran from King Fahd International Airport?", a: "About 30–40 minutes, the same as the airport's distance from central Dammam and Khobar." },
+  ],
+  reviews: [
+    { name: "James O.", origin: "Aramco Contractor, UK", text: "Regular transfers between our Dhahran compound and the airport — always on time, always professional." },
+    { name: "Layla H.", origin: "Visitor, Saudi Arabia", text: "Booked a driver just for an Ithra visit. Smooth pickup and drop-off, no hassle at all." },
+  ],
+};
+
+export const khamisMushait: CityData = {
+  slug: "khamis-mushait",
+  tags: ["tourism"],
+  priority: 2,
+  reviewed: false,
+  landmarks: [
+    { name: "Khamis Mushait Friday Market (Souq Al-Khamis)", description: "The historic weekly market the city takes its name from — traditional crafts, textiles, and local produce, still held on its original day." },
+    { name: "Al Mahfar Al-Turki (Ottoman-era fort)", description: "A restored Ottoman military fort on the edge of the city, one of the more visible historic sites in the Asir region." },
+    { name: "Aviation and military heritage sites", description: "Khamis Mushait's long-standing role as a military aviation hub has left several heritage sites tied to that history, of interest to visitors specifically curious about the region's aviation background." },
+  ],
+  seasonalNote: "Khamis Mushait shares Asir Province's cooler highland climate with neighbouring Abha, so it sees the same seasonal pattern — busier during the cooler months and around the regional Asir summer festival period, when nearby Abha and Al Souda draw overflow visitors into Khamis Mushait's hotels as well.",
+  nearbyCities: [{ city: "Abha", slug: "abha" }],
+  city: "Khamis Mushait",
+  h1: "Private Taxi & Airport Transfer in Khamis Mushait",
+  region: "Asir Province",
+  intro: "Taxi and airport transfer services in Khamis Mushait — Abha Airport connections, the historic Friday Market, and access to the wider Asir Province highlands.",
+  whyVisit: "Khamis Mushait is Abha's larger, adjacent twin city in the Asir highlands — home to the historic Souq Al-Khamis (Friday Market) the city is named after, an Ottoman-era fort, and a long-standing role as a regional aviation and military hub. It shares Abha's cooler mountain climate and makes a practical base for exploring the wider Asir region.",
+  challenge: "Khamis Mushait doesn't have its own airport — Abha International Airport, about 25 km away, is the connection point for almost every visitor, so a reliable transfer between the two cities is the first thing most trips need.",
+  benefit: "We run this Abha Airport to Khamis Mushait transfer as a core, regular route, alongside local city transfers and connections on to Abha itself and the Al Souda resort area.",
+  airport: { name: "Abha International Airport", code: "AHB", distance: "~25 km from Khamis Mushait" },
+  popularRoutes: [
+    { from: "Abha Airport (AHB)", to: "Khamis Mushait", time: "~25–30 min" },
+    { from: "Khamis Mushait", to: "Abha city centre", time: "~20–25 min" },
+    { from: "Khamis Mushait", to: "Al Souda", time: "~1 hr" },
+  ],
+  pickupPoints: ["Abha International Airport", "Souq Al-Khamis (Friday Market)", "Khamis Mushait city centre", "Al Mahfar Al-Turki fort"],
+  faqs: [
+    { q: "Does Khamis Mushait have its own airport?", a: "No — Abha International Airport, about 25 km away, serves both cities. We run this transfer as one of our core Asir Province routes." },
+    { q: "Is the Friday Market still held on Fridays?", a: "Yes — Souq Al-Khamis still runs on its traditional day, and it's the market the city takes its name from." },
+    { q: "Can I combine a Khamis Mushait stay with visiting Abha and Al Souda?", a: "Yes — all three are within a short drive of each other, and many visitors base themselves in one city while day-tripping to the others." },
+    { q: "Is Khamis Mushait's climate the same as Abha's?", a: "Yes — both share the same cooler Asir highland climate, distinct from the rest of Saudi Arabia's coastal and desert regions." },
+  ],
+  reviews: [
+    { name: "Nasser Al-Qahtani", origin: "Traveler, Saudi Arabia", text: "Easy airport pickup from Abha straight to our hotel in Khamis Mushait. Driver knew the area well." },
+    { name: "Emily T.", origin: "Tourist, UK", text: "Based ourselves in Khamis Mushait for a few days and day-tripped to Abha and Al Souda — transfers were smooth every time." },
+  ],
+};
+
+/** All 16 city hubs in one place — for the data-layer validation script and
+ * any future consumer that needs to iterate every CityData entry (gap
+ * analysis, sitemap/nav generation in W9) without importing cityData1/2/3
+ * separately. Individual named exports are unchanged for existing pages. */
+export const allCities: CityData[] = [
+  riyadh, jeddah, makkah, madinah, dammam,
+  khobar, jubail, taif, abha,
+  yanbu, alula, neom, tabuk,
+  alAhsa, dhahran, khamisMushait,
+];

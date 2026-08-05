@@ -3,70 +3,62 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-    MenuIcon, XIcon, ChevronDownIcon,
-    PlaneIcon, HotelIcon, CarIcon, PackageIcon, CompassIcon,
-    MapIcon, MountainIcon, TreePineIcon,
-    UserIcon, EyeIcon, MailIcon, GlobeIcon,
-} from './Icons';
+import { MenuIcon, XIcon, ChevronDownIcon, GlobeIcon, WhatsAppIcon } from './Icons';
 import Logo from './Logo';
 import { arabicPathFor } from '@/lib/bilingualPages';
+import { WHATSAPP_URL } from '@/lib/contact';
+import { serviceGroups, locationGroups, crossBorderGroups, companyGroups, type NavGroup } from '@/config/navigation';
 import styles from './Navbar.module.css';
 
 /*
   NAVBAR — 5 Design Principles:
-  Balance:    Logo (left) | Services / Cross Border / Company (center) | Language + Book Now (right)
-  Alignment:  All links baseline-aligned; dropdown items strictly left-aligned
-  Proximity:  Services + Tours grouped under "Services"; GCC routes under "Cross Border"; info pages under "Company"
-  Repetition: Identical .link class for every nav item; identical .dropdownItem for every dropdown entry
-  Contrast:   Light links on dark blue header bg; gold CTA vs surrounding chrome
+  Balance:    Logo (left) | Services / Locations / Cross Border / Company (center) | Language + WhatsApp + Book Now (right)
+  Alignment:  Column labels + links left-aligned within each column; columns sit side by side
+  Proximity:  Each dropdown groups its links into labeled columns (Services: transport/airports/tours;
+              Locations: major cities/Eastern & industrial/tourism; Cross Border: by country/popular routes)
+  Repetition: Identical column layout and link style across every dropdown
+  Contrast:   Light links on dark blue header bg; white dropdown panel; gold "Book Now" + green WhatsApp CTA
+
+  Column data (serviceGroups/locationGroups/crossBorderGroups/companyGroups)
+  lives in config/navigation.ts — Execution Brief v3 W9 — so a new W7 city/
+  airport/route page shows up here without editing this file.
 */
 
-const serviceLinks = [
-    { href: '/our-services',               icon: <CarIcon size={14} />,     label: 'All Services' },
-    { href: '/airport-transfers',          icon: <PlaneIcon size={14} />,   label: 'Airport Transfers' },
-    { href: '/hotel-transfers',            icon: <HotelIcon size={14} />,   label: 'Hotel Transfers' },
-    { href: '/private-taxi',               icon: <CarIcon size={14} />,     label: 'Private Taxi' },
-    { href: '/umrah-transport-package',    icon: <PackageIcon size={14} />, label: 'Umrah Transport' },
-    { href: '/ziyarat-services-in-saudi-arabia', icon: <CompassIcon size={14} />, label: 'Ziyarat Services' },
-];
+type DropdownKey = 'services' | 'locations' | 'border' | 'company';
 
-const tourLinks = [
-    { href: '/jeddah-city-tour-services-in-saudi-arabia',         icon: <MapIcon size={14} />,      label: 'Jeddah City Tour' },
-    { href: '/reliable-alula-tour-taxi-service-in-saudi-arabia',  icon: <MountainIcon size={14} />, label: 'AlUla Tour' },
-    { href: '/taif-ziyarat-taxi-service',                         icon: <TreePineIcon size={14} />, label: 'Taif Ziyarat Tour' },
-];
-
-const borderRouteLinks = [
-    { href: '/border-crossing',                          icon: <MapIcon size={14} />, label: 'All Border Crossings' },
-    { href: '/dammam-airport-to-bahrain-taxi-service',    icon: <PlaneIcon size={14} />, label: 'Dammam Airport → Bahrain' },
-    { href: '/dammam-airport-to-qatar-taxi-service',      icon: <PlaneIcon size={14} />, label: 'Dammam Airport → Qatar' },
-    { href: '/dammam-airport-to-riyadh-taxi-service',      icon: <PlaneIcon size={14} />, label: 'Dammam Airport → Riyadh' },
-    { href: '/dammam-airport-to-khafji-taxi-service',      icon: <PlaneIcon size={14} />, label: 'Dammam Airport → Khafji' },
-    { href: '/bahrain-to-dammam-taxi-service',             icon: <MapIcon size={14} />, label: 'Bahrain → Dammam' },
-    { href: '/qatar-to-riyadh-taxi-service',               icon: <MapIcon size={14} />, label: 'Qatar → Riyadh' },
-    { href: '/khafji-to-kuwait-taxi-service',              icon: <MapIcon size={14} />, label: 'Khafji → Kuwait' },
-];
-
-const aboutLinks = [
-    { href: '/about-us',    icon: <UserIcon size={14} />, label: 'About Us' },
-    { href: '/our-gallery', icon: <EyeIcon size={14} />,  label: 'Gallery' },
-    { href: '/contact-us',  icon: <MailIcon size={14} />, label: 'Contact Us' },
-];
+const DropdownPanel = ({ groups, open, onLinkClick }: { groups: NavGroup[]; open: boolean; onLinkClick: () => void }) => (
+    <div className={`${styles.dropdownMenu} ${open ? styles.dropdownMenuOpen : ''}`}>
+        {groups.map((group) => (
+            <div key={group.label} className={styles.dropdownColumn}>
+                <div className={styles.dropdownLabel}>{group.label}</div>
+                {group.items.map((item) => (
+                    <Link key={item.href} href={item.href} className={styles.dropdownItem} onClick={onLinkClick}>
+                        {item.label}
+                    </Link>
+                ))}
+            </div>
+        ))}
+    </div>
+);
 
 const Navbar = () => {
     const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
-    const [servicesOpen, setServicesOpen] = useState(false);
-    const [borderOpen, setBorderOpen] = useState(false);
-    const [aboutOpen, setAboutOpen] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState<DropdownKey | null>(null);
 
     const close = () => {
         setMenuOpen(false);
-        setServicesOpen(false);
-        setBorderOpen(false);
-        setAboutOpen(false);
+        setOpenDropdown(null);
     };
+
+    const toggle = (key: DropdownKey) => setOpenDropdown((cur) => (cur === key ? null : key));
+
+    const navItems: { key: DropdownKey; label: string; groups: NavGroup[] }[] = [
+        { key: 'services', label: 'Services', groups: serviceGroups },
+        { key: 'locations', label: 'Locations', groups: locationGroups },
+        { key: 'border', label: 'Cross Border', groups: crossBorderGroups },
+        { key: 'company', label: 'Company', groups: companyGroups },
+    ];
 
     return (
         <nav className={`${styles.navbar} ${styles.navbarShifted}`}>
@@ -79,116 +71,27 @@ const Navbar = () => {
 
                 {/* ---- NAV LINKS (Balance: centered between logo and language/CTA actions) ---- */}
                 <div className={`${styles.navLinks} ${menuOpen ? styles.navLinksOpen : ''}`}>
-
-                    {/* SERVICES DROPDOWN — Proximity: services + day tours grouped together */}
-                    <div
-                        className={styles.dropdown}
-                        onMouseEnter={() => setServicesOpen(true)}
-                        onMouseLeave={() => setServicesOpen(false)}
-                    >
-                        <button
-                            className={styles.link}
-                            onClick={() => setServicesOpen(!servicesOpen)}
-                            aria-expanded={servicesOpen}
+                    {navItems.map(({ key, label, groups }) => (
+                        <div
+                            key={key}
+                            className={styles.dropdown}
+                            onMouseEnter={() => setOpenDropdown(key)}
+                            onMouseLeave={() => setOpenDropdown((cur) => (cur === key ? null : cur))}
                         >
-                            Services
-                            <ChevronDownIcon
-                                className={`${styles.arrow} ${servicesOpen ? styles.arrowRotate : ''}`}
-                                size={14}
-                            />
-                        </button>
-                        <div className={`${styles.dropdownMenu} ${servicesOpen ? styles.dropdownMenuOpen : ''}`}>
-                            <div className={styles.dropdownLabel}>Transport Services</div>
-                            {serviceLinks.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={styles.dropdownItem}
-                                    onClick={close}
-                                >
-                                    {item.icon}
-                                    {item.label}
-                                </Link>
-                            ))}
-                            <div className={styles.dropdownLabel}>Day Tours</div>
-                            {tourLinks.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={styles.dropdownItem}
-                                    onClick={close}
-                                >
-                                    {item.icon}
-                                    {item.label}
-                                </Link>
-                            ))}
+                            <button
+                                className={styles.link}
+                                onClick={() => toggle(key)}
+                                aria-expanded={openDropdown === key}
+                            >
+                                {label}
+                                <ChevronDownIcon
+                                    className={`${styles.arrow} ${openDropdown === key ? styles.arrowRotate : ''}`}
+                                    size={14}
+                                />
+                            </button>
+                            <DropdownPanel groups={groups} open={openDropdown === key} onLinkClick={close} />
                         </div>
-                    </div>
-
-                    {/* CROSS BORDER DROPDOWN — Proximity: GCC route links grouped separately */}
-                    <div
-                        className={styles.dropdown}
-                        onMouseEnter={() => setBorderOpen(true)}
-                        onMouseLeave={() => setBorderOpen(false)}
-                    >
-                        <button
-                            className={styles.link}
-                            onClick={() => setBorderOpen(!borderOpen)}
-                            aria-expanded={borderOpen}
-                        >
-                            Cross Border
-                            <ChevronDownIcon
-                                className={`${styles.arrow} ${borderOpen ? styles.arrowRotate : ''}`}
-                                size={14}
-                            />
-                        </button>
-                        <div className={`${styles.dropdownMenu} ${borderOpen ? styles.dropdownMenuOpen : ''}`}>
-                            <div className={styles.dropdownLabel}>GCC Routes</div>
-                            {borderRouteLinks.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={styles.dropdownItem}
-                                    onClick={close}
-                                >
-                                    {item.icon}
-                                    {item.label}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* ABOUT US DROPDOWN — Proximity: informational pages grouped together */}
-                    <div
-                        className={styles.dropdown}
-                        onMouseEnter={() => setAboutOpen(true)}
-                        onMouseLeave={() => setAboutOpen(false)}
-                    >
-                        <button
-                            className={styles.link}
-                            onClick={() => setAboutOpen(!aboutOpen)}
-                            aria-expanded={aboutOpen}
-                        >
-                            Company
-                            <ChevronDownIcon
-                                className={`${styles.arrow} ${aboutOpen ? styles.arrowRotate : ''}`}
-                                size={14}
-                            />
-                        </button>
-                        <div className={`${styles.dropdownMenu} ${aboutOpen ? styles.dropdownMenuOpen : ''}`}>
-                            {aboutLinks.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={styles.dropdownItem}
-                                    onClick={close}
-                                >
-                                    {item.icon}
-                                    {item.label}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
+                    ))}
 
                     {/* Language switcher — mobile only; desktop shows it in .navActions instead */}
                     <Link
@@ -202,13 +105,17 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                {/* ---- RIGHT GROUP — hamburger (mobile) + actions (language switcher + CTA), anchored top-right ---- */}
+                {/* ---- RIGHT GROUP — hamburger (mobile) + actions (language switcher + CTAs), anchored top-right ---- */}
                 <div className={styles.rightGroup}>
                     <div className={styles.navActions}>
                         <Link href={arabicPathFor(pathname)} className={styles.langSwitcher} lang="ar">
                             <GlobeIcon size={14} />
                             العربية
                         </Link>
+                        <a href={WHATSAPP_URL} className={styles.ctaWhatsapp} target="_blank" rel="noopener noreferrer" onClick={close}>
+                            <WhatsAppIcon size={16} />
+                            <span className={styles.ctaWhatsappLabel}>WhatsApp</span>
+                        </a>
                         <Link href="/book-online" className={styles.cta} onClick={close}>
                             Book Now
                         </Link>

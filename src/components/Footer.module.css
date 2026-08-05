@@ -18,7 +18,7 @@
 
 .grid {
     display: grid;
-    grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr 1fr;
     gap: 2.5rem;
     margin-bottom: 3rem;
 }
@@ -35,7 +35,7 @@
 }
 
 .heading {
-    color: var(--accent);
+    color: var(--brass-bright);
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
     font-weight: 600;
@@ -47,11 +47,11 @@
 }
 
 .logoIcon {
-    color: var(--accent);
+    color: var(--brass-bright);
 }
 
 .text {
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.65);
     line-height: 1.8;
     margin-bottom: 1.5rem;
 }
@@ -97,18 +97,18 @@
 }
 
 .contactIcon {
-    color: var(--accent);
+    color: var(--brass-bright);
     flex-shrink: 0;
 }
 
 .link {
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.65);
     transition: all 0.3s ease;
     font-size: 0.9rem;
 }
 
 .link:hover {
-    color: var(--accent);
+    color: var(--brass-bright);
     padding-left: 4px;
 }
 
@@ -121,7 +121,7 @@
 }
 
 .copyright {
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.65);
     font-size: 0.8rem;
 }
 
@@ -132,13 +132,13 @@
 }
 
 .bottomLink {
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.65);
     font-size: 0.8rem;
     transition: all 0.3s ease;
 }
 
 .bottomLink:hover {
-    color: var(--accent);
+    color: var(--brass-bright);
 }
 
 .divider {

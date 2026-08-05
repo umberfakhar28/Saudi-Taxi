@@ -174,7 +174,7 @@ export default function JeddahCityTour() {
                 title="More Jeddah Taxi Services"
                 links={[
                     { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
-                    { href: "/jeddah-airport-taxi-guide", label: "Jeddah Airport Taxi Guide" },
+                    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
                     { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
                     { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
                     { href: "/services/jeddah", label: "Jeddah Taxi Services Overview" },

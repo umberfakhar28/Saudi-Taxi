@@ -3,6 +3,10 @@ import type { RouteData } from "@/components/RoutePage";
 /* ── 1. Dammam Airport → Bahrain ────────────────────────────── */
 export const dammamAirportToBahrain: RouteData = {
   slug: "dammam-airport-to-bahrain-taxi-service",
+  tags: ["gcc", "airport"],
+  priority: 1,
+  reverseSlug: "bahrain-to-dammam-taxi-service",
+  fromSlug: "dammam",
   origin: "Dammam Airport",
   destination: "Bahrain",
   isCrossBorder: true,
@@ -60,6 +64,10 @@ export const dammamAirportToBahrain: RouteData = {
 /* ── 2. Dammam Airport → Khafji ─────────────────────────────── */
 export const dammamAirportToKhafji: RouteData = {
   slug: "dammam-airport-to-khafji-taxi-service",
+  tags: ["business", "airport"],
+  priority: 2,
+  reverseSlug: "khafji-to-dammam-airport-taxi-service",
+  fromSlug: "dammam",
   origin: "Dammam Airport",
   destination: "Khafji",
   isCrossBorder: false,
@@ -108,6 +116,10 @@ export const dammamAirportToKhafji: RouteData = {
 /* ── 3. Dammam Airport → Qatar ──────────────────────────────── */
 export const dammamAirportToQatar: RouteData = {
   slug: "dammam-airport-to-qatar-taxi-service",
+  tags: ["gcc", "airport"],
+  priority: 1,
+  reverseSlug: "qatar-to-dammam-taxi-service",
+  fromSlug: "dammam",
   origin: "Dammam Airport",
   destination: "Qatar",
   isCrossBorder: true,
@@ -165,6 +177,11 @@ export const dammamAirportToQatar: RouteData = {
 /* ── 4. Dammam Airport → Riyadh ─────────────────────────────── */
 export const dammamAirportToRiyadh: RouteData = {
   slug: "dammam-airport-to-riyadh-taxi-service",
+  tags: ["business", "airport"],
+  priority: 1,
+  reverseSlug: "riyadh-to-dammam-airport-taxi-service",
+  fromSlug: "dammam",
+  toSlug: "riyadh",
   origin: "Dammam Airport",
   destination: "Riyadh",
   isCrossBorder: false,
@@ -213,6 +230,10 @@ export const dammamAirportToRiyadh: RouteData = {
 /* ── 5. Bahrain → Dammam ────────────────────────────────────── */
 export const bahrainToDammam: RouteData = {
   slug: "bahrain-to-dammam-taxi-service",
+  tags: ["gcc"],
+  priority: 1,
+  reverseSlug: "dammam-airport-to-bahrain-taxi-service",
+  toSlug: "dammam",
   origin: "Bahrain",
   destination: "Dammam",
   isCrossBorder: true,
@@ -269,6 +290,10 @@ export const bahrainToDammam: RouteData = {
 /* ── 6. Qatar → Riyadh ──────────────────────────────────────── */
 export const qatarToRiyadh: RouteData = {
   slug: "qatar-to-riyadh-taxi-service",
+  tags: ["gcc"],
+  priority: 1,
+  reverseSlug: "riyadh-to-qatar-taxi-service",
+  toSlug: "riyadh",
   origin: "Qatar",
   destination: "Riyadh",
   isCrossBorder: true,
@@ -326,6 +351,9 @@ export const qatarToRiyadh: RouteData = {
 /* ── 7. Khafji → Kuwait ─────────────────────────────────────── */
 export const khafjiToKuwait: RouteData = {
   slug: "khafji-to-kuwait-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "kuwait-to-khafji-taxi-service",
   origin: "Khafji",
   destination: "Kuwait",
   isCrossBorder: true,
@@ -386,6 +414,10 @@ export const khafjiToKuwait: RouteData = {
 /* ── 8. Riyadh → Bahrain ────────────────────────────────────── */
 export const riyadhToBahrain: RouteData = {
   slug: "riyadh-to-bahrain-taxi-service",
+  tags: ["gcc"],
+  priority: 1,
+  reverseSlug: "bahrain-to-riyadh-taxi-service",
+  fromSlug: "riyadh",
   origin: "Riyadh",
   destination: "Bahrain",
   isCrossBorder: true,
@@ -443,6 +475,10 @@ export const riyadhToBahrain: RouteData = {
 /* ── 9. Dammam → Kuwait ─────────────────────────────────────── */
 export const dammamToKuwait: RouteData = {
   slug: "dammam-to-kuwait-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "kuwait-to-dammam-taxi-service",
+  fromSlug: "dammam",
   origin: "Dammam",
   destination: "Kuwait",
   isCrossBorder: true,
@@ -500,6 +536,10 @@ export const dammamToKuwait: RouteData = {
 /* ── 10. Kuwait → Dammam ────────────────────────────────────── */
 export const kuwaitToDammam: RouteData = {
   slug: "kuwait-to-dammam-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "dammam-to-kuwait-taxi-service",
+  toSlug: "dammam",
   origin: "Kuwait",
   destination: "Dammam",
   isCrossBorder: true,
@@ -556,6 +596,10 @@ export const kuwaitToDammam: RouteData = {
 /* ── 11. Kuwait → Riyadh ────────────────────────────────────── */
 export const kuwaitToRiyadh: RouteData = {
   slug: "kuwait-to-riyadh-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "riyadh-to-kuwait-taxi-service",
+  toSlug: "riyadh",
   origin: "Kuwait",
   destination: "Riyadh",
   isCrossBorder: true,
@@ -612,6 +656,10 @@ export const kuwaitToRiyadh: RouteData = {
 /* ── 12. Qatar → Dammam ─────────────────────────────────────── */
 export const qatarToDammam: RouteData = {
   slug: "qatar-to-dammam-taxi-service",
+  tags: ["gcc"],
+  priority: 1,
+  reverseSlug: "dammam-airport-to-qatar-taxi-service",
+  toSlug: "dammam",
   origin: "Qatar",
   destination: "Dammam",
   isCrossBorder: true,
@@ -668,6 +716,10 @@ export const qatarToDammam: RouteData = {
 /* ── 13. Dammam → Abu Dhabi ─────────────────────────────────── */
 export const dammamToAbuDhabi: RouteData = {
   slug: "dammam-to-abu-dhabi-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "abu-dhabi-to-dammam-taxi-service",
+  fromSlug: "dammam",
   origin: "Dammam",
   destination: "Abu Dhabi",
   isCrossBorder: true,
@@ -725,6 +777,10 @@ export const dammamToAbuDhabi: RouteData = {
 /* ── 14. Dammam → Dubai ─────────────────────────────────────── */
 export const dammamToDubai: RouteData = {
   slug: "dammam-to-dubai-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "dubai-to-dammam-taxi-service",
+  fromSlug: "dammam",
   origin: "Dammam",
   destination: "Dubai",
   isCrossBorder: true,
@@ -782,6 +838,10 @@ export const dammamToDubai: RouteData = {
 /* ── 15. Dubai → Dammam ─────────────────────────────────────── */
 export const dubaiToDammam: RouteData = {
   slug: "dubai-to-dammam-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "dammam-to-dubai-taxi-service",
+  toSlug: "dammam",
   origin: "Dubai",
   destination: "Dammam",
   isCrossBorder: true,
@@ -838,6 +898,10 @@ export const dubaiToDammam: RouteData = {
 /* ── 16. Bahrain → Riyadh ───────────────────────────────────── */
 export const bahrainToRiyadh: RouteData = {
   slug: "bahrain-to-riyadh-taxi-service",
+  tags: ["gcc"],
+  priority: 1,
+  reverseSlug: "riyadh-to-bahrain-taxi-service",
+  toSlug: "riyadh",
   origin: "Bahrain",
   destination: "Riyadh",
   isCrossBorder: true,
@@ -894,6 +958,10 @@ export const bahrainToRiyadh: RouteData = {
 /* ── 17. Riyadh → Dubai ─────────────────────────────────────── */
 export const riyadhToDubai: RouteData = {
   slug: "riyadh-to-dubai-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "dubai-to-riyadh-taxi-service",
+  fromSlug: "riyadh",
   origin: "Riyadh",
   destination: "Dubai",
   isCrossBorder: true,
@@ -951,6 +1019,10 @@ export const riyadhToDubai: RouteData = {
 /* ── 18. Dubai → Riyadh ─────────────────────────────────────── */
 export const dubaiToRiyadh: RouteData = {
   slug: "dubai-to-riyadh-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reverseSlug: "riyadh-to-dubai-taxi-service",
+  toSlug: "riyadh",
   origin: "Dubai",
   destination: "Riyadh",
   isCrossBorder: true,
@@ -1004,6 +1076,898 @@ export const dubaiToRiyadh: RouteData = {
   ctaText: "Book Your Riyadh Transfer",
 };
 
+/* ── 19. Jeddah → Makkah ────────────────────────────────────── */
+// Migrated from the bespoke src/app/jeddah-to-makkah-taxi-service/page.tsx
+// onto RoutePage (Execution Brief v3 W3 / docs/page-inventory.md D1). Real
+// facts (distance, duration, FAQs) carried forward; the old page's "Check
+// Rates" pricing-table concept has no equivalent here by design (ground
+// rule 9) — vehicleOptions below has no price field, same as every other
+// RoutePage entry.
+export const jeddahToMakkah: RouteData = {
+  slug: "jeddah-to-makkah-taxi-service",
+  tags: ["umrah"],
+  priority: 1,
+  reverseSlug: "makkah-to-jeddah-taxi-service",
+  fromSlug: "jeddah",
+  toSlug: "makkah",
+  origin: "Jeddah",
+  destination: "Makkah",
+  isCrossBorder: false,
+  eyebrow: "Intercity Umrah Transfer",
+  h1: "Jeddah to Makkah — Private Taxi & Intercity Transfer",
+  intro: "Direct, comfortable transfers from Jeddah Airport or Jeddah city to Makkah. Meet-and-greet pickup, Ihram-friendly vehicles, and drivers experienced with the region's busiest Umrah corridor — available 24/7.",
+  breadcrumbLabel: "Jeddah → Makkah",
+  distance: "~80 km",
+  travelTime: "1 – 1.5 hours",
+  heroImage: "/images/airport-terminal.jpg",
+  overviewTitle: "Your Direct Route from Jeddah to Makkah",
+  overviewParagraphs: [
+    "The journey from Jeddah to Makkah covers approximately 80 kilometers and takes around 1 to 1.5 hours depending on traffic — longer during Ramadan evenings and the weeks around Hajj, when this is the busiest corridor in the Kingdom.",
+    "Whether you're arriving at King Abdulaziz International Airport (KAIA) or traveling from anywhere in Jeddah city, we provide door-to-door pickup and drop-off directly to your hotel near the Haram, with drivers who understand Miqat and Ihram timing for Umrah arrivals.",
+    "Most travelers on this route are arriving from a long-haul flight and heading straight into Ihram — we plan the pickup around that, not around a generic airport-to-hotel run.",
+  ],
+  documents: [
+    "Valid passport and Umrah/entry visa",
+    "Confirmed flight number for airport pickups",
+    "Makkah hotel name or address",
+  ],
+  pickupPoints: ["KAIA Terminal 1 & 2 (Jeddah Airport)", "Jeddah city hotels", "Jeddah Corniche", "Al-Balad district"],
+  dropoffInfo: "Direct drop-off at your Makkah hotel — including the Abraj Al-Bait / Clock Tower district, Ajyad, and Aziziyah — as close to the Haram as your accommodation allows.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Air-conditioned, ideal for solo travelers or couples with standard luggage." },
+    { name: "Premium Sedan", capacity: "1–3 passengers", note: "Extra legroom and priority service for a more comfortable ride." },
+    { name: "Van / SUV", capacity: "Up to 6 passengers", note: "Spacious interior with room for extra luggage — ideal for families and Umrah groups." },
+  ],
+  faqs: [
+    { q: "How long does it take from Jeddah Airport to Makkah?", a: "The journey typically takes 1 to 1.5 hours depending on traffic. During Ramadan and Hajj season it can take noticeably longer, so we build in extra buffer time on those dates." },
+    { q: "Can I book a return trip from Makkah to Jeddah?", a: "Yes — many travelers book both their arrival and departure transfers together for convenience. WhatsApp us with both dates and we'll confirm one driver for the round trip where possible." },
+    { q: "What if my flight is delayed?", a: "We track all incoming flights, so if yours is delayed your driver's pickup time adjusts automatically at no extra charge." },
+    { q: "Do you provide child seats?", a: "Yes, child and booster seats are available on request — just mention your child's age when booking so the right seat is ready." },
+  ],
+  relatedRoutes: [
+    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+    { href: "/makkah-to-jeddah-taxi-service", label: "Makkah to Jeddah Taxi (Return Trip)" },
+    { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
+    { href: "/services/jeddah", label: "Jeddah Taxi Services Overview" },
+    { href: "/services/makkah", label: "Makkah Taxi Service" },
+    { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tours" },
+  ],
+  ctaText: "Book Your Jeddah to Makkah Transfer",
+};
+
+/* ── 20. Makkah → Madinah ───────────────────────────────────── */
+// Migrated from the bespoke src/app/makkah-to-madinah-taxi-service/page.tsx
+// onto RoutePage (Execution Brief v3 W3 / docs/page-inventory.md D1).
+export const makkahToMadinah: RouteData = {
+  slug: "makkah-to-madinah-taxi-service",
+  tags: ["umrah"],
+  priority: 1,
+  reverseSlug: "madinah-to-makkah-taxi-service",
+  fromSlug: "makkah",
+  toSlug: "madinah",
+  origin: "Makkah",
+  destination: "Madinah",
+  isCrossBorder: false,
+  eyebrow: "Intercity Umrah Transfer",
+  h1: "Makkah to Madinah — Chauffeur & Intercity Car Service",
+  intro: "Premium intercity transfers between the Holy Cities — door-to-door from your Makkah hotel directly to Madinah, with a driver and vehicle for the whole journey. Safe, comfortable, and paced around pilgrims' schedules, not a generic timetable.",
+  breadcrumbLabel: "Makkah → Madinah",
+  distance: "~450 km",
+  travelTime: "4 – 5 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Pilgrim-Focused Intercity Transfers",
+  overviewParagraphs: [
+    "The journey from Makkah to Madinah is one of the most-traveled routes for Umrah and Hajj pilgrims. We run it via the Haramain Expressway for the fastest journey, or the historical route on request for travelers who want to see more of the landscape between the two Holy Cities.",
+    "On request, we can build in an optional stop at the historic Badr battlefield en route — a detail most generic intercity transfers don't offer, since it only makes sense for a private, driver-paced journey rather than a fixed-schedule service.",
+    "Vehicles are air-conditioned Sedans, SUVs, or Vans depending on your group size, and drivers are experienced with pilgrim schedules — including timing the arrival around prayer times where requested.",
+  ],
+  documents: [
+    "Valid passport and Umrah/entry visa",
+    "Makkah hotel checkout confirmation",
+    "Madinah hotel name or address",
+  ],
+  pickupPoints: ["Abraj Al-Bait / Clock Tower hotels", "Ajyad area hotels", "Aziziyah district", "Makkah city hotels"],
+  dropoffInfo: "Direct drop-off at your Madinah hotel, most commonly in the hotel district around Al-Masjid an-Nabawi.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the 4–5 hour highway drive." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Extra luggage space, popular for family Umrah trips." },
+    { name: "Van", capacity: "Up to 7 passengers", note: "Conference-style seating for larger groups traveling together." },
+  ],
+  faqs: [
+    { q: "How long does the drive from Makkah to Madinah take?", a: "Typically 4 to 5 hours via the Haramain Expressway, depending on traffic and any requested stops along the way." },
+    { q: "Can we stop at the Badr battlefield on the way?", a: "Yes — this is a popular optional stop for pilgrims wanting to visit the historic site of the Battle of Badr. Mention it when booking so we can plan the extra time into your journey." },
+    { q: "What vehicles are available for this route?", a: "Air-conditioned Sedans, SUVs, and Vans — Toyota Camry, GMC Yukon, and Toyota HiAce class vehicles, chosen based on your group size and luggage." },
+    { q: "Do you offer corporate or group accounts for this route?", a: "Yes — WhatsApp us about your travel pattern and we'll set up an account with consolidated billing for regular group bookings." },
+  ],
+  relatedRoutes: [
+    { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
+    { href: "/makkah-to-madinah-guide", label: "Makkah to Madinah Travel Guide" },
+    { href: "/services/makkah", label: "Makkah Taxi Service" },
+    { href: "/services/madinah", label: "Madinah Taxi Service" },
+    { href: "/umrah-taxi-services", label: "Umrah Taxi Services" },
+  ],
+  ctaText: "Book Your Makkah to Madinah Transfer",
+};
+
+/* ── 21. Riyadh → Dammam ────────────────────────────────────── */
+// Migrated from the legacy content/riyadh-to-dammam-taxi.html (rendered via
+// dangerouslySetInnerHTML at /riyadh-to-dammam-guide) onto RoutePage
+// (docs/page-inventory.md D2 — this one is NOT a duplicate, it was the only
+// content for this corridor, so it's a straight migration with no 301: the
+// slug stays "/riyadh-to-dammam-guide"). Pricing figures from the original
+// ("SAR 400-700", "save up to 20%", "10-15% round-trip discount") dropped
+// entirely per ground rule 9 — every pricing question below routes to
+// WhatsApp/quote instead.
+export const riyadhToDammam: RouteData = {
+  slug: "riyadh-to-dammam-guide",
+  tags: ["business"],
+  priority: 1,
+  reverseSlug: "dammam-to-riyadh-taxi-service",
+  fromSlug: "riyadh",
+  toSlug: "dammam",
+  origin: "Riyadh",
+  destination: "Dammam",
+  isCrossBorder: false,
+  eyebrow: "Executive Business Transfer",
+  h1: "Taxi from Riyadh to Dammam — Executive Car Transfer Service",
+  intro: "Professional executive taxi service from Riyadh to Dammam via Highway 40 — Saudi Arabia's busiest business corridor. Comfortable vehicles, onboard WiFi, and productive travel time, with corporate accounts available for regular travelers.",
+  breadcrumbLabel: "Riyadh → Dammam",
+  distance: "~400 km",
+  travelTime: "~4 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Saudi Arabia's Premier Business Corridor",
+  overviewParagraphs: [
+    "The Riyadh–Dammam route connects the political capital with the economic heart of the Eastern Province — Dammam, Al Khobar, and Dhahran — and carries thousands of business travelers along Highway 40 every week.",
+    "The 4-hour drive is a genuinely productive stretch for business travelers: executive vehicles come with onboard WiFi and charging points, so calls, emails, and presentation prep don't have to wait until you land.",
+    "Weekday mornings (6:00–7:00 AM) are the best time to travel if you want to arrive fresh for meetings. Thursday evenings see the heaviest weekend traffic and are worth avoiding if your schedule allows.",
+  ],
+  documents: [
+    "Valid ID or passport",
+    "Destination address or hotel name in Dammam, Khobar, or Dhahran",
+    "Company details for corporate account bookings",
+  ],
+  pickupPoints: ["Riyadh hotels and business districts", "King Khalid International Airport", "Olaya / KAFD", "Diplomatic Quarter"],
+  dropoffInfo: "Door-to-door service across the Eastern Province business region — Dammam's business district and Corniche, Al Khobar's financial district, Dhahran (including the Saudi Aramco and KFUPM area), and Jubail Industrial City on request.",
+  vehicleOptions: [
+    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Mercedes E-Class / BMW 5 Series class — leather interior, WiFi hotspot, rear AC controls." },
+    { name: "Business SUV", capacity: "1–6 passengers", note: "GMC Yukon Denali / Lexus LX class — executive seating, WiFi and charging ports, privacy glass." },
+    { name: "Luxury Van", capacity: "1–7 passengers", note: "Mercedes V-Class / GMC Yukon XL class — conference-style seating and individual climate control." },
+  ],
+  faqs: [
+    { q: "How long does it take to drive from Riyadh to Dammam?", a: "Approximately 4 hours covering 400 km via Highway 40, door-to-door including city traffic at both ends." },
+    { q: "Is there WiFi in the vehicles?", a: "Yes, in all Executive Sedan, Business SUV, and Luxury Van bookings. Standard vehicles may not have WiFi, but phone tethering works fine on this route." },
+    { q: "Can I work during the journey?", a: "Yes — the 4-hour drive is designed around this. Executive vehicles have laptop-friendly seating, charging points, and stable WiFi for calls." },
+    { q: "Do you offer corporate accounts?", a: "Yes — consolidated monthly billing, a dedicated account contact, and priority booking for companies with regular Riyadh–Eastern Province travel. WhatsApp us to set one up." },
+    { q: "What's the best time to travel?", a: "Early morning (6:00–7:00 AM) if you want to arrive fresh for meetings. Avoid Thursday evenings, which see the heaviest weekend traffic." },
+    { q: "Do you serve all areas of Dammam and Khobar?", a: "Yes — business districts, residential areas, industrial zones, and the airport are all covered door-to-door." },
+  ],
+  relatedRoutes: [
+    { href: "/dammam-to-riyadh-taxi-service", label: "Dammam to Riyadh Taxi (Return Trip)" },
+    { href: "/dammam-airport-to-riyadh-taxi-service", label: "Dammam Airport → Riyadh" },
+    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+    { href: "/services/dammam", label: "Dammam Taxi Service" },
+    { href: "/corporate-transportation-services", label: "Corporate Transportation" },
+    { href: "/dammam-airport-taxi-service", label: "Dammam Airport Taxi Service" },
+  ],
+  ctaText: "Book Your Riyadh to Dammam Transfer",
+};
+
+/* ── 22. Makkah → Jeddah (W7 P1 reciprocal) ─────────────────── */
+export const makkahToJeddah: RouteData = {
+  slug: "makkah-to-jeddah-taxi-service",
+  tags: ["umrah"],
+  priority: 1,
+  reviewed: false,
+  reverseSlug: "jeddah-to-makkah-taxi-service",
+  fromSlug: "makkah",
+  toSlug: "jeddah",
+  origin: "Makkah",
+  destination: "Jeddah",
+  isCrossBorder: false,
+  eyebrow: "Intercity Departure Transfer",
+  h1: "Makkah to Jeddah — Private Taxi & Airport Departure Transfer",
+  intro: "Comfortable transfers from your Makkah hotel to Jeddah city or King Abdulaziz International Airport (KAIA) for your departure flight. Timed around Tawaf al-Wada and your check-in window, not a fixed pickup slot.",
+  breadcrumbLabel: "Makkah → Jeddah",
+  distance: "~80 km",
+  travelTime: "1 – 1.5 hours",
+  heroImage: "/images/airport-terminal.jpg",
+  overviewTitle: "Your Direct Route from Makkah to Jeddah",
+  overviewParagraphs: [
+    "The journey from Makkah to Jeddah covers roughly 80 kilometers and takes 1 to 1.5 hours outside of Ramadan evenings and Hajj weeks, when this corridor gets noticeably busier in both directions.",
+    "Most travelers on this leg are heading to KAIA for a departure flight rather than arriving — we build the pickup time around your flight's check-in window, not a generic city transfer schedule, and can time it to follow Tawaf al-Wada (the farewell circumambulation) if that's the last thing on your itinerary before leaving Makkah.",
+    "We also run this route for travelers heading into Jeddah city itself — for a stopover, a flight the next day, or to explore Al-Balad before departing.",
+  ],
+  documents: [
+    "Valid passport and exit visa/permit as applicable",
+    "Confirmed departure flight number and time",
+    "Jeddah hotel address, if not going directly to the airport",
+  ],
+  pickupPoints: ["Abraj Al-Bait / Clock Tower hotels", "Ajyad area hotels", "Aziziyah district", "Makkah city hotels"],
+  dropoffInfo: "Direct drop-off at KAIA Terminal 1 or 2 for departures, or anywhere in Jeddah city — hotels, the Corniche, or Al-Balad.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Air-conditioned, ideal for solo travelers or couples with standard luggage." },
+    { name: "Premium Sedan", capacity: "1–3 passengers", note: "Extra legroom and priority service for a more comfortable ride." },
+    { name: "Van / SUV", capacity: "Up to 6 passengers", note: "Spacious interior with room for extra luggage — ideal for families and Umrah groups." },
+  ],
+  faqs: [
+    { q: "How much buffer time should I leave before my flight?", a: "We recommend leaving Makkah at least 3.5 hours before an international departure from KAIA, factoring in the 1–1.5 hour drive plus check-in and security. We'll confirm an exact pickup time once you share your flight details." },
+    { q: "Can the driver wait while I finish Tawaf al-Wada?", a: "Yes — let us know when booking and we'll build reasonable waiting time into the pickup plan so your farewell Tawaf isn't rushed." },
+    { q: "Do you drop off directly at the departures terminal?", a: "Yes, straight to KAIA Terminal 1 or 2 departures, matched to your airline." },
+    { q: "Can I book this alongside my original Jeddah-to-Makkah arrival transfer?", a: "Yes — many travelers book both legs together at the start of their trip so the return pickup is already arranged before they even land." },
+  ],
+  relatedRoutes: [
+    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+    { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
+    { href: "/services/makkah", label: "Makkah Taxi Service" },
+    { href: "/services/jeddah", label: "Jeddah Taxi Services Overview" },
+    { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+  ],
+  ctaText: "Book Your Makkah to Jeddah Transfer",
+};
+
+/* ── 23. Madinah → Makkah (W7 P1 reciprocal) ────────────────── */
+export const madinahToMakkah: RouteData = {
+  slug: "madinah-to-makkah-taxi-service",
+  tags: ["umrah"],
+  priority: 1,
+  reviewed: false,
+  reverseSlug: "makkah-to-madinah-taxi-service",
+  fromSlug: "madinah",
+  toSlug: "makkah",
+  origin: "Madinah",
+  destination: "Makkah",
+  isCrossBorder: false,
+  eyebrow: "Intercity Umrah Transfer",
+  h1: "Madinah to Makkah — Chauffeur & Intercity Car Service",
+  intro: "Door-to-door transfers from your Madinah hotel to Makkah via the Haramain Expressway, with a stop at the Miqat for pilgrims beginning their Umrah from Madinah. Paced around your schedule, not a fixed timetable.",
+  breadcrumbLabel: "Madinah → Makkah",
+  distance: "~450 km",
+  travelTime: "4 – 5 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Pilgrim-Focused Transfers from Madinah to Makkah",
+  overviewParagraphs: [
+    "Many pilgrims visit Madinah first and begin their Umrah on the way to Makkah — which means this direction has a step the reverse journey doesn't: a stop at Dhul Hulaifah (Abyar Ali), the Miqat for travelers departing Madinah, where you enter the state of Ihram before continuing.",
+    "We build this stop into the journey as standard, with enough time to change into Ihram, perform the intention (niyyah), and pray two rak'ahs before getting back on the road — no separate transport needed for the Miqat.",
+    "From there we continue via the Haramain Expressway for the fastest route, with drivers experienced in Ihram etiquette for the rest of the journey into Makkah.",
+  ],
+  documents: [
+    "Valid passport and Umrah/entry visa",
+    "Madinah hotel checkout confirmation",
+    "Makkah hotel name or address",
+  ],
+  pickupPoints: ["Madinah hotel district (near Al-Masjid an-Nabawi)", "Madinah city hotels", "Dhul Hulaifah / Abyar Ali Miqat (built into the route)"],
+  dropoffInfo: "Direct drop-off at your Makkah hotel — including the Abraj Al-Bait / Clock Tower district, Ajyad, and Aziziyah.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the 4–5 hour highway drive." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Extra luggage space, popular for family Umrah trips." },
+    { name: "Van", capacity: "Up to 7 passengers", note: "Conference-style seating for larger groups traveling together." },
+  ],
+  faqs: [
+    { q: "Do we stop at the Miqat on this route?", a: "Yes — Dhul Hulaifah (Abyar Ali) is the Miqat for travelers departing Madinah, and it's built into every booking on this route as standard, with time to change into Ihram and pray before continuing." },
+    { q: "How long does the drive from Madinah to Makkah take?", a: "Typically 4 to 5 hours via the Haramain Expressway, plus the Miqat stop, depending on traffic." },
+    { q: "What vehicles are available for this route?", a: "Air-conditioned Sedans, SUVs, and Vans, chosen based on your group size and luggage — all with enough space to travel comfortably in Ihram." },
+    { q: "Can we request a female driver or family vehicle?", a: "Yes — mention this when booking and we'll arrange accordingly, subject to availability." },
+  ],
+  relatedRoutes: [
+    { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
+    { href: "/makkah-to-madinah-guide", label: "Makkah to Madinah Travel Guide" },
+    { href: "/services/madinah", label: "Madinah Taxi Service" },
+    { href: "/services/makkah", label: "Makkah Taxi Service" },
+    { href: "/umrah-taxi-services", label: "Umrah Taxi Services" },
+  ],
+  ctaText: "Book Your Madinah to Makkah Transfer",
+};
+
+/* ── 24. Dammam → Riyadh (W7 P1 reciprocal, general city-to-city) ── */
+export const dammamToRiyadh: RouteData = {
+  slug: "dammam-to-riyadh-taxi-service",
+  tags: ["business"],
+  priority: 1,
+  reviewed: false,
+  reverseSlug: "riyadh-to-dammam-guide",
+  fromSlug: "dammam",
+  toSlug: "riyadh",
+  origin: "Dammam",
+  destination: "Riyadh",
+  isCrossBorder: false,
+  eyebrow: "Executive Business Transfer",
+  h1: "Taxi from Dammam to Riyadh — Executive Car Transfer Service",
+  intro: "Professional executive taxi service from Dammam to Riyadh via Highway 40. Comfortable vehicles, onboard WiFi, and productive travel time for the Eastern Province's busiest connection to the capital.",
+  breadcrumbLabel: "Dammam → Riyadh",
+  distance: "~400 km",
+  travelTime: "~4 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "From the Eastern Province to the Capital",
+  overviewParagraphs: [
+    "The Dammam–Riyadh corridor carries thousands of business travelers weekly — Aramco and industrial-sector staff heading to head office meetings, government appointments, and Eastern Province residents connecting through Riyadh.",
+    "Executive vehicles come with onboard WiFi and charging points for the 4-hour drive, so the trip itself can double as productive time rather than dead travel hours.",
+    "Sunday mornings see the heaviest traffic out of Dammam as the work week begins; a slightly earlier departure avoids the worst of it and gets you into Riyadh with time to spare before meetings.",
+  ],
+  documents: [
+    "Valid ID or passport",
+    "Destination address or hotel name in Riyadh",
+    "Company details for corporate account bookings",
+  ],
+  pickupPoints: ["Dammam city hotels and Corniche", "Al Khobar business district", "Dhahran (Aramco / KFUPM area)", "King Fahd International Airport"],
+  dropoffInfo: "Door-to-door service anywhere in Riyadh — KAFD, Olaya, Diriyah, government ministries, or King Khalid International Airport for onward connections.",
+  vehicleOptions: [
+    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Mercedes E-Class / BMW 5 Series class — leather interior, WiFi hotspot, rear AC controls." },
+    { name: "Business SUV", capacity: "1–6 passengers", note: "GMC Yukon Denali / Lexus LX class — executive seating, WiFi and charging ports, privacy glass." },
+    { name: "Luxury Van", capacity: "1–7 passengers", note: "Mercedes V-Class / GMC Yukon XL class — conference-style seating and individual climate control." },
+  ],
+  faqs: [
+    { q: "How long does it take to drive from Dammam to Riyadh?", a: "Approximately 4 hours covering 400 km via Highway 40, door-to-door including city traffic at both ends." },
+    { q: "Is there WiFi in the vehicles?", a: "Yes, in all Executive Sedan, Business SUV, and Luxury Van bookings." },
+    { q: "Do you offer corporate accounts?", a: "Yes — consolidated monthly billing and priority booking for companies with regular Eastern Province–Riyadh travel. WhatsApp us to set one up." },
+    { q: "What's the best time to travel to avoid traffic?", a: "Sunday mornings see the heaviest traffic as the work week starts — an earlier departure or a Saturday travel day avoids most of it." },
+    { q: "Can you pick me up directly from Dammam Airport?", a: "Yes — see our dedicated Dammam Airport to Riyadh page if you're arriving by air rather than starting from a Dammam city address." },
+  ],
+  relatedRoutes: [
+    { href: "/riyadh-to-dammam-guide", label: "Riyadh to Dammam Travel Guide" },
+    { href: "/dammam-airport-to-riyadh-taxi-service", label: "Dammam Airport → Riyadh" },
+    { href: "/services/dammam", label: "Dammam Taxi Service" },
+    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+    { href: "/corporate-transportation-services", label: "Corporate Transportation" },
+  ],
+  ctaText: "Book Your Dammam to Riyadh Transfer",
+};
+
+/* ── 25. Riyadh → Dammam Airport (W7 P1 reciprocal) ─────────── */
+export const riyadhToDammamAirport: RouteData = {
+  slug: "riyadh-to-dammam-airport-taxi-service",
+  tags: ["business", "airport"],
+  priority: 1,
+  reviewed: false,
+  reverseSlug: "dammam-airport-to-riyadh-taxi-service",
+  fromSlug: "riyadh",
+  toSlug: "dammam",
+  origin: "Riyadh",
+  destination: "Dammam Airport",
+  isCrossBorder: false,
+  eyebrow: "Intercity Airport Transfer",
+  h1: "Riyadh to Dammam Airport — Executive Car Transfer Service",
+  intro: "Private intercity transfer from your Riyadh hotel or office straight to King Fahd International Airport (DMM) — for onward flights, Eastern Province business trips ending at the airport, or GCC connections DMM serves.",
+  breadcrumbLabel: "Riyadh → Dammam Airport",
+  distance: "~400 km",
+  travelTime: "3.5 – 4.5 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Direct Highway Transfer from Riyadh to Dammam Airport",
+  overviewParagraphs: [
+    "Travelers based in Riyadh sometimes need King Fahd International specifically — for a GCC connection DMM serves better than Riyadh's own airport, or as the final leg of an Eastern Province business trip before flying out. This route gets you there door-to-door in one vehicle.",
+    "The drive follows Highway 40, the same well-lit dual carriageway used by the reverse direction, with a rest-stop option roughly at the midpoint near Al-Ahsa/Hofuf for the full 3.5–4.5 hour journey.",
+    "We plan the pickup time around your flight's check-in window rather than a fixed slot, factoring in the drive plus a buffer for the airport.",
+  ],
+  documents: [
+    "Valid ID or passport",
+    "Confirmed departure flight number and time",
+    "Riyadh pickup address or hotel confirmation",
+  ],
+  pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Diriyah", "Riyadh corporate offices"],
+  dropoffInfo: "Direct drop-off at King Fahd International Airport (DMM) departures, Terminal 1.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Ideal for solo executive travel between the two cities." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Popular for families and business teams with extra luggage." },
+    { name: "Van", capacity: "6–10 passengers", note: "Best for corporate groups traveling together." },
+  ],
+  faqs: [
+    { q: "How much time should I leave before my DMM flight?", a: "We recommend leaving Riyadh at least 7 hours before an international departure, covering the 3.5–4.5 hour drive plus check-in and security buffer. We'll confirm an exact pickup time once you share your flight details." },
+    { q: "Can you arrange a corporate account for regular trips?", a: "Yes, we offer monthly invoiced corporate accounts for businesses that regularly move staff between Riyadh and the Eastern Province." },
+    { q: "Do you offer a rest stop on the way?", a: "Yes, drivers can stop near the Al-Ahsa/Hofuf area roughly midway if requested, or continue non-stop if your flight timing is tight." },
+    { q: "Can I book a late-night departure to catch an early DMM flight?", a: "Yes, we run 24/7 — a late-night or overnight departure from Riyadh also means lighter traffic on Highway 40." },
+  ],
+  relatedRoutes: [
+    { href: "/dammam-airport-to-riyadh-taxi-service", label: "Dammam Airport → Riyadh" },
+    { href: "/dammam-airport-taxi-service", label: "Dammam Airport Taxi Service" },
+    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+    { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport Taxi Service" },
+    { href: "/corporate-transportation-services", label: "Corporate Transportation" },
+  ],
+  ctaText: "Book Your Dammam Airport Transfer",
+};
+
+/* ── 26. Jeddah Airport → Madinah (W7 P1, new — Madinah-first Umrah itinerary) ── */
+export const jeddahAirportToMadinah: RouteData = {
+  slug: "jeddah-airport-to-madinah-taxi-service",
+  tags: ["umrah", "airport"],
+  priority: 1,
+  reviewed: false,
+  reverseSlug: "madinah-to-jeddah-airport-taxi-service",
+  fromSlug: "jeddah",
+  toSlug: "madinah",
+  origin: "Jeddah Airport",
+  destination: "Madinah",
+  isCrossBorder: false,
+  eyebrow: "Airport to City Umrah Transfer",
+  h1: "Jeddah Airport to Madinah — Private Taxi & Umrah Transfer",
+  intro: "Direct transfer from King Abdulaziz International Airport (KAIA) straight to Madinah — for pilgrims following a Madinah-first Umrah itinerary. Meet-and-greet pickup and a comfortable highway drive, no Ihram required for this leg.",
+  breadcrumbLabel: "Jeddah Airport → Madinah",
+  distance: "~420 km",
+  travelTime: "~4.5 hours",
+  heroImage: "/images/airport-terminal.jpg",
+  overviewTitle: "For Pilgrims Starting Their Umrah in Madinah",
+  overviewParagraphs: [
+    "Many pilgrims choose to visit Madinah first and pray at Al-Masjid an-Nabawi before continuing on to Makkah for Umrah — a common alternative to the more typical Makkah-first route. This transfer covers that first leg: KAIA arrivals straight through to Madinah.",
+    "Because you haven't yet reached your Miqat on this itinerary, there's no need to enter Ihram for this drive — it's a comfortable, ordinary highway transfer along the coastal route north from Jeddah.",
+    "Once your Madinah visit is complete, our companion Madinah to Makkah service picks up the journey from there, including the mandatory Miqat stop at Dhul Hulaifah before continuing to Makkah.",
+  ],
+  documents: [
+    "Valid passport and Umrah/entry visa",
+    "Confirmed flight number for airport pickup",
+    "Madinah hotel name or address",
+  ],
+  pickupPoints: ["KAIA Terminal 1 & 2 (Jeddah Airport)"],
+  dropoffInfo: "Direct drop-off at your Madinah hotel, most commonly in the hotel district around Al-Masjid an-Nabawi.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the 4.5-hour highway drive." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Extra luggage space, popular for family Umrah trips." },
+    { name: "Van", capacity: "Up to 7 passengers", note: "For larger Umrah groups traveling together." },
+  ],
+  faqs: [
+    { q: "Do I need to be in Ihram for this leg of the trip?", a: "No — if you're following a Madinah-first itinerary, your Miqat comes later, on the drive from Madinah to Makkah. This leg from the airport is an ordinary transfer." },
+    { q: "Is Madinah-first a common way to perform Umrah?", a: "Yes, many pilgrims prefer to visit the Prophet's Mosque first, then continue to Makkah afterward — this route serves exactly that itinerary." },
+    { q: "How long is the drive from Jeddah Airport to Madinah?", a: "Around 4.5 hours covering roughly 420 km, longer during Ramadan and Hajj season when the route is busier." },
+    { q: "Can you also book the onward Madinah to Makkah leg?", a: "Yes — WhatsApp us your full itinerary and we can arrange both legs, including the Miqat stop, in one coordinated booking." },
+  ],
+  relatedRoutes: [
+    { href: "/madinah-to-jeddah-airport-taxi-service", label: "Madinah to Jeddah Airport Taxi (Return Trip)" },
+    { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
+    { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah Taxi" },
+    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+    { href: "/services/madinah", label: "Madinah Taxi Service" },
+    { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+  ],
+  ctaText: "Book Your Jeddah Airport to Madinah Transfer",
+};
+
+/* ── 27. Riyadh → Makkah (W7 P1, new — long-distance Umrah) ── */
+export const riyadhToMakkah: RouteData = {
+  slug: "riyadh-to-makkah-taxi-service",
+  tags: ["umrah"],
+  priority: 1,
+  reviewed: false,
+  reverseSlug: "makkah-to-riyadh-taxi-service",
+  fromSlug: "riyadh",
+  toSlug: "makkah",
+  origin: "Riyadh",
+  destination: "Makkah",
+  isCrossBorder: false,
+  eyebrow: "Long-Distance Umrah Transfer",
+  h1: "Riyadh to Makkah — Private Taxi & Umrah Transfer Service",
+  intro: "Long-distance door-to-door transfer from Riyadh to Makkah, including a stop at the correct Miqat for travelers from the Najd direction. A private alternative to flying for groups, families, and those who prefer to drive.",
+  breadcrumbLabel: "Riyadh → Makkah",
+  distance: "~870 km",
+  travelTime: "9 – 10 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "A Long Drive, Done Properly — Including the Miqat",
+  overviewParagraphs: [
+    "This is a genuine long-haul journey — well over 800 km — and one detail matters more here than on any other Umrah corridor: travelers from Riyadh and the wider Najd region enter Ihram at Qarn al-Manazil (As-Sail al-Kabir), not at any of the Jeddah- or Madinah-side Miqats. We build this stop into the route as standard.",
+    "Given the distance, most solo travelers in a hurry are better served by flying into Jeddah or Madinah and taking a shorter connecting transfer — this service is aimed at groups, families, and travelers who specifically want a private, uninterrupted overland journey.",
+    "We schedule rest stops along the way and use SUV or Van-class vehicles by default for the extra comfort this distance calls for.",
+  ],
+  documents: [
+    "Valid passport and Umrah/entry visa",
+    "Confirmed Riyadh pickup address or hotel",
+    "Makkah hotel name or address",
+  ],
+  pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Qarn al-Manazil / As-Sail al-Kabir Miqat (built into the route)"],
+  dropoffInfo: "Direct drop-off at your Makkah hotel — including the Abraj Al-Bait / Clock Tower district, Ajyad, and Aziziyah.",
+  vehicleOptions: [
+    { name: "SUV", capacity: "1–5 passengers", note: "Recommended default for this distance — extra legroom and comfort." },
+    { name: "Van", capacity: "Up to 7 passengers", note: "Conference-style seating, popular for family Umrah groups making the full drive together." },
+    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats for travelers who prefer a sedan despite the distance." },
+  ],
+  faqs: [
+    { q: "Where do I enter Ihram on this route?", a: "At Qarn al-Manazil (As-Sail al-Kabir) — the correct Miqat for pilgrims traveling from Riyadh and the Najd region. It's built into every booking on this route as standard." },
+    { q: "Is it better to fly instead of driving this route?", a: "For a solo traveler in a hurry, yes — flying into Jeddah or Madinah and taking a shorter connecting transfer is usually faster. This service suits groups, families, and travelers who specifically want a private overland journey." },
+    { q: "How long does the full drive take?", a: "Typically 9–10 hours including the Miqat stop and rest breaks, depending on traffic." },
+    { q: "Can this be booked for a large family group?", a: "Yes — Van-class vehicles with conference-style seating are popular for exactly this trip." },
+  ],
+  relatedRoutes: [
+    { href: "/makkah-to-riyadh-taxi-service", label: "Makkah to Riyadh Taxi (Return Trip)" },
+    { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport Taxi Service" },
+    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+    { href: "/services/makkah", label: "Makkah Taxi Service" },
+    { href: "/umrah-taxi-services", label: "Umrah Taxi Services" },
+  ],
+  ctaText: "Book Your Riyadh to Makkah Transfer",
+};
+
+/* ── 28. Riyadh → Qatar (W7 P1 reciprocal — the "Riyadh↔Doha" gap) ── */
+export const riyadhToQatar: RouteData = {
+  slug: "riyadh-to-qatar-taxi-service",
+  tags: ["gcc"],
+  priority: 1,
+  reviewed: false,
+  reverseSlug: "qatar-to-riyadh-taxi-service",
+  fromSlug: "riyadh",
+  origin: "Riyadh",
+  destination: "Qatar",
+  isCrossBorder: true,
+  borderCrossingName: "Salwa / Abu Samra Border",
+  eyebrow: "Long-Distance Border Transfer",
+  h1: "Riyadh to Qatar — Private Taxi & Cross-Border Transfer",
+  intro: "Private door-to-door transfer from Riyadh to Doha, Qatar, via the Salwa (Abu Samra) land border. One vehicle for the entire journey — direct to your Doha destination, no layovers or vehicle changes.",
+  breadcrumbLabel: "Riyadh → Qatar",
+  distance: "~580 km",
+  travelTime: "6.5 – 7.5 hours (incl. border)",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Non-Stop Land Transfer from Riyadh to Doha",
+  overviewParagraphs: [
+    "For business travelers, diplomatic missions, and families who prefer a private overland journey to flying, the Riyadh–Doha route runs south-east across the central desert plateau and Eastern Province to the Salwa border, then on into Qatar. It's especially popular around GCC summits and major events in Doha.",
+    "The journey departs Riyadh, crosses the Eastern Province via Al-Ahsa, enters Qatar at Salwa/Abu Samra, then continues to Doha — one continuous route covered by a single vehicle and driver throughout.",
+    "Given the distance, we build in a scheduled rest stop roughly midway near Al-Ahsa, and offer executive vehicles with extra legroom for the multi-hour drive.",
+  ],
+  borderProcessTitle: "Salwa / Abu Samra Crossing on This Route",
+  borderProcessParagraphs: [
+    "From Riyadh, the drive to the Salwa border takes roughly 5 hours via the eastern highway network and Al-Ahsa. Passengers present passports for Saudi exit formalities before proceeding to the Qatari entry post at Abu Samra.",
+    "GCC nationals cross with their national ID; other nationalities need a Hayya Card (for event ticket holders) or an approved Qatar visa. Vehicle customs checks apply on both sides, and the crossing typically takes 30–60 minutes combined during off-peak hours.",
+    "After clearing into Qatar, the remaining drive to Doha takes about an hour.",
+  ],
+  documents: [
+    "Valid passport (6+ months validity)",
+    "Hayya Card or valid Qatar entry visa (non-GCC nationals)",
+    "GCC national ID (for Saudi/Qatari/GCC citizens)",
+    "Doha drop-off address or hotel confirmation",
+  ],
+  pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Diriyah", "Riyadh corporate offices"],
+  dropoffInfo: "Direct drop-off anywhere in Doha — hotels, residential towers, corporate offices, or Hamad International Airport for onward connections.",
+  vehicleOptions: [
+    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats and extra comfort for the 7-hour journey." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Popular for families and business travelers with luggage." },
+    { name: "Van", capacity: "6–10 passengers", note: "For delegations or groups traveling together to Doha." },
+  ],
+  faqs: [
+    { q: "Is a single driver used for the entire Riyadh to Doha trip?", a: "Yes, one vehicle and driver cover the full route from Riyadh, through the Salwa border, to your final Doha destination." },
+    { q: "How long does the full journey take?", a: "Typically 6.5–7.5 hours including the border crossing and a scheduled rest stop, depending on traffic and border processing times." },
+    { q: "Do I need a Hayya Card for this route?", a: "Only if you're attending an event that issues one; otherwise a standard Qatar visa or GCC national ID applies." },
+    { q: "Can this trip be booked for a delegation?", a: "Yes, we regularly arrange multi-vehicle convoys for delegations, corporate groups, and event attendees traveling between Riyadh and Doha." },
+  ],
+  relatedRoutes: [
+    { href: "/qatar-to-riyadh-taxi-service", label: "Qatar to Riyadh Taxi" },
+    { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport to Qatar Taxi" },
+    { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar Taxi" },
+    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+    { href: "/border-crossing", label: "All Border Crossing Routes" },
+  ],
+  ctaText: "Book Your Doha Transfer",
+};
+
+/* ── 29. Khafji → Dammam Airport (W7 P1.5 reciprocal) ───────── */
+export const khafjiToDammamAirport: RouteData = {
+  slug: "khafji-to-dammam-airport-taxi-service",
+  tags: ["business", "airport"],
+  priority: 2,
+  reviewed: false,
+  reverseSlug: "dammam-airport-to-khafji-taxi-service",
+  toSlug: "dammam",
+  origin: "Khafji",
+  destination: "Dammam Airport",
+  isCrossBorder: false,
+  eyebrow: "Border Town to Airport Transfer",
+  h1: "Khafji to Dammam Airport — Private Taxi & Intercity Transfer",
+  intro: "Direct highway transfer from Al Khafji to King Fahd International Airport (DMM) — for KJO staff, residents, and travelers connecting to a flight after crossing in from Kuwait.",
+  breadcrumbLabel: "Khafji → Dammam Airport",
+  distance: "~180 km",
+  travelTime: "2 – 2.5 hours",
+  heroImage: "/images/fleet-suv.jpg",
+  overviewTitle: "Direct Transfer from Khafji to King Fahd International Airport",
+  overviewParagraphs: [
+    "For Khafji Joint Operations staff, residents, and travelers who've just crossed in from Kuwait, King Fahd International (DMM) is the nearest major airport for onward domestic or international flights.",
+    "The drive follows Highway 95 south along the Gulf coast through Ras Tanura and Jubail before reaching DMM — the same well-maintained route used by the companion Dammam Airport to Khafji service, just in reverse.",
+    "As a domestic transfer entirely within Saudi Arabia, there are no border formalities on this leg — just a straightforward coastal highway drive timed around your flight.",
+  ],
+  documents: [
+    "Valid ID or passport (for identification purposes only)",
+    "Confirmed departure flight number and time",
+    "Khafji pickup address",
+  ],
+  pickupPoints: ["Al Khafji city center", "Khafji Joint Operations (KJO) compound", "Khafji hotels"],
+  dropoffInfo: "Direct drop-off at King Fahd International Airport (DMM) departures.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the 2-hour coastal highway drive." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Popular with KJO business travelers needing extra space." },
+    { name: "Van", capacity: "6–10 passengers", note: "For crews or families traveling together to the airport." },
+  ],
+  faqs: [
+    { q: "How much time should I leave before my DMM flight?", a: "We recommend leaving Khafji at least 4.5 hours before an international departure, covering the 2–2.5 hour drive plus check-in and security buffer." },
+    { q: "Do you serve KJO staff regularly on this route?", a: "Yes, this is a regular transfer for Khafji Joint Operations staff and contractors flying out through Dammam." },
+    { q: "Can I stop in Jubail on the way to the airport?", a: "Yes, a short stop can be arranged along the route — just mention it when booking." },
+    { q: "Can you combine this with a Kuwait border crossing?", a: "Yes — book our Kuwait to Khafji service first, then continue with this leg to the airport, or ask us to arrange the combined itinerary in one booking." },
+  ],
+  relatedRoutes: [
+    { href: "/dammam-airport-to-khafji-taxi-service", label: "Dammam Airport to Khafji Taxi" },
+    { href: "/kuwait-to-khafji-taxi-service", label: "Kuwait to Khafji Taxi" },
+    { href: "/dammam-airport-taxi-service", label: "Dammam Airport Taxi Service" },
+    { href: "/services/dammam", label: "Dammam Taxi Service" },
+    { href: "/border-crossing", label: "All Border Crossing Routes" },
+  ],
+  ctaText: "Book Your Dammam Airport Transfer",
+};
+
+/* ── 30. Kuwait → Khafji (W7 P1.5 reciprocal) ───────────────── */
+export const kuwaitToKhafji: RouteData = {
+  slug: "kuwait-to-khafji-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reviewed: false,
+  reverseSlug: "khafji-to-kuwait-taxi-service",
+  origin: "Kuwait",
+  destination: "Khafji",
+  isCrossBorder: true,
+  borderCrossingName: "Al Nuwaiseeb / Al Khafji Border",
+  eyebrow: "Border Crossing Transfer",
+  h1: "Kuwait to Khafji Private Taxi & Border Transfer — 24/7",
+  intro: "Direct taxi transfer from Kuwait City across the Al Nuwaiseeb border crossing into Al Khafji, Saudi Arabia. The shortest and most direct land route between the two countries.",
+  breadcrumbLabel: "Kuwait → Khafji",
+  distance: "~180 km to Khafji",
+  travelTime: "2.5 – 3 hours (incl. border)",
+  heroImage: "/images/fleet-suv.jpg",
+  overviewTitle: "Shortest Land Route from Kuwait into Saudi Arabia",
+  overviewParagraphs: [
+    "Al Nuwaiseeb is the primary land gateway between Kuwait and Saudi Arabia, and Al Khafji — Saudi Arabia's northernmost Gulf coast city — sits just a short drive from the crossing on the Saudi side.",
+    "Our drivers collect you in Kuwait City, guide you through the Kuwaiti exit and Saudi entry formalities at the border, and continue the short final leg into Khafji — including the Khafji Joint Operations compound and surrounding accommodation.",
+    "This route is especially popular with GCC nationals, cross-border commuters working in the joint Neutral Zone oil fields, and families with connections on both sides of the border.",
+  ],
+  borderProcessTitle: "Al Nuwaiseeb Border Crossing Process",
+  borderProcessParagraphs: [
+    "From central Kuwait City, the drive to the border post takes roughly 1.5–2 hours. Passengers present passports and vehicle documents at the Kuwaiti exit post.",
+    "GCC nationals cross with their national ID card — no passport stamp required in most cases. Non-GCC nationals need a valid Saudi entry visa or Iqama if returning as a resident.",
+    "The crossing is open 24 hours. Processing typically takes 30–90 minutes outside peak periods, but can extend on Thursday/Friday evenings and public holidays — we plan pickup times around known busy windows where possible.",
+  ],
+  documents: [
+    "Valid passport (6+ months validity)",
+    "Saudi entry visa or Iqama (for expatriates returning as residents)",
+    "GCC national ID (for Saudi/Kuwaiti/GCC citizens)",
+    "Cash (Saudi Riyal) for any border toll — cards often accepted as backup",
+    "Khafji drop-off address confirmation",
+  ],
+  pickupPoints: ["Kuwait City hotels", "Kuwait International Airport", "Salmiya", "Kuwait corporate offices"],
+  dropoffInfo: "Direct drop-off in Al Khafji city center, the Khafji Joint Operations (KJO) compound, or local hotels.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Quick and efficient for the border crossing route." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Popular with oil and gas industry commuters." },
+    { name: "Van", capacity: "6–10 passengers", note: "For crews and families crossing together." },
+  ],
+  faqs: [
+    { q: "Do GCC nationals need a visa for this crossing?", a: "No, GCC nationals can cross with just their national ID card in most cases." },
+    { q: "How long can the border crossing take?", a: "The Al Nuwaiseeb crossing runs 24 hours and is usually 30–90 minutes for passenger vehicles, but Thursday/Friday evenings and public holidays can see longer waits." },
+    { q: "Do you serve workers commuting to the Neutral Zone oil fields?", a: "Yes, this route is regularly used by workers and contractors in the shared Saudi-Kuwait Neutral Zone oil operations." },
+    { q: "Can I continue on to Dammam Airport after crossing?", a: "Yes — book our Khafji to Dammam Airport service to continue, or ask us to arrange the combined itinerary in one booking." },
+  ],
+  relatedRoutes: [
+    { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait Taxi" },
+    { href: "/khafji-to-dammam-airport-taxi-service", label: "Khafji to Dammam Airport Taxi" },
+    { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
+    { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh Taxi" },
+    { href: "/border-crossing", label: "All Border Crossing Routes" },
+  ],
+  ctaText: "Book Your Khafji Border Crossing",
+};
+
+/* ── 31. Riyadh → Kuwait (W7 P1.5 reciprocal) ───────────────── */
+export const riyadhToKuwait: RouteData = {
+  slug: "riyadh-to-kuwait-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reviewed: false,
+  reverseSlug: "kuwait-to-riyadh-taxi-service",
+  fromSlug: "riyadh",
+  origin: "Riyadh",
+  destination: "Kuwait",
+  isCrossBorder: true,
+  borderCrossingName: "Haradh / Wajir Border",
+  eyebrow: "Long-Distance Border Transfer",
+  h1: "Riyadh to Kuwait — Private Taxi & Cross-Border Transfer",
+  intro: "Private door-to-door transfer from Riyadh to Kuwait City via the Haradh/Wajir land border. One vehicle for the full journey — a comfortable overland alternative to flying for groups and travelers with luggage.",
+  breadcrumbLabel: "Riyadh → Kuwait",
+  distance: "~550 km",
+  travelTime: "6 – 7 hours (incl. border)",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Direct Overland Transfer from Riyadh to Kuwait",
+  overviewParagraphs: [
+    "For business travelers, GCC nationals, and families who prefer a private overland journey to flying, the Riyadh–Kuwait route runs north-east through Saudi Arabia's Central and Eastern regions via the Haradh/Wajir border crossing.",
+    "The journey departs Riyadh, crosses into Kuwait at Haradh, then continues to Kuwait City — one continuous route covered by a single vehicle and driver.",
+    "Given the distance, we build in a scheduled rest stop roughly midway, and offer executive vehicles with extra legroom for the multi-hour drive.",
+  ],
+  borderProcessTitle: "Crossing at Haradh / Wajir",
+  borderProcessParagraphs: [
+    "From Riyadh, the drive to the Haradh border post takes around 4 hours through the eastern desert plateau. Passengers present passports for Saudi exit formalities before proceeding to the Kuwaiti entry post.",
+    "GCC nationals cross with their national ID; other nationalities need a valid Kuwait entry visa. Vehicle customs checks apply on both sides.",
+    "After clearing into Kuwait, the remaining drive to Kuwait City takes around 2 hours.",
+  ],
+  documents: [
+    "Valid passport (6+ months validity)",
+    "Kuwait entry visa or GCC national ID",
+    "Saudi exit clearance (standard for residents/visitors)",
+    "Kuwait drop-off address or hotel confirmation",
+  ],
+  pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Diriyah", "Riyadh corporate offices"],
+  dropoffInfo: "Direct drop-off anywhere in Kuwait City, Salmiya, or Kuwait International Airport for onward connections.",
+  vehicleOptions: [
+    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats and extra comfort for the long journey." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Popular for families and business travelers with luggage." },
+    { name: "Van", capacity: "6–10 passengers", note: "For delegations or groups traveling together to Kuwait." },
+  ],
+  faqs: [
+    { q: "Is a single driver used for the entire Riyadh to Kuwait trip?", a: "Yes, one vehicle and driver cover the full route from Riyadh, through the Haradh/Wajir border, to your final Kuwait destination." },
+    { q: "How long does the full journey take?", a: "Typically 6–7 hours including the border crossing and a scheduled rest stop, depending on traffic and border processing times." },
+    { q: "Do I need a visa to enter Kuwait this way?", a: "Non-GCC nationals need a valid Kuwait entry visa. GCC nationals can cross with just their national ID." },
+    { q: "Can this trip be booked for a group or delegation?", a: "Yes, we regularly arrange multi-vehicle convoys for delegations, corporate groups, and families traveling between Riyadh and Kuwait." },
+  ],
+  relatedRoutes: [
+    { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh Taxi" },
+    { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
+    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+    { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport Taxi Service" },
+    { href: "/border-crossing", label: "All Border Crossing Routes" },
+  ],
+  ctaText: "Book Your Kuwait Transfer",
+};
+
+/* ── 32. Abu Dhabi → Dammam (W7 P1.5 reciprocal) ────────────── */
+export const abuDhabiToDammam: RouteData = {
+  slug: "abu-dhabi-to-dammam-taxi-service",
+  tags: ["gcc"],
+  priority: 2,
+  reviewed: false,
+  reverseSlug: "dammam-to-abu-dhabi-taxi-service",
+  toSlug: "dammam",
+  origin: "Abu Dhabi",
+  destination: "Dammam",
+  isCrossBorder: true,
+  borderCrossingName: "Al Batha / Ghuwaifat Border",
+  eyebrow: "Long-Distance Border Transfer",
+  h1: "Abu Dhabi to Dammam — Executive Car Transfer Service",
+  intro: "Private long-distance overland transfer from Abu Dhabi to Dammam via the Al Batha (Ghuwaifat) border crossing into Saudi Arabia. A single executive vehicle for the full journey.",
+  breadcrumbLabel: "Abu Dhabi → Dammam",
+  distance: "~950 km",
+  travelTime: "10 – 11.5 hours (incl. border)",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Direct Overland Transfer from Abu Dhabi to Dammam",
+  overviewParagraphs: [
+    "This is a genuine long-haul overland journey — well over 900 km — best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers avoiding airport-to-airport connections on both ends.",
+    "The route runs north-west from Abu Dhabi along the Gulf coast to the Ghuwaifat / Al Batha border crossing into Saudi Arabia, then continues through the Eastern Province to Dammam.",
+    "Given the distance, we schedule one or more rest stops along the way and use executive-grade vehicles built for long-distance comfort.",
+  ],
+  borderProcessTitle: "Crossing at Al Batha / Ghuwaifat",
+  borderProcessParagraphs: [
+    "The drive from Abu Dhabi to the Ghuwaifat border post takes several hours along the Gulf coastal highway.",
+    "GCC nationals cross with their national ID; other nationalities should confirm current Saudi visa requirements before travel. Vehicle customs checks apply on both sides.",
+    "After clearing into Saudi Arabia, the remaining drive continues along the coastal highway into Dammam, Al Khobar, or Dhahran.",
+  ],
+  documents: [
+    "Valid passport (6+ months validity)",
+    "Saudi entry visa or GCC national ID",
+    "UAE exit clearance (standard for residents/visitors)",
+    "Dammam/Khobar/Dhahran drop-off address",
+  ],
+  pickupPoints: ["Abu Dhabi hotels", "Saadiyat Island", "Zayed International Airport", "Abu Dhabi corporate offices"],
+  dropoffInfo: "Direct drop-off anywhere in Dammam, Al Khobar, or Dhahran — hotels, residential compounds, or King Fahd International Airport for onward flights.",
+  vehicleOptions: [
+    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats and extra comfort for the multi-hour drive." },
+    { name: "Luxury SUV", capacity: "1–5 passengers", note: "Recommended for this distance — extra legroom, comfort, and luggage space." },
+    { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together on the long-haul route." },
+  ],
+  faqs: [
+    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~950 km route from Abu Dhabi through the Ghuwaifat border to Dammam. We recommend this mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains faster for solo travelers in a hurry." },
+    { q: "How long does the full journey take?", a: "Typically 10–11.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
+    { q: "Do I need a Saudi visa for this route?", a: "GCC nationals cross with just their national ID. Other nationalities should confirm current Saudi visa requirements before travel." },
+    { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
+  ],
+  relatedRoutes: [
+    { href: "/dammam-to-abu-dhabi-taxi-service", label: "Dammam to Abu Dhabi Taxi" },
+    { href: "/dubai-to-dammam-taxi-service", label: "Dubai to Dammam Taxi" },
+    { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE Taxi" },
+    { href: "/services/dammam", label: "Dammam Taxi Service" },
+    { href: "/border-crossing", label: "All Border Crossing Routes" },
+  ],
+  ctaText: "Book Your Dammam Transfer",
+};
+
+/* ── 33. Madinah → Jeddah Airport (closes the Jeddah Airport↔Madinah pair) ── */
+export const madinahToJeddahAirport: RouteData = {
+  slug: "madinah-to-jeddah-airport-taxi-service",
+  tags: ["umrah", "airport"],
+  priority: 2,
+  reviewed: false,
+  reverseSlug: "jeddah-airport-to-madinah-taxi-service",
+  fromSlug: "madinah",
+  origin: "Madinah",
+  destination: "Jeddah Airport",
+  isCrossBorder: false,
+  eyebrow: "City to Airport Departure Transfer",
+  h1: "Madinah to Jeddah Airport — Private Taxi & Departure Transfer",
+  intro: "Direct transfer from your Madinah hotel to King Abdulaziz International Airport (KAIA) for your departure flight — for pilgrims who flew into Jeddah but are completing their trip in Madinah, or anyone flying out via KAIA.",
+  breadcrumbLabel: "Madinah → Jeddah Airport",
+  distance: "~420 km",
+  travelTime: "~4.5 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "Direct Transfer to Your Departure Flight",
+  overviewParagraphs: [
+    "Many pilgrims end their trip in Madinah after visiting Makkah, then need to reach KAIA in Jeddah for their international departure — the coastal highway route runs the same distance as the inbound leg, just in reverse.",
+    "We plan the pickup time around your flight's check-in window, factoring in the 4.5-hour drive plus airport buffer, rather than a generic hotel checkout time.",
+    "No Miqat or Ihram considerations apply on this leg — it's simply the final, ordinary transfer of the trip.",
+  ],
+  documents: [
+    "Valid passport and exit visa/permit as applicable",
+    "Confirmed departure flight number and time",
+    "Madinah hotel pickup address",
+  ],
+  pickupPoints: ["Madinah hotel district (near Al-Masjid an-Nabawi)", "Madinah city hotels"],
+  dropoffInfo: "Direct drop-off at KAIA Terminal 1 or 2 departures, matched to your airline.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the 4.5-hour highway drive." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Extra luggage space, popular for family Umrah trips." },
+    { name: "Van", capacity: "Up to 7 passengers", note: "For larger Umrah groups traveling together." },
+  ],
+  faqs: [
+    { q: "How much buffer time should I leave before my flight?", a: "We recommend leaving Madinah at least 8 hours before an international departure from KAIA, covering the 4.5-hour drive plus check-in and security. We'll confirm an exact pickup time once you share your flight details." },
+    { q: "Do you drop off directly at the departures terminal?", a: "Yes, straight to KAIA Terminal 1 or 2 departures, matched to your airline." },
+    { q: "Can I book this alongside my original arrival transfer?", a: "Yes — many travelers book both legs of their trip together at the start, so the return pickup is already arranged before they even land." },
+  ],
+  relatedRoutes: [
+    { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah Taxi" },
+    { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
+    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
+    { href: "/services/madinah", label: "Madinah Taxi Service" },
+    { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+  ],
+  ctaText: "Book Your Jeddah Airport Departure Transfer",
+};
+
+/* ── 34. Makkah → Riyadh (closes the Riyadh↔Makkah pair) ────── */
+export const makkahToRiyadh: RouteData = {
+  slug: "makkah-to-riyadh-taxi-service",
+  tags: ["umrah"],
+  priority: 2,
+  reviewed: false,
+  reverseSlug: "riyadh-to-makkah-taxi-service",
+  fromSlug: "makkah",
+  toSlug: "riyadh",
+  origin: "Makkah",
+  destination: "Riyadh",
+  isCrossBorder: false,
+  eyebrow: "Long-Distance Departure Transfer",
+  h1: "Makkah to Riyadh — Private Taxi & Executive Transfer Service",
+  intro: "Long-distance door-to-door transfer from your Makkah hotel to Riyadh — for Riyadh residents completing Umrah, or travelers connecting onward through King Khalid International Airport.",
+  breadcrumbLabel: "Makkah → Riyadh",
+  distance: "~870 km",
+  travelTime: "9 – 10 hours",
+  heroImage: "/images/chauffeur.jpg",
+  overviewTitle: "The Return Leg of a Riyadh-Based Umrah Trip",
+  overviewParagraphs: [
+    "This is the same long-haul distance as the outbound Riyadh to Makkah journey, just in reverse — since Ihram is no longer required on the way home, there's no Miqat stop built into this direction.",
+    "Most solo travelers in a hurry are better served flying out of Jeddah or Madinah; this service is aimed at groups, families, and travelers who made the outbound drive and want the same private, uninterrupted return.",
+    "We schedule rest stops along the way and default to SUV or Van-class vehicles for the extra comfort this distance calls for.",
+  ],
+  documents: [
+    "Valid passport and Umrah/entry visa",
+    "Makkah hotel checkout confirmation",
+    "Riyadh drop-off address or hotel confirmation",
+  ],
+  pickupPoints: ["Abraj Al-Bait / Clock Tower hotels", "Ajyad area hotels", "Aziziyah district", "Makkah city hotels"],
+  dropoffInfo: "Direct drop-off anywhere in Riyadh — KAFD, Olaya, Diriyah, or King Khalid International Airport for onward connections.",
+  vehicleOptions: [
+    { name: "SUV", capacity: "1–5 passengers", note: "Recommended default for this distance — extra legroom and comfort." },
+    { name: "Van", capacity: "Up to 7 passengers", note: "Conference-style seating, popular for family Umrah groups making the full drive together." },
+    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats for travelers who prefer a sedan despite the distance." },
+  ],
+  faqs: [
+    { q: "Is Ihram required for this leg?", a: "No — this is the return journey after completing Umrah, so there's no Miqat or Ihram requirement on the drive back to Riyadh." },
+    { q: "Is it better to fly instead of driving this route?", a: "For a solo traveler in a hurry, yes — flying out of Jeddah or Madinah is usually faster. This service suits groups, families, and travelers who specifically want a private overland journey." },
+    { q: "Can you drop me directly at King Khalid International Airport?", a: "Yes, if you have an onward flight from Riyadh, we can route your drop-off directly to RUH instead of a city address." },
+    { q: "How long does the full drive take?", a: "Typically 9–10 hours including rest breaks, depending on traffic." },
+  ],
+  relatedRoutes: [
+    { href: "/riyadh-to-makkah-taxi-service", label: "Riyadh to Makkah Taxi" },
+    { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport Taxi Service" },
+    { href: "/services/riyadh", label: "Riyadh Taxi Service" },
+    { href: "/services/makkah", label: "Makkah Taxi Service" },
+    { href: "/umrah-taxi-services", label: "Umrah Taxi Services" },
+  ],
+  ctaText: "Book Your Makkah to Riyadh Transfer",
+};
+
 export const allRoutes: RouteData[] = [
   dammamAirportToBahrain,
   dammamAirportToKhafji,
@@ -1023,4 +1987,22 @@ export const allRoutes: RouteData[] = [
   bahrainToRiyadh,
   riyadhToDubai,
   dubaiToRiyadh,
+  jeddahToMakkah,
+  makkahToMadinah,
+  riyadhToDammam,
+  // W7 P1 (docs/page-gap-analysis.md — reciprocals + new corridors)
+  makkahToJeddah,
+  madinahToMakkah,
+  dammamToRiyadh,
+  riyadhToDammamAirport,
+  jeddahAirportToMadinah,
+  riyadhToMakkah,
+  riyadhToQatar,
+  // W7 P1.5 (secondary GCC reciprocals)
+  khafjiToDammamAirport,
+  kuwaitToKhafji,
+  riyadhToKuwait,
+  abuDhabiToDammam,
+  madinahToJeddahAirport,
+  makkahToRiyadh,
 ];

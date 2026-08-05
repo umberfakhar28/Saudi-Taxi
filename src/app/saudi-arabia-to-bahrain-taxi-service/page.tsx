@@ -3,6 +3,14 @@ import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, MessageIcon } from "@/components/Icons";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import RelatedLinks from "@/components/RelatedLinks";
+import { allRoutes } from "@/lib/routeData";
+
+// W8 hub rebuild (docs/page-gap-analysis.md A4) — reads allRoutes directly so
+// a new Bahrain-related route page appears here automatically (ground rule 6).
+const bahrainRoutes = allRoutes
+    .filter((r) => r.origin.includes("Bahrain") || r.destination.includes("Bahrain"))
+    .map((r) => ({ href: `/${r.slug}`, label: `${r.origin} → ${r.destination}` }));
 
 export const metadata = generatePageMetadata({
     title: "Saudi Arabia to Bahrain Taxi | Causeway Transfer 24/7",
@@ -96,6 +104,9 @@ export default function SaudiToBahrain() {
                     </div>
                 </div>
             </section>
+
+            {/* All specific Bahrain routes (W8) */}
+            {bahrainRoutes.length > 0 && <RelatedLinks title="All Saudi Arabia ↔ Bahrain Routes" links={bahrainRoutes} />}
 
             {/* CTA */}
             <section style={{ background: 'var(--primary)', padding: '5rem 0', textAlign: 'center' }}>

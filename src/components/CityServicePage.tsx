@@ -1,18 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-
-// Cities with their own dedicated airport-taxi landing page — the airport
-// card below links there instead of the generic /airport-transfers hub when
-// one exists. (madinah's page is spelled "madina" in its URL.)
-const CITY_AIRPORT_PAGE: Record<string, string> = {
-  riyadh: "/riyadh-airport-taxi-service",
-  jeddah: "/jeddah-airport-taxi-service",
-  dammam: "/dammam-airport-taxi-service",
-  abha: "/abha-airport-taxi-service",
-  madinah: "/madina-airport-taxi-service",
-  taif: "/taif-airport-taxi-service",
-};
+import { AIRPORTS } from "@/lib/airportRoutesData";
 
 export interface CityData {
   slug: string;
@@ -32,6 +21,38 @@ export interface CityData {
   faqs: { q: string; a: string }[];
   reviews: { name: string; origin: string; text: string }[];
   heroImage?: string;
+
+  /** 3-5 real, city-specific landmarks — breaks the six-field formula every
+   * city hub previously shared (Execution Brief v3 W5). Facts only, no
+   * pricing (ground rule 9) — these are sightseeing notes, not tour ads. */
+  landmarks: { name: string; description: string }[];
+  /** One paragraph about a season, event, or travel pattern that's actually
+   * specific to this city — not a generic "book ahead for holidays" line
+   * that would read the same on every city page. */
+  seasonalNote: string;
+
+  // --- Execution Brief v3 D1 additions (RouteData's reverseSlug/fromSlug/
+  // toSlug don't apply here — nearbyCities already covers the relational
+  // side for location pages) ---
+  /** Commercial-intent tags — drives nav curation (config/navigation.ts, W9)
+   * and the gap-analysis groupings in docs/page-gap-analysis.md. */
+  tags: ("umrah" | "airport" | "business" | "gcc" | "tourism")[];
+  /** 1 = top commercial intent, 2 = secondary/long-tail. */
+  priority: 1 | 2;
+  /** Arabic mirror of the page-critical strings. Omitted (not machine-
+   * translated as a placeholder) until a human writes it — see D3/W10. */
+  ar?: {
+    h1: string;
+    intro: string;
+  };
+  /** Defaults to true when omitted — every pre-existing entry here is
+   * already live, human-written content. New W7 drafts start explicitly
+   * `false` until a human reviews them (see scripts/seo/check-data-layer.js). */
+  reviewed?: boolean;
+  /** Defaults to true when omitted (matches current sitewide behavior).
+   * Wired into config/navigation.ts in W9 — setting it now is prep, not yet
+   * functional. */
+  showInNav?: boolean;
 }
 
 export default function CityServicePage({ data }: { data: CityData }) {
@@ -121,7 +142,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
                     <h3>{data.airport.name}</h3>
                     <p>IATA: <strong style={{ color: "var(--accent)" }}>{data.airport.code}</strong></p>
                     <p>City distance: {data.airport.distance}</p>
-                    <Link href={CITY_AIRPORT_PAGE[data.slug] ?? "/airport-transfers"} className="btn btn-secondary" style={{ marginTop: "var(--space-4)" }}>Book Airport Transfer</Link>
+                    <Link href={AIRPORTS.find((a) => a.code === data.airport!.code)?.pageHref ?? "/airport-transfers"} className="btn btn-secondary" style={{ marginTop: "var(--space-4)" }}>Book Airport Transfer</Link>
                   </div>
                 )}
                 <div className="card">
@@ -135,7 +156,30 @@ export default function CityServicePage({ data }: { data: CityData }) {
                     ))}
                   </ul>
                 </div>
+                <div className="card" style={{ background: "var(--bg-subtle)" }}>
+                  <div className="card-icon">📅</div>
+                  <h3>Good to Know</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7 }}>{data.seasonalNote}</p>
+                </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Landmarks — breaks the shared six-field formula (W5) */}
+        <section className="section" style={{ background: "var(--bg-subtle)" }}>
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Sightseeing</span>
+              <h2 className="section-title">Landmarks Worth Seeing in {data.city}</h2>
+            </div>
+            <div className="grid-3">
+              {data.landmarks.map((l) => (
+                <div key={l.name} className="card">
+                  <h3 style={{ color: "var(--accent)", fontSize: "var(--text-lg)" }}>{l.name}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7 }}>{l.description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -216,14 +260,14 @@ export default function CityServicePage({ data }: { data: CityData }) {
         </section>
 
         {/* CTA */}
-        <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--bg-base))", padding: "var(--space-20) 0", textAlign: "center" }}>
+        <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "var(--space-20) 0", textAlign: "center" }}>
           <div className="container">
             <span className="section-eyebrow">Book Now</span>
-            <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>Ready to Travel in {data.city}?</h2>
-            <p style={{ color: "var(--text-body)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>Professional chauffeurs, fixed rates, 24/7 availability across {data.city} and beyond.</p>
+            <h2 style={{ color: "var(--white)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>Ready to Travel in {data.city}?</h2>
+            <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>Professional chauffeurs, fixed rates, 24/7 availability across {data.city} and beyond.</p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/book-online" className="btn btn-primary btn-lg">Book Your Ride</Link>
-              <Link href="/quote" className="btn btn-secondary btn-lg">Get Instant Quote</Link>
+              <Link href="/quote" className="btn btn-outline btn-lg">Get Instant Quote</Link>
             </div>
           </div>
         </section>

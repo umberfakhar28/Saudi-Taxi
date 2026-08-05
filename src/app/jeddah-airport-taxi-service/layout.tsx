@@ -1,23 +1,8 @@
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-
+// Schema injection removed — this was a leftover from before the page was
+// migrated onto the shared AirportPage template (Execution Brief v3 W2),
+// which now injects its own complete Service/FAQPage/BreadcrumbList schema
+// directly. Keeping this as a duplicate caused conflicting JSON-LD for the
+// same page. Layout kept as a passthrough rather than removed outright.
 export default function Layout({ children }: { children: React.ReactNode }) {
-    const schemas = [
-        serviceSchema({
-            name: "Jeddah Airport Taxi Service",
-            description: "Premium taxi transfers to and from Jeddah King Abdulaziz International Airport (KAIA). Meet & greet, flight tracking, 24/7 service.",
-            url: "/jeddah-airport-taxi-service",
-            areaServed: ["Jeddah", "Makkah", "Madinah"],
-        }),
-        breadcrumbSchema([
-            { name: "Home", path: "/" },
-            { name: "Airport Transfers", path: "/airport-transfers" },
-            { name: "Jeddah Airport Taxi", path: "/jeddah-airport-taxi-service" },
-        ]),
-    ];
-    return (
-        <>
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-            {children}
-        </>
-    );
+    return children;
 }

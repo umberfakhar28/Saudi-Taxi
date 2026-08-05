@@ -7,6 +7,7 @@ export const metadata = generatePageMetadata({
     description: "Thank you for booking with Gulf Trip Service. Your booking has been received and we will confirm shortly.",
     path: "/thank-you",
     keywords: ["thank you booking Saudi taxi", "booking confirmation", "taxi booking received"],
+    noindex: true,
 });
 
 export default function ThankYou() {

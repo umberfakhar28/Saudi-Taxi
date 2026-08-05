@@ -168,6 +168,7 @@ export default function AirportTransfers() {
                     { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
                     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
                     { href: "/our-services", label: "All Services" },
+                    { href: "/blog/airport-transfer-tips", label: "10 Airport Transfer Tips for Saudi Arabia" },
                 ]}
             />
 

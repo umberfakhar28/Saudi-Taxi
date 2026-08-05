@@ -95,7 +95,7 @@ export default function BookingWidget() {
             key={t}
             type="button"
             onClick={() => setTripType(t)}
-            className={tripType === t ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm'}
+            className={tripType === t ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm'}
             style={{ textTransform: 'capitalize' }}
           >
             {t === 'one-way' ? 'One-way' : 'Return'}

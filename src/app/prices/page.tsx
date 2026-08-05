@@ -74,7 +74,7 @@ export default function Prices() {
             {/* Call to Action */}
             <section style={{ background: 'var(--bg-subtle)', padding: '5rem 0' }}>
                 <div className="container">
-                    <div className="card" style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center', padding: '4rem' }}>
+                    <div className="card" style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center', padding: 'clamp(1.75rem, 6vw, 4rem)' }}>
                         <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Get Your Personalised Quote Today</h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
                             Contact our 24/7 support team on WhatsApp or use our online form to receive a detailed quote within minutes.
@@ -83,7 +83,7 @@ export default function Prices() {
                             <a href={WHATSAPP_URL} className="btn btn-primary btn-lg">
                                 <MessageIcon size={20} /> Get Quote on WhatsApp
                             </a>
-                            <Link href="/quote" className="btn btn-outline btn-lg">Online Quote Form</Link>
+                            <Link href="/quote" className="btn btn-secondary btn-lg">Online Quote Form</Link>
                         </div>
                     </div>
                 </div>

@@ -1,13 +1,28 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import RelatedLinks from "@/components/RelatedLinks";
+import AirportFaqAccordion from "@/components/AirportFaqAccordion";
 import styles from "./umrah-taxi.module.css";
 
 export const metadata = generatePageMetadata({
     title: "Umrah Taxi Services in Makkah & Madinah | 24/7",
-    description: "Professional Umrah taxi services in Makkah and Madinah. Airport transfers, inter-city travel, guided Ziyarat tours. Licensed drivers, 24/7. Book on WhatsApp.",
+    description: "Professional Umrah taxi services in Makkah and Madinah. Ihram-friendly vehicles, wheelchair-accessible options, airport transfers, guided Ziyarat tours. Licensed drivers, 24/7. Book on WhatsApp.",
     path: "/umrah-taxi-services",
     keywords: ["Umrah taxi", "Makkah taxi", "Umrah transport", "Umrah transfer Saudi Arabia", "Umrah transportation"],
 });
+
+// FAQs migrated from the retired /makkah-umrah-taxi-guide (Execution Brief
+// v3 W4 / D2) — the guide's genuinely general, non-city-specific content;
+// its Ziyarat-site directory isn't repeated here since
+// /ziyarat-services-in-saudi-arabia already covers those sites in full.
+const faqs = [
+    { q: "Can I book a taxi during Hajj season?", a: "Yes, but advance booking is essential during Hajj (Dhul-Hijjah) — we recommend at least 2–4 weeks ahead. Availability during peak Hajj days (8th–12th Dhul-Hijjah) is extremely limited without advance booking." },
+    { q: "Do you provide separate transportation for men and women?", a: "We offer family vehicles with privacy partitions, or separate vehicles on request. Female travelers can also request a female driver, subject to availability." },
+    { q: "Can your taxis accommodate wheelchair users?", a: "Yes — we have wheelchair-accessible vans with hydraulic ramps and secure anchoring. Mention this when booking so we can arrange the right vehicle and any assistance you need." },
+    { q: "Are your vehicles genuinely Ihram-friendly?", a: "Yes — no music or entertainment systems, clean and modest interiors, and enough space to sit comfortably in Ihram clothing. We also arrange secure Zamzam water storage separate from your luggage." },
+    { q: "Is it safe for solo female travelers?", a: "Yes. All drivers are background-checked and GPS-tracked, and female travelers can request a female driver or a family-style vehicle. You're welcome to share your trip details with family for extra peace of mind." },
+    { q: "What payment methods do you accept?", a: "Cash (SAR), credit/debit card, Apple Pay, and Google Pay. Online bookings are card-only at the time of booking; corporate accounts with invoiced billing are available for travel agencies and groups." },
+];
 
 const services = [
     {
@@ -92,7 +107,7 @@ export default function UmrahTaxiServices() {
                                 With over 10 years of experience serving Umrah pilgrims from around the world, we understand the unique needs of pilgrims. Our drivers are not only professional and experienced, but they are also familiar with the sacred sites and can guide you throughout your stay.
                             </p>
                             <p>
-                                For city-specific detail, see our dedicated <Link href="/makkah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah Umrah taxi guide</Link> and <Link href="/madinah-umrah-taxi-guide" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah Umrah taxi guide</Link>, or book the <Link href="/makkah-to-madinah-taxi-service" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah to Madinah taxi</Link> directly if that's the only leg you need. For a fuller planning checklist, our <Link href="/guides/umrah-transportation" style={{ color: 'var(--accent)', fontWeight: 600 }}>Umrah transportation guide</Link> walks through the whole journey.
+                                For city-specific detail, see our <Link href="/services/makkah" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah taxi service</Link> and <Link href="/services/madinah" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah taxi service</Link> pages, or book the <Link href="/makkah-to-madinah-taxi-service" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah to Madinah taxi</Link> directly if that's the only leg you need. For a fuller planning checklist, our <Link href="/guides/umrah-transportation" style={{ color: 'var(--accent)', fontWeight: 600 }}>Umrah transportation guide</Link> walks through the whole journey.
                             </p>
                             <ul className={styles.checkList}>
                                 <li>✅ Meet & greet at Jeddah Airport</li>
@@ -158,6 +173,66 @@ export default function UmrahTaxiServices() {
                     </div>
                 </div>
             </section>
+
+            {/* Ihram-friendly & accessible — genuinely new content migrated
+                from the retired /makkah-umrah-taxi-guide (W4 / D2), not
+                repeated anywhere else on the site. */}
+            <section className="section-lg bg-light">
+                <div className="container">
+                    <h2 className="section-title">Built Around Pilgrims, Not Just Adapted</h2>
+                    <div className="grid-2">
+                        <div className="card">
+                            <h3 style={{ color: 'var(--primary)', marginBottom: '0.75rem' }}>Ihram-Friendly Vehicles</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                                No music or entertainment systems, clean and modest interiors, and enough space to sit comfortably in Ihram clothing. Zamzam water is stored securely, separate from your luggage.
+                            </p>
+                        </div>
+                        <div className="card">
+                            <h3 style={{ color: 'var(--primary)', marginBottom: '0.75rem' }}>Wheelchair-Accessible Vans</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                                Hydraulic ramps and secure anchoring for elderly pilgrims or wheelchair users, with drivers trained in accessibility assistance. Mention this when booking so the right vehicle is ready.
+                            </p>
+                        </div>
+                        <div className="card">
+                            <h3 style={{ color: 'var(--primary)', marginBottom: '0.75rem' }}>Hotel-to-Haram Shuttle Coverage</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                                From the Clock Tower / Abraj Al Bait complex (walking distance, shuttle available for elderly guests) to Aziziyah and Al Kakiyyah district hotels further out — we cover every Makkah hotel belt for daily prayer trips.
+                            </p>
+                        </div>
+                        <div className="card">
+                            <h3 style={{ color: 'var(--primary)', marginBottom: '0.75rem' }}>Prayer-Time Awareness</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                                Drivers plan routes around prayer times rather than through them, with flexible timing around Jumu'ah and stops at mosques when a journey overlaps an obligatory prayer.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ */}
+            <section className="section-lg">
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">FAQ</span>
+                        <h2 className="section-title">Umrah Taxi — Frequently Asked Questions</h2>
+                    </div>
+                    <div style={{ maxWidth: 780, margin: '0 auto' }}>
+                        <AirportFaqAccordion faqs={faqs.map((f) => ({ q: f.q, a: f.a }))} />
+                    </div>
+                </div>
+            </section>
+
+            {/* Related links */}
+            <RelatedLinks
+                title="Plan Your Umrah Trip"
+                links={[
+                    { href: "/airport-transfer-for-umrah", label: "Airport Transfer for Umrah" },
+                    { href: "/services/makkah", label: "Makkah Taxi Service" },
+                    { href: "/services/madinah", label: "Madinah Taxi Service" },
+                    { href: "/ziyarat-services-in-saudi-arabia", label: "Ziyarat Services" },
+                    { href: "/blog/umrah-travel-planning", label: "Complete Umrah Travel Planning Checklist" },
+                ]}
+            />
 
             {/* CTA */}
             <section style={{

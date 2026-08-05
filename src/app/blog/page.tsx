@@ -54,7 +54,7 @@ export default function BlogIndex() {
                 <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
               </div>
               <div className="grid-3">
-                {posts.filter((p) => p.category === cat).map((post) => (
+                {posts.map((post) => post.category !== cat ? null : (
                   <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
                     <div className="card" style={{ height: "100%" }}>
                       <span className="badge badge-gold" style={{ marginBottom: "var(--space-4)", display: "inline-flex" }}>{post.category}</span>

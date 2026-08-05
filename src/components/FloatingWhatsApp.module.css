@@ -1,0 +1,107 @@
+/* Floating WhatsApp button — Homepage Hero + Multi-Mode Search addendum §3.
+   `inset-inline-end`/`inset-block-end` (logical properties) mean this sits
+   bottom-right in LTR and bottom-left in RTL automatically — no [dir="rtl"]
+   override needed for position. */
+
+.button {
+    position: fixed;
+    inset-block-end: max(24px, env(safe-area-inset-bottom));
+    inset-inline-end: max(24px, env(safe-area-inset-right));
+    z-index: 400; /* below the mobile nav drawer (999) and its hamburger (1001) —
+                     the drawer's opaque background then naturally covers this
+                     button when it slides open, no extra JS state needed. */
+    display: flex;
+    align-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background: var(--accent-green);
+    color: var(--white);
+    box-shadow: 0 8px 24px rgba(37, 199, 102, 0.4);
+    overflow: hidden;
+    transition: width var(--ease-base), transform var(--ease-base), box-shadow var(--ease-base);
+}
+
+.halo {
+    position: absolute;
+    inset: -6px;
+    border-radius: var(--radius-full);
+    border: 2px solid rgba(37, 199, 102, 0.35);
+    animation: haloPulse 2.4s ease-out infinite;
+    pointer-events: none;
+}
+
+.icon {
+    position: absolute;
+    inset-inline-start: 15px;
+    flex-shrink: 0;
+}
+
+.label {
+    position: absolute;
+    inset-inline-start: 56px;
+    white-space: nowrap;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    padding-inline-end: var(--space-5);
+    opacity: 0;
+    transition: opacity var(--ease-fast);
+}
+
+.button:hover,
+.button:focus-visible {
+    width: 190px;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(37, 199, 102, 0.5);
+}
+
+.button:hover .label,
+.button:focus-visible .label {
+    opacity: 1;
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--white);
+    outline-offset: 3px;
+}
+
+@keyframes haloPulse {
+    0%   { opacity: 0.6; transform: scale(1); }
+    70%  { opacity: 0; transform: scale(1.35); }
+    100% { opacity: 0; transform: scale(1.35); }
+}
+
+@media (max-width: 767px) {
+    .button {
+        width: 52px;
+        height: 52px;
+        inset-block-end: max(20px, env(safe-area-inset-bottom));
+        inset-inline-end: max(20px, env(safe-area-inset-right));
+    }
+
+    .icon {
+        inset-inline-start: 13px;
+    }
+
+    .label {
+        inset-inline-start: 52px;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+        width: 52px; /* no room for a slide-out label at this size — tap opens WhatsApp directly */
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .button,
+    .label {
+        transition: none;
+    }
+
+    .halo {
+        animation: none;
+        opacity: 0;
+    }
+}
