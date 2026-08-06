@@ -1,0 +1,62 @@
+# Supabase keepalive
+#
+# WHAT THIS IS FOR: Supabase free-tier projects auto-pause after ~7 days
+# with no external activity. This workflow runs once a day and performs a
+# real database read + write (a PATCH against public.keepalive, a table
+# created solely for this purpose — see docs/supabase-keepalive.md) so the
+# project never sits idle long enough to pause.
+#
+# CREDENTIAL: uses the legacy JWT "anon" key (GitHub secret
+# SUPABASE_KEEPALIVE_KEY), not Supabase's newer sb_publishable_/sb_secret_
+# key system, even though those are now the recommended default. Reason:
+# the new key formats cannot be sent as an `Authorization: Bearer` token
+# (Supabase rejects that combination outright), which would require a
+# different request shape than what's used below. The legacy anon key is
+# still fully supported (Supabase's stated deprecation date is end of
+# 2026) and is scoped down to almost nothing via the RLS policies on
+# public.keepalive — it can only SELECT and UPDATE that one row, nothing
+# else in the database. If you're reading this after that deprecation
+# date, or after Supabase changes how the new keys authenticate, this
+# workflow needs its headers updated accordingly.
+#
+# 60-DAY GITHUB ACTIONS INACTIVITY RULE: GitHub disables scheduled
+# workflows in repos with no commits for 60 days. Mitigation chosen here:
+# this repo is under active development (commits land far more often than
+# every 50 days), so that's judged sufficient on its own. If this repo
+# ever goes quiet for an extended stretch, add a second independent
+# trigger (an external free cron service, or a platform cron if the site
+# moves to one that supports it) rather than relying on this alone.
+#
+# If this job ever goes red, don't ignore it — a paused Supabase project
+# means the live site's booking flow stops working until someone manually
+# resumes it from the dashboard.
+
+name: Supabase keepalive
+
+on:
+  schedule:
+    - cron: '17 6 * * *'   # daily, 06:17 UTC — off-the-hour to avoid peak scheduling delays
+  workflow_dispatch:        # allows manual runs for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Touch keepalive row
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEEPALIVE_KEY }}
+        run: |
+          set -euo pipefail
+          status=$(curl -s -o /tmp/out.txt -w '%{http_code}' \
+            -X PATCH "$SUPABASE_URL/rest/v1/keepalive?id=eq.1" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation" \
+            -d '{"last_ping":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"}')
+          echo "HTTP $status"
+          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+            echo "Keepalive failed:"; cat /tmp/out.txt; exit 1
+          fi
+          echo "Response body:"; cat /tmp/out.txt
