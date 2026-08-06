@@ -1,31 +1,63 @@
-import { MetadataRoute } from "next";
+import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
 
-const BASE_URL = "https://gulftripservice.com";
+export const BASE_URL = "https://gulftripservice.com";
+
+export interface SitemapEntry {
+  url: string;
+  lastModified: Date;
+  changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+  priority: number;
+  /** hreflang -> absolute URL, including "x-default" where applicable. */
+  alternates?: Record<string, string>;
+}
 
 /**
- * Real last-modified date for a route, taken from its page.tsx mtime,
- * so the sitemap doesn't lie to crawlers by claiming every page changed
- * on every build. Falls back to a fixed date if the file can't be read.
+ * Real last-modified date for a route.
+ *
+ * Originally this read the page.tsx file's filesystem mtime, which sounds
+ * reasonable but is actually a poor signal for SEO: mtime gets reset by
+ * `git clone`, `git checkout`, CI checkouts, and every fresh deploy —
+ * none of which mean the page's actual content changed. Two pages last
+ * genuinely edited months apart would report near-identical timestamps
+ * just because they were checked out in the same deploy.
+ *
+ * Using the file's last Git commit date instead is a real, stable signal
+ * of when the content actually changed. This runs at build time (this
+ * sitemap has no runtime dynamic dependencies, so Next.js renders it
+ * statically), where `.git` is guaranteed to be present — not at request
+ * time in a deployed serverless function, where it usually isn't.
  */
 function lastMod(routePath: string): Date {
-  const filePath = path.join(process.cwd(), "src", "app", routePath, "page.tsx");
+  const relFile = path.join("src", "app", routePath, "page.tsx").replace(/\\/g, "/");
   try {
-    return fs.statSync(filePath).mtime;
+    const iso = execFileSync("git", ["log", "-1", "--format=%cI", "--", relFile], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+    }).trim();
+    if (iso) return new Date(iso);
+  } catch {
+    // git not available (or file has no commit history yet) — fall through
+  }
+  try {
+    return fs.statSync(path.join(process.cwd(), "src", "app", routePath, "page.tsx")).mtime;
   } catch {
     return new Date("2026-01-01");
   }
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages: MetadataRoute.Sitemap = [
+export function buildSitemapEntries(): SitemapEntry[] {
+  const staticPages: SitemapEntry[] = [
     {
       url: BASE_URL,
       lastModified: lastMod(""),
       changeFrequency: "weekly",
       priority: 1.0,
-      alternates: { languages: { en: BASE_URL, ar: `${BASE_URL}/ar` } },
+      // Self-referencing entries required for both language variants, plus
+      // x-default for users whose language doesn't match either — see
+      // https://developers.google.com/search/docs/specialty/international/localized-versions
+      alternates: { en: BASE_URL, ar: `${BASE_URL}/ar`, "x-default": BASE_URL },
     },
     {
       url: `${BASE_URL}/about-us`,
@@ -38,7 +70,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: lastMod("/contact-us"),
       changeFrequency: "monthly",
       priority: 0.8,
-      alternates: { languages: { en: `${BASE_URL}/contact-us`, ar: `${BASE_URL}/ar/contact-us` } },
+      alternates: { en: `${BASE_URL}/contact-us`, ar: `${BASE_URL}/ar/contact-us`, "x-default": `${BASE_URL}/contact-us` },
     },
     {
       url: `${BASE_URL}/our-services`,
@@ -120,7 +152,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const airportTransferPages: MetadataRoute.Sitemap = [
+  const airportTransferPages: SitemapEntry[] = [
     { slug: "/airport-transfers", priority: 0.85 },
     { slug: "/jeddah-airport-taxi-service", priority: 0.85 },
     { slug: "/riyadh-airport-taxi-service", priority: 0.85 },
@@ -140,7 +172,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 
-  const servicePages: MetadataRoute.Sitemap = [
+  const servicePages: SitemapEntry[] = [
     { slug: "/umrah-taxi-services", priority: 0.85 },
     { slug: "/umrah-transport-package", priority: 0.85 },
     { slug: "/hotel-transfers", priority: 0.8 },
@@ -156,7 +188,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 
-  const borderCrossingPages: MetadataRoute.Sitemap = [
+  const borderCrossingPages: SitemapEntry[] = [
     { slug: "/border-crossing", priority: 0.8 },
     { slug: "/saudi-arabia-to-bahrain-taxi-service", priority: 0.8 },
     { slug: "/saudi-arabia-to-qatar-taxi-service", priority: 0.8 },
@@ -168,11 +200,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "monthly" as const,
     priority,
     ...(slug === "/border-crossing" && {
-      alternates: { languages: { en: `${BASE_URL}${slug}`, ar: `${BASE_URL}/ar${slug}` } },
+      alternates: { en: `${BASE_URL}${slug}`, ar: `${BASE_URL}/ar${slug}`, "x-default": `${BASE_URL}${slug}` },
     }),
   }));
 
-  const crossBorderRoutePages: MetadataRoute.Sitemap = [
+  const crossBorderRoutePages: SitemapEntry[] = [
     { slug: "/dammam-airport-to-bahrain-taxi-service", priority: 0.8 },
     { slug: "/dammam-airport-to-khafji-taxi-service", priority: 0.75 },
     { slug: "/dammam-airport-to-qatar-taxi-service", priority: 0.8 },
@@ -205,13 +237,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority,
       ...(hasArabic && {
-        alternates: { languages: { en: `${BASE_URL}${slug}`, ar: `${BASE_URL}/ar${slug}` } },
+        alternates: { en: `${BASE_URL}${slug}`, ar: `${BASE_URL}/ar${slug}`, "x-default": `${BASE_URL}${slug}` },
       }),
     };
   });
 
-  const arPages: MetadataRoute.Sitemap = [
-    { slug: "/ar", enSlug: "/", priority: 0.95 },
+  const arPages: SitemapEntry[] = [
+    { slug: "/ar", enSlug: "", priority: 0.95 },
     { slug: "/ar/border-crossing", enSlug: "/border-crossing", priority: 0.75 },
     { slug: "/ar/dammam-airport-to-bahrain-taxi-service", enSlug: "/dammam-airport-to-bahrain-taxi-service", priority: 0.75 },
     { slug: "/ar/dammam-airport-to-qatar-taxi-service", enSlug: "/dammam-airport-to-qatar-taxi-service", priority: 0.75 },
@@ -221,10 +253,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: lastMod(slug),
     changeFrequency: "monthly" as const,
     priority,
-    alternates: { languages: { en: `${BASE_URL}${enSlug}`, ar: `${BASE_URL}${slug}` } },
+    // enSlug is "" for the homepage pair, so this resolves to exactly
+    // BASE_URL — no trailing slash — matching the homepage's own
+    // self-referencing entry above. It previously didn't (enSlug was "/",
+    // producing BASE_URL + "/"), so the sitemap asserted two different
+    // canonical spellings of the same homepage URL depending on which
+    // entry you read, which is exactly the kind of inconsistency crawlers
+    // flag.
+    alternates: { en: `${BASE_URL}${enSlug}`, ar: `${BASE_URL}${slug}`, "x-default": `${BASE_URL}${enSlug}` },
   }));
 
-  const cityTourPages: MetadataRoute.Sitemap = [
+  const cityTourPages: SitemapEntry[] = [
     { slug: "/jeddah-city-tour-services-in-saudi-arabia", priority: 0.78 },
     { slug: "/jeddah-to-makkah-taxi-service", priority: 0.78 },
     { slug: "/makkah-to-madinah-taxi-service", priority: 0.78 },
@@ -255,7 +294,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // on the pages they redirect to, so they're sitemapped there instead.
     "/makkah-to-madinah-guide",
   ];
-  const longFormGuides: MetadataRoute.Sitemap = longFormGuideSlugs.map((slug) => ({
+  const longFormGuides: SitemapEntry[] = longFormGuideSlugs.map((slug) => ({
     url: `${BASE_URL}${slug}`,
     lastModified: lastMod(slug),
     changeFrequency: "monthly" as const,
@@ -264,11 +303,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   longFormGuides.push({
     url: `${BASE_URL}/riyadh-to-dammam-guide`,
     lastModified: lastMod("/riyadh-to-dammam-guide"),
-    changeFrequency: "monthly" as const,
+    changeFrequency: "monthly",
     priority: 0.70,
   });
 
-  const cityPages: MetadataRoute.Sitemap = [
+  const cityPages: SitemapEntry[] = [
     "riyadh", "jeddah", "makkah", "madinah", "dammam", "khobar",
     "jubail", "taif", "abha", "yanbu", "alula", "neom", "tabuk",
     // W7 P2 (docs/page-gap-analysis.md)
@@ -280,7 +319,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.80,
   }));
 
-  const guidePages: MetadataRoute.Sitemap = [
+  const guidePages: SitemapEntry[] = [
     "king-khalid-airport", "king-abdulaziz-airport", "umrah-transportation",
     "hajj-transportation", "business-travel", "family-travel",
   ].map((slug) => ({
@@ -297,7 +336,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "family-saudi-destinations", "vip-transport-saudi",
     "riyadh-to-jeddah-travel", "safe-travel-tips-saudi",
   ];
-  const blogPages: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
+  const blogPages: SitemapEntry[] = blogSlugs.map((slug) => ({
     url: `${BASE_URL}/blog/${slug}`,
     lastModified: lastMod(`/blog/${slug}`),
     changeFrequency: "monthly" as const,
@@ -312,7 +351,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...crossBorderRoutePages,
     ...cityTourPages,
     ...longFormGuides,
-    { url: `${BASE_URL}/blog`, lastModified: lastMod("/blog"), changeFrequency: "weekly" as const, priority: 0.80 },
+    { url: `${BASE_URL}/blog`, lastModified: lastMod("/blog"), changeFrequency: "weekly", priority: 0.80 },
     ...blogPages,
     ...cityPages,
     ...guidePages,
