@@ -17,7 +17,7 @@ type Mode = 'transfers' | 'hourly' | 'daytrips';
 
 const MODE_TABS: { key: Mode; label: string; icon: React.ReactNode }[] = [
     { key: 'transfers', label: 'Transfers', icon: <CarIcon size={16} /> },
-    { key: 'hourly', label: 'Hourly Driver', icon: <ClockIcon size={16} /> },
+    { key: 'hourly', label: 'Hourly Drive', icon: <ClockIcon size={16} /> },
     { key: 'daytrips', label: 'Day Trips', icon: <CompassIcon size={16} /> },
 ];
 const MODE_INDEX: Record<Mode, number> = { transfers: 0, hourly: 1, daytrips: 2 };

@@ -13,12 +13,12 @@ const Hero = () => {
             <div className={styles.content}>
                 <div className={styles.badge}>
                     <ShieldIcon size={14} className={styles.badgeIcon} />
-                    Trusted by 15,000+ Travelers
+                    Most Reliable Ride in Saudi Arabia
                 </div>
 
                 <h1 className={styles.title}>
-                    Saudi Arabia&apos;s Most Trusted<br />
-                    <em>Luxury Transfer Service</em>
+                    Book Taxi Service Online <br />
+                    <em> in Saudi Arabia </em>
                 </h1>
 
                 <p className={styles.subtitle}>

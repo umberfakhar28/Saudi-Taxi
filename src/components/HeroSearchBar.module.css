@@ -271,8 +271,8 @@
     margin: 0;
 }
 
-.errorBoxDesktop p + p,
-.errorBox p + p {
+.errorBoxDesktop p+p,
+.errorBox p+p {
     margin-top: 4px;
 }
 
@@ -441,22 +441,22 @@
         flex-wrap: wrap;
     }
 
-    .bar > .field:nth-child(1),
-    .bar > .field:nth-child(2) {
+    .bar>.field:nth-child(1),
+    .bar>.field:nth-child(2) {
         flex: 1 1 50%;
     }
 
-    .bar > .field:nth-child(3),
-    .bar > .field:nth-child(4) {
+    .bar>.field:nth-child(3),
+    .bar>.field:nth-child(4) {
         flex: 1 1 auto;
         border-bottom: none;
     }
 
-    .bar > .field:nth-child(1) {
+    .bar>.field:nth-child(1) {
         border-bottom: 1px solid rgba(20, 23, 31, 0.10);
     }
 
-    .bar > .field:nth-child(2) {
+    .bar>.field:nth-child(2) {
         border-bottom: 1px solid rgba(20, 23, 31, 0.10);
         border-inline-end: none;
     }
@@ -474,6 +474,7 @@
 
 /* <768px — bar + return row + trust row collapse behind the tap-to-open sheet */
 @media (max-width: 767px) {
+
     .bar,
     .returnRow {
         display: none;
@@ -500,6 +501,7 @@
 }
 
 @media (min-width: 768px) {
+
     .mobileSummary,
     .sheetOverlay {
         display: none;
