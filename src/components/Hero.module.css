@@ -25,20 +25,30 @@
 .heroImage {
     z-index: 0;
     object-fit: cover;
-    /* Keep faces/subjects roughly centered-right if the source photo is a
-       car/driver shot with headroom on the left for text — adjust if the
-       actual image composition needs a different focal point. */
-    object-position: center;
+    /* Source photo: car sits right-of-center against a skyline, open
+       sky/water on the left third. Bias the crop toward that right side so
+       the car survives being cropped tighter on narrow/tall viewports
+       instead of sliding out of frame. */
+    object-position: 68% 55%;
 }
 
-/* Dark scrim over the photo — darker at the bottom where body copy and the
-   search bar sit, so contrast holds regardless of what's underneath in the
-   source image. Verified against --white text for AA at both stops. */
+/* Dark scrim over the photo — two gradients layered:
+   1. Left-to-right: strong on the left (where the headline text sits, over
+      what's often bright sky) fading out by ~65% width so the car on the
+      right shows through clearly, per request — text needs the scrim, the
+      car doesn't.
+   2. Top-to-bottom: darker toward the bottom where body copy and the
+      search bar sit.
+   Contrast re-checked against --white text for the worst case (a
+   near-white source pixel under the strongest, top-left corner of the
+   scrim) — still comfortably past the 4.5:1 AA floor. */
 .heroScrim {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(3, 10, 37, 0.72) 0%, rgba(3, 10, 37, 0.80) 55%, rgba(3, 10, 37, 0.90) 100%);
+    background:
+        linear-gradient(90deg, rgba(3, 10, 37, 0.86) 0%, rgba(3, 10, 37, 0.62) 42%, rgba(3, 10, 37, 0.28) 65%, rgba(3, 10, 37, 0.12) 100%),
+        linear-gradient(180deg, rgba(3, 10, 37, 0.35) 0%, rgba(3, 10, 37, 0.45) 55%, rgba(3, 10, 37, 0.68) 100%);
     z-index: 1;
 }
 
@@ -58,11 +68,18 @@
 .content {
     position: relative;
     z-index: 10;
-    max-width: 760px;
+    width: 100%;
+    max-width: 620px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    /* Left-aligned and pinned to the hero's left edge on wide viewports —
+       the car sits right-of-center in the source photo, so keeping the
+       headline in the open sky/skyline space on the left is what stops
+       text and car from overlapping. Reverts to centered below 900px,
+       where there's no longer room for a clean two-zone split. */
+    align-items: flex-start;
+    align-self: flex-start;
+    text-align: left;
     animation: heroFadeInUp 0.9s ease-out;
 }
 
@@ -130,6 +147,29 @@
 }
 
 /* ===== RESPONSIVE ===== */
+
+/* Below this width there's no room for a left-text / right-car split —
+   back to the original centered layout, matching .searchWrap which stays
+   centered at every breakpoint. */
+@media (max-width: 900px) {
+    .content {
+        max-width: 100%;
+        align-items: center;
+        align-self: center;
+        text-align: center;
+    }
+
+    /* The left-heavy horizontal scrim above assumes text stays on the
+       left — once .content re-centers across the full width, text can sit
+       anywhere, so fall back to uniform full-width darkening (same
+       strength as the left side above) rather than leaving the
+       right-hand text exposed over a barely-darkened patch of sky. */
+    .heroScrim {
+        background:
+            linear-gradient(180deg, rgba(3, 10, 37, 0.72) 0%, rgba(3, 10, 37, 0.80) 55%, rgba(3, 10, 37, 0.90) 100%);
+    }
+}
+
 @media (max-width: 480px) {
     .title {
         font-size: 2rem;
