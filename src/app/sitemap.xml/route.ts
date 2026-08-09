@@ -47,6 +47,12 @@ export function GET() {
   const entries = buildSitemapEntries();
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
+    // Presentation-only: renders a styled table when a human opens this
+    // URL in a browser (public/sitemap.xsl). Browsers apply their own
+    // formatting to raw XML regardless of source indentation, so this is
+    // what actually makes the page readable — crawlers ignore this
+    // instruction and read the <urlset> data beneath it unaffected.
+    '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
     ...entries.map(renderUrl),
     "</urlset>",
