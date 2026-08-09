@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { ShieldIcon } from './Icons';
 import HeroSearchBar from './HeroSearchBar';
 import styles from './Hero.module.css';
@@ -7,6 +8,19 @@ import styles from './Hero.module.css';
 const Hero = () => {
     return (
         <section className={styles.hero}>
+            <Image
+                src="/gulftripservice-heroimage.webp"
+                alt="Professional chauffeur and taxi service in Saudi Arabia"
+                fill
+                priority
+                sizes="100vw"
+                className={styles.heroImage}
+            />
+            {/* Dark scrim over the photo so white headline text stays AA-compliant
+                at every point in the image, not just wherever it happens to be
+                dark already — same pattern as AirportPage.tsx's hero. */}
+            <div className={styles.heroScrim} />
+
             {/* TOP — Headline, subtitle (CTAs removed — the search bar below is
                 the hero's one primary action; see the Homepage Hero + Multi-Mode
                 Search addendum, §1). */}

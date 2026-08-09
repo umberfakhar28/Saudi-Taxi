@@ -1,10 +1,11 @@
 /*
   HERO — Premium Transportation Hero
-  No background image. Clean light gradient, dark charcoal text.
-  Headline on top, multi-mode search bar below (see HeroSearchBar.module.css
-  for the bar/tabs/trust-row styling — this file only owns the hero shell,
-  badge, headline, and subtitle now that the CTA buttons and old single-mode
-  search row are gone, per the Homepage Hero + Multi-Mode Search addendum §1.
+  Full-bleed photo background (public/gulftripservice-heroimage.webp) with a
+  dark scrim for AA-compliant white text, badge, and headline — replaces the
+  earlier flat-gradient, no-photo version. Headline on top, multi-mode
+  search bar below (see HeroSearchBar.module.css for the bar/tabs/trust-row
+  styling — this file only owns the hero shell, image, scrim, badge,
+  headline, and subtitle).
 */
 
 /* ---- Root hero container ---- */
@@ -16,19 +17,29 @@
     position: relative;
     overflow: hidden;
     padding: calc(var(--nav-height) + var(--topbar-height) + var(--space-10)) var(--space-6) var(--space-12);
-    background: linear-gradient(160deg, #FFFFFF 0%, #F5F8FD 55%, #EEF3FC 100%);
+    /* Dark fallback so there's no white flash before the image paints —
+       also what shows through the scrim's lighter edges. */
+    background: var(--bg-dark, #050C33);
 }
 
-/* Soft ambient tint, no photo */
-.hero::before {
+.heroImage {
+    z-index: 0;
+    object-fit: cover;
+    /* Keep faces/subjects roughly centered-right if the source photo is a
+       car/driver shot with headroom on the left for text — adjust if the
+       actual image composition needs a different focal point. */
+    object-position: center;
+}
+
+/* Dark scrim over the photo — darker at the bottom where body copy and the
+   search bar sit, so contrast holds regardless of what's underneath in the
+   source image. Verified against --white text for AA at both stops. */
+.heroScrim {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(ellipse 55% 60% at 0% 20%, rgba(36, 84, 232, 0.06) 0%, transparent 65%),
-        radial-gradient(ellipse 45% 45% at 100% 80%, rgba(36, 84, 232, 0.05) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
+    background: linear-gradient(180deg, rgba(3, 10, 37, 0.72) 0%, rgba(3, 10, 37, 0.80) 55%, rgba(3, 10, 37, 0.90) 100%);
+    z-index: 1;
 }
 
 /* Blue accent strip at bottom */
@@ -39,7 +50,7 @@
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-hover), var(--accent));
+    background: linear-gradient(90deg, var(--accent), var(--brass, var(--accent-hover)), var(--accent));
     z-index: 5;
 }
 
@@ -59,20 +70,20 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    background: var(--accent-light);
-    border: 1px solid rgba(36, 84, 232, 0.18);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     padding: var(--space-2) var(--space-5);
     border-radius: var(--radius-full);
     font-size: var(--text-xs);
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--white, #FFFFFF);
     margin-bottom: var(--space-4);
 }
 
 .badgeIcon {
-    color: var(--accent);
+    color: var(--brass, #C8952F);
     flex-shrink: 0;
 }
 
@@ -80,15 +91,16 @@
     font-family: var(--font-heading);
     font-size: clamp(2.8rem, 5.5vw, 4rem);
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--white, #FFFFFF);
     line-height: 1.1;
     letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
 }
 
 .title em {
     font-style: normal;
-    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    background: linear-gradient(135deg, var(--brass, #C8952F), #E8C77A);
     -webkit-text-fill-color: transparent;
     background-clip: text;
     -webkit-background-clip: text;
@@ -96,7 +108,7 @@
 
 .subtitle {
     font-size: var(--text-lg);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.65;
     max-width: 600px;
     margin-bottom: 0;
