@@ -1,0 +1,101 @@
+/*
+  HERO IMAGE SLIDER — crossfade background stack + pagination dots.
+  Fills its parent (Hero.module.css's .photoFrame) exactly; the hero's
+  scrim and text content are rendered by Hero.tsx on top of this, unchanged
+  by which slide is active.
+*/
+
+.root {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1000ms ease-in-out;
+}
+
+.slideActive {
+    opacity: 1;
+    z-index: 1;
+}
+
+.slideImage {
+    object-fit: cover;
+    object-position: var(--obj-desktop, center);
+}
+
+@media (max-width: 900px) {
+    .slideImage {
+        object-position: var(--obj-mobile, center);
+    }
+}
+
+/* ---- Pagination dots ---- */
+.dots {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 12;
+    display: flex;
+    gap: 2px;
+}
+
+.dot {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.dot::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    transition: background var(--ease-base), width var(--ease-base), border-radius var(--ease-base);
+}
+
+.dot:hover::before {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.dot:focus-visible {
+    outline: 2px solid var(--brass-bright, #E8C77A);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+.dotActive::before {
+    background: var(--brass-bright, #E8C77A);
+    width: 22px;
+    border-radius: var(--radius-full);
+}
+
+@media (max-width: 640px) {
+    .dots {
+        bottom: 18px;
+    }
+}
+
+/* Respect reduced motion: swap instantly instead of crossfading, and drop
+   the dot micro-transitions too. */
+@media (prefers-reduced-motion: reduce) {
+    .slide {
+        transition-duration: 0.01ms;
+    }
+
+    .dot::before {
+        transition: none;
+    }
+}

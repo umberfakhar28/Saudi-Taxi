@@ -1,58 +1,88 @@
 /*
   HERO — Premium Transportation Hero
-  Full-bleed photo background (public/gulftripservice-heroimage.webp) with a
-  dark scrim for AA-compliant white text, badge, and headline — replaces the
-  earlier flat-gradient, no-photo version. Headline on top, multi-mode
-  search bar below (see HeroSearchBar.module.css for the bar/tabs/trust-row
-  styling — this file only owns the hero shell, image, scrim, badge,
-  headline, and subtitle).
+  Full-bleed, crossfading image slider (public/hero-slider — Saudi Arabia
+  then the wider Gulf/GCC, see src/lib/heroSliderConfig.ts and
+  HeroImageSlider.tsx) that starts at the very top of the page, behind the
+  navbar/topbar — they float over it as a transparent/frosted overlay (see
+  Navbar.module.css .navbarTransparent and TopBar.module.css
+  .topBarTransparent, toggled from PublicLayout only on "/"). The hero fills
+  exactly one viewport (100dvh) so badge, headline, subtitle, and both CTAs
+  always land above the fold — that layout never changes as the background
+  slide changes. The content block sits inside the same global .container
+  the navbar's logo uses (see Hero.tsx), so logo/badge/H1/paragraph/CTAs all
+  share one horizontal alignment edge instead of the hero using its own
+  hardcoded offset. The multi-mode search bar lives in its own
+  .searchSection band right below (see HeroSearchBar.module.css for the
+  bar/tabs/trust-row styling — this file only owns the hero shell, photo
+  frame, scrim, badge, headline, subtitle, CTAs, and the search section
+  wrapper; the slider's own image stack + dots are in
+  HeroImageSlider.module.css).
 */
 
-/* ---- Root hero container ---- */
+/* ---- Root hero container ----
+   Exactly one viewport tall — the navbar overlays it rather than pushing
+   it down, so there's no nav-clearance padding here. dvh (where supported)
+   accounts for mobile browser chrome collapsing/expanding; vh is the
+   fallback. A min-height floor keeps the content block from feeling
+   cramped on very short viewports (e.g. landscape phones). */
 .hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-6);
     position: relative;
     overflow: hidden;
-    padding: calc(var(--nav-height) + var(--topbar-height) + var(--space-10)) var(--space-6) var(--space-12);
+    height: 100vh;
+    height: 100dvh;
+    min-height: 620px;
     /* Dark fallback so there's no white flash before the image paints —
        also what shows through the scrim's lighter edges. */
     background: var(--bg-dark, #050C33);
 }
 
+/* ---- Photo frame — fills the full hero, edge to edge ---- */
+.photoFrame {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-dark, #050C33);
+}
+
+/* Shared object-fit for every slide (crops to fill the viewport-height
+   band — trades the old "zero crop" treatment for guaranteed
+   CTA-above-the-fold). Per-slide object-position lives in
+   HeroImageSlider.module.css's .slideImage instead of here, driven by each
+   slide's own objectPosition/mobileObjectPosition in heroSliderConfig.ts —
+   different photos need different focal points to keep their vehicle in
+   frame, so one fixed value here would fight that. */
 .heroImage {
     z-index: 0;
     object-fit: cover;
-    /* Source photo: car sits right-of-center against a skyline, open
-       sky/water on the left third. Bias the crop toward that right side so
-       the car survives being cropped tighter on narrow/tall viewports
-       instead of sliding out of frame. */
-    object-position: 68% 55%;
 }
 
-/* Dark scrim over the photo — two gradients layered:
-   1. Left-to-right: strong on the left (where the headline text sits, over
-      what's often bright sky) fading out by ~65% width so the car on the
-      right shows through clearly, per request — text needs the scrim, the
-      car doesn't.
-   2. Top-to-bottom: darker toward the bottom where body copy and the
-      search bar sit.
+/* Dark scrim over the photo — two gradients layered, kept light so this
+   photo (already well-lit, logo visible on the car door) reads clear and
+   bright rather than shadowed:
+   1. Left-to-right: darker on the left (where the headline text sits),
+      medium through the center, much lighter by ~62% width so the car,
+      skyline and sunset detail on the right stay rich — text needs the
+      scrim, the photo doesn't.
+   2. Top-to-bottom: a soft darker band near the very top (under the
+      transparent nav, for logo/link legibility) and again toward the
+      bottom, lighter through the middle where the car/skyline show
+      through.
    Contrast re-checked against --white text for the worst case (a
    near-white source pixel under the strongest, top-left corner of the
-   scrim) — still comfortably past the 4.5:1 AA floor. */
+   scrim) — still clears the 4.5:1 AA floor. */
 .heroScrim {
     content: '';
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(90deg, rgba(3, 10, 37, 0.86) 0%, rgba(3, 10, 37, 0.62) 42%, rgba(3, 10, 37, 0.28) 65%, rgba(3, 10, 37, 0.12) 100%),
-        linear-gradient(180deg, rgba(3, 10, 37, 0.35) 0%, rgba(3, 10, 37, 0.45) 55%, rgba(3, 10, 37, 0.68) 100%);
+        linear-gradient(90deg, rgba(3, 10, 37, 0.60) 0%, rgba(3, 10, 37, 0.36) 40%, rgba(3, 10, 37, 0.14) 62%, rgba(3, 10, 37, 0.02) 100%),
+        linear-gradient(180deg, rgba(3, 10, 37, 0.40) 0%, rgba(3, 10, 37, 0.05) 15%, rgba(3, 10, 37, 0.08) 55%, rgba(3, 10, 37, 0.34) 100%);
     z-index: 1;
 }
 
-/* Blue accent strip at bottom */
+/* Blue accent strip at the bottom of the photo frame */
 .hero::after {
     content: '';
     position: absolute;
@@ -64,21 +94,32 @@
     z-index: 5;
 }
 
-/* ---- Headline block ---- */
-.content {
-    position: relative;
+/* ---- Content outer — positions the whole text block over the photo.
+   Nudged slightly below dead-center (53%, not 50%) so it clears the
+   transparent nav band comfortably even on shorter desktop heights, with
+   even more room to spare below for the CTAs. Spans the full width so the
+   nested .container below can center/align itself the same way the
+   navbar's own container does. ---- */
+.contentOuter {
+    position: absolute;
     z-index: 10;
-    width: 100%;
-    max-width: 620px;
+    top: 53%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+/* ---- Headline block — the actual text column, capped to a comfortable
+   reading width and left-aligned within the shared .container. ---- */
+.content {
+    max-width: 600px;
     display: flex;
     flex-direction: column;
-    /* Left-aligned and pinned to the hero's left edge on wide viewports —
-       the car sits right-of-center in the source photo, so keeping the
-       headline in the open sky/skyline space on the left is what stops
-       text and car from overlapping. Reverts to centered below 900px,
-       where there's no longer room for a clean two-zone split. */
+    /* Left-aligned — the car sits right-of-center in the source photo, so
+       keeping the headline in the open sky/skyline space on the left is
+       what stops text and car from overlapping. Reverts to centered below
+       900px, where there's no longer room for a clean two-zone split. */
     align-items: flex-start;
-    align-self: flex-start;
     text-align: left;
     animation: heroFadeInUp 0.9s ease-out;
 }
@@ -96,7 +137,7 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--white, #FFFFFF);
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
 }
 
 .badgeIcon {
@@ -104,14 +145,20 @@
     flex-shrink: 0;
 }
 
+/* Trimmed from the old clamp(2.8rem, 5.5vw, 4rem) — 64px read as too large
+   once the text column narrowed to 600px, and pushed the content block
+   taller than it needed to be. This tops out at 54px (3.375rem) instead,
+   still the strongest element on the page, tight 1.1 line-height so the
+   three natural lines ("Book Taxi Service" / "Online" / "in Saudi Arabia")
+   don't drift apart vertically. */
 .title {
     font-family: var(--font-heading);
-    font-size: clamp(2.8rem, 5.5vw, 4rem);
+    font-size: clamp(2.4rem, 4vw, 3.375rem);
     font-weight: 700;
     color: var(--white, #FFFFFF);
     line-height: 1.1;
     letter-spacing: -0.02em;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
 }
 
@@ -126,9 +173,31 @@
 .subtitle {
     font-size: var(--text-lg);
     color: rgba(255, 255, 255, 0.85);
-    line-height: 1.65;
+    line-height: 1.55;
     max-width: 600px;
     margin-bottom: 0;
+}
+
+/* ---- Primary CTAs — Book Now (primary) then WhatsApp (secondary),
+   directly under the subtitle with clear separation. ---- */
+.ctaRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+}
+
+/* ---- Search section — its own band below the hero photo, so the photo
+   (and headline/CTAs over it) stay fully visible instead of the search
+   bar sitting on top of them. ---- */
+.searchSection {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    background: var(--surface-2, #F6F7FA);
+    padding: var(--space-8) var(--space-6);
 }
 
 /* ---- Search bar wrapper (bar itself styled in HeroSearchBar.module.css) ---- */
@@ -154,9 +223,13 @@
 @media (max-width: 900px) {
     .content {
         max-width: 100%;
+        margin: 0 auto;
         align-items: center;
-        align-self: center;
         text-align: center;
+    }
+
+    .ctaRow {
+        justify-content: center;
     }
 
     /* The left-heavy horizontal scrim above assumes text stays on the
@@ -166,7 +239,7 @@
        right-hand text exposed over a barely-darkened patch of sky. */
     .heroScrim {
         background:
-            linear-gradient(180deg, rgba(3, 10, 37, 0.72) 0%, rgba(3, 10, 37, 0.80) 55%, rgba(3, 10, 37, 0.90) 100%);
+            linear-gradient(180deg, rgba(3, 10, 37, 0.58) 0%, rgba(3, 10, 37, 0.30) 20%, rgba(3, 10, 37, 0.40) 55%, rgba(3, 10, 37, 0.62) 100%);
     }
 }
 
@@ -185,8 +258,18 @@
         margin-bottom: var(--space-3);
     }
 
-    .hero {
-        padding: calc(var(--nav-height) + var(--topbar-height) + var(--space-6)) var(--space-4) var(--space-8);
-        gap: var(--space-4);
+    .ctaRow {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: var(--space-4);
+    }
+
+    .ctaRow :global(.btn) {
+        width: 100%;
+    }
+
+    .searchSection {
+        padding: var(--space-6) var(--space-4);
     }
 }
