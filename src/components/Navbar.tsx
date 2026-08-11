@@ -41,7 +41,7 @@ const DropdownPanel = ({ groups, open, onLinkClick }: { groups: NavGroup[]; open
     </div>
 );
 
-const Navbar = () => {
+const Navbar = ({ transparent = false }: { transparent?: boolean }) => {
     const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState<DropdownKey | null>(null);
@@ -61,12 +61,12 @@ const Navbar = () => {
     ];
 
     return (
-        <nav className={`${styles.navbar} ${styles.navbarShifted}`}>
+        <nav className={`${styles.navbar} ${styles.navbarShifted} ${transparent ? styles.navbarTransparent : ''}`}>
             <div className={styles.container}>
 
                 {/* ---- LOGO (Balance: anchors the left side; also serves as the Home link) ---- */}
                 <Link href="/" className={styles.logo} onClick={close} aria-label="Gulf Trip Service — Home">
-                    <Logo size={38} variant="white" />
+                    <Logo size={44} variant="white" />
                 </Link>
 
                 {/* ---- NAV LINKS (Balance: centered between logo and language/CTA actions) ---- */}

@@ -13,6 +13,17 @@
     height: var(--topbar-height);
     background: var(--bg-primary);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background var(--ease-base), border-color var(--ease-base);
+}
+
+/* Homepage-only, pre-scroll: floats over the hero photo instead of the
+   solid fill above — see Navbar.module.css .navbarTransparent, which this
+   pairs with (both toggled together from PublicLayout). */
+.topBarTransparent {
+    background: rgba(3, 10, 37, 0.55);
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
 }
 
 .container {

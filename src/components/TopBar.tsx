@@ -2,9 +2,9 @@ import { MailIcon, ClockIcon, ShieldCheckIcon } from './Icons';
 import { EMAIL } from '@/lib/contact';
 import styles from './TopBar.module.css';
 
-const TopBar = () => {
+const TopBar = ({ transparent = false }: { transparent?: boolean }) => {
     return (
-        <div className={styles.topBar}>
+        <div className={`${styles.topBar} ${transparent ? styles.topBarTransparent : ''}`}>
             <div className={styles.container}>
                 <a href={`mailto:${EMAIL}`} className={styles.item}>
                     <MailIcon size={13} />
