@@ -36,9 +36,10 @@ export default function NewQuotePage() {
 
     const saveQuote = async (status: 'draft' | 'sent') => {
         if (!form.customer_name || !form.pickup_location) { alert('Please fill required fields.'); return; }
+        if (status === 'sent' && !form.customer_email) { alert('Customer email is required to send a quote.'); return; }
         setSaving(true);
         const validUntil = new Date(); validUntil.setHours(validUntil.getHours() + 24);
-        const { error } = await supabase.from('quotes').insert({
+        const quotePayload = {
             customer_name: form.customer_name, customer_email: form.customer_email,
             customer_phone: form.customer_phone, pickup_location: form.pickup_location,
             dropoff_location: form.dropoff_location, distance_km: parseFloat(form.distance_km)||0,
@@ -47,12 +48,35 @@ export default function NewQuotePage() {
             base_fare: pricing.baseFare, per_km_rate: parseFloat(form.distance_km)>0 ? pricing.perKmCost/(parseFloat(form.distance_km)||1) : 0,
             surcharge: pricing.surchargeAmount, total_amount: pricing.total,
             admin_override_amount: form.admin_override_amount ? parseFloat(form.admin_override_amount) : null,
-            status, valid_until: status === 'sent' ? validUntil.toISOString() : null,
+            status: 'draft' as string, valid_until: null as string | null,
             notes: form.notes
-        });
+        };
+
+        // Send the quote email BEFORE persisting a 'sent' status — a status
+        // of "sent" must mean the customer genuinely received it (Admin
+        // Portal audit §8: "Send to Customer must trigger the real
+        // quote_sent email, not just change a status"). If the email fails,
+        // the quote is still saved as a draft so no data is lost, and the
+        // real error is shown instead of a fake success.
+        if (status === 'sent') {
+            const emailRes = await fetch('/api/emails/send', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'quote_sent', quoteData: { ...quotePayload, valid_until: validUntil.toISOString() } }),
+            });
+            if (!emailRes.ok) {
+                const e = await emailRes.json().catch(() => ({}));
+                setSaving(false);
+                alert('Could not send quote to customer: ' + (e.error || 'Unknown error') + '. The quote was not saved — please retry.');
+                return;
+            }
+            quotePayload.status = 'sent';
+            quotePayload.valid_until = validUntil.toISOString();
+        }
+
+        const { error } = await supabase.from('quotes').insert(quotePayload);
         setSaving(false);
         if (!error) router.push('/admin/quotes');
-        else alert('Error saving quote: ' + error.message);
+        else alert('Quote email was sent, but saving the quote record failed: ' + error.message);
     };
 
     return (

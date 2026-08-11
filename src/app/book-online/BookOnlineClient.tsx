@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, waLink } from "@/lib/contact";
 import { HOURLY_DURATIONS } from "@/lib/searchBarConfig";
 import { TOURS } from "@/lib/tourData";
+import { SEARCH_INDEX } from "@/lib/searchIndex";
+import SearchAutocomplete from "@/components/SearchAutocomplete";
 
 const services = [
     { id: "airport-transfer", label: "Airport Transfer", icon: "✈️" },
@@ -18,45 +20,74 @@ const services = [
     { id: "alula-tour", label: "AlUla Tour", icon: "🏜️" },
 ];
 
+// Generic vehicle-type list, shared vocabulary with the admin Fleet page's
+// CAR_TYPES and the admin Quotes calculator's VEHICLES — used here only when
+// the customer did NOT arrive via a specific vehicle's "Book Now" button
+// (see VEHICLE PRESELECTION below).
+const VEHICLE_OPTIONS = ["Sedan", "SUV", "Luxury", "Van", "Minibus"];
+
 // Maps the homepage search bar's Day Trips mode (src/lib/tourData.ts slugs)
 // onto this page's own service radio-button ids — the two lists evolved
 // independently (see investigation ahead of the Homepage Hero + Multi-Mode
 // Search addendum), so this is the one small bridge between them rather
-// than a full merge of either list.
+// than a full merge of either list. Built from TOURS directly so a new tour
+// added to tourData.ts can never silently fall through unmapped again (that
+// was the root cause of the "service not reliably carried forward" bug —
+// an unmapped day trip resolved to an empty service, and the old code
+// still jumped to Step 2 with it blank).
 const DAYTRIP_SERVICE_ID: Record<string, string> = {
     "jeddah-city-tour": "jeddah-tour",
     "alula-tour": "alula-tour",
     "taif-ziyarat-tour": "ziyarat",
 };
 
+const SUGGESTED_VALUES = new Set(SEARCH_INDEX.map((e) => e.value));
+
+interface FormData {
+    service: string;
+    vehicleSlug: string;
+    vehicleName: string;
+    from: string;
+    to: string;
+    date: string;
+    time: string;
+    passengers: string;
+    name: string;
+    email: string;
+    phone: string;
+    notes: string;
+}
+
+const EMPTY_FORM: FormData = {
+    service: '', vehicleSlug: '', vehicleName: '',
+    from: '', to: '', date: '', time: '', passengers: '1',
+    name: '', email: '', phone: '', notes: '',
+};
+
 export default function BookOnlineClient() {
     const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState({
-        service: '',
-        from: '',
-        to: '',
-        date: '',
-        time: '',
-        passengers: '1',
-        name: '',
-        email: '',
-        phone: '',
-        notes: '',
-    });
+    const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
+    const [step2Errors, setStep2Errors] = useState<Record<string, string>>({});
     const [submitted, setSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
-    // Prefill from the homepage search bar (or the WebMCP book_taxi tool,
-    // which already targeted these same from/to/date/passengers params
-    // before this page actually read them — see layout.tsx). A missing or
-    // unrecognized param is left at its default rather than blocking the
-    // rest of the prefill (Homepage Hero + Multi-Mode Search addendum §2.4).
+    // Prefill from the homepage search bar, a vehicle's "Book Now" button
+    // (Book by Vehicle Type / Fleet), or the WebMCP book_taxi tool — all of
+    // which already targeted these query params before this page actually
+    // read every one of them (see layout.tsx). A missing or unrecognized
+    // param is left at its default rather than blocking the rest of the
+    // prefill (Homepage Hero + Multi-Mode Search addendum §2.4).
     useEffect(() => {
         const mode = searchParams.get('mode');
-        if (!mode && !searchParams.get('from')) return; // nothing to prefill
+        const fromParam = searchParams.get('from');
+        const vehicleSlug = searchParams.get('vehicle');
+        const vehicleNameParam = searchParams.get('vehicleName');
 
-        const from = searchParams.get('from') ?? '';
+        if (!mode && !fromParam && !vehicleSlug) return; // nothing to prefill
+
+        const from = fromParam ?? '';
         const date = searchParams.get('date') ?? '';
         const time = searchParams.get('time') ?? '';
         const passengers = searchParams.get('passengers') ?? '1';
@@ -77,9 +108,12 @@ export default function BookOnlineClient() {
             const tour = TOURS.find((t) => t.slug === dayTripSlug);
             service = (dayTripSlug && DAYTRIP_SERVICE_ID[dayTripSlug]) || '';
             to = tour ? tour.label : to;
-        } else {
+        } else if (mode === 'transfers' || fromParam) {
             service = 'private-taxi';
         }
+        // Arrived with only a `vehicle` param (no mode/from) — service is
+        // left blank on purpose so the customer confirms it on Step 1
+        // themselves; the vehicle choice is retained regardless (below).
 
         const notesParts = [
             luggage && luggage !== '0' ? `Luggage: ${luggage} bag(s)` : null,
@@ -94,13 +128,19 @@ export default function BookOnlineClient() {
             date: date || prev.date,
             time: time || prev.time,
             passengers: passengers || prev.passengers,
+            vehicleSlug: vehicleSlug || prev.vehicleSlug,
+            vehicleName: vehicleNameParam ? decodeURIComponent(vehicleNameParam) : prev.vehicleName,
             notes: notesParts.length ? notesParts.join(' | ') : prev.notes,
         }));
 
-        // Service (and usually from/date) is already known from the search
-        // bar — land on Trip Details instead of asking the user to pick the
-        // service again from scratch.
-        setStep(2);
+        // Only skip ahead to Trip Details once a concrete service is
+        // actually known — landing on Step 2 with an empty service was
+        // exactly how a booking used to reach the database with no service
+        // recorded at all. A vehicle-only arrival (no mode) stays on Step 1
+        // so the customer picks a service, with the vehicle already retained.
+        if (service) {
+            setStep(2);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -108,48 +148,89 @@ export default function BookOnlineClient() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const clearVehicle = () => setFormData((f) => ({ ...f, vehicleSlug: '', vehicleName: '' }));
+
+    const validateStep2 = (): boolean => {
+        const e: Record<string, string> = {};
+        if (!formData.from.trim()) e.from = 'Pickup location is required.';
+        if (!formData.to.trim()) e.to = 'Drop-off location is required.';
+        if (!formData.date) e.date = 'Travel date is required.';
+        if (!formData.time) e.time = 'Pickup time is required.';
+        setStep2Errors(e);
+        return Object.keys(e).length === 0;
+    };
+
+    const goToStep3 = () => {
+        if (validateStep2()) setStep(3);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setSubmitError(null);
 
         try {
             const { createClient } = await import("@/utils/supabase/client");
             const supabase = createClient();
 
+            // 1. Create/update the customer record (Admin Portal audit §10 —
+            // the `customers` table existed but nothing ever wrote to it).
+            // Done before the booking insert so the booking can carry a real
+            // foreign key rather than being matched up later by guesswork.
+            const custRes = await fetch('/api/customers/upsert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: formData.name, email: formData.email, phone: formData.phone }),
+            });
+            const custJson = await custRes.json();
+            if (!custRes.ok) throw new Error(custJson.error || 'Could not save your contact details.');
+
             const bookingData = {
+                customer_id: custJson.customerId,
                 customer_name: formData.name,
                 customer_email: formData.email,
                 customer_phone: formData.phone,
                 service_type: formData.service,
                 pickup_location: formData.from,
                 dropoff_location: formData.to,
+                pickup_location_type: SUGGESTED_VALUES.has(formData.from) ? 'suggested' : 'custom',
+                dropoff_location_type: SUGGESTED_VALUES.has(formData.to) ? 'suggested' : 'custom',
                 travel_date: formData.date,
                 travel_time: formData.time,
-                passengers_count: parseInt(formData.passengers),
+                passengers_count: parseInt(formData.passengers, 10) || 1,
                 special_notes: formData.notes,
-                status: 'pending'
+                car_type: formData.vehicleName || null,
+                vehicle_slug: formData.vehicleSlug || null,
+                status: 'pending',
             };
 
-            // 1. Save to Supabase
-            const { error: dbError } = await supabase
-                .from('bookings')
-                .insert([bookingData]);
-
+            // 2. Save to Supabase — the operation that actually matters. If
+            // this fails, nothing else should pretend to have succeeded.
+            const { error: dbError } = await supabase.from('bookings').insert([bookingData]);
             if (dbError) throw dbError;
 
-            // 2. Send Emails
-            await fetch('/api/emails/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'new_booking',
-                    bookingData
-                })
-            });
+            // 3. Send notification emails. The booking is already safely
+            // persisted at this point, so an email hiccup is logged, not
+            // treated as a failed booking — but it's never silently
+            // swallowed either.
+            try {
+                const emailRes = await fetch('/api/emails/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'new_booking', bookingData }),
+                });
+                if (!emailRes.ok) {
+                    const j = await emailRes.json().catch(() => ({}));
+                    console.error('Booking confirmation email failed:', j.error);
+                }
+            } catch (emailErr) {
+                console.error('Booking confirmation email failed:', emailErr);
+            }
 
             setSubmitted(true);
-        } catch (error: any) {
-            alert("Error submitting booking: " + error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+            setSubmitError(message);
         } finally {
             setIsSubmitting(false);
         }
@@ -182,7 +263,26 @@ export default function BookOnlineClient() {
                         </div>
                     ) : (
                         <>
-                            {/* Progress Steps */}
+                            {/* Selected vehicle — persists across all 3 steps once set from a
+                                vehicle's "Book Now" button; never needs reselecting. */}
+                            {formData.vehicleName && (
+                                <div style={{
+                                    display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem 1rem',
+                                    background: 'rgba(36, 84, 232, 0.08)', border: '1px solid var(--secondary)',
+                                    borderRadius: 'var(--radius-md)', padding: '0.85rem 1.25rem', marginBottom: '1.5rem',
+                                }}>
+                                    <span style={{ fontSize: '0.9rem', color: 'var(--text-dark)', minWidth: 0, wordBreak: 'break-word' }}>
+                                        🚗 Booking for: <strong>{formData.vehicleName}</strong>
+                                    </span>
+                                    <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--secondary)', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', flexShrink: 0 }}>
+                                        Change vehicle
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Progress Steps — connector width uses clamp() so 3 steps + 2
+                                connectors never exceed a narrow mobile viewport (audit §13:
+                                step navigation must not clip/overflow on small screens). */}
                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem', gap: '0' }}>
                                 {['Select Service', 'Trip Details', 'Your Info'].map((label, i) => (
                                     <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
@@ -198,7 +298,7 @@ export default function BookOnlineClient() {
                                             </div>
                                             <div style={{ fontSize: '0.75rem', color: step === i + 1 ? 'var(--primary)' : 'var(--text-muted)', fontWeight: step === i + 1 ? 600 : 400, whiteSpace: 'nowrap' }}>{label}</div>
                                         </div>
-                                        {i < 2 && <div style={{ width: '80px', height: '2px', background: step > i + 1 ? 'var(--secondary)' : 'var(--gray-300)', margin: '0 0.5rem 1.5rem' }} />}
+                                        {i < 2 && <div style={{ width: 'clamp(30px, 8vw, 80px)', height: '2px', background: step > i + 1 ? 'var(--secondary)' : 'var(--gray-300)', margin: '0 0.5rem 1.5rem' }} />}
                                     </div>
                                 ))}
                             </div>
@@ -237,33 +337,70 @@ export default function BookOnlineClient() {
                                 {step === 2 && (
                                     <div className="card">
                                         <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Trip Details</h2>
+                                        {Object.keys(step2Errors).length > 0 && (
+                                            <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid #ef4444', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: '#b91c1c', fontSize: '0.85rem' }}>
+                                                Please fill in all required fields before continuing.
+                                            </div>
+                                        )}
                                         <div className="grid-2">
                                             <div className="form-group">
-                                                <label className="form-label">Pickup Location *</label>
-                                                <input type="text" name="from" className="form-input" placeholder="e.g. Jeddah Airport" value={formData.from} onChange={handleChange} required />
+                                                <SearchAutocomplete
+                                                    label="Pickup Location *"
+                                                    placeholder="e.g. Jeddah Airport"
+                                                    value={formData.from}
+                                                    onChange={(v) => setFormData((f) => ({ ...f, from: v }))}
+                                                    required
+                                                    invalid={!!step2Errors.from}
+                                                />
+                                                {step2Errors.from && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.from}</p>}
                                             </div>
                                             <div className="form-group">
-                                                <label className="form-label">Drop-off Location *</label>
-                                                <input type="text" name="to" className="form-input" placeholder="e.g. Makkah Hotel" value={formData.to} onChange={handleChange} required />
+                                                <SearchAutocomplete
+                                                    label="Drop-off Location *"
+                                                    placeholder="e.g. Makkah Hotel"
+                                                    value={formData.to}
+                                                    onChange={(v) => setFormData((f) => ({ ...f, to: v }))}
+                                                    required
+                                                    invalid={!!step2Errors.to}
+                                                />
+                                                {step2Errors.to && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.to}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <label className="form-label">Travel Date *</label>
-                                                <input type="date" name="date" className="form-input" value={formData.date} onChange={handleChange} required />
+                                                <input type="date" name="date" className="form-input" value={formData.date} onChange={handleChange} aria-invalid={!!step2Errors.date} style={step2Errors.date ? { borderColor: '#ef4444' } : undefined} required />
+                                                {step2Errors.date && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.date}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <label className="form-label">Pickup Time *</label>
-                                                <input type="time" name="time" className="form-input" value={formData.time} onChange={handleChange} required />
+                                                <input type="time" name="time" className="form-input" value={formData.time} onChange={handleChange} aria-invalid={!!step2Errors.time} style={step2Errors.time ? { borderColor: '#ef4444' } : undefined} required />
+                                                {step2Errors.time && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.time}</p>}
                                             </div>
                                         </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Number of Passengers *</label>
-                                            <select name="passengers" className="form-select" value={formData.passengers} onChange={handleChange}>
-                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n} passenger{n > 1 ? 's' : ''}</option>)}
-                                            </select>
+                                        <div className="grid-2">
+                                            <div className="form-group">
+                                                <label className="form-label">Number of Passengers *</label>
+                                                <select name="passengers" className="form-select" value={formData.passengers} onChange={handleChange}>
+                                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n} passenger{n > 1 ? 's' : ''}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="form-group">
+                                                <label className="form-label">Vehicle {formData.vehicleName ? '' : '(optional)'}</label>
+                                                {formData.vehicleName ? (
+                                                    <div className="form-input" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-dark)', fontWeight: 600 }}>
+                                                        <span>🚗 {formData.vehicleName}</span>
+                                                        <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--secondary)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Change</button>
+                                                    </div>
+                                                ) : (
+                                                    <select name="vehicleName" className="form-select" value={formData.vehicleName} onChange={handleChange}>
+                                                        <option value="">No preference</option>
+                                                        {VEHICLE_OPTIONS.map((v) => <option key={v} value={v}>{v}</option>)}
+                                                    </select>
+                                                )}
+                                            </div>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                                             <button type="button" className="btn btn-outline-gold" onClick={() => setStep(1)}>← Back</button>
-                                            <button type="button" className="btn btn-primary" onClick={() => setStep(3)}>Next: Your Info →</button>
+                                            <button type="button" className="btn btn-primary" onClick={goToStep3}>Next: Your Info →</button>
                                         </div>
                                     </div>
                                 )}
@@ -272,6 +409,11 @@ export default function BookOnlineClient() {
                                 {step === 3 && (
                                     <div className="card">
                                         <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Your Information</h2>
+                                        {submitError && (
+                                            <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid #ef4444', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: '#b91c1c', fontSize: '0.85rem' }}>
+                                                {submitError} Your entered details are still here — please try again.
+                                            </div>
+                                        )}
                                         <div className="grid-2">
                                             <div className="form-group">
                                                 <label className="form-label">Full Name *</label>
@@ -305,7 +447,7 @@ export default function BookOnlineClient() {
                     {/* WhatsApp Alternative */}
                     <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
                         <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>Prefer to book instantly via WhatsApp?</p>
-                        <a href={WHATSAPP_URL} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                        <a href={waLink("Hi, I'd like to book a ride.")} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                             💬 Book via WhatsApp
                         </a>
                     </div>

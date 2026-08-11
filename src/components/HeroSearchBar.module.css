@@ -152,9 +152,30 @@
     cursor: pointer;
 }
 
+.select::placeholder {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* "Choose from list instead" — reverts the Day Trip field's custom-text
+   entry back to the dropdown. */
+.backToListBtn {
+    align-self: flex-start;
+    margin-top: 2px;
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .departureInputs {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-2);
+    min-width: 210px;
 }
 
 .dateInput,
@@ -163,7 +184,6 @@
     background: transparent;
     padding: 0;
     outline: none;
-    min-width: 0;
     font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: 600;
@@ -171,12 +191,20 @@
     cursor: pointer;
 }
 
+/* Native date/time inputs render their own segments (dd/mm/yyyy, hh:mm) and
+   a calendar/clock icon — `min-width: 0` (the old value) let flexbox shrink
+   them past the width that content needs, which is what actually clipped
+   the value on tablet widths. These floors are sized to the widest they
+   render at in Chrome/Safari/Firefox, so the field wraps onto its own line
+   (via .departureInputs below) instead of the input itself compressing. */
 .dateInput {
-    flex: 1.3;
+    flex: 1.3 1 118px;
+    min-width: 118px;
 }
 
 .timeInput {
-    flex: 1;
+    flex: 1 1 92px;
+    min-width: 92px;
 }
 
 .dateInput[aria-invalid="true"],
@@ -446,9 +474,18 @@
         flex: 1 1 50%;
     }
 
-    .bar>.field:nth-child(3),
+    /* Real flex-basis values (not `auto`) so .bar's existing flex-wrap can
+       do its job — Departure reserves enough room for its date+time pair
+       to render uncropped, and Passengers wraps onto its own line instead
+       of both being squeezed to fit on one. */
+    .bar>.field:nth-child(3) {
+        flex: 1 1 260px;
+        min-width: 260px;
+        border-bottom: none;
+    }
+
     .bar>.field:nth-child(4) {
-        flex: 1 1 auto;
+        flex: 1 1 160px;
         border-bottom: none;
     }
 

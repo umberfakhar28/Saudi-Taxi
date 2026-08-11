@@ -76,7 +76,7 @@ export function UpcomingBookings({ bookings }: { bookings: any[] }) {
             <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '1rem' }}>Upcoming (Next 48h)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                 {bookings.map((b) => (
-                    <Link key={b.id} href={`/admin/bookings/${b.id}`} style={{ display: 'block', textDecoration: 'none', border: '1px solid #f1f5f9', padding: '0.875rem', borderRadius: 8 }}>
+                    <Link key={b.id} href={`/admin/bookings?edit=${b.id}`} style={{ display: 'block', textDecoration: 'none', border: '1px solid #f1f5f9', padding: '0.875rem', borderRadius: 8 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                             <div style={{ fontWeight: 600, color: '#1e293b', fontSize: '0.9rem' }}>{b.customer_name}</div>
                             <div style={{ fontSize: '0.8rem', color: '#3b82f6', fontWeight: 600 }}>{b.travel_time}</div>

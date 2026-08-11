@@ -379,3 +379,12 @@
     text-decoration: none;
 }
 .admin-btn-secondary:hover { background: #e2e8f0; color: #1e293b; }
+
+/* Invoice detail page: browser print-to-PDF is the real "Download PDF"
+   mechanism (window.print() on /admin/invoices/[id]) — this hides the
+   admin chrome so only the invoice card prints. */
+@media print {
+    .admin-sidebar, .admin-page-bar, .invoice-print-hide { display: none !important; }
+    .admin-main, .admin-content { padding: 0 !important; margin: 0 !important; }
+    body { background: #fff !important; }
+}

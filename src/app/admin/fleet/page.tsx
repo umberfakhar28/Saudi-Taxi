@@ -11,6 +11,8 @@ export default function FleetPage() {
     const [fleet, setFleet] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
     const [form, setForm] = useState({ ...empty });
     const supabase = createClient();
 
@@ -23,11 +25,23 @@ export default function FleetPage() {
 
     useEffect(() => { fetchFleet(); }, [fetchFleet]);
 
-    const handleAdd = async (e: React.FormEvent) => {
+    const openAdd = () => { setEditingId(null); setForm({ ...empty }); setModal(true); };
+    const openEdit = (v: any) => {
+        setEditingId(v.id);
+        setForm({ car_model: v.car_model, car_type: v.car_type, capacity: v.capacity, is_available: v.is_available });
+        setModal(true);
+    };
+
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        const { error } = await supabase.from('fleet').insert([form]);
+        setSaving(true);
+        const { error } = editingId
+            ? await supabase.from('fleet').update(form).eq('id', editingId)
+            : await supabase.from('fleet').insert([form]);
+        setSaving(false);
         if (error) { alert(error.message); return; }
         setModal(false);
+        setEditingId(null);
         setForm({ ...empty });
         fetchFleet();
     };
@@ -55,7 +69,7 @@ export default function FleetPage() {
                         {fleet.length} vehicle{fleet.length !== 1 ? 's' : ''} registered · {available} available
                     </p>
                 </div>
-                <button className="admin-btn-primary" onClick={() => setModal(true)}>
+                <button className="admin-btn-primary" onClick={openAdd}>
                     <Plus size={16} /> Add Vehicle
                 </button>
             </div>
@@ -130,7 +144,7 @@ export default function FleetPage() {
                                 </td>
                                 <td>
                                     <div style={{ display: 'flex', gap: '0.35rem' }}>
-                                        <button className="admin-icon-btn" title="Edit"><Edit size={14} /></button>
+                                        <button className="admin-icon-btn" title="Edit" onClick={() => openEdit(v)}><Edit size={14} /></button>
                                         <button className="admin-icon-btn danger" title="Delete" onClick={() => deleteVehicle(v.id)}><Trash2 size={14} /></button>
                                     </div>
                                 </td>
@@ -146,15 +160,15 @@ export default function FleetPage() {
                 </table>
             </div>
 
-            {/* Add modal */}
+            {/* Add / Edit modal */}
             {modal && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)' }}>
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', maxWidth: 440, width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>Add New Vehicle</h2>
+                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>{editingId ? 'Edit Vehicle' : 'Add New Vehicle'}</h2>
                             <button onClick={() => setModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
                         </div>
-                        <form onSubmit={handleAdd}>
+                        <form onSubmit={handleSave}>
                             <div className="form-group">
                                 <label className="form-label">Car Model *</label>
                                 <input type="text" className="form-input" placeholder="e.g. Toyota Camry 2024" required value={form.car_model} onChange={e => setForm({ ...form, car_model: e.target.value })} />
@@ -171,9 +185,17 @@ export default function FleetPage() {
                                     <input type="number" className="form-input" min={1} max={50} value={form.capacity} onChange={e => setForm({ ...form, capacity: parseInt(e.target.value) })} />
                                 </div>
                             </div>
+                            {editingId && (
+                                <div className="form-group">
+                                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <input type="checkbox" checked={form.is_available} onChange={e => setForm({ ...form, is_available: e.target.checked })} />
+                                        Available for booking
+                                    </label>
+                                </div>
+                            )}
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
                                 <button type="button" className="admin-btn-secondary" onClick={() => setModal(false)}>Cancel</button>
-                                <button type="submit" className="admin-btn-primary">Add Vehicle</button>
+                                <button type="submit" className="admin-btn-primary" disabled={saving}>{saving ? 'Saving...' : editingId ? 'Save Changes' : 'Add Vehicle'}</button>
                             </div>
                         </form>
                     </div>

@@ -154,7 +154,7 @@ const VehicleTypeCarousel = () => {
                                 <div className={styles.content}>
                                     <h3 className={styles.name}>{v.name}</h3>
                                     <p className={styles.desc}>{v.desc}</p>
-                                    <Link href={`/book-online?vehicle=${v.slug}`} className={styles.cta}>
+                                    <Link href={`/book-online?vehicle=${v.slug}&vehicleName=${encodeURIComponent(v.name)}`} className={styles.cta}>
                                         Book Now
                                         <span className={styles.ctaArrow}>→</span>
                                     </Link>

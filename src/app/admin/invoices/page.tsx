@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client';
 import { Search, Filter, RefreshCw, FileText, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import { formatSAR } from '@/utils/pricing';
+import Link from 'next/link';
 
 export default function InvoicesPage() {
     const [invoices, setInvoices] = useState<any[]>([]);
@@ -112,8 +113,8 @@ export default function InvoicesPage() {
                                 </td>
                                 <td>
                                     <div style={{ display: 'flex', gap: '0.35rem' }}>
-                                        <button className="admin-icon-btn" title="View Details"><FileText size={15} /></button>
-                                        <button className="admin-icon-btn" title="Download PDF"><Download size={15} /></button>
+                                        <Link href={`/admin/invoices/${inv.id}`} className="admin-icon-btn" title="View Details"><FileText size={15} /></Link>
+                                        <Link href={`/admin/invoices/${inv.id}`} className="admin-icon-btn" title="Download PDF"><Download size={15} /></Link>
                                     </div>
                                 </td>
                             </tr>

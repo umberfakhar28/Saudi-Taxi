@@ -49,6 +49,7 @@ function HeroSearchBarInner() {
     const [to, setTo] = useState('');
     const [duration, setDuration] = useState(HOURLY_DURATIONS[1].value);
     const [dayTrip, setDayTrip] = useState(TOURS[0]?.slug ?? '');
+    const [dayTripCustom, setDayTripCustom] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [addReturn, setAddReturn] = useState(false);
@@ -87,6 +88,7 @@ function HeroSearchBarInner() {
         if (!from.trim()) e.from = 'Enter a pickup location';
         if (mode === 'transfers' && !to.trim()) e.to = 'Enter a destination';
         if (mode === 'daytrips' && !dayTrip) e.dayTrip = 'Choose a day trip';
+        if (mode === 'daytrips' && dayTrip === 'other' && !dayTripCustom.trim()) e.dayTripCustom = 'Enter your destination';
         if (!date) e.date = 'Choose a date';
         else if (date < todayISO()) e.date = "Date can't be in the past";
         if (!time) e.time = 'Choose a time';
@@ -101,7 +103,14 @@ function HeroSearchBarInner() {
         params.set('from', from);
         if (mode === 'transfers') params.set('to', to);
         if (mode === 'hourly') params.set('duration', duration);
-        if (mode === 'daytrips') params.set('dayTrip', dayTrip);
+        if (mode === 'daytrips') {
+            params.set('dayTrip', dayTrip);
+            // A custom destination (not one of the listed day trips) rides
+            // along in the generic `to` param — BookOnlineClient already
+            // falls back to it whenever the `dayTrip` slug doesn't match a
+            // known tour, so no special-casing is needed on that end.
+            if (dayTrip === 'other' && dayTripCustom.trim()) params.set('to', dayTripCustom.trim());
+        }
         params.set('date', date);
         params.set('time', time);
         if (mode === 'transfers' && addReturn) {
@@ -152,17 +161,40 @@ function HeroSearchBarInner() {
         return (
             <div className={styles.field}>
                 <label className={styles.fieldLabel} htmlFor={`${idPrefix}-daytrip`}>Day Trip</label>
-                <select
-                    id={`${idPrefix}-daytrip`}
-                    className={styles.select}
-                    value={dayTrip}
-                    onChange={(e) => setDayTrip(e.target.value)}
-                    aria-invalid={!!errors.dayTrip || undefined}
-                >
-                    {TOURS.map((t) => (
-                        <option key={t.slug} value={t.slug}>{t.label}</option>
-                    ))}
-                </select>
+                {dayTrip === 'other' ? (
+                    <input
+                        id={`${idPrefix}-daytrip-custom`}
+                        type="text"
+                        className={styles.select}
+                        style={{ cursor: 'text' }}
+                        placeholder="Type your destination"
+                        value={dayTripCustom}
+                        onChange={(e) => setDayTripCustom(e.target.value)}
+                        aria-invalid={!!errors.dayTripCustom || undefined}
+                    />
+                ) : (
+                    <select
+                        id={`${idPrefix}-daytrip`}
+                        className={styles.select}
+                        value={dayTrip}
+                        onChange={(e) => setDayTrip(e.target.value)}
+                        aria-invalid={!!errors.dayTrip || undefined}
+                    >
+                        {TOURS.map((t) => (
+                            <option key={t.slug} value={t.slug}>{t.label}</option>
+                        ))}
+                        <option value="other">Other (type your own)…</option>
+                    </select>
+                )}
+                {dayTrip === 'other' && (
+                    <button
+                        type="button"
+                        onClick={() => { setDayTrip(TOURS[0]?.slug ?? ''); setDayTripCustom(''); }}
+                        className={styles.backToListBtn}
+                    >
+                        ← Choose from list instead
+                    </button>
+                )}
             </div>
         );
     };
@@ -274,7 +306,7 @@ function HeroSearchBarInner() {
                 onClick={() => setMobileSheetOpen(true)}
             >
                 <CompassIcon size={16} />
-                {from && (mode === 'transfers' ? to : mode === 'hourly' ? `${duration}h` : dayTrip) ? 'Edit your search' : 'Where are you going?'}
+                {from && (mode === 'transfers' ? to : mode === 'hourly' ? `${duration}h` : (dayTrip === 'other' ? dayTripCustom : dayTrip)) ? 'Edit your search' : 'Where are you going?'}
             </button>
 
             {mobileSheetOpen && (

@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { MapPinIcon, CalendarIcon, UserIcon, PackageIcon, CarIcon, WhatsAppIcon, CheckCircleIcon } from './Icons';
 import { WHATSAPP_URL, waLink } from '@/lib/contact';
 import { FLEET_TIERS } from '@/lib/fleetConfig';
+import { SEARCH_INDEX } from '@/lib/searchIndex';
 import styles from './DestinationEnquiryForm.module.css';
+
+const SUGGESTED_VALUES = new Set(SEARCH_INDEX.map((e) => e.value));
 
 interface DestinationEnquiryFormProps {
     /** Destination name — shown locked/preselected, per the Popular
@@ -53,28 +56,36 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
 
         const notesLines = [
             `Destination: ${destinationLabel}`,
-            `Vehicle preference: ${vehicleLabel}`,
             form.luggage ? `Luggage: ${form.luggage} bag(s)` : null,
             form.notes ? `Additional requirements: ${form.notes}` : null,
             `Source page: ${sourcePage}`,
         ].filter(Boolean).join(' | ');
 
+        const pickup = form.pickup || `${destinationLabel} (pickup TBD)`;
+        const dropoff = form.dropoff || destinationLabel;
+
         // Same shape BookOnlineClient.tsx inserts into Supabase's `bookings`
         // table — reusing the existing booking/email pipeline rather than a
-        // parallel one, per the Popular Destinations brief §9. Only real
-        // table columns go into this object (destination/vehicle context is
-        // folded into special_notes instead of a new column).
+        // parallel one, per the Popular Destinations brief §9. Vehicle
+        // preference and location provenance now go into real columns
+        // (car_type/vehicle_slug/pickup_location_type/dropoff_location_type)
+        // instead of being buried in free-text notes, so the admin panel and
+        // emails can display them as actual fields (Admin Portal audit §1-2).
         const dbPayload = {
             customer_name: form.name,
             customer_email: form.email,
             customer_phone: form.phone,
             service_type: 'destination-enquiry',
-            pickup_location: form.pickup || `${destinationLabel} (pickup TBD)`,
-            dropoff_location: form.dropoff || destinationLabel,
+            pickup_location: pickup,
+            dropoff_location: dropoff,
+            pickup_location_type: SUGGESTED_VALUES.has(pickup) ? 'suggested' : 'custom',
+            dropoff_location_type: SUGGESTED_VALUES.has(dropoff) ? 'suggested' : 'custom',
             travel_date: form.date,
             travel_time: form.time,
             passengers_count: parseInt(form.passengers, 10) || 1,
             special_notes: notesLines,
+            car_type: vehicleLabel || null,
+            vehicle_slug: form.vehicle || null,
             status: 'pending',
         };
 
@@ -82,17 +93,36 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             const { createClient } = await import('@/utils/supabase/client');
             const supabase = createClient();
 
-            const { error: dbError } = await supabase.from('bookings').insert([dbPayload]);
-            if (dbError) throw dbError;
-
-            await fetch('/api/emails/send', {
+            const custRes = await fetch('/api/customers/upsert', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'destination_enquiry',
-                    bookingData: { ...dbPayload, destination_name: destinationLabel },
-                }),
+                body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone }),
             });
+            const custJson = await custRes.json();
+            if (!custRes.ok) throw new Error(custJson.error || 'Could not save your contact details.');
+
+            const { error: dbError } = await supabase.from('bookings').insert([{ ...dbPayload, customer_id: custJson.customerId }]);
+            if (dbError) throw dbError;
+
+            // The enquiry is already saved at this point — an email hiccup
+            // shouldn't make the customer think their request wasn't
+            // received, but it also shouldn't be silently swallowed.
+            try {
+                const emailRes = await fetch('/api/emails/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'destination_enquiry',
+                        bookingData: { ...dbPayload, destination_name: destinationLabel },
+                    }),
+                });
+                if (!emailRes.ok) {
+                    const j = await emailRes.json().catch(() => ({}));
+                    console.error('Destination enquiry email failed:', j.error);
+                }
+            } catch (emailErr) {
+                console.error('Destination enquiry email failed:', emailErr);
+            }
 
             setSubmitted(true);
         } catch (err) {

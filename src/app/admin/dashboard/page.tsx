@@ -1,10 +1,12 @@
 import { createClient } from '@/utils/supabase/server';
-import { CalendarCheck, TrendingUp, Clock, CheckCircle2, ArrowUpRight, FileText, Receipt, Users, XCircle, RefreshCw, Filter } from 'lucide-react';
+import { CalendarCheck, TrendingUp, Clock, CheckCircle2, FileText, Receipt, Users, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import DashboardFilters from './components/DashboardFilters';
 import { DashboardCharts } from './components/DashboardCharts';
 import { ConversionFunnel, AlertsSection, UpcomingBookings, RecentActivity } from './components/DashboardWidgets';
-import { startOfDay, endOfDay, startOfWeek, startOfMonth, subDays } from 'date-fns';
+import { startOfDay, endOfDay, startOfWeek, startOfMonth, subDays, subWeeks, subMonths, format } from 'date-fns';
+
+type TrendView = 'daily' | 'weekly' | 'monthly';
 
 export default async function AdminDashboard({ searchParams }: { searchParams: Promise<{ range?: string, status?: string }> }) {
     const supabase = await createClient();
@@ -27,6 +29,19 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         endDate = endOfDay(now);
     }
 
+    // Previous-period window — the *same length* range immediately before
+    // the one above — so the stat-card trend badges can show a real
+    // period-over-period % instead of the hardcoded "+5%" etc. they used to
+    // (Admin Portal audit). "All Time" has no natural previous period, so
+    // its badges are simply omitted rather than faked.
+    let prevStart: Date | null = null;
+    let prevEnd: Date | null = null;
+    if (startDate && endDate) {
+        if (range === 'today') { prevStart = subDays(startDate, 1); prevEnd = subDays(endDate, 1); }
+        else if (range === 'this_week') { prevStart = subWeeks(startDate, 1); prevEnd = subWeeks(endDate, 1); }
+        else if (range === 'this_month') { prevStart = subMonths(startDate, 1); prevEnd = subMonths(endDate, 1); }
+    }
+
     // Build base queries
     let bookingsQ = supabase.from('bookings').select('*');
     let invoicesQ = supabase.from('invoices').select('*');
@@ -46,24 +61,45 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         bookingsQ = bookingsQ.eq('status', statusFilter);
     }
 
+    // 6-month window feeding the Revenue/Booking Trend charts — independent
+    // of the KPI date filter above and wide enough to fill any of the
+    // daily/weekly/monthly toggle's three views (Admin Portal audit — this
+    // used to be Math.random(), and switching the toggle rendered an empty
+    // chart since the fake data was hardcoded to a single 'daily' tag).
+    const trendWindowStart = subMonths(now, 6);
+
     const [
         { data: bookings },
         { data: invoices },
         { data: quotes },
         { data: customers },
-        { data: auditLogs }
+        { data: auditLogs },
+        { data: prevBookingsRaw },
+        { data: prevInvoicesRaw },
+        { data: trendBookingsRaw },
+        { data: trendInvoicesRaw },
     ] = await Promise.all([
         bookingsQ,
         invoicesQ,
         quotesQ,
         customersQ,
-        supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(10)
+        supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(10),
+        prevStart && prevEnd
+            ? supabase.from('bookings').select('id, status, created_at').gte('created_at', prevStart.toISOString()).lte('created_at', prevEnd.toISOString())
+            : Promise.resolve({ data: [] as { id: string; status: string; created_at: string }[] }),
+        prevStart && prevEnd
+            ? supabase.from('invoices').select('total_amount, status, created_at').gte('created_at', prevStart.toISOString()).lte('created_at', prevEnd.toISOString())
+            : Promise.resolve({ data: [] as { total_amount: number; status: string; created_at: string }[] }),
+        supabase.from('bookings').select('created_at').gte('created_at', trendWindowStart.toISOString()),
+        supabase.from('invoices').select('created_at, total_amount, status').gte('created_at', trendWindowStart.toISOString()),
     ]);
 
     const bookingsList = bookings || [];
     const invoicesList = invoices || [];
     const quotesList = quotes || [];
     const customersList = customers || [];
+    const prevBookingsList = prevBookingsRaw || [];
+    const prevInvoicesList = prevInvoicesRaw || [];
 
     // KPI Calculations
     const totalBookings = bookingsList.length;
@@ -71,30 +107,41 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     const confirmedBookings = bookingsList.filter(b => b.status === 'confirmed').length;
     const completedBookings = bookingsList.filter(b => b.status === 'completed').length;
     const cancelledBookings = bookingsList.filter(b => b.status === 'cancelled').length;
-    
+
     const paidInvoices = invoicesList.filter(i => i.status === 'paid');
     const unpaidInvoices = invoicesList.filter(i => i.status === 'unpaid' || i.status === 'partially_paid');
-    
+
     const totalRevenue = paidInvoices.reduce((sum, i) => sum + (Number(i.total_amount) || 0), 0);
     const pendingRevenue = unpaidInvoices.reduce((sum, i) => sum + (Number(i.total_amount) || 0) - (Number(i.paid_amount) || 0), 0);
     const avgBookingValue = totalBookings > 0 ? totalRevenue / totalBookings : 0;
-    
+
     const totalQuotes = quotesList.length;
     const sentQuotes = quotesList.filter(q => q.status === 'sent' || q.status === 'accepted' || q.status === 'converted').length;
-    
-    // Previous period simulation (static for now to avoid complex queries)
-    const trendClass = "text-green-600 bg-green-100";
-    const trendIcon = "↑";
+
+    // Real period-over-period trend. Returns null (no badge) when there's
+    // no previous period to compare against, or when the previous period
+    // had zero of something and the metric is still zero now (nothing to
+    // report); shows "New" when it went from zero to something.
+    function pctChange(current: number, previous: number): { label: string; up: boolean } | null {
+        if (!prevStart || !prevEnd) return null;
+        if (previous === 0) return current > 0 ? { label: 'New', up: true } : null;
+        const pct = ((current - previous) / previous) * 100;
+        return { label: `${pct >= 0 ? '+' : ''}${pct.toFixed(0)}%`, up: pct >= 0 };
+    }
+
+    const prevTotalBookings = prevBookingsList.length;
+    const prevCompletedBookings = prevBookingsList.filter((b) => b.status === 'completed').length;
+    const prevRevenue = prevInvoicesList.filter((i) => i.status === 'paid').reduce((s, i) => s + (Number(i.total_amount) || 0), 0);
 
     const stats = [
-        { name: 'Total Bookings', value: totalBookings, icon: CalendarCheck, color: '#6366f1', bg: '#eef2ff', href: '/admin/bookings', trend: '+5%' },
-        { name: 'Pending', value: pendingBookings, icon: Clock, color: '#f59e0b', bg: '#fffbeb', href: '/admin/bookings?status=pending' },
-        { name: 'Completed', value: completedBookings, icon: CheckCircle2, color: '#10b981', bg: '#ecfdf5', href: '/admin/bookings?status=completed', trend: '+12%' },
-        { name: 'Cancelled', value: cancelledBookings, icon: XCircle, color: '#f43f5e', bg: '#ffe4e6', href: '/admin/bookings?status=cancelled' },
-        { name: 'Revenue (Paid)', value: `SAR ${totalRevenue.toFixed(0)}`, icon: TrendingUp, color: '#fbbf24', bg: '#fffbeb', href: '/admin/invoices', trend: '+8%' },
-        { name: 'Avg Booking Value', value: `SAR ${avgBookingValue.toFixed(0)}`, icon: Receipt, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/invoices' },
-        { name: 'Active Quotes', value: quotesList.filter(q => q.status === 'draft' || q.status === 'sent').length, icon: FileText, color: '#8b5cf6', bg: '#f5f3ff', href: '/admin/quotes' },
-        { name: 'Customers', value: customersList.length, icon: Users, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/customers', trend: '+2%' },
+        { name: 'Total Bookings', value: totalBookings, icon: CalendarCheck, color: '#6366f1', bg: '#eef2ff', href: '/admin/bookings', trend: pctChange(totalBookings, prevTotalBookings) },
+        { name: 'Pending', value: pendingBookings, icon: Clock, color: '#f59e0b', bg: '#fffbeb', href: '/admin/bookings?status=pending', trend: null },
+        { name: 'Completed', value: completedBookings, icon: CheckCircle2, color: '#10b981', bg: '#ecfdf5', href: '/admin/bookings?status=completed', trend: pctChange(completedBookings, prevCompletedBookings) },
+        { name: 'Cancelled', value: cancelledBookings, icon: XCircle, color: '#f43f5e', bg: '#ffe4e6', href: '/admin/bookings?status=cancelled', trend: null },
+        { name: 'Revenue (Paid)', value: `SAR ${totalRevenue.toFixed(0)}`, icon: TrendingUp, color: '#fbbf24', bg: '#fffbeb', href: '/admin/invoices', trend: pctChange(totalRevenue, prevRevenue) },
+        { name: 'Avg Booking Value', value: `SAR ${avgBookingValue.toFixed(0)}`, icon: Receipt, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/invoices', trend: null },
+        { name: 'Active Quotes', value: quotesList.filter(q => q.status === 'draft' || q.status === 'sent').length, icon: FileText, color: '#8b5cf6', bg: '#f5f3ff', href: '/admin/quotes', trend: null },
+        { name: 'Customers', value: customersList.length, icon: Users, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/customers', trend: null },
     ];
 
     const statusClass = (status: string) => {
@@ -113,9 +160,45 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         { status: 'cancelled', count: cancelledBookings, revenue: bookingsList.filter(b=>b.status==='cancelled').reduce((s, b)=>s+(Number(b.quote_amount)||0),0) }
     ];
 
-    // Dummy trend data generation for demonstration (would normally group by date from DB)
-    const revenueTrend = Array.from({length: 10}).map((_, i) => ({ date: `Day ${i+1}`, revenue: Math.floor(Math.random() * 5000), view: 'daily' }));
-    const bookingTrend = Array.from({length: 10}).map((_, i) => ({ date: `Day ${i+1}`, bookings: Math.floor(Math.random() * 20), view: 'daily' }));
+    // Real trend buckets from the 6-month window above — replaces the old
+    // Math.random() series. Each view produces its own set of period
+    // labels (last 14 days / 8 weeks / 6 months) so the chart's
+    // daily/weekly/monthly toggle actually has real data for all three.
+    const trendBookingsList = trendBookingsRaw || [];
+    const trendInvoicesList = (trendInvoicesRaw || []).filter((i) => i.status === 'paid');
+
+    function periodLabels(view: TrendView): string[] {
+        if (view === 'daily') return Array.from({ length: 14 }, (_, i) => format(subDays(now, 13 - i), 'MMM d'));
+        if (view === 'weekly') return Array.from({ length: 8 }, (_, i) => format(startOfWeek(subWeeks(now, 7 - i), { weekStartsOn: 1 }), 'MMM d'));
+        return Array.from({ length: 6 }, (_, i) => format(startOfMonth(subMonths(now, 5 - i)), 'MMM yyyy'));
+    }
+
+    function bucketKeyFor(date: Date, view: TrendView): string {
+        if (view === 'daily') return format(startOfDay(date), 'MMM d');
+        if (view === 'weekly') return format(startOfWeek(date, { weekStartsOn: 1 }), 'MMM d');
+        return format(startOfMonth(date), 'MMM yyyy');
+    }
+
+    function buildRevenueTrend(view: TrendView) {
+        const totals = new Map<string, number>();
+        for (const inv of trendInvoicesList) {
+            const key = bucketKeyFor(new Date(inv.created_at), view);
+            totals.set(key, (totals.get(key) || 0) + (Number(inv.total_amount) || 0));
+        }
+        return periodLabels(view).map((label) => ({ date: label, revenue: totals.get(label) || 0, view }));
+    }
+
+    function buildBookingTrend(view: TrendView) {
+        const counts = new Map<string, number>();
+        for (const b of trendBookingsList) {
+            const key = bucketKeyFor(new Date(b.created_at), view);
+            counts.set(key, (counts.get(key) || 0) + 1);
+        }
+        return periodLabels(view).map((label) => ({ date: label, bookings: counts.get(label) || 0, view }));
+    }
+
+    const revenueTrend = [...buildRevenueTrend('daily'), ...buildRevenueTrend('weekly'), ...buildRevenueTrend('monthly')];
+    const bookingTrend = [...buildBookingTrend('daily'), ...buildBookingTrend('weekly'), ...buildBookingTrend('monthly')];
 
     // Prepare data for widgets
     const overdueInvoicesCount = unpaidInvoices.filter(i => new Date(i.due_date) < new Date()).length;
@@ -139,7 +222,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                     <Link href="/admin/quotes/new" className="admin-btn-secondary">+ New Quote</Link>
-                    <Link href="/admin/bookings/new" className="admin-btn-primary">+ New Booking</Link>
+                    <Link href="/admin/bookings?new=1" className="admin-btn-primary">+ New Booking</Link>
                 </div>
             </div>
 
@@ -157,8 +240,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                         <Icon size={19} />
                                     </div>
                                     {s.trend && (
-                                        <div style={{ fontSize: '0.7rem', fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: '#dcfce7', color: '#166534' }}>
-                                            {trendIcon} {s.trend}
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: s.trend.up ? '#dcfce7' : '#fee2e2', color: s.trend.up ? '#166534' : '#991b1b' }}>
+                                            {s.trend.up ? '↑' : '↓'} {s.trend.label}
                                         </div>
                                     )}
                                 </div>
@@ -196,10 +279,10 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                 <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0f172a', marginBottom: '1rem' }}>Quick Actions</div>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                                     {[
-                                        { label: '✨ New Booking', href: '/admin/bookings/new' },
+                                        { label: '✨ New Booking', href: '/admin/bookings?new=1' },
                                         { label: '📄 New Quote', href: '/admin/quotes/new' },
-                                        { label: '👤 Add Customer', href: '/admin/customers' },
-                                        { label: '💰 Create Invoice', href: '/admin/invoices' },
+                                        { label: '👤 Add Customer', href: '/admin/customers?new=1' },
+                                        { label: '💰 Create Invoice', href: '/admin/bookings' },
                                         { label: '📅 View Calendar', href: '/admin/calendar' },
                                         { label: '📊 Export Data', href: '/admin/reports' },
                                     ].map(a => (
@@ -243,8 +326,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                <Link href={`/admin/bookings/${b.id}`} style={{ fontSize: '0.75rem', color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>Edit</Link>
-                                                <Link href={`/admin/invoices/new?booking=${b.id}`} style={{ fontSize: '0.75rem', color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>Invoice</Link>
+                                                <Link href={`/admin/bookings?edit=${b.id}`} style={{ fontSize: '0.75rem', color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>Edit</Link>
+                                                <Link href={`/admin/bookings?invoice=${b.id}`} style={{ fontSize: '0.75rem', color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>Invoice</Link>
                                             </div>
                                         </td>
                                     </tr>

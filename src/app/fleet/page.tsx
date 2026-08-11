@@ -162,7 +162,7 @@ export default function FleetPage() {
                                         <span><UserIcon size={15} /> {cat.passengers} Passengers</span>
                                         <span><PackageIcon size={15} /> {cat.luggage} Bags</span>
                                     </div>
-                                    <Link href={`/book-online?vehicle=${cat.slug}`} className="btn btn-outline-gold btn-sm">
+                                    <Link href={`/book-online?vehicle=${cat.slug}&vehicleName=${encodeURIComponent(cat.name)}`} className="btn btn-outline-gold btn-sm">
                                         Book Now<span className="sr-only"> the {cat.name}</span>
                                     </Link>
                                 </div>

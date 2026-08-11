@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Search, RefreshCw, ChevronDown, X, Download, Trash, CheckSquare, Square, FileText, MessageCircle, AlertTriangle, Eye, Edit, FilePlus, ChevronLeft, ChevronRight, Calendar, Mail, Share2 } from 'lucide-react';
 import { format, isWithinInterval, startOfDay, endOfDay, addDays, parseISO } from 'date-fns';
@@ -7,7 +8,9 @@ import { format, isWithinInterval, startOfDay, endOfDay, addDays, parseISO } fro
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
 const PAYMENT_OPTIONS = ['all', 'paid', 'unpaid', 'partially_paid'];
 
-export default function BookingsPage() {
+function BookingsPageInner() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const [bookings, setBookings] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     
@@ -138,14 +141,32 @@ export default function BookingsPage() {
         setSelectedIds(next);
     };
 
+    // Writes a real row to audit_logs via the service-role API route (so it
+    // works regardless of RLS on that table) — feeds the Dashboard's Recent
+    // Activity widget, which previously read a table nothing ever wrote to.
+    // Fire-and-forget: a logging hiccup should never block the real action.
+    const logActivity = useCallback((entityType: string, entityId: string | null, action: string, description: string) => {
+        fetch('/api/admin/audit-log', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entityType, entityId, action, description }),
+        }).catch(() => { /* non-critical */ });
+    }, []);
+
     // Actions
     const updateStatus = async (id: string, newStatus: string) => {
         if (newStatus === 'cancelled' && !confirm('Are you sure you want to cancel this booking?')) return;
-        
-        await supabase.from('bookings').update({ status: newStatus }).eq('id', id);
-        
+
+        const target = bookings.find(b => b.id === id);
+        const { error } = await supabase.from('bookings').update({ status: newStatus }).eq('id', id);
+        if (error) { alert('Failed to update status: ' + error.message); return; }
+        logActivity('booking', id, 'status_changed', `${target?.customer_name ?? 'Booking'} marked ${newStatus}`);
+
         if (newStatus === 'confirmed') {
-            await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_confirmed', bookingId: id }) });
+            const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_confirmed', bookingId: id }) });
+            if (!res.ok) {
+                const j = await res.json().catch(() => ({}));
+                alert('Booking confirmed, but the confirmation email failed to send: ' + (j.error || 'unknown error'));
+            }
         }
         if (newStatus === 'completed') {
             const b = bookings.find(b => b.id === id);
@@ -159,7 +180,9 @@ export default function BookingsPage() {
     };
 
     const duplicateTrip = async (b: any) => {
-        await supabase.from('bookings').insert({ customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, service_type: b.service_type, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, travel_time: b.travel_time, passengers_count: b.passengers_count, special_notes: b.special_notes, status: 'pending', quote_amount: b.quote_amount, car_type: b.car_type });
+        const { error } = await supabase.from('bookings').insert({ customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, customer_id: b.customer_id, service_type: b.service_type, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, pickup_location_type: b.pickup_location_type, dropoff_location_type: b.dropoff_location_type, travel_date: b.travel_date, travel_time: b.travel_time, passengers_count: b.passengers_count, special_notes: b.special_notes, status: 'pending', quote_amount: b.quote_amount, car_type: b.car_type, vehicle_slug: b.vehicle_slug });
+        if (error) { alert('Failed to duplicate trip: ' + error.message); return; }
+        logActivity('booking', null, 'duplicated', `Trip duplicated for ${b.customer_name}`);
         alert('Trip duplicated successfully!'); setOpenDropdown(null); fetchBookings();
     };
 
@@ -181,47 +204,112 @@ export default function BookingsPage() {
         const invNum = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
         const { data: invData, error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() }).select().single();
         if (!error && invData) {
+            // Keep the booking's own invoice_id pointer in sync so future
+            // lookups (and the "already has an invoice" branch above) find
+            // it without relying on the invoices.booking_id back-reference
+            // alone.
+            await supabase.from('bookings').update({ invoice_id: invData.id }).eq('id', b.id);
+            logActivity('invoice', invData.id, 'created', `Invoice ${invNum} generated for ${b.customer_name}`);
             await fetchBookings();
-            setInvoiceModal({ ...b, invoice_number: invNum, invoice_db_id: invData.id });
+            setInvoiceModal({ ...b, invoice_number: invNum, invoice_db_id: invData.id, total_amount: b.quote_amount || 0 });
         } else {
-            alert('Failed to create invoice. Please try again.');
+            alert('Failed to create invoice: ' + (error?.message || 'unknown error'));
         }
     };
 
-    const sendEmail = async (type: string, b: any) => {
-        await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type, bookingData: b }) });
-        alert('Communication sent!'); setOpenDropdown(null);
+    const sendEmail = async (type: 'booking_confirmed' | 'invoice', payload: any) => {
+        const body = type === 'invoice' ? { type, invoiceData: payload } : { type, bookingData: payload };
+        try {
+            const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const json = await res.json();
+            if (!res.ok) {
+                alert('Failed to send: ' + (json.error || 'unknown error'));
+                return;
+            }
+            logActivity('booking', payload.id || payload.booking_id || null, 'email_sent', `${type === 'invoice' ? 'Invoice' : 'Confirmation'} email sent to ${payload.customer_email || 'customer'}`);
+            alert('Communication sent!');
+        } catch (err: any) {
+            alert('Failed to send: ' + (err?.message || 'unknown error'));
+        } finally {
+            setOpenDropdown(null);
+        }
     };
 
     const saveNotes = async () => {
         if (!notesModal) return;
-        await supabase.from('bookings').update({ internal_notes: notes }).eq('id', notesModal.id);
+        const { error } = await supabase.from('bookings').update({ internal_notes: notes }).eq('id', notesModal.id);
+        if (error) { alert('Failed to save notes: ' + error.message); return; }
         setNotesModal(null); fetchBookings();
     };
 
     const saveEdit = async () => {
         if (!editModal) return;
-        await supabase.from('bookings').update({ customer_name: editModal.customer_name, customer_phone: editModal.customer_phone, customer_email: editModal.customer_email, service_type: editModal.service_type, pickup_location: editModal.pickup_location, dropoff_location: editModal.dropoff_location, travel_date: editModal.travel_date, travel_time: editModal.travel_time, passengers_count: parseInt(editModal.passengers_count) || 1, quote_amount: parseFloat(editModal.quote_amount) || null, internal_notes: editModal.internal_notes }).eq('id', editModal.id);
+        const { error } = await supabase.from('bookings').update({ customer_name: editModal.customer_name, customer_phone: editModal.customer_phone, customer_email: editModal.customer_email, service_type: editModal.service_type, pickup_location: editModal.pickup_location, dropoff_location: editModal.dropoff_location, travel_date: editModal.travel_date, travel_time: editModal.travel_time, passengers_count: parseInt(editModal.passengers_count) || 1, quote_amount: parseFloat(editModal.quote_amount) || null, internal_notes: editModal.internal_notes }).eq('id', editModal.id);
+        if (error) { alert('Failed to save changes: ' + error.message); return; }
+        logActivity('booking', editModal.id, 'updated', `Booking details updated for ${editModal.customer_name}`);
         setEditModal(null); fetchBookings();
+        if (searchParams.get('edit')) router.replace('/admin/bookings');
     };
 
     const createBooking = async () => {
-        if (!newBooking.customer_name || !newBooking.pickup_location || !newBooking.dropoff_location) {
-            alert('Please fill in customer name, pickup and dropoff locations.'); return;
+        if (!newBooking.customer_name || !newBooking.customer_phone || !newBooking.customer_email || !newBooking.pickup_location || !newBooking.dropoff_location) {
+            alert('Please fill in customer name, phone, email, pickup and dropoff locations.'); return;
         }
-        const { error } = await supabase.from('bookings').insert({ ...newBooking, passengers_count: parseInt(newBooking.passengers_count) || 1, quote_amount: parseFloat(newBooking.quote_amount) || null });
+        // Create/update the customer record too — same pipeline the public
+        // booking form uses, so a booking created from the admin panel
+        // shows up on the Customers page exactly like a public one does.
+        const custRes = await fetch('/api/customers/upsert', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: newBooking.customer_name, email: newBooking.customer_email, phone: newBooking.customer_phone }),
+        });
+        const custJson = await custRes.json();
+        if (!custRes.ok) { alert('Error saving customer: ' + custJson.error); return; }
+
+        const { error } = await supabase.from('bookings').insert({ ...newBooking, customer_id: custJson.customerId, passengers_count: parseInt(newBooking.passengers_count) || 1, quote_amount: parseFloat(newBooking.quote_amount) || null });
         if (!error) {
             setNewBookingModal(false);
             setNewBooking({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending' });
+            logActivity('booking', null, 'created', `Booking created for ${newBooking.customer_name} (admin panel)`);
             fetchBookings();
-        } else { alert('Error creating booking.'); }
+        } else { alert('Error creating booking: ' + error.message); }
     };
+
+    // Deep-linked actions from outside this page — the Dashboard's Recent
+    // Bookings table used to link straight to /admin/bookings/[id] and
+    // /admin/invoices/new, neither of which exists, so both links 404'd
+    // (Admin Portal audit). They now link back here with ?edit=<id> /
+    // ?invoice=<id>, and this effect opens the same real modals a user
+    // would reach by clicking the row actions directly — no parallel page,
+    // no dead route.
+    useEffect(() => {
+        if (loading || bookings.length === 0) return;
+        const editId = searchParams.get('edit');
+        const invoiceId = searchParams.get('invoice');
+        if (editId) {
+            const b = bookings.find((x) => x.id === editId);
+            if (b) setEditModal(b);
+        }
+        if (invoiceId) {
+            const b = bookings.find((x) => x.id === invoiceId);
+            if (b) generateInvoice(b);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, bookings]);
+
+    // ?new=1 (Dashboard's "New Booking" quick action) opens the modal
+    // immediately — it doesn't need existing bookings loaded first.
+    useEffect(() => {
+        if (searchParams.get('new')) setNewBookingModal(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Bulk Actions
     const handleBulkDelete = async () => {
         if (!confirm(`Are you sure you want to delete ${selectedIds.size} bookings? This cannot be undone.`)) return;
         const ids = Array.from(selectedIds);
-        await supabase.from('bookings').delete().in('id', ids);
+        const { error } = await supabase.from('bookings').delete().in('id', ids);
+        if (error) { alert('Failed to delete: ' + error.message); return; }
+        logActivity('booking', null, 'deleted', `${ids.length} booking(s) deleted`);
         setSelectedIds(new Set());
         fetchBookings();
     };
@@ -229,8 +317,28 @@ export default function BookingsPage() {
     const handleBulkStatus = async (status: string) => {
         if (!confirm(`Update ${selectedIds.size} bookings to ${status}?`)) return;
         const ids = Array.from(selectedIds);
-        await supabase.from('bookings').update({ status }).in('id', ids);
+        const { error } = await supabase.from('bookings').update({ status }).in('id', ids);
+        if (error) { alert('Failed to update: ' + error.message); return; }
+        logActivity('booking', null, 'status_changed', `${ids.length} booking(s) marked ${status}`);
         setSelectedIds(new Set());
+        fetchBookings();
+    };
+
+    // Marking an invoice paid also credits the linked customer's lifetime
+    // spend (Admin Portal audit §10 — total_spent previously never updated
+    // anywhere, so it sat at 0 for every customer regardless of history).
+    const markInvoicePaid = async (b: any) => {
+        const { data: inv } = await supabase.from('invoices').select('id, total_amount').eq('booking_id', b.id).single();
+        const { error } = await supabase.from('invoices').update({ status: 'paid', paid_amount: inv?.total_amount ?? b.quote_amount ?? 0 }).eq('booking_id', b.id);
+        if (error) { alert('Failed to mark invoice paid: ' + error.message); setOpenDropdown(null); return; }
+        if (b.customer_id) {
+            const { data: cust } = await supabase.from('customers').select('total_spent').eq('id', b.customer_id).single();
+            if (cust) {
+                await supabase.from('customers').update({ total_spent: Number(cust.total_spent || 0) + Number(inv?.total_amount ?? b.quote_amount ?? 0) }).eq('id', b.customer_id);
+            }
+        }
+        logActivity('invoice', inv?.id ?? null, 'paid', `Invoice for ${b.customer_name} marked paid`);
+        setOpenDropdown(null);
         fetchBookings();
     };
 
@@ -592,7 +700,7 @@ export default function BookingsPage() {
                     <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>Billing &amp; Invoice</div>
                     <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 Generate Invoice</button>
                     {b.invoice_id && <button onClick={() => { setInvoiceModal(b); setOpenDropdown(null); }} className="dropdown-item">👁️ View Invoice</button>}
-                    {b.invoice_id && b.payment_status !== 'paid' && <button onClick={async () => { await supabase.from('invoices').update({ status: 'paid' }).eq('booking_id', b.id); setOpenDropdown(null); fetchBookings(); }} className="dropdown-item">✅ Mark Invoice Paid</button>}
+                    {b.invoice_id && b.payment_status !== 'paid' && <button onClick={() => markInvoicePaid(b)} className="dropdown-item">✅ Mark Invoice Paid</button>}
                     <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Booking Status</div>
                     <button onClick={() => updateStatus(b.id, 'pending')} className="dropdown-item text-amber-600">Mark Pending</button>
                     <button onClick={() => updateStatus(b.id, 'confirmed')} className="dropdown-item text-blue-600">Confirm Booking</button>
@@ -740,6 +848,14 @@ export default function BookingsPage() {
                 @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
             `}} />
         </div>
+    );
+}
+
+export default function BookingsPage() {
+    return (
+        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading…</div>}>
+            <BookingsPageInner />
+        </Suspense>
     );
 }
 
