@@ -1,0 +1,109 @@
+/*
+  DESTINATION ENQUIRY FORM — reuses the sitewide .form-group/.form-input/
+  .btn system (globals.css) for every field; this file only owns the
+  destination chip, grid layout, and success state.
+*/
+
+.form {
+    background: var(--surface-1);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--space-8);
+    border: 1px solid rgba(16, 18, 26, 0.07);
+}
+
+.destinationChip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--accent-light, rgba(12, 32, 122, 0.08));
+    color: var(--text-primary);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-5);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-6);
+}
+
+.destinationChip svg {
+    color: var(--accent-primary);
+    flex-shrink: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+}
+
+.error {
+    color: #C0392B;
+    font-size: var(--text-sm);
+    margin-top: var(--space-4);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+}
+
+/* ---- Success state ---- */
+.success {
+    background: var(--surface-1);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--space-12) var(--space-8);
+    text-align: center;
+    border: 1px solid rgba(16, 18, 26, 0.07);
+}
+
+.successIcon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto var(--space-6);
+    border-radius: 50%;
+    background: rgba(37, 199, 102, 0.12);
+    color: var(--accent-green, #25D366);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.successTitle {
+    font-size: var(--text-2xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+}
+
+.successText {
+    color: var(--text-muted);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto var(--space-8);
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .form {
+        padding: var(--space-6) var(--space-5);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions :global(.btn) {
+        width: 100%;
+    }
+}

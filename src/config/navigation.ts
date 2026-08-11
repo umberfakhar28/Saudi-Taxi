@@ -2,6 +2,7 @@ import { allCities } from "@/lib/cityData3";
 import { allRoutes } from "@/lib/routeData";
 import { AIRPORTS } from "@/lib/airportRoutesData";
 import { TOURS } from "@/lib/tourData";
+import { FEATURED_DESTINATIONS } from "@/lib/destinationData";
 
 /**
  * Single source of truth for header nav curation (Execution Brief v3 W9).
@@ -77,6 +78,18 @@ export const locationGroups: NavGroup[] = [
     items: allCities
       .filter((c) => c.priority === 2 && c.tags.includes("tourism") && c.showInNav !== false)
       .map((c) => ({ href: `/services/${c.slug}`, label: c.city })),
+  },
+  {
+    // Gulf-wide (Popular Destinations system, src/lib/destinationData.ts) —
+    // separate from the Saudi-only columns above. Riyadh already appears
+    // under Major Cities, so it's excluded here to avoid a duplicate link.
+    label: "Gulf Destinations",
+    items: [
+      ...FEATURED_DESTINATIONS
+        .filter((d) => d.country !== "saudi-arabia")
+        .map((d) => ({ href: d.href, label: d.name })),
+      { href: "/destinations", label: "All Popular Destinations" },
+    ],
   },
 ];
 

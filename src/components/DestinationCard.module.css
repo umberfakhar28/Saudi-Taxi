@@ -1,0 +1,84 @@
+/*
+  DESTINATION CARD — full-bleed image, bottom-gradient caption, whole card
+  clickable. Reuses sitewide tokens only (radius/shadow/spacing) — see
+  Fleet page's .interiorCard for the same pattern this is built from.
+*/
+
+.card {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(16, 18, 26, 0.07);
+    transition: transform var(--ease-base), box-shadow var(--ease-base);
+}
+
+.card:hover,
+.card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-xl);
+}
+
+.card:focus-visible {
+    outline: 2px solid var(--brass-bright, #E8C77A);
+    outline-offset: 3px;
+}
+
+.image {
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.card:hover .image {
+    transform: scale(1.06);
+}
+
+/* Left-light/bottom-dark overlay — same premium gradient language as the
+   homepage hero's scrim, just oriented for a portrait card. */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(3, 10, 37, 0) 40%, rgba(3, 10, 37, 0.55) 75%, rgba(3, 10, 37, 0.86) 100%);
+}
+
+.content {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--space-6) var(--space-5) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.name {
+    color: var(--white, #FFFFFF);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.country {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: var(--text-sm);
+    font-weight: 600;
+}
+
+.flag {
+    font-size: 1.05em;
+    line-height: 1;
+}
+
+@media (max-width: 480px) {
+    .card {
+        aspect-ratio: 5 / 6;
+    }
+
+    .name {
+        font-size: var(--text-lg);
+    }
+}

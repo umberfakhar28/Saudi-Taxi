@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
+import TrendingDestinations from "@/components/TrendingDestinations";
 import Features from "@/components/Features";
 import FAQSection from "@/components/FAQSection";
 import VehiclesSection from "@/components/VehiclesSection";
@@ -114,6 +115,12 @@ export default function Home() {
           SOCIAL PROOF — Repetition: consistent logo/badge strip
           ═══════════════════════════════════════════════════════════════════ */}
       <SocialProof />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          TRENDING DESTINATIONS — Popular Gulf cities, above the vehicle-type
+          cards per the Popular Destinations brief §2
+          ═══════════════════════════════════════════════════════════════════ */}
+      <TrendingDestinations />
 
       {/* ═══════════════════════════════════════════════════════════════════
           BOOK BY VEHICLE TYPE — carousel of vehicles from /public/vehicles

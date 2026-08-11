@@ -1,6 +1,7 @@
 import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
+import { DESTINATION_DETAILS } from "./destinationData";
 
 export const BASE_URL = "https://gulftripservice.com";
 
@@ -343,6 +344,26 @@ export function buildSitemapEntries(): SitemapEntry[] {
     priority: 0.70,
   }));
 
+  // "Popular Destinations" — /destinations index + one entry per
+  // /destinations/[slug] page (Object.keys(DESTINATION_DETAILS), so a new
+  // destination added there shows up here automatically). lastMod points
+  // at the shared dynamic-route template file, since these pages don't
+  // each have their own page.tsx to read a commit date from.
+  const destinationPages: SitemapEntry[] = [
+    {
+      url: `${BASE_URL}/destinations`,
+      lastModified: lastMod("/destinations"),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    ...Object.keys(DESTINATION_DETAILS).map((slug) => ({
+      url: `${BASE_URL}/destinations/${slug}`,
+      lastModified: lastMod("/destinations/[slug]"),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+  ];
+
   return [
     ...staticPages,
     ...airportTransferPages,
@@ -355,6 +376,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     ...blogPages,
     ...cityPages,
     ...guidePages,
+    ...destinationPages,
     ...arPages,
   ];
 }

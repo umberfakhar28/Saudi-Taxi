@@ -129,6 +129,39 @@ export async function POST(req: Request) {
             results.push({ id: r?.id });
         }
 
+        // ─── DESTINATION ENQUIRY ───────────────────────────────────────
+        // Fired from DestinationEnquiryForm.tsx (Popular Destinations
+        // pages) — same admin+customer email pair as `new_booking`, but a
+        // destination-specific subject line and an extra Destination row,
+        // since a Riyadh/Dubai/Doha enquiry is a browsing lead rather than
+        // a firm booking request.
+        if (type === 'destination_enquiry' && b) {
+            const destLabel = b.destination_name || 'Trip';
+            const subject = `New ${destLabel} Travel Enquiry`;
+            const enquiryRows = `
+                <div style="${rowStyle}"><span style="${labelStyle}">Destination</span><span style="${valueStyle}">${destLabel}</span></div>
+                ${buildBookingRows(b)}
+            `;
+            const adminHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
+                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📍 New Destination Enquiry</p></div>
+                ${enquiryRows}
+                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings" style="${btnStyle}">View in Admin Panel</a></p>
+            </div></div>`;
+            const { data: r1 } = await resend.emails.send({ from: FROM, to: ADMIN_EMAIL, subject, html: adminHtml });
+            await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, 'sent');
+
+            const custSubject = `We've Received Your ${destLabel} Enquiry – Gulf Trip Service`;
+            const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
+                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Request Received!</p></div>
+                <p style="color:#475569;">Assalamu Alaikum <strong>${b.customer_name}</strong>,</p>
+                <p style="color:#475569;">Thank you for your ${destLabel} travel enquiry. Our travel team will review your request and get back to you shortly.</p>
+                <p style="color:#94a3b8;font-size:0.85rem;">Need an instant reply? Message us on WhatsApp any time.</p>
+            </div></div>`;
+            const { data: r2 } = await resend.emails.send({ from: FROM, to: b.customer_email, subject: custSubject, html: custHtml });
+            await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, 'sent');
+            results.push({ admin: r1?.id, customer: r2?.id });
+        }
+
         return NextResponse.json({ success: true, results });
     } catch (error: any) {
         console.error('Email error:', error);
