@@ -5,6 +5,7 @@ import styles from "./VehiclesSection.module.css";
 const vehicles = [
   {
     id: 1,
+    slug: "toyota-camry",
     name: "Toyota Camry",
     category: "Standard",
     image: "/images/fleet-sedan2.jpg",
@@ -15,6 +16,7 @@ const vehicles = [
   },
   {
     id: 2,
+    slug: "lexus-es",
     name: "Lexus ES",
     category: "Premium",
     image: "/images/chauffeur.jpg",
@@ -25,6 +27,7 @@ const vehicles = [
   },
   {
     id: 3,
+    slug: "gmc-yukon",
     name: "GMC Yukon",
     category: "SUV",
     image: "/images/fleet-suv.jpg",
@@ -35,26 +38,31 @@ const vehicles = [
   },
   {
     id: 4,
+    slug: "mercedes-s-class",
     name: "Mercedes S-Class",
     category: "Luxury",
-    image: "/images/interior.jpg",
+    image: "/images/Mercedes S-Class.webp",
     objectPosition: "center center",
+    alt: "Mercedes S-Class luxury chauffeur car for Gulf travel",
     desc1: "Iconic luxury sedan with massage seats, ambient lighting, and executive-class privacy on the road.",
     desc2:
       "Best suited for <strong>VIP travelers &amp; special occasions</strong> demanding the finest.",
   },
   {
     id: 5,
+    slug: "bmw-7-series",
     name: "BMW 7 Series",
     category: "Luxury",
-    image: "/images/fleet-sedan.jpg",
-    objectPosition: "center top",
+    image: "/images/BMW 7 Series.webp",
+    objectPosition: "center center",
+    alt: "BMW 7 Series luxury chauffeur car for Gulf travel",
     desc1: "Dynamic performance meets handcrafted luxury — a bold, elegant ride for the discerning traveler.",
     desc2:
       "Best suited for <strong>professionals &amp; luxury seekers</strong> who appreciate prestige.",
   },
   {
     id: 6,
+    slug: "toyota-hiace",
     name: "Toyota HiAce",
     category: "Van",
     image: "/images/fleet-van.jpg",
@@ -85,7 +93,7 @@ export default function VehiclesSection() {
               <div className={styles.imageWrapper}>
                 <Image
                   src={car.image}
-                  alt={`${car.name} — ${car.category} vehicle`}
+                  alt={car.alt ?? `${car.name} — ${car.category} vehicle`}
                   fill
                   className={styles.image}
                   style={{ objectPosition: car.objectPosition }}
@@ -105,7 +113,7 @@ export default function VehiclesSection() {
                 />
                 <div className={styles.spacer} />
                 <Link
-                  href={`/book-online?car=${car.id}`}
+                  href={`/book-online?vehicle=${car.slug}&vehicleName=${encodeURIComponent(car.name)}`}
                   className={styles.cta}
                 >
                   Book Now
