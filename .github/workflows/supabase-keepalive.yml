@@ -47,16 +47,46 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEEPALIVE_KEY }}
         run: |
-          set -euo pipefail
-          status=$(curl -s -o /tmp/out.txt -w '%{http_code}' \
+          set -uo pipefail
+
+          # Every run so far has died with a bare "exit code 3" and no other
+          # output (curl's own error text was thrown away by `-s`). Exit 3
+          # is curl's "URL malformed" code, which happens when $SUPABASE_URL
+          # is empty — "$SUPABASE_URL/rest/v1/..." then evaluates to just
+          # "/rest/v1/...", a URL with no host. Strip stray whitespace and
+          # fail loudly, with a specific reason, before ever calling curl —
+          # a missing/misconfigured secret should not look identical to a
+          # network blip.
+          SUPABASE_URL="$(printf '%s' "$SUPABASE_URL" | tr -d '[:space:]')"
+          SUPABASE_KEY="$(printf '%s' "$SUPABASE_KEY" | tr -d '[:space:]')"
+
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "::error::SUPABASE_URL or SUPABASE_KEEPALIVE_KEY repo secret is missing or empty. Set both under Settings > Secrets and variables > Actions (see docs/supabase-keepalive.md)."
+            exit 1
+          fi
+          case "$SUPABASE_URL" in
+            https://*) ;;
+            *) echo "::error::SUPABASE_URL must start with https:// — got a value starting with '${SUPABASE_URL:0:12}...'. Check the secret for a copy/paste mistake."; exit 1 ;;
+          esac
+
+          http_body="$(mktemp)"
+          # -sS (not just -s): stay quiet on progress, but still print
+          # curl's own error line on failure instead of swallowing it.
+          status=$(curl -sS -o "$http_body" -w '%{http_code}' \
             -X PATCH "$SUPABASE_URL/rest/v1/keepalive?id=eq.1" \
             -H "apikey: $SUPABASE_KEY" \
             -H "Authorization: Bearer $SUPABASE_KEY" \
             -H "Content-Type: application/json" \
             -H "Prefer: return=representation" \
             -d '{"last_ping":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"}')
+          curl_exit=$?
+          if [ "$curl_exit" -ne 0 ]; then
+            echo "::error::curl exited with code $curl_exit before getting an HTTP response (see the curl error line above) — this is a network/URL problem, not a Supabase API error."
+            exit 1
+          fi
+
           echo "HTTP $status"
           if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
-            echo "Keepalive failed:"; cat /tmp/out.txt; exit 1
+            echo "::error::Keepalive failed with HTTP $status"; cat "$http_body"; exit 1
           fi
-          echo "Response body:"; cat /tmp/out.txt
+          echo "Response body:"; cat "$http_body"
