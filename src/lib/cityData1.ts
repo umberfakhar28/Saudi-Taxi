@@ -38,7 +38,8 @@ export const riyadh: CityData = {
     { name: "Sarah K.", origin: "Tourist, UK", text: "Exploring Diriyah was so easy with Gulf Trip Service. Fixed price, no stress." },
     { name: "Mohammed T.", origin: "Corporate Client", text: "We use Gulf Trip for all executive airport transfers. Reliable every single time." },
   ],
-  heroImage: "/images/city-riyadh.jpg",
+  heroImage: "/destinations/riyadh-skyline-night.webp",
+  heroImageAlt: "Riyadh skyline at blue hour with the Kingdom Centre Tower — private chauffeur and taxi service in Saudi Arabia's capital",
 };
 
 export const jeddah: CityData = {
@@ -79,7 +80,8 @@ export const jeddah: CityData = {
     { name: "James O.", origin: "Tourist, USA", text: "Booked a Jeddah city tour. Driver was knowledgeable and the car was luxurious." },
     { name: "Tariq M.", origin: "Business Traveler, UAE", text: "Regular Jeddah–Makkah transfers for my clients. Always on time, always professional." },
   ],
-  heroImage: "/images/city-jeddah.jpg",
+  heroImage: "/destinations/jeddah-corniche-skyline.webp",
+  heroImageAlt: "Jeddah Corniche waterfront with the King Fahd Fountain at sunset — premium private transfer service on Saudi Arabia's Red Sea coast",
 };
 
 export const makkah: CityData = {
@@ -120,6 +122,8 @@ export const makkah: CityData = {
     { name: "Amna S.", origin: "Pilgrim, Canada", text: "The Ziyarat tour was exceptional. Driver explained every site with genuine knowledge." },
     { name: "Dr. Khalid F.", origin: "Pilgrim, Malaysia", text: "Transferred from KAIA at midnight — flawless. Will book again for Hajj season." },
   ],
+  heroImage: "/hero-slider/saudi-arabia-luxury-chauffeur-service.webp",
+  heroImageAlt: "Private chauffeur vehicle on a Saudi Arabia highway — premium transport service for Makkah pilgrims and visitors",
 };
 
 // Spelling note: this site standardizes on "Madinah" everywhere except one
@@ -167,6 +171,8 @@ export const madinah: CityData = {
     { name: "Siti R.", origin: "Pilgrim, Indonesia", text: "Beautiful Ziyarat tour around Madinah. Driver was respectful and knowledgeable." },
     { name: "Hassan M.", origin: "Pilgrim, Egypt", text: "Booked the Makkah–Madinah transfer for our family of 6. Spacious van, excellent service." },
   ],
+  heroImage: "/hero-slider/saudi-airport-transfer-service.webp",
+  heroImageAlt: "Private airport transfer vehicle in Saudi Arabia — premium chauffeur service for Madinah visitors and pilgrims",
 };
 
 export const dammam: CityData = {
@@ -208,4 +214,6 @@ export const dammam: CityData = {
     { name: "Nadia K.", origin: "Business Traveler, UK", text: "Airport to Khobar was seamless. Highly recommend for Eastern Province travel." },
     { name: "Ali Al-Dosari", origin: "Local Client, Dammam", text: "Best corporate taxi service in the Eastern Province. Our whole team uses them." },
   ],
+  heroImage: "/destinations/dammam-eastern-province-skyline.webp",
+  heroImageAlt: "Dammam Eastern Province skyline — private taxi and airport transfer service near King Fahd International Airport",
 };

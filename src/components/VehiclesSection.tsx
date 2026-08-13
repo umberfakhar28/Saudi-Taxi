@@ -13,6 +13,7 @@ const vehicles = [
     desc1: "Smooth, fuel-efficient rides perfect for city commutes and airport transfers — dependable comfort every trip.",
     desc2:
       "Best suited for <strong>solo travelers &amp; small groups</strong> seeking reliability.",
+    tags: ["4 Seater", "AC/Heater", "3 Bags"],
   },
   {
     id: 2,
@@ -24,6 +25,7 @@ const vehicles = [
     desc1: "Premium leather interior with whisper-quiet cabin, turning every journey into a first-class experience.",
     desc2:
       "Best suited for <strong>executives &amp; couples</strong> who value refined comfort.",
+    tags: ["4 Seater", "AC/Heater", "3 Bags", "Leather Seats"],
   },
   {
     id: 3,
@@ -35,6 +37,7 @@ const vehicles = [
     desc1: "Commanding 7-seat SUV with generous cargo room — built for long journeys and rugged road conditions.",
     desc2:
       "Best suited for <strong>families &amp; groups</strong> exploring inter-city destinations.",
+    tags: ["7 Seater", "AC/Heater", "5 Bags"],
   },
   {
     id: 4,
@@ -47,6 +50,7 @@ const vehicles = [
     desc1: "Iconic luxury sedan with massage seats, ambient lighting, and executive-class privacy on the road.",
     desc2:
       "Best suited for <strong>VIP travelers &amp; special occasions</strong> demanding the finest.",
+    tags: ["4 Seater", "AC/Heater", "3 Bags", "Massage Seats"],
   },
   {
     id: 5,
@@ -59,6 +63,7 @@ const vehicles = [
     desc1: "Dynamic performance meets handcrafted luxury — a bold, elegant ride for the discerning traveler.",
     desc2:
       "Best suited for <strong>professionals &amp; luxury seekers</strong> who appreciate prestige.",
+    tags: ["4 Seater", "AC/Heater", "3 Bags", "Premium Sound"],
   },
   {
     id: 6,
@@ -70,6 +75,7 @@ const vehicles = [
     desc1: "Spacious 12-passenger van with enormous luggage capacity — the ultimate group travel solution.",
     desc2:
       "Best suited for <strong>large groups &amp; full Umrah party transfers</strong> all together.",
+    tags: ["12 Seater", "AC/Heater", "10 Bags"],
   },
 ];
 
@@ -100,6 +106,11 @@ export default function VehiclesSection() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 <span className={styles.badge}>{car.category}</span>
+              </div>
+              <div className={styles.tagsRow}>
+                {car.tags.map((tag) => (
+                  <span key={tag} className={styles.tag}>{tag}</span>
+                ))}
               </div>
               <div className={styles.content}>
                 <h3 className={styles.name}>{car.name}</h3>

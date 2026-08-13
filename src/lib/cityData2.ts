@@ -39,6 +39,8 @@ export const khobar: CityData = {
     { name: "Yousef A.", origin: "Business Client, Khobar", text: "Booked for our corporate guests every visit. Never a complaint." },
     { name: "Emma L.", origin: "Tourist, Australia", text: "Khobar Corniche to the airport was smooth and stress-free." },
   ],
+  heroImage: "/destinations/dammam-eastern-province-skyline.webp",
+  heroImageAlt: "Eastern Province waterfront near Al Khobar — private chauffeur service in the Dammam metropolitan area",
 };
 
 export const jubail: CityData = {
@@ -80,6 +82,8 @@ export const jubail: CityData = {
     { name: "Chen W.", origin: "Project Manager, Singapore", text: "Arranged transfers for our entire site team. Professional and cost-effective." },
     { name: "Khalid S.", origin: "Saudi Aramco, Jubail", text: "Best corporate taxi option in Jubail. Highly recommend." },
   ],
+  heroImage: "/destinations/dammam-eastern-province-skyline.webp",
+  heroImageAlt: "Eastern Province skyline near Jubail Industrial City — private chauffeur and corporate transfer service",
 };
 
 export const taif: CityData = {
@@ -120,6 +124,8 @@ export const taif: CityData = {
     { name: "Omar F.", origin: "Family Traveler, Jeddah", text: "Taif in summer with kids — the cable car, the honey market, all covered in one day. Perfect service." },
     { name: "Michael T.", origin: "Traveler, UK", text: "Driver was a Taif native and gave us an authentic experience. Highly recommend." },
   ],
+  heroImage: "/destinations/taif-mountain-city-view.webp",
+  heroImageAlt: "Taif mountain city view in the Sarawat range — private transfer service to Saudi Arabia's rose-growing highlands",
 };
 
 export const abha: CityData = {
@@ -160,4 +166,6 @@ export const abha: CityData = {
     { name: "Abdullah K.", origin: "Family Traveler, Riyadh", text: "Abha with children was unforgettable. Reliable transfers made it stress-free." },
     { name: "Lena P.", origin: "Traveler, Germany", text: "Habala village tour from Abha — extraordinary. Gulf Trip made it seamless." },
   ],
+  heroImage: "/destinations/abha-asir-mountains-view.webp",
+  heroImageAlt: "Abha and the Asir mountains — private taxi service in Saudi Arabia's highland tourism region",
 };

@@ -40,6 +40,8 @@ export const yanbu: CityData = {
     { name: "Hana M.", origin: "Diver, Saudi Arabia", text: "Transferred to my dive site at dawn without any fuss. Excellent service." },
     { name: "Ibrahim Y.", origin: "Resident, Yanbu", text: "Regular Yanbu–Madinah trips for Umrah. Always reliable, always comfortable." },
   ],
+  heroImage: "/destinations/jeddah-corniche-skyline.webp",
+  heroImageAlt: "Red Sea coastline near Yanbu, Saudi Arabia — private taxi and airport transfer service",
 };
 
 export const alula: CityData = {
@@ -80,6 +82,8 @@ export const alula: CityData = {
     { name: "Jens K.", origin: "Photographer, Germany", text: "Four days of AlUla transfers. Drivers knew every golden-hour shooting location." },
     { name: "Reem Al-Otaibi", origin: "Traveler, Saudi Arabia", text: "Best way to experience AlUla. Professional, punctual, and deeply knowledgeable." },
   ],
+  heroImage: "/hero-slider/gulf-cross-border-chauffeur-service.webp",
+  heroImageAlt: "Private chauffeur vehicle for AlUla desert and heritage site transfers in Saudi Arabia",
 };
 
 export const neom: CityData = {
@@ -121,6 +125,8 @@ export const neom: CityData = {
     { name: "Yuki T.", origin: "Architect, Japan", text: "Sharma Airport to site in an executive SUV. Professional and efficient." },
     { name: "Marcus D.", origin: "Engineer, Australia", text: "Reliable partner for all our NEOM team transfers. Highly recommend for contractors." },
   ],
+  heroImage: "/hero-slider/gulf-cross-border-chauffeur-service.webp",
+  heroImageAlt: "Private executive transfer vehicle for NEOM contractor and business travel, Saudi Arabia",
 };
 
 export const tabuk: CityData = {
@@ -161,6 +167,8 @@ export const tabuk: CityData = {
     { name: "Sophie H.", origin: "Traveler, Canada", text: "Tabuk Airport to our guesthouse and back. Reliable and affordable." },
     { name: "Omar Al-Harbi", origin: "Local Guide, Tabuk", text: "We partner with Gulf Trip for all our guests' airport transfers. Never a complaint." },
   ],
+  heroImage: "/hero-slider/saudi-airport-transfer-service.webp",
+  heroImageAlt: "Private airport transfer vehicle in Saudi Arabia — chauffeur service in Tabuk Province",
 };
 
 export const alAhsa: CityData = {
@@ -200,6 +208,8 @@ export const alAhsa: CityData = {
     { name: "Fatima Al-Otaibi", origin: "Traveler, Saudi Arabia", text: "Finally visited the oasis properly instead of just driving through on the way to Dammam. Driver knew all the best palm-grove paths." },
     { name: "Robert K.", origin: "Business Traveler, USA", text: "Added a half-day Al-Ahsa stop to our Riyadh–Dammam trip. Well worth it — the Qaisariah Souq was a highlight." },
   ],
+  heroImage: "/destinations/dammam-eastern-province-skyline.webp",
+  heroImageAlt: "Eastern Province skyline near Al-Ahsa oasis — private taxi and transfer service",
 };
 
 export const dhahran: CityData = {
@@ -238,6 +248,8 @@ export const dhahran: CityData = {
     { name: "James O.", origin: "Aramco Contractor, UK", text: "Regular transfers between our Dhahran compound and the airport — always on time, always professional." },
     { name: "Layla H.", origin: "Visitor, Saudi Arabia", text: "Booked a driver just for an Ithra visit. Smooth pickup and drop-off, no hassle at all." },
   ],
+  heroImage: "/destinations/dammam-eastern-province-skyline.webp",
+  heroImageAlt: "Eastern Province skyline near Dhahran — private corporate taxi and transfer service",
 };
 
 export const khamisMushait: CityData = {
@@ -276,6 +288,8 @@ export const khamisMushait: CityData = {
     { name: "Nasser Al-Qahtani", origin: "Traveler, Saudi Arabia", text: "Easy airport pickup from Abha straight to our hotel in Khamis Mushait. Driver knew the area well." },
     { name: "Emily T.", origin: "Tourist, UK", text: "Based ourselves in Khamis Mushait for a few days and day-tripped to Abha and Al Souda — transfers were smooth every time." },
   ],
+  heroImage: "/destinations/abha-asir-mountains-view.webp",
+  heroImageAlt: "Asir highlands near Khamis Mushait — private taxi and airport transfer service",
 };
 
 /** All 16 city hubs in one place — for the data-layer validation script and

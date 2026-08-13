@@ -2,6 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { AIRPORTS } from "@/lib/airportRoutesData";
+import { WhatsAppIcon, ChevronRightIcon, PlaneIcon, MapPinIcon, CalendarIcon } from "@/components/Icons";
+import { waLink } from "@/lib/contact";
+import DestinationEnquiryForm from "@/components/DestinationEnquiryForm";
+import styles from "./CityServicePage.module.css";
 
 export interface CityData {
   slug: string;
@@ -21,6 +25,11 @@ export interface CityData {
   faqs: { q: string; a: string }[];
   reviews: { name: string; origin: string; text: string }[];
   heroImage?: string;
+  /** Alt text for heroImage — falls back to a generic "{city} skyline"
+   * description when omitted. Also reused as the Sightseeing cards' image
+   * (the project has no per-landmark photography yet), so it should read
+   * naturally as a general representation of the city. */
+  heroImageAlt?: string;
 
   /** 3-5 real, city-specific landmarks — breaks the six-field formula every
    * city hub previously shared (Execution Brief v3 W5). Facts only, no
@@ -55,7 +64,25 @@ export interface CityData {
   showInNav?: boolean;
 }
 
+const FALLBACK_HERO_IMAGE = "/hero-slider/saudi-arabia-luxury-chauffeur-service.webp";
+
+/** Pre-fills the multi-step booking flow — same query-param contract
+ * BookOnlineClient.tsx already reads from the homepage search bar and every
+ * vehicle "Book Now" button, so a rider lands straight on Trip Details with
+ * their route filled in instead of an empty form. */
+function bookingHref({ from, to }: { from?: string; to?: string }): string {
+  const params = new URLSearchParams({ mode: "transfers" });
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  return `/book-online?${params.toString()}`;
+}
+
 export default function CityServicePage({ data }: { data: CityData }) {
+  const heroImage = data.heroImage ?? FALLBACK_HERO_IMAGE;
+  const heroImageAlt = data.heroImageAlt ?? `${data.city} skyline, Saudi Arabia — private taxi and chauffeur service`;
+  const airportInfo = data.airport ? AIRPORTS.find((a) => a.code === data.airport!.code) : undefined;
+  const quoteMessage = `Hello GulfTripService, I would like to get a quote for your transportation service in ${data.city}. Please share the available options, pricing, and booking details. Thank you.`;
+
   const schemas = [
     serviceSchema({
       name: `Taxi Service in ${data.city}`,
@@ -75,46 +102,50 @@ export default function CityServicePage({ data }: { data: CityData }) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       <main>
-        {/* Hero */}
-        <section className="page-hero">
-          <div className="container" style={{ position: "relative", zIndex: 1 }}>
-            <span className="section-eyebrow">Taxi Service</span>
+        {/* Hero — city photo background with a navy scrim for text contrast,
+            same photo+scrim language as /destinations pages. */}
+        <section className={styles.hero}>
+          <Image
+            src={heroImage}
+            alt={heroImageAlt}
+            fill
+            priority
+            sizes="100vw"
+            className={styles.heroImage}
+          />
+          <div className={styles.heroScrim} />
+          <div className={`container ${styles.heroContent}`}>
+            <span className="badge" style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "var(--white)" }}>
+              Taxi &amp; Chauffeur Service
+            </span>
             <h1>{data.h1}</h1>
             <p>{data.intro}</p>
-            <div className="breadcrumb">
-              <Link href="/">Home</Link> / <Link href="/our-services">Services</Link> / <span>{data.city}</span>
+            <div className={styles.heroBreadcrumb}>
+              <Link href="/">Home</Link>
+              <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />
+              <Link href="/our-services">Services</Link>
+              <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />
+              <span>{data.city}</span>
             </div>
           </div>
         </section>
 
-        {data.heroImage && (
-          <section style={{ padding: "var(--space-8) 0 0" }}>
-            <div className="container">
-              <div style={{
-                position: "relative",
-                width: "100%",
-                height: "360px",
-                borderRadius: "var(--radius-xl)",
-                overflow: "hidden",
-                boxShadow: "var(--shadow-xl)",
-              }}>
-                <Image
-                  src={data.heroImage}
-                  alt={`${data.city} skyline, Saudi Arabia`}
-                  fill
-                  style={{ objectFit: "cover" }}
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                  priority={false}
-                />
-              </div>
-            </div>
-          </section>
-        )}
+        {/* Booking / lead form — destination preselected, right below the
+            hero so conversion doesn't require scrolling past the fold. */}
+        <section className="section-lg" style={{ paddingTop: "var(--space-10)" }}>
+          <div className="container" style={{ maxWidth: 900 }}>
+            <DestinationEnquiryForm
+              destinationName={data.city}
+              countryName="Saudi Arabia"
+              sourcePage={`/services/${data.slug}`}
+            />
+          </div>
+        </section>
 
-        {/* Why Visit */}
-        <section className="section-lg">
+        {/* Why Visit + right-rail info cards */}
+        <section className="section-lg" style={{ paddingTop: 0 }}>
           <div className="container">
-            <div className="grid-60-40">
+            <div className={styles.infoRail}>
               <div>
                 <span className="section-eyebrow">Destination</span>
                 <h2 className="section-title">Why Travelers Visit {data.city}</h2>
@@ -135,18 +166,24 @@ export default function CityServicePage({ data }: { data: CityData }) {
                   </p>
                 )}
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+              <div className={styles.infoRailCards}>
                 {data.airport && (
                   <div className="card">
-                    <div className="card-icon">✈️</div>
+                    <div className="card-icon"><PlaneIcon size={24} /></div>
                     <h3>{data.airport.name}</h3>
                     <p>IATA: <strong style={{ color: "var(--accent)" }}>{data.airport.code}</strong></p>
                     <p>City distance: {data.airport.distance}</p>
-                    <Link href={AIRPORTS.find((a) => a.code === data.airport!.code)?.pageHref ?? "/airport-transfers"} className="btn btn-secondary" style={{ marginTop: "var(--space-4)" }}>Book Airport Transfer</Link>
+                    <Link
+                      href={airportInfo?.pageHref ?? bookingHref({ from: data.airport.name, to: data.city })}
+                      className="btn btn-secondary"
+                      style={{ marginTop: "var(--space-4)" }}
+                    >
+                      Book Airport Transfer
+                    </Link>
                   </div>
                 )}
                 <div className="card">
-                  <div className="card-icon">📍</div>
+                  <div className="card-icon"><MapPinIcon size={24} /></div>
                   <h3>Popular Pickup Points</h3>
                   <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", marginTop: "var(--space-3)" }}>
                     {data.pickupPoints.map((pt, i) => (
@@ -157,7 +194,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
                   </ul>
                 </div>
                 <div className="card" style={{ background: "var(--bg-subtle)" }}>
-                  <div className="card-icon">📅</div>
+                  <div className="card-icon"><CalendarIcon size={24} /></div>
                   <h3>Good to Know</h3>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7 }}>{data.seasonalNote}</p>
                 </div>
@@ -166,18 +203,32 @@ export default function CityServicePage({ data }: { data: CityData }) {
           </div>
         </section>
 
-        {/* Landmarks — breaks the shared six-field formula (W5) */}
+        {/* Sightseeing — image + title + description + CTA cards */}
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
           <div className="container">
             <div className="section-header centered">
               <span className="section-eyebrow">Sightseeing</span>
               <h2 className="section-title">Landmarks Worth Seeing in {data.city}</h2>
             </div>
-            <div className="grid-3">
+            <div className={styles.sightGrid}>
               {data.landmarks.map((l) => (
-                <div key={l.name} className="card">
-                  <h3 style={{ color: "var(--accent)", fontSize: "var(--text-lg)" }}>{l.name}</h3>
-                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7 }}>{l.description}</p>
+                <div key={l.name} className={styles.sightCard}>
+                  <div className={styles.sightImageWrap}>
+                    <Image
+                      src={heroImage}
+                      alt={`${data.city}, Saudi Arabia — near ${l.name}`}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className={styles.sightImage}
+                    />
+                  </div>
+                  <div className={styles.sightBody}>
+                    <h3 className={styles.sightTitle}>{l.name}</h3>
+                    <p className={styles.sightDesc}>{l.description}</p>
+                    <Link href={bookingHref({ to: `${l.name}, ${data.city}` })} className={styles.sightCta}>
+                      Book Your Ride
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>
@@ -191,32 +242,26 @@ export default function CityServicePage({ data }: { data: CityData }) {
               <span className="section-eyebrow">Routes</span>
               <h2 className="section-title">Popular Routes from {data.city}</h2>
             </div>
-            <div className="grid-3">
-              {data.popularRoutes.map((r, i) => {
-                const content = (
-                  <>
-                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>FROM</p>
-                    <h3 style={{ color: "var(--accent)", fontSize: "var(--text-xl)" }}>{r.from}</h3>
-                    <p style={{ color: "var(--text-muted)", margin: "var(--space-2) 0" }}>↓</p>
-                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>TO</p>
-                    <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{r.to}</h3>
-                    <div className="divider" style={{ margin: "var(--space-4) 0" }} />
-                    <p style={{ color: "var(--accent)", fontWeight: 700 }}>⏱ {r.time}</p>
-                  </>
-                );
-                return r.href ? (
-                  <Link key={i} href={r.href} className="card" style={{ textAlign: "center", display: "block" }}>
-                    {content}
+            <div className={styles.routeGrid}>
+              {data.popularRoutes.map((r, i) => (
+                <div key={i} className={`card ${styles.routeCard}`}>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>FROM</p>
+                  <h3 style={{ color: "var(--accent)", fontSize: "var(--text-xl)" }}>{r.from}</h3>
+                  <p style={{ color: "var(--text-muted)", margin: "var(--space-2) 0" }}>↓</p>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>TO</p>
+                  <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{r.to}</h3>
+                  <div className="divider" style={{ margin: "var(--space-4) 0" }} />
+                  <p style={{ color: "var(--accent)", fontWeight: 700 }}>⏱ {r.time}</p>
+                  <Link href={r.href ?? bookingHref({ from: r.from, to: r.to })} className={`btn btn-primary ${styles.routeCta}`}>
+                    Book Your Ride
                   </Link>
-                ) : (
-                  <div key={i} className="card" style={{ textAlign: "center" }}>
-                    {content}
-                  </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
             <div style={{ textAlign: "center", marginTop: "var(--space-10)" }}>
-              <Link href="/quote" className="btn btn-primary btn-lg">Get a Quote for Your Route</Link>
+              <a href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+                <WhatsAppIcon size={18} /> Get a Quote on WhatsApp
+              </a>
             </div>
           </div>
         </section>
@@ -266,8 +311,10 @@ export default function CityServicePage({ data }: { data: CityData }) {
             <h2 style={{ color: "var(--white)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>Ready to Travel in {data.city}?</h2>
             <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>Professional chauffeurs, fixed rates, 24/7 availability across {data.city} and beyond.</p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/book-online" className="btn btn-primary btn-lg">Book Your Ride</Link>
-              <Link href="/quote" className="btn btn-outline btn-lg">Get Instant Quote</Link>
+              <Link href={bookingHref({ to: data.city })} className="btn btn-primary btn-lg">Book Your Ride</Link>
+              <a href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+                <WhatsAppIcon size={18} /> Get a Quote
+              </a>
             </div>
           </div>
         </section>
