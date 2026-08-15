@@ -32,6 +32,8 @@ export const riyadh: CityData = {
     { q: "How far in advance should I book?", a: "We recommend 2–4 hours for city rides and 24 hours for airport pickups during peak periods." },
     { q: "Is Riyadh Season traffic really that bad?", a: "Evenings near Boulevard City and the main venues get significantly busier during Riyadh Season (roughly October–March) — book pickups with extra buffer time on event nights." },
     { q: "Can you take me to the Edge of the World?", a: "Yes — this popular day-trip needs a driver familiar with the unmarked desert track. We offer it as a half-day charter from Riyadh, roughly 90 minutes each way." },
+    { q: "Do you serve KAFD and Olaya for business meetings?", a: "Yes — these are two of our most regular Riyadh pickup zones, with drivers used to the office-tower access points in both districts." },
+    { q: "Is Riyadh's airport far from the city centre?", a: "King Khalid International Airport is about 35km north of central Riyadh, typically a 35–50 minute transfer depending on traffic." },
   ],
   reviews: [
     { name: "Ahmed Al-Rashid", origin: "Business Traveler, Riyadh", text: "Impeccable service for my KAFD meetings. Driver was punctual and the vehicle was spotless." },
@@ -40,6 +42,30 @@ export const riyadh: CityData = {
   ],
   heroImage: "/destinations/riyadh-skyline-night.webp",
   heroImageAlt: "Riyadh skyline at blue hour with the Kingdom Centre Tower — private chauffeur and taxi service in Saudi Arabia's capital",
+  serviceAreas: [
+    { name: "Olaya & King Fahd Road", note: "Riyadh's central business corridor — corporate towers, banks and five-star hotels make this our most common weekday pickup zone." },
+    { name: "KAFD (King Abdullah Financial District)", note: "The capital's purpose-built financial district, a regular stop for conference and meeting transfers." },
+    { name: "Diriyah & Al Nakheel", note: "The historic Diriyah gate area and residential Al Nakheel district on the city's northwest edge — a longer drive from central hotels." },
+  ],
+  hotelZones: [
+    { name: "Olaya hotel corridor", note: "Riyadh's densest concentration of international hotel brands, walking distance from King Fahd Road's business towers." },
+    { name: "KAFD hotels", note: "Newer high-rise hotels built for conference and corporate travelers visiting the financial district." },
+    { name: "Diriyah", note: "A smaller, boutique hotel cluster near the At-Turaif heritage site, popular with cultural visitors." },
+  ],
+  airportNote: "King Khalid International Airport sits north of the city, roughly 35km from central Olaya — a 35–50 minute transfer depending on time of day, longer during Riyadh Season evening traffic.",
+  businessTravel: {
+    intro: "Riyadh is Saudi Arabia's political and financial capital, and most of our bookings here are business travel — meetings across KAFD and Olaya, government-related visits, and conference attendance tied to the city's growing events calendar.",
+    areas: [
+      { name: "KAFD", note: "Saudi Arabia's flagship financial district, home to major banks and a regular multi-stop meeting circuit." },
+      { name: "Olaya business corridor", note: "Corporate towers along King Fahd Road, within a short transfer of most business hotels." },
+      { name: "Riyadh Front & exhibition venues", note: "Convention and exhibition space used for major conferences and trade events." },
+    ],
+  },
+  practicalInfo: [
+    { title: "Riyadh Season traffic", note: "Evenings near Boulevard City and major venues get significantly busier roughly October–March — build in extra time for pickups on event nights." },
+    { title: "City size", note: "Riyadh's districts can be 30–50km apart; one driver for a multi-stop day is far more practical than switching rides." },
+    { title: "Summer heat", note: "Daytime temperatures routinely pass 45°C from June–August — most riders shift outdoor plans to early morning or evening." },
+  ],
 };
 
 export const jeddah: CityData = {
@@ -74,6 +100,8 @@ export const jeddah: CityData = {
     { q: "Do you offer Jeddah city tours?", a: "Yes, we offer half-day and full-day city tour transfers covering Al-Balad, the Corniche, and local landmarks." },
     { q: "Do you serve Al-Balad specifically?", a: "Yes, though vehicle access into the narrow historic lanes is limited — we drop you at the edge of the district and arrange a fixed pickup time and point for when you're done exploring." },
     { q: "Is Jeddah humid in summer?", a: "Yes, coastal humidity peaks from June to September. Early-morning or evening Corniche visits are noticeably more comfortable than midday." },
+    { q: "Which KAIA terminal will my driver meet me at?", a: "We confirm your exact terminal — including the seasonal Hajj Terminal — before your driver is dispatched, so there's no mix-up on arrival." },
+    { q: "Can I go straight from Jeddah airport to Makkah without stopping in the city?", a: "Yes — this is one of our most common bookings, typically 60–90 minutes direct from KAIA to Makkah hotels." },
   ],
   reviews: [
     { name: "Fatima B.", origin: "Umrah Pilgrim, Pakistan", text: "Arrived at 2am and our driver was already waiting. Transferred straight to Makkah. Perfect service." },
@@ -82,6 +110,29 @@ export const jeddah: CityData = {
   ],
   heroImage: "/destinations/jeddah-corniche-skyline.webp",
   heroImageAlt: "Jeddah Corniche waterfront with the King Fahd Fountain at sunset — premium private transfer service on Saudi Arabia's Red Sea coast",
+  serviceAreas: [
+    { name: "Al-Balad (Historic Jeddah)", note: "The UNESCO-listed old town's narrow lanes limit vehicle access, so pickups are arranged at the district edge." },
+    { name: "Jeddah Corniche", note: "The city's long Red Sea waterfront — a regular evening pickup and drop-off stretch for tourists and residents alike." },
+    { name: "North Jeddah (Red Sea Mall / Al Shate'i)", note: "The newer business and residential districts north of the city, common for hotel and mall pickups." },
+  ],
+  hotelZones: [
+    { name: "Corniche waterfront hotels", note: "Sea-view hotels along the Red Sea promenade, popular with tourists and business travelers alike." },
+    { name: "North Jeddah hotel corridor", note: "Newer international hotel brands near Red Sea Mall and North Obhur." },
+    { name: "Al-Balad guesthouses", note: "Smaller heritage-district stays, a useful base for exploring the historic old town on foot." },
+  ],
+  airportNote: "King Abdulaziz International Airport (KAIA) has three terminals, including the Hajj Terminal used seasonally for pilgrim flights — we confirm which terminal you're landing at before dispatching a driver.",
+  religiousTravel: {
+    intro: "Jeddah is the main air gateway for Umrah pilgrims arriving from abroad — most riders here are heading straight on to Makkah or Madinah rather than staying in the city. We run this connection daily, including overnight arrivals timed around long-haul flight schedules.",
+    links: [
+      { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+      { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
+    ],
+  },
+  practicalInfo: [
+    { title: "Ramadan & Hajj season traffic", note: "Roads toward Makkah get noticeably heavier during Ramadan and the weeks before Hajj — build in extra time for airport pickups on those dates." },
+    { title: "Coastal humidity", note: "Summer humidity peaks June–September; early-morning or evening Corniche visits are far more comfortable than midday." },
+    { title: "Al-Balad access", note: "Vehicles can't enter the historic old town's narrow lanes — we drop you at the edge and arrange a fixed return pickup point." },
+  ],
 };
 
 export const makkah: CityData = {
@@ -116,6 +167,8 @@ export const makkah: CityData = {
     { q: "What vehicles are available for large groups?", a: "We have minivans seating up to 10, ideal for family Umrah groups traveling between hotels and the Haram." },
     { q: "How far in advance should I book during Hajj?", a: "At least 2–4 weeks ahead — availability during peak Hajj days (8th–12th Dhul-Hijjah) is extremely limited without advance booking." },
     { q: "Can you pick me up directly from my Haram-area hotel?", a: "Yes, though during Ramadan and Hajj some roads near the Haram have vehicle restrictions — your driver will meet you at the nearest permitted point and guide you in." },
+    { q: "Do you provide transport for both Umrah and Hajj?", a: "Yes — daily Umrah transfers year-round, plus dedicated Hajj-season transport. Advance booking is strongly recommended given how limited availability gets during 8th–12th Dhul-Hijjah." },
+    { q: "Can non-Muslim companions travel with a Makkah booking?", a: "Makkah itself is restricted to Muslims under Saudi law — we can transport mixed groups as far as the city boundary, but only Muslim passengers continue into Makkah." },
   ],
   reviews: [
     { name: "Bilal H.", origin: "Umrah Pilgrim, UK", text: "Our driver waited patiently during our Tawaf. Truly understood the spiritual nature of our trip." },
@@ -124,6 +177,30 @@ export const makkah: CityData = {
   ],
   heroImage: "/hero-slider/saudi-arabia-luxury-chauffeur-service.webp",
   heroImageAlt: "Private chauffeur vehicle on a Saudi Arabia highway — premium transport service for Makkah pilgrims and visitors",
+  serviceAreas: [
+    { name: "Abraj Al-Bait / Clock Tower district", note: "The pilgrim hotel cluster directly facing the Haram — Makkah's busiest pickup and drop-off zone." },
+    { name: "Aziziyah", note: "A residential district further from the Haram, popular for longer-stay and budget accommodation with a longer walk-in." },
+    { name: "Mina & Muzdalifah", note: "The Hajj plains, accessible only during the pilgrimage period and only with proper permits." },
+  ],
+  hotelZones: [
+    { name: "Abraj Al-Bait (Clock Tower) hotels", note: "Five-star towers with direct Haram views — the shortest possible walk to Tawaf." },
+    { name: "Ajyad district", note: "A short walk from the Haram, with a wider range of hotel categories than the Clock Tower towers." },
+    { name: "Aziziyah", note: "More affordable, longer-stay accommodation a drive rather than a walk from the Haram." },
+  ],
+  airportNote: "Makkah has no airport of its own — nearly every visitor arrives via King Abdulaziz International Airport (JED) in Jeddah, roughly 80km and 60–90 minutes away, or via Madinah's airport for pilgrims combining both holy cities.",
+  religiousTravel: {
+    intro: "Every booking in Makkah ultimately serves the same purpose — getting pilgrims to and from the Masjid al-Haram safely and on schedule. Our Makkah drivers are Muslim, understand Ihram etiquette, and know which hotel-area roads stay open during peak Tawaf hours.",
+    links: [
+      { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+      { href: "/ziyarat-services-in-saudi-arabia", label: "Ziyarat Services" },
+      { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah Taxi" },
+    ],
+  },
+  practicalInfo: [
+    { title: "Hajj season", note: "The city reaches its busiest point of the year during Hajj (Dhul-Hijjah) — book transport weeks in advance if traveling then." },
+    { title: "Ramadan congestion", note: "The final ten nights of Ramadan bring the heaviest congestion near the Haram; weekday mornings outside those windows are consistently easier." },
+    { title: "Hotel-to-Haram distance", note: "Distance from your hotel to the Haram varies enormously by district — Clock Tower hotels are a short walk, Aziziyah is not — factor this into transfer timing." },
+  ],
 };
 
 // Spelling note: this site standardizes on "Madinah" everywhere except one
@@ -165,6 +242,8 @@ export const madinah: CityData = {
     { q: "Is there a direct transfer from Madinah to Makkah?", a: "Yes, we run this route daily. It's approximately 4–5 hours on the Haramain Expressway." },
     { q: "How do I book a Rawdah visit, and can you help with transport for it?", a: "Rawdah access is booked through the Nusuk app — you reserve your own time slot there. We handle the transport side: getting you to the Prophet's Mosque in good time for your slot, with early-morning pickups (after Fajr) recommended since those times are least crowded." },
     { q: "How many days should I plan to stay in Madinah?", a: "Most Umrah pilgrims stay 2–4 days — enough time for daily prayers at the Prophet's Mosque, a Rawdah visit, a Ziyarat tour, and some rest before continuing on." },
+    { q: "Can you help coordinate pickup around my Rawdah slot?", a: "Yes — tell us your Nusuk app time slot and we plan pickup around it, with early-morning (post-Fajr) slots recommended since they're the least crowded." },
+    { q: "Is Madinah's airport close to the Haram?", a: "Yes — Prince Mohammad Bin Abdulaziz Airport is about 15km away, one of the shortest airport-to-holy-site transfers of any Saudi city, typically 20–30 minutes." },
   ],
   reviews: [
     { name: "Usman A.", origin: "Pilgrim, Nigeria", text: "Transfer from MED airport was smooth. Driver helped us to our hotel despite road closures." },
@@ -173,6 +252,30 @@ export const madinah: CityData = {
   ],
   heroImage: "/hero-slider/saudi-airport-transfer-service.webp",
   heroImageAlt: "Private airport transfer vehicle in Saudi Arabia — premium chauffeur service for Madinah visitors and pilgrims",
+  serviceAreas: [
+    { name: "Central Haram hotel belt (Anbar / Bab Al-Salam)", note: "The closest hotel cluster to the Prophet's Mosque, our busiest Madinah pickup zone." },
+    { name: "Quba & Al-Baqi corridor", note: "The Ziyarat route linking Quba Mosque and the Al-Baqi cemetery, just outside the central zone." },
+    { name: "Dates Market & outer Madinah", note: "The commercial district popular for dates and souvenir shopping before departure." },
+  ],
+  hotelZones: [
+    { name: "Central Haram hotel belt", note: "The closest towers to the Rawdah — the shortest possible walk for daily prayers." },
+    { name: "Anbar district", note: "Mid-range hotels a short walk further out from the mosque." },
+    { name: "Airport-corridor hotels", note: "Useful for pilgrims with very late arrivals or early departures." },
+  ],
+  airportNote: "Prince Mohammad Bin Abdulaziz Airport sits about 15km from the Haram — one of the shortest airport-to-holy-site transfers of any Saudi city, typically 20–30 minutes.",
+  religiousTravel: {
+    intro: "Madinah revolves around the Prophet's Mosque, and nearly every transfer we run here connects a hotel, the Haram's restricted zone, or a Ziyarat site. Drivers are trained on where to wait without congesting the restricted area, and can help time your Rawdah visit around your Nusuk app slot.",
+    links: [
+      { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+      { href: "/ziyarat-services-in-saudi-arabia", label: "Ziyarat Services" },
+      { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah Taxi" },
+    ],
+  },
+  practicalInfo: [
+    { title: "Rawdah timing", note: "Rawdah access is booked through the Nusuk app in advance — plan your pickup time around your slot, not the other way around." },
+    { title: "Restricted-zone pickup", note: "Vehicles can't enter the area immediately around the Prophet's Mosque — your driver waits at the nearest designated point, coordinated via WhatsApp." },
+    { title: "Ramadan & Hajj season", note: "Like Makkah, Madinah sees its busiest periods during Ramadan and the weeks around Hajj — book ahead if traveling then." },
+  ],
 };
 
 export const dammam: CityData = {
@@ -208,6 +311,8 @@ export const dammam: CityData = {
     { q: "Do you serve Jubail Industrial City?", a: "Yes, Jubail is within our Eastern Province service zone. Corporate accounts available for Jubail-based companies." },
     { q: "Is Ithra worth visiting from Dammam?", a: "Yes — the King Abdulaziz Center for World Culture (Ithra) in nearby Dhahran is one of the Eastern Province's best cultural stops, and it's a short, easy transfer from central Dammam." },
     { q: "How humid does Dammam get in summer?", a: "Very — coastal humidity from June through September is among the highest in the Kingdom. Most outdoor plans work better scheduled for evenings during those months." },
+    { q: "Do you handle recurring Aramco visitor pickups?", a: "Yes — this is one of our most regular Dammam bookings, with drivers familiar with compound visitor procedures at Dhahran." },
+    { q: "How busy does the King Fahd Causeway get?", a: "Thursday and Friday evenings see a real surge as residents head to Bahrain for the weekend — booking outside that window avoids the queue." },
   ],
   reviews: [
     { name: "Robert S.", origin: "Oil Industry Executive, USA", text: "Used Gulf Trip for all my Aramco-area transfers. Punctual, professional, and the car is always clean." },
@@ -216,4 +321,28 @@ export const dammam: CityData = {
   ],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Dammam Eastern Province skyline — private taxi and airport transfer service near King Fahd International Airport",
+  serviceAreas: [
+    { name: "Dhahran business district", note: "The Aramco headquarters and Ithra cultural centre area, a short drive from central Dammam." },
+    { name: "Khobar Corniche", note: "The Eastern Province's liveliest waterfront strip, a common leisure and retail pickup zone." },
+    { name: "King Fahd Causeway approach", note: "The staging point for weekend and business crossings into Bahrain." },
+  ],
+  hotelZones: [
+    { name: "Dammam Corniche hotels", note: "Waterfront hotels convenient for both leisure visitors and the airport." },
+    { name: "Khobar business hotel corridor", note: "The Eastern Province's densest concentration of business-traveler hotels." },
+    { name: "Dhahran compound guesthouses", note: "Accommodation used mainly by Aramco-affiliated visitors and contractors." },
+  ],
+  airportNote: "King Fahd International Airport is one of the largest airports in the world by land area — allow a little extra time once inside the airport boundary to reach the terminal building itself.",
+  businessTravel: {
+    intro: "Dammam's economy runs on Saudi Aramco and the wider Eastern Province energy sector, and most of our bookings here are executives moving between the airport, Dhahran, and Khobar's business district — or across the border into Bahrain for meetings.",
+    areas: [
+      { name: "Dhahran (Aramco HQ & Ithra)", note: "The corporate and cultural heart of the tri-city area, with its own compound access procedures." },
+      { name: "Khobar business district", note: "Prince Turki Street's office towers, a regular stop on multi-meeting days." },
+      { name: "King Fahd Causeway", note: "Used for business trips across the border into Bahrain, with drivers familiar with crossing procedures." },
+    ],
+  },
+  practicalInfo: [
+    { title: "Aramco-driven traffic", note: "Weekday mornings see business-travel-driven traffic toward King Fahd International Airport and the Khobar/Dhahran business districts." },
+    { title: "Summer humidity", note: "Among the highest in the Kingdom from June through September — most outdoor activity shifts to evenings." },
+    { title: "Causeway weekend surge", note: "Thursday and Friday evenings get busy toward Bahrain as residents head over for the weekend." },
+  ],
 };

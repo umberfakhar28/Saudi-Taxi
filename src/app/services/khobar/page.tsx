@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Khobar. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/khobar",
   keywords: ["Khobar taxi", "Al Khobar taxi service", "Khobar airport transfer", "Khobar Dammam taxi", "Eastern Province taxi"],
+  ogImage: khobar.heroImage,
+  ogImageAlt: khobar.heroImageAlt,
 });
 
 export default function KhobarPage() {

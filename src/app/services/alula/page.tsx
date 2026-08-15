@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in AlUla. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/alula",
   keywords: ["AlUla taxi", "AlUla airport transfer", "Hegra taxi", "Elephant Rock transfer AlUla", "AlUla tour driver"],
+  ogImage: alula.heroImage,
+  ogImageAlt: alula.heroImageAlt,
 });
 
 export default function AlulaPage() {

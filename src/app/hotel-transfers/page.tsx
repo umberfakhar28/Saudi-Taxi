@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { WhatsAppIcon } from "@/components/Icons";
+import { waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Hotel Transfer Taxi Service | Makkah, Jeddah, Madinah",
@@ -10,30 +11,51 @@ export const metadata = generatePageMetadata({
     keywords: ["hotel transfer Makkah", "hotel transfer Madinah", "hotel taxi Saudi Arabia", "door to door transfer Saudi"],
 });
 
+const faqs = [
+    { q: "Can you pick me up directly from my hotel lobby?", a: "Yes — door-to-door is the default for this service. Share your hotel name and we confirm the exact pickup point." },
+    { q: "Do you serve hotels outside Makkah, Madinah and Jeddah?", a: "Our primary coverage is the Makkah–Madinah–Jeddah corridor, but contact us to confirm availability for other cities." },
+    { q: "Can I book a hotel-to-airport transfer for departure?", a: "Yes — the same door-to-door service works in either direction, including timed pickups around your flight." },
+    { q: "What vehicle sizes are available for hotel transfers?", a: "Sedans for solo travelers and couples, up to large minivans for bigger groups — let us know your group size when booking." },
+];
+
 const schemas = [
     serviceSchema({ name: "Hotel Transfer Services in Saudi Arabia", description: "Door-to-door hotel transfer taxi service in Makkah, Madinah and Jeddah. Professional drivers, meet-and-greet, 24/7. Book your transfer on WhatsApp.", url: "/hotel-transfers", areaServed: ["Makkah", "Madinah", "Jeddah"] }),
-    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Hotel Transfers", path: "/hotel-transfers" }]),
+    faqSchema(faqs.map((f) => ({ question: f.q, answer: f.a }))),
+    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Services", path: "/our-services" }, { name: "Hotel Transfers", path: "/hotel-transfers" }]),
 ];
 
 const features = [
     { icon: "🏨", title: "Door-to-Door Service", description: "We pick you up directly from your hotel lobby and drop you precisely at your destination — no walking, no confusion." },
     { icon: "⏱️", title: "Punctual & Reliable", description: "We value your time. Our drivers are always on time, ensuring you never miss a prayer, tour, or departure." },
     { icon: "🛞", title: "All Vehicle Sizes", description: "From sedans for solo travelers to large minivans for groups — we have the right vehicle for every need." },
-    { icon: "💵", title: "Transparent Pricing", description: "No meter surprises. All hotel transfer rates are agreed upon via quote before your journey begins." },
+    { icon: "💵", title: "Transparent, Agreed Rates", description: "No meter surprises. Every hotel transfer rate is agreed via quote before your journey begins." },
     { icon: "🗺️", title: "City-Wide Coverage", description: "We cover all major hotels in Makkah, Madinah, Jeddah and surrounding areas." },
     { icon: "☎️", title: "24/7 Support", description: "Our team is available round the clock. Reach us any time via phone, WhatsApp or our booking form." },
 ];
 
 const routes = [
-    { route: "Airport → Makkah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
-    { route: "Airport → Madinah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
-    { route: "Makkah → Madinah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
-    { route: "Jeddah City → Makkah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
-    { route: "Makkah → Jeddah Hotels", price: "Check Rates", vehicle: "Sedan / SUV" },
-    { route: "Madinah → Jeddah Airport", price: "Check Rates", vehicle: "Sedan / SUV" },
+    { from: "Airport", to: "Makkah Hotels", vehicle: "Sedan / SUV" },
+    { from: "Airport", to: "Madinah Hotels", vehicle: "Sedan / SUV" },
+    { from: "Makkah", to: "Madinah Hotels", vehicle: "Sedan / SUV" },
+    { from: "Jeddah City", to: "Makkah Hotels", vehicle: "Sedan / SUV" },
+    { from: "Makkah", to: "Jeddah Hotels", vehicle: "Sedan / SUV" },
+    { from: "Madinah", to: "Jeddah Airport", vehicle: "Sedan / SUV" },
 ];
 
 const hotels = ["Makkah Clock Royal Tower — A Fairmont Hotel", "Hilton Makkah Convention Hotel", "Swissôtel Al Maqam Makkah", "Dar Al-Tawasol Makkah", "Movenpick Hotel & Residences Hajar Tower", "Anwar Al Madinah Mövenpick Hotel", "Pullman Zamzam Madina", "InterContinental Madinah-Dar Al Iman", "Sheraton Makkah Jabal Al Kaaba Hotel", "Conrad Makkah"];
+
+const relatedServices = [
+    { href: "/airport-transfers", label: "Airport Transfers" },
+    { href: "/private-taxi", label: "Private Taxi" },
+    { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+    { href: "/corporate-transportation-services", label: "Corporate Transportation" },
+];
+
+const relatedCities = [
+    { slug: "makkah", city: "Makkah" },
+    { slug: "madinah", city: "Madinah" },
+    { slug: "jeddah", city: "Jeddah" },
+];
 
 export default function HotelTransfers() {
     return (
@@ -78,18 +100,21 @@ export default function HotelTransfers() {
                                 <tr style={{ background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', color: 'var(--white)' }}>
                                     <th style={{ padding: '1.2rem 1.5rem', textAlign: 'left', fontWeight: 600, fontSize: '0.9rem' }}>Route</th>
                                     <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>Vehicle</th>
-                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>Pricing</th>
+                                    <th style={{ padding: '1.2rem 1.5rem', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {routes.map((r, i) => (
                                     <tr key={i} style={{ borderBottom: '1px solid var(--gray-200)' }}>
-                                        <td style={{ padding: '1.1rem 1.5rem', fontWeight: 500 }}>{r.route}</td>
+                                        <td style={{ padding: '1.1rem 1.5rem', fontWeight: 500 }}>{r.from} → {r.to}</td>
                                         <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>{r.vehicle}</td>
                                         <td style={{ padding: '1.1rem 1.5rem', textAlign: 'center' }}>
-                                            <span style={{ background: 'linear-gradient(135deg, var(--secondary), var(--secondary-light))', color: 'var(--primary)', padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 700, fontSize: '0.9rem' }}>
-                                                {r.price}
-                                            </span>
+                                            <Link
+                                                href={`/book-online?mode=transfers&from=${encodeURIComponent(r.from)}&to=${encodeURIComponent(r.to)}`}
+                                                style={{ background: 'linear-gradient(135deg, var(--secondary), var(--secondary-light))', color: 'var(--primary)', padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 700, fontSize: '0.85rem', textDecoration: 'none', display: 'inline-block' }}
+                                            >
+                                                Book This Route
+                                            </Link>
                                         </td>
                                     </tr>
                                 ))}
@@ -126,6 +151,48 @@ export default function HotelTransfers() {
                 </div>
             </section>
 
+            {/* FAQ */}
+            <section className="section-lg" style={{ background: 'var(--bg-subtle)' }}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">FAQ</span>
+                        <h2 className="section-title">Hotel Transfers — Frequently Asked Questions</h2>
+                    </div>
+                    <div style={{ maxWidth: 780, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                        {faqs.map((f, i) => (
+                            <div key={i} className="card" style={{ padding: 'var(--space-6) var(--space-8)' }}>
+                                <h3 style={{ color: 'var(--accent)', fontSize: 'var(--text-base)', marginBottom: 'var(--space-3)' }}>{f.q}</h3>
+                                <p style={{ color: 'var(--text-body)', marginBottom: 0 }}>{f.a}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Related Services & Cities */}
+            <section className="section-lg">
+                <div className="container">
+                    <div className="grid-2" style={{ gap: 'var(--space-10)' }}>
+                        <div>
+                            <h3 style={{ marginBottom: 'var(--space-4)' }}>Related Services</h3>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+                                {relatedServices.map((l) => (
+                                    <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style={{ marginBottom: 'var(--space-4)' }}>Related Cities</h3>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+                                {relatedCities.map((c) => (
+                                    <Link key={c.slug} href={`/services/${c.slug}`} className="btn btn-outline-gold btn-sm">{c.city} Taxi Service</Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* CTA */}
             <section style={{ background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)', padding: '5rem 0', textAlign: 'center' }}>
                 <div className="container">
@@ -135,7 +202,9 @@ export default function HotelTransfers() {
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your hotel transfer</span></Link>
-                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+                        <a href={waLink("Hello GulfTripService, I would like to get a quote for your hotel transfer service. Please share the available options, pricing, and booking details. Thank you.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+                            <WhatsAppIcon size={18} /> Get a Quote
+                        </a>
                     </div>
                 </div>
             </section>

@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Tabuk. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/tabuk",
   keywords: ["Tabuk taxi", "Tabuk airport transfer", "Tabuk to NEOM taxi", "Wadi Disah tour taxi", "Tabuk Aqaba transfer"],
+  ogImage: tabuk.heroImage,
+  ogImageAlt: tabuk.heroImageAlt,
 });
 
 export default function TabukPage() {

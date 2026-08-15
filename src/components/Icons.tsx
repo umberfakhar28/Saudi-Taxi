@@ -227,6 +227,18 @@ export const EyeIcon = ({ size = 24, className = "", style }: IconProps) => (
     </svg>
 );
 
+export const BriefcaseIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={style}>
+        <path d="M9 2a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v3h20V7a2 2 0 0 0-2-2h-3V4a2 2 0 0 0-2-2H9zm0 2h6v1H9V4zM2 11v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-7H2zm8 2h4v2h-4v-2z"/>
+    </svg>
+);
+
+export const MoonIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={style}>
+        <path d="M20.742 13.045a8.088 8.088 0 0 1-2.077.272c-4.412 0-7.987-3.575-7.987-7.987 0-1.708.535-3.291 1.446-4.59A10.523 10.523 0 0 0 1.5 11.25C1.5 17.463 6.537 22.5 12.75 22.5c5.096 0 9.394-3.4 10.75-8.055a8.09 8.09 0 0 1-2.758-1.4z"/>
+    </svg>
+);
+
 // Official WhatsApp glyph — same path already used in content/*.html's inline
 // SVGs (.btn-whatsapp buttons), promoted to a shared component so it isn't
 // re-pasted as inline markup on every page that needs it.

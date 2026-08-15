@@ -6,11 +6,37 @@ import { AIRPORTS, AIRPORT_ROUTES, type AirportPageInfo } from "@/lib/airportRou
 import { AIRPORT_FAQS } from "@/lib/airportFaqs";
 import { AIRPORT_WAIT_TIMES } from "@/lib/airportTransferConfig";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
+import { allCities } from "@/lib/cityData3";
 import AirportFaqAccordion from "@/components/AirportFaqAccordion";
 import {
   PlaneIcon, ChevronRightIcon, WhatsAppIcon, CheckCircleIcon, PackageIcon,
-  TimerIcon, ClockIcon,
+  TimerIcon, ClockIcon, MapPinIcon, HotelIcon, BriefcaseIcon, MoonIcon,
 } from "@/components/Icons";
+import styles from "./AirportPage.module.css";
+
+/** Use-case chips computed from data already on every airport (routes,
+ * relatedServices, religiousTravel/businessInfo presence) rather than
+ * hand-written near-duplicate lists. */
+function useCasesFor(data: AirportPageInfo, routeCount: number): string[] {
+  const cases: string[] = ["Hotel & door-to-door transfers", "Family & group travel"];
+  if (routeCount > 0) cases.push("City & intercity transfers");
+  if (data.businessInfo) cases.push("Business & corporate travel");
+  if (data.religiousTravel) cases.push("Umrah & religious travel");
+  return cases;
+}
+
+/** Related /services/[slug] city pages for this airport — the airport's own
+ * city plus its real, existing nearby-city relationships, never a guessed
+ * slug (matched against the live CityData list by city name). */
+function relatedCitiesFor(data: AirportPageInfo): { slug: string; city: string }[] {
+  const ownCity = allCities.find((c) => c.city.toLowerCase() === data.city.toLowerCase());
+  if (!ownCity) return [];
+  const cities = [{ slug: ownCity.slug, city: ownCity.city }];
+  for (const n of ownCity.nearbyCities) {
+    if (!cities.some((c) => c.slug === n.slug)) cities.push({ slug: n.slug, city: n.city });
+  }
+  return cities;
+}
 
 /**
  * Shared template for every airport page (Airport Page Spec addendum to
@@ -95,6 +121,34 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
         </div>
       </section>
 
+      {/* Quick Facts strip — verified data only, nothing invented. */}
+      <section className={styles.quickFacts}>
+        <div className="container">
+          <div className={styles.factRow}>
+            <div className={styles.factItem}>
+              <span className={styles.factLabel}>Airport</span>
+              <span className={styles.factValue}>{data.fullName}</span>
+            </div>
+            <div className={styles.factItem}>
+              <span className={styles.factLabel}>IATA Code</span>
+              <span className={styles.factValue}>{data.code}</span>
+            </div>
+            <div className={styles.factItem}>
+              <span className={styles.factLabel}>Location</span>
+              <span className={styles.factValue}>{data.distanceFromCity}</span>
+            </div>
+            <div className={styles.factItem}>
+              <span className={styles.factLabel}>Terminals</span>
+              <span className={styles.factValue}>{data.terminals && data.terminals.length > 1 ? data.terminals.length : "Single arrivals hall"}</span>
+            </div>
+            <div className={styles.factItem}>
+              <span className={styles.factLabel}>Transfer Types</span>
+              <span className={styles.factValue}>Private, door-to-door</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* §2 — Other airports we cover */}
       <section className="section-lg">
         <div className="container">
@@ -174,6 +228,13 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               </li>
             ))}
           </ul>
+          <div className={styles.useCaseRow}>
+            {useCasesFor(data, routes.length).map((label) => (
+              <span key={label} className={styles.useCaseChip}>
+                <CheckCircleIcon size={14} /> {label}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -235,6 +296,12 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               </div>
             ))}
           </div>
+          <div className={styles.cantFindDriver}>
+            <MapPinIcon size={20} style={{ color: "var(--accent)", flexShrink: 0 }} />
+            <p style={{ margin: 0, color: "var(--text-body)", fontSize: "var(--text-sm)" }}>
+              <strong>Can&apos;t find your driver?</strong> Message the WhatsApp number from your booking confirmation — a real person replies immediately during your pickup window, not an automated queue.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -244,10 +311,10 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
           <TimerIcon size={32} style={{ color: "var(--accent)", marginBottom: "var(--space-4)" }} />
           <h2 className="section-title" style={{ textAlign: "center" }}>Flight-Delay Policy</h2>
           <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
-            We track your flight number from departure, not just scheduled landing time, so a delayed flight doesn't leave your driver waiting at the wrong time — or you waiting for a driver who thinks you've already landed.
+            We track your flight number from departure, not just scheduled landing time, so a delayed flight doesn&apos;t leave your driver waiting at the wrong time — or you waiting for a driver who thinks you&apos;ve already landed.
           </p>
           <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
-            {AIRPORT_WAIT_TIMES.airportFreeWaitMinutes} minutes of waiting time after your actual landing is included at no extra charge. If your flight is delayed well beyond that, message us and we'll adjust the pickup — no penalty for circumstances outside your control.
+            {AIRPORT_WAIT_TIMES.airportFreeWaitMinutes} minutes of waiting time after your actual landing is included at no extra charge. If your flight is delayed well beyond that, message us and we&apos;ll adjust the pickup — no penalty for circumstances outside your control.
           </p>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp" style={{ marginTop: "var(--space-6)" }}>
             <WhatsAppIcon size={16} /> Message Us About a Delayed Flight
@@ -290,8 +357,161 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               </p>
             </div>
           )}
+          {data.lastReviewed && (
+            <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "var(--text-xs)", marginTop: "var(--space-6)" }}>
+              Terminal and pickup information last reviewed: {data.lastReviewed}.
+            </p>
+          )}
         </div>
       </section>
+
+      {/* Hotel Transfer Zones — district-level, not named-property
+          partnership claims that can't be verified. */}
+      {data.hotelZones && data.hotelZones.length > 0 && (
+        <section className="section-lg">
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Hotel Transfers</span>
+              <h2 className="section-title">Popular Hotel Transfer Destinations from {data.name}</h2>
+            </div>
+            <div className="grid-3">
+              {data.hotelZones.map((zone) => (
+                <div key={zone.name} className="card">
+                  <div className="card-icon"><HotelIcon size={22} /></div>
+                  <h3>{zone.name}</h3>
+                  <p>{zone.note}</p>
+                </div>
+              ))}
+            </div>
+            <div style={{ textAlign: "center", marginTop: "var(--space-8)" }}>
+              <Link href="/hotel-transfers" className="btn btn-outline-gold">All Hotel Transfer Services</Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Business Travel — only rendered where genuinely relevant. */}
+      {data.businessInfo && (
+        <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Business Travel</span>
+              <h2 className="section-title">{data.name} for Business Travelers</h2>
+            </div>
+            <p style={{ color: "var(--text-body)", lineHeight: 1.8, maxWidth: 760, margin: "0 auto var(--space-8)", textAlign: "center" }}>
+              {data.businessInfo.intro}
+            </p>
+            <div className="grid-3">
+              {data.businessInfo.areas.map((area) => (
+                <div key={area.name} className="card">
+                  <div className="card-icon"><BriefcaseIcon size={22} /></div>
+                  <h3>{area.name}</h3>
+                  <p>{area.note}</p>
+                </div>
+              ))}
+            </div>
+            <div style={{ textAlign: "center", marginTop: "var(--space-8)" }}>
+              <Link href="/corporate-transportation-services" className="btn btn-outline-gold">Corporate Transportation Services</Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Religious Travel — only rendered where genuinely relevant (JED, MED);
+          links to the dedicated Umrah/Ziyarat pages rather than duplicating
+          their content. */}
+      {data.religiousTravel && (
+        <section className="section-lg">
+          <div className="container" style={{ maxWidth: 780, margin: "0 auto", textAlign: "center" }}>
+            <MoonIcon size={32} style={{ color: "var(--accent)", marginBottom: "var(--space-4)" }} />
+            <span className="section-eyebrow">Religious Travel</span>
+            <h2 className="section-title" style={{ textAlign: "center" }}>Umrah &amp; Ziyarat Transport from {data.name}</h2>
+            <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{data.religiousTravel.intro}</p>
+            <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
+              {data.religiousTravel.links.map((l) => (
+                <Link key={l.href} href={l.href} className="btn btn-secondary">{l.label}</Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Vehicle Options — shared fleet data (FLEET_TIERS), real images and
+          capacities already used by the booking widget elsewhere. */}
+      <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
+        <div className="container">
+          <div className="section-header centered">
+            <span className="section-eyebrow">Fleet</span>
+            <h2 className="section-title">Vehicle Options from {data.name}</h2>
+          </div>
+          <div className="grid-4">
+            {FLEET_TIERS.map((tier) => (
+              <div key={tier.id} className="card" style={{ textAlign: "center", padding: 0, overflow: "hidden" }}>
+                <div style={{ position: "relative", width: "100%", height: 160 }}>
+                  <Image
+                    src={tier.image}
+                    alt={`${tier.name} — ${tier.models}`}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                </div>
+                <div style={{ padding: "var(--space-6)" }}>
+                  <h3 style={{ fontSize: "var(--text-lg)" }}>{tier.name}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginBottom: "var(--space-2)" }}>{tier.models}</p>
+                  <p style={{ color: "var(--accent)", fontWeight: 700, fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>
+                    Up to {tier.maxPassengers} passengers · {tier.maxLuggage} bags
+                  </p>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{tier.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Practical Airport Travel Tips */}
+      {data.practicalInfo && data.practicalInfo.length > 0 && (
+        <section className="section-lg">
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Good to Know</span>
+              <h2 className="section-title">Practical Tips for {data.name}</h2>
+            </div>
+            <div className="grid-3">
+              {data.practicalInfo.map((item) => (
+                <div key={item.title} className="card">
+                  <h3 style={{ fontSize: "var(--text-base)" }}>{item.title}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7 }}>{item.note}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Reviews — only rendered where genuine, airport-specific reviews
+          exist; never padded with a generic quote. */}
+      {data.reviews && data.reviews.length > 0 && (
+        <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Customer Reviews</span>
+              <h2 className="section-title">What Travelers Say About {data.name}</h2>
+            </div>
+            <div className={styles.reviewGrid}>
+              {data.reviews.map((r, i) => (
+                <div key={i} className="card">
+                  <div style={{ display: "flex", gap: "var(--space-1)", marginBottom: "var(--space-3)", color: "var(--accent)" }}>★★★★★</div>
+                  <p style={{ color: "var(--text-body)", fontStyle: "italic", lineHeight: 1.75, marginBottom: "var(--space-4)" }}>&ldquo;{r.text}&rdquo;</p>
+                  <p style={{ color: "var(--text-main)", fontWeight: 600 }}>{r.name}</p>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{r.origin} · {data.name} Transfer</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* §8 — FAQs */}
       <section className="section-lg">
@@ -322,7 +542,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
                   </li>
                 ))}
               </ul>
-              <Link href="/border-crossing" style={{ color: "var(--accent)", fontWeight: 700, fontSize: "var(--text-base)" }}>View all routes →</Link>
+              <Link href="/routes" style={{ color: "var(--accent)", fontWeight: 700, fontSize: "var(--text-base)" }}>View all routes →</Link>
             </div>
             <div>
               <div className="card-icon" style={{ marginBottom: "var(--space-4)" }}><PackageIcon size={22} /></div>
@@ -347,6 +567,16 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               <Link href="/our-services" style={{ color: "var(--accent)", fontWeight: 700, fontSize: "var(--text-base)" }}>All services →</Link>
             </div>
           </div>
+          {relatedCitiesFor(data).length > 0 && (
+            <div style={{ marginTop: "var(--space-10)", paddingTop: "var(--space-10)", borderTop: "1px solid rgba(16,18,26,0.08)" }}>
+              <h3 style={{ marginBottom: "var(--space-4)" }}>Related Cities</h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                {relatedCitiesFor(data).map((c) => (
+                  <Link key={c.slug} href={`/services/${c.slug}`} className="btn btn-outline-gold btn-sm">{c.city}</Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

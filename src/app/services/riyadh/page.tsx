@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Riyadh. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/riyadh",
   keywords: ["Riyadh taxi", "Riyadh airport transfer", "King Khalid Airport taxi", "corporate taxi Riyadh", "KAFD transfer"],
+  ogImage: riyadh.heroImage,
+  ogImageAlt: riyadh.heroImageAlt,
 });
 
 export default function RiyadhPage() {

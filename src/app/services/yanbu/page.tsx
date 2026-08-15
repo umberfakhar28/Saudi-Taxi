@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Yanbu. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/yanbu",
   keywords: ["Yanbu taxi", "Yanbu airport transfer", "Yanbu Industrial City taxi", "Yanbu to Madinah taxi"],
+  ogImage: yanbu.heroImage,
+  ogImageAlt: yanbu.heroImageAlt,
 });
 
 export default function YanbuPage() {

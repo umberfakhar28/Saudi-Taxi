@@ -9,6 +9,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi or corporate transfer in Dhahran. Ithra visits, Saudi Aramco and KFUPM transfers, tri-city Eastern Province coverage. Reserve on WhatsApp.",
   path: "/services/dhahran",
   keywords: ["Dhahran taxi", "Dhahran car service", "Ithra transfer", "Saudi Aramco taxi Dhahran"],
+  ogImage: dhahran.heroImage,
+  ogImageAlt: dhahran.heroImageAlt,
 });
 
 export default function DhahranPage() {

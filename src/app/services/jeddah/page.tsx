@@ -8,6 +8,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Jeddah. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/jeddah",
   keywords: ["Jeddah taxi", "Jeddah airport taxi", "KAIA transfer", "Jeddah to Makkah", "Jeddah city tour taxi"],
+  ogImage: jeddah.heroImage,
+  ogImageAlt: jeddah.heroImageAlt,
 });
 
 export default function JeddahPage() {

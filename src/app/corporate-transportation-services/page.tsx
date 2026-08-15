@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
-import { UserIcon, ShieldIcon, ClockIcon, MessageIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import CoreServicePage from "@/components/CoreServicePage";
+import { corporateTransportation } from "@/lib/serviceData";
 
 export const metadata = generatePageMetadata({
     title: "Corporate Taxi & Transportation Service | Saudi Arabia",
@@ -11,121 +9,6 @@ export const metadata = generatePageMetadata({
     keywords: ["corporate transport Saudi Arabia", "executive taxi", "business car hire", "corporate travel Saudi Arabia"],
 });
 
-const schemas = [
-    serviceSchema({ name: "Corporate Taxi & Transportation Service | Saudi Arabia", description: "Corporate transportation service in Saudi Arabia: executive transfers, staff shuttles, event transport. Professional drivers, 24/7. Reserve on WhatsApp today.", url: "/corporate-transportation-services", areaServed: ["Saudi Arabia"] }),
-    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Corporate Transportation", path: "/corporate-transportation-services" }]),
-];
-
-const solutions = [
-    {
-        title: "Executive Transfers",
-        desc: "VIP airport pickups and hotel-to-meeting transfers for your key stakeholders and executives."
-    },
-    {
-        title: "Staff Shuttles",
-        desc: "Reliable, scheduled transportation for your employees across major Saudi cities."
-    },
-    {
-        title: "Corporate Events",
-        desc: "Coordinated transport for large-scale conferences, trade shows, and business events."
-    }
-];
-
 export default function CorporateTransportation() {
-    return (
-        <>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-        <main>
-            {/* Hero */}
-            <section className="page-hero">
-                <h1>Corporate Car & Chauffeur Transportation Service</h1>
-                <p>
-                    Premium business travel solutions across Saudi Arabia. 
-                    Professional, punctual, and tailored to your company&apos;s needs.
-                </p>
-                <div className="breadcrumb">
-                    <Link href="/">Home</Link> <ChevronRightIcon size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Corporate Transportation</span>
-                </div>
-            </section>
-
-            {/* Intro */}
-            <section className="section-lg">
-                <div className="container">
-                    <div className="grid-2">
-                        <div>
-                            <h2 className="section-title">Professional Business Travel Solutions</h2>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-                                Gulf Trip Service provides comprehensive corporate transportation services designed to meet the high standards of modern business. We understand that punctuality, professionalism, and reliability are the cornerstones of successful corporate travel.
-                            </p>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
-                                From individual executive transfers in luxury sedans to group transport for large events, we manage every detail of the journey so you can focus on your business objectives.
-                            </p>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
-                                The same coordinated approach carries over to other group and event work we do, from <Link href="/wedding-transportation" style={{ color: 'var(--accent)', fontWeight: 600 }}>wedding transportation</Link> to <Link href="/educational-tours-transport" style={{ color: 'var(--accent)', fontWeight: 600 }}>educational tour transport</Link> for schools and universities.
-                            </p>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
-                                Planning a business trip yourself? Our <Link href="/guides/business-travel" style={{ color: 'var(--accent)', fontWeight: 600 }}>business travel guide</Link> covers what to expect beyond the ride itself.
-                            </p>
-                        </div>
-                        <div className="grid-1" style={{ gap: '1.5rem' }}>
-                            {solutions.map((s, i) => (
-                                <div key={i} className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                    <div style={{ color: 'var(--secondary)', flexShrink: 0 }}>
-                                        <ShieldIcon size={24} />
-                                    </div>
-                                    <div>
-                                        <h3 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{s.title}</h3>
-                                        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', margin: 0 }}>{s.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Why Corporate */}
-            <section className="section-lg bg-light">
-                <div className="container">
-                    <div className="section-header centered">
-                        <h2 className="section-title">Why Partner with Gulf Trip Service?</h2>
-                    </div>
-                    <div className="grid-3">
-                        <div className="card text-center">
-                            <ClockIcon size={40} style={{ color: 'var(--accent)', marginBottom: '1.5rem' }} />
-                            <h3>Strict Punctuality</h3>
-                            <p style={{ fontSize: '0.9rem' }}>We ensure your team and guests arrive on time, every time, with zero delays.</p>
-                        </div>
-                        <div className="card text-center">
-                            <UserIcon size={40} style={{ color: 'var(--accent)', marginBottom: '1.5rem' }} />
-                            <h3>Professional Drivers</h3>
-                            <p style={{ fontSize: '0.9rem' }}>Ministry-licensed chauffeurs with exceptional local knowledge and etiquette.</p>
-                        </div>
-                        <div className="card text-center">
-                            <CarIcon size={40} style={{ color: 'var(--accent)', marginBottom: '1.5rem' }} />
-                            <h3>Diverse Fleet</h3>
-                            <p style={{ fontSize: '0.9rem' }}>A wide range of premium vehicles from luxury sedans to high-capacity shuttle buses.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA */}
-            <section style={{ background: 'var(--primary)', padding: '5rem 0', textAlign: 'center' }}>
-                <div className="container">
-                    <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Inquire About Corporate Accounts</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.8)', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-                        Need customized transport solutions for your business? Contact our corporate team for bespoke quotes and account details.
-                    </p>
-                    <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-                        <Link href="/contact-us" className="btn btn-primary btn-lg">Contact Form</Link>
-                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
-                            <MessageIcon size={18} style={{ marginRight: '8px' }} /> WhatsApp Business
-                        </a>
-                    </div>
-                </div>
-            </section>
-        </main>
-        </>
-    );
+    return <CoreServicePage data={corporateTransportation} />;
 }

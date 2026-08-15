@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Madinah. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/madinah",
   keywords: ["Madinah taxi", "Prophet mosque taxi", "Madinah airport transfer", "Ziyarat Madinah", "Madinah to Makkah taxi"],
+  ogImage: madinah.heroImage,
+  ogImageAlt: madinah.heroImageAlt,
 });
 
 export default function MadinahPage() {

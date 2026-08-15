@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Taif. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/taif",
   keywords: ["Taif taxi", "Taif airport transfer", "Makkah to Taif taxi", "Taif rose farm tour", "Al-Hada taxi"],
+  ogImage: taif.heroImage,
+  ogImageAlt: taif.heroImageAlt,
 });
 
 export default function TaifPage() {

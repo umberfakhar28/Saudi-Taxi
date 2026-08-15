@@ -13,6 +13,20 @@ import StickyMobileBar from "@/components/StickyMobileBar";
 import RelatedLinks from "@/components/RelatedLinks";
 import { AIRPORTS, AIRPORT_ROUTES } from "@/lib/airportRoutesData";
 import { AIRPORT_FAQS } from "@/lib/airportFaqs";
+import { allCities } from "@/lib/cityData3";
+
+// Every city page that has a real airport entry — computed, not hand-listed,
+// so a new airport in AIRPORTS automatically gets linked here too.
+const airportCities = allCities.filter((c) => AIRPORTS.some((a) => a.city.toLowerCase() === c.city.toLowerCase()));
+
+const audienceSegments = [
+    { icon: "🛬", title: "Arriving Travelers", description: "Meet-and-greet pickup the moment you land, with flight tracking for delays." },
+    { icon: "🛫", title: "Departing Travelers", description: "Timed pickup around your check-in window, straight to departures." },
+    { icon: "🕋", title: "Umrah Pilgrims", description: "Ihram-friendly vehicles and drivers experienced with pilgrim schedules." },
+    { icon: "💼", title: "Business Travelers", description: "Executive vehicles for airport-to-meeting transfers." },
+    { icon: "👨‍👩‍👧‍👦", title: "Families & Groups", description: "Vans and SUVs sized to your group, with room for luggage." },
+    { icon: "🌍", title: "International Visitors", description: "Multilingual drivers and door-to-door service for first-time visitors." },
+];
 
 export const metadata = generatePageMetadata({
     title: "Airport Taxi & Private Transfers in Saudi Arabia | 24/7",
@@ -93,6 +107,25 @@ export default function AirportTransfers() {
                 </div>
             </section>
 
+            {/* Who It's For */}
+            <section className="section-lg" style={{ paddingTop: 'var(--space-8)' }}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Who It&apos;s For</span>
+                        <h2 className="section-title">Who Uses Our Airport Transfer Service?</h2>
+                    </div>
+                    <div className="grid-3">
+                        {audienceSegments.map((a) => (
+                            <div key={a.title} className="card" style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '2.2rem', marginBottom: 'var(--space-3)' }}>{a.icon}</div>
+                                <h3 style={{ fontSize: 'var(--text-base)' }}>{a.title}</h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>{a.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Booking Widget */}
             <section className="section-lg">
                 <div className="container">
@@ -134,6 +167,21 @@ export default function AirportTransfers() {
                     </section>
                 );
             })}
+
+            {/* Related Cities */}
+            <section className="section" style={{ background: 'var(--bg-subtle)' }}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Related Cities</span>
+                        <h2 className="section-title">City Transfer Services</h2>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', justifyContent: 'center' }}>
+                        {airportCities.map((c) => (
+                            <Link key={c.slug} href={`/services/${c.slug}`} className="btn btn-outline-gold btn-sm">{c.city} Taxi Service</Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* How it works */}
             <HowItWorksSteps />
@@ -194,7 +242,7 @@ export default function AirportTransfers() {
                     </p>
                     <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <a href="#booking-widget" className="btn btn-primary btn-lg" style={{ minWidth: '200px' }}>
-                            Check Rates
+                            Start Booking
                         </a>
                         <Link href="/book-online" className="btn btn-outline btn-lg" style={{ minWidth: '200px', color: 'var(--white)', borderColor: 'rgba(255,255,255,0.5)' }}>
                             Book Now<span className="sr-only"> your airport transfer</span>

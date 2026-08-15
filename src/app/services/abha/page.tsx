@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Abha. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/abha",
   keywords: ["Abha taxi", "Abha airport transfer", "Habala village tour taxi", "Asir mountain taxi", "Al-Soudah transfer"],
+  ogImage: abha.heroImage,
+  ogImageAlt: abha.heroImageAlt,
 });
 
 export default function AbhaPage() {

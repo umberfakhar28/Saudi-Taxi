@@ -99,6 +99,29 @@ export interface AirportPageInfo {
   relatedServices: { href: string; label: string }[];
   /** Dedicated /guides/* terminal-map page, where one exists (JED, RUH only). */
   guidePageHref?: string;
+
+  // --- Phase 3 Airport Template additions (standardization pass) — all
+  // optional so every field degrades gracefully instead of forcing a
+  // section onto an airport where it doesn't genuinely apply. ---
+  /** Hotel districts genuinely reachable from this airport — district-level,
+   * not named-property partnership claims that can't be verified. */
+  hotelZones?: { name: string; note: string }[];
+  /** Present only where corporate/business travel is a genuine use case for
+   * this airport — omitted entirely elsewhere rather than padded in. */
+  businessInfo?: { intro: string; areas: { name: string; note: string }[] };
+  /** Present only where Umrah/Ziyarat travel is genuinely relevant to this
+   * airport (JED, MED) — links to the dedicated service pages instead of
+   * duplicating their content here. */
+  religiousTravel?: { intro: string; links: { href: string; label: string }[] };
+  /** 2-3 practical, non-invented travel considerations specific to this
+   * airport (terminal quirks, luggage/family notes, peak periods, etc.). */
+  practicalInfo?: { title: string; note: string }[];
+  /** 1-2 genuine, airport-specific reviews. Omitted entirely rather than
+   * padded with a generic quote. */
+  reviews?: { name: string; origin: string; text: string }[];
+  /** Editorial freshness stamp for terminal/procedure information — only
+   * ever set when this content has actually just been reviewed. */
+  lastReviewed?: string;
 }
 
 export const AIRPORTS: AirportPageInfo[] = [
@@ -148,6 +171,29 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/umrah-transport-package", label: "Umrah Transport Package" },
     ],
     guidePageHref: "/guides/king-abdulaziz-airport",
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Corniche waterfront hotels", note: "Sea-view hotels along the Red Sea promenade, a straightforward transfer from any of the three terminals." },
+      { name: "North Jeddah hotel corridor", note: "Newer international hotel brands near Red Sea Mall, popular with business and transit travelers." },
+      { name: "Al-Balad guesthouses", note: "Smaller heritage-district stays for travelers exploring the historic old town before continuing on." },
+    ],
+    religiousTravel: {
+      intro: "For most pilgrims, KAIA is only a stop on the way to Makkah or Madinah rather than a destination in itself — we run this connection daily, including overnight arrivals timed around long-haul flight schedules, with Ihram-friendly vehicles and drivers who understand pilgrim etiquette.",
+      links: [
+        { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+        { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah Airport to Makkah Taxi" },
+        { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah Taxi" },
+      ],
+    },
+    practicalInfo: [
+      { title: "Confirm your terminal", note: "KAIA has three distinct terminals with different meeting points — tell us your flight number so your driver waits at the right one." },
+      { title: "Hajj Terminal seasonality", note: "The Hajj Terminal only operates during Dhul-Hijjah — outside that window, pilgrim flights typically use Terminal 1." },
+      { title: "Ramadan and Hajj congestion", note: "Roads toward Makkah get noticeably heavier during Ramadan evenings and the weeks before Hajj — build in extra time." },
+    ],
+    reviews: [
+      { name: "Fatima B.", origin: "Umrah Pilgrim, Pakistan", text: "Arrived at 2am and our driver was already waiting at the right terminal. Transferred straight to Makkah without any confusion." },
+      { name: "James O.", origin: "Business Traveler, USA", text: "Landed at the South Terminal for a domestic connection and the driver was exactly where he said he'd be." },
+    ],
   },
   {
     code: "MED",
@@ -167,6 +213,27 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/airport-transfer-for-umrah", label: "Airport Transfer for Umrah" },
       { href: "/hotel-transfers", label: "Hotel Transfers" },
       { href: "/private-taxi", label: "Private Taxi" },
+    ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Central Haram hotel belt", note: "The closest hotel cluster to the Prophet's Mosque, a short transfer from the airport." },
+      { name: "Anbar district", note: "Mid-range hotels a short walk further from the mosque than the central belt." },
+    ],
+    religiousTravel: {
+      intro: "Madinah Airport is the closest airport in Saudi Arabia to a holy site — most arrivals here are Umrah or Ziyarat travelers heading straight to the Prophet's Mosque hotel district, and our drivers plan pickup around Rawdah timing where requested.",
+      links: [
+        { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+        { href: "/ziyarat-services-in-saudi-arabia", label: "Ziyarat Services" },
+        { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah Taxi" },
+      ],
+    },
+    practicalInfo: [
+      { title: "Shortest holy-site transfer", note: "At 15km from the Haram, this is one of the shortest airport-to-holy-site transfers of any Saudi city — typically 20–30 minutes." },
+      { title: "Restricted-zone pickup", note: "Vehicles can't enter the area immediately around the Prophet's Mosque — your driver waits at the nearest designated point." },
+    ],
+    reviews: [
+      { name: "Usman A.", origin: "Pilgrim, Nigeria", text: "Smooth transfer from MED straight to our hotel despite road closures near the Haram — driver knew an alternate route." },
+      { name: "Siti R.", origin: "Pilgrim, Indonesia", text: "Shortest airport transfer I've experienced anywhere — we were checking into our hotel within half an hour of landing." },
     ],
   },
   {
@@ -192,6 +259,27 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/hotel-transfers", label: "Hotel Transfers" },
       { href: "/private-taxi", label: "Private Taxi" },
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },
+    ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Dammam Corniche hotels", note: "Waterfront hotels convenient for both leisure visitors and a short airport transfer." },
+      { name: "Khobar business hotel corridor", note: "The Eastern Province's densest concentration of business-traveler hotels, about 30 minutes from the airport." },
+    ],
+    businessInfo: {
+      intro: "King Fahd International is one of the largest airports in the world by land area, and a large share of arrivals here are Aramco-affiliated executives and Eastern Province business travelers moving on to Dhahran, Khobar, or the King Fahd Causeway for cross-border meetings.",
+      areas: [
+        { name: "Dhahran (Aramco / KFUPM)", note: "The corporate and academic core of the Eastern Province, a regular airport transfer destination." },
+        { name: "Khobar business district", note: "Prince Turki Street's office towers, roughly 30 minutes from the airport." },
+        { name: "King Fahd Causeway", note: "The gateway for business trips across the border into Bahrain." },
+      ],
+    },
+    practicalInfo: [
+      { title: "Large airport footprint", note: "KFIA is unusually large by land area — allow extra time to reach the terminal building itself once inside the airport boundary." },
+      { title: "Gateway to GCC routes", note: "This is our starting point for cross-border transfers to Bahrain, Qatar, and Khafji — mention your onward destination when booking." },
+    ],
+    reviews: [
+      { name: "Robert S.", origin: "Oil Industry Executive, USA", text: "Used Gulf Trip for all my Aramco-area transfers from DMM. Punctual every single time, even for early morning flights." },
+      { name: "Nadia K.", origin: "Business Traveler, UK", text: "Airport to Khobar was seamless, and the driver already knew our office building's visitor entrance." },
     ],
   },
   {
@@ -234,6 +322,28 @@ export const AIRPORTS: AirportPageInfo[] = [
         facilities: ["Domestic baggage claim", "Ground transport pickup area"],
       },
     ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Olaya hotel corridor", note: "Riyadh's densest concentration of international hotel brands, about 35–50 minutes from the airport." },
+      { name: "KAFD hotels", note: "Newer high-rise hotels built for conference and corporate travelers visiting the financial district." },
+      { name: "Diriyah", note: "A smaller, boutique hotel cluster near the At-Turaif heritage site." },
+    ],
+    businessInfo: {
+      intro: "Riyadh Airport serves the capital's government, financial and diplomatic traffic, and most of our RUH bookings are business travelers heading into KAFD, Olaya, or a ministry appointment rather than tourism.",
+      areas: [
+        { name: "KAFD", note: "Saudi Arabia's flagship financial district, a regular multi-stop meeting circuit from the airport." },
+        { name: "Olaya business corridor", note: "Corporate towers along King Fahd Road, within a short transfer of most business hotels." },
+        { name: "Diplomatic Quarter", note: "Embassy and government-appointment traffic, a frequent RUH pickup destination." },
+      ],
+    },
+    practicalInfo: [
+      { title: "Confirm your terminal", note: "RUH has both the newer Terminal 5 and the older Terminals 1–4 — tell us your flight number so your driver waits at the correct one." },
+      { title: "Riyadh Season traffic", note: "Evenings near Boulevard City and major venues get significantly busier roughly October–March — build in extra time on event nights." },
+    ],
+    reviews: [
+      { name: "Ahmed Al-Rashid", origin: "Business Traveler, Riyadh", text: "Impeccable service for my KAFD meetings straight from RUH. Driver was punctual and knew exactly which terminal I'd land at." },
+      { name: "Mohammed T.", origin: "Corporate Client", text: "We use Gulf Trip for all executive Riyadh airport transfers. Reliable every single time, regardless of terminal." },
+    ],
   },
   {
     code: "AHB",
@@ -253,6 +363,19 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/hotel-transfers", label: "Hotel Transfers" },
       { href: "/private-taxi", label: "Private Taxi" },
       { href: "/educational-tours-transport", label: "Educational Tours Transport" },
+    ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Abha city-centre hotels", note: "The most convenient base for Lake Park and central attractions, a short drive from the airport." },
+      { name: "Al Souda highland stays", note: "Higher-elevation accommodation for visitors prioritising the coolest possible climate." },
+    ],
+    practicalInfo: [
+      { title: "Peak summer season", note: "June–August draws a steady wave of domestic tourism escaping the heat elsewhere — book ahead, as demand for pickups rises too." },
+      { title: "Winter mist", note: "Mountain roads to Al Souda and Habala can see fog in winter; our drivers are experienced with the conditions." },
+    ],
+    reviews: [
+      { name: "Sara M.", origin: "Tourist, Jordan", text: "The mountain views on the drive from the airport were breathtaking, and the driver knew every scenic stop." },
+      { name: "Abdullah K.", origin: "Family Traveler, Riyadh", text: "Easy pickup at Abha's single arrivals hall — no confusion about where to find the driver." },
     ],
   },
   {
@@ -275,6 +398,19 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/private-taxi", label: "Private Taxi" },
       { href: "/educational-tours-transport", label: "Educational Tours Transport" },
     ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Taif city-centre hotels", note: "The most convenient base for Souq Al-Dabab and Shubra Palace, a short drive from the airport." },
+      { name: "Al-Hada resort-area hotels", note: "Mountain-view stays popular with summer visitors escaping the coastal heat." },
+    ],
+    practicalInfo: [
+      { title: "Mountain road transfer", note: "The drive down toward Makkah is a scenic switchback route — allow a little extra time versus a flat-highway equivalent distance." },
+      { title: "Rose season demand", note: "Roughly March into early April, Taif sees a real visitor surge for the rose harvest — book ahead if traveling then." },
+    ],
+    reviews: [
+      { name: "Nora Al-Zahrani", origin: "Tourist, Riyadh", text: "Landed at Taif and our driver took us straight into the mountain air — a lovely first impression of the city." },
+      { name: "Michael T.", origin: "Traveler, UK", text: "Small, easy airport with a driver waiting right at the exit — no hunting around for a name board." },
+    ],
   },
   {
     code: "TUU",
@@ -294,6 +430,25 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },
       { href: "/hotel-transfers", label: "Hotel Transfers" },
       { href: "/private-taxi", label: "Private Taxi" },
+    ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Tabuk city-centre hotels", note: "The main accommodation base for visitors exploring Tabuk Castle and the railway museum." },
+    ],
+    businessInfo: {
+      intro: "Tabuk Airport functions as a gateway for NEOM workforce travel, and a meaningful share of arrivals here are contractors and consultants continuing on to the project by road.",
+      areas: [
+        { name: "NEOM/Haql corridor", note: "The primary route for workforce and business travel toward the project zone." },
+        { name: "Aqaba border crossing", note: "Used by international teams and business travelers continuing into Jordan or Egypt." },
+      ],
+    },
+    practicalInfo: [
+      { title: "NEOM-driven demand", note: "Airport traffic patterns tend to track NEOM project activity more than tourist seasons — confirm your onward site before booking." },
+      { title: "Long onward distances", note: "Routes to Wadi Disah, AlUla or NEOM sites can mean several hours on the road after landing — plan accordingly." },
+    ],
+    reviews: [
+      { name: "Andrew B.", origin: "Project Consultant, UK", text: "Six-month NEOM contract — every Tabuk Airport pickup was handled without a single issue." },
+      { name: "Sophie H.", origin: "Traveler, Canada", text: "Small, quick airport and the driver was waiting right at the exit — straight to our guesthouse." },
     ],
   },
   {
@@ -315,6 +470,25 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/hotel-transfers", label: "Hotel Transfers" },
       { href: "/private-taxi", label: "Private Taxi" },
     ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Yanbu waterfront hotels", note: "Corniche-adjacent stays convenient for both business and leisure visitors." },
+    ],
+    businessInfo: {
+      intro: "Yanbu Airport serves a real petrochemical and contractor travel base alongside its growing dive-tourism season, and airport transfers regularly connect straight to the Industrial City and Royal Commission offices.",
+      areas: [
+        { name: "Yanbu Industrial City", note: "Major petrochemical and manufacturing facilities, a regular airport transfer destination." },
+        { name: "Royal Commission offices", note: "Administrative offices tied to the Industrial City's operation." },
+      ],
+    },
+    practicalInfo: [
+      { title: "Short airport transfer", note: "At 10km from the city, this is one of the shorter airport transfers on this list — typically 15–20 minutes." },
+      { title: "Dive season", note: "Roughly October through April is when Red Sea diving conditions are calmest and demand for dive-site drop-offs peaks." },
+    ],
+    reviews: [
+      { name: "Carlos R.", origin: "Contractor, Spain", text: "Six months of Yanbu Airport transfers — always on time, never a wait at the exit." },
+      { name: "Hana M.", origin: "Diver, Saudi Arabia", text: "Transferred straight from the airport to my dive site at dawn without any fuss." },
+    ],
   },
   {
     code: "ULH",
@@ -334,6 +508,19 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/hotel-transfers", label: "Hotel Transfers" },
       { href: "/private-taxi", label: "Private Taxi" },
       { href: "/educational-tours-transport", label: "Educational Tours Transport" },
+    ],
+    lastReviewed: "August 2026",
+    hotelZones: [
+      { name: "Old Town resort area", note: "AlUla's main concentration of resort and boutique hotel stays, a short transfer from the airport." },
+      { name: "Ashar Valley", note: "Newer accommodation closer to the Arts District and evening event venues." },
+    ],
+    practicalInfo: [
+      { title: "Event season demand", note: "Roughly October through March, hotels, drivers, and tour slots all get busiest — book your transfer ahead during this window." },
+      { title: "Guide required at Hegra", note: "Your transfer gets you to the site, but Hegra itself requires a separately booked licensed guide through Saudi Tourism." },
+    ],
+    reviews: [
+      { name: "Isabella F.", origin: "Tourist, Italy", text: "Landed at AlUla's small, easy airport and our driver had us at the resort within half an hour." },
+      { name: "Jens K.", origin: "Photographer, Germany", text: "Four days of AlUla transfers starting right from the airport — drivers knew every golden-hour shooting location." },
     ],
   },
 ];

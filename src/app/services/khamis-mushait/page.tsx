@@ -9,6 +9,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi or Abha Airport transfer in Khamis Mushait. Friday Market visits, Asir Province connections. Reserve on WhatsApp.",
   path: "/services/khamis-mushait",
   keywords: ["Khamis Mushait taxi", "Khamis Mushait airport transfer", "Abha to Khamis Mushait taxi"],
+  ogImage: khamisMushait.heroImage,
+  ogImageAlt: khamisMushait.heroImageAlt,
 });
 
 export default function KhamisMushaitPage() {

@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in NEOM. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/neom",
   keywords: ["NEOM taxi", "Sharma Airport transfer", "NEOM contractor transport", "Tabuk to NEOM taxi", "NEOM transfer service"],
+  ogImage: neom.heroImage,
+  ogImageAlt: neom.heroImageAlt,
 });
 
 export default function NeomPage() {

@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
-import { UserIcon, ShieldIcon, MessageIcon, ChevronRightIcon, CompassIcon, LandmarkIcon } from "@/components/Icons";
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import CoreServicePage from "@/components/CoreServicePage";
+import { educationalToursTransport } from "@/lib/serviceData";
 
 export const metadata = generatePageMetadata({
     title: "Educational Tour Transport Service | Saudi Arabia",
@@ -11,93 +9,6 @@ export const metadata = generatePageMetadata({
     keywords: ["educational tour transport", "student field trip", "school trip bus", "educational transport Saudi"],
 });
 
-const schemas = [
-    serviceSchema({ name: "Educational Tour Transport Service | Saudi Arabia", description: "Coordinated transport for educational tours and student field trips across Saudi Arabia. Safe vehicles, professional drivers, 24/7. Reserve on WhatsApp today.", url: "/educational-tours-transport", areaServed: ["Saudi Arabia"] }),
-    breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Educational Tours", path: "/educational-tours-transport" }]),
-];
-
 export default function EducationalToursTransport() {
-    return (
-        <>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-        <main>
-            {/* Hero */}
-            <section className="page-hero">
-                <h1>Educational Tour & Group Transport Service</h1>
-                <p>
-                    Safe and inspiring journeys for students. 
-                    Professional group transport solutions for educational trips across Saudi Arabia.
-                </p>
-                <div className="breadcrumb">
-                    <Link href="/">Home</Link> <ChevronRightIcon size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} /> <span>Educational Tours</span>
-                </div>
-            </section>
-
-            {/* Content */}
-            <section className="section-lg">
-                <div className="container">
-                    <div className="grid-2">
-                        <div>
-                            <h2 className="section-title">Coordinated Transport for Learning</h2>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-                                Educational tours are vital for student growth, and having a reliable transportation partner is essential for a successful trip. Gulf Trip Service specializes in providing safe, coordinated transport for schools, colleges, and universities visiting historic and educational sites across the Kingdom.
-                            </p>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
-                                We manage the logistics of moving large groups of students and faculty, ensuring everyone remains together, on schedule, and safe throughout the tour.
-                            </p>
-                            <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: '2rem' }}>
-                                Schools running regular routes alongside occasional trips can also use our <Link href="/school-buses-services" style={{ color: 'var(--accent)', fontWeight: 600 }}>daily school bus service</Link>, and for institutional or business events we offer the same coordinated planning through <Link href="/corporate-transportation-services" style={{ color: 'var(--accent)', fontWeight: 600 }}>corporate transportation</Link>.
-                            </p>
-                            <div className="card" style={{ background: 'var(--bg-subtle)' }}>
-                                <h3 style={{ fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '1rem' }}>Tour Coordination</h3>
-                                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', margin: 0 }}>
-                                    Our logistics team works closely with educational coordinators to plan efficient routes and schedule pickups across multiple locations if required.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="grid-1" style={{ gap: '1.5rem' }}>
-                            <div className="card" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                                <LandmarkIcon size={32} style={{ color: 'var(--secondary)' }} />
-                                <div>
-                                    <h3 style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>Historic Site Visits</h3>
-                                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Safe transfers to museums, cultural centers, and archaeological landmarks.</p>
-                                </div>
-                            </div>
-                            <div className="card" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                                <CompassIcon size={32} style={{ color: 'var(--secondary)' }} />
-                                <div>
-                                    <h3 style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>Guided Group Logistics</h3>
-                                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Expert handling of large-capacity buses and coordinated multi-vehicle convoys.</p>
-                                </div>
-                            </div>
-                            <div className="card" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                                <ShieldIcon size={32} style={{ color: 'var(--secondary)' }} />
-                                <div>
-                                    <h3 style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>Highest Safety Standards</h3>
-                                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Background-checked drivers and vehicles with modern safety features.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA */}
-            <section style={{ background: 'var(--primary)', padding: '5rem 0', textAlign: 'center' }}>
-                <div className="container">
-                    <h2 style={{ color: 'var(--white)', marginBottom: '1.5rem' }}>Plan Your Next Educational Tour</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-                        Need reliable transport for your students? Contact us to discuss your itinerary and group size for a comprehensive quote.
-                    </p>
-                    <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-                        <Link href="/contact-us" className="btn btn-primary btn-lg">Contact Form</Link>
-                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" style={{ color: 'white', borderColor: 'white' }}>
-                            <MessageIcon size={18} style={{ marginRight: '8px' }} /> WhatsApp Enquiries
-                        </a>
-                    </div>
-                </div>
-            </section>
-        </main>
-        </>
-    );
+    return <CoreServicePage data={educationalToursTransport} />;
 }

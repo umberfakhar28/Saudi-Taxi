@@ -7,6 +7,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi, airport transfer or chauffeur in Dammam. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
   path: "/services/dammam",
   keywords: ["Dammam taxi", "King Fahd Airport taxi", "Dammam Khobar transfer", "Eastern Province taxi", "Dammam Riyadh taxi"],
+  ogImage: dammam.heroImage,
+  ogImageAlt: dammam.heroImageAlt,
 });
 
 export default function DammamPage() {

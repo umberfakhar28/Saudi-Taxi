@@ -9,6 +9,8 @@ export const metadata = generatePageMetadata({
   description: "Book a private taxi or car transfer in Al-Ahsa and Hofuf. Oasis and old-town visits, business travel, GCC corridor stopovers. Reserve on WhatsApp.",
   path: "/services/al-ahsa",
   keywords: ["Al-Ahsa taxi", "Hofuf taxi", "Al-Ahsa Oasis transfer", "Al-Ahsa car service"],
+  ogImage: alAhsa.heroImage,
+  ogImageAlt: alAhsa.heroImageAlt,
 });
 
 export default function AlAhsaPage() {
