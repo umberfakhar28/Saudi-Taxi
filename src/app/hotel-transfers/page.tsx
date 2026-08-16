@@ -57,6 +57,17 @@ const relatedCities = [
     { slug: "jeddah", city: "Jeddah" },
 ];
 
+// Genuine matches only — the two airports whose hotel districts this page's
+// own routes/hotel list actually cover (Phase 9: Airport Connections).
+const relatedAirports = [
+    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA)" },
+    { href: "/madina-airport-taxi-service", label: "Madinah Airport" },
+];
+
+const relatedTours = [
+    { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
+];
+
 export default function HotelTransfers() {
     return (
         <>
@@ -169,10 +180,10 @@ export default function HotelTransfers() {
                 </div>
             </section>
 
-            {/* Related Services & Cities */}
+            {/* Related Services, Airports, Cities & Tours */}
             <section className="section-lg">
                 <div className="container">
-                    <div className="grid-2" style={{ gap: 'var(--space-10)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-10)' }}>
                         <div>
                             <h3 style={{ marginBottom: 'var(--space-4)' }}>Related Services</h3>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
@@ -182,10 +193,26 @@ export default function HotelTransfers() {
                             </div>
                         </div>
                         <div>
+                            <h3 style={{ marginBottom: 'var(--space-4)' }}>Airport Connections</h3>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+                                {relatedAirports.map((a) => (
+                                    <Link key={a.href} href={a.href} className="btn btn-outline-gold btn-sm">{a.label}</Link>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
                             <h3 style={{ marginBottom: 'var(--space-4)' }}>Related Cities</h3>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
                                 {relatedCities.map((c) => (
                                     <Link key={c.slug} href={`/services/${c.slug}`} className="btn btn-outline-gold btn-sm">{c.city} Taxi Service</Link>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style={{ marginBottom: 'var(--space-4)' }}>Tours &amp; Experiences</h3>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+                                {relatedTours.map((t) => (
+                                    <Link key={t.href} href={t.href} className="btn btn-outline-gold btn-sm">{t.label}</Link>
                                 ))}
                             </div>
                         </div>

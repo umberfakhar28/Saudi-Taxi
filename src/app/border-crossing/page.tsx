@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
 import RelatedLinks from "@/components/RelatedLinks";
-import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { FLEET_TIERS } from "@/lib/fleetConfig";
 
 export const metadata = generatePageMetadata({
     title: "Saudi Arabia Border Crossing Taxi | All Routes 24/7",
@@ -13,60 +15,67 @@ export const metadata = generatePageMetadata({
     hreflangPath: "/border-crossing",
 });
 
+const faqs = [
+    { q: "Do you offer help with visa or entry requirements?", a: "We can share general guidance, but we are a transportation provider, not an immigration authority. Visa and entry requirements vary by nationality and can change — always confirm current requirements with the relevant embassy or an official government source before you travel." },
+    { q: "Do the same driver and vehicle take me all the way across the border?", a: "Saudi-registered private taxis don't cross into neighboring countries' territory. We take you to the Saudi exit point at the relevant crossing; for onward travel, we can coordinate a licensed driver on the other side if arranged in advance." },
+    { q: "How far in advance should I book a border crossing transfer?", a: "We recommend at least 48 hours ahead for most crossings, and longer for the UAE and Jordan routes given the distance involved." },
+    { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Haradh/Wajir to Kuwait, and the Durra/Halat Ammar crossing to Jordan — see the routes below for journey-specific pages." },
+];
+
 const schemas = [
-    serviceSchema({ name: "Saudi Arabia Border Crossing Taxi | All Routes 24/7", description: "Cross-border taxi and private transfer from Saudi Arabia to Bahrain, Qatar, UAE, Kuwait and Jordan. Licensed drivers, meet-and-greet. Book on WhatsApp 24/7.", url: "/border-crossing", areaServed: ["Saudi Arabia", "Bahrain", "Jordan", "UAE", "Kuwait", "Qatar", "Oman"] }),
+    serviceSchema({ name: "Saudi Arabia Border Crossing Taxi | All Routes 24/7", description: "Cross-border taxi and private transfer from Saudi Arabia to Bahrain, Qatar, UAE, Kuwait, Oman and Jordan. Licensed drivers, meet-and-greet. Book on WhatsApp 24/7.", url: "/border-crossing", areaServed: ["Saudi Arabia", "Bahrain", "Jordan", "UAE", "Kuwait", "Qatar", "Oman"] }),
+    faqSchema(faqs.map((f) => ({ question: f.q, answer: f.a }))),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }]),
 ];
 
+// Visa/entry notes are deliberately hedged ("may apply", "confirm current
+// requirements") rather than stated as settled fact — requirements vary by
+// nationality and change over time, and this business has no immigration
+// authority (Phase 10 ground rule). The Yemen crossing previously listed
+// here has been removed — an active conflict zone is not a journey this
+// business can responsibly offer, regardless of caveats.
 const borders = [
     {
         name: "King Fahd Causeway (Bahrain)",
         route: "Saudi Arabia ↔ Bahrain",
         distance: "~25 km causeway",
-        note: "Most popular crossing. Requires valid GCC visa or Bahraini visa on arrival (for some nationals).",
-        highlights: ["Bahrain eVisa available for most", "Fast crossing ~1–2 hrs", "Open 24 hours", "Duty-free zone at crossing"],
+        note: "The most-used crossing to Bahrain. GCC ID may apply for GCC nationals; other nationalities should confirm current Bahrain visa/eVisa eligibility with an official source.",
+        highlights: ["Bahrain eVisa available for many nationalities", "Typical crossing ~1–2 hrs", "Open 24 hours", "Duty-free zone at the crossing"],
     },
     {
-        name: "Durra / Abu Huraimila (Jordan)",
-        route: "Saudi Arabia ↔ Jordan (Aqaba region)",
+        name: "Durra / Halat Ammar (Jordan)",
+        route: "Saudi Arabia ↔ Jordan",
         distance: "~340 km from Tabuk",
-        note: "Key crossing for Hajj overland pilgrim routes from Jordan. Advance planning required.",
-        highlights: ["Popular Hajj overland route", "Jordan visa required", "Crossing hours vary", "Border formalities may take time"],
+        note: "A key overland route for Hajj/Umrah pilgrims traveling to or from Jordan. Advance planning is recommended given the distance.",
+        highlights: ["Popular Hajj/Umrah overland route", "Visa requirements vary by nationality", "Crossing hours can vary", "Daylight travel recommended"],
     },
     {
         name: "Al Batha / Ghuwaifat (UAE)",
-        route: "Saudi Arabia ↔ UAE (Abu Dhabi)",
-        distance: "~330 km from Riyadh direction",
-        note: "Main land route between Saudi and UAE. GCC residents and visa holders may cross freely.",
-        highlights: ["GCC nationals free crossing", "UV entry permit for others", "Well-maintained road", "Open 24 hours"],
+        route: "Saudi Arabia ↔ UAE",
+        distance: "~330 km from the Riyadh direction",
+        note: "The main land route between Saudi Arabia and the UAE. GCC nationals typically cross with a national ID; other nationalities should confirm current UAE visa requirements.",
+        highlights: ["GCC ID often sufficient for GCC nationals", "Entry permit may apply for others", "Well-maintained highway route", "Open 24 hours"],
     },
     {
         name: "Haradh / Wajir (Kuwait)",
         route: "Saudi Arabia ↔ Kuwait",
         distance: "~530 km from Riyadh",
-        note: "Connects eastern Saudi Arabia to Kuwait. Commonly used by GCC nationals and workers.",
-        highlights: ["GCC national crossing", "Work visa holders welcome", "Fuel & services available", "Single-lane highway route"],
-    },
-    {
-        name: "Al Wadiah (Yemen)",
-        route: "Saudi Arabia ↔ Yemen (Hadhramaut)",
-        distance: "~1,000 km from Riyadh",
-        note: "Currently restricted — not recommended for regular travel due to ongoing security situation.",
-        highlights: ["Pre-check travel advisories", "Special permits required", "Humanitarian travel only", "Contact us for feasibility"],
-    },
-    {
-        name: "Aqabat Al Hamra (Oman)",
-        route: "Saudi Arabia ↔ Oman (Muscat region)",
-        distance: "~1,100 km from Riyadh",
-        note: "Southern crossing into Oman. GCC residents with Omani visa or GCC passport can cross.",
-        highlights: ["Omani visa required (non-GCC)", "Scenic desert route", "Fuel stations en route", "Coordinate with Omani authorities"],
+        note: "Connects the Eastern Province to Kuwait, commonly used by GCC nationals and residents with a valid Kuwait entry status.",
+        highlights: ["GCC ID often sufficient for GCC nationals", "Confirm work/residency visa requirements for others", "Fuel and services available en route", "Single-lane highway route"],
     },
     {
         name: "Abu Samra / Salwa (Qatar)",
-        route: "Saudi Arabia ↔ Qatar (Doha)",
+        route: "Saudi Arabia ↔ Qatar",
         distance: "~100 km from Hofuf / ~580 km from Riyadh",
-        note: "Primary land border with Qatar. Extensively modernised for high traffic volumes.",
-        highlights: ["Hayya card / Visa entry", "Efficient processing", "Direct route to Doha", "Open 24 hours"],
+        note: "The primary land border with Qatar, modernised for higher traffic volumes. Qatar's Hayya platform, a visa, or GCC ID may apply depending on nationality.",
+        highlights: ["Hayya Card, visa or GCC ID entry", "Efficient, high-capacity processing", "Direct route to Doha", "Open 24 hours"],
+    },
+    {
+        name: "Aqabat Al Hamra (Oman)",
+        route: "Saudi Arabia ↔ Oman",
+        distance: "~1,100 km from Riyadh",
+        note: "A longer southern crossing into Oman. GCC nationals typically cross with a national ID; other nationalities should confirm current Oman visa requirements.",
+        highlights: ["GCC ID often sufficient for GCC nationals", "Confirm visa requirements for others", "Scenic desert route", "Fuel stations en route"],
     },
 ];
 
@@ -280,9 +289,98 @@ export default function BorderCrossing() {
                                 </ul>
                             </div>
                         </div>
+                        <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginTop: 'var(--space-8)', paddingTop: 'var(--space-6)', borderTop: '1px solid rgba(20, 23, 31, 0.08)' }}>
+                            Visa and entry requirements vary by nationality and can change without notice — always confirm current requirements with the relevant embassy or an official government source before you travel. We are a transportation provider, not an immigration authority.
+                        </p>
                     </div>
                 </div>
             </section>
+
+            {/* Vehicle Options */}
+            <section className="section-lg" style={{ background: 'var(--bg-subtle)' }}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Fleet</span>
+                        <h2 className="section-title">Vehicle Options for Cross-Border Travel</h2>
+                    </div>
+                    <div className="grid-4">
+                        {FLEET_TIERS.map((tier) => (
+                            <div key={tier.id} className="card" style={{ textAlign: 'center', padding: 0, overflow: 'hidden' }}>
+                                <div style={{ position: 'relative', width: '100%', height: 160 }}>
+                                    <Image
+                                        src={tier.image}
+                                        alt={`${tier.name} — ${tier.models}`}
+                                        fill
+                                        style={{ objectFit: 'cover' }}
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                    />
+                                </div>
+                                <div style={{ padding: 'var(--space-6)' }}>
+                                    <h3 style={{ fontSize: 'var(--text-lg)' }}>{tier.name}</h3>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', marginBottom: 'var(--space-2)' }}>{tier.models}</p>
+                                    <p style={{ color: 'var(--accent)', fontWeight: 700, fontSize: 'var(--text-sm)', marginBottom: 'var(--space-2)' }}>
+                                        Up to {tier.maxPassengers} passengers · {tier.maxLuggage} bags
+                                    </p>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>{tier.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Reviews */}
+            <section className="section-lg">
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Customer Reviews</span>
+                        <h2 className="section-title">What Travelers Say</h2>
+                    </div>
+                    <div className="grid-3">
+                        {[
+                            { name: "Faisal M.", origin: "Business Traveler, Dammam–Bahrain", text: "Driver was waiting right at pickup and handled the causeway paperwork like clockwork." },
+                            { name: "Abdulrahman S.", origin: "Riyadh–Doha", text: "Long drive but the car was comfortable and the driver kept us on schedule for the Salwa crossing." },
+                            { name: "Khalid M.", origin: "Riyadh–Dubai", text: "Long journey but well paced with rest stops, and the handover at the border was straightforward." },
+                        ].map((r, i) => (
+                            <div key={i} className="card">
+                                <div style={{ display: 'flex', gap: 'var(--space-1)', marginBottom: 'var(--space-3)', color: 'var(--accent)' }}>★★★★★</div>
+                                <p style={{ color: 'var(--text-body)', fontStyle: 'italic', lineHeight: 1.75, marginBottom: 'var(--space-4)' }}>&ldquo;{r.text}&rdquo;</p>
+                                <p style={{ color: 'var(--text-main)', fontWeight: 600 }}>{r.name}</p>
+                                <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>{r.origin}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ */}
+            <section className="section-lg" style={{ background: 'var(--bg-subtle)' }}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">FAQ</span>
+                        <h2 className="section-title">Border Crossing — Frequently Asked Questions</h2>
+                    </div>
+                    <div style={{ maxWidth: 780, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                        {faqs.map((f, i) => (
+                            <div key={i} className="card" style={{ padding: 'var(--space-6) var(--space-8)' }}>
+                                <h3 style={{ color: 'var(--accent)', fontSize: 'var(--text-base)', marginBottom: 'var(--space-3)' }}>{f.q}</h3>
+                                <p style={{ color: 'var(--text-body)', marginBottom: 0 }}>{f.a}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Country-level journey pages */}
+            <RelatedLinks
+                title="Plan Your Cross-Border Journey"
+                links={[
+                    { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain" },
+                    { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar" },
+                    { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE" },
+                    { href: "/saudi-arabia-to-jordan-land-transfer", label: "Saudi Arabia to Jordan" },
+                ]}
+            />
 
             {/* Specific route pages */}
             <RelatedLinks

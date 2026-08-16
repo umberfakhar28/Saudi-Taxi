@@ -71,6 +71,12 @@ export const privateTaxi: ServiceData = {
     { title: "Booking durations", note: "Half-day (around 4 hours) and full-day (around 10 hours) hire both include the vehicle, fuel and driver — request a quote for your specific duration and distance." },
     { title: "Multi-stop itineraries", note: "Tell your driver your full itinerary at the start — private hire is built for changing plans, not a fixed pickup-to-drop-off run." },
   ],
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
+  tourLinks: [
+    { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
+    { href: "/taif-ziyarat-taxi-service", label: "Taif Ziyarat Tour" },
+    { href: "/reliable-alula-tour-taxi-service-in-saudi-arabia", label: "AlUla Tour" },
+  ],
   reviews: [
     { name: "Layla H.", origin: "Shopper, Riyadh", text: "Booked a half-day for shopping across three malls — driver waited at each stop without any fuss." },
   ],
@@ -140,6 +146,10 @@ export const corporateTransportation: ServiceData = {
     { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport" },
     { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport" },
     { href: "/dammam-airport-taxi-service", label: "Dammam Airport" },
+  ],
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
+  specificHotelLinks: [
+    { href: "/hotels/riyadh/the-ritz-carlton-riyadh", label: "The Ritz-Carlton, Riyadh" },
   ],
   practicalInfo: [
     { title: "Corporate accounts", note: "Consolidated monthly billing and priority booking are available for companies with regular transport needs — contact us to set one up." },
@@ -224,6 +234,10 @@ export const umrahTransportPackage: ServiceData = {
     { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah" },
     { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah" },
   ],
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
+  tourLinks: [
+    { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
+  ],
   reviews: [
     { name: "Hassan M.", origin: "Pilgrim, Egypt", text: "Booked the full package for our family of 6 — one driver the entire trip, spacious van, excellent service." },
   ],
@@ -303,6 +317,10 @@ export const umrahTaxiServices: ServiceData = {
   routeLinks: [
     { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah" },
   ],
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
+  tourLinks: [
+    { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
+  ],
   practicalInfo: [
     { title: "Hajj season booking", note: "Advance booking is essential during Hajj (Dhul-Hijjah) — at least 2–4 weeks ahead, since availability during 8th–12th Dhul-Hijjah is extremely limited." },
     { title: "Solo female travelers", note: "All drivers are background-checked and GPS-tracked; a female driver or family-style vehicle can be requested subject to availability." },
@@ -317,6 +335,7 @@ export const umrahTaxiServices: ServiceData = {
     { q: "Are your vehicles genuinely Ihram-friendly?", a: "Yes — no music or entertainment systems, clean and modest interiors, and secure Zamzam water storage separate from your luggage." },
     { q: "Is it safe for solo female travelers?", a: "Yes — drivers are background-checked and GPS-tracked, and a female driver or family-style vehicle can be requested." },
     { q: "What payment methods do you accept?", a: "Cash (SAR), credit/debit card, Apple Pay, and Google Pay. Corporate accounts with invoiced billing are available for travel agencies and groups." },
+    { q: "Can I add a Jeddah city tour before or after my Umrah?", a: "Yes — many pilgrims add a half or full day in Jeddah on the way through KAIA. See our Jeddah City Tour page for what's covered, and mention it when booking your transport." },
   ],
   relatedServices: [
     { href: "/airport-transfer-for-umrah", label: "Airport Transfer for Umrah" },
@@ -368,6 +387,10 @@ export const ziyaratServices: ServiceData = {
     { icon: "🕌", title: "Makkah Ziyarat", description: "Jabal Al-Nour, Jabal Thawr, Arafat, Mina and other sacred Makkah sites." },
     { icon: "🌙", title: "Madinah Ziyarat", description: "Masjid Quba, Mount Uhud, Jannat Al-Baqi and the Seven Mosques." },
     { icon: "🌹", title: "Makkah + Taif", description: "A two-day extension combining Ziyarat with Taif's rose farms and mountain scenery." },
+  ],
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
+  tourLinks: [
+    { href: "/taif-ziyarat-taxi-service", label: "Taif Ziyarat Tour" },
   ],
   siteGroups: [
     {
@@ -467,6 +490,7 @@ export const airportTransferForUmrah: ServiceData = {
     { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah Airport to Makkah" },
     { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah" },
   ],
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
   reviews: [
     { name: "Fatima B.", origin: "Umrah Pilgrim, Pakistan", text: "Arrived at 2am and our driver was already waiting. Transferred straight to Makkah — perfect service." },
   ],
@@ -530,6 +554,7 @@ export const weddingTransportation: ServiceData = {
     { icon: "👥", title: "Guest Shuttles", description: "Coordinated transport between hotels and the venue for larger guest lists." },
     { icon: "✈️", title: "Honeymoon Departure", description: "Door-to-airport transfer for the newlyweds after the celebration." },
   ],
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
   practicalInfo: [
     { title: "Bespoke packages", note: "Packages are tailored to your specific schedule, guest count, and venue requirements — share these details for an accurate plan." },
     { title: "Book ahead for peak wedding season", note: "Popular wedding dates and venues get booked up — reach out as early as possible once your date is confirmed." },

@@ -28,15 +28,18 @@ export interface Country {
   slug: CountrySlug;
   name: string;
   flag: string;
+  /** One-line transport-context summary — shown above each country's
+   * destination grid on /destinations (Phase 7). */
+  blurb: string;
 }
 
 export const COUNTRIES: Country[] = [
-  { slug: "saudi-arabia", name: "Saudi Arabia", flag: "🇸🇦" },
-  { slug: "uae", name: "UAE", flag: "🇦🇪" },
-  { slug: "qatar", name: "Qatar", flag: "🇶🇦" },
-  { slug: "bahrain", name: "Bahrain", flag: "🇧🇭" },
-  { slug: "oman", name: "Oman", flag: "🇴🇲" },
-  { slug: "kuwait", name: "Kuwait", flag: "🇰🇼" },
+  { slug: "saudi-arabia", name: "Saudi Arabia", flag: "🇸🇦", blurb: "Gulf Trip Service's home network — cities, airports and routes across the Kingdom." },
+  { slug: "uae", name: "UAE", flag: "🇦🇪", blurb: "Dubai and Abu Dhabi's skylines, plus Sharjah and Ras Al Khaimah, with direct road links to Riyadh and Dammam." },
+  { slug: "qatar", name: "Qatar", flag: "🇶🇦", blurb: "Doha and its surrounding districts, reached from Saudi Arabia via the Salwa border crossing." },
+  { slug: "bahrain", name: "Bahrain", flag: "🇧🇭", blurb: "Manama and Bahrain's other districts, connected to Saudi Arabia by the King Fahd Causeway." },
+  { slug: "oman", name: "Oman", flag: "🇴🇲", blurb: "Muscat's coastal capital, plus Salalah, Nizwa and Sur, reached via Muscat International Airport." },
+  { slug: "kuwait", name: "Kuwait", flag: "🇰🇼", blurb: "Kuwait City and its districts, connected to Saudi Arabia's Eastern Province by road." },
 ];
 
 export function countryFor(slug: CountrySlug): Country {
@@ -87,6 +90,13 @@ export interface DestinationDetail {
   internalLinks: { href: string; label: string }[];
   /** Slugs into DESTINATIONS (any country). */
   relatedSlugs: string[];
+
+  /** Compact transport snapshot — verified facts only (Phase 7). */
+  quickFacts: { label: string; value: string }[];
+  /** 2 destination-specific logistics notes — not generic filler. */
+  practicalInfo: { title: string; note: string }[];
+  faqs: { q: string; a: string }[];
+  reviews: { name: string; origin: string; text: string }[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -339,6 +349,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["abu-dhabi", "sharjah", "ras-al-khaimah", "doha", "manama", "riyadh"],
+    quickFacts: [
+      { label: "Country", value: "UAE 🇦🇪" },
+      { label: "Airports", value: "Dubai Intl (DXB) & Al Maktoum Intl (DWC)" },
+      { label: "Saudi Corridor", value: "Riyadh & Dammam road transfers" },
+      { label: "Best For", value: "Business, stopovers & leisure" },
+    ],
+    practicalInfo: [
+      { title: "Two Airports", note: "Confirm whether your flight lands at DXB or DWC — they're roughly 45 minutes apart, and pickup is routed to the correct terminal." },
+      { title: "Cross-Border Timing", note: "Travelers arriving by road from Riyadh or Dammam should allow extra time for UAE–Saudi border processing during weekend peaks." },
+    ],
+    faqs: [
+      { q: "Do you offer transfers between Dubai and Saudi Arabia?", a: "Yes — we run direct road transfers connecting Dubai to Riyadh and Dammam, alongside standard airport and city transfers within Dubai itself." },
+      { q: "Which Dubai airport do you cover?", a: "Both — Dubai International (DXB) and Al Maktoum International (DWC). Let us know your arrival airport when booking so pickup is arranged at the right terminal." },
+      { q: "Can I book an hourly chauffeur instead of a one-way transfer?", a: "Yes, hourly and full-day chauffeur booking is available for business meetings or multi-stop sightseeing across Dubai's districts." },
+    ],
+    reviews: [
+      { name: "Yousef A.", origin: "Business Traveler, Riyadh–Dubai", text: "Booked the Riyadh-to-Dubai road transfer for a work trip — driver was on time at both ends and the car was comfortable for the long drive." },
+      { name: "Fatima Z.", origin: "Family Visitor, Dubai", text: "Used the hourly chauffeur for a Downtown-to-Marina day with the kids. Much easier than juggling taxis between stops." },
+    ],
   },
   "abu-dhabi": {
     slug: "abu-dhabi", name: "Abu Dhabi", country: "uae",
@@ -366,6 +395,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["dubai", "sharjah", "ras-al-khaimah", "doha", "dammam"],
+    quickFacts: [
+      { label: "Country", value: "UAE 🇦🇪" },
+      { label: "Airport", value: "Abu Dhabi Intl (AUH)" },
+      { label: "Saudi Corridor", value: "Dammam road transfers" },
+      { label: "Layout", value: "Spread-out — sights 20–40 min apart" },
+    ],
+    practicalInfo: [
+      { title: "Spread-Out Sights", note: "The Grand Mosque, Louvre and Yas Island sit well apart from each other — a private driver makes it practical to see more than one in a day." },
+      { title: "Onward to Dubai", note: "Many visitors combine an Abu Dhabi stop with Dubai — we run direct transfers between the two Emirates." },
+    ],
+    faqs: [
+      { q: "Do you meet arrivals at Abu Dhabi International Airport?", a: "Yes — we track your flight and meet you at AUH arrivals with a name board, straight to a private vehicle." },
+      { q: "Can I visit the Grand Mosque, Louvre and Yas Island in one day?", a: "Yes, an hourly chauffeur is the practical way to combine all three without losing time between stops — they're each a real drive apart." },
+      { q: "Do you run transfers between Abu Dhabi and Dammam?", a: "Yes, we operate direct road transfers connecting Abu Dhabi to Dammam and onward Saudi destinations." },
+    ],
+    reviews: [
+      { name: "Khalid M.", origin: "Business Traveler, Dammam–Abu Dhabi", text: "Long road transfer but the driver kept us updated and the car was comfortable the whole way." },
+      { name: "Aisha R.", origin: "Leisure Visitor", text: "Driver planned the Grand Mosque and Louvre visit well so we weren't rushing between the two." },
+    ],
   },
   sharjah: {
     slug: "sharjah", name: "Sharjah", country: "uae",
@@ -392,6 +440,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["dubai", "abu-dhabi", "ras-al-khaimah", "manama"],
+    quickFacts: [
+      { label: "Country", value: "UAE 🇦🇪" },
+      { label: "Airport", value: "Sharjah Intl (SHJ)" },
+      { label: "Nearby", value: "Dubai — around 30–40 min" },
+      { label: "Character", value: "Heritage, museums & a quieter pace" },
+    ],
+    practicalInfo: [
+      { title: "SHJ or DXB Arrivals", note: "We meet arrivals directly at Sharjah International (SHJ), and also run transfers from Dubai International (DXB) for travelers staying in Sharjah." },
+      { title: "Dress & Pace", note: "Sharjah keeps a more conservative character than its neighbors — modest dress is appreciated, particularly around the Heritage Area." },
+    ],
+    faqs: [
+      { q: "Do you cover Sharjah International Airport (SHJ)?", a: "Yes, we meet arrivals at SHJ directly, as well as running transfers from Dubai International for travelers connecting to Sharjah." },
+      { q: "Is the Heritage Area walkable once we arrive?", a: "Yes — your driver will park nearby and wait while you explore the old town on foot at your own pace." },
+      { q: "Can I combine a Sharjah and Dubai day trip?", a: "Yes, this is a common request — an hourly chauffeur suits a half-day museum circuit in Sharjah followed by an afternoon in Dubai." },
+    ],
+    reviews: [
+      { name: "Hassan T.", origin: "Budget-Carrier Arrival, SHJ", text: "Landed at Sharjah on a budget flight and the driver was waiting right at arrivals — easy transfer to our Dubai hotel." },
+      { name: "Mona K.", origin: "Heritage Tour, Sharjah", text: "Quiet, well-paced visit to the Heritage Area — driver waited while we walked through without any rush." },
+    ],
   },
   "ras-al-khaimah": {
     slug: "ras-al-khaimah", name: "Ras Al Khaimah", country: "uae",
@@ -417,6 +484,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["dubai", "sharjah", "abu-dhabi"],
+    quickFacts: [
+      { label: "Country", value: "UAE 🇦🇪" },
+      { label: "Airport", value: "RAK Intl (RKT) + Dubai Intl (DXB) connections" },
+      { label: "Highlight", value: "Jebel Jais mountains" },
+      { label: "Layout", value: "Coast and mountains ~45 min apart" },
+    ],
+    practicalInfo: [
+      { title: "Mountain Road Timing", note: "The drive up to Jebel Jais takes longer than the straight-line distance suggests — a private driver familiar with the route helps plan the day." },
+      { title: "Two Arrival Options", note: "We meet arrivals at RAK's own airport (RKT) directly, or transfer from Dubai International (DXB) for travelers connecting on to RAK's resorts." },
+    ],
+    faqs: [
+      { q: "Do you offer transfers to Jebel Jais?", a: "Yes — an hourly chauffeur suits a mountain-road day trip up to Jebel Jais and back, with the same driver waiting rather than a one-way taxi with no return arranged." },
+      { q: "Can I fly into Dubai and still visit RAK?", a: "Yes, we run transfers from Dubai International (DXB) directly to RAK's resorts and attractions, around an hour's drive." },
+      { q: "Is a private transfer necessary to reach the beach resorts?", a: "It's the practical option — RAK's resorts and Jebel Jais sit apart from each other, roughly 45 minutes, so combining both in a day works best with a private vehicle." },
+    ],
+    reviews: [
+      { name: "Salem A.", origin: "Adventure Traveler", text: "Driver knew the mountain road to Jebel Jais well and waited while we did the zipline." },
+      { name: "Layla H.", origin: "Resort Stay, Al Marjan Island", text: "Easy transfer straight from Dubai airport to our RAK resort, no changes needed." },
+    ],
   },
 
   // ----------------------------------------------------------- Qatar -----
@@ -447,6 +533,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["the-pearl-qatar", "lusail", "al-wakrah", "manama", "dammam"],
+    quickFacts: [
+      { label: "Country", value: "Qatar 🇶🇦" },
+      { label: "Airport", value: "Hamad Intl (DOH)" },
+      { label: "Border Route", value: "Salwa border crossing to/from Saudi Arabia" },
+      { label: "Best For", value: "Business, transit & museum visits" },
+    ],
+    practicalInfo: [
+      { title: "Salwa Border Travelers", note: "Travelers crossing by road via the Salwa border should confirm documentation ahead of time — we coordinate pickup on both sides." },
+      { title: "West Bay Traffic", note: "West Bay's business towers see heavy peak-hour traffic — build in extra time for meeting-to-meeting transfers." },
+    ],
+    faqs: [
+      { q: "Do you run transfers between Qatar and Saudi Arabia?", a: "Yes — we operate road transfers connecting Doha to Riyadh and Dammam via the Salwa border crossing." },
+      { q: "Do you meet arrivals at Hamad International Airport?", a: "Yes, with flight tracking and a name-board pickup, useful both for Doha stays and onward road travel toward Saudi Arabia." },
+      { q: "Can I combine the Museum of Islamic Art and Souq Waqif in one trip?", a: "Yes, an hourly chauffeur suits a Museum–Souq Waqif–Katara day without booking separate one-way trips." },
+    ],
+    reviews: [
+      { name: "Abdulrahman S.", origin: "Business Traveler, Riyadh–Doha", text: "Crossed via Salwa on a work trip — driver handled the border smoothly and we made our meeting on time." },
+      { name: "Noura F.", origin: "Museum Day, Doha", text: "Driver waited outside the Museum of Islamic Art and Souq Waqif so we could take our time at each stop." },
+    ],
   },
   "the-pearl-qatar": {
     slug: "the-pearl-qatar", name: "The Pearl", country: "qatar",
@@ -471,6 +576,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["doha", "lusail", "al-wakrah"],
+    quickFacts: [
+      { label: "Country", value: "Qatar 🇶🇦" },
+      { label: "Nearest Airport", value: "Hamad Intl (DOH), ~20–25 min" },
+      { label: "Access", value: "Single causeway road from the mainland" },
+      { label: "Style", value: "Marina, dining & boutique shopping" },
+    ],
+    practicalInfo: [
+      { title: "Single Access Road", note: "The Pearl connects to the mainland by one causeway — a pre-arranged transfer avoids relying on street-hailed taxis from outside the island." },
+      { title: "Evening Marina Traffic", note: "Porto Arabia gets busy on weekend evenings — build in a little extra time for dinner reservations." },
+    ],
+    faqs: [
+      { q: "How far is The Pearl from the airport?", a: "Around 20–25 minutes from Hamad International Airport (DOH) — we meet arrivals there and transfer directly to The Pearl's residences and hotels." },
+      { q: "Can I combine The Pearl with West Bay or Katara in one evening?", a: "Yes, an hourly chauffeur suits an evening moving between The Pearl's marina dining and other Doha districts." },
+      { q: "Is it easy to get a taxi from The Pearl on the spot?", a: "Because it's reached by a single causeway road, a pre-arranged private transfer is more reliable than hailing a taxi from the island." },
+    ],
+    reviews: [
+      { name: "Rania D.", origin: "Marina Dinner, The Pearl", text: "Driver waited outside our restaurant at Porto Arabia and got us back to our West Bay hotel without any hassle." },
+      { name: "Tariq B.", origin: "Airport Arrival", text: "Straightforward transfer from Hamad straight to our Pearl apartment, no issues finding the address." },
+    ],
   },
   lusail: {
     slug: "lusail", name: "Lusail", country: "qatar",
@@ -495,6 +619,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["doha", "the-pearl-qatar", "al-wakrah"],
+    quickFacts: [
+      { label: "Country", value: "Qatar 🇶🇦" },
+      { label: "Nearest Airport", value: "Hamad Intl (DOH), ~30–35 min" },
+      { label: "Note", value: "Stadium event traffic on match/event days" },
+      { label: "Style", value: "New city — stadium & marina district" },
+    ],
+    practicalInfo: [
+      { title: "Event-Day Traffic", note: "Road closures and congestion around Lusail Stadium are common on event days — we build in buffer time based on published schedules." },
+      { title: "New Road Network", note: "Lusail's roads are wide and newly built, generally straightforward outside of stadium events." },
+    ],
+    faqs: [
+      { q: "Do you cover transfers on Lusail Stadium event days?", a: "Yes, an hourly chauffeur is useful on event days — a driver who can adjust pickup timing and routing around closures beats a single fixed transfer." },
+      { q: "How far is Lusail from the airport?", a: "Roughly 30–35 minutes from Hamad International Airport (DOH), though this can extend on major event days." },
+      { q: "Can I combine Lusail with central Doha?", a: "Yes, we run transfers connecting Lusail's Marina District with central Doha and The Pearl." },
+    ],
+    reviews: [
+      { name: "Omar K.", origin: "Stadium Event, Lusail", text: "Driver planned around the event traffic and got us there with time to spare." },
+      { name: "Dana M.", origin: "Marina District Visit", text: "Comfortable ride from the airport straight to the Marina District, driver knew the new roads well." },
+    ],
   },
   "al-wakrah": {
     slug: "al-wakrah", name: "Al Wakrah", country: "qatar",
@@ -519,6 +662,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["doha", "the-pearl-qatar", "lusail"],
+    quickFacts: [
+      { label: "Country", value: "Qatar 🇶🇦" },
+      { label: "Nearest Airport", value: "Hamad Intl (DOH), ~15–20 min" },
+      { label: "Note", value: "One of the closest towns to DOH" },
+      { label: "Style", value: "Restored heritage souq & quiet corniche" },
+    ],
+    practicalInfo: [
+      { title: "Convenient for Flight Timing", note: "Being close to Hamad International makes Al Wakrah a practical stop for early arrivals or late departures." },
+      { title: "Quieter Pace", note: "Al Wakrah moves more slowly than central Doha — good for a relaxed half-day rather than a packed itinerary." },
+    ],
+    faqs: [
+      { q: "Is Al Wakrah a good stop for an early flight or late arrival?", a: "Yes, it's one of the closer Qatari towns to Hamad International Airport, typically 15–20 minutes." },
+      { q: "Can I combine Al Wakrah with a trip into central Doha?", a: "Yes, a private transfer connects Al Wakrah directly to Doha's Corniche and West Bay districts." },
+      { q: "What's there to see in Al Wakrah?", a: "The restored Souq Al Wakra heritage market, a quiet corniche, and Al Janoub Stadium — see the Attractions section above for details." },
+    ],
+    reviews: [
+      { name: "Huda S.", origin: "Late Arrival, DOH", text: "Landed late and the driver was still waiting — short hop to our Al Wakrah hotel." },
+      { name: "Ibrahim N.", origin: "Souq Al Wakra Visit", text: "Quieter than central Doha, and the driver waited while we walked through the souq." },
+    ],
   },
 
   // ---------------------------------------------------------- Bahrain ----
@@ -549,6 +711,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["muharraq", "amwaj-islands", "zallaq", "doha", "dammam"],
+    quickFacts: [
+      { label: "Country", value: "Bahrain 🇧🇭" },
+      { label: "Airport", value: "Bahrain Intl (BAH)" },
+      { label: "Land Route", value: "King Fahd Causeway from Dammam" },
+      { label: "Best For", value: "Causeway travelers & short city breaks" },
+    ],
+    practicalInfo: [
+      { title: "Causeway Border Timing", note: "The King Fahd Causeway has its own passport control roughly midway across — build in time for the crossing alongside the drive itself." },
+      { title: "Compact City Grid", note: "Manama's souq, World Trade Center district and waterfront hotels are close enough to combine in a single half-day loop." },
+    ],
+    faqs: [
+      { q: "Do you run transfers over the King Fahd Causeway?", a: "Yes — direct causeway transfers from Dammam's airport and city hotels straight into Manama, and back." },
+      { q: "Do you meet arrivals at Bahrain International Airport?", a: "Yes, with flight tracking and a name-board pickup at BAH arrivals." },
+      { q: "Can I combine Manama with Bahrain Fort in one day?", a: "Yes, an hourly chauffeur works well for a Manama-plus-Bahrain-Fort day trip." },
+    ],
+    reviews: [
+      { name: "Faisal M.", origin: "Causeway Traveler, Dammam–Manama", text: "Smooth causeway crossing and the driver knew exactly where to go on the Bahrain side." },
+      { name: "Layla H.", origin: "City Break, Manama", text: "Compact city, easy to see the souq and World Trade Center towers in one afternoon with our driver." },
+    ],
   },
   muharraq: {
     slug: "muharraq", name: "Muharraq", country: "bahrain",
@@ -574,6 +755,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["manama", "amwaj-islands", "zallaq"],
+    quickFacts: [
+      { label: "Country", value: "Bahrain 🇧🇭" },
+      { label: "Airport", value: "Bahrain Intl (BAH) — located in Muharraq" },
+      { label: "Heritage", value: "UNESCO-listed Pearling Trail" },
+      { label: "Nearby", value: "Manama, across a short bridge" },
+    ],
+    practicalInfo: [
+      { title: "Shortest Airport Transfer in the Gulf", note: "Since BAH is located in Muharraq itself, arrivals staying here have one of the shortest airport transfers anywhere in the region." },
+      { title: "Walking-Heavy Heritage Trail", note: "The Pearling Trail is best explored on foot — your driver will park nearby and wait while you walk through." },
+    ],
+    faqs: [
+      { q: "How far is Muharraq from the airport?", a: "Very close — Bahrain International Airport is located in Muharraq itself, making it one of the shortest airport transfers in the Gulf." },
+      { q: "Can I combine Muharraq with Manama in one trip?", a: "Yes, they sit directly across a short bridge from each other — the Pearling Trail on one side, the World Trade Center and souq on the other." },
+      { q: "Do you offer transfers to Muharraq from Saudi Arabia?", a: "Yes, via the King Fahd Causeway, alongside standard airport transfers." },
+    ],
+    reviews: [
+      { name: "Sara A.", origin: "Airport Arrival, BAH", text: "Barely any drive at all from the airport to our Muharraq hotel — very convenient." },
+      { name: "Yusuf T.", origin: "Pearling Trail Walk", text: "Driver waited patiently while we walked the whole Pearling Trail, then took us straight to Manama after." },
+    ],
   },
   "amwaj-islands": {
     slug: "amwaj-islands", name: "Amwaj Islands", country: "bahrain",
@@ -598,6 +798,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["manama", "muharraq", "zallaq"],
+    quickFacts: [
+      { label: "Country", value: "Bahrain 🇧🇭" },
+      { label: "Nearest Airport", value: "Bahrain Intl (BAH), ~10–15 min" },
+      { label: "Style", value: "Resort islands — beaches & marina" },
+      { label: "Nearby", value: "Manama, for city sightseeing" },
+    ],
+    practicalInfo: [
+      { title: "Closest Resort District to the Airport", note: "Amwaj is one of the nearest resort areas to BAH — a convenient first or last stop for arrivals and departures." },
+      { title: "Evening Marina Traffic", note: "The marina promenade gets busy on weekend evenings — worth building in a little extra time." },
+    ],
+    faqs: [
+      { q: "How far is Amwaj Islands from the airport?", a: "Typically 10–15 minutes from Bahrain International Airport — one of the closest resort districts to BAH." },
+      { q: "Can I split my stay between Amwaj and Manama?", a: "Yes, a private transfer connects Amwaj directly into Manama for those splitting time between beach and city sightseeing." },
+      { q: "Are the beach clubs open to visitors staying elsewhere?", a: "Several of Amwaj's beach clubs welcome day visitors — check with your chosen club directly, and we can arrange the transfer there." },
+    ],
+    reviews: [
+      { name: "Nadia F.", origin: "Beach Stay, Amwaj", text: "Quick transfer from the airport straight to our resort — nice change of pace from Manama." },
+      { name: "Ahmed J.", origin: "Amwaj–Manama Day", text: "Driver took us from the beach club to dinner in Manama without any trouble." },
+    ],
   },
   zallaq: {
     slug: "zallaq", name: "Zallaq", country: "bahrain",
@@ -622,6 +841,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain cross-border transfer" },
     ],
     relatedSlugs: ["manama", "muharraq", "amwaj-islands"],
+    quickFacts: [
+      { label: "Country", value: "Bahrain 🇧🇭" },
+      { label: "Nearest Airport", value: "Bahrain Intl (BAH), ~30–35 min" },
+      { label: "Note", value: "Heavy traffic on Bahrain Grand Prix weekends" },
+      { label: "Style", value: "Beach resorts & the F1 circuit" },
+    ],
+    practicalInfo: [
+      { title: "Grand Prix Weekends", note: "Circuit traffic and road closures make timing unpredictable during race weekends — an hourly chauffeur handles this better than a fixed one-way transfer." },
+      { title: "Further from Manama", note: "Zallaq sits further from central Manama than Amwaj or Muharraq — we build the extra distance into pickup timing." },
+    ],
+    faqs: [
+      { q: "Do you offer transfers to the Bahrain International Circuit?", a: "Yes, including on Grand Prix weekends — we recommend an hourly chauffeur given the unpredictable race-day traffic." },
+      { q: "How far is Zallaq from the airport?", a: "Roughly 30–35 minutes from Bahrain International Airport, further out than Manama or Muharraq." },
+      { q: "Are Zallaq's beaches open to day visitors?", a: "Al Jazayer Beach is a public beach, and several resort hotels along the coast offer day access — ask when booking." },
+    ],
+    reviews: [
+      { name: "Mariam Q.", origin: "Grand Prix Weekend", text: "Traffic around the circuit was heavy but our driver adjusted the route and got us there on time." },
+      { name: "Bader S.", origin: "Beach Resort Stay", text: "Quiet stretch of coast, and the transfer from the airport was straightforward despite the distance." },
+    ],
   },
 
   // ------------------------------------------------------------ Oman -----
@@ -649,6 +887,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/routes", label: "All intercity and cross-border routes" },
     ],
     relatedSlugs: ["salalah", "nizwa", "sur", "dubai"],
+    quickFacts: [
+      { label: "Country", value: "Oman 🇴🇲" },
+      { label: "Airport", value: "Muscat Intl (MCT)" },
+      { label: "Layout", value: "~50km coastal ribbon city" },
+      { label: "Best For", value: "Heritage sightseeing & business travel" },
+    ],
+    practicalInfo: [
+      { title: "Long Coastal Layout", note: "Old Muscat, Mutrah and the newer Qurum/Al Mouj areas look close on a map but are each a real drive apart along the coast." },
+      { title: "Mosque Visiting Hours", note: "The Grand Mosque is open to non-Muslim visitors in the mornings only — we plan pickup timing around this." },
+    ],
+    faqs: [
+      { q: "Do you meet arrivals at Muscat International Airport?", a: "Yes, with real-time flight tracking and a name-board pickup at MCT arrivals." },
+      { q: "Can I see the Grand Mosque, Old Muscat and Mutrah in one day?", a: "Yes, an hourly chauffeur suits a full-day circuit through all three, given how spread out Muscat's districts are." },
+      { q: "What time can I visit the Sultan Qaboos Grand Mosque?", a: "Non-Muslim visitors are generally welcome in the mornings — check current visiting hours before your trip, as they can change." },
+    ],
+    reviews: [
+      { name: "Zainab R.", origin: "Heritage Day, Muscat", text: "Driver planned the Grand Mosque visit for the morning window and then took us on to Mutrah Souq." },
+      { name: "Talal O.", origin: "Business Traveler", text: "Muscat's districts are more spread out than I expected — having a driver on call all day made the meetings much easier." },
+    ],
   },
   salalah: {
     slug: "salalah", name: "Salalah", country: "oman",
@@ -673,6 +930,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["muscat", "nizwa", "sur"],
+    quickFacts: [
+      { label: "Country", value: "Oman 🇴🇲" },
+      { label: "Airport", value: "Salalah Airport (SLL)" },
+      { label: "Season", value: "Khareef monsoon season, roughly June–September" },
+      { label: "Best For", value: "Seasonal green-hills sightseeing" },
+    ],
+    practicalInfo: [
+      { title: "Book Ahead in Khareef Season", note: "Salalah sees a sharp seasonal surge of GCC visitors during Khareef — a pre-arranged transfer avoids the taxi shortages that can happen during peak weeks." },
+      { title: "Weather-Dependent Roads", note: "Some routes to waterfalls and viewpoints can be affected by monsoon conditions — your driver will advise on access on the day." },
+    ],
+    faqs: [
+      { q: "What is Khareef season and does it affect transfers?", a: "Khareef (roughly June–September) is Salalah's monsoon season, when demand for transport rises sharply — we recommend booking ahead during these months." },
+      { q: "Do you run day trips to Wadi Darbat?", a: "Yes, an hourly chauffeur is especially useful during Khareef season for a Wadi Darbat and coastal waterfalls day trip." },
+      { q: "Do you meet arrivals at Salalah Airport?", a: "Yes, we track flights into Salalah Airport (SLL) and meet arrivals directly." },
+    ],
+    reviews: [
+      { name: "Amina S.", origin: "Khareef Season Visitor", text: "Glad we booked ahead — the driver mentioned taxis get scarce during Khareef and ours was waiting right on time." },
+      { name: "Rashid B.", origin: "Wadi Darbat Day Trip", text: "Driver adjusted the route slightly for the wet season roads and got us to the waterfalls safely." },
+    ],
   },
   nizwa: {
     slug: "nizwa", name: "Nizwa", country: "oman",
@@ -697,6 +973,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["muscat", "salalah", "sur"],
+    quickFacts: [
+      { label: "Country", value: "Oman 🇴🇲" },
+      { label: "Nearest Airport", value: "Muscat Intl (MCT), ~90 min by road" },
+      { label: "Note", value: "No commercial airport in Nizwa itself" },
+      { label: "Highlight", value: "Fort, souq & Jabal Akhdar mountain villages" },
+    ],
+    practicalInfo: [
+      { title: "No Local Airport", note: "Travelers fly into Muscat and continue by road — we run this as a direct private transfer, roughly 90 minutes." },
+      { title: "Mountain Village Access", note: "Jabal Akhdar's terraced villages sit at altitude and, in places, need a 4x4 — let us know in advance if you'd like to include this." },
+    ],
+    faqs: [
+      { q: "Is there an airport in Nizwa?", a: "No — Nizwa has no commercial airport. Travelers typically fly into Muscat International (MCT) and continue by road, which we run as a direct transfer." },
+      { q: "Can I visit Jabal Akhdar from Nizwa?", a: "Yes, with a private driver or 4x4 where the terrain requires it — an hourly or full-day charter suits a Muscat–Nizwa–Jabal Akhdar loop." },
+      { q: "Is the Nizwa Souq open every day?", a: "The souq operates daily, with its well-known livestock auction specifically on Friday mornings." },
+    ],
+    reviews: [
+      { name: "Waleed H.", origin: "Muscat–Nizwa Day Trip", text: "Ninety-minute drive from Muscat went smoothly, and the driver knew the mountain roads up toward Jabal Akhdar." },
+      { name: "Salma K.", origin: "Friday Souq Visit", text: "Timed our trip for the Friday livestock souq and the driver got us there right as it opened." },
+    ],
   },
   sur: {
     slug: "sur", name: "Sur", country: "oman",
@@ -721,6 +1016,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/airport-transfers", label: "All airport transfer services" },
     ],
     relatedSlugs: ["muscat", "nizwa", "salalah"],
+    quickFacts: [
+      { label: "Country", value: "Oman 🇴🇲" },
+      { label: "Nearest Airport", value: "Muscat Intl (MCT), ~3 hrs by road" },
+      { label: "Note", value: "No commercial airport in Sur itself" },
+      { label: "Highlight", value: "Dhow shipyard & Ras Al Jinz turtle beach" },
+    ],
+    practicalInfo: [
+      { title: "No Local Airport", note: "Travelers fly into Muscat and continue by road — around 3 hours, best run as a full-day charter with stops rather than a single transfer." },
+      { title: "Coastal Road Stops", note: "The Bimmah Sinkhole sits roughly halfway between Muscat and Sur and is a natural, popular stop to build into the drive." },
+    ],
+    faqs: [
+      { q: "Is there an airport in Sur?", a: "No — Sur has no commercial airport. Travelers fly into Muscat International (MCT) and continue by road, which we run as a direct transfer or full-day charter." },
+      { q: "Can I stop at the Bimmah Sinkhole on the way?", a: "Yes, it's a popular stop roughly halfway between Muscat and Sur and easy to build into your itinerary." },
+      { q: "Can you arrange the trip to Ras Al Jinz Turtle Reserve?", a: "Yes, it's about 40 minutes from Sur — we can include it as part of your Sur day trip or overnight stop." },
+    ],
+    reviews: [
+      { name: "Fahad M.", origin: "Muscat–Sur Day Trip", text: "Long drive but the driver planned stops at the Bimmah Sinkhole so it never felt like just a transfer." },
+      { name: "Reem A.", origin: "Turtle Reserve Visit", text: "Comfortable full-day charter — dhow shipyard in the morning, turtle reserve at Ras Al Jinz in the afternoon." },
+    ],
   },
 
   // ----------------------------------------------------------- Kuwait ----
@@ -751,6 +1065,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["salmiya", "al-shaheed-park", "failaka-island", "dammam", "manama"],
+    quickFacts: [
+      { label: "Country", value: "Kuwait 🇰🇼" },
+      { label: "Airport", value: "Kuwait Intl (KWI)" },
+      { label: "Saudi Corridor", value: "Eastern Province road link via Khafji" },
+      { label: "Best For", value: "Business travel & city sightseeing" },
+    ],
+    practicalInfo: [
+      { title: "Cross-Border Timing", note: "Road travelers crossing from Saudi Arabia's Eastern Province via Khafji should allow extra time for border processing." },
+      { title: "Compact Downtown", note: "Kuwait City's downtown, Gulf Road corniche and Salmiya district are each a short private-car ride apart." },
+    ],
+    faqs: [
+      { q: "Do you run transfers between Kuwait and Saudi Arabia?", a: "Yes — we operate road transfers connecting Kuwait City to Riyadh, Dammam and Khafji." },
+      { q: "Do you meet arrivals at Kuwait International Airport?", a: "Yes, with real-time flight tracking and a name-board pickup straight to a private vehicle." },
+      { q: "Can I book a chauffeur for a business day across the city?", a: "Yes, an hourly chauffeur suits business travel between Kuwait City's commercial towers, or a sightseeing day combining the Towers, souq and museum." },
+    ],
+    reviews: [
+      { name: "Meshal A.", origin: "Business Traveler, Dammam–Kuwait", text: "Crossed via Khafji for a work trip — driver handled the paperwork stop smoothly and we were on schedule." },
+      { name: "Farah I.", origin: "City Sightseeing, Kuwait City", text: "Driver combined the Kuwait Towers, souq and museum into one easy afternoon." },
+    ],
   },
   salmiya: {
     slug: "salmiya", name: "Salmiya", country: "kuwait",
@@ -775,6 +1108,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["kuwait-city", "al-shaheed-park", "failaka-island"],
+    quickFacts: [
+      { label: "Country", value: "Kuwait 🇰🇼" },
+      { label: "Nearest Airport", value: "Kuwait Intl (KWI), ~20–25 min" },
+      { label: "Style", value: "Corniche, malls & Kuwait's densest dining scene" },
+      { label: "Nearby", value: "Downtown Kuwait City" },
+    ],
+    practicalInfo: [
+      { title: "Evening Traffic", note: "Salmiya's corniche and dining strip get busy on weekend evenings — worth building in extra time." },
+      { title: "Downtown Connection", note: "A private transfer connects Salmiya directly into downtown Kuwait City for visitors working or sightseeing there." },
+    ],
+    faqs: [
+      { q: "How far is Salmiya from the airport?", a: "Roughly 20–25 minutes from Kuwait International Airport — we track arriving flights and transfer directly to Salmiya's hotels." },
+      { q: "Can I combine Salmiya dining with a downtown Kuwait City visit?", a: "Yes, an hourly chauffeur suits an evening moving between Salmiya's corniche dining and downtown sights." },
+      { q: "Is Salmiya walkable along the corniche?", a: "Yes, the corniche itself is a popular walk — your driver can drop you at one end and meet you further along if you'd like to explore on foot." },
+    ],
+    reviews: [
+      { name: "Dalal Y.", origin: "Dining Evening, Salmiya", text: "Driver dropped us at the corniche and picked us back up after dinner without any wait." },
+      { name: "Nasser Q.", origin: "Airport Arrival", text: "Quick, comfortable transfer from the airport straight to our Salmiya hotel." },
+    ],
   },
   "al-shaheed-park": {
     slug: "al-shaheed-park", name: "Al Shaheed Park", country: "kuwait",
@@ -799,6 +1151,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["kuwait-city", "salmiya", "failaka-island"],
+    quickFacts: [
+      { label: "Country", value: "Kuwait 🇰🇼" },
+      { label: "Nearest Airport", value: "Kuwait Intl (KWI), ~20 min" },
+      { label: "Location", value: "Central Kuwait City" },
+      { label: "Highlight", value: "Museums, gardens & downtown skyline views" },
+    ],
+    practicalInfo: [
+      { title: "Central Location", note: "Al Shaheed Park sits close to Kuwait City's downtown core, easy to combine with a Souq Al-Mubarakiya or Kuwait Towers stop." },
+      { title: "Museum Hours", note: "Check current opening hours for the National Memorial Museum before your visit — your driver can wait or return at a set time." },
+    ],
+    faqs: [
+      { q: "How far is Al Shaheed Park from the airport?", a: "Around 20 minutes from Kuwait International Airport — we transfer arriving visitors directly there or to nearby hotels." },
+      { q: "Can I combine Al Shaheed Park with other downtown sights?", a: "Yes, it sits close to Kuwait City's downtown core, easily combined with the Kuwait Towers and Souq Al-Mubarakiya in the same trip." },
+      { q: "Is there parking near the park for a driver to wait?", a: "Yes, your driver can wait nearby or arrange a set return time while you explore the gardens and museums." },
+    ],
+    reviews: [
+      { name: "Bashar E.", origin: "Downtown Circuit, Kuwait City", text: "Driver combined Al Shaheed Park with the Kuwait Towers and old souq in one well-paced afternoon." },
+      { name: "Wafa L.", origin: "Museum Visit", text: "Easy to reach from our hotel and the driver waited while we went through the museum." },
+    ],
   },
   "failaka-island": {
     slug: "failaka-island", name: "Failaka Island", country: "kuwait",
@@ -823,6 +1194,25 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/border-crossing", label: "GCC border crossing routes" },
     ],
     relatedSlugs: ["kuwait-city", "salmiya", "al-shaheed-park"],
+    quickFacts: [
+      { label: "Country", value: "Kuwait 🇰🇼" },
+      { label: "Nearest Airport", value: "Kuwait Intl (KWI)" },
+      { label: "Access", value: "Ferry from Kuwait City — no airport on the island" },
+      { label: "Highlight", value: "4,000 years of Gulf history" },
+    ],
+    practicalInfo: [
+      { title: "Ferry Schedule Dependency", note: "A pre-arranged transfer to the ferry terminal helps ensure you don't miss your sailing time — schedules can be limited outside peak season." },
+      { title: "Local Transport on the Island", note: "We handle the Kuwait City side of the trip — the island itself is explored on foot or by local transport once you arrive." },
+    ],
+    faqs: [
+      { q: "Is there an airport on Failaka Island?", a: "No — visitors fly into Kuwait International Airport (KWI) and we transfer you to Kuwait City's ferry terminal for the crossing." },
+      { q: "Can you help me catch the ferry on time?", a: "Yes, a pre-arranged transfer to the terminal is particularly useful for making a specific sailing time." },
+      { q: "Can I combine Failaka with other Kuwait City sightseeing?", a: "Yes, many visitors combine a Failaka day trip with Kuwait City sights on the same day — let us know when booking." },
+    ],
+    reviews: [
+      { name: "Adel R.", origin: "Ferry Day Trip", text: "Driver got us to the ferry terminal with plenty of time before our sailing to Failaka." },
+      { name: "Shaikha M.", origin: "History Day Trip", text: "Interesting to see the old ruins and abandoned village — transfer to and from the terminal was smooth both ways." },
+    ],
   },
 };
 

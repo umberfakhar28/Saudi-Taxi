@@ -62,6 +62,15 @@ export interface CityData {
   /** Present only where corporate/business travel is a genuine use case for
    * this city — omitted entirely elsewhere rather than padded in. */
   businessTravel?: { intro: string; areas: { name: string; note: string }[] };
+  /** Dedicated photo for the Sightseeing/Landmarks section — falls back to
+   * heroImage (the previous behavior) where a city has no distinct one yet. */
+  attractionsImage?: string;
+  /** Banner photo for the Airport Connections section — only rendered where
+   * a city has one; the section itself still works without it. */
+  airportImage?: string;
+  /** Banner photo for the Service Coverage / Areas section — same
+   * graceful-degradation approach as airportImage. */
+  coverageImage?: string;
   /** Present only where Umrah/Ziyarat travel is genuinely relevant to this
    * city — links out to the dedicated service pages instead of duplicating
    * their content here. */
@@ -326,6 +335,18 @@ export default function CityServicePage({ data }: { data: CityData }) {
                 <span className="section-eyebrow">Coverage</span>
                 <h2 className="section-title">Areas We Cover in {data.city}</h2>
               </div>
+              {data.coverageImage && (
+                <div style={{ position: "relative", width: "100%", height: 320, borderRadius: "var(--radius-xl)", overflow: "hidden", boxShadow: "var(--shadow-lg)", marginBottom: "var(--space-8)" }}>
+                  <Image
+                    src={data.coverageImage}
+                    alt={`Private chauffeur vehicle on the road in ${data.city} — service coverage across the city`}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 768px) 100vw, 1200px"
+                    loading="lazy"
+                  />
+                </div>
+              )}
               <div className="grid-3">
                 {data.serviceAreas.map((area) => (
                   <div key={area.name} className="card">
@@ -349,6 +370,18 @@ export default function CityServicePage({ data }: { data: CityData }) {
         {data.airport && (
           <section className="section" style={{ background: "var(--bg-subtle)" }}>
             <div className="container">
+              {data.airportImage && (
+                <div style={{ position: "relative", width: "100%", height: 320, borderRadius: "var(--radius-xl)", overflow: "hidden", boxShadow: "var(--shadow-lg)", marginBottom: "var(--space-8)" }}>
+                  <Image
+                    src={data.airportImage}
+                    alt={`Private chauffeur vehicle at ${data.airport.name} — airport transfer service to and from ${data.city}`}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 768px) 100vw, 1200px"
+                    loading="lazy"
+                  />
+                </div>
+              )}
               <div className="grid-60-40">
                 <div>
                   <span className="section-eyebrow">Airport</span>
@@ -431,7 +464,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
                 <div key={l.name} className={styles.sightCard}>
                   <div className={styles.sightImageWrap}>
                     <Image
-                      src={heroImage}
+                      src={data.attractionsImage ?? heroImage}
                       alt={`${data.city}, Saudi Arabia — near ${l.name}`}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

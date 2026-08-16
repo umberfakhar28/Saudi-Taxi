@@ -72,9 +72,32 @@ export interface TourPageData {
   reviews?: { name: string; origin: string; text: string }[];
   faqs: { q: string; a: string }[];
 
+  /** The one real hotel-transfer page — genuinely relevant since every tour
+   * starts/ends with a hotel pickup or drop-off (Phase 11). */
+  hotelLink?: { href: string; label: string };
+
   relatedServices: { href: string; label: string }[];
 
   ctaText: string;
+}
+
+/** Universal tour journey patterns — apply to every tour/Ziyarat experience
+ * this business genuinely offers, so this is one shared, computed list
+ * rather than 3 near-identical hand-written copies (Phase 16). */
+function travelScenariosFor(data: TourPageData) {
+  const scenarios = [
+    { icon: "✈️", title: "Airport Arrival + Tour", description: `Landing in ${data.city} and heading straight into the ${data.title.toLowerCase()} the same day, with your driver on call for both legs.` },
+    { icon: "🏨", title: "Hotel-Based Tour", description: `Pickup from your ${data.city} hotel, private transport around the sites, and drop-off back at the hotel when you're done.` },
+    { icon: "👨‍👩‍👧‍👦", title: "Family Experience", description: `A private vehicle sized to your family, with flexible stops rather than a fixed group-tour pace.` },
+  ];
+  if (data.religiousNote) {
+    scenarios.push({ icon: "🕌", title: "Ziyarat & Religious Travel", description: `Respectful, unhurried transport between the sites, with drivers familiar with the route and etiquette.` });
+  }
+  scenarios.push(
+    { icon: "🌆", title: "City Sightseeing", description: `A half or full day covering ${data.city}'s main sites without needing to arrange separate trips.` },
+    { icon: "🚐", title: "Group Travel", description: `Larger vehicles available for groups traveling together, with the same driver for the whole itinerary.` },
+  );
+  return scenarios;
 }
 
 export default function TourPage({ data }: { data: TourPageData }) {
@@ -85,6 +108,9 @@ export default function TourPage({ data }: { data: TourPageData }) {
   const cityRoutes = allRoutes.filter((r) => r.fromSlug === data.citySlug || r.toSlug === data.citySlug).slice(0, 6);
   const nearbyCities = cityPage?.nearbyCities ?? [];
   const relatedTours = allTourPages.filter((t) => t.slug !== data.slug);
+  const primaryAirport = cityAirports[0];
+  const primaryRoute = cityRoutes[0];
+  const scenarios = travelScenariosFor(data);
 
   const schemas = [
     serviceSchema({
@@ -137,6 +163,24 @@ export default function TourPage({ data }: { data: TourPageData }) {
             {data.overviewParagraphs.map((p, i) => (
               <p key={i} style={{ color: "var(--text-muted)", lineHeight: 1.8, fontSize: "1.05rem", marginTop: i === 0 ? "var(--space-4)" : "var(--space-4)" }}>{p}</p>
             ))}
+            {(primaryAirport || primaryRoute) && (
+              <p style={{ color: "var(--text-muted)", lineHeight: 1.8, fontSize: "1.05rem", marginTop: "var(--space-4)" }}>
+                {primaryAirport && (
+                  <>
+                    Landing at{" "}
+                    <Link href={`/${primaryAirport.city.toLowerCase()}-airport-taxi-service`} style={{ color: "var(--accent)", fontWeight: 600 }}>{primaryAirport.name}</Link>?{" "}
+                    Pickup can be arranged straight from arrivals.{" "}
+                  </>
+                )}
+                {primaryRoute && (
+                  <>
+                    Combining this with another city? See our{" "}
+                    <Link href={`/${primaryRoute.slug}`} style={{ color: "var(--accent)", fontWeight: 600 }}>{primaryRoute.breadcrumbLabel}</Link>{" "}
+                    route.
+                  </>
+                )}
+              </p>
+            )}
           </div>
         </section>
 
@@ -153,6 +197,26 @@ export default function TourPage({ data }: { data: TourPageData }) {
                   <div style={{ fontSize: "2.2rem", marginBottom: "var(--space-3)" }}>{a.icon}</div>
                   <h3 style={{ fontSize: "var(--text-base)" }}>{a.title}</h3>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{a.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Travel Scenarios — distinct from "Who This Tour Is For": specific
+            journey patterns rather than traveler types (Phase 16). */}
+        <section className="section-lg">
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Travel Scenarios</span>
+              <h2 className="section-title">Common Ways This Tour Is Booked</h2>
+            </div>
+            <div className="grid-3">
+              {scenarios.map((s) => (
+                <div key={s.title} className="card" style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "2.2rem", marginBottom: "var(--space-3)" }}>{s.icon}</div>
+                  <h3 style={{ fontSize: "var(--text-base)" }}>{s.title}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{s.description}</p>
                 </div>
               ))}
             </div>
@@ -194,6 +258,35 @@ export default function TourPage({ data }: { data: TourPageData }) {
                       </li>
                     ))}
                   </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Itinerary / Journey Flow — a visual summary of pickup → stops →
+            return, always flagged as flexible rather than a fixed schedule. */}
+        <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Journey Flow</span>
+              <h2 className="section-title">How the {data.title} Runs</h2>
+              <p className="section-subtitle">{data.itineraryNote}</p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "var(--space-6)" }}>
+              {[
+                { label: "Pickup", text: data.pickupInfo },
+                ...data.destinations.slice(0, 4).map((d, i) => ({ label: `Stop ${i + 1}: ${d.name}`, text: d.description })),
+                { label: "Return", text: data.dropoffInfo },
+              ].map((step, i, arr) => (
+                <div key={step.label} style={{ textAlign: "center" }}>
+                  <div style={{
+                    width: 56, height: 56, borderRadius: "50%", background: "var(--accent-subtle)", color: "var(--accent-primary)",
+                    display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto var(--space-4)",
+                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid rgba(12,32,122,0.18)",
+                  }}>{i === arr.length - 1 ? "🏁" : i + 1}</div>
+                  <h3 style={{ fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>{step.label}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", lineHeight: 1.6 }}>{step.text}</p>
                 </div>
               ))}
             </div>
@@ -349,14 +442,22 @@ export default function TourPage({ data }: { data: TourPageData }) {
         )}
 
         {/* Hotel / Airport / City / Route Connections */}
-        {(cityAirports.length > 0 || cityRoutes.length > 0 || nearbyCities.length > 0) && (
+        {(cityAirports.length > 0 || cityRoutes.length > 0 || nearbyCities.length > 0 || data.hotelLink) && (
           <section className="section">
             <div className="container">
               <div className="section-header centered">
                 <span className="section-eyebrow">Plan Your Trip</span>
                 <h2 className="section-title">Connect Your {data.city} Journey</h2>
               </div>
-              <div className="grid-3" style={{ gap: "var(--space-8)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-8)" }}>
+                {data.hotelLink && (
+                  <div>
+                    <h3 style={{ marginBottom: "var(--space-4)" }}>Hotel Connections</h3>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                      <Link href={data.hotelLink.href} className="btn btn-outline-gold btn-sm">{data.hotelLink.label}</Link>
+                    </div>
+                  </div>
+                )}
                 {cityAirports.length > 0 && (
                   <div>
                     <h3 style={{ marginBottom: "var(--space-4)" }}>Airport Transfers</h3>
@@ -434,20 +535,35 @@ export default function TourPage({ data }: { data: TourPageData }) {
           </div>
         </section>
 
-        {/* Related Tours & Services */}
+        {/* Related Tours & Services — labeled separately so anchor text stays
+            descriptive rather than one undifferentiated link pile. */}
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
           <div className="container">
             <div className="section-header centered">
               <span className="section-eyebrow">Explore More</span>
-              <h2 className="section-title">Related Tours & Services</h2>
+              <h2 className="section-title">Related Tours &amp; Services</h2>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "center" }}>
-              {relatedTours.map((t) => (
-                <Link key={t.slug} href={`/${t.slug}`} className="btn btn-outline-gold">{t.title}</Link>
-              ))}
-              {data.relatedServices.map((l) => (
-                <Link key={l.href} href={l.href} className="btn btn-outline-gold">{l.label}</Link>
-              ))}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-8)" }}>
+              {relatedTours.length > 0 && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Other Tours &amp; Ziyarat Experiences</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    {relatedTours.map((t) => (
+                      <Link key={t.slug} href={`/${t.slug}`} className="btn btn-outline-gold btn-sm">{t.title}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {data.relatedServices.length > 0 && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Related Services</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    {data.relatedServices.map((l) => (
+                      <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>

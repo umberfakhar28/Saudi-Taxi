@@ -48,6 +48,7 @@ export default function DestinationsPage() {
                 <div className="section-header centered">
                   <span className="section-eyebrow">{country.flag} {country.name}</span>
                   <h2 className="section-title">{country.name} Destinations</h2>
+                  <p className="section-subtitle">{country.blurb}</p>
                 </div>
 
                 <div className={styles.grid}>

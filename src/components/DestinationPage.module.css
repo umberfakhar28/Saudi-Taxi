@@ -1,0 +1,59 @@
+/* ===================================================================
+   DestinationPage — quick facts strip, reviews grid. Reuses sitewide
+   tokens only (--space-*, --radius-*, --accent-*), same approach as
+   CoreServicePage/RoutePage/AirportPage/TourPage.module.css.
+   =================================================================== */
+
+.quickFacts {
+  background: var(--bg-subtle);
+  border-bottom: 1px solid rgba(16, 18, 26, 0.07);
+  padding: var(--space-6) 0;
+}
+
+.factRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-6);
+}
+
+.factItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+  border-inline-start: 1px solid rgba(16, 18, 26, 0.08);
+  padding-inline-start: var(--space-4);
+}
+
+.factItem:first-child {
+  border-inline-start: none;
+  padding-inline-start: 0;
+}
+
+.factLabel {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.factValue {
+  font-size: var(--text-sm);
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .factItem {
+    border-inline-start: none;
+    padding-inline-start: 0;
+  }
+}
+
+.reviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 400px));
+  gap: var(--space-8);
+  justify-content: center;
+}

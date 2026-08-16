@@ -122,6 +122,17 @@ export interface AirportPageInfo {
   /** Editorial freshness stamp for terminal/procedure information — only
    * ever set when this content has actually just been reviewed. */
   lastReviewed?: string;
+
+  // --- Phase 8 Airport standardization pass — cross-links into the Tour and
+  // Destination families that didn't exist when this file was first written. ---
+  /** Real /taif-ziyarat-taxi-service-style Tour family pages reachable from
+   * this airport — only set where a genuine match exists (JED, TIF, ULH). */
+  tourLinks?: { href: string; label: string }[];
+  /** Slugs into DESTINATIONS (@/lib/destinationData) — only set where this
+   * airport genuinely serves as the entry point for cross-border travel to
+   * that destination (currently DMM → Bahrain/Qatar via the causeway and
+   * Salwa border). */
+  relatedDestinationSlugs?: string[];
 }
 
 export const AIRPORTS: AirportPageInfo[] = [
@@ -172,6 +183,9 @@ export const AIRPORTS: AirportPageInfo[] = [
     ],
     guidePageHref: "/guides/king-abdulaziz-airport",
     lastReviewed: "August 2026",
+    tourLinks: [
+      { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
+    ],
     hotelZones: [
       { name: "Corniche waterfront hotels", note: "Sea-view hotels along the Red Sea promenade, a straightforward transfer from any of the three terminals." },
       { name: "North Jeddah hotel corridor", note: "Newer international hotel brands near Red Sea Mall, popular with business and transit travelers." },
@@ -261,6 +275,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },
     ],
     lastReviewed: "August 2026",
+    relatedDestinationSlugs: ["manama", "doha"],
     hotelZones: [
       { name: "Dammam Corniche hotels", note: "Waterfront hotels convenient for both leisure visitors and a short airport transfer." },
       { name: "Khobar business hotel corridor", note: "The Eastern Province's densest concentration of business-traveler hotels, about 30 minutes from the airport." },
@@ -399,6 +414,9 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/educational-tours-transport", label: "Educational Tours Transport" },
     ],
     lastReviewed: "August 2026",
+    tourLinks: [
+      { href: "/taif-ziyarat-taxi-service", label: "Taif Ziyarat Tour" },
+    ],
     hotelZones: [
       { name: "Taif city-centre hotels", note: "The most convenient base for Souq Al-Dabab and Shubra Palace, a short drive from the airport." },
       { name: "Al-Hada resort-area hotels", note: "Mountain-view stays popular with summer visitors escaping the coastal heat." },
@@ -510,6 +528,9 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/educational-tours-transport", label: "Educational Tours Transport" },
     ],
     lastReviewed: "August 2026",
+    tourLinks: [
+      { href: "/reliable-alula-tour-taxi-service-in-saudi-arabia", label: "AlUla Tour" },
+    ],
     hotelZones: [
       { name: "Old Town resort area", note: "AlUla's main concentration of resort and boutique hotel stays, a short transfer from the airport." },
       { name: "Ashar Valley", note: "Newer accommodation closer to the Arts District and evening event venues." },

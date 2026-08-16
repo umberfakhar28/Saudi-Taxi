@@ -123,6 +123,8 @@ export const taifZiyarat: TourPageData = {
     { title: "Best Time of Day to Travel", note: "Weekday mornings tend to have lighter traffic on the mountain road than Thursday/Friday evenings." },
   ],
 
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
+
   relatedServices: [
     { href: "/ziyarat-services-in-saudi-arabia", label: "Ziyarat Services" },
     { href: "/private-taxi", label: "Private Taxi" },
@@ -228,6 +230,8 @@ export const jeddahCityTour: TourPageData = {
     { title: "Currency", note: "Saudi Riyal. Most places accept cards, but cash is useful in the traditional souqs." },
     { title: "Language", note: "Arabic is the official language. English is widely understood in hotels and tourist areas, and our drivers speak both." },
   ],
+
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
 
   relatedServices: [
     { href: "/private-taxi", label: "Private Taxi" },
@@ -336,6 +340,8 @@ export const aluTour: TourPageData = {
     { title: "Hegra Tickets", note: "Entry tickets for Hegra are booked separately through the official heritage platform, not included in our transportation booking." },
     { title: "What to Wear", note: "Modest, comfortable clothing and sturdy footwear are recommended for walking around outdoor archaeological sites." },
   ],
+
+  hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
 
   relatedServices: [
     { href: "/services/madinah", label: "Madinah Taxi Service" },

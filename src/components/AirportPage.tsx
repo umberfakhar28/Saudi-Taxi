@@ -8,9 +8,10 @@ import { AIRPORT_WAIT_TIMES } from "@/lib/airportTransferConfig";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 import { allCities } from "@/lib/cityData3";
 import AirportFaqAccordion from "@/components/AirportFaqAccordion";
+import { getDestination } from "@/lib/destinationData";
 import {
   PlaneIcon, ChevronRightIcon, WhatsAppIcon, CheckCircleIcon, PackageIcon,
-  TimerIcon, ClockIcon, MapPinIcon, HotelIcon, BriefcaseIcon, MoonIcon,
+  TimerIcon, ClockIcon, MapPinIcon, HotelIcon, BriefcaseIcon, MoonIcon, CompassIcon,
 } from "@/components/Icons";
 import styles from "./AirportPage.module.css";
 
@@ -51,6 +52,9 @@ function relatedCitiesFor(data: AirportPageInfo): { slug: string; city: string }
 export default function AirportPage({ data }: { data: AirportPageInfo }) {
   const routes = AIRPORT_ROUTES.filter((r) => r.airportCode === data.code);
   const otherAirports = AIRPORTS.filter((a) => a.code !== data.code);
+  const relatedDestinations = (data.relatedDestinationSlugs ?? [])
+    .map((slug) => getDestination(slug))
+    .filter((d): d is NonNullable<typeof d> => Boolean(d));
 
   const specificFaqs = AIRPORT_FAQS.filter((f) => f.airports?.includes(data.code));
   const genericFaqs = AIRPORT_FAQS.filter((f) => !f.airports);
@@ -385,6 +389,48 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             </div>
             <div style={{ textAlign: "center", marginTop: "var(--space-8)" }}>
               <Link href="/hotel-transfers" className="btn btn-outline-gold">All Hotel Transfer Services</Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Tours & Local Highlights — only rendered where a genuine Tour-family
+          page exists for this airport's city. */}
+      {data.tourLinks && data.tourLinks.length > 0 && (
+        <section className="section-lg">
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Tours & Experiences</span>
+              <h2 className="section-title">Explore {data.city} from {data.name}</h2>
+            </div>
+            <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
+              {data.tourLinks.map((l) => (
+                <Link key={l.href} href={l.href} className="btn btn-outline-gold">
+                  <CompassIcon size={16} /> {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Related Destinations — only rendered where this airport genuinely
+          serves as a cross-border entry point to a Destination-family page. */}
+      {relatedDestinations.length > 0 && (
+        <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
+          <div className="container">
+            <div className="section-header centered">
+              <span className="section-eyebrow">Cross-Border Travel</span>
+              <h2 className="section-title">Destinations Reachable from {data.name}</h2>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-6)", maxWidth: 760, margin: "0 auto" }}>
+              {relatedDestinations.map((d) => (
+                <Link key={d.slug} href={d.href} className="card" style={{ textAlign: "center" }}>
+                  <div className="card-icon" style={{ margin: "0 auto var(--space-3)" }}><MapPinIcon size={22} /></div>
+                  <h3 style={{ fontSize: "var(--text-base)" }}>{d.name}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: 0 }}>{d.blurb}</p>
+                </Link>
+              ))}
             </div>
           </div>
         </section>

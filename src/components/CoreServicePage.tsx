@@ -55,6 +55,16 @@ export interface ServiceData {
   airportLinks?: { href: string; label: string }[];
   /** Only for services where specific route pages are genuinely relevant. */
   routeLinks?: { href: string; label: string }[];
+  /** The one real hotel-transfer page — only for services where a hotel
+   * pickup/drop-off is a genuine part of the trip (Phase 9). No per-property
+   * Hotel-family pages exist yet, so this always points at /hotel-transfers. */
+  hotelLink?: { href: string; label: string };
+  /** Real, named Hotel-family pages (e.g. /hotels/riyadh/the-ritz-carlton-riyadh)
+   * — only for services with a genuinely specific match (Phase 15). */
+  specificHotelLinks?: { href: string; label: string }[];
+  /** Real Tour-family pages (e.g. /taif-ziyarat-taxi-service) — only for
+   * services where a genuine match exists (Phase 9). */
+  tourLinks?: { href: string; label: string }[];
 
   practicalInfo?: { title: string; note: string }[];
   /** Only for Ziyarat-type services — a real, named list of sites, not a
@@ -94,6 +104,9 @@ export default function CoreServicePage({ data }: { data: ServiceData }) {
   ];
 
   const process = data.process && data.process.length > 0 ? data.process : DEFAULT_PROCESS;
+  const primaryCity = data.coverage[0];
+  const primaryAirport = data.airportLinks?.[0];
+  const primaryRoute = data.routeLinks?.[0];
 
   return (
     <>
@@ -135,6 +148,30 @@ export default function CoreServicePage({ data }: { data: ServiceData }) {
                 {data.overviewParagraphs.map((p, i) => (
                   <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{p}</p>
                 ))}
+                {(primaryCity || primaryAirport || primaryRoute) && (
+                  <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>
+                    {primaryAirport && (
+                      <>
+                        Travelers can book this service directly from{" "}
+                        <Link href={primaryAirport.href} style={{ color: "var(--accent)", fontWeight: 600 }}>{primaryAirport.label}</Link>.{" "}
+                      </>
+                    )}
+                    {primaryCity && (
+                      <>
+                        It&apos;s a regular booking in{" "}
+                        <Link href={`/services/${primaryCity.slug}`} style={{ color: "var(--accent)", fontWeight: 600 }}>{primaryCity.city}</Link>{" "}
+                        and our other coverage cities.{" "}
+                      </>
+                    )}
+                    {primaryRoute && (
+                      <>
+                        See our{" "}
+                        <Link href={primaryRoute.href} style={{ color: "var(--accent)", fontWeight: 600 }}>{primaryRoute.label}</Link>{" "}
+                        route for one of the most common journeys booked through this service.
+                      </>
+                    )}
+                  </p>
+                )}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
                 {data.benefits.slice(0, 3).map((b) => (
@@ -243,45 +280,54 @@ export default function CoreServicePage({ data }: { data: ServiceData }) {
           </div>
         </section>
 
-        {/* What's Included + Use Cases */}
+        {/* What's Included */}
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
-          <div className="container">
-            <div className="grid-60-40">
-              <div>
-                <span className="section-eyebrow">What&apos;s Included</span>
-                <h2 className="section-title">Every Booking Includes</h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", marginTop: "var(--space-4)" }}>
-                  {data.included.map((item) => (
-                    <div key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start" }}>
-                      <CheckCircleIcon size={20} style={{ color: "var(--accent)", flexShrink: 0, marginTop: 2 }} />
-                      <span style={{ color: "var(--text-body)" }}>{item}</span>
-                    </div>
-                  ))}
+          <div className="container" style={{ maxWidth: 700 }}>
+            <div className="section-header centered">
+              <span className="section-eyebrow">What&apos;s Included</span>
+              <h2 className="section-title">Every Booking Includes</h2>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+              {data.included.map((item) => (
+                <div key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start" }}>
+                  <CheckCircleIcon size={20} style={{ color: "var(--accent)", flexShrink: 0, marginTop: 2 }} />
+                  <span style={{ color: "var(--text-body)" }}>{item}</span>
                 </div>
-              </div>
-              <div>
-                <h3 style={{ color: "var(--text-main)", marginBottom: "var(--space-4)", fontSize: "var(--text-xl)" }}>Use Cases</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-                  {data.useCases.slice(0, 4).map((uc) => (
-                    <div key={uc.title} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start", background: "var(--card, var(--surface-1))", padding: "var(--space-4)", borderRadius: "var(--radius-md)" }}>
-                      <span style={{ fontSize: "1.5rem" }}>{uc.icon}</span>
-                      <div>
-                        <strong style={{ fontSize: "var(--text-sm)", color: "var(--text-main)" }}>{uc.title}</strong>
-                        <p style={{ margin: 0, fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>{uc.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Airport / Route connections — only where genuinely relevant. */}
-        {((data.airportLinks && data.airportLinks.length > 0) || (data.routeLinks && data.routeLinks.length > 0)) && (
+        {/* Common Travel Scenarios — full section rather than a truncated
+            4-item sidebar list, matching the richer treatment used across
+            the site's other page families (Phase 15). */}
+        {data.useCases.length > 0 && (
           <section className="section">
             <div className="container">
-              <div className="grid-2" style={{ gap: "var(--space-10)" }}>
+              <div className="section-header centered">
+                <span className="section-eyebrow">Travel Scenarios</span>
+                <h2 className="section-title">Common Ways {data.title} Is Booked</h2>
+              </div>
+              <div className="grid-3">
+                {data.useCases.map((uc) => (
+                  <div key={uc.title} className="card" style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: "2.2rem", marginBottom: "var(--space-3)" }}>{uc.icon}</div>
+                    <h3 style={{ fontSize: "var(--text-base)" }}>{uc.title}</h3>
+                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{uc.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Airport / Route / Hotel / Tour connections — only categories with
+            genuine content render, so this reads correctly whether 1 or all
+            4 are present (Phase 9: added Hotel and Tour connections). */}
+        {((data.airportLinks && data.airportLinks.length > 0) || (data.routeLinks && data.routeLinks.length > 0) || data.hotelLink || (data.specificHotelLinks && data.specificHotelLinks.length > 0) || (data.tourLinks && data.tourLinks.length > 0)) && (
+          <section className="section">
+            <div className="container">
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-10)" }}>
                 {data.airportLinks && data.airportLinks.length > 0 && (
                   <div>
                     <h3 style={{ marginBottom: "var(--space-4)" }}>Airport Connections</h3>
@@ -297,6 +343,29 @@ export default function CoreServicePage({ data }: { data: ServiceData }) {
                     <h3 style={{ marginBottom: "var(--space-4)" }}>Popular Routes</h3>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                       {data.routeLinks.map((l) => (
+                        <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {(data.hotelLink || (data.specificHotelLinks && data.specificHotelLinks.length > 0)) && (
+                  <div>
+                    <h3 style={{ marginBottom: "var(--space-4)" }}>Hotel Connections</h3>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                      {data.specificHotelLinks?.map((l) => (
+                        <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
+                      ))}
+                      {data.hotelLink && (
+                        <Link href={data.hotelLink.href} className="btn btn-outline-gold btn-sm">{data.hotelLink.label}</Link>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {data.tourLinks && data.tourLinks.length > 0 && (
+                  <div>
+                    <h3 style={{ marginBottom: "var(--space-4)" }}>Tours &amp; Experiences</h3>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                      {data.tourLinks.map((l) => (
                         <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
                       ))}
                     </div>

@@ -6,7 +6,7 @@ import { FLEET_TIERS } from "@/lib/fleetConfig";
 import { AIRPORTS, type AirportCode } from "@/lib/airportRoutesData";
 import { allCities } from "@/lib/cityData3";
 import { allRoutes } from "@/lib/routeData";
-import { WhatsAppIcon, MapPinIcon, PlaneIcon, HotelIcon, ChevronRightIcon } from "@/components/Icons";
+import { WhatsAppIcon, PlaneIcon, HotelIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "./HotelPage.module.css";
 
 /**
@@ -69,6 +69,12 @@ export interface HotelData {
   reviews?: { name: string; origin: string; text: string }[];
   faqs: { q: string; a: string }[];
 
+  /** Real Tour-family pages (e.g. /taif-ziyarat-taxi-service) genuinely
+   * bookable from this hotel — only set where a real match exists
+   * (Phase 13). Never implies the hotel itself partners with or operates
+   * the tour. */
+  tourLinks?: { href: string; label: string }[];
+
   /** Other hotel pages once they exist — empty array today, by design. */
   relatedHotels?: { slug: string; hotelName: string }[];
   relatedServices: { href: string; label: string }[];
@@ -91,6 +97,8 @@ export default function HotelPage({ data }: { data: HotelData }) {
   const airports = AIRPORTS.filter((a) => airportCodes.includes(a.code));
 
   const cityRoutes = allRoutes.filter((r) => r.fromSlug === data.citySlug || r.toSlug === data.citySlug).slice(0, 4);
+  const primaryAirport = airports[0];
+  const primaryRoute = cityRoutes[0];
 
   const relatedServices = data.relatedServices.length > 0 ? data.relatedServices : [
     { href: "/hotel-transfers", label: "Hotel Transfers" },
@@ -189,6 +197,26 @@ export default function HotelPage({ data }: { data: HotelData }) {
                 {data.transferOverviewParagraphs.map((p, i) => (
                   <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{p}</p>
                 ))}
+                {(primaryAirport || primaryRoute) && (
+                  <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
+                    {primaryAirport && (
+                      <>
+                        Travelers arriving at{" "}
+                        <Link href={primaryAirport.pageHref} style={{ color: "var(--accent)", fontWeight: 600 }}>{primaryAirport.name} ({primaryAirport.code})</Link>{" "}
+                        can arrange a private{" "}
+                        <Link href="/airport-transfers" style={{ color: "var(--accent)", fontWeight: 600 }}>airport transfer</Link>{" "}
+                        directly to the hotel.{" "}
+                      </>
+                    )}
+                    {primaryRoute && (
+                      <>
+                        For onward travel, see our{" "}
+                        <Link href={`/${primaryRoute.slug}`} style={{ color: "var(--accent)", fontWeight: 600 }}>{primaryRoute.origin} to {primaryRoute.destination}</Link>{" "}
+                        route.
+                      </>
+                    )}
+                  </p>
+                )}
               </div>
               <div className={styles.infoRailCards}>
                 <div className="card">
@@ -197,17 +225,6 @@ export default function HotelPage({ data }: { data: HotelData }) {
                   {data.area && <p>Area: <strong style={{ color: "var(--accent)" }}>{data.area}</strong></p>}
                   <p>City: <strong style={{ color: "var(--accent)" }}>{data.city}</strong></p>
                   <Link href="/book-online" className="btn btn-secondary" style={{ marginTop: "var(--space-4)" }}>Book a Transfer</Link>
-                </div>
-                <div className="card" style={{ background: "var(--bg-subtle)" }}>
-                  <div className="card-icon"><MapPinIcon size={22} /></div>
-                  <h3>Use Cases</h3>
-                  <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", marginTop: "var(--space-3)" }}>
-                    {data.useCases.slice(0, 4).map((uc) => (
-                      <li key={uc.title} style={{ color: "var(--text-body)", fontSize: "var(--text-sm)", display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
-                        <span style={{ color: "var(--accent)" }}>{uc.icon}</span> {uc.title}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             </div>
@@ -234,6 +251,65 @@ export default function HotelPage({ data }: { data: HotelData }) {
                       Full {a.name} guide →
                     </Link>
                   </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Travel Scenarios — full section rather than a cramped sidebar
+            list, matching the richer treatment used across the site's other
+            page families (Phase 13). */}
+        {data.useCases.length > 0 && (
+          <section className="section">
+            <div className="container">
+              <div className="section-header centered">
+                <span className="section-eyebrow">Travel Scenarios</span>
+                <h2 className="section-title">Ways Travelers Use This Transfer</h2>
+              </div>
+              <div className="grid-3">
+                {data.useCases.map((uc) => (
+                  <div key={uc.title} className="card" style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: "2.2rem", marginBottom: "var(--space-3)" }}>{uc.icon}</div>
+                    <h3 style={{ fontSize: "var(--text-base)" }}>{uc.title}</h3>
+                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{uc.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Popular Routes — its own section rather than buried in the
+            bottom link grid, per Phase 13's internal-linking priority. */}
+        {cityRoutes.length > 0 && (
+          <section className="section" style={{ background: "var(--bg-subtle)" }}>
+            <div className="container">
+              <div className="section-header centered">
+                <span className="section-eyebrow">Routes</span>
+                <h2 className="section-title">Popular Routes From {data.city}</h2>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "center" }}>
+                {cityRoutes.map((r) => (
+                  <Link key={r.slug} href={`/${r.slug}`} className="btn btn-outline-gold btn-sm">{r.origin} → {r.destination}</Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Tours & Experiences — only where a genuine Tour-family match
+            exists; never implies the hotel partners with or operates it. */}
+        {data.tourLinks && data.tourLinks.length > 0 && (
+          <section className="section">
+            <div className="container">
+              <div className="section-header centered">
+                <span className="section-eyebrow">Tours &amp; Experiences</span>
+                <h2 className="section-title">Explore {data.city} from {data.hotelName}</h2>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "center" }}>
+                {data.tourLinks.map((l) => (
+                  <Link key={l.href} href={l.href} className="btn btn-outline-gold">{l.label}</Link>
                 ))}
               </div>
             </div>
@@ -413,9 +489,6 @@ export default function HotelPage({ data }: { data: HotelData }) {
                   <Link href={`/services/${data.citySlug}`} className="btn btn-outline-gold btn-sm">{data.city} Taxi Service</Link>
                   {data.relatedHotels?.map((h) => (
                     <Link key={h.slug} href={`/hotels/${data.citySlug}/${h.slug}`} className="btn btn-outline-gold btn-sm">{h.hotelName}</Link>
-                  ))}
-                  {cityRoutes.map((r) => (
-                    <Link key={r.slug} href={`/${r.slug}`} className="btn btn-outline-gold btn-sm">{r.origin} → {r.destination}</Link>
                   ))}
                 </div>
               </div>
