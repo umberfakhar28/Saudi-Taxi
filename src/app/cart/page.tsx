@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 
+// Transactional, session-specific page with no unique content for search —
+// noindexed for the same reason as /checkout (see src/app/checkout/page.tsx).
 export const metadata = generatePageMetadata({
     title: "Cart | Gulf Trip Service",
     description: "Review your selected Gulf Trip Service services before checkout.",
     path: "/cart",
     keywords: ["cart Saudi taxi", "review booking cart", "taxi booking review"],
+    noindex: true,
 });
 
 export default function Cart() {

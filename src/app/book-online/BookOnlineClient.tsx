@@ -237,16 +237,7 @@ export default function BookOnlineClient() {
     };
 
     return (
-        <main>
-            <section className="page-hero">
-                <h1>Book Online</h1>
-                <p>Reserve your taxi or transport service in Saudi Arabia quickly and easily. Instant confirmation.</p>
-                <div className="breadcrumb">
-                    <Link href="/">Home</Link> / <span>Book Online</span>
-                </div>
-            </section>
-
-            <section className="section-lg">
+        <section className="section-lg">
                 <div className="container" style={{ maxWidth: '800px' }}>
 
                     {submitted ? (
@@ -453,6 +444,5 @@ export default function BookOnlineClient() {
                     </div>
                 </div>
             </section>
-        </main>
     );
 }

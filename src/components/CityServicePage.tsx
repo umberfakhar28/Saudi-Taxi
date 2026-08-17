@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { AIRPORTS } from "@/lib/airportRoutesData";
+import { hotelsForCity } from "@/lib/hotelData";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 import {
   WhatsAppIcon, ChevronRightIcon, PlaneIcon, MapPinIcon, CalendarIcon,
@@ -182,6 +183,9 @@ export default function CityServicePage({ data }: { data: CityData }) {
   const heroImageAlt = data.heroImageAlt ?? `${data.city} skyline, Saudi Arabia — private taxi and chauffeur service`;
   const airportInfo = data.airport ? AIRPORTS.find((a) => a.code === data.airport!.code) : undefined;
   const quoteMessage = `Hello GulfTripService, I would like to get a quote for your transportation service in ${data.city}. Please share the available options, pricing, and booking details. Thank you.`;
+  // Data-driven — automatically picks up any hotel added for this city later
+  // (Phase 19 internal-linking pass), no per-city hardcoding required.
+  const cityHotels = hotelsForCity(data.slug);
 
   const schemas = [
     serviceSchema({
@@ -445,6 +449,16 @@ export default function CityServicePage({ data }: { data: CityData }) {
                   </div>
                 ))}
               </div>
+              {cityHotels.length > 0 && (
+                <div style={{ textAlign: "center", marginTop: "var(--space-8)" }}>
+                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-4)" }}>Featured hotel transfer page:</p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "center" }}>
+                    {cityHotels.map((h) => (
+                      <Link key={h.slug} href={`/hotels/${h.citySlug}/${h.slug}`} className="btn btn-outline-gold btn-sm">{h.hotelName}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div style={{ textAlign: "center", marginTop: "var(--space-8)" }}>
                 <Link href="/hotel-transfers" className="btn btn-outline-gold">All Hotel Transfer Services</Link>
               </div>

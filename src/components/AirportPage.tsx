@@ -9,6 +9,7 @@ import { FLEET_TIERS } from "@/lib/fleetConfig";
 import { allCities } from "@/lib/cityData3";
 import AirportFaqAccordion from "@/components/AirportFaqAccordion";
 import { getDestination } from "@/lib/destinationData";
+import { hotelsForCity } from "@/lib/hotelData";
 import {
   PlaneIcon, ChevronRightIcon, WhatsAppIcon, CheckCircleIcon, PackageIcon,
   TimerIcon, ClockIcon, MapPinIcon, HotelIcon, BriefcaseIcon, MoonIcon, CompassIcon,
@@ -51,6 +52,10 @@ function relatedCitiesFor(data: AirportPageInfo): { slug: string; city: string }
  */
 export default function AirportPage({ data }: { data: AirportPageInfo }) {
   const routes = AIRPORT_ROUTES.filter((r) => r.airportCode === data.code);
+  // Data-driven — automatically picks up any hotel added for this airport's
+  // city later (Phase 19 internal-linking pass), no per-airport hardcoding.
+  const airportCityMatch = allCities.find((c) => c.city.toLowerCase() === data.city.toLowerCase());
+  const airportCityHotels = airportCityMatch ? hotelsForCity(airportCityMatch.slug) : [];
   const otherAirports = AIRPORTS.filter((a) => a.code !== data.code);
   const relatedDestinations = (data.relatedDestinationSlugs ?? [])
     .map((slug) => getDestination(slug))
@@ -387,6 +392,16 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
                 </div>
               ))}
             </div>
+            {airportCityHotels.length > 0 && (
+              <div style={{ textAlign: "center", marginTop: "var(--space-8)" }}>
+                <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "var(--space-4)" }}>Featured hotel transfer page:</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "center" }}>
+                  {airportCityHotels.map((h) => (
+                    <Link key={h.slug} href={`/hotels/${h.citySlug}/${h.slug}`} className="btn btn-outline-gold btn-sm">{h.hotelName}</Link>
+                  ))}
+                </div>
+              </div>
+            )}
             <div style={{ textAlign: "center", marginTop: "var(--space-8)" }}>
               <Link href="/hotel-transfers" className="btn btn-outline-gold">All Hotel Transfer Services</Link>
             </div>

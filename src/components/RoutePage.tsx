@@ -15,7 +15,32 @@ import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { allRoutes } from "@/lib/routeData";
 import { allCities } from "@/lib/cityData3";
 import { AIRPORTS } from "@/lib/airportRoutesData";
+import { getDestination } from "@/lib/destinationData";
+import { hotelsForCity } from "@/lib/hotelData";
 import styles from "./RoutePage.module.css";
+
+/** Maps a route's non-Saudi endpoint name (as written in RouteData's
+ * origin/destination strings) to a real Destination-family slug — explicit
+ * and verified rather than fuzzy-matched, so it never links somewhere wrong.
+ * Country-level names map to that country's featured/capital destination
+ * page (Phase 19). */
+const GCC_DESTINATION_SLUG_MAP: Record<string, string> = {
+  "bahrain": "manama",
+  "qatar": "doha",
+  "kuwait": "kuwait-city",
+  "dubai": "dubai",
+  "abu dhabi": "abu-dhabi",
+};
+
+/** The real Destination-family page for this route's non-Saudi endpoint —
+ * only set where the endpoint genuinely has no Saudi CityData match (i.e.
+ * it's the cross-border side) and a mapping exists. */
+function destinationPageFor(data: RouteData) {
+  const candidate = !data.toSlug ? data.destination : !data.fromSlug ? data.origin : undefined;
+  if (!candidate) return undefined;
+  const slug = GCC_DESTINATION_SLUG_MAP[candidate.toLowerCase()];
+  return slug ? getDestination(slug) : undefined;
+}
 
 export interface RouteData {
   slug: string;
@@ -202,6 +227,13 @@ export default function RoutePage({ data }: { data: RouteData }) {
   const originAirport = airportPageFor(data.origin);
   const destinationAirport = airportPageFor(data.destination);
   const relatedCities = relatedCitiesFor(data);
+  const routeDestination = destinationPageFor(data);
+  // Data-driven — automatically picks up any hotel added for either endpoint
+  // city later (Phase 19 internal-linking pass), no per-route hardcoding.
+  const routeHotels = [
+    ...(data.fromSlug ? hotelsForCity(data.fromSlug) : []),
+    ...(data.toSlug ? hotelsForCity(data.toSlug) : []),
+  ];
 
   return (
     <>
@@ -597,10 +629,10 @@ export default function RoutePage({ data }: { data: RouteData }) {
         {/* Related routes */}
         <RelatedLinks title="Related Routes You May Need" links={data.relatedRoutes} />
 
-        {/* Related Cities, Airports & Services */}
+        {/* Related Cities, Airports, Hotels, Destination & Services */}
         <section className="section">
           <div className="container">
-            <div className="grid-3" style={{ gap: "var(--space-10)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-10)" }}>
               {relatedCities.length > 0 && (
                 <div>
                   <h3 style={{ marginBottom: "var(--space-4)" }}>Related Cities</h3>
@@ -619,6 +651,24 @@ export default function RoutePage({ data }: { data: RouteData }) {
                     {destinationAirport && destinationAirport.code !== originAirport?.code && (
                       <Link href={destinationAirport.pageHref} className="btn btn-outline-gold btn-sm">{destinationAirport.name}</Link>
                     )}
+                  </div>
+                </div>
+              )}
+              {routeHotels.length > 0 && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Related Hotels</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    {routeHotels.map((h) => (
+                      <Link key={h.slug} href={`/hotels/${h.citySlug}/${h.slug}`} className="btn btn-outline-gold btn-sm">{h.hotelName}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {routeDestination && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Related Destination</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    <Link href={routeDestination.href} className="btn btn-outline-gold btn-sm">{routeDestination.name}</Link>
                   </div>
                 </div>
               )}

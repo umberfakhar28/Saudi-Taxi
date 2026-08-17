@@ -323,10 +323,16 @@ export default function BorderPage({ data }: { data: BorderData }) {
           </div>
         </section>
 
-        {/* City / Airport / Route / Hotel connections */}
+        {/* Origin connections — City / Airport / Route / Hotel, all on the
+            Saudi side of the journey. Explicitly framed as "Origin" (Phase
+            18) rather than an unlabeled generic link grid. */}
         {((data.cityLinks && data.cityLinks.length > 0) || (data.airportLinks && data.airportLinks.length > 0) || (data.routeLinks && data.routeLinks.length > 0) || data.hotelLink || (data.specificHotelLinks && data.specificHotelLinks.length > 0)) && (
           <section className="section" style={{ background: "var(--bg-subtle)" }}>
             <div className="container">
+              <div className="section-header centered">
+                <span className="section-eyebrow">Origin</span>
+                <h2 className="section-title">Departing From {data.originCountry}</h2>
+              </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-10)" }}>
                 {data.cityLinks && data.cityLinks.length > 0 && (
                   <div>
@@ -376,14 +382,17 @@ export default function BorderPage({ data }: { data: BorderData }) {
           </section>
         )}
 
-        {/* Destinations in the destination country — computed from the real
-            Destination family (Phase 7), never hand-listed. */}
+        {/* Destination connections — computed from the real Destination
+            family (Phase 7), never hand-listed. Explicitly framed as
+            "Destination" (Phase 18), the counterpart to the Origin section
+            above. */}
         {destinations.length > 0 && (
           <section className="section">
             <div className="container">
               <div className="section-header centered">
-                <span className="section-eyebrow">Where You Can Go</span>
-                <h2 className="section-title">{data.destinationCountry} Destinations</h2>
+                <span className="section-eyebrow">Destination</span>
+                <h2 className="section-title">Arriving in {data.destinationCountry}</h2>
+                <p className="section-subtitle">Where you can go once you&apos;re across the border.</p>
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "center" }}>
                 {destinations.map((d) => (

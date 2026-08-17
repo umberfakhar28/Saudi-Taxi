@@ -9,6 +9,14 @@ import BookOnlineClient from "./BookOnlineClient";
  * state), and client components cannot export `metadata`. Without this
  * split, one of the site's most-linked conversion pages silently inherited
  * the homepage's title/description and canonical URL instead of its own.
+ *
+ * The H1/hero/breadcrumb are rendered here too, outside the Suspense
+ * boundary below, rather than inside BookOnlineClient. BookOnlineClient
+ * calls useSearchParams() (for the homepage search bar's prefill —
+ * Homepage Hero + Multi-Mode Search addendum §2.4), which on this fully
+ * static route makes its whole subtree bail out to client-side rendering —
+ * so anything placed inside it (including an <h1>) was previously absent
+ * from the actual HTML sent to the browser/crawlers until after hydration.
  */
 export const metadata = generatePageMetadata({
     title: "Book Online",
@@ -22,19 +30,18 @@ const schemas = [
 
 export default function BookOnlinePage() {
     return (
-        <>
+        <main>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-            <div className="container" style={{ paddingTop: 'var(--space-4)' }}>
+            <section className="page-hero">
+                <h1>Book Online</h1>
+                <p>Reserve your taxi or transport service in Saudi Arabia quickly and easily. Instant confirmation.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Book Online</span>
                 </div>
-            </div>
-            {/* useSearchParams() (for the homepage search bar's prefill —
-                Homepage Hero + Multi-Mode Search addendum §2.4) requires a
-                Suspense boundary during static rendering. */}
+            </section>
             <Suspense fallback={null}>
                 <BookOnlineClient />
             </Suspense>
-        </>
+        </main>
     );
 }

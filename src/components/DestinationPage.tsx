@@ -51,6 +51,14 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
     const otherCountries = related.filter((d) => d.country !== data.country);
     const primaryRouteLink = data.internalLinks[0];
     const primaryRelated = related[0];
+    // Cross-border links (Phase 10/14's Border family) already live inside
+    // internalLinks — surfaced as their own labeled section here (Phase 17)
+    // rather than left buried in the generic routes/services list. Only the
+    // 12 destinations in Bahrain/Qatar/UAE genuinely have one; Oman and
+    // Kuwait destinations correctly get none (no Border-family page exists
+    // for those countries).
+    const borderLinks = data.internalLinks.filter((l) => l.href.startsWith("/saudi-arabia-to-"));
+    const otherInternalLinks = data.internalLinks.filter((l) => !l.href.startsWith("/saudi-arabia-to-"));
     const quoteMessage = `Hello GulfTripService, I would like to get a quote for private transportation in ${data.name}, ${country.name}. Please share the available options and booking details. Thank you.`;
 
     const schemas = [
@@ -393,8 +401,30 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
             )}
 
             {/* Internal links to relevant routes/services */}
-            {data.internalLinks.length > 0 && (
-                <RelatedLinks title={`Relevant Routes & Services for ${data.name}`} links={data.internalLinks} />
+            {/* Cross-Border Connections — its own section since this is a
+                distinct relationship (Saudi Arabia ↔ this destination's
+                country) rather than a same-country route. */}
+            {borderLinks.length > 0 && (
+                <section className="section" style={{ background: "var(--bg-subtle)" }}>
+                    <div className="container">
+                        <div className="section-header centered">
+                            <span className="section-eyebrow">Cross-Border</span>
+                            <h2 className="section-title">Saudi Arabia ↔ {data.name} Transfers</h2>
+                        </div>
+                        <p style={{ textAlign: "center", color: "var(--text-muted)", maxWidth: 700, margin: "0 auto var(--space-8)" }}>
+                            Traveling between Saudi Arabia and {data.name} by road? See our dedicated cross-border transfer page for journey details, border-crossing guidance, and booking.
+                        </p>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "center" }}>
+                            {borderLinks.map((l) => (
+                                <Link key={l.href} href={l.href} className="btn btn-outline-gold">{l.label}</Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {otherInternalLinks.length > 0 && (
+                <RelatedLinks title={`Relevant Routes & Services for ${data.name}`} links={otherInternalLinks} />
             )}
 
             {/* Related destinations — split so travelers see other places in the

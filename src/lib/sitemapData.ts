@@ -2,6 +2,7 @@ import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { DESTINATION_DETAILS } from "./destinationData";
+import { allHotels } from "./hotelData";
 
 export const BASE_URL = "https://gulftripservice.com";
 
@@ -364,6 +365,16 @@ export function buildSitemapEntries(): SitemapEntry[] {
     })),
   ];
 
+  // Hotel / Accommodation Transfer pages — one entry per allHotels record
+  // (Phase 5's dynamic /hotels/[city]/[hotel] route), so a future hotel
+  // added there is sitemapped automatically, same pattern as destinationPages.
+  const hotelPages: SitemapEntry[] = allHotels.map((h) => ({
+    url: `${BASE_URL}/hotels/${h.citySlug}/${h.slug}`,
+    lastModified: lastMod("/hotels/[city]/[hotel]"),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   return [
     ...staticPages,
     ...airportTransferPages,
@@ -377,6 +388,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     ...cityPages,
     ...guidePages,
     ...destinationPages,
+    ...hotelPages,
     ...arPages,
   ];
 }
