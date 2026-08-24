@@ -196,10 +196,10 @@ export default function ArabicDammamToQatar() {
             أسعار ثابتة، سائقون محترفون، وخدمة على مدار الساعة من مطار الدمام إلى قطر.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+            <Link href="/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
+            <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
-            <Link href="/book-online" className="btn btn-secondary btn-lg">احجز الآن</Link>
           </div>
         </div>
       </section>

@@ -638,6 +638,11 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               </div>
             </div>
           )}
+          {/* No separate "Travel Guide" cross-link for this family — the one
+              guide that used to exist (/jeddah-airport-taxi-guide) is a
+              permanent 301 into this exact page (see next.config.ts), so
+              its content already lives here rather than on a linkable
+              second page. */}
         </div>
       </section>
 
@@ -649,10 +654,13 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             Meet-and-greet pickup, 24/7 availability, and a fixed quote before you travel.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
+            {/* Primary (navy) leads, WhatsApp (green, functional channel)
+                follows as secondary — matching every other page family's
+                closing CTA. This page previously had no primary CTA at all. */}
+            <Link href="/quote" className="btn btn-primary btn-lg">Request a Quote</Link>
             <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
               <WhatsAppIcon size={18} /> Book via WhatsApp
             </a>
-            <Link href="/quote" className="btn btn-outline btn-lg">Request a Quote</Link>
           </div>
         </div>
       </section>

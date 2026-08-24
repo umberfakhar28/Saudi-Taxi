@@ -10,7 +10,7 @@ export default function StickyMobileBar({ ratesHref = '#booking-widget' }: { rat
     <>
       <div className={styles.spacer} aria-hidden="true" />
       <nav className={styles.bar} aria-label="Quick actions">
-        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={`btn btn-primary ${styles.action}`}>
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={`btn btn-whatsapp ${styles.action}`}>
           <MessageIcon size={16} /> WhatsApp
         </a>
         <a href={TEL_URL} className={`btn btn-secondary ${styles.action}`}>

@@ -80,10 +80,10 @@ export default function Prices() {
                             Contact our 24/7 support team on WhatsApp or use our online form to receive a detailed quote within minutes.
                         </p>
                         <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <a href={WHATSAPP_URL} className="btn btn-primary btn-lg">
+                            <Link href="/quote" className="btn btn-primary btn-lg">Online Quote Form</Link>
+                            <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg">
                                 <MessageIcon size={20} /> Get Quote on WhatsApp
                             </a>
-                            <Link href="/quote" className="btn btn-secondary btn-lg">Online Quote Form</Link>
                         </div>
                     </div>
                 </div>

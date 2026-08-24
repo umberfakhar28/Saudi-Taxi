@@ -141,7 +141,7 @@ export default function BorderCrossing() {
                                 journey is as smooth as possible from door to door.
                             </p>
                             <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-                                <a href={waLink("Hi, I need a border crossing transfer")} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                <a href={waLink("Hi, I need a border crossing transfer")} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                                     💬 Request a Quote
                                 </a>
                                 <Link href="/contact-us" className="btn btn-secondary">
@@ -435,12 +435,12 @@ export default function BorderCrossing() {
                         and ensure a hassle-free journey across the border.
                     </p>
                     <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
-                            <MessageIcon size={18} /> WhatsApp Us
-                        </a>
-                        <Link href="/quote" className="btn btn-outline btn-lg">
+                        <Link href="/quote" className="btn btn-primary btn-lg">
                             Get a Quote
                         </Link>
+                        <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+                            <MessageIcon size={18} /> WhatsApp Us
+                        </a>
                     </div>
                 </div>
             </section>

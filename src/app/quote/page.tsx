@@ -265,12 +265,12 @@ export default function Quote() {
                         Contact us now via WhatsApp or our contact form and get your personalised, fixed-price quote within minutes.
                     </p>
                     <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
-                            💬 WhatsApp Us
-                        </a>
-                        <Link href="/contact-us" className="btn btn-outline btn-lg">
+                        <Link href="/contact-us" className="btn btn-primary btn-lg">
                             Contact Form
                         </Link>
+                        <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+                            💬 WhatsApp Us
+                        </a>
                     </div>
                 </div>
             </section>

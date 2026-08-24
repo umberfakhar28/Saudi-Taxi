@@ -44,24 +44,10 @@ const testimonials = [
 
 const AUTOPLAY_MS = 2600;
 
-// Simplified Trustpilot watermark for a light card background — five-star
-// row + wordmark in Trustpilot's own brand green, not a redrawn/faked
-// logotype (same convention already used by SocialProof.tsx, kept in its
-// own brand color regardless of the site's navy/brass palette). There's no
-// live Trustpilot profile wired up yet, so this stays a badge rather than
-// a link to nowhere — swap in a real profile URL here once one exists.
-function TrustpilotBadge() {
-  return (
-    <div className={styles.trustpilot} aria-label="Rated on Trustpilot">
-      <span className={styles.trustpilotStars}>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <StarIcon key={i} size={10} />
-        ))}
-      </span>
-      <span className={styles.trustpilotWordmark}>Trustpilot</span>
-    </div>
-  );
-}
+// A TrustpilotBadge used to render here claiming "Rated on Trustpilot" with
+// a five-star row — removed because there's no live Trustpilot profile
+// behind it, so it was presenting an unbacked rating claim. Re-add once a
+// real profile exists.
 
 export default function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -150,7 +136,6 @@ export default function TestimonialsSection() {
           </button>
 
           <div className={styles.card}>
-            <TrustpilotBadge />
             <span className={styles.quoteMark} aria-hidden="true">&ldquo;</span>
 
             {/* All slides render stacked in the same grid cell so the card

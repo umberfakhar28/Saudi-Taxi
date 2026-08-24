@@ -42,6 +42,16 @@ function destinationPageFor(data: RouteData) {
   return slug ? getDestination(slug) : undefined;
 }
 
+/** Long-form Guide-family pages that cover this exact corridor in depth.
+ * The Guide family (GuidePage.tsx) had no inbound links from anywhere else
+ * on the site — this is the fix for the two routes it actually overlaps
+ * with (the Riyadh↔Dammam corridor already has its own guide content
+ * migrated directly into RoutePage, so it needs no separate link here). */
+const ROUTE_GUIDE_MAP: Record<string, { href: string; label: string }> = {
+  "jeddah-to-makkah-taxi-service": { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah: Full Travel Guide" },
+  "makkah-to-madinah-taxi-service": { href: "/makkah-to-madinah-guide", label: "Makkah to Madinah: Full Travel Guide" },
+};
+
 export interface RouteData {
   slug: string;
   origin: string;
@@ -228,6 +238,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
   const destinationAirport = airportPageFor(data.destination);
   const relatedCities = relatedCitiesFor(data);
   const routeDestination = destinationPageFor(data);
+  const routeGuide = ROUTE_GUIDE_MAP[data.slug];
   // Data-driven — automatically picks up any hotel added for either endpoint
   // city later (Phase 19 internal-linking pass), no per-route hardcoding.
   const routeHotels = [
@@ -672,6 +683,14 @@ export default function RoutePage({ data }: { data: RouteData }) {
                   </div>
                 </div>
               )}
+              {routeGuide && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Travel Guide</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    <Link href={routeGuide.href} className="btn btn-outline-gold btn-sm">{routeGuide.label}</Link>
+                  </div>
+                </div>
+              )}
               <div>
                 <h3 style={{ marginBottom: "var(--space-4)" }}>Related Services</h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
@@ -693,10 +712,14 @@ export default function RoutePage({ data }: { data: RouteData }) {
               Fixed rates, professional drivers, and 24/7 availability for {data.origin} to {data.destination}.
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
-              <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+              {/* Primary (navy) leads, WhatsApp (green, functional channel)
+                  follows as secondary — matching every other page family's
+                  closing CTA. WhatsApp previously wore the primary navy
+                  class here, with Book Online demoted to an outline button. */}
+              <Link href="/book-online" className="btn btn-primary btn-lg">Book Online</Link>
+              <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> WhatsApp Quote
               </a>
-              <Link href="/book-online" className="btn btn-outline btn-lg">Book Online</Link>
             </div>
           </div>
         </section>

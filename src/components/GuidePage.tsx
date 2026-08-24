@@ -1,9 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
 export interface GuideSection {
   heading: string;
   content: string;
+  /** Optional supporting image for this section only — a terminal, route
+   * landmark, or destination the section is actually about. Omit unless it
+   * adds real information; guides stay text-first by design. */
+  image?: string;
+  imageAlt?: string;
 }
 
 export interface GuideData {
@@ -11,6 +17,12 @@ export interface GuideData {
   subtitle: string;
   eyebrow: string;
   path: string;
+  /** Optional featured image, shown as a contained, framed image below the
+   * hero text — not a full-bleed photo hero. Guides are long-form/editorial
+   * by design, so this stays a modest accent rather than the family
+   * adopting the photo-hero treatment other page families use. */
+  heroImage?: string;
+  heroImageAlt?: string;
   sections: GuideSection[];
   faqs: { q: string; a: string }[];
   ctaText: string;
@@ -49,6 +61,22 @@ export default function GuidePage({ data }: { data: GuideData }) {
         </div>
       </section>
 
+      {data.heroImage && (
+        <div className="container" style={{ marginTop: "var(--space-10)" }}>
+          <div style={{ maxWidth: 820, margin: "0 auto", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)" }}>
+            <Image
+              src={data.heroImage}
+              alt={data.heroImageAlt ?? data.title}
+              width={1600}
+              height={900}
+              priority
+              sizes="(max-width: 820px) 100vw, 820px"
+              style={{ width: "100%", height: "auto", display: "block" }}
+            />
+          </div>
+        </div>
+      )}
+
       <section className="section-lg">
         <div className="container">
           <div style={{ maxWidth: 820, margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--space-12)" }}>
@@ -56,6 +84,18 @@ export default function GuidePage({ data }: { data: GuideData }) {
               <div key={i}>
                 <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)", marginBottom: "var(--space-4)", borderLeft: "3px solid var(--accent)", paddingLeft: "var(--space-5)" }}>{s.heading}</h2>
                 <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>{s.content}</p>
+                {s.image && (
+                  <div style={{ marginTop: "var(--space-6)", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)" }}>
+                    <Image
+                      src={s.image}
+                      alt={s.imageAlt ?? s.heading}
+                      width={1200}
+                      height={675}
+                      sizes="(max-width: 820px) 100vw, 820px"
+                      style={{ width: "100%", height: "auto", display: "block" }}
+                    />
+                  </div>
+                )}
               </div>
             ))}
             {data.relatedGuide && (

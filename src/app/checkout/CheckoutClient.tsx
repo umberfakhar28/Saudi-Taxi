@@ -145,7 +145,7 @@ export default function CheckoutClient() {
                                 </div>
                             </div>
 
-                            <div style={{ marginTop: '1rem', padding: '1rem 1.25rem', background: 'rgba(36, 84, 232,0.1)', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--secondary)' }}>
+                            <div style={{ marginTop: '1rem', padding: '1rem 1.25rem', background: 'rgba(12, 32, 122,0.1)', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--secondary)' }}>
                                 <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                                     🔒 Your info is never shared. Card charging goes live soon — for now this submits a request to our team.
                                 </p>

@@ -19,9 +19,12 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(rgba(36, 84, 232, 0.16) 1px, transparent 1px);
+    /* Was rgba(36, 84, 232, ...) — the pre-rebrand blue (#2454E8), before the
+       brand moved to #0C207A. Corrected to the current accent, at a lower
+       opacity so the dot texture stays a trace detail, not a blue wash. */
+    background-image: radial-gradient(rgba(12, 32, 122, 0.12) 1px, transparent 1px);
     background-size: 44px 44px;
-    opacity: 0.28;
+    opacity: 0.22;
     mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 80%);
     pointer-events: none;
 }
@@ -47,9 +50,12 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2.5px;
-    color: var(--accent);
-    background: rgba(36, 84, 232, 0.08);
-    border: 1px solid rgba(36, 84, 232, 0.24);
+    color: var(--text-muted);
+    /* Neutral pill, matching the sitewide .section-eyebrow convention in
+       globals.css — this local eyebrow had drifted to a blue fill/border
+       that no other eyebrow on the site uses. */
+    background: var(--bg-subtle);
+    border: 1px solid var(--line);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-full);
     margin-bottom: var(--space-4);
@@ -63,13 +69,15 @@
     position: relative;
 }
 
-/* Gold underline accent */
+/* Gold/brass underline accent — was actually wired to var(--accent) (blue),
+   despite the comment; now genuinely brass, matching the tiny-accent role
+   brass plays on the shared .card top bar. */
 .title::after {
     content: '';
     display: block;
     width: 56px;
     height: 3px;
-    background: var(--accent);
+    background: var(--brass);
     margin: var(--space-3) auto 0;
     border-radius: var(--radius-full);
 }
@@ -92,22 +100,23 @@
     background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
     padding: var(--space-10) var(--space-8);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(36, 84, 232, 0.10);
+    /* Blue-tinted inset dropped, matching the shared .card in globals.css. */
+    box-shadow: var(--shadow-md);
     text-align: center;
     transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(36, 84, 232, 0.10);
+    border: 1px solid rgba(16, 18, 26, 0.07);
 }
 
-/* Gold top bar — gradient shimmer instead of solid */
+/* Brass top bar — the tiny decorative accent, not the interaction color */
 .card::before {
     content: '';
     position: absolute;
     top: 0; left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform var(--ease-base);
@@ -115,19 +124,19 @@
 
 .card:hover {
     transform: translateY(-6px);
-    box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(36, 84, 232, 0.14);
-    border-color: rgba(36, 84, 232, 0.20);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(12, 32, 122, 0.15);
 }
 
 .card:hover::before {
     transform: scaleX(1);
 }
 
-/* Icon wrapper */
+/* Icon wrapper — neutral at rest, navy only on hover/interaction */
 .icon {
     width: 64px;
     height: 64px;
-    background: rgba(36, 84, 232, 0.09);
+    background: var(--bg-subtle);
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
@@ -135,7 +144,7 @@
     color: var(--accent);
     margin: 0 auto var(--space-5);
     transition: background var(--ease-base), color var(--ease-base), border-color var(--ease-base);
-    border: 1px solid rgba(36, 84, 232, 0.18);
+    border: 1px solid var(--line);
 }
 
 .card:hover .icon {

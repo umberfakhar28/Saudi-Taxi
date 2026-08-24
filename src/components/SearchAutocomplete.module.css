@@ -106,7 +106,7 @@
 }
 
 .optionActive {
-    background: var(--accent-subtle, rgba(36, 84, 232, 0.08));
+    background: var(--accent-subtle, rgba(12, 32, 122, 0.08));
 }
 
 .empty {

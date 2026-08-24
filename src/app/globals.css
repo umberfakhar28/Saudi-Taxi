@@ -105,6 +105,7 @@
   --bg-dark:     #030A25;        /* Reserved dark — CTA bands */
   --bg-base:     #FFFFFF;        /* Section background */
   --bg-subtle:   #F6F7FA;        /* Alternating light sections */
+  --bg-warm:     #FAFAF8;        /* Neutral warm off-white — page-hero, future alternating surfaces. Not beige/cream, just less cool than bg-subtle. */
   --bg-card:     #FFFFFF;        /* Card fill */
   --bg-elevated: var(--surface-2);
   --bg-white:    var(--surface-1);
@@ -351,22 +352,24 @@ ul { list-style: none; }
    =================================================================== */
 .page-hero {
   padding: 10rem 0 5rem;
+  /* Was a 3-stop gradient ending on a blue-tinted #EEF1FA — now settles on
+     the neutral warm off-white so the hero reads white-first, not blue-first. */
   background:
-    linear-gradient(160deg, #FFFFFF 0%, #F7F8FB 55%, #EEF1FA 100%);
+    linear-gradient(160deg, #FFFFFF 0%, #F7F8FB 55%, var(--bg-warm) 100%);
   color: var(--text-primary);
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-/* Soft ambient tint */
+/* Soft ambient tint — trace amount of brand color, not a colored wash */
 .page-hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(12, 32, 122, 0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(12, 32, 122, 0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(12, 32, 122, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(12, 32, 122, 0.025) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -608,7 +611,9 @@ ul { list-style: none; }
 .card {
   background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(12, 32, 122, 0.08);
+  /* Blue-tinted inset dropped — shadow-md/xl are already neutral (rgba on
+     #10121a), so the card no longer carries a permanent blue wash at rest. */
+  box-shadow: var(--shadow-md);
   padding: var(--space-10) var(--space-8);
   transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
   position: relative;
@@ -616,14 +621,15 @@ ul { list-style: none; }
   border: 1px solid rgba(16, 18, 26, 0.07);
 }
 
-/* Blue top-accent bar */
+/* Tiny brass accent rule — the roadmap's "brass as a tiny decorative
+   micro-detail" applied literally, replacing what used to be a navy bar. */
 .card::before {
   content: '';
   position: absolute;
   top: 0; left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  background: linear-gradient(90deg, transparent, var(--brass), transparent);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--ease-base);
@@ -631,7 +637,9 @@ ul { list-style: none; }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(12, 32, 122, 0.12);
+  box-shadow: var(--shadow-xl);
+  /* Navy stays the interaction signal (hover border), per the brand's
+     "navy primarily for interaction" role — only the accent bar went brass. */
   border-color: rgba(12, 32, 122, 0.15);
   background: linear-gradient(160deg, var(--surface-2) 0%, var(--bg-tertiary) 100%);
 }
@@ -640,23 +648,26 @@ ul { list-style: none; }
   transform: scaleX(1);
 }
 
-/* Card Icon wrapper */
+/* Card Icon wrapper — neutral at rest so the same icon container isn't a
+   blue tile on every single card sitewide; navy appears on hover/interaction
+   instead of being always-on. */
 .card-icon {
   width: 64px;
   height: 64px;
-  background: rgba(12, 32, 122, 0.10);
+  background: var(--bg-subtle);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--accent-primary);
   margin-bottom: var(--space-6);
-  transition: background var(--ease-base), color var(--ease-base);
-  border: 1px solid rgba(12, 32, 122, 0.18);
+  transition: background var(--ease-base), color var(--ease-base), border-color var(--ease-base);
+  border: 1px solid var(--line);
 }
 
 .card:hover .card-icon {
-  background: rgba(12, 32, 122, 0.18);
+  background: var(--accent-light);
+  border-color: rgba(12, 32, 122, 0.18);
   color: var(--accent-hover);
 }
 
@@ -1268,7 +1279,8 @@ ul { list-style: none; }
   background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
   border: 1px solid rgba(16, 18, 26, 0.07);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(12, 32, 122, 0.08);
+  /* Blue-tinted inset dropped, matching the shared .card above. */
+  box-shadow: var(--shadow-md);
   padding: var(--space-6);
   position: relative;
   overflow: hidden;
@@ -1284,7 +1296,8 @@ ul { list-style: none; }
   top: 0; left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  /* Brass tiny accent, matching the shared .card top bar. */
+  background: linear-gradient(90deg, transparent, var(--brass), transparent);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--ease-base);
@@ -1296,7 +1309,7 @@ ul { list-style: none; }
 .guide-content a.related-card:hover,
 .guide-content a.ziyarat-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(12, 32, 122, 0.12);
+  box-shadow: var(--shadow-xl);
   border-color: rgba(12, 32, 122, 0.15);
 }
 .guide-content a.route-card:hover::before,

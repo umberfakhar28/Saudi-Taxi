@@ -36,7 +36,7 @@ export default function ThankYou() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         margin: '0 auto 2rem',
                         fontSize: '3rem',
-                        boxShadow: '0 8px 30px rgba(36, 84, 232,0.4)',
+                        boxShadow: '0 8px 30px rgba(12, 32, 122,0.4)',
                         animation: 'pulse 2s infinite',
                     }}>
                         ✅
@@ -84,7 +84,7 @@ export default function ThankYou() {
                     </div>
 
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a href={WHATSAPP_URL} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                             💬 WhatsApp Us
                         </a>
                         <Link href="/" className="btn btn-outline btn-lg">

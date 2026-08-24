@@ -431,7 +431,7 @@
         box-shadow: none;
         background: rgba(0,0,0,0.25);
         border-radius: var(--radius-md);
-        border-top: 2px solid rgba(36, 84, 232,0.3);
+        border-top: 2px solid rgba(12, 32, 122,0.3);
         margin: var(--space-2) 0;
         /* Side-by-side columns don't fit the narrow slide-in drawer — each
            column stacks full-width instead, one after another. */

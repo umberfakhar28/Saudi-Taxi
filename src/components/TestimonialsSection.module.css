@@ -9,7 +9,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(36, 84, 232, 0.16) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(12, 32, 122, 0.16) 1px, transparent 1px);
   background-size: 44px 44px;
   opacity: 0.30;
   mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 80%);
@@ -33,7 +33,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid rgba(36, 84, 232, 0.14);
+  border: 1px solid rgba(12, 32, 122, 0.14);
   background: var(--bg-card);
   color: var(--accent);
   font-size: 1.6rem;
@@ -61,8 +61,9 @@
   background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-8) var(--space-8) var(--space-7);
-  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(36, 84, 232, 0.08);
-  border: 1px solid rgba(36, 84, 232, 0.10);
+  /* Blue-tinted inset dropped, matching the shared .card in globals.css. */
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(16, 18, 26, 0.07);
 }
 
 .quoteMark {
@@ -76,34 +77,6 @@
   opacity: 0.14;
   pointer-events: none;
   user-select: none;
-}
-
-/* ── Trustpilot badge, top-right of the card ── */
-
-.trustpilot {
-  position: absolute;
-  top: var(--space-4);
-  right: var(--space-5);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: var(--radius-full);
-  background: rgba(0, 182, 122, 0.08);
-}
-
-.trustpilotStars {
-  display: inline-flex;
-  align-items: center;
-  gap: 1px;
-  color: #00B67A;
-}
-
-.trustpilotWordmark {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  color: #00B67A;
 }
 
 /* ── slide stack (crossfade without layout jump) ── */
@@ -297,11 +270,6 @@
 
   .card {
     width: 100%;
-  }
-
-  .trustpilot {
-    top: var(--space-3);
-    right: var(--space-3);
   }
 
   .reviewerRow {

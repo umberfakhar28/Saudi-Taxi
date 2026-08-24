@@ -99,7 +99,7 @@ export default function PayOnlineClient() {
 
                                 <div style={{
                                     marginTop: '2rem', padding: '1.25rem',
-                                    background: 'rgba(36, 84, 232,0.1)', borderRadius: 'var(--radius-md)',
+                                    background: 'rgba(12, 32, 122,0.1)', borderRadius: 'var(--radius-md)',
                                     borderLeft: '4px solid var(--secondary)',
                                 }}>
                                     <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>

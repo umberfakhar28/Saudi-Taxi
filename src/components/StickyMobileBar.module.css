@@ -19,7 +19,7 @@
     bottom: 0;
     z-index: 500;
     background: var(--bg-primary, #10121a);
-    border-top: 1px solid rgba(36, 84, 232, 0.2);
+    border-top: 1px solid rgba(12, 32, 122, 0.2);
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
     gap: 8px;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);

@@ -259,7 +259,7 @@ export default function BookOnlineClient() {
                             {formData.vehicleName && (
                                 <div style={{
                                     display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem 1rem',
-                                    background: 'rgba(36, 84, 232, 0.08)', border: '1px solid var(--secondary)',
+                                    background: 'rgba(12, 32, 122, 0.08)', border: '1px solid var(--secondary)',
                                     borderRadius: 'var(--radius-md)', padding: '0.85rem 1.25rem', marginBottom: '1.5rem',
                                 }}>
                                     <span style={{ fontSize: '0.9rem', color: 'var(--text-dark)', minWidth: 0, wordBreak: 'break-word' }}>
@@ -306,7 +306,7 @@ export default function BookOnlineClient() {
                                                     padding: '1.2rem 1.5rem', borderRadius: 'var(--radius-md)',
                                                     border: `2px solid ${formData.service === svc.id ? 'var(--secondary)' : 'var(--gray-300)'}`,
                                                     cursor: 'pointer', transition: 'all 0.2s',
-                                                    background: formData.service === svc.id ? 'rgba(36, 84, 232,0.08)' : 'var(--white)',
+                                                    background: formData.service === svc.id ? 'rgba(12, 32, 122,0.08)' : 'var(--white)',
                                                 }}>
                                                     <input type="radio" name="service" value={svc.id} checked={formData.service === svc.id} onChange={handleChange} style={{ display: 'none' }} />
                                                     <span style={{ fontSize: '1.8rem' }}>{svc.icon}</span>
@@ -438,7 +438,7 @@ export default function BookOnlineClient() {
                     {/* WhatsApp Alternative */}
                     <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
                         <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>Prefer to book instantly via WhatsApp?</p>
-                        <a href={waLink("Hi, I'd like to book a ride.")} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                        <a href={waLink("Hi, I'd like to book a ride.")} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                             💬 Book via WhatsApp
                         </a>
                     </div>

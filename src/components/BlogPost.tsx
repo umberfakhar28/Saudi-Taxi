@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { blogPostingSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { posts as allPosts } from "@/app/blog/page";
 
@@ -8,7 +9,12 @@ export interface BlogPostData {
   date: string;
   excerpt: string;
   path: string;
-  body: { heading?: string; text: string }[];
+  /** Optional featured image — a contained, framed image below the hero
+   * text (not a full-bleed hero), matching GuidePage's treatment so the
+   * two long-form/editorial families read consistently. */
+  featuredImage?: string;
+  featuredImageAlt?: string;
+  body: { heading?: string; text: string; image?: string; imageAlt?: string }[];
 }
 
 /** Same-category posts first, then fill to 4 with the rest — every post
@@ -52,6 +58,22 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
         </div>
       </section>
 
+      {data.featuredImage && (
+        <div className="container" style={{ marginTop: "var(--space-10)" }}>
+          <div style={{ maxWidth: 780, margin: "0 auto", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)" }}>
+            <Image
+              src={data.featuredImage}
+              alt={data.featuredImageAlt ?? data.title}
+              width={1560}
+              height={878}
+              priority
+              sizes="(max-width: 780px) 100vw, 780px"
+              style={{ width: "100%", height: "auto", display: "block" }}
+            />
+          </div>
+        </div>
+      )}
+
       <section className="section-lg">
         <div className="container">
           <div style={{ maxWidth: 780, margin: "0 auto" }}>
@@ -61,6 +83,18 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
                 <div key={i}>
                   {block.heading && <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)", marginBottom: "var(--space-4)" }}>{block.heading}</h2>}
                   <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>{block.text}</p>
+                  {block.image && (
+                    <div style={{ marginTop: "var(--space-6)", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)" }}>
+                      <Image
+                        src={block.image}
+                        alt={block.imageAlt ?? block.heading ?? data.title}
+                        width={1200}
+                        height={675}
+                        sizes="(max-width: 780px) 100vw, 780px"
+                        style={{ width: "100%", height: "auto", display: "block" }}
+                      />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -69,9 +103,22 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
                 <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)", marginBottom: "var(--space-5)" }}>Related Reading</h3>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-4)" }}>
                   {related.map((p) => (
-                    <Link key={p.slug} href={`/blog/${p.slug}`} className="card" style={{ display: "block", textDecoration: "none" }}>
-                      <span className="badge badge-gold" style={{ marginBottom: "var(--space-3)", display: "inline-flex" }}>{p.category}</span>
-                      <h4 style={{ color: "var(--text-main)", fontSize: "var(--text-base)", lineHeight: 1.4, margin: 0 }}>{p.title}</h4>
+                    <Link key={p.slug} href={`/blog/${p.slug}`} className="card" style={{ display: "block", textDecoration: "none", padding: p.featuredImage ? 0 : undefined, overflow: "hidden" }}>
+                      {p.featuredImage && (
+                        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9" }}>
+                          <Image
+                            src={p.featuredImage}
+                            alt={p.featuredImageAlt ?? p.title}
+                            fill
+                            sizes="220px"
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+                      )}
+                      <div style={{ padding: p.featuredImage ? "var(--space-5) var(--space-5) var(--space-6)" : undefined }}>
+                        <span className="badge badge-gold" style={{ marginBottom: "var(--space-3)", display: "inline-flex" }}>{p.category}</span>
+                        <h4 style={{ color: "var(--text-main)", fontSize: "var(--text-base)", lineHeight: 1.4, margin: 0 }}>{p.title}</h4>
+                      </div>
                     </Link>
                   ))}
                 </div>

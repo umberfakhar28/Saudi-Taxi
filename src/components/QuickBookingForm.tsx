@@ -109,7 +109,7 @@ export default function QuickBookingForm() {
                         justifyContent: 'center', 
                         gap: '2rem',
                         flexWrap: 'wrap',
-                        borderTop: '1px solid rgba(36, 84, 232, 0.08)',
+                        borderTop: '1px solid rgba(12, 32, 122, 0.08)',
                         paddingTop: '1.5rem'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>

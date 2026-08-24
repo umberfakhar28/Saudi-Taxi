@@ -7,7 +7,7 @@
 export type LogoVariant = "color" | "white";
 
 const NAVY = "#10121A";
-const BLUE = "#2454E8";
+const BLUE = "#0C207A";
 const BLUE_LIGHT = "#4A72F5";
 
 export function LogoMark({

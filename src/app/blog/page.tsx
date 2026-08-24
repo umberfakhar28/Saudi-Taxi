@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
@@ -9,7 +10,21 @@ export const metadata = generatePageMetadata({
   keywords: ["Saudi Arabia travel blog", "Umrah travel tips", "Saudi transportation guide", "Riyadh Jeddah travel"],
 });
 
-export const posts = [
+export interface BlogPostSummary {
+  slug: string;
+  category: string;
+  title: string;
+  excerpt: string;
+  /** Optional featured image — powers both the index/related-post cards
+   * below and the individual article's own featured image in BlogPost.tsx
+   * (matched there by slug). None of the 12 posts have one yet; add real,
+   * article-accurate photography here when it exists — never a generic
+   * stock photo standing in for the actual place/topic. */
+  featuredImage?: string;
+  featuredImageAlt?: string;
+}
+
+export const posts: BlogPostSummary[] = [
   { slug: "airport-transfer-tips",        category: "Travel Tips",       title: "10 Airport Transfer Tips Every Saudi Arabia Traveler Should Know",       excerpt: "Avoid common pitfalls and arrive stress-free with these expert airport transfer tips for Saudi Arabia's busiest airports." },
   { slug: "private-vs-rental-car",        category: "Travel Tips",       title: "Private Taxi vs Rental Car in Saudi Arabia: Which Is Better?",           excerpt: "We break down the real costs, convenience, and risks of each option so you can decide what's right for your trip." },
   { slug: "umrah-travel-planning",        category: "Religious Travel",  title: "The Complete Umrah Travel Planning Checklist",                           excerpt: "A step-by-step checklist covering visas, accommodation, transport, and packing for your Umrah trip to Saudi Arabia." },
@@ -56,10 +71,23 @@ export default function BlogIndex() {
               <div className="grid-3">
                 {posts.map((post) => post.category !== cat ? null : (
                   <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-                    <div className="card" style={{ height: "100%" }}>
-                      <span className="badge badge-gold" style={{ marginBottom: "var(--space-4)", display: "inline-flex" }}>{post.category}</span>
-                      <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-lg)", marginBottom: "var(--space-3)", lineHeight: 1.4 }}>{post.title}</h3>
-                      <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7, marginBottom: 0 }}>{post.excerpt}</p>
+                    <div className="card" style={{ height: "100%", padding: post.featuredImage ? 0 : undefined, overflow: "hidden" }}>
+                      {post.featuredImage && (
+                        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9" }}>
+                          <Image
+                            src={post.featuredImage}
+                            alt={post.featuredImageAlt ?? post.title}
+                            fill
+                            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+                      )}
+                      <div style={{ padding: post.featuredImage ? "var(--space-6) var(--space-6) var(--space-8)" : undefined }}>
+                        <span className="badge badge-gold" style={{ marginBottom: "var(--space-4)", display: "inline-flex" }}>{post.category}</span>
+                        <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-lg)", marginBottom: "var(--space-3)", lineHeight: 1.4 }}>{post.title}</h3>
+                        <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7, marginBottom: 0 }}>{post.excerpt}</p>
+                      </div>
                     </div>
                   </Link>
                 ))}

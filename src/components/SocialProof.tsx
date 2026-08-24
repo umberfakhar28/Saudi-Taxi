@@ -1,21 +1,10 @@
 import styles from './SocialProof.module.css';
-import { StarIcon, CheckCircleIcon } from './Icons';
+import { CheckCircleIcon } from './Icons';
 
-/* Simplified Trustpilot watermark — five-star row + wordmark, in Trustpilot's
-   own brand green. A third-party brand mark like this keeps its own brand
-   color regardless of the site's theme (same convention as a "Sign in with
-   Google" button keeping Google's colors). */
-const TrustpilotMark = () => (
-    <span className={styles.trustpilotMark}>
-        <span className={styles.trustpilotStars}>
-            {Array.from({ length: 5 }).map((_, i) => (
-                <StarIcon key={i} size={12} />
-            ))}
-        </span>
-        <span className={styles.trustpilotWordmark}>Trustpilot</span>
-    </span>
-);
-
+// The "Review us on Trustpilot" link + star mark that used to live here was
+// removed — it pointed to href="#" (no real Trustpilot profile exists yet)
+// while visually presenting a five-star rating, which reads as a claimed
+// rating with no backing. Re-add it once a real profile URL exists to link.
 const SocialProof = () => {
     return (
         <div className={styles.socialProof}>
@@ -28,11 +17,6 @@ const SocialProof = () => {
                 >
                     <CheckCircleIcon size={15} />
                     Free cancellation up to 24 hours before pickup
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" className={styles.trustpilot}>
-                    Review us on
-                    <TrustpilotMark />
                 </a>
             </div>
         </div>

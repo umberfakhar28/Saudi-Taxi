@@ -9,13 +9,14 @@
     padding: 0 var(--spacing-md);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* Was space-between across two links; only one remains now that the
+       unbacked Trustpilot link was removed. */
+    justify-content: center;
     gap: 1.5rem;
 }
 
-/* ---- The two trust links: subtle, slim supporting bar ---- */
-.trustNote,
-.trustpilot {
+/* ---- Trust link: subtle, slim supporting bar ---- */
+.trustNote {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -35,32 +36,9 @@
     flex-shrink: 0;
 }
 
-.trustNote:hover,
-.trustpilot:hover {
+.trustNote:hover {
     color: #FFFFFF;
     background: rgba(255, 255, 255, 0.14);
-}
-
-/* ---- Trustpilot watermark: five-star row + wordmark, brand green ---- */
-.trustpilotMark {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-/* White variant of the mark — Trustpilot's own recommendation for use on
-   colored/dark backgrounds, where the standard green fails contrast. */
-.trustpilotStars {
-    display: inline-flex;
-    align-items: center;
-    gap: 1px;
-    color: #FFFFFF;
-}
-
-.trustpilotWordmark {
-    font-weight: 800;
-    color: #FFFFFF;
-    letter-spacing: 0.2px;
 }
 
 @media (max-width: 640px) {
@@ -71,8 +49,7 @@
         gap: 0.5rem;
     }
 
-    .trustNote,
-    .trustpilot {
+    .trustNote {
         white-space: normal;
         justify-content: center;
         padding: 0.65rem 0.75rem;

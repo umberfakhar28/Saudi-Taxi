@@ -138,7 +138,7 @@ export default function OurServices() {
                                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
                                     <div style={{
                                         fontSize: '2.5rem',
-                                        background: 'linear-gradient(135deg, rgba(36, 84, 232,0.15), rgba(224, 190, 114,0.15))',
+                                        background: 'linear-gradient(135deg, rgba(12, 32, 122,0.15), rgba(224, 190, 114,0.15))',
                                         borderRadius: 'var(--radius-md)',
                                         padding: '1rem',
                                         minWidth: '70px',

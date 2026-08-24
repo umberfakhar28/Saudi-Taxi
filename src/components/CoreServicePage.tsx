@@ -6,6 +6,12 @@ import { waLink } from "@/lib/contact";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 import styles from "./CoreServicePage.module.css";
 
+// No Guide-family cross-links live here — the two guides that used to cover
+// Umrah taxi topics (/madinah-umrah-taxi-guide, /makkah-umrah-taxi-guide)
+// are both permanent 301s (see next.config.ts): one into /services/madinah,
+// the other back into this exact page. Their content was consolidated into
+// those pages already, not left as separate linkable guides.
+
 /**
  * Shared template for the Core Service page family (Phase 4 standardization
  * pass). Unlike City/Route/Airport, this family previously had NO shared
