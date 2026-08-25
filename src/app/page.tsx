@@ -173,17 +173,21 @@ export default function Home() {
       <Features />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          WHY CHOOSE US / OUR PROMISE — Balance: 60/40 asymmetric split
-          Left (60%): navy card with explanatory text + checklist
-          Right (40%): full-bleed photo, rounded corners, matching the card's height
+          WHY CHOOSE US / OUR PROMISE — the navy card is the dominant
+          element; the photo is a small supporting accent beside it, not a
+          second equal-sized panel. A flex row (not the 60/40 grid) so the
+          card can grow to fill the space the compact image doesn't need,
+          and so the image wraps onto its own line — still compact, never
+          full-width — once the viewport can't fit both side by side.
           ═══════════════════════════════════════════════════════════════════ */}
       <section className="section-lg" style={{ background: 'var(--ivory)' }}>
         <div className="container">
-          <div className="grid-60-40" style={{ alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-6)' }}>
 
-            {/* Left column — navy card, on-dark text throughout. */}
+            {/* Navy card — the primary visual element. */}
             <div
               style={{
+                flex: '1 1 480px',
                 background: 'var(--navy)',
                 borderRadius: 'var(--radius-xl)',
                 padding: 'var(--space-12)',
@@ -237,18 +241,28 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Right column — full, uncropped photo at its native 16:9 ratio
-                (aspect-ratio matches the source exactly, so cover never
-                crops anything) — responsive at every width, and centered
-                against the taller navy card rather than stretched/clipped
-                to force-match its height. */}
-            <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: '0 20px 48px rgba(8, 24, 39, 0.18)' }}>
+            {/* Compact supporting photo — fixed-width accent, not a second
+                card. Native 16:9 ratio, so cover never crops the chauffeur
+                or the car; a small, premium-feeling frame beside the copy
+                rather than a competing panel. */}
+            <div
+              style={{
+                position: 'relative',
+                flex: '0 1 360px',
+                width: '100%',
+                maxWidth: 360,
+                aspectRatio: '16 / 9',
+                borderRadius: '18px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 24px rgba(8, 24, 39, 0.14)',
+              }}
+            >
               <Image
                 src="/images/private-chauffeur-luggage-assistance-saudi-arabia.webp"
                 alt="Professional Gulf Trip Service chauffeur assisting a guest with luggage at a Saudi Arabia hotel entrance"
                 title="Private Chauffeur & Luggage Assistance Service in Saudi Arabia"
                 fill
-                sizes="(max-width: 900px) 100vw, 40vw"
+                sizes="(max-width: 640px) 90vw, 360px"
                 style={{ objectFit: 'cover' }}
               />
             </div>
