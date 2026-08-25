@@ -179,7 +179,7 @@ export default function Home() {
           ═══════════════════════════════════════════════════════════════════ */}
       <section className="section-lg" style={{ background: 'var(--ivory)' }}>
         <div className="container">
-          <div className="grid-60-40" style={{ alignItems: 'stretch' }}>
+          <div className="grid-60-40" style={{ alignItems: 'center' }}>
 
             {/* Left column — navy card, on-dark text throughout. */}
             <div
@@ -237,10 +237,12 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Right column — real photo, rounded corners, stretches to match
-                the navy card's height (CSS grid's default align-items:
-                stretch does this automatically). */}
-            <div style={{ position: 'relative', borderRadius: 'var(--radius-xl)', overflow: 'hidden', minHeight: 360, boxShadow: '0 20px 48px rgba(8, 24, 39, 0.18)' }}>
+            {/* Right column — full, uncropped photo at its native 16:9 ratio
+                (aspect-ratio matches the source exactly, so cover never
+                crops anything) — responsive at every width, and centered
+                against the taller navy card rather than stretched/clipped
+                to force-match its height. */}
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: '0 20px 48px rgba(8, 24, 39, 0.18)' }}>
               <Image
                 src="/images/private-chauffeur-luggage-assistance-saudi-arabia.webp"
                 alt="Professional Gulf Trip Service chauffeur assisting a guest with luggage at a Saudi Arabia hotel entrance"
@@ -263,7 +265,7 @@ export default function Home() {
           ═══════════════════════════════════════════════════════════════════ */}
       <section className="section-lg" style={{ background: 'var(--ivory)' }}>
         <div className="container">
-          <div className="grid-60-40" style={{ alignItems: 'stretch' }}>
+          <div className="grid-60-40" style={{ alignItems: 'center' }}>
             <div>
               <div className="section-header">
                 <span className="section-eyebrow" style={{ background: 'var(--ivory-200)', borderColor: 'var(--ivory-300)', color: 'var(--text-muted)' }}>Beyond the Holy Cities</span>
@@ -281,9 +283,10 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Right column — King Fahd Causeway photo, rounded corners,
-                stretches to match the left column's height. */}
-            <div style={{ position: 'relative', borderRadius: 'var(--radius-xl)', overflow: 'hidden', minHeight: 320, boxShadow: '0 20px 48px rgba(8, 24, 39, 0.18)' }}>
+            {/* Right column — full, uncropped King Fahd Causeway photo at its
+                native ~7:5 ratio, centered against the taller text column
+                instead of being stretched/clipped to match its height. */}
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '7 / 5', borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: '0 20px 48px rgba(8, 24, 39, 0.18)' }}>
               <Image
                 src="/images/king-fahd-causeway-saudi-bahrain-border-crossing.webp"
                 alt="Aerial view of the King Fahd Causeway connecting Saudi Arabia and Bahrain across the Gulf"
