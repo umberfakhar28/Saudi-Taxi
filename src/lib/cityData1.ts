@@ -184,6 +184,8 @@ export const makkah: CityData = {
   heroImage: "/images/images-gulf/makkah-taxi-service.webp.png",
   heroImageAlt: "Private chauffeur vehicle on the mountain road into Makkah with the Abraj Al-Bait Clock Tower and Masjid al-Haram at dusk — taxi service for Umrah pilgrims",
   attractionsImage: "/images/images-gulf/makkah-attractions.webp.png",
+  coverageImage: "/images/images-gulf/makkah-taxi-service-coverage.webp",
+  airportImage: "/images/images-gulf/makkah-airport-transfer.webp",
   serviceAreas: [
     { name: "Abraj Al-Bait / Clock Tower district", note: "The pilgrim hotel cluster directly facing the Haram — Makkah's busiest pickup and drop-off zone." },
     { name: "Aziziyah", note: "A residential district further from the Haram, popular for longer-stay and budget accommodation with a longer walk-in." },
@@ -259,6 +261,9 @@ export const madinah: CityData = {
   ],
   heroImage: "/hero-slider/saudi-airport-transfer-service.webp",
   heroImageAlt: "Private airport transfer vehicle in Saudi Arabia — premium chauffeur service for Madinah visitors and pilgrims",
+  attractionsImage: "/images/images-gulf/madinah-attractions.webp",
+  coverageImage: "/images/images-gulf/madinah-taxi-service-coverage.webp",
+  airportImage: "/images/images-gulf/madinah-airport-transfer.webp",
   serviceAreas: [
     { name: "Central Haram hotel belt (Anbar / Bab Al-Salam)", note: "The closest hotel cluster to the Prophet's Mosque, our busiest Madinah pickup zone." },
     { name: "Quba & Al-Baqi corridor", note: "The Ziyarat route linking Quba Mosque and the Al-Baqi cemetery, just outside the central zone." },
@@ -328,6 +333,8 @@ export const dammam: CityData = {
   ],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Dammam Eastern Province skyline — private taxi and airport transfer service near King Fahd International Airport",
+  coverageImage: "/images/images-gulf/dammam-taxi-service-coverage.webp",
+  airportImage: "/images/images-gulf/dammam-airport-transfer.webp",
   serviceAreas: [
     { name: "Dhahran business district", note: "The Aramco headquarters and Ithra cultural centre area, a short drive from central Dammam." },
     { name: "Khobar Corniche", note: "The Eastern Province's liveliest waterfront strip, a common leisure and retail pickup zone." },
