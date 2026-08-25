@@ -9,7 +9,7 @@
   position: relative;
   padding: 9rem 0 5rem;
   overflow: hidden;
-  color: var(--white);
+  color: var(--on-dark);
   text-align: center;
 }
 
@@ -18,10 +18,11 @@
   z-index: 0;
 }
 
+/* Flat navy scrim, no gradient — the brief's prescribed image-scrim value. */
 .heroScrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(3, 10, 37, 0.68) 0%, rgba(3, 10, 37, 0.82) 100%);
+  background: rgba(8, 24, 39, 0.72);
   z-index: 1;
 }
 
@@ -31,12 +32,12 @@
 }
 
 .heroContent h1 {
-  color: var(--white);
+  color: var(--on-dark);
   margin-top: var(--space-4);
 }
 
 .heroContent p {
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--on-dark);
   max-width: 680px;
   margin: var(--space-4) auto 0;
   font-size: var(--text-lg);
@@ -45,7 +46,7 @@
 .heroBreadcrumb {
   margin-top: var(--space-6);
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--on-dark-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,11 +55,11 @@
 }
 
 .heroBreadcrumb a {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--on-dark-muted);
 }
 
 .heroBreadcrumb a:hover {
-  color: var(--white);
+  color: var(--on-dark);
 }
 
 /* ------------------------------------------------------------------
@@ -66,7 +67,7 @@
    ------------------------------------------------------------------ */
 .quickFacts {
   background: var(--bg-subtle);
-  border-bottom: 1px solid rgba(16, 18, 26, 0.07);
+  border-bottom: 1px solid var(--line);
   padding: var(--space-6) 0;
 }
 
@@ -81,7 +82,7 @@
   flex-direction: column;
   gap: 4px;
   text-align: center;
-  border-inline-start: 1px solid rgba(16, 18, 26, 0.08);
+  border-inline-start: 1px solid var(--line);
   padding-inline-start: var(--space-4);
 }
 

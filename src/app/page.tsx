@@ -7,12 +7,14 @@ import VehiclesSection from "@/components/VehiclesSection";
 import VehicleTypeCarousel from "@/components/VehicleTypeCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Link from "next/link";
+import Image from "next/image";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon, GlobeIcon } from "@/components/Icons";
 import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import QuickBookingForm from "@/components/QuickBookingForm";
 import { homeFaqs } from "@/lib/homeFaqs";
 import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import styles from "./page.module.css";
 
 export const metadata = generatePageMetadata({
   title: "Saudi Arabia Taxi & GCC Transfers",
@@ -104,7 +106,7 @@ const homeSchemas = [
 
 export default function Home() {
   return (
-    <main>
+    <main className={styles.homepage}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(homeSchemas) }} />
       {/* ═══════════════════════════════════════════════════════════════════
           HERO — Balance: 2-col asymmetric layout
@@ -128,10 +130,11 @@ export default function Home() {
       <VehicleTypeCarousel />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          STATS BANNER — Deep navy with gold accents
+          STATS BANNER — navy background, gold numbers (Fix 3)
           ═══════════════════════════════════════════════════════════════════ */}
-      <section className="bg-dark"
+      <section
         style={{
+          background: 'var(--navy)',
           padding: 'var(--space-16) 0',
           position: 'relative',
           overflow: 'hidden',
@@ -142,9 +145,9 @@ export default function Home() {
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(var(--gold) 1px, transparent 1px)',
             backgroundSize: '40px 40px',
-            opacity: 0.05,
+            opacity: 0.06,
             pointerEvents: 'none',
           }}
         />
@@ -152,12 +155,12 @@ export default function Home() {
           <div className="grid-4" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
             {stats.map((stat, i) => (
               <div key={i}>
-                {/* Number — gold for maximum contrast */}
-                <div className="stat-number" style={{ color: 'var(--accent)' }}>
+                {/* Number — gold-300, verified ~8:1 against navy */}
+                <div className="stat-number" style={{ color: 'var(--gold-300)' }}>
                   <AnimatedCounter end={stat.number} />
                 </div>
-                {/* Label — muted slate for hierarchy */}
-                <div className="stat-label" style={{ color: 'rgba(255,255,255,0.65)' }}>{stat.label}</div>
+                {/* Label — text-on-dark-muted, verified ~8:1 against navy */}
+                <div className="stat-label" style={{ color: 'var(--text-on-dark-muted)' }}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -170,33 +173,40 @@ export default function Home() {
       <Features />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          WHY CHOOSE US — Balance: 60/40 asymmetric split
-          Left (60%): explanatory text + checklist
-          Right (40%): strong pull-quote + CTA
+          WHY CHOOSE US / OUR PROMISE — Balance: 60/40 asymmetric split
+          Left (60%): navy card with explanatory text + checklist
+          Right (40%): full-bleed photo, rounded corners, matching the card's height
           ═══════════════════════════════════════════════════════════════════ */}
-      <section className="section-lg" style={{ background: 'var(--bg-subtle)' }}>
+      <section className="section-lg" style={{ background: 'var(--ivory)' }}>
         <div className="container">
-          <div className="grid-60-40">
+          <div className="grid-60-40" style={{ alignItems: 'stretch' }}>
 
-            {/* Left column — Alignment: left-aligned text block */}
-            <div>
+            {/* Left column — navy card, on-dark text throughout. */}
+            <div
+              style={{
+                background: 'var(--navy)',
+                borderRadius: 'var(--radius-xl)',
+                padding: 'var(--space-12)',
+                boxShadow: '0 20px 48px rgba(8, 24, 39, 0.25)',
+              }}
+            >
               <div className="section-header">
-                <span className="section-eyebrow">Our Promise</span>
-                <h2 className="section-title">
+                <span className="section-eyebrow" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'var(--line-dark)', color: 'var(--on-dark)' }}>Our Promise</span>
+                <h2 className="section-title" style={{ color: 'var(--on-dark)' }}>
                   Why Thousands Choose Gulf Trip Service
                 </h2>
               </div>
-              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-4)', lineHeight: 1.8 }}>
-                We've been serving Umrah pilgrims and travellers in Saudi Arabia for
+              <p style={{ color: 'var(--on-dark)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-4)', lineHeight: 1.8 }}>
+                We&apos;ve been serving Umrah pilgrims and travellers in Saudi Arabia for
                 over a decade. Every aspect of our service is designed around your
                 comfort and peace of mind.
               </p>
-              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>
+              <p style={{ color: 'var(--on-dark-muted)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>
                 Beyond the Holy Cities, we run dedicated services in{' '}
-                <Link href="/services/madinah" style={{ color: 'var(--accent)', fontWeight: 600 }}>Madinah</Link>,{' '}
-                <Link href="/services/makkah" style={{ color: 'var(--accent)', fontWeight: 600 }}>Makkah</Link>,{' '}
-                <Link href="/services/taif" style={{ color: 'var(--accent)', fontWeight: 600 }}>Taif</Link> and{' '}
-                <Link href="/services/alula" style={{ color: 'var(--accent)', fontWeight: 600 }}>AlUla</Link>, with the same fixed-rate, pre-booked chauffeur model.
+                <Link href="/services/madinah" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Madinah</Link>,{' '}
+                <Link href="/services/makkah" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Makkah</Link>,{' '}
+                <Link href="/services/taif" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Taif</Link> and{' '}
+                <Link href="/services/alula" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>AlUla</Link>, with the same fixed-rate, pre-booked chauffeur model.
               </p>
 
               {/* Checklist — Proximity: each item is a self-contained unit; consistent spacing */}
@@ -209,14 +219,17 @@ export default function Home() {
                       alignItems: 'flex-start',
                       gap: 'var(--space-3)',
                       fontSize: 'var(--text-base)',
-                      color: 'var(--text-body)',
+                      color: 'var(--on-dark)',
                       lineHeight: 1.6,
                     }}
                   >
-                    {/* Icon — Contrast: green checkmark pops against grey text */}
+                    {/* Success-green checkmark, not gold — six of these appear in one
+                        section, and gold is capped at 1-2 marks per section. A
+                        checkmark is semantically a success indicator anyway, which
+                        the token set has a dedicated colour for. */}
                     <CheckCircleIcon
                       size={20}
-                      style={{ color: 'var(--primary)', marginTop: '2px', flexShrink: 0 }}
+                      style={{ color: 'var(--success)', marginTop: '2px', flexShrink: 0 }}
                     />
                     {item}
                   </li>
@@ -224,65 +237,18 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Right column — Balance: pull-quote card to counterweight the list */}
-            <div
-              style={{
-                background: 'linear-gradient(145deg, var(--navy-dark), var(--navy))',
-                borderRadius: 'var(--radius-xl)',
-                padding: 'var(--space-12)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                gap: 'var(--space-8)',
-                color: 'var(--white)',
-                boxShadow: 'var(--shadow-xl)',
-              }}
-            >
-              {/* Pull quote — Contrast: large italic quote vs smaller attribution */}
-              <blockquote>
-                <div
-                  style={{
-                    fontSize: 'var(--text-6xl)',
-                    lineHeight: 1,
-                    color: 'var(--accent)',
-                    fontFamily: 'var(--font-heading)',
-                    marginBottom: 'var(--space-4)',
-                  }}
-                >
-                  "
-                </div>
-                <p
-                  style={{
-                    fontSize: 'var(--text-xl)',
-                    lineHeight: 1.6,
-                    color: 'rgba(255,255,255,0.9)',
-                    fontStyle: 'italic',
-                    marginBottom: 'var(--space-4)',
-                  }}
-                >
-                  The most reliable taxi we've used during Umrah. Driver was on time,
-                  courteous, and the car was spotless. Highly recommended.
-                </p>
-                {/* Proximity: attribution immediately below its quote */}
-                <footer
-                  style={{
-                    fontSize: 'var(--text-sm)',
-                    color: 'var(--accent)',
-                    fontWeight: 600,
-                    fontStyle: 'normal',
-                  }}
-                >
-                  — Brother Ahmed, Pakistan
-                </footer>
-              </blockquote>
-
-              {/* Divider — Visual breathing room */}
-              <div className="divider-gold" />
-
-              {/* CTA — Contrast: gold on dark, highest visible action inside card */}
-              <Link href="/quote" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
-                Get Quote
-              </Link>
+            {/* Right column — real photo, rounded corners, stretches to match
+                the navy card's height (CSS grid's default align-items:
+                stretch does this automatically). */}
+            <div style={{ position: 'relative', borderRadius: 'var(--radius-xl)', overflow: 'hidden', minHeight: 360, boxShadow: '0 20px 48px rgba(8, 24, 39, 0.18)' }}>
+              <Image
+                src="/images/private-chauffeur-luggage-assistance-saudi-arabia.webp"
+                alt="Professional Gulf Trip Service chauffeur assisting a guest with luggage at a Saudi Arabia hotel entrance"
+                title="Private Chauffeur & Luggage Assistance Service in Saudi Arabia"
+                fill
+                sizes="(max-width: 900px) 100vw, 40vw"
+                style={{ objectFit: 'cover' }}
+              />
             </div>
           </div>
         </div>
@@ -295,15 +261,15 @@ export default function Home() {
           the Makkah/Jeddah/Madinah core, covering the Eastern Province and
           cross-border transfers to Bahrain and Qatar.
           ═══════════════════════════════════════════════════════════════════ */}
-      <section className="section-lg">
+      <section className="section-lg" style={{ background: 'var(--ivory)' }}>
         <div className="container">
-          <div className="grid-60-40">
+          <div className="grid-60-40" style={{ alignItems: 'stretch' }}>
             <div>
               <div className="section-header">
-                <span className="section-eyebrow">Beyond the Holy Cities</span>
-                <h2 className="section-title">Eastern Province &amp; GCC Cross-Border Transfers</h2>
+                <span className="section-eyebrow" style={{ background: 'var(--ivory-200)', borderColor: 'var(--ivory-300)', color: 'var(--text-muted)' }}>Beyond the Holy Cities</span>
+                <h2 className="section-title" style={{ color: 'var(--text)' }}>Eastern Province &amp; GCC Cross-Border Transfers</h2>
               </div>
-              <p style={{ color: 'var(--text-body)', fontSize: 'var(--text-lg)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
+              <p style={{ color: 'var(--text)', fontSize: 'var(--text-lg)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
                 Beyond Makkah, Jeddah and Madinah, we run daily routes across the Eastern
                 Province — Dammam, Khobar and Dhahran — and connect travelers overland to
                 neighboring GCC countries. Direct transfers to Bahrain via the King Fahd
@@ -314,26 +280,51 @@ export default function Home() {
                 Explore Border Crossing Routes
               </Link>
             </div>
-            <div
-              className="card"
-              style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}
-            >
-              <div className="card-icon"><GlobeIcon size={22} /></div>
-              <h3>Popular GCC Routes</h3>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                {[
-                  { href: '/dammam-airport-to-bahrain-taxi-service', label: 'Dammam Airport → Bahrain' },
-                  { href: '/dammam-airport-to-qatar-taxi-service', label: 'Dammam Airport → Qatar' },
-                  { href: '/bahrain-to-dammam-taxi-service', label: 'Bahrain → Dammam' },
-                  { href: '/qatar-to-riyadh-taxi-service', label: 'Qatar → Riyadh' },
-                ].map((r) => (
-                  <li key={r.href}>
-                    <Link href={r.href} style={{ color: 'var(--accent)', fontWeight: 600, fontSize: 'var(--text-sm)' }}>
-                      {r.label} →
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+
+            {/* Right column — King Fahd Causeway photo, rounded corners,
+                stretches to match the left column's height. */}
+            <div style={{ position: 'relative', borderRadius: 'var(--radius-xl)', overflow: 'hidden', minHeight: 320, boxShadow: '0 20px 48px rgba(8, 24, 39, 0.18)' }}>
+              <Image
+                src="/images/king-fahd-causeway-saudi-bahrain-border-crossing.webp"
+                alt="Aerial view of the King Fahd Causeway connecting Saudi Arabia and Bahrain across the Gulf"
+                title="King Fahd Causeway — Saudi Arabia to Bahrain Border Crossing"
+                fill
+                sizes="(max-width: 900px) 100vw, 40vw"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+          </div>
+
+          {/* Popular GCC Routes — a compact link row beneath the photo, not a
+              second card, so the two-column layout above stays a clean
+              text + photo pairing. */}
+          <div style={{ marginTop: 'var(--space-10)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--line)' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--text)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-5)' }}>
+              <GlobeIcon size={20} style={{ color: 'var(--navy)', flexShrink: 0 }} /> Popular GCC Routes
+            </h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+              {[
+                { href: '/dammam-airport-to-bahrain-taxi-service', label: 'Dammam Airport → Bahrain' },
+                { href: '/dammam-airport-to-qatar-taxi-service', label: 'Dammam Airport → Qatar' },
+                { href: '/bahrain-to-dammam-taxi-service', label: 'Bahrain → Dammam' },
+                { href: '/qatar-to-riyadh-taxi-service', label: 'Qatar → Riyadh' },
+              ].map((r) => (
+                <Link
+                  key={r.href}
+                  href={r.href}
+                  style={{
+                    color: 'var(--teal)',
+                    fontWeight: 600,
+                    fontSize: 'var(--text-sm)',
+                    background: 'var(--white)',
+                    border: '1px solid var(--line)',
+                    borderRadius: 'var(--radius-full)',
+                    padding: '8px 16px',
+                  }}
+                >
+                  {r.label} →
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -361,37 +352,37 @@ export default function Home() {
           ═══════════════════════════════════════════════════════════════════ */}
       <section
         style={{
-          background: 'linear-gradient(140deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%)',
+          background: 'var(--ivory)',
           padding: 'var(--space-20) 0',
           textAlign: 'center',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Background decoration — Alignment: positioned absolutely, not in content flow */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'radial-gradient(var(--accent) 1px, transparent 1px)',
-            backgroundSize: '30px 30px',
-            opacity: 0.05,
-            pointerEvents: 'none',
-          }}
-        />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          {/* Badge — Repetition: same pill badge */}
+          {/* Badge — on-light, matching every other ivory-section eyebrow */}
           <div
-            className="badge badge-dark"
-            style={{ display: 'inline-flex', marginBottom: 'var(--space-6)' }}
+            style={{
+              display: 'inline-flex',
+              marginBottom: 'var(--space-6)',
+              background: 'var(--ivory-200)',
+              border: '1px solid var(--ivory-300)',
+              color: 'var(--text-muted)',
+              padding: '6px 16px',
+              borderRadius: 'var(--radius-full)',
+              fontSize: 'var(--text-xs)',
+              fontWeight: 700,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+            }}
           >
             24/7 Available — Call or WhatsApp Anytime
           </div>
 
-          {/* Heading — Contrast: white, 4xl, bold vs dark green bg */}
+          {/* Heading */}
           <h2
             style={{
-              color: 'var(--white)',
+              color: 'var(--text)',
               fontSize: 'var(--text-4xl)',
               marginBottom: 'var(--space-4)',
             }}
@@ -399,10 +390,10 @@ export default function Home() {
             Ready to Book Your Ride?
           </h2>
 
-          {/* Body — Contrast: slightly muted vs heading */}
+          {/* Body */}
           <p
             style={{
-              color: 'rgba(255,255,255,0.78)',
+              color: 'var(--text)',
               fontSize: 'var(--text-lg)',
               maxWidth: 580,
               margin: '0 auto var(--space-10)',
@@ -413,12 +404,14 @@ export default function Home() {
             across Makkah, Jeddah, and Madinah with fixed, transparent pricing.
           </p>
 
-          {/* CTA group — Balance: two equal-weight buttons */}
+          {/* CTA group — gold primary (the one primary button on this screenful),
+              navy secondary — this section sits on ivory, so it needs the
+              solid-navy secondary treatment, not the on-navy outline variant. */}
           <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/book-online" className="btn btn-primary btn-lg">
               Book Now
             </Link>
-            <Link href="/contact-us" className="btn btn-outline btn-lg">
+            <Link href="/contact-us" className="btn btn-secondary btn-lg">
               Contact Us
             </Link>
           </div>

@@ -64,6 +64,38 @@ const EMPTY_FORM: FormData = {
     name: '', email: '', phone: '', notes: '',
 };
 
+// Fix 6 (Homepage Colour System brief). The submit handler below does a
+// genuine dynamic `import("@/utils/supabase/client")` — a real webpack/
+// Turbopack chunk boundary, even though nothing on this page uses
+// next/dynamic or React.lazy. If a user has this tab open across a
+// deploy, that import requests a chunk file by a build hash the server no
+// longer serves, and throws — exactly the "Loading chunk ... failed" class
+// of error, surfacing today as the generic submitError message with no
+// actual recovery path. Two real fixes below: retry (handles a transient
+// network blip / slow connection / ad-blocker interference, where the
+// same chunk URL can succeed on a second attempt) and, if that's
+// exhausted or the message signature is unambiguously a stale-chunk 404
+// (retrying an identical missing URL is futile), persist the in-progress
+// form and reload once to fetch the new build.
+const RELOAD_GUARD_KEY = 'gts-book-online-chunk-reload-v1';
+const SAVED_FORM_KEY = 'gts-book-online-saved-form-v1';
+
+function isChunkLoadError(err: unknown): boolean {
+    const message = err instanceof Error ? err.message : String(err);
+    return /loading chunk .* failed|failed to load chunk|failed to fetch dynamically imported module|importing a module script failed/i.test(message);
+}
+
+async function importSupabaseClient(retries = 2, delaysMs = [400, 1200]) {
+    for (let attempt = 0; ; attempt++) {
+        try {
+            return await import('@/utils/supabase/client');
+        } catch (err) {
+            if (attempt >= retries) throw err;
+            await new Promise((resolve) => setTimeout(resolve, delaysMs[attempt] ?? 1200));
+        }
+    }
+}
+
 export default function BookOnlineClient() {
     const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
@@ -72,6 +104,26 @@ export default function BookOnlineClient() {
     const [submitted, setSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+
+    // Rehydrate form state after a chunk-error-triggered reload (Fix 6) —
+    // only runs when the reload guard is actually set, so a normal visit
+    // never touches this. Clears both keys immediately after restoring so
+    // it can never fire twice or leak into an unrelated future session.
+    useEffect(() => {
+        if (sessionStorage.getItem(RELOAD_GUARD_KEY) !== '1') return;
+        sessionStorage.removeItem(RELOAD_GUARD_KEY);
+        const saved = sessionStorage.getItem(SAVED_FORM_KEY);
+        sessionStorage.removeItem(SAVED_FORM_KEY);
+        if (!saved) return;
+        try {
+            const { formData: savedFormData, step: savedStep } = JSON.parse(saved) as { formData: FormData; step: number };
+            setFormData(savedFormData);
+            setStep(savedStep);
+        } catch {
+            // Malformed saved state — nothing to restore, fail silently rather
+            // than blocking the page.
+        }
+    }, []);
 
     // Prefill from the homepage search bar, a vehicle's "Book Now" button
     // (Book by Vehicle Type / Fleet), or the WebMCP book_taxi tool — all of
@@ -170,7 +222,7 @@ export default function BookOnlineClient() {
         setSubmitError(null);
 
         try {
-            const { createClient } = await import("@/utils/supabase/client");
+            const { createClient } = await importSupabaseClient();
             const supabase = createClient();
 
             // 1. Create/update the customer record (Admin Portal audit §10 —
@@ -229,6 +281,20 @@ export default function BookOnlineClient() {
 
             setSubmitted(true);
         } catch (error: unknown) {
+            // Fix 6 — a genuinely stale build (the dynamic import above
+            // requesting a chunk hash the server no longer serves) can't be
+            // fixed by showing an error and letting the customer press
+            // submit again — the tab is still running the old JS, so it
+            // would fail identically. The only real fix is a reload to
+            // fetch the new build; guarded by RELOAD_GUARD_KEY so a repeat
+            // failure after that reload falls through to the normal error
+            // message instead of reload-looping.
+            if (isChunkLoadError(error) && sessionStorage.getItem(RELOAD_GUARD_KEY) !== '1') {
+                sessionStorage.setItem(RELOAD_GUARD_KEY, '1');
+                sessionStorage.setItem(SAVED_FORM_KEY, JSON.stringify({ formData, step }));
+                window.location.reload();
+                return;
+            }
             const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
             setSubmitError(message);
         } finally {
@@ -243,7 +309,7 @@ export default function BookOnlineClient() {
                     {submitted ? (
                         <div className="card" style={{ textAlign: 'center', padding: '4rem' }}>
                             <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✅</div>
-                            <h2 style={{ color: 'var(--primary)' }}>Booking Request Received!</h2>
+                            <h2 style={{ color: 'var(--navy)' }}>Booking Request Received!</h2>
                             <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2rem' }}>
                                 Thank you, <strong>{formData.name}</strong>! We&apos;ll confirm your booking within 30 minutes via WhatsApp or email.
                             </p>
@@ -259,13 +325,13 @@ export default function BookOnlineClient() {
                             {formData.vehicleName && (
                                 <div style={{
                                     display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem 1rem',
-                                    background: 'rgba(12, 32, 122, 0.08)', border: '1px solid var(--secondary)',
+                                    background: 'rgba(8, 24, 39, 0.04)', border: '1px solid var(--line)',
                                     borderRadius: 'var(--radius-md)', padding: '0.85rem 1.25rem', marginBottom: '1.5rem',
                                 }}>
                                     <span style={{ fontSize: '0.9rem', color: 'var(--text-dark)', minWidth: 0, wordBreak: 'break-word' }}>
                                         🚗 Booking for: <strong>{formData.vehicleName}</strong>
                                     </span>
-                                    <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--secondary)', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', flexShrink: 0 }}>
+                                    <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--teal)', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', flexShrink: 0 }}>
                                         Change vehicle
                                     </button>
                                 </div>
@@ -280,16 +346,18 @@ export default function BookOnlineClient() {
                                         <div style={{ textAlign: 'center' }}>
                                             <div style={{
                                                 width: '40px', height: '40px', borderRadius: '50%',
-                                                background: step > i + 1 ? 'var(--success)' : step === i + 1 ? 'linear-gradient(135deg, var(--secondary), var(--secondary-light))' : 'var(--gray-300)',
+                                                /* Flat gold for the current step (an active-state indicator, one of
+                                                   gold's allowed roles) — no gradient. Green for completed steps. */
+                                                background: step > i + 1 ? 'var(--success)' : step === i + 1 ? 'var(--gold)' : 'var(--gray-300)',
                                                 display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.5rem',
-                                                color: step >= i + 1 ? 'var(--primary)' : 'var(--gray-500)', fontWeight: 700,
+                                                color: step > i + 1 ? 'var(--on-dark)' : step === i + 1 ? 'var(--navy)' : 'var(--gray-500)', fontWeight: 700,
                                                 fontSize: '0.9rem',
                                             }}>
                                                 {step > i + 1 ? '✓' : i + 1}
                                             </div>
-                                            <div style={{ fontSize: '0.75rem', color: step === i + 1 ? 'var(--primary)' : 'var(--text-muted)', fontWeight: step === i + 1 ? 600 : 400, whiteSpace: 'nowrap' }}>{label}</div>
+                                            <div style={{ fontSize: '0.75rem', color: step === i + 1 ? 'var(--navy)' : 'var(--text-muted)', fontWeight: step === i + 1 ? 600 : 400, whiteSpace: 'nowrap' }}>{label}</div>
                                         </div>
-                                        {i < 2 && <div style={{ width: 'clamp(30px, 8vw, 80px)', height: '2px', background: step > i + 1 ? 'var(--secondary)' : 'var(--gray-300)', margin: '0 0.5rem 1.5rem' }} />}
+                                        {i < 2 && <div style={{ width: 'clamp(30px, 8vw, 80px)', height: '2px', background: step > i + 1 ? 'var(--success)' : 'var(--gray-300)', margin: '0 0.5rem 1.5rem' }} />}
                                     </div>
                                 ))}
                             </div>
@@ -298,15 +366,17 @@ export default function BookOnlineClient() {
                                 {/* Step 1: Select Service */}
                                 {step === 1 && (
                                     <div className="card">
-                                        <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Select Your Service</h2>
+                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>Select Your Service</h2>
                                         <div className="grid-2">
                                             {services.map((svc) => (
                                                 <label key={svc.id} style={{
                                                     display: 'flex', alignItems: 'center', gap: '1rem',
                                                     padding: '1.2rem 1.5rem', borderRadius: 'var(--radius-md)',
-                                                    border: `2px solid ${formData.service === svc.id ? 'var(--secondary)' : 'var(--gray-300)'}`,
+                                                    /* Gold border marks the selected card — an active-state indicator,
+                                                       and only one radio option is ever selected at a time. */
+                                                    border: `2px solid ${formData.service === svc.id ? 'var(--gold)' : 'var(--gray-300)'}`,
                                                     cursor: 'pointer', transition: 'all 0.2s',
-                                                    background: formData.service === svc.id ? 'rgba(12, 32, 122,0.08)' : 'var(--white)',
+                                                    background: 'var(--white)',
                                                 }}>
                                                     <input type="radio" name="service" value={svc.id} checked={formData.service === svc.id} onChange={handleChange} style={{ display: 'none' }} />
                                                     <span style={{ fontSize: '1.8rem' }}>{svc.icon}</span>
@@ -327,9 +397,9 @@ export default function BookOnlineClient() {
                                 {/* Step 2: Trip Details */}
                                 {step === 2 && (
                                     <div className="card">
-                                        <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Trip Details</h2>
+                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>Trip Details</h2>
                                         {Object.keys(step2Errors).length > 0 && (
-                                            <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid #ef4444', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: '#b91c1c', fontSize: '0.85rem' }}>
+                                            <div style={{ background: 'rgba(179, 38, 30, 0.08)', border: '1px solid var(--error)', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: 'var(--error)', fontSize: '0.85rem' }}>
                                                 Please fill in all required fields before continuing.
                                             </div>
                                         )}
@@ -343,7 +413,7 @@ export default function BookOnlineClient() {
                                                     required
                                                     invalid={!!step2Errors.from}
                                                 />
-                                                {step2Errors.from && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.from}</p>}
+                                                {step2Errors.from && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.from}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <SearchAutocomplete
@@ -354,17 +424,17 @@ export default function BookOnlineClient() {
                                                     required
                                                     invalid={!!step2Errors.to}
                                                 />
-                                                {step2Errors.to && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.to}</p>}
+                                                {step2Errors.to && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.to}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <label className="form-label">Travel Date *</label>
-                                                <input type="date" name="date" className="form-input" value={formData.date} onChange={handleChange} aria-invalid={!!step2Errors.date} style={step2Errors.date ? { borderColor: '#ef4444' } : undefined} required />
-                                                {step2Errors.date && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.date}</p>}
+                                                <input type="date" name="date" className="form-input" value={formData.date} onChange={handleChange} aria-invalid={!!step2Errors.date} style={step2Errors.date ? { borderColor: 'var(--error)' } : undefined} required />
+                                                {step2Errors.date && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.date}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <label className="form-label">Pickup Time *</label>
-                                                <input type="time" name="time" className="form-input" value={formData.time} onChange={handleChange} aria-invalid={!!step2Errors.time} style={step2Errors.time ? { borderColor: '#ef4444' } : undefined} required />
-                                                {step2Errors.time && <p style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.time}</p>}
+                                                <input type="time" name="time" className="form-input" value={formData.time} onChange={handleChange} aria-invalid={!!step2Errors.time} style={step2Errors.time ? { borderColor: 'var(--error)' } : undefined} required />
+                                                {step2Errors.time && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.time}</p>}
                                             </div>
                                         </div>
                                         <div className="grid-2">
@@ -379,7 +449,7 @@ export default function BookOnlineClient() {
                                                 {formData.vehicleName ? (
                                                     <div className="form-input" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-dark)', fontWeight: 600 }}>
                                                         <span>🚗 {formData.vehicleName}</span>
-                                                        <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--secondary)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Change</button>
+                                                        <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--teal)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Change</button>
                                                     </div>
                                                 ) : (
                                                     <select name="vehicleName" className="form-select" value={formData.vehicleName} onChange={handleChange}>
@@ -399,9 +469,9 @@ export default function BookOnlineClient() {
                                 {/* Step 3: Personal Info */}
                                 {step === 3 && (
                                     <div className="card">
-                                        <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Your Information</h2>
+                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>Your Information</h2>
                                         {submitError && (
-                                            <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid #ef4444', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: '#b91c1c', fontSize: '0.85rem' }}>
+                                            <div style={{ background: 'rgba(179, 38, 30, 0.08)', border: '1px solid var(--error)', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: 'var(--error)', fontSize: '0.85rem' }}>
                                                 {submitError} Your entered details are still here — please try again.
                                             </div>
                                         )}

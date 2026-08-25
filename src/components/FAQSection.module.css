@@ -1,5 +1,5 @@
 .faqSection {
-    background: var(--bg-base);
+    background: var(--ivory, var(--bg-base));
     padding: var(--space-20) 0;
 }
 
@@ -14,17 +14,19 @@
 
 /* Each accordion row */
 .accordionItem {
-    background: var(--bg-card);
+    background: var(--white, var(--bg-card));
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(12, 32, 122, 0.06);
+    border: 1px solid var(--line);
     border-left: 4px solid transparent;
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     transition: border-color var(--ease-base), box-shadow var(--ease-base);
 }
 
+/* Gold, not teal — this is an active-state indicator (explicitly one of
+   gold's allowed roles), not interactive text. */
 .accordionItemOpen {
-    border-left-color: var(--accent);
+    border-left-color: var(--gold, var(--accent));
     box-shadow: var(--shadow-md);
 }
 
@@ -44,26 +46,34 @@
 }
 
 .accordionTrigger:hover {
-    background: rgba(12, 32, 122, 0.04);
+    background: rgba(47, 111, 115, 0.05);
 }
 
 .accordionQuestion {
     font-size: var(--text-base);
     font-weight: 600;
-    color: var(--text-main);
+    color: var(--text, var(--text-main));
     line-height: 1.5;
     font-family: var(--font-body);
 }
 
+/* Navy, not gold or teal — gold fails contrast as text on a light
+   background (it's a fill/mark colour only), and this isn't a link. */
 .accordionItemOpen .accordionQuestion {
-    color: var(--accent);
+    color: var(--navy, var(--accent));
 }
 
-/* Chevron icon */
+/* Chevron icon — monochrome ink at rest; gold when open, since an
+   icon glyph is a non-text mark (same allowance as rating stars),
+   reinforcing the active state without using gold as text. */
 .accordionIcon {
-    color: var(--accent);
+    color: var(--ink, var(--accent));
     flex-shrink: 0;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.accordionItemOpen .accordionIcon {
+    color: var(--gold, var(--accent));
 }
 
 .accordionIconOpen {

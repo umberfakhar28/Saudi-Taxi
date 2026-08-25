@@ -1,86 +1,105 @@
 /* ===================================================
    GULF TRIP SERVICE — Premium Transfer Brand
-   v6 — White 60 / Deep Navy #0C207A 30 / Brass #C8952F 10
+   v7 — 3-Colour System: Ivory 60 / Navy #081827 30 / Gold #B8945B 10
 
-   Changes from v5:
-   - accent #2454E8 -> #0C207A (5.99:1 -> 13.97:1 on white)
-   - brass #C8952F introduced as the true 10% accent
-   - body{} no longer inherits --text-muted (3.18:1 -> 9.42:1)
-   - --text-placeholder 2.28:1 -> 4.69:1
-   - hover is motion, not a lighter tint (was 4.19:1 -> now 11.68:1)
-   - decorative rules/table chrome demoted to --line-strong/--text-muted
-   Token NAMES are unchanged, so component files need no edits.
+   Changes from v6:
+   - Strict 60/30/10 replaces the old "white 60 / navy 30 / brass 10" —
+     the palette itself barely moved, but every section/card/icon that
+     used to carry a permanent blue or brass TINT as decoration had that
+     tint removed; navy and gold now appear only as flat fills or text,
+     never as a background wash.
+   - Teal (#2F6F73, was --accent-primary's blue #0C207A) is DEMOTED from a
+     brand/section colour to a purely functional one: inline links, focus
+     rings, text-button hover. It never fills a background, tints a card,
+     or colours an icon anymore.
+   - Headings now use navy (--text-primary), body copy uses ink
+     (--text-secondary) — previously both were slate/charcoal variants of
+     the same near-black. This is the one place a genuinely new colour
+     role was introduced, not just a hex swap.
+   - --accent-light/--accent-subtle (used for tinted icon-badge/pill
+     backgrounds sitewide) now resolve to white/transparent — "no tinted
+     background bands" is a hard rule in this pass.
+   - --brass renamed in spirit only (kept the same alias) to the new gold
+     #B8945B; --brass-bright repurposed as the gold hover/pressed shade.
+   Token NAMES are unchanged, so most component files need no edits —
+   but .btn-primary/.btn-secondary/.btn-outline-gold/.card-icon below are
+   overridden explicitly rather than left to the alias, because this pass
+   splits what used to be one "brand blue" into three different roles
+   (gold for primary actions, navy for secondary/headings, teal for
+   links) that a single token can no longer serve correctly.
    =================================================== */
 
-/* ===== DESIGN SYSTEM — Light + Confident Blue ===== */
+/* ===== DESIGN SYSTEM — Ivory / Navy / Gold ===== */
 :root {
   /* ===== CORE BACKGROUND SYSTEM ===== */
-  --bg-primary:    #050C33;      /* Reserved dark — footer, CTA bands only */
-  --bg-secondary:  #FFFFFF;      /* Main page background */
-  --bg-tertiary:   #F3F5F9;      /* Alternate light, card gradient partner */
+  --bg-primary:    #081827;      /* Navy — header, footer, dark bands */
+  --bg-secondary:  #FFFFFF;      /* Card surfaces only, never a section bg */
+  --bg-tertiary:   #F5F2EA;      /* Ivory — was a separate cool-toned alternate; consolidated into one true ivory */
 
   /* ===== SURFACE SYSTEM ===== */
   --surface-1:     #FFFFFF;      /* Cards */
-  --surface-2:     #F6F7FA;      /* Elevated surfaces / hover */
+  --surface-2:     #F5F2EA;      /* Ivory alternating sections */
 
   /* ===== TEXT SYSTEM ===== */
-  --text-primary:   #101425;     /* Charcoal — headings */
-  --text-secondary: #3D465C;     /* Slate — body */
-  --text-muted:     #5C6579;     /* Soft slate — captions */
+  --text-primary:   #081827;     /* Navy — ALL headings, per the new rule */
+  --text-secondary: #1C2528;     /* Ink — body text on light */
+  --text-muted:     #5A6569;     /* Muted — secondary/caption text on light */
 
-  /* ===== ACCENT SYSTEM — CONFIDENT BLUE ===== */
-  --accent-primary:    #0C207A;  /* Premium blue */
-  --accent-hover:      #16309B;  /* Lighter blue */
-  --accent-light:      #EEF1FA;  /* Very light blue tint */
-  --accent-subtle:     rgba(12, 32, 122, 0.08);
-  --accent-on-light:   #FFFFFF;  /* Text on blue surfaces */
+  /* ===== FUNCTIONAL TEAL — interactive text only, never a fill ===== */
+  --accent-primary:    #2F6F73;  /* Teal — inline links, focus rings, text-button hover. NOT a background/icon colour anymore. */
+  --accent-hover:      #275D61;  /* Teal-dark — link hover/pressed */
+  --accent-light:      #FFFFFF;  /* Was a light blue tint for badge/pill backgrounds — now plain white; no tinted bands */
+  --accent-subtle:     rgba(0, 0, 0, 0);  /* Was a blue tint overlay — fully removed */
+  --accent-on-light:   #FFFFFF;  /* Text on a solid teal fill (rare — teal is text-only in most places now) */
 
-  /* ===== 10% ACCENT — BRASS (conversion + ceremony only) =====
-     Brass is 2.69:1 on white: it is a MATERIAL, never body text on
-     white. Use as fill, rule, or as text on navy (5.19:1). */
-  --brass:         #C8952F;
-  --brass-bright:  #E8C87A;   /* on navy only — 8.63:1 */
-  --brass-veil:    rgba(200, 149, 47, 0.14);
+  /* ===== 10% ACCENT — GOLD (primary actions + tiny marks only) =====
+     Gold is 2.8:1 on ivory: it is a MATERIAL, never body text on light.
+     Use as a button fill (with navy text), a rating-star mark, or a
+     single small rule/divider — never a section background, never an
+     icon colour, never more than one or two marks per section. */
+  --brass:         #B8945B;      /* Gold */
+  --brass-bright:  #A07D46;      /* Gold hover/pressed (was a lighter on-navy gold; repurposed as gold-dark) */
+  --brass-veil:    rgba(184, 148, 91, 0.14);
 
-  /* ===== NEUTRAL CHROME — the work blue used to do for free ===== */
-  --line:          #E2E5EC;
-  --line-strong:   #CBD0DA;
-  --row-hover:     #F7F8FB;
+  /* ===== NEUTRAL CHROME ===== */
+  --line:          #E4DFD2;      /* Warm ivory-toned border, replacing the old cool blue-grey line */
+  --line-strong:   #D6CDB8;
+  --row-hover:     #F5F2EA;
 
-  /* ===== NEUTRAL PALETTE (white → charcoal) ===== */
+  /* ===== NEUTRAL PALETTE (white → ink), warm-toned throughout ===== */
   --gray-50:  #FFFFFF;
-  --gray-100: #F6F7FA;
-  --gray-200: #E2E5EC;
-  --gray-300: #CBD0DA;
-  --gray-400: #C1C7D1;
-  --gray-500: #6B7488;
-  --gray-600: #5C6579;
-  --gray-700: #3D465C;
-  --gray-800: #232B45;
-  --gray-900: #101425;
+  --gray-100: #F5F2EA;
+  --gray-200: #E4DFD2;
+  --gray-300: #D6CDB8;
+  --gray-400: #B7AD97;
+  --gray-500: #8C8474;
+  --gray-600: #5A6569;
+  --gray-700: #1C2528;
+  --gray-800: #14191C;
+  --gray-900: #081827;
 
-  /* ===== SHADOWS - SOFT, ON WHITE ===== */
+  /* ===== SHADOWS — neutral elevation, not a brand colour ===== */
   --shadow-xs:  0 1px 2px rgba(16, 18, 26, 0.04);
   --shadow-sm:  0 2px 8px rgba(16, 18, 26, 0.06);
   --shadow-md:  0 4px 20px rgba(16, 18, 26, 0.08);
   --shadow-lg:  0 12px 36px rgba(16, 18, 26, 0.10);
   --shadow-xl:  0 24px 64px rgba(16, 18, 26, 0.14);
-  --shadow-gold:    0 8px 24px rgba(12, 32, 122, 0.16);
-  --shadow-gold-lg: 0 16px 48px rgba(12, 32, 122, 0.22);
+  --shadow-gold:    0 8px 24px rgba(8, 24, 39, 0.16);
+  --shadow-gold-lg: 0 16px 48px rgba(8, 24, 39, 0.22);
 
   --text-main:        var(--text-primary);
-  --text-body:        #3D465C;
+  --text-body:        #1C2528;
   --text-light:       var(--text-primary);
-  --text-placeholder: #6B7488;
+  --text-placeholder: #5A6569;
 
   --navy:           var(--bg-primary);
-  --navy-light:     #0A1547;
+  --navy-light:     #0E2438;      /* navy-soft — the ONLY alternate navy, for depth within a dark section */
   --navy-dark:      var(--bg-primary);
-  --navy-subtle:    rgba(16, 18, 26, 0.60);
-  --navy-text:      #FFFFFF;
+  --navy-subtle:    rgba(28, 37, 40, 0.60);
+  --navy-text:      #F5F2EA;
 
   --accent:         var(--accent-primary);
-  --accent-dark:    #081553;
+  --accent-dark:    #275D61;
   --accent-text:    #FFFFFF;
 
   --primary:        var(--accent-primary);
@@ -91,8 +110,10 @@
   --secondary-light: var(--accent-light);
   --secondary-dark:  var(--accent-dark);
 
-  --success: #1E9E5A;
-  --border-subtle: rgba(16, 18, 26, 0.08);
+  --success: #2E7D52;
+  --error:   #B3261E;
+  --warning: #9A6B12;
+  --border-subtle: rgba(28, 37, 40, 0.08);
   --spacing-md: var(--space-4);
 
   /* WhatsApp brand green — official glyph + CTA family only, not a
@@ -102,15 +123,27 @@
   --accent-green-hover: #1DA851;
 
   /* ------- Backgrounds ------- */
-  --bg-dark:     #030A25;        /* Reserved dark — CTA bands */
-  --bg-base:     #FFFFFF;        /* Section background */
-  --bg-subtle:   #F6F7FA;        /* Alternating light sections */
-  --bg-warm:     #FAFAF8;        /* Neutral warm off-white — page-hero, future alternating surfaces. Not beige/cream, just less cool than bg-subtle. */
+  --bg-dark:     #081827;        /* Navy — reserved dark bands */
+  --bg-base:     #FFFFFF;        /* Card/section-white only */
+  --bg-subtle:   #F5F2EA;        /* Ivory — alternating sections, was a cool grey */
+  --bg-warm:     #F5F2EA;        /* Consolidated into the same ivory — no separate "warm off-white" needed now that ivory IS the warm tone */
   --bg-card:     #FFFFFF;        /* Card fill */
   --bg-elevated: var(--surface-2);
   --bg-white:    var(--surface-1);
   --white:       #FFFFFF;
-  --black:       #0A0B10;
+  --black:       #14191C;
+
+  /* ===== On-dark neutrals (new, explicit names from the brief) ===== */
+  --on-dark:        #F5F2EA;
+  --on-dark-muted:  #B6C2CE;
+  --line-dark:      rgba(245, 242, 234, 0.14);
+  --ink:            #1C2528;
+  --muted:          #5A6569;
+  --gold:           var(--brass);
+  --gold-dark:      var(--brass-bright);
+  --teal:           var(--accent-primary);
+  --teal-dark:      var(--accent-hover);
+  --ivory:          #F5F2EA;
 
   /* ===== TYPOGRAPHY - INTER/PLUS JAKARTA SANS ===== */
   --font-heading: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
@@ -158,9 +191,6 @@
   --radius-xl:   24px;
   --radius-2xl:  32px;
   --radius-full: 9999px;
-
-  /* Inset glow for card surfaces */
-  --shadow-inset-gold: inset 0 1px 0 rgba(12, 32, 122, 0.12);
 
   /* ------- Transitions ------- */
   --ease-fast:   0.15s ease;
@@ -352,37 +382,19 @@ ul { list-style: none; }
    =================================================================== */
 .page-hero {
   padding: 10rem 0 5rem;
-  /* Was a 3-stop gradient ending on a blue-tinted #EEF1FA — now settles on
-     the neutral warm off-white so the hero reads white-first, not blue-first. */
-  background:
-    linear-gradient(160deg, #FFFFFF 0%, #F7F8FB 55%, var(--bg-warm) 100%);
+  /* Flat ivory — no gradient. Was previously a white-to-blue-tinted 3-stop
+     gradient; the sitewide colour pass rules out gradients entirely. */
+  background: var(--ivory, var(--bg-warm));
   color: var(--text-primary);
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-/* Soft ambient tint — trace amount of brand color, not a colored wash */
-.page-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(12, 32, 122, 0.03) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(12, 32, 122, 0.025) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-/* Dot texture — subtle on light background */
-.page-hero .dotPattern {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(16, 20, 37, 0.07) 1px, transparent 1px);
-  background-size: 44px 44px;
-  opacity: 0.4;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
-  pointer-events: none;
-}
+/* The ambient radial-gradient tint and dot-texture this used to have were
+   both removed rather than recoloured — old-blue tinted decoration with no
+   place in the stricter 3-colour system, matching the same fix already
+   applied to Features/Testimonials. */
 
 .page-hero::after {
   content: '';
@@ -447,87 +459,63 @@ ul { list-style: none; }
   overflow: hidden;
 }
 
-/* Ripple shimmer on hover */
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-  transition: left var(--ease-slow);
-}
+/* .btn::before shimmer removed — it was a gradient sweep on every button
+   sitewide, which the no-gradient rule rules out even as a hover polish
+   effect. Hover feedback now comes from colour/transform changes only. */
 
-.btn:hover::before {
-  left: 140%;
-}
-
-/* --- Primary CTA: Gold Background + Navy Text --- */
+/* --- Primary: gold fill, navy text — identical on ivory or navy sections,
+   so gold reads as "the primary action" everywhere, learned once. Flat
+   colour, no gradient. Maximum one visible per screenful (enforced at the
+   content level, not by CSS). --- */
 .btn-primary {
-  /* 230%-wide gradient inside a fixed frame. Hover slides it rather than
-     recolouring it, so the contrast floor never drops:
-     rest 13.97:1 → hover 11.68:1. Both clear AA comfortably. */
-  background-image: linear-gradient(105deg,
-      var(--accent-dark) 0%,
-      var(--accent-primary) 42%,
-      var(--accent-hover) 78%,
-      var(--accent-primary) 100%);
-  background-size: 230% 100%;
-  background-position: 0% 50%;
-  color: var(--accent-on-light);
+  background: var(--gold);
+  background-image: none;
+  color: var(--navy);
   border-color: transparent;
-  box-shadow: 0 6px 18px rgba(12, 32, 122, 0.28);
-  transition: background-position 0.6s var(--ease-base),
+  box-shadow: 0 6px 18px rgba(8, 24, 39, 0.2);
+  transition: background var(--ease-base),
               transform 0.28s var(--ease-base),
               box-shadow 0.38s var(--ease-base);
 }
 
-/* Brass filament along the top edge — widens on hover. */
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  left: 16%; right: 16%; top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--brass-bright), transparent);
-  opacity: 0.5;
-  transition: opacity 0.35s var(--ease-base),
-              left 0.5s var(--ease-base),
-              right 0.5s var(--ease-base);
-}
-
 .btn-primary:hover {
-  background-position: 100% 50%;
+  background: var(--gold-dark);
+  color: var(--navy);
   transform: translateY(-2px);
-  box-shadow: 0 14px 34px rgba(12, 32, 122, 0.34);
+  box-shadow: 0 14px 34px rgba(8, 24, 39, 0.28);
 }
-
-.btn-primary:hover::after { opacity: 1; left: 5%; right: 5%; }
 
 .btn-primary:active {
+  background: var(--gold-dark);
+  filter: brightness(0.94);
   transform: translateY(0) scale(0.985);
-  box-shadow: 0 2px 8px rgba(12, 32, 122, 0.30);
+  box-shadow: 0 2px 8px rgba(8, 24, 39, 0.24);
 }
 
 .btn-primary:disabled,
 .btn-primary[disabled] {
-  opacity: 0.5;
+  background: var(--line);
+  color: var(--muted);
+  filter: none;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-/* --- Secondary CTA: Gold Outline + Transparent --- */
+/* --- Secondary: navy fill on light sections. On navy sections this class
+   is expected to be re-scoped to the on-dark treatment by the page (see
+   .btn-outline below for the on-navy equivalent shape). --- */
 .btn-secondary {
-  background: transparent;
-  color: var(--accent-primary);
-  border-color: var(--accent-primary);
+  background: var(--navy);
+  color: var(--on-dark);
+  border-color: transparent;
 }
 
 .btn-secondary:hover {
-  background: var(--accent-primary);
-  color: var(--accent-on-light);
+  background: var(--navy-light);
+  color: var(--on-dark);
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(12, 32, 122, 0.35);
+  box-shadow: 0 8px 28px rgba(8, 24, 39, 0.28);
 }
 
 .btn-secondary:active {
@@ -536,38 +524,42 @@ ul { list-style: none; }
 
 .btn-secondary:disabled,
 .btn-secondary[disabled] {
-  opacity: 0.5;
+  background: var(--line);
+  color: var(--muted);
   cursor: not-allowed;
   transform: none;
 }
 
-/* --- Outline on dark backgrounds --- */
+/* --- Outline on navy backgrounds --- */
 .btn-outline {
   background: transparent;
-  color: var(--white);
-  border-color: rgba(255,255,255,0.6);
+  color: var(--on-dark);
+  border-color: var(--on-dark);
 }
 
 .btn-outline:hover {
-  background: var(--white);
-  color: var(--bg-primary);
-  border-color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--on-dark);
+  border-color: var(--on-dark);
 }
 
 .btn-outline:active {
   transform: translateY(1px) scale(0.98);
 }
 
-/* --- Outline Gold (on any background) --- */
+/* --- Outline gold — reserved for the rare case a gold-bordered button is
+   genuinely needed outside the primary/secondary pair. Not for routine use
+   — gold stays a fill or a mark, this is the exception, not a third
+   default button. --- */
 .btn-outline-gold {
   background: transparent;
-  color: var(--accent-primary);
-  border-color: var(--accent-primary);
+  color: var(--navy);
+  border-color: var(--gold);
 }
 
 .btn-outline-gold:hover {
-  background: var(--accent-primary);
-  color: var(--accent-on-light);
+  background: var(--gold);
+  color: var(--navy);
 }
 
 .btn-outline-gold:active {
@@ -608,67 +600,46 @@ ul { list-style: none; }
 /* ===================================================================
    CARDS — Luxury Dark Cards with Surface Depth
    =================================================================== */
+/* No coloured cards, no gradients: flat --white fill on ivory sections.
+   .card is reused inside a navy section here and there — those instances
+   need a local override to rgba(255,255,255,0.05), since a plain white
+   card would break the ivory/navy-only rule; flagged as a known follow-up
+   rather than solved with a media/parent-context hack here. */
 .card {
-  background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
+  background: var(--white);
   border-radius: var(--radius-lg);
-  /* Blue-tinted inset dropped — shadow-md/xl are already neutral (rgba on
-     #10121a), so the card no longer carries a permanent blue wash at rest. */
   box-shadow: var(--shadow-md);
   padding: var(--space-10) var(--space-8);
   transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(16, 18, 26, 0.07);
-}
-
-/* Tiny brass accent rule — the roadmap's "brass as a tiny decorative
-   micro-detail" applied literally, replacing what used to be a navy bar. */
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--brass), transparent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--ease-base);
+  border: 1px solid var(--line);
 }
 
 .card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-xl);
-  /* Navy stays the interaction signal (hover border), per the brand's
-     "navy primarily for interaction" role — only the accent bar went brass. */
-  border-color: rgba(12, 32, 122, 0.15);
-  background: linear-gradient(160deg, var(--surface-2) 0%, var(--bg-tertiary) 100%);
+  border-color: var(--line-strong);
 }
 
-.card:hover::before {
-  transform: scaleX(1);
-}
-
-/* Card Icon wrapper — neutral at rest so the same icon container isn't a
-   blue tile on every single card sitewide; navy appears on hover/interaction
-   instead of being always-on. */
+/* Card Icon wrapper — monochrome per the new rule: ink icon on a white
+   badge with a line border. No colour, no duotone, no gold detail. */
 .card-icon {
   width: 64px;
   height: 64px;
-  background: var(--bg-subtle);
+  background: var(--white);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-primary);
+  color: var(--ink);
   margin-bottom: var(--space-6);
-  transition: background var(--ease-base), color var(--ease-base), border-color var(--ease-base);
+  transition: border-color var(--ease-base);
   border: 1px solid var(--line);
 }
 
 .card:hover .card-icon {
-  background: var(--accent-light);
-  border-color: rgba(12, 32, 122, 0.18);
-  color: var(--accent-hover);
+  border-color: var(--line-strong);
 }
 
 .card h3 {
@@ -740,34 +711,32 @@ ul { list-style: none; }
 .form-textarea {
   width: 100%;
   padding: 13px 18px;
-  border: 1.5px solid rgba(16, 18, 26, 0.12);
+  border: 1.5px solid var(--line);
   border-radius: var(--radius-md);
   font-size: var(--text-base);
   font-family: var(--font-body);
-  color: var(--text-primary);
-  background: var(--surface-2);
+  color: var(--ink);
+  background: var(--white);
   transition: border-color var(--ease-base), box-shadow var(--ease-base), background var(--ease-base);
   outline: none;
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .form-input:hover,
 .form-select:hover,
 .form-textarea:hover {
-  border-color: rgba(12, 32, 122, 0.30);
-  background: var(--surface-1);
+  border-color: var(--line-strong);
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(12, 32, 122, 0.16), 0 1px 4px rgba(0, 0, 0, 0.40);
-  background: var(--surface-1);
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(47, 111, 115, 0.16);
 }
 
 .form-textarea {
@@ -785,13 +754,13 @@ ul { list-style: none; }
 .text-primary { color: var(--accent-primary); }
 .text-accent  { color: var(--accent-primary); }
 .text-muted   { color: var(--text-muted); }
-.text-white   { color: var(--text-primary); }
-.text-dark    { color: var(--text-secondary); }
 
-.bg-primary   { background-color: var(--accent-primary); color: var(--accent-on-light); }
+/* .text-white, .text-dark, .bg-primary and .bg-gold-mid were unused
+   anywhere in the app and also broke the sitewide colour rules (a teal
+   background fill, a teal/teal-dark/teal gradient) — deleted rather than
+   fixed, per "delete dead tokens, don't leave them orphaned." */
 .bg-subtle    { background-color: var(--bg-tertiary); }
-.bg-dark      { background-color: var(--bg-primary); color: var(--white); }
-.bg-gold-mid  { background: linear-gradient(135deg, var(--bg-dark), var(--accent-dark), var(--accent-primary)); color: var(--white); }
+.bg-dark      { background-color: var(--bg-primary); color: var(--on-dark); }
 
 /* Flex */
 .flex         { display: flex; }
@@ -842,7 +811,7 @@ ul { list-style: none; }
 .divider {
   width: 100%;
   height: 1px;
-  background: rgba(16, 18, 26, 0.08);
+  background: var(--line);
   margin: var(--space-8) 0;
 }
 
@@ -887,7 +856,7 @@ ul { list-style: none; }
   font-family: var(--font-heading);
   font-size: var(--text-5xl);
   font-weight: 700;
-  color: var(--accent-primary);
+  color: var(--gold);
   line-height: 1;
   margin-bottom: var(--space-2);
 }
@@ -910,7 +879,7 @@ ul { list-style: none; }
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  border: 1px solid rgba(16, 18, 26, 0.07);
+  border: 1px solid var(--line);
 }
 
 .price-table thead tr {
@@ -934,7 +903,7 @@ ul { list-style: none; }
 }
 
 .price-table tbody tr {
-  border-bottom: 1px solid rgba(16, 18, 26, 0.06);
+  border-bottom: 1px solid var(--line);
   transition: background var(--ease-fast);
 }
 
@@ -948,15 +917,10 @@ ul { list-style: none; }
   color: var(--text-secondary);
 }
 
-.price-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
-  color: var(--accent-on-light);
-  padding: 4px 16px;
-  border-radius: var(--radius-full);
-  font-weight: 700;
-  font-size: var(--text-sm);
-}
+/* .price-badge (a teal-gradient "Check Rates" pill) was unused anywhere in
+   the app — the pricing-badge pattern it belonged to was already removed
+   sitewide under the "no pricing anywhere" rule (see serviceData.ts) —
+   deleted rather than recoloured. */
 
 /* ===================================================================
    Hover utility
@@ -1029,7 +993,7 @@ ul { list-style: none; }
 .guide-content .hero,
 .guide-content .route-hero {
   padding: 10rem 0 5rem;
-  background: linear-gradient(160deg, #FFFFFF 0%, #F7F8FB 55%, #EEF1FA 100%);
+  background: var(--ivory);
   color: var(--text-primary);
   text-align: center;
 }
@@ -1061,8 +1025,10 @@ ul { list-style: none; }
   font-weight: 600;
 }
 .guide-content .direct-answer {
-  background: var(--accent-light);
-  border-inline-start: 3px solid var(--accent-primary);
+  background: var(--white);
+  /* Gold, not teal — a static decorative rule is one of gold's allowed
+     roles; teal is reserved for interactive text only. */
+  border-inline-start: 3px solid var(--gold);
   border-radius: var(--radius-md);
   padding: var(--space-6);
   margin: var(--space-8) 0;
@@ -1098,22 +1064,22 @@ ul { list-style: none; }
   text-decoration: none;
 }
 .guide-content .btn-primary {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
-  color: var(--accent-on-light);
-  box-shadow: 0 4px 20px rgba(12, 32, 122, 0.25);
+  background: var(--gold);
+  color: var(--navy);
+  box-shadow: 0 4px 20px rgba(8, 24, 39, 0.2);
 }
 .guide-content .btn-primary:hover {
+  background: var(--gold-dark);
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(12, 32, 122, 0.35);
+  box-shadow: 0 8px 28px rgba(8, 24, 39, 0.3);
 }
 .guide-content .btn-secondary {
-  background: transparent;
-  color: var(--accent-primary);
-  border-color: var(--accent-primary);
+  background: var(--navy);
+  color: var(--on-dark);
+  border-color: var(--navy);
 }
 .guide-content .btn-secondary:hover {
-  background: var(--accent-primary);
-  color: var(--accent-on-light);
+  background: var(--navy-light);
 }
 .guide-content .btn-large { padding: 17px 44px; font-size: var(--text-base); }
 .guide-content .btn-small {
@@ -1132,12 +1098,16 @@ ul { list-style: none; }
   transition: all var(--ease-base);
   white-space: nowrap;
   text-decoration: none;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
-  color: var(--accent-on-light);
+  /* Navy, not gold — this button repeats once per card across grids of
+     package/booking-option cards, and gold is capped at 1-2 marks per
+     screenful. Matches the sitewide .btn-secondary treatment. */
+  background: var(--navy);
+  color: var(--on-dark);
 }
 .guide-content .btn-small:hover {
+  background: var(--navy-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(12, 32, 122, 0.3);
+  box-shadow: 0 8px 20px rgba(8, 24, 39, 0.25);
 }
 
 /* WhatsApp brand button — official green, not the site's blue accent. */
@@ -1232,7 +1202,7 @@ ul { list-style: none; }
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
   font-weight: 700;
-  color: var(--accent-primary);
+  color: var(--navy);
   line-height: 1;
   margin-bottom: var(--space-2);
 }
@@ -1258,15 +1228,15 @@ ul { list-style: none; }
   margin: var(--space-6) 0;
 }
 .guide-content .terminal-badges .badge {
-  background: rgba(12, 32, 122, 0.10);
-  border: 1px solid rgba(12, 32, 122, 0.32);
-  color: var(--accent-primary);
+  background: var(--white);
+  border: 1px solid var(--line);
+  color: var(--ink);
 }
 
 /* --- Cards: every repeating info block shares one visual language,
-   matching the site's real .card (gradient surface, radius, shadow,
-   top accent-bar on hover, padding). .faq-item is excluded — it's a
-   <details> accordion row now, styled separately below. div.benefit is
+   matching the site's real .card (flat surface, radius, shadow, padding).
+   .faq-item is excluded — it's a <details> accordion row now, styled
+   separately below. div.benefit is
    tag-qualified because the same class also labels a plain <p> checkmark
    note in makkah-to-madinah-taxi.html — only the real card should get
    card chrome. --- */
@@ -1276,32 +1246,20 @@ ul { list-style: none; }
   div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box, .cta-box
 ) {
   display: block;
-  background: linear-gradient(160deg, var(--surface-1) 0%, var(--bg-tertiary) 100%);
-  border: 1px solid rgba(16, 18, 26, 0.07);
+  /* Flat surface, no gradient — matches the shared .card above. */
+  background: var(--white);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  /* Blue-tinted inset dropped, matching the shared .card above. */
   box-shadow: var(--shadow-md);
   padding: var(--space-6);
   position: relative;
   overflow: hidden;
   transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
 }
-.guide-content :is(
-  .route-card, .related-card, .ziyarat-card, .vehicle-card, .terminal-card,
-  .district-card, .significance-card, .scenario-card, .info-section,
-  div.benefit, .feature, .package, .reason, .trust-item, .option, .fact-box, .cta-box
-)::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 2px;
-  /* Brass tiny accent, matching the shared .card top bar. */
-  background: linear-gradient(90deg, transparent, var(--brass), transparent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--ease-base);
-}
+/* The gold top-bar accent this used to show on hover was removed — these
+   cards render many-per-grid, and gold is capped at 1-2 marks per
+   screenful (matching the .card fix elsewhere). Hover feedback below is
+   lift + border + shadow only, no colour. */
 /* Only cards that are still real links get a hover lift / pointer cursor —
    the ones converted from <a> to <div> when their destination was removed
    correctly stay non-interactive. */
@@ -1310,19 +1268,16 @@ ul { list-style: none; }
 .guide-content a.ziyarat-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border-color: rgba(12, 32, 122, 0.15);
+  border-color: var(--line-strong);
 }
-.guide-content a.route-card:hover::before,
-.guide-content a.related-card:hover::before,
-.guide-content a.ziyarat-card:hover::before {
-  transform: scaleX(1);
-}
-/* "Most popular" / "recommended" card highlight. */
+/* "Most popular" / "recommended" card highlight — navy, not teal (teal
+   never colours a card border/fill; navy is the correct material for a
+   fixed, non-interactive highlight). */
 .guide-content .route-card.featured,
 .guide-content .package.recommended,
 .guide-content .cta-box.featured {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-lg), 0 0 0 2px rgba(12, 32, 122, 0.15);
+  border-color: var(--navy);
+  box-shadow: var(--shadow-lg), 0 0 0 2px rgba(8, 24, 39, 0.12);
 }
 
 /* Quick-book row cards (booking-options / cta-boxes / package-options) —
@@ -1362,8 +1317,8 @@ ul { list-style: none; }
 }
 .guide-content .badge-popular {
   display: inline-block;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
-  color: var(--accent-on-light);
+  background: var(--navy);
+  color: var(--on-dark);
   padding: 4px 14px;
   border-radius: var(--radius-full);
   font-weight: 700;
@@ -1388,7 +1343,7 @@ ul { list-style: none; }
 /* The <p class="benefit"> checkmark note (distinct from div.benefit cards
    above) — a highlighted inline note, not a card. */
 .guide-content p.benefit {
-  color: var(--accent-primary);
+  color: var(--navy);
   font-weight: 600;
 }
 
@@ -1412,7 +1367,7 @@ ul { list-style: none; }
 }
 .guide-content .terminal-info h4 {
   font-size: var(--text-sm);
-  color: var(--accent-primary);
+  color: var(--navy);
   margin-top: var(--space-4);
   margin-bottom: var(--space-2);
   text-transform: uppercase;
@@ -1441,8 +1396,8 @@ ul { list-style: none; }
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--accent-subtle);
-  color: var(--accent-primary);
+  background: var(--white);
+  color: var(--navy);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1450,7 +1405,7 @@ ul { list-style: none; }
   font-weight: 800;
   font-size: var(--text-xl);
   font-family: var(--font-heading);
-  border: 1px solid rgba(12, 32, 122, 0.18);
+  border: 1px solid var(--line);
 }
 .guide-content .process-step h3,
 .guide-content .meet-greet-process > .step h3,
@@ -1498,14 +1453,14 @@ ul { list-style: none; }
 }
 .guide-content .faq-item {
   background: var(--surface-1);
-  border: 1px solid rgba(16, 18, 26, 0.08);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: 0;
   overflow: hidden;
   transition: border-color var(--ease-base), box-shadow var(--ease-base);
 }
 .guide-content .faq-item[open] {
-  border-color: rgba(12, 32, 122, 0.25);
+  border-color: var(--gold);
   box-shadow: var(--shadow-sm);
 }
 .guide-content .faq-item summary {
@@ -1523,8 +1478,8 @@ ul { list-style: none; }
 }
 .guide-content .faq-item summary::-webkit-details-marker { display: none; }
 .guide-content .faq-item[open] summary {
-  color: var(--accent-primary);
-  border-bottom: 1px solid rgba(16, 18, 26, 0.08);
+  color: var(--navy);
+  border-bottom: 1px solid var(--line);
 }
 /* Chevron indicator — rotates via the native [open] attribute, no JS. */
 .guide-content .faq-item summary::after {
@@ -1541,7 +1496,7 @@ ul { list-style: none; }
 .guide-content .faq-item[open] summary::after {
   transform: rotate(-135deg);
   margin-top: 4px;
-  border-color: var(--accent-primary);
+  border-color: var(--gold);
 }
 .guide-content .faq-item > p {
   padding: var(--space-5) var(--space-6);
@@ -1562,7 +1517,7 @@ ul { list-style: none; }
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  border: 1px solid rgba(16, 18, 26, 0.07);
+  border: 1px solid var(--line);
   margin: var(--space-8) 0;
 }
 .guide-content thead tr {
@@ -1578,14 +1533,16 @@ ul { list-style: none; }
   color: var(--text-muted);
 }
 .guide-content tbody tr {
-  border-bottom: 1px solid rgba(16, 18, 26, 0.06);
+  border-bottom: 1px solid var(--line);
   transition: background var(--ease-fast);
 }
 .guide-content tbody tr:last-child { border-bottom: none; }
 .guide-content tbody tr:hover { background: var(--row-hover); }
+/* A faint navy tint, not teal/gold — a static row highlight isn't
+   interactive text or a mark, so neither functional colour applies. */
 .guide-content tr.recommended,
 .guide-content tr.popular {
-  background: var(--accent-subtle);
+  background: rgba(8, 24, 39, 0.04);
 }
 .guide-content td {
   padding: 1rem 1.5rem;

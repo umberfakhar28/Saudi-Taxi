@@ -143,7 +143,7 @@ export default function HotelPage({ data }: { data: HotelData }) {
             />
             <div className={styles.heroScrim} />
             <div className={`container ${styles.heroContent}`}>
-              <span className="badge" style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "var(--white)" }}>
+              <span className="badge" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--line-dark)", color: "var(--on-dark)" }}>
                 Hotel Transfer Service
               </span>
               <h1>{data.h1}</h1>
@@ -387,9 +387,9 @@ export default function HotelPage({ data }: { data: HotelData }) {
               {process.map((step, i) => (
                 <div key={step.title} style={{ textAlign: "center" }}>
                   <div style={{
-                    width: 56, height: 56, borderRadius: "50%", background: "var(--accent-subtle)", color: "var(--accent-primary)",
+                    width: 56, height: 56, borderRadius: "50%", background: "var(--white)", color: "var(--navy)",
                     display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto var(--space-4)",
-                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid rgba(12,32,122,0.18)",
+                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid var(--line)",
                   }}>{i + 1}</div>
                   <h3 style={{ fontSize: "var(--text-base)", marginBottom: "var(--space-2)" }}>{step.title}</h3>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{step.description}</p>
@@ -502,7 +502,7 @@ export default function HotelPage({ data }: { data: HotelData }) {
               </div>
             </div>
             {city && city.nearbyCities.length > 0 && (
-              <div style={{ marginTop: "var(--space-10)", paddingTop: "var(--space-10)", borderTop: "1px solid rgba(16,18,26,0.08)" }}>
+              <div style={{ marginTop: "var(--space-10)", paddingTop: "var(--space-10)", borderTop: "1px solid var(--line)" }}>
                 <h3 style={{ marginBottom: "var(--space-4)" }}>Nearby Cities</h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                   {city.nearbyCities.map((n) => (
@@ -515,11 +515,11 @@ export default function HotelPage({ data }: { data: HotelData }) {
         </section>
 
         {/* Final CTA */}
-        <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "var(--space-20) 0", textAlign: "center" }}>
+        <section style={{ background: "var(--bg-dark)", padding: "var(--space-20) 0", textAlign: "center" }}>
           <div className="container">
-            <span className="section-eyebrow">Book Now</span>
-            <h2 style={{ color: "var(--white)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
-            <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
+            <span className="section-eyebrow" style={{ background: "rgba(255,255,255,0.08)", borderColor: "var(--line-dark)", color: "var(--on-dark)" }}>Book Now</span>
+            <h2 style={{ color: "var(--on-dark)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
+            <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
               Professional drivers, private vehicles, 24/7 availability to and from {data.hotelName}.
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>

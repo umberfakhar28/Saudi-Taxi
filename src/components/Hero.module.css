@@ -33,7 +33,7 @@
     min-height: 620px;
     /* Dark fallback so there's no white flash before the image paints —
        also what shows through the scrim's lighter edges. */
-    background: var(--bg-dark, #050C33);
+    background: var(--navy, #081827);
 }
 
 /* ---- Photo frame — fills the full hero, edge to edge ---- */
@@ -43,7 +43,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: var(--bg-dark, #050C33);
+    background: var(--navy, #081827);
 }
 
 /* Shared object-fit for every slide (crops to fill the viewport-height
@@ -58,31 +58,23 @@
     object-fit: cover;
 }
 
-/* Dark scrim over the photo — two gradients layered, kept light so this
-   photo (already well-lit, logo visible on the car door) reads clear and
-   bright rather than shadowed:
-   1. Left-to-right: darker on the left (where the headline text sits),
-      medium through the center, much lighter by ~62% width so the car,
-      skyline and sunset detail on the right stay rich — text needs the
-      scrim, the photo doesn't.
-   2. Top-to-bottom: a soft darker band near the very top (under the
-      transparent nav, for logo/link legibility) and again toward the
-      bottom, lighter through the middle where the car/skyline show
-      through.
-   Contrast re-checked against --white text for the worst case (a
-   near-white source pixel under the strongest, top-left corner of the
-   scrim) — still clears the 4.5:1 AA floor. */
+/* Flat navy tint over the photo (Homepage Colour System brief — no
+   gradients anywhere, including scrims). A single flat opacity is slightly
+   less nuanced than the old two-axis gradient scrim it replaces, but at
+   this strength it still clears the 4.5:1 AA floor for the worst case (a
+   near-white source pixel under the text column) — the old gradient's own
+   darkest point was 0.60, so 0.58 flat sits right at the already-verified
+   safe level. */
 .heroScrim {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        linear-gradient(90deg, rgba(3, 10, 37, 0.60) 0%, rgba(3, 10, 37, 0.36) 40%, rgba(3, 10, 37, 0.14) 62%, rgba(3, 10, 37, 0.02) 100%),
-        linear-gradient(180deg, rgba(3, 10, 37, 0.40) 0%, rgba(3, 10, 37, 0.05) 15%, rgba(3, 10, 37, 0.08) 55%, rgba(3, 10, 37, 0.34) 100%);
+    background: var(--navy, #081827);
+    opacity: 0.58;
     z-index: 1;
 }
 
-/* Blue accent strip at the bottom of the photo frame */
+/* Flat gold accent strip at the bottom of the photo frame — no gradient */
 .hero::after {
     content: '';
     position: absolute;
@@ -90,7 +82,7 @@
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--brass, var(--accent-hover)), var(--accent));
+    background: var(--gold, #B8945B);
     z-index: 5;
 }
 
@@ -128,20 +120,20 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(245, 242, 234, 0.12);
+    border: 1px solid rgba(245, 242, 234, 0.28);
     padding: var(--space-2) var(--space-5);
     border-radius: var(--radius-full);
     font-size: var(--text-xs);
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--white, #FFFFFF);
+    color: var(--text-on-dark, #F5F2EA);
     margin-bottom: var(--space-5);
 }
 
 .badgeIcon {
-    color: var(--brass, #C8952F);
+    color: var(--gold, #B8945B);
     flex-shrink: 0;
 }
 
@@ -155,24 +147,24 @@
     font-family: var(--font-heading);
     font-size: clamp(2.4rem, 4vw, 3.375rem);
     font-weight: 700;
-    color: var(--white, #FFFFFF);
+    color: var(--text-on-dark, #F5F2EA);
     line-height: 1.1;
     letter-spacing: -0.02em;
     margin-bottom: var(--space-5);
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
 }
 
+/* Flat gold — was a gradient text-fill, which the brief's no-gradient rule
+   rules out even for decorative emphasis text. */
 .title em {
     font-style: normal;
-    background: linear-gradient(135deg, var(--brass, #C8952F), #E8C77A);
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
+    color: var(--gold, #B8945B);
 }
 
 .subtitle {
     font-size: var(--text-lg);
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--text-on-dark, #F5F2EA);
+    opacity: 0.9;
     line-height: 1.55;
     max-width: 600px;
     margin-bottom: 0;
@@ -187,6 +179,12 @@
     gap: var(--space-4);
     margin-top: var(--space-7);
 }
+
+/* No local .btn-primary override needed anymore — the corrected global
+   rule in globals.css is already gold-bg/navy-text unconditionally, with
+   hover=gold-dark. This override used to duplicate that, except its hover
+   lightened to gold-300, which the sitewide spec doesn't call for (hover
+   should darken, not lighten), so it was removed rather than kept. */
 
 /* ---- Search section — its own band below the hero photo, so the photo
    (and headline/CTAs over it) stay fully visible instead of the search
@@ -232,15 +230,9 @@
         justify-content: center;
     }
 
-    /* The left-heavy horizontal scrim above assumes text stays on the
-       left — once .content re-centers across the full width, text can sit
-       anywhere, so fall back to uniform full-width darkening (same
-       strength as the left side above) rather than leaving the
-       right-hand text exposed over a barely-darkened patch of sky. */
-    .heroScrim {
-        background:
-            linear-gradient(180deg, rgba(3, 10, 37, 0.58) 0%, rgba(3, 10, 37, 0.30) 20%, rgba(3, 10, 37, 0.40) 55%, rgba(3, 10, 37, 0.62) 100%);
-    }
+    /* No scrim override needed below 900px anymore — the flat tint above
+       is already uniform in every direction, unlike the old directional
+       gradient it replaced, so it already works with .content re-centered. */
 }
 
 @media (max-width: 480px) {

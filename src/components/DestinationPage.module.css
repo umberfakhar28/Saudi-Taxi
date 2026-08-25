@@ -6,7 +6,7 @@
 
 .quickFacts {
   background: var(--bg-subtle);
-  border-bottom: 1px solid rgba(16, 18, 26, 0.07);
+  border-bottom: 1px solid var(--line);
   padding: var(--space-6) 0;
 }
 
@@ -21,7 +21,7 @@
   flex-direction: column;
   gap: 4px;
   text-align: center;
-  border-inline-start: 1px solid rgba(16, 18, 26, 0.08);
+  border-inline-start: 1px solid var(--line);
   padding-inline-start: var(--space-4);
 }
 

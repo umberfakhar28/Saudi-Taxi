@@ -6,6 +6,12 @@ import Image from 'next/image';
 import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
 import styles from './VehicleTypeCarousel.module.css';
 
+// `passengers` is parsed straight from each vehicle's own `desc` (already a
+// real, stated seat count) rather than duplicated as a second hand-typed
+// number. `luggage` is a reasonable capacity estimate for the named
+// real-world vehicle model — approximate, like any car-hire spec sheet,
+// never a business/operational claim. `category` (already existed) doubles
+// as the class tag.
 const vehicleTypes = [
     {
         slug: 'ford-taurus',
@@ -13,6 +19,7 @@ const vehicleTypes = [
         name: 'Ford Taurus',
         category: 'Standard',
         desc: 'Comfortable 3-seat sedan — ideal for solo travelers and short city transfers.',
+        luggage: 2,
     },
     {
         slug: 'bmw-7-series',
@@ -20,6 +27,7 @@ const vehicleTypes = [
         name: 'BMW 7 Series',
         category: 'Luxury',
         desc: 'Executive 3-seat sedan with a refined cabin — built for business travel in comfort.',
+        luggage: 3,
     },
     {
         slug: 'genesis-g90',
@@ -27,6 +35,7 @@ const vehicleTypes = [
         name: 'Genesis G90',
         category: 'Luxury',
         desc: 'Flagship 3-seat sedan with a whisper-quiet ride — perfect for VIP airport pickups.',
+        luggage: 3,
     },
     {
         slug: 'mercedes-s-class',
@@ -34,6 +43,7 @@ const vehicleTypes = [
         name: 'Mercedes-Benz S-Class',
         category: 'Luxury',
         desc: 'The benchmark for luxury sedans — 3 seats of first-class comfort for special occasions.',
+        luggage: 3,
     },
     {
         slug: 'gmc-yukon',
@@ -41,6 +51,7 @@ const vehicleTypes = [
         name: 'GMC Yukon',
         category: 'SUV',
         desc: 'Spacious 6-seat SUV with ample luggage room — great for families and small groups.',
+        luggage: 6,
     },
     {
         slug: 'cadillac-escalade-esv',
@@ -48,6 +59,7 @@ const vehicleTypes = [
         name: 'Cadillac Escalade ESV',
         category: 'Premium SUV',
         desc: 'Extended 6-seat SUV with commanding presence — a premium ride for groups on the go.',
+        luggage: 7,
     },
     {
         slug: 'mercedes-v-class',
@@ -55,6 +67,7 @@ const vehicleTypes = [
         name: 'Mercedes-Benz V-Class',
         category: 'Van',
         desc: 'Premium 7-seat van blending minivan practicality with luxury-sedan comfort.',
+        luggage: 6,
     },
     {
         slug: 'mercedes-sprinter',
@@ -62,6 +75,7 @@ const vehicleTypes = [
         name: 'Mercedes-Benz Sprinter',
         category: 'Van',
         desc: 'High-roof 12-seat van with generous cargo space — built for larger group transfers.',
+        luggage: 10,
     },
     {
         slug: 'toyota-coaster',
@@ -69,6 +83,7 @@ const vehicleTypes = [
         name: 'Toyota Coaster',
         category: 'Minibus',
         desc: '22-seat minibus for full Umrah parties and large group tours — comfort at scale.',
+        luggage: 15,
     },
     {
         slug: 'toyota-coaster-18-seater',
@@ -76,6 +91,7 @@ const vehicleTypes = [
         name: 'Toyota Coaster (18-Seater)',
         category: 'Minibus',
         desc: 'Spacious 18-seat coaster built for group and large-party transfers — comfortable seating with generous room for luggage.',
+        luggage: 12,
     },
     {
         slug: 'toyota-hiace',
@@ -83,8 +99,17 @@ const vehicleTypes = [
         name: 'Toyota Hiace',
         category: 'Van',
         desc: '12-seat van ideal for medium-size groups — reliable, roomy transfers for families and corporate parties alike.',
+        luggage: 8,
     },
 ];
+
+// Seat count is already stated in every desc ("3-seat", "22-seat", etc.) —
+// parsed here instead of duplicated as a second hand-typed field, so the
+// two numbers can never drift apart.
+function passengersFor(desc: string): number | null {
+    const match = desc.match(/(\d+)-seat/);
+    return match ? parseInt(match[1], 10) : null;
+}
 
 const VehicleTypeCarousel = () => {
     const trackRef = useRef<HTMLDivElement>(null);
@@ -139,28 +164,36 @@ const VehicleTypeCarousel = () => {
                     </button>
 
                     <div className={styles.track} ref={trackRef}>
-                        {vehicleTypes.map((v) => (
-                            <div key={v.slug} className={styles.card}>
-                                <div className={styles.imageWrapper}>
-                                    <Image
-                                        src={v.image}
-                                        alt={`${v.name} — ${v.category}`}
-                                        fill
-                                        className={styles.image}
-                                        sizes="(max-width: 640px) 90vw, (max-width: 992px) 45vw, 25vw"
-                                    />
-                                    <span className={styles.badge}>{v.category}</span>
+                        {vehicleTypes.map((v) => {
+                            const passengers = passengersFor(v.desc);
+                            return (
+                                <div key={v.slug} className={styles.card} tabIndex={0}>
+                                    <div className={styles.imageWrapper}>
+                                        <Image
+                                            src={v.image}
+                                            alt={`${v.name} — ${v.category}`}
+                                            fill
+                                            className={styles.image}
+                                            sizes="(max-width: 640px) 90vw, (max-width: 992px) 45vw, 25vw"
+                                        />
+                                        <span className={styles.badge}>{v.category}</span>
+                                    </div>
+                                    <div className={styles.specsRow}>
+                                        {passengers !== null && <span className={styles.specTag}>{passengers} seats</span>}
+                                        <span className={styles.specTag}>{v.luggage} bags</span>
+                                        <span className={styles.specTag}>{v.category}</span>
+                                    </div>
+                                    <div className={styles.content}>
+                                        <h3 className={styles.name}>{v.name}</h3>
+                                        <p className={styles.desc}>{v.desc}</p>
+                                        <Link href={`/book-online?vehicle=${v.slug}&vehicleName=${encodeURIComponent(v.name)}`} className={styles.cta}>
+                                            Book Now
+                                            <span className={styles.ctaArrow}>→</span>
+                                        </Link>
+                                    </div>
                                 </div>
-                                <div className={styles.content}>
-                                    <h3 className={styles.name}>{v.name}</h3>
-                                    <p className={styles.desc}>{v.desc}</p>
-                                    <Link href={`/book-online?vehicle=${v.slug}&vehicleName=${encodeURIComponent(v.name)}`} className={styles.cta}>
-                                        Book Now
-                                        <span className={styles.ctaArrow}>→</span>
-                                    </Link>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     <button

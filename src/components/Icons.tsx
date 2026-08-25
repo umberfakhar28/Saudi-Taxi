@@ -87,6 +87,16 @@ export const ArrowRightIcon = ({ size = 24, className = "", style }: IconProps) 
     </svg>
 );
 
+// Standard "opens in a new tab" glyph — used next to outbound links like
+// the Trustpilot block in SocialProof.tsx.
+export const ExternalLinkIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+        <path d="M18 13v6a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H12" />
+        <path d="M15 4h5v5" />
+        <path d="M20 4l-9 9" />
+    </svg>
+);
+
 export const TimerIcon = ClockIcon;
 export const MessageSquareIcon = MessageIcon;
 export const ShieldCheckIcon = ShieldIcon;
@@ -254,5 +264,61 @@ export const WhatsAppIcon = ({ size = 24, className = "", style }: IconProps) =>
 export const LinkedInIcon = ({ size = 24, className = "", style }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={style} aria-hidden="true">
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+    </svg>
+);
+
+// ---------------------------------------------------------------------
+// Homepage "Our Advantages" icon set — stroke-based icons, distinct from
+// the solid fill="currentColor" icons above. Fully monochrome (ink on
+// light, on-dark on navy) — an earlier version paired each with a gold
+// accent detail, which the sitewide colour pass explicitly rules out
+// ("no duotone, no gold detail paths"). Used only by Features.tsx.
+// ---------------------------------------------------------------------
+export const SedanAccentIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+        <path d="M3.5 15.5v-2.3c0-.5.2-1 .6-1.3l2-1.7 1.4-2.6c.3-.6.9-.9 1.5-.9h5.9c.6 0 1.2.3 1.5.9l1.4 2.6 2 1.7c.4.3.6.8.6 1.3v2.3" />
+        <path d="M3.5 15.5h17M6 15.5v1.3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1.3M20 15.5v1.3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1.3" />
+        <circle cx="16.5" cy="10.5" r="0.9" fill="currentColor" stroke="none" />
+    </svg>
+);
+
+export const ChauffeurCapIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+        <path d="M4 15c0-3.5 3.5-6 8-6s8 2.5 8 6" />
+        <path d="M3 15h18v1.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 16.5V15z" />
+        <path d="M8 9c0-2.2 1.8-4 4-4s4 1.8 4 4" />
+        <circle cx="12" cy="12.4" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
+);
+
+export const ClockAccentIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+        <circle cx="12" cy="12" r="8.25" />
+        <path d="M12 7.5V12l3 1.8" />
+    </svg>
+);
+
+export const ShieldCheckAccentIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+        <path d="M12 3.5l6.5 2.4v5.1c0 4.2-2.7 7.6-6.5 9-3.8-1.4-6.5-4.8-6.5-9V5.9L12 3.5z" />
+        <path d="M8.8 12.2l2.1 2.1 4.1-4.3" />
+    </svg>
+);
+
+export const MedalAccentIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+        <path d="M8.5 11L6 4.5h3l1.6 4.2" />
+        <path d="M15.5 11L18 4.5h-3l-1.6 4.2" />
+        <circle cx="12" cy="14.5" r="5" />
+        <path d="M12 12.3l.9 1.8 2 .3-1.45 1.4.34 2-1.79-.95-1.79.95.34-2-1.45-1.4 2-.3.9-1.8z" fill="currentColor" stroke="none" />
+    </svg>
+);
+
+export const ChatGlobeAccentIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+        <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v6A2.5 2.5 0 0 1 17.5 15H10l-4 3.5V15H6.5A2.5 2.5 0 0 1 4 12.5v-6z" />
+        <circle cx="9" cy="9.5" r="1" fill="currentColor" stroke="none" />
+        <circle cx="12.5" cy="9.5" r="1" fill="currentColor" stroke="none" />
+        <circle cx="16" cy="9.5" r="1" fill="currentColor" stroke="none" />
     </svg>
 );

@@ -1,0 +1,66 @@
+/*
+  Homepage colour system (Homepage Colour System brief, Option 1 — Deep Navy
+  + Warm Ivory + Muted Teal), scoped entirely to .homepage.
+
+  These tokens are intentionally NOT added to globals.css :root — several
+  names here (--navy, --ivory) would collide with existing sitewide aliases
+  (e.g. --navy already means var(--bg-primary), #050C33, used by every other
+  page family's closing CTA bands). Defining them here instead, on a class
+  applied only to the homepage's <main>, means every homepage component can
+  reference var(--navy) etc. via normal CSS custom-property inheritance
+  without touching a single other page's colours.
+*/
+.homepage {
+  /* Core — locked */
+  --navy:        #081827;
+  --ivory:       #F5F2EA;
+  --teal:        #2F6F73;
+  --gold:        #B8945B;
+  --ink:         #1C2528;
+
+  /* Derived — navy family */
+  --navy-800:    #0E2438;
+  --navy-700:    #16304A;
+  --navy-line:   rgba(245, 242, 234, 0.14);
+
+  /* Derived — ivory family */
+  --ivory-200:   #EFEBE0;
+  --ivory-300:   #E4DFD2;
+  --surface:     #FFFFFF;
+
+  /* Derived — teal + gold */
+  --teal-700:    #275D61;
+  --teal-050:    #E3EDEC;
+  --gold-300:    #D8BE8E;
+  --gold-050:    #F3EADA;
+
+  /* Text roles */
+  --text:               var(--ink);
+  --text-muted:         #5A6569;
+  --text-on-dark:       var(--ivory);
+  --text-on-dark-muted: #B6C2CE;
+
+  background: var(--ivory);
+}
+
+.homepage :focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+.homepage .onDark :focus-visible {
+  outline-color: var(--gold-300);
+}
+
+/*
+  Button colour overrides used to live here (context-dependent gold/navy
+  swaps for .btn-primary/.btn-secondary/.btn-outline). The sitewide colour
+  pass made the shared globals.css button rules correct and CONTEXT-FREE —
+  .btn-primary is now identical gold-on-navy-text on any background, and
+  .btn-secondary/.btn-outline are now the correct solid-navy / on-dark-
+  outline treatments by default. These homepage-local overrides had drifted
+  out of sync with that (e.g. .btnSecondaryOnLight still drew an outline
+  button, .btnPrimaryOnLight still drew a navy-not-gold primary) and were
+  actively fighting the corrected global styles, so they were removed
+  rather than patched. Every button on this page now gets its colour from
+  globals.css directly.
+*/

@@ -1,6 +1,10 @@
 .section {
   padding: var(--space-16) 0;
-  background: var(--bg-base);
+  /* The first legitimate white band on the homepage — a deliberate plain
+     surface after several ivory/navy/teal sections, per the brief's
+     background-rhythm table. Cards stay visible against it via shadow and
+     border alone, same as before. */
+  background: var(--surface, var(--bg-base));
 }
 
 .grid {
@@ -10,21 +14,21 @@
 }
 
 .card {
-  background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+  background: var(--surface, var(--bg-card));
   border-radius: var(--radius-lg);
   overflow: hidden;
-  /* Blue-tinted inset dropped, matching the shared .card in globals.css. */
   box-shadow: var(--shadow-md);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(16, 18, 26, 0.07);
+  border: 1px solid var(--ivory-300, rgba(16, 18, 26, 0.07));
 }
 
-.card:hover {
+.card:hover,
+.card:focus-within {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border-color: rgba(12, 32, 122, 0.15);
+  border-color: rgba(47, 111, 115, 0.25);
 }
 
 .imageWrapper {
@@ -46,12 +50,13 @@
   transform: scale(1.08);
 }
 
+/* Navy, not teal — a permanent label fill isn't "interactive text". */
 .badge {
   position: absolute;
   top: var(--space-3);
   left: var(--space-3);
-  background: var(--accent);
-  color: var(--accent-text);
+  background: var(--navy, var(--accent));
+  color: var(--on-dark, var(--accent-text));
   font-size: var(--text-xs);
   font-weight: 700;
   text-transform: uppercase;
@@ -60,47 +65,55 @@
   border-radius: var(--radius-full);
 }
 
-/* Feature-tag row — reserved space below the image, revealed on hover for
-   pointer devices, always visible on touch devices (no hover) per the
-   mobile-fallback requirement. Sits below the photo rather than over it,
-   so the vehicle image is never obscured. */
+/* Feature-tag row — Fix 5. The previous version used a fixed
+   `max-height: 64px` + `overflow: hidden` to animate the reveal, which
+   clipped the 4th tag on any card whose tags wrapped to a second line
+   (Lexus ES, Mercedes S-Class, BMW 7 Series — all 4-tag cards) whenever
+   the wrapped row's real height crept past that guessed ceiling. Root
+   cause confirmed: a hardcoded height ceiling combined with overflow:
+   hidden, not a layout bug in the flex row itself (flex-wrap was already
+   present).
+   Fix: remove the ceiling and the overflow clip entirely — min-height
+   reserves the space so the reveal never shifts the card or its grid row,
+   but nothing above that floor can ever be cut off, at any tag count or
+   wrap count. */
 .tagsRow {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  max-height: 0;
+  min-height: 64px;
   opacity: 0;
-  overflow: hidden;
-  padding: 0 var(--space-6);
-  transition: max-height 0.35s ease, opacity 0.3s ease, padding 0.35s ease;
+  visibility: hidden;
+  padding: var(--space-4) var(--space-6) 0;
+  transition: opacity 0.3s ease, visibility 0.3s;
 }
 
 @media (hover: hover) {
-  .card:hover .tagsRow {
-    max-height: 64px;
+  .card:hover .tagsRow,
+  .card:focus-within .tagsRow {
     opacity: 1;
-    padding: var(--space-4) var(--space-6) 0;
+    visibility: visible;
   }
 }
 
 @media (hover: none) {
   .tagsRow {
-    max-height: 64px;
     opacity: 1;
-    padding: var(--space-4) var(--space-6) 0;
+    visibility: visible;
   }
 }
 
+/* Monochrome — a spec tag is a label, not interactive text. */
 .tag {
-  background: var(--accent-subtle);
-  color: var(--accent-primary);
+  background: var(--white);
+  color: var(--ink);
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.02em;
   padding: 5px 12px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(12, 32, 122, 0.14);
-  white-space: nowrap;
+  border: 1px solid var(--line);
+  white-space: normal;
 }
 
 .content {
@@ -134,28 +147,30 @@
   flex: 1;
 }
 
+/* Secondary button, matching the sitewide button system — solid navy fill
+   so it reads as an actual button, not inline link text. 6 of these are
+   visible at once in the grid, which is fine: the "max one per screenful"
+   cap only applies to the gold Primary variant, not Secondary. */
 .cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  background: transparent;
-  color: var(--accent);
-  border: 1.5px solid var(--accent);
+  background: var(--navy, var(--accent));
+  color: var(--on-dark, var(--accent-text));
+  border: none;
   font-size: var(--text-sm);
   font-weight: 600;
-  padding: 10px 24px;
+  padding: 10px 20px;
   border-radius: var(--radius-sm);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease;
   margin-top: var(--space-3);
   align-self: flex-start;
 }
 
 .cta:hover {
-  background: var(--accent);
-  color: var(--accent-text);
-  transform: translateY(-2px);
+  background: var(--navy-light, var(--accent-hover));
 }
 
 .ctaArrow {

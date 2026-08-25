@@ -95,7 +95,7 @@ export default function VehiclesSection() {
         {/* Vehicle grid */}
         <div className={styles.grid}>
           {vehicles.map((car) => (
-            <div key={car.id} className={styles.card}>
+            <div key={car.id} className={styles.card} tabIndex={0}>
               <div className={styles.imageWrapper}>
                 <Image
                   src={car.image}

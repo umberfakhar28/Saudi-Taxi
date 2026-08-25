@@ -19,47 +19,42 @@ export default function ThankYou() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '8rem 1rem',
-                background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%)',
+                background: 'var(--navy)',
                 position: 'relative',
                 overflow: 'hidden',
                 textAlign: 'center',
             }}>
-                <div style={{
-                    position: 'absolute', inset: 0,
-                    backgroundImage: 'radial-gradient(var(--secondary) 1px, transparent 1px)',
-                    backgroundSize: '40px 40px', opacity: 0.05,
-                }} />
                 <div style={{ position: 'relative', zIndex: 1, maxWidth: '700px' }}>
                     <div style={{
                         width: '100px', height: '100px', borderRadius: '50%',
-                        background: 'linear-gradient(135deg, var(--secondary), var(--secondary-light))',
+                        background: 'var(--success)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         margin: '0 auto 2rem',
                         fontSize: '3rem',
-                        boxShadow: '0 8px 30px rgba(12, 32, 122,0.4)',
+                        boxShadow: '0 8px 30px rgba(8, 24, 39, 0.35)',
                         animation: 'pulse 2s infinite',
                     }}>
                         ✅
                     </div>
-                    <h1 style={{ color: 'var(--white)', fontSize: '3rem', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>
+                    <h1 style={{ color: 'var(--on-dark)', fontSize: '3rem', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>
                         Thank You!
                     </h1>
-                    <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.3rem', marginBottom: '1rem' }}>
+                    <p style={{ color: 'var(--on-dark)', fontSize: '1.3rem', marginBottom: '1rem' }}>
                         Your booking request has been successfully received.
                     </p>
-                    <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '1.05rem', marginBottom: '3rem', lineHeight: '1.8' }}>
-                        Our team will review your request and send you a confirmation within <strong style={{ color: 'var(--secondary)' }}>30 minutes</strong> via WhatsApp or email. Please keep your phone nearby.
+                    <p style={{ color: 'var(--on-dark-muted)', fontSize: '1.05rem', marginBottom: '3rem', lineHeight: '1.8' }}>
+                        Our team will review your request and send you a confirmation within <strong style={{ color: 'var(--gold)' }}>30 minutes</strong> via WhatsApp or email. Please keep your phone nearby.
                     </p>
 
                     <div style={{
-                        background: 'rgba(255,255,255,0.1)',
+                        background: 'rgba(255,255,255,0.08)',
                         backdropFilter: 'blur(10px)',
                         borderRadius: 'var(--radius-lg)',
                         padding: '2rem',
-                        border: '1px solid rgba(255,255,255,0.15)',
+                        border: '1px solid var(--line-dark)',
                         marginBottom: '2.5rem',
                     }}>
-                        <h3 style={{ color: 'var(--secondary)', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>What Happens Next?</h3>
+                        <h3 style={{ color: 'var(--on-dark)', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>What Happens Next?</h3>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
                             {[
                                 { step: "1", text: "Our team reviews your booking details" },
@@ -70,14 +65,14 @@ export default function ThankYou() {
                                 <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                                     <div style={{
                                         width: '36px', height: '36px', borderRadius: '50%',
-                                        background: 'var(--secondary)',
+                                        background: 'var(--white)',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        fontWeight: 700, color: 'var(--primary)', flexShrink: 0,
+                                        fontWeight: 700, color: 'var(--navy)', flexShrink: 0,
                                         fontSize: '0.9rem',
                                     }}>
                                         {item.step}
                                     </div>
-                                    <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.95rem' }}>{item.text}</span>
+                                    <span style={{ color: 'var(--on-dark)', fontSize: '0.95rem' }}>{item.text}</span>
                                 </div>
                             ))}
                         </div>
@@ -92,8 +87,8 @@ export default function ThankYou() {
                         </Link>
                     </div>
 
-                    <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '2rem', fontSize: '0.9rem' }}>
-                        Questions? Call us: <a href={TEL_URL} style={{ color: 'var(--secondary)' }}>{PHONE_DISPLAY}</a>
+                    <p style={{ color: 'var(--on-dark-muted)', marginTop: '2rem', fontSize: '0.9rem' }}>
+                        Questions? Call us: <a href={TEL_URL} style={{ color: 'var(--on-dark)', textDecoration: 'underline' }}>{PHONE_DISPLAY}</a>
                     </p>
                 </div>
             </section>
@@ -110,7 +105,7 @@ export default function ThankYou() {
                         ].map((svc, i) => (
                             <Link key={i} href={svc.link} className="card" style={{ textAlign: 'center', textDecoration: 'none' }}>
                                 <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>{svc.icon}</div>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '1.1rem', marginBottom: '0.4rem' }}>{svc.title}</h3>
+                                <h3 style={{ color: 'var(--navy)', fontSize: '1.1rem', marginBottom: '0.4rem' }}>{svc.title}</h3>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0 }}>{svc.desc}</p>
                             </Link>
                         ))}

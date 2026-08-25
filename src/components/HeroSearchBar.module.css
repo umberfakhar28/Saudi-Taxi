@@ -43,14 +43,16 @@
     gap: 2px;
 }
 
+/* Flat gold, no gradient — this pill is an active-state indicator, one of
+   gold's allowed roles (and exactly one is ever visible at a time). */
 .tabIndicator {
     position: absolute;
     inset-block: 4px;
     inset-inline-start: 4px;
     width: calc((100% - 8px) / 3);
-    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    background: var(--gold);
     border-radius: var(--radius-full);
-    box-shadow: 0 4px 16px rgba(12, 32, 122, 0.35);
+    box-shadow: 0 4px 16px rgba(8, 24, 39, 0.25);
     transition: transform var(--ease-base);
 }
 
@@ -82,11 +84,11 @@
 }
 
 .tabActive {
-    color: var(--accent-text);
+    color: var(--navy);
 }
 
 .tabActive:hover {
-    color: var(--accent-text);
+    color: var(--navy);
 }
 
 .tab:focus-visible {
@@ -99,7 +101,7 @@
     display: flex;
     align-items: stretch;
     background: var(--surface-1);
-    border: 1px solid rgba(20, 23, 31, 0.08);
+    border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
     padding: var(--space-2);
@@ -114,7 +116,7 @@
     flex-direction: column;
     gap: 4px;
     padding: var(--space-2) var(--space-5);
-    border-inline-end: 1px solid rgba(20, 23, 31, 0.10);
+    border-inline-end: 1px solid var(--line);
 }
 
 .field:last-of-type {
@@ -134,7 +136,7 @@
 }
 
 .fieldLabel svg {
-    color: var(--accent);
+    color: var(--navy);
     flex-shrink: 0;
 }
 
@@ -210,9 +212,11 @@
 .dateInput[aria-invalid="true"],
 .timeInput[aria-invalid="true"],
 .select[aria-invalid="true"] {
-    color: #C0392B;
+    color: var(--error);
 }
 
+/* The primary CTA of this widget — flat gold/navy, no gradient, matching
+   the sitewide .btn-primary treatment exactly. */
 .submit {
     flex-shrink: 0;
     align-self: center;
@@ -222,8 +226,8 @@
     margin-inline-start: var(--space-2);
     padding: 0 var(--space-8);
     height: 52px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-    color: var(--accent-text);
+    background: var(--gold);
+    color: var(--navy);
     font-family: var(--font-body);
     font-weight: 800;
     font-size: var(--text-sm);
@@ -233,13 +237,14 @@
     border-radius: var(--radius-md);
     white-space: nowrap;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(12, 32, 122, 0.25);
-    transition: transform var(--ease-base), box-shadow var(--ease-base);
+    box-shadow: 0 8px 24px rgba(8, 24, 39, 0.2);
+    transition: background var(--ease-base), transform var(--ease-base), box-shadow var(--ease-base);
 }
 
 .submit:hover {
+    background: var(--gold-dark);
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(12, 32, 122, 0.35);
+    box-shadow: 0 12px 32px rgba(8, 24, 39, 0.3);
 }
 
 .submit:focus-visible,
@@ -286,11 +291,11 @@
 /* ---- Validation ---- */
 .errorBoxDesktop,
 .errorBox {
-    background: rgba(192, 57, 43, 0.08);
-    border: 1px solid rgba(192, 57, 43, 0.25);
+    background: rgba(179, 38, 30, 0.08);
+    border: 1px solid rgba(179, 38, 30, 0.25);
     border-radius: var(--radius-md);
     padding: var(--space-3) var(--space-5);
-    color: #C0392B;
+    color: var(--error);
     font-size: var(--text-sm);
 }
 
@@ -325,12 +330,12 @@
     align-items: center;
     gap: var(--space-2);
     font-size: var(--text-sm);
-    color: rgba(20, 23, 31, 0.7);
+    color: var(--muted);
     font-weight: 600;
 }
 
 .trustItem svg {
-    color: var(--accent);
+    color: var(--navy);
     flex-shrink: 0;
 }
 
@@ -360,7 +365,7 @@
     gap: var(--space-3);
     width: 100%;
     background: var(--surface-1);
-    border: 1px solid rgba(20, 23, 31, 0.08);
+    border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
     padding: var(--space-5);
@@ -372,7 +377,7 @@
 }
 
 .mobileSummary svg {
-    color: var(--accent);
+    color: var(--navy);
     flex-shrink: 0;
 }
 
@@ -397,11 +402,23 @@
     gap: var(--space-4);
     padding: var(--space-5);
     padding-top: max(var(--space-5), env(safe-area-inset-top));
-    background: linear-gradient(135deg, var(--bg-dark), var(--accent-dark));
+    background: var(--bg-dark);
 }
 
 .sheetHeader .tablist {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* The tablist's default text colours (var(--text-muted)/var(--text-primary))
+   assume a light background — inside the navy sheet header they'd render
+   as dark-on-dark. The active tab's own text still sits on the gold
+   indicator pill, so it's unaffected and stays navy. */
+.sheetHeader .tab {
+    color: var(--on-dark-muted);
+}
+
+.sheetHeader .tab:hover {
+    color: var(--on-dark);
 }
 
 .sheetClose {
@@ -411,7 +428,7 @@
     border-radius: 50%;
     border: none;
     background: rgba(255, 255, 255, 0.14);
-    color: var(--white);
+    color: var(--on-dark);
     font-size: 1rem;
     cursor: pointer;
 }
@@ -426,7 +443,7 @@
 
 .sheetForm .field {
     border-inline-end: none;
-    border-bottom: 1px solid rgba(20, 23, 31, 0.10);
+    border-bottom: 1px solid var(--line);
     padding: var(--space-4) 0;
 }
 
@@ -437,8 +454,8 @@
 .sheetSubmit {
     position: sticky;
     bottom: max(var(--space-4), env(safe-area-inset-bottom));
-    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-    color: var(--accent-text);
+    background: var(--gold);
+    color: var(--navy);
     border: none;
     border-radius: var(--radius-md);
     padding: 16px;
@@ -490,11 +507,11 @@
     }
 
     .bar>.field:nth-child(1) {
-        border-bottom: 1px solid rgba(20, 23, 31, 0.10);
+        border-bottom: 1px solid var(--line);
     }
 
     .bar>.field:nth-child(2) {
-        border-bottom: 1px solid rgba(20, 23, 31, 0.10);
+        border-bottom: 1px solid var(--line);
         border-inline-end: none;
     }
 

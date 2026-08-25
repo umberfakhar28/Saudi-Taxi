@@ -9,7 +9,7 @@
    ------------------------------------------------------------------ */
 .quickFacts {
   background: var(--bg-subtle);
-  border-bottom: 1px solid rgba(16, 18, 26, 0.07);
+  border-bottom: 1px solid var(--line);
   padding: var(--space-6) 0;
 }
 
@@ -24,7 +24,7 @@
   flex-direction: column;
   gap: 4px;
   text-align: center;
-  border-inline-start: 1px solid rgba(16, 18, 26, 0.08);
+  border-inline-start: 1px solid var(--line);
   padding-inline-start: var(--space-4);
 }
 
@@ -64,17 +64,18 @@
   margin-top: var(--space-6);
 }
 
+/* Monochrome — a use-case chip is a label, not interactive text. */
 .useCaseChip {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--accent-subtle);
-  color: var(--accent-primary);
+  background: var(--white);
+  color: var(--ink);
   font-size: var(--text-xs);
   font-weight: 600;
   padding: 6px 14px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(12, 32, 122, 0.14);
+  border: 1px solid var(--line);
 }
 
 /* ------------------------------------------------------------------
@@ -87,9 +88,9 @@
   max-width: 640px;
   margin: var(--space-8) auto 0;
   padding: var(--space-5) var(--space-6);
-  background: var(--accent-subtle);
+  background: var(--white);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(12, 32, 122, 0.14);
+  border: 1px solid var(--line);
 }
 
 /* ------------------------------------------------------------------

@@ -17,7 +17,7 @@
   padding: var(--space-5) var(--space-6);
   background: var(--bg-subtle);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(16, 18, 26, 0.07);
+  border: 1px solid var(--line);
 }
 
 .journeyPoint {
@@ -30,19 +30,24 @@
   font-size: var(--text-sm);
   padding: 8px 16px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(16, 18, 26, 0.1);
+  border: 1px solid var(--line);
   box-shadow: var(--shadow-sm);
 }
 
+/* A faint navy tint marks the border-crossing waypoint as distinct from a
+   plain stop, without using teal (never a background fill) or gold
+   (reserved for the destination-endpoint emphasis below). */
 .journeyBorder {
-  background: var(--accent-subtle);
-  color: var(--accent-primary);
-  border-color: rgba(12, 32, 122, 0.18);
+  background: rgba(8, 24, 39, 0.05);
+  color: var(--navy);
+  border-color: var(--line-strong);
 }
 
+/* Navy, not teal — the strongest visual weight in this chain (the final
+   destination) is a permanent label, not interactive text. */
 .journeyDestination {
-  background: var(--accent);
-  color: var(--accent-on-light);
+  background: var(--navy);
+  color: var(--on-dark);
   border-color: transparent;
 }
 
@@ -65,13 +70,13 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--accent-subtle);
-  color: var(--accent-primary);
+  background: var(--white);
+  color: var(--ink);
   font-size: var(--text-xs);
   font-weight: 600;
   padding: 6px 14px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(12, 32, 122, 0.14);
+  border: 1px solid var(--line);
 }
 
 /* ------------------------------------------------------------------

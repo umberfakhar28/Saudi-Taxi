@@ -3,7 +3,7 @@
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
     background: var(--bg-card);
-    border: 1px solid rgba(12, 32, 122, 0.06);
+    border: 1px solid var(--line);
 }
 
 .priceTable {
@@ -13,8 +13,8 @@
 }
 
 .priceTable thead tr {
-    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
-    color: var(--white);
+    background: var(--navy);
+    color: var(--on-dark);
 }
 
 .priceTable th {
@@ -24,7 +24,7 @@
     font-size: 0.9rem;
     letter-spacing: 0.5px;
     white-space: nowrap;
-    color: var(--accent);
+    color: var(--on-dark);
 }
 
 .thSub {
@@ -37,12 +37,12 @@
 }
 
 .priceTable tbody tr {
-    border-bottom: 1px solid rgba(12, 32, 122, 0.06);
+    border-bottom: 1px solid var(--line);
     transition: background 0.2s ease;
 }
 
 .priceTable tbody tr:hover {
-    background: rgba(12, 32, 122, 0.04);
+    background: var(--row-hover);
 }
 
 .priceTable td {
@@ -53,7 +53,7 @@
 
 .priceCell {
     font-weight: 700;
-    color: var(--accent);
+    color: var(--navy);
     text-align: center;
 }
 
@@ -65,7 +65,7 @@
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
     position: relative;
-    border: 1px solid rgba(12, 32, 122, 0.06);
+    border: 1px solid var(--line);
     display: flex;
     flex-direction: column;
 }
@@ -73,11 +73,13 @@
 .packageCard:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
-    border-color: rgba(12, 32, 122, 0.12);
+    border-color: var(--line-strong);
 }
 
+/* Gold — the "recommended" highlight is an active/marked state, and only
+   one package is ever marked recommended at a time. */
 .packageRecommended {
-    border-color: var(--accent);
+    border-color: var(--gold);
     transform: scale(1.03);
 }
 
@@ -90,8 +92,8 @@
     top: -14px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, var(--accent), var(--accent-light));
-    color: var(--accent-text);
+    background: var(--gold);
+    color: var(--navy);
     padding: 0.4rem 1.5rem;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -99,7 +101,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(12, 32, 122, 0.3);
+    box-shadow: 0 4px 12px rgba(8, 24, 39, 0.25);
 }
 
 .packageName {
@@ -113,7 +115,7 @@
     text-align: center;
     font-size: 2.5rem;
     font-weight: 800;
-    color: var(--accent);
+    color: var(--navy);
     font-family: var(--font-heading);
     margin-bottom: 0.25rem;
 }
@@ -124,7 +126,7 @@
     font-size: 0.9rem;
     margin-bottom: 2rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(12, 32, 122, 0.08);
+    border-bottom: 1px solid var(--line);
 }
 
 .packageFeatures {
@@ -144,7 +146,7 @@
 }
 
 .checkmark {
-    color: var(--accent);
+    color: var(--success);
     font-weight: 700;
     flex-shrink: 0;
 }

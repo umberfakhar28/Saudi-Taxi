@@ -1,10 +1,7 @@
 import styles from './SocialProof.module.css';
-import { CheckCircleIcon } from './Icons';
+import { CheckCircleIcon, StarIcon, ExternalLinkIcon } from './Icons';
+import { TRUSTPILOT_URL } from '@/lib/trustpilot';
 
-// The "Review us on Trustpilot" link + star mark that used to live here was
-// removed — it pointed to href="#" (no real Trustpilot profile exists yet)
-// while visually presenting a five-star rating, which reads as a claimed
-// rating with no backing. Re-add it once a real profile URL exists to link.
 const SocialProof = () => {
     return (
         <div className={styles.socialProof}>
@@ -15,8 +12,25 @@ const SocialProof = () => {
                     rel="noopener noreferrer"
                     className={styles.trustNote}
                 >
-                    <CheckCircleIcon size={15} />
+                    <CheckCircleIcon size={17} />
                     Free cancellation up to 24 hours before pickup
+                </a>
+
+                <span className={styles.divider} aria-hidden="true" />
+
+                <a
+                    href={TRUSTPILOT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Read our reviews on Trustpilot (opens in a new tab)"
+                    className={styles.trustpilotBlock}
+                >
+                    <span className={styles.trustpilotMark}>
+                        <StarIcon size={12} />
+                    </span>
+                    <span className={styles.trustpilotWordmark}>Trustpilot</span>
+                    <span className={styles.trustpilotLabel}>Verified reviews</span>
+                    <ExternalLinkIcon size={13} className={styles.externalIcon} />
                 </a>
             </div>
         </div>

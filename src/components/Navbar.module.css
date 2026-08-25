@@ -33,7 +33,9 @@
    Hero.module.css .heroScrim for the matching darker band under the top
    of the photo that keeps this legible against bright sky. */
 .navbarTransparent {
-    background: linear-gradient(180deg, rgba(3, 10, 37, 0.58) 0%, rgba(3, 10, 37, 0.30) 70%, rgba(3, 10, 37, 0) 100%);
+    /* Flat scrim over the hero photo, per the brief's exact prescribed
+       replacement for any gradient-over-an-image case. */
+    background: rgba(8, 24, 39, 0.72);
     border-bottom-color: transparent;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
@@ -142,7 +144,7 @@
 /* Base link style (Repetition: identical across all nav items) */
 .link {
     position: relative;
-    color: rgba(255, 255, 255, 0.85);  /* Contrast: light on the dark blue header bg */
+    color: var(--on-dark);
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -168,7 +170,7 @@
     left: var(--space-3);
     right: var(--space-3);
     height: 2px;
-    background: var(--accent-light);
+    background: var(--gold);
     border-radius: var(--radius-full);
     transform: scaleX(0);
     transform-origin: center;
@@ -176,7 +178,7 @@
 }
 
 .link:hover {
-    color: #FFFFFF;
+    color: var(--on-dark);
 }
 
 .link:hover::after {
@@ -219,7 +221,7 @@
     visibility: hidden;
     transition: opacity var(--ease-base), transform var(--ease-base), visibility var(--ease-base);
     z-index: 200;
-    border: 1px solid rgba(20, 23, 31, 0.06);
+    border: 1px solid var(--line);
 }
 
 .dropdownMenuOpen {
@@ -256,30 +258,34 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--navy);
     flex-shrink: 0;
 }
 
-/* Dropdown items — plain bold text links, no card chrome (matches the
-   reference layout: minimal, generous vertical rhythm, color-only hover). */
+/* Dropdown items — ink text on white, hover is a row background highlight
+   (ivory), per the site-wide dropdown rule — not a text-colour change. */
 .dropdownItem {
     display: block;
-    padding: var(--space-2) 0;
-    color: var(--text-main);
+    padding: var(--space-2) var(--space-3);
+    margin: 0 calc(var(--space-3) * -1);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
     font-size: var(--text-sm);
     font-weight: 700;
     white-space: nowrap;
-    transition: color var(--ease-fast);
+    transition: background var(--ease-fast);
 }
 
 .dropdownItem:hover {
-    color: var(--accent);
+    background: var(--ivory);
 }
 
-/* ---- CTA Button — Contrast: gold, the most prominent element ---- */
+/* ---- CTA Button — the nav's primary action: flat gold, navy text, no
+   gradient. This is the one primary button visible in the header on every
+   page, so it must match .btn-primary's colours exactly. ---- */
 .cta {
-    background: linear-gradient(135deg, var(--accent), var(--accent-light));
-    color: var(--accent-text) !important;  /* Contrast: Navy text on bright Gold */
+    background: var(--gold);
+    color: var(--navy) !important;
     padding: 9px 22px;
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
@@ -288,13 +294,14 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     flex-shrink: 0;
-    transition: transform var(--ease-base), box-shadow var(--ease-base);
+    transition: background var(--ease-base), transform var(--ease-base), box-shadow var(--ease-base);
     box-shadow: var(--shadow-gold);
     white-space: nowrap;
     display: inline-block;
 }
 
 .cta:hover {
+    background: var(--gold-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-gold-lg);
 }
@@ -383,7 +390,7 @@
         top: 0; right: 0;
         width: min(300px, 85vw);
         height: 100dvh;
-        background: linear-gradient(170deg, var(--navy-dark), var(--navy));
+        background: var(--navy);
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
@@ -431,7 +438,7 @@
         box-shadow: none;
         background: rgba(0,0,0,0.25);
         border-radius: var(--radius-md);
-        border-top: 2px solid rgba(12, 32, 122,0.3);
+        border-top: 2px solid var(--line-dark);
         margin: var(--space-2) 0;
         /* Side-by-side columns don't fit the narrow slide-in drawer — each
            column stacks full-width instead, one after another. */
@@ -453,15 +460,15 @@
     }
 
     .dropdownLabel {
-        color: rgba(255,255,255,0.4);
+        color: var(--on-dark-muted);
         padding: var(--space-3) 0 var(--space-2);
     }
 
     .dropdownItem {
-        color: rgba(255,255,255,0.8);
+        color: var(--on-dark);
         padding: var(--space-3) 0;
         font-size: var(--text-sm);
-        border-bottom: 1px solid rgba(255,255,255,0.04);
+        border-bottom: 1px solid var(--line-dark);
         white-space: nowrap;
     }
 

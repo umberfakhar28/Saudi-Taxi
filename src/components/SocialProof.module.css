@@ -1,5 +1,11 @@
+/* Light bar, matching the reference layout — was navy-800, changed on
+   request. Trustpilot's own brand green (#00B67A) is the one literal
+   colour in this file — an official third-party mark keeps its own colour
+   regardless of the page's palette. */
 .socialProof {
-    background: var(--accent);
+    background: var(--ivory, #F5F2EA);
+    border-top: 1px solid var(--ivory-300, rgba(28, 37, 40, 0.08));
+    border-bottom: 1px solid var(--ivory-300, rgba(28, 37, 40, 0.08));
     padding: 0.85rem 0;
 }
 
@@ -9,44 +15,97 @@
     padding: 0 var(--spacing-md);
     display: flex;
     align-items: center;
-    /* Was space-between across two links; only one remains now that the
-       unbacked Trustpilot link was removed. */
     justify-content: center;
-    gap: 1.5rem;
+    gap: 24px;
 }
 
-/* ---- Trust link: subtle, slim supporting bar ---- */
+/* ---- Left: free-cancellation link ---- */
 .trustNote {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--text, #1C2528);
     white-space: nowrap;
     flex-shrink: 0;
     padding: 0.5rem 0.6rem;
     border-radius: var(--radius-sm);
-    transition: color 0.15s ease, background 0.15s ease;
+    transition: background 0.15s ease;
 }
 
 .trustNote svg {
-    color: #FFFFFF;
-    opacity: 0.9;
+    color: var(--text, #1C2528);
     flex-shrink: 0;
 }
 
 .trustNote:hover {
-    color: #FFFFFF;
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(28, 37, 40, 0.05);
 }
 
-@media (max-width: 640px) {
+/* ---- Divider ---- */
+.divider {
+    width: 1px;
+    height: 20px;
+    background: var(--ivory-300, rgba(28, 37, 40, 0.14));
+    flex-shrink: 0;
+}
+
+/* ---- Right: Trustpilot block ---- */
+.trustpilotBlock {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+}
+
+.trustpilotBlock:hover {
+    background: rgba(28, 37, 40, 0.05);
+}
+
+.trustpilotMark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background: #00B67A;
+    color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.trustpilotWordmark {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    color: var(--text, #1C2528);
+}
+
+.trustpilotLabel {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted, #5A6569);
+}
+
+.externalIcon {
+    color: var(--text-muted, #5A6569);
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
     .container {
         flex-direction: column;
         justify-content: center;
         text-align: center;
         gap: 0.5rem;
+    }
+
+    .divider {
+        display: none;
     }
 
     .trustNote {
@@ -55,5 +114,12 @@
         padding: 0.65rem 0.75rem;
         min-height: 44px;
         width: 100%;
+    }
+
+    .trustpilotBlock {
+        justify-content: center;
+        width: 100%;
+        padding: 0.65rem 0.75rem;
+        min-height: 44px;
     }
 }

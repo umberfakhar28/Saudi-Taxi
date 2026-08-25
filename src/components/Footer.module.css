@@ -1,19 +1,11 @@
 .footer {
-    background: linear-gradient(180deg, var(--bg-dark) 0%, #050A15 100%);
-    color: rgba(255, 255, 255, 0.65);
+    /* Flat navy, no gradient */
+    background: var(--navy);
+    color: var(--on-dark-muted);
     padding: 5rem 0 0;
-    border-top: 1px solid rgba(12, 32, 122, 0.18);
+    border-top: 1px solid var(--line-dark);
     font-size: 0.9rem;
     position: relative;
-}
-
-/* Subtle gold top-edge glow */
-.footer::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(12, 32, 122, 0.50), transparent);
 }
 
 .grid {
@@ -35,7 +27,7 @@
 }
 
 .heading {
-    color: var(--brass-bright);
+    color: var(--on-dark);
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
     font-weight: 600;
@@ -47,11 +39,11 @@
 }
 
 .logoIcon {
-    color: var(--brass-bright);
+    color: var(--on-dark);
 }
 
 .text {
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--on-dark-muted);
     line-height: 1.8;
     margin-bottom: 1.5rem;
 }
@@ -61,26 +53,26 @@
     gap: 0.75rem;
 }
 
+/* Monochrome icon on a bordered circle — matches the new rule for icon
+   badges on navy (rgba(255,255,255,0.06) fill). */
 .socialLink {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(12, 32, 122, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--line-dark);
     border-radius: 50%;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
-    color: var(--text-muted);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    color: var(--on-dark);
 }
 
 .socialLink:hover {
-    background: var(--accent);
-    color: var(--accent-text);
-    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--on-dark);
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(12, 32, 122, 0.35);
 }
 
 .list {
@@ -97,18 +89,21 @@
 }
 
 .contactIcon {
-    color: var(--brass-bright);
+    color: var(--on-dark);
     flex-shrink: 0;
 }
 
 .link {
-    color: rgba(255, 255, 255, 0.65);
-    transition: all 0.3s ease;
+    color: var(--on-dark-muted);
+    text-decoration: none;
+    transition: color 0.2s ease, padding-left 0.2s ease;
     font-size: 0.9rem;
 }
 
 .link:hover {
-    color: var(--brass-bright);
+    color: var(--on-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
     padding-left: 4px;
 }
 
@@ -116,12 +111,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(12, 32, 122, 0.10);
+    border-top: 1px solid var(--line-dark);
     padding: 2rem 0;
 }
 
 .copyright {
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--on-dark-muted);
     font-size: 0.8rem;
 }
 
@@ -132,17 +127,20 @@
 }
 
 .bottomLink {
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--on-dark-muted);
+    text-decoration: none;
     font-size: 0.8rem;
-    transition: all 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 .bottomLink:hover {
-    color: var(--brass-bright);
+    color: var(--on-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .divider {
-    color: rgba(255, 255, 255, 0.15);
+    color: var(--line-dark);
     font-size: 0.7rem;
 }
 

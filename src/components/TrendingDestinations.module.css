@@ -1,5 +1,23 @@
 .section {
-    background: var(--bg-base);
+    background: var(--ivory, var(--bg-base));
+}
+
+/* Light section — .btn-primary here should be the dark navy accent, not
+   the gold used on dark sections elsewhere on the homepage. Scoped to this
+   component only, via :global(). */
+.viewAll :global(.btn-primary) {
+    background: var(--navy, var(--accent-primary));
+    background-image: none;
+    color: var(--ivory, var(--accent-on-light));
+    box-shadow: none;
+}
+.viewAll :global(.btn-primary):hover {
+    background: var(--navy-700, var(--accent-hover));
+    transform: translateY(-2px);
+}
+.viewAll :global(.btn-primary)::before,
+.viewAll :global(.btn-primary)::after {
+    display: none;
 }
 
 .grid {

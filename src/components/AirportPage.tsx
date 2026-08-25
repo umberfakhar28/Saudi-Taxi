@@ -96,21 +96,21 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
           sizes="100vw"
           priority
         />
-        {/* Dark overlay — verified for AA against white hero text (see W2 report). */}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(3,10,37,0.82) 0%, rgba(3,10,37,0.90) 100%)", zIndex: 1 }} />
+        {/* Flat navy scrim, no gradient — the brief's prescribed image-scrim value. */}
+        <div style={{ position: "absolute", inset: 0, background: "rgba(8, 24, 39, 0.72)", zIndex: 1 }} />
         <div className="container" style={{ position: "relative", zIndex: 2 }}>
-          <span className="badge" style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "var(--white)" }}>
+          <span className="badge" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--line-dark)", color: "var(--on-dark)" }}>
             {data.city.toUpperCase()} AIRPORT TRANSFERS
           </span>
-          <h1 style={{ color: "var(--white)", marginTop: "var(--space-4)" }}>
+          <h1 style={{ color: "var(--on-dark)", marginTop: "var(--space-4)" }}>
             Private Car, Taxi and Chauffeur Service
             <br />
             <span style={{ color: "var(--brass-bright)" }}>from {data.name} ({data.code})</span>
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.85)", maxWidth: 620, margin: "var(--space-4) auto 0", fontSize: "var(--text-lg)" }}>
-            <strong style={{ color: "var(--white)" }}>{data.fullName}</strong> meet-and-greet pickup{" "}
-            {data.terminals && data.terminals.length > 1 ? <><strong style={{ color: "var(--white)" }}>at every terminal</strong>, with{" "}</> : ""}
-            <strong style={{ color: "var(--white)" }}>24/7 availability</strong> and real-time flight tracking for delays.
+          <p style={{ color: "var(--on-dark)", maxWidth: 620, margin: "var(--space-4) auto 0", fontSize: "var(--text-lg)" }}>
+            <strong style={{ color: "var(--on-dark)" }}>{data.fullName}</strong> meet-and-greet pickup{" "}
+            {data.terminals && data.terminals.length > 1 ? <><strong style={{ color: "var(--on-dark)" }}>at every terminal</strong>, with{" "}</> : ""}
+            <strong style={{ color: "var(--on-dark)" }}>24/7 availability</strong> and real-time flight tracking for delays.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap", marginTop: "var(--space-8)" }}>
             <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
@@ -120,10 +120,10 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               Request a Quote
             </Link>
           </div>
-          <div className="breadcrumb" style={{ color: "rgba(255,255,255,0.65)", marginTop: "var(--space-6)" }}>
-            <Link href="/" style={{ color: "rgba(255,255,255,0.8)" }}>Home</Link>{" "}
+          <div className="breadcrumb" style={{ color: "var(--on-dark-muted)", marginTop: "var(--space-6)" }}>
+            <Link href="/" style={{ color: "var(--on-dark-muted)" }}>Home</Link>{" "}
             <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
-            <Link href="/airport-transfers" style={{ color: "rgba(255,255,255,0.8)" }}>Airport Transfers</Link>{" "}
+            <Link href="/airport-transfers" style={{ color: "var(--on-dark-muted)" }}>Airport Transfers</Link>{" "}
             <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
             <span>{data.name}</span>
           </div>
@@ -233,7 +233,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               "Fleet of Sedans, SUVs and Vans with luggage room to match",
             ].map((item) => (
               <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem" }}>
-                <CheckCircleIcon size={18} style={{ color: "var(--accent)", flexShrink: 0, marginTop: 2 }} /> {item}
+                <CheckCircleIcon size={18} style={{ color: "var(--success)", flexShrink: 0, marginTop: 2 }} /> {item}
               </li>
             ))}
           </ul>
@@ -296,9 +296,9 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             ].map((step) => (
               <div key={step.n} style={{ textAlign: "center" }}>
                 <div style={{
-                  width: 56, height: 56, borderRadius: "50%", background: "var(--accent-subtle)", color: "var(--accent-primary)",
+                  width: 56, height: 56, borderRadius: "50%", background: "var(--white)", color: "var(--navy)",
                   display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto var(--space-4)",
-                  fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid rgba(12,32,122,0.18)",
+                  fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid var(--line)",
                 }}>{step.n}</div>
                 <h3 style={{ fontSize: "var(--text-base)", marginBottom: "var(--space-2)" }}>{step.label}</h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{step.text}</p>
@@ -306,7 +306,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             ))}
           </div>
           <div className={styles.cantFindDriver}>
-            <MapPinIcon size={20} style={{ color: "var(--accent)", flexShrink: 0 }} />
+            <MapPinIcon size={20} style={{ color: "var(--navy)", flexShrink: 0 }} />
             <p style={{ margin: 0, color: "var(--text-body)", fontSize: "var(--text-sm)" }}>
               <strong>Can&apos;t find your driver?</strong> Message the WhatsApp number from your booking confirmation — a real person replies immediately during your pickup window, not an automated queue.
             </p>
@@ -317,7 +317,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
       {/* §6 — Flight-Delay Policy */}
       <section className="section-lg">
         <div className="container" style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-          <TimerIcon size={32} style={{ color: "var(--accent)", marginBottom: "var(--space-4)" }} />
+          <TimerIcon size={32} style={{ color: "var(--navy)", marginBottom: "var(--space-4)" }} />
           <h2 className="section-title" style={{ textAlign: "center" }}>Flight-Delay Policy</h2>
           <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
             We track your flight number from departure, not just scheduled landing time, so a delayed flight doesn&apos;t leave your driver waiting at the wrong time — or you waiting for a driver who thinks you&apos;ve already landed.
@@ -352,7 +352,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                     {t.facilities.map((f) => (
                       <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>
-                        <CheckCircleIcon size={14} style={{ marginTop: 3, flexShrink: 0, color: "var(--accent)" }} /> {f}
+                        <CheckCircleIcon size={14} style={{ marginTop: 3, flexShrink: 0, color: "var(--success)" }} /> {f}
                       </li>
                     ))}
                   </ul>
@@ -484,7 +484,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
       {data.religiousTravel && (
         <section className="section-lg">
           <div className="container" style={{ maxWidth: 780, margin: "0 auto", textAlign: "center" }}>
-            <MoonIcon size={32} style={{ color: "var(--accent)", marginBottom: "var(--space-4)" }} />
+            <MoonIcon size={32} style={{ color: "var(--navy)", marginBottom: "var(--space-4)" }} />
             <span className="section-eyebrow">Religious Travel</span>
             <h2 className="section-title" style={{ textAlign: "center" }}>Umrah &amp; Ziyarat Transport from {data.name}</h2>
             <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{data.religiousTravel.intro}</p>
@@ -520,7 +520,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
                 <div style={{ padding: "var(--space-6)" }}>
                   <h3 style={{ fontSize: "var(--text-lg)" }}>{tier.name}</h3>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginBottom: "var(--space-2)" }}>{tier.models}</p>
-                  <p style={{ color: "var(--accent)", fontWeight: 700, fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>
+                  <p style={{ color: "var(--navy)", fontWeight: 700, fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>
                     Up to {tier.maxPassengers} passengers · {tier.maxLuggage} bags
                   </p>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{tier.description}</p>
@@ -563,7 +563,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             <div className={styles.reviewGrid}>
               {data.reviews.map((r, i) => (
                 <div key={i} className="card">
-                  <div style={{ display: "flex", gap: "var(--space-1)", marginBottom: "var(--space-3)", color: "var(--accent)" }}>★★★★★</div>
+                  <div style={{ display: "flex", gap: "var(--space-1)", marginBottom: "var(--space-3)", color: "var(--gold)" }}>★★★★★</div>
                   <p style={{ color: "var(--text-body)", fontStyle: "italic", lineHeight: 1.75, marginBottom: "var(--space-4)" }}>&ldquo;{r.text}&rdquo;</p>
                   <p style={{ color: "var(--text-main)", fontWeight: 600 }}>{r.name}</p>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{r.origin} · {data.name} Transfer</p>
@@ -629,7 +629,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             </div>
           </div>
           {relatedCitiesFor(data).length > 0 && (
-            <div style={{ marginTop: "var(--space-10)", paddingTop: "var(--space-10)", borderTop: "1px solid rgba(16,18,26,0.08)" }}>
+            <div style={{ marginTop: "var(--space-10)", paddingTop: "var(--space-10)", borderTop: "1px solid var(--line)" }}>
               <h3 style={{ marginBottom: "var(--space-4)" }}>Related Cities</h3>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                 {relatedCitiesFor(data).map((c) => (
@@ -647,10 +647,10 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
       </section>
 
       {/* §10 — Closing CTA */}
-      <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "5rem 0", textAlign: "center" }}>
+      <section style={{ background: "var(--bg-dark)", padding: "5rem 0", textAlign: "center" }}>
         <div className="container">
-          <h2 style={{ color: "var(--white)", marginBottom: "1rem" }}>Ready to book your {data.name} transfer?</h2>
-          <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
+          <h2 style={{ color: "var(--on-dark)", marginBottom: "1rem" }}>Ready to book your {data.name} transfer?</h2>
+          <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
             Meet-and-greet pickup, 24/7 availability, and a fixed quote before you travel.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>

@@ -292,22 +292,22 @@ export default function RoutePage({ data }: { data: RouteData }) {
           </section>
         )}
 
-        {/* Quick facts strip */}
-        <section style={{ background: "linear-gradient(135deg, var(--accent-dark), var(--accent))", padding: "1.75rem 0" }}>
+        {/* Quick facts strip — flat navy, no gradient; teal never fills a background. */}
+        <section style={{ background: "var(--bg-dark)", padding: "1.75rem 0" }}>
           <div className="container">
             <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-6)", justifyContent: "center", alignItems: "center" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--on-dark)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
                 <MapPinIcon size={16} /> {data.distance}
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--on-dark)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
                 <ClockIcon size={16} /> {data.travelTime}
               </div>
               {data.borderCrossingName && (
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--on-dark)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
                   <GlobeIcon size={16} /> {data.borderCrossingName}
                 </div>
               )}
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--on-dark)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
                 <ShieldIcon size={16} /> 24/7 Availability
               </div>
             </div>
@@ -387,9 +387,9 @@ export default function RoutePage({ data }: { data: RouteData }) {
                 <div className="card">
                   <div className="card-icon"><CarIcon size={22} /></div>
                   <h3>Journey Details</h3>
-                  <p>Distance: <strong style={{ color: "var(--accent)" }}>{data.distance}</strong></p>
-                  <p>Travel time: <strong style={{ color: "var(--accent)" }}>{data.travelTime}</strong></p>
-                  {data.borderCrossingName && <p>Crossing: <strong style={{ color: "var(--accent)" }}>{data.borderCrossingName}</strong></p>}
+                  <p>Distance: <strong style={{ color: "var(--navy)" }}>{data.distance}</strong></p>
+                  <p>Travel time: <strong style={{ color: "var(--navy)" }}>{data.travelTime}</strong></p>
+                  {data.borderCrossingName && <p>Crossing: <strong style={{ color: "var(--navy)" }}>{data.borderCrossingName}</strong></p>}
                 </div>
                 <div className="card">
                   <div className="card-icon"><MapPinIcon size={22} /></div>
@@ -397,7 +397,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
                   <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", marginTop: "var(--space-3)" }}>
                     {data.pickupPoints.map((pt, i) => (
                       <li key={i} style={{ color: "var(--text-body)", fontSize: "var(--text-sm)", display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
-                        <span style={{ color: "var(--accent)" }}>›</span> {pt}
+                        <span style={{ color: "var(--navy)" }}>›</span> {pt}
                       </li>
                     ))}
                   </ul>
@@ -512,7 +512,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
             <div className="grid-3">
               {includedItemsFor(data).map((item) => (
                 <div key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start" }}>
-                  <CheckCircleIcon size={20} style={{ color: "var(--accent)", flexShrink: 0, marginTop: 2 }} />
+                  <CheckCircleIcon size={20} style={{ color: "var(--success)", flexShrink: 0, marginTop: 2 }} />
                   <span style={{ color: "var(--text-body)" }}>{item}</span>
                 </div>
               ))}
@@ -541,7 +541,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
                   </div>
                   <div style={{ padding: "var(--space-6)" }}>
                     <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{v.name}</h3>
-                    <p style={{ color: "var(--accent)", fontWeight: 700, margin: "var(--space-2) 0" }}>{v.capacity}</p>
+                    <p style={{ color: "var(--navy)", fontWeight: 700, margin: "var(--space-2) 0" }}>{v.capacity}</p>
                     <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{v.note}</p>
                   </div>
                 </div>
@@ -564,9 +564,9 @@ export default function RoutePage({ data }: { data: RouteData }) {
               {HOW_IT_WORKS.map((step) => (
                 <div key={step.n} style={{ textAlign: "center" }}>
                   <div style={{
-                    width: 56, height: 56, borderRadius: "50%", background: "var(--accent-subtle)", color: "var(--accent-primary)",
+                    width: 56, height: 56, borderRadius: "50%", background: "var(--white)", color: "var(--navy)",
                     display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto var(--space-4)",
-                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid rgba(12,32,122,0.18)",
+                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid var(--line)",
                   }}>{step.n}</div>
                   <h3 style={{ fontSize: "var(--text-base)", marginBottom: "var(--space-2)" }}>{step.label}</h3>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{step.text}</p>
@@ -608,7 +608,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
               <div className={styles.reviewGrid}>
                 {data.reviews.map((r, i) => (
                   <div key={i} className="card">
-                    <div style={{ display: "flex", gap: "var(--space-1)", marginBottom: "var(--space-3)", color: "var(--accent)" }}>★★★★★</div>
+                    <div style={{ display: "flex", gap: "var(--space-1)", marginBottom: "var(--space-3)", color: "var(--gold)" }}>★★★★★</div>
                     <p style={{ color: "var(--text-body)", fontStyle: "italic", lineHeight: 1.75, marginBottom: "var(--space-4)" }}>&ldquo;{r.text}&rdquo;</p>
                     <p style={{ color: "var(--text-main)", fontWeight: 600 }}>{r.name}</p>
                     <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{r.origin} · {data.origin} → {data.destination}</p>
@@ -629,7 +629,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
             <div style={{ maxWidth: 780, margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
               {data.faqs.map((f, i) => (
                 <div key={i} className="card" style={{ padding: "var(--space-6) var(--space-8)" }}>
-                  <h3 style={{ color: "var(--accent)", fontSize: "var(--text-base)", marginBottom: "var(--space-3)" }}>{f.q}</h3>
+                  <h3 style={{ color: "var(--navy)", fontSize: "var(--text-base)", marginBottom: "var(--space-3)" }}>{f.q}</h3>
                   <p style={{ color: "var(--text-body)", marginBottom: 0 }}>{f.a}</p>
                 </div>
               ))}
@@ -704,11 +704,11 @@ export default function RoutePage({ data }: { data: RouteData }) {
         </section>
 
         {/* CTA */}
-        <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "var(--space-20) 0", textAlign: "center" }}>
+        <section style={{ background: "var(--bg-dark)", padding: "var(--space-20) 0", textAlign: "center" }}>
           <div className="container">
-            <span className="section-eyebrow">Book Now</span>
-            <h2 style={{ color: "var(--white)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
-            <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
+            <span className="section-eyebrow" style={{ background: "rgba(255,255,255,0.08)", borderColor: "var(--line-dark)", color: "var(--on-dark)" }}>Book Now</span>
+            <h2 style={{ color: "var(--on-dark)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
+            <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
               Fixed rates, professional drivers, and 24/7 availability for {data.origin} to {data.destination}.
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>

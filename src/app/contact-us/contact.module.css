@@ -5,19 +5,21 @@
     text-align: center;
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
-    border: 1px solid rgba(12, 32, 122, 0.06);
+    border: 1px solid var(--line);
     border-bottom: 3px solid transparent;
 }
 
+/* Gold hover accent — a transient active state, and only one card is ever
+   hovered at a time. */
 .contactCard:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
-    border-bottom-color: var(--accent);
-    border-color: rgba(12, 32, 122, 0.12);
+    border-bottom-color: var(--gold);
+    border-color: var(--line-strong);
 }
 
 .contactIcon {
-    color: var(--accent);
+    color: var(--navy);
     margin-bottom: 1rem;
     display: flex;
     justify-content: center;
@@ -47,7 +49,7 @@
 }
 
 .contactLink:hover {
-    color: var(--accent-light);
+    color: var(--teal-dark, var(--accent-hover));
     transform: translateX(5px);
 }
 
@@ -83,8 +85,9 @@
 }
 
 .infoIconWrapper {
-    background: rgba(12, 32, 122, 0.08);
-    color: var(--accent);
+    background: var(--white);
+    color: var(--navy);
+    border: 1px solid var(--line);
     padding: 0.6rem;
     border-radius: 8px;
     display: flex;
@@ -111,7 +114,7 @@
     padding: 2.5rem;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(12, 32, 122, 0.06);
+    border: 1px solid var(--line);
 }
 
 /* Responsive */

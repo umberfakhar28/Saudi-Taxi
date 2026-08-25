@@ -281,9 +281,9 @@ export default function TourPage({ data }: { data: TourPageData }) {
               ].map((step, i, arr) => (
                 <div key={step.label} style={{ textAlign: "center" }}>
                   <div style={{
-                    width: 56, height: 56, borderRadius: "50%", background: "var(--accent-subtle)", color: "var(--accent-primary)",
+                    width: 56, height: 56, borderRadius: "50%", background: "var(--white)", color: "var(--navy)",
                     display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto var(--space-4)",
-                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid rgba(12,32,122,0.18)",
+                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid var(--line)",
                   }}>{i === arr.length - 1 ? "🏁" : i + 1}</div>
                   <h3 style={{ fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>{step.label}</h3>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", lineHeight: 1.6 }}>{step.text}</p>
@@ -569,11 +569,11 @@ export default function TourPage({ data }: { data: TourPageData }) {
         </section>
 
         {/* Final CTA */}
-        <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "var(--space-20) 0", textAlign: "center" }}>
+        <section style={{ background: "var(--bg-dark)", padding: "var(--space-20) 0", textAlign: "center" }}>
           <div className="container">
-            <span className="section-eyebrow">Book Now</span>
-            <h2 style={{ color: "var(--white)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
-            <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
+            <span className="section-eyebrow" style={{ background: "rgba(255,255,255,0.08)", borderColor: "var(--line-dark)", color: "var(--on-dark)" }}>Book Now</span>
+            <h2 style={{ color: "var(--on-dark)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
+            <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
               Private vehicle, professional driver, flexible scheduling.
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>

@@ -137,7 +137,7 @@ export default function Quote() {
                                 }}>
                                     {step.number}
                                 </div>
-                                <h3 style={{ color: 'var(--primary)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-3)' }}>{step.title}</h3>
+                                <h3 style={{ color: 'var(--navy)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-3)' }}>{step.title}</h3>
                                 <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
                             </div>
                         ))}
@@ -150,7 +150,7 @@ export default function Quote() {
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
-                                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                                background: 'var(--accent-green)',
                                 borderRadius: 'var(--radius-xl)',
                                 padding: 'var(--space-10) var(--space-8)',
                                 display: 'flex',
@@ -159,7 +159,7 @@ export default function Quote() {
                                 gap: 'var(--space-4)',
                                 textAlign: 'center',
                                 textDecoration: 'none',
-                                color: 'white',
+                                color: 'var(--white)',
                                 boxShadow: 'var(--shadow-lg)',
                                 transition: 'transform var(--ease-base), box-shadow var(--ease-base)',
                             }}
@@ -176,7 +176,7 @@ export default function Quote() {
                         <Link
                             href="/contact-us"
                             style={{
-                                background: 'linear-gradient(135deg, var(--bg-primary), var(--navy-light))',
+                                background: 'var(--bg-primary)',
                                 borderRadius: 'var(--radius-xl)',
                                 padding: 'var(--space-10) var(--space-8)',
                                 display: 'flex',
@@ -185,7 +185,7 @@ export default function Quote() {
                                 gap: 'var(--space-4)',
                                 textAlign: 'center',
                                 textDecoration: 'none',
-                                color: 'white',
+                                color: 'var(--on-dark)',
                                 boxShadow: 'var(--shadow-lg)',
                                 transition: 'transform var(--ease-base)',
                             }}
@@ -243,25 +243,17 @@ export default function Quote() {
                 </div>
             </section>
 
-            {/* Final CTA */}
+            {/* Final CTA — flat navy, no gradient/dot-texture */}
             <section style={{
-                background: 'linear-gradient(140deg, var(--bg-primary) 0%, var(--bg-dark) 60%, var(--navy-light) 100%)',
+                background: 'var(--bg-primary)',
                 padding: 'var(--space-20) 0',
                 textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden',
             }}>
-                <div style={{
-                    position: 'absolute', inset: 0,
-                    backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)',
-                    backgroundSize: '30px 30px',
-                    pointerEvents: 'none',
-                }} />
-                <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                    <h2 style={{ color: 'var(--white)', fontSize: 'var(--text-4xl)', marginBottom: 'var(--space-4)' }}>
+                <div className="container">
+                    <h2 style={{ color: 'var(--on-dark)', fontSize: 'var(--text-4xl)', marginBottom: 'var(--space-4)' }}>
                         Ready for Your Journey?
                     </h2>
-                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 'var(--text-lg)', maxWidth: 560, margin: '0 auto var(--space-10)', lineHeight: 1.8 }}>
+                    <p style={{ color: 'var(--on-dark-muted)', fontSize: 'var(--text-lg)', maxWidth: 560, margin: '0 auto var(--space-10)', lineHeight: 1.8 }}>
                         Contact us now via WhatsApp or our contact form and get your personalised, fixed-price quote within minutes.
                     </p>
                     <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>

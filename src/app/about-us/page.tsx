@@ -82,11 +82,11 @@ export default function AboutUs() {
 
                         {/* Founder / CEO profile card */}
                         <div style={{
-                            background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))',
+                            background: 'var(--navy)',
                             borderRadius: 'var(--radius-lg)',
                             padding: '2.5rem 2rem',
                             textAlign: 'center',
-                            color: 'var(--white)',
+                            color: 'var(--on-dark)',
                         }}>
                             <div style={{
                                 position: 'relative',
@@ -95,7 +95,7 @@ export default function AboutUs() {
                                 margin: '0 auto 1.25rem',
                                 borderRadius: '50%',
                                 overflow: 'hidden',
-                                border: '3px solid var(--secondary)',
+                                border: '3px solid var(--gold)',
                                 boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
                             }}>
                                 <Image
@@ -106,11 +106,11 @@ export default function AboutUs() {
                                     style={{ objectFit: 'cover' }}
                                 />
                             </div>
-                            <h3 style={{ color: 'var(--white)', marginBottom: '0.15rem', fontSize: '1.25rem' }}>Umber Fakhar</h3>
-                            <p style={{ color: 'var(--secondary)', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: '1rem' }}>
+                            <h3 style={{ color: 'var(--on-dark)', marginBottom: '0.15rem', fontSize: '1.25rem' }}>Umber Fakhar</h3>
+                            <p style={{ color: 'var(--gold)', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: '1rem' }}>
                                 CEO, Gulf Trip Service
                             </p>
-                            <p style={{ color: 'rgba(255,255,255,0.82)', lineHeight: '1.7', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
+                            <p style={{ color: 'var(--on-dark-muted)', lineHeight: '1.7', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
                                 Leading Gulf Trip Service&apos;s mission to deliver safe, reliable and comfortable private transportation for pilgrims and travelers across Saudi Arabia and the Gulf.
                             </p>
                             <a
@@ -125,9 +125,9 @@ export default function AboutUs() {
                                     width: 40,
                                     height: 40,
                                     borderRadius: '50%',
-                                    background: 'rgba(255,255,255,0.1)',
-                                    border: '1px solid rgba(255,255,255,0.25)',
-                                    color: 'var(--white)',
+                                    background: 'rgba(255,255,255,0.08)',
+                                    border: '1px solid var(--line-dark)',
+                                    color: 'var(--on-dark)',
                                 }}
                             >
                                 <LinkedInIcon size={18} />
@@ -138,7 +138,7 @@ export default function AboutUs() {
             </section>
 
             {/* Stats */}
-            <section style={{ background: 'linear-gradient(135deg, var(--navy-dark), var(--navy))', padding: '5rem 0' }}>
+            <section style={{ background: 'var(--navy)', padding: '5rem 0' }}>
                 <div className="container">
                     <div className="grid-4" style={{ textAlign: 'center' }}>
                         {stats.map((stat, i) => (
@@ -146,7 +146,7 @@ export default function AboutUs() {
                                 <div style={{
                                     fontSize: '3.2rem',
                                     fontWeight: 700,
-                                    color: 'var(--secondary)',
+                                    color: 'var(--gold)',
                                     fontFamily: 'var(--font-heading)',
                                     lineHeight: 1,
                                     marginBottom: '0.75rem',
@@ -155,7 +155,7 @@ export default function AboutUs() {
                                     <AnimatedCounter end={stat.number} />
                                 </div>
                                 <div style={{
-                                    color: 'rgba(255,255,255,0.9)',
+                                    color: 'var(--on-dark)',
                                     fontSize: '1rem',
                                     textTransform: 'uppercase',
                                     letterSpacing: '2px',
@@ -175,14 +175,14 @@ export default function AboutUs() {
                     <div className="grid-2" style={{ maxWidth: '900px', margin: '0 auto' }}>
                         <div className="card" style={{ textAlign: 'center', padding: '2.5rem' }}>
                             <div style={{ color: 'var(--accent)', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}><TargetIcon size={36} /></div>
-                            <h3 style={{ color: 'var(--primary)' }}>Our Mission</h3>
+                            <h3 style={{ color: 'var(--navy)' }}>Our Mission</h3>
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.7' }}>
                                 To provide every pilgrim and traveler in Saudi Arabia and the Gulf with safe, comfortable, and reliable transportation services — removing the stress of travel so they can focus on what brought them here.
                             </p>
                         </div>
                         <div className="card" style={{ textAlign: 'center', padding: '2.5rem' }}>
                             <div style={{ color: 'var(--accent)', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}><EyeIcon size={36} /></div>
-                            <h3 style={{ color: 'var(--primary)' }}>Our Vision</h3>
+                            <h3 style={{ color: 'var(--navy)' }}>Our Vision</h3>
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.7' }}>
                                 To be the region&apos;s most trusted private transportation partner — the name pilgrims, tourists and business travelers reach for first, from arrival to departure.
                             </p>
@@ -200,7 +200,7 @@ export default function AboutUs() {
                         {values.map((value, i) => (
                             <div key={i} className="card" style={{ textAlign: 'center' }}>
                                 <div style={{ color: 'var(--accent)', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>{value.icon}</div>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '1.15rem', marginBottom: '0.75rem' }}>{value.title}</h3>
+                                <h3 style={{ color: 'var(--navy)', fontSize: '1.15rem', marginBottom: '0.75rem' }}>{value.title}</h3>
                                 <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '0.9rem' }}>{value.description}</p>
                             </div>
                         ))}
@@ -213,13 +213,13 @@ export default function AboutUs() {
                 <div className="container">
                     <h2 className="section-title">Our Journey</h2>
                     <div style={{ maxWidth: '700px', margin: '0 auto', position: 'relative' }}>
-                        <div style={{ position: 'absolute', left: 40, top: 8, bottom: 8, width: 2, background: 'var(--secondary)', opacity: 0.35 }} aria-hidden="true" />
+                        <div style={{ position: 'absolute', left: 40, top: 8, bottom: 8, width: 2, background: 'var(--line-strong)' }} aria-hidden="true" />
                         {milestones.map((milestone, i) => (
                             <div key={i} style={{ display: 'flex', gap: '2rem', marginBottom: '1.5rem', alignItems: 'flex-start', position: 'relative' }}>
                                 <div style={{
                                     minWidth: '80px',
-                                    background: 'linear-gradient(135deg, var(--secondary), var(--secondary-light))',
-                                    color: 'var(--primary)',
+                                    background: 'var(--navy)',
+                                    color: 'var(--on-dark)',
                                     fontWeight: 700,
                                     padding: '0.5rem 1rem',
                                     borderRadius: 'var(--radius-md)',
@@ -272,10 +272,10 @@ export default function AboutUs() {
             </section>
 
             {/* CTA */}
-            <section style={{ background: 'linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%)', padding: '5rem 0', textAlign: 'center' }}>
+            <section style={{ background: 'var(--navy)', padding: '5rem 0', textAlign: 'center' }}>
                 <div className="container">
-                    <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Book a Ride</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
+                    <h2 style={{ color: 'var(--on-dark)', marginBottom: '1rem' }}>Book a Ride</h2>
+                    <p style={{ color: 'var(--on-dark-muted)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
                         Join the 15,000+ satisfied customers who trust Gulf Trip Service for premium transportation across Saudi Arabia and the Gulf.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>

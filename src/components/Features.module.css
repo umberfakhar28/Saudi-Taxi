@@ -9,25 +9,16 @@
 */
 
 .features {
-    background: var(--bg-base);
+    background: var(--ivory, var(--bg-base));
     padding: var(--space-20) 0;
     position: relative;
     overflow: hidden;
 }
 
-.features::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    /* Was rgba(36, 84, 232, ...) — the pre-rebrand blue (#2454E8), before the
-       brand moved to #0C207A. Corrected to the current accent, at a lower
-       opacity so the dot texture stays a trace detail, not a blue wash. */
-    background-image: radial-gradient(rgba(12, 32, 122, 0.12) 1px, transparent 1px);
-    background-size: 44px 44px;
-    opacity: 0.22;
-    mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 80%);
-    pointer-events: none;
-}
+/* The dot-texture background this used to have was teal-tinted, which the
+   sitewide colour pass rules out (teal never fills a background, and a
+   purely decorative texture doesn't earn a place in a stricter 3-colour
+   system) — removed rather than recoloured. */
 
 .container {
     max-width: var(--container-width);
@@ -50,12 +41,9 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2.5px;
-    color: var(--text-muted);
-    /* Neutral pill, matching the sitewide .section-eyebrow convention in
-       globals.css — this local eyebrow had drifted to a blue fill/border
-       that no other eyebrow on the site uses. */
-    background: var(--bg-subtle);
-    border: 1px solid var(--line);
+    color: var(--text-muted, var(--text));
+    background: var(--surface, var(--bg-subtle));
+    border: 1px solid var(--ivory-300, var(--line));
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-full);
     margin-bottom: var(--space-4);
@@ -64,27 +52,25 @@
 /* Title */
 .title {
     font-size: var(--text-4xl);
-    color: var(--text-main);
+    color: var(--text, var(--text-main));
     margin-bottom: var(--space-4);
     position: relative;
 }
 
-/* Gold/brass underline accent — was actually wired to var(--accent) (blue),
-   despite the comment; now genuinely brass, matching the tiny-accent role
-   brass plays on the shared .card top bar. */
+/* Gold underline accent — the tiny decorative rule */
 .title::after {
     content: '';
     display: block;
     width: 56px;
     height: 3px;
-    background: var(--brass);
+    background: var(--gold, var(--brass));
     margin: var(--space-3) auto 0;
     border-radius: var(--radius-full);
 }
 
 .subtitle {
     font-size: var(--text-lg);
-    color: var(--text-muted);
+    color: var(--text-muted, var(--text));
     line-height: 1.8;
 }
 
@@ -95,75 +81,60 @@
     gap: var(--space-6);
 }
 
-/* Card */
+/* Card — flat surface, no gradient */
 .card {
-    background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+    background: var(--surface, var(--bg-card));
     padding: var(--space-10) var(--space-8);
     border-radius: var(--radius-lg);
-    /* Blue-tinted inset dropped, matching the shared .card in globals.css. */
     box-shadow: var(--shadow-md);
     text-align: center;
     transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(16, 18, 26, 0.07);
+    border: 1px solid var(--ivory-300, rgba(16, 18, 26, 0.07));
 }
 
-/* Brass top bar — the tiny decorative accent, not the interaction color */
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--brass), transparent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--ease-base);
-}
-
+/* The gold top-bar this card used to have on hover was removed — six
+   cards in this grid each showing a gold accent would put six gold marks
+   in one screenful, well past "gold appears once or twice per section,
+   maximum." Hover feedback is border + shadow only now, no colour. */
 .card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-xl);
-    border-color: rgba(12, 32, 122, 0.15);
+    border-color: var(--line-strong);
 }
 
-.card:hover::before {
-    transform: scaleX(1);
-}
-
-/* Icon wrapper — neutral at rest, navy only on hover/interaction */
+/* Icon badge — monochrome per the sitewide rule: white circle, line
+   border, ink icon. No tint, no colour change on hover. */
 .icon {
-    width: 64px;
-    height: 64px;
-    background: var(--bg-subtle);
-    border-radius: var(--radius-md);
+    width: 56px;
+    height: 56px;
+    background: var(--white, var(--bg-subtle));
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent);
+    color: var(--ink, var(--text));
     margin: 0 auto var(--space-5);
-    transition: background var(--ease-base), color var(--ease-base), border-color var(--ease-base);
+    transition: border-color var(--ease-base);
     border: 1px solid var(--line);
 }
 
 .card:hover .icon {
-    background: var(--accent);
-    color: var(--accent-text);
-    border-color: var(--accent);
+    border-color: var(--line-strong);
 }
 
 /* Card Title */
 .cardTitle {
     font-size: var(--text-xl);
-    color: var(--text-main);
+    color: var(--text, var(--text-main));
     margin-bottom: var(--space-3);
     font-weight: 600;
 }
 
 /* Card Text */
 .cardText {
-    color: var(--text-muted);
+    color: var(--text-muted, var(--text));
     line-height: 1.75;
     font-size: var(--text-base);
 }

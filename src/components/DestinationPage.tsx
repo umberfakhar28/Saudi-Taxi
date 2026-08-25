@@ -91,19 +91,19 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                     sizes="100vw"
                     priority
                 />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(3,10,37,0.72) 0%, rgba(3,10,37,0.84) 100%)", zIndex: 1 }} />
+                <div style={{ position: "absolute", inset: 0, background: "rgba(8, 24, 39, 0.72)", zIndex: 1 }} />
                 <div className="container" style={{ position: "relative", zIndex: 2 }}>
-                    <span className="badge" style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "var(--white)" }}>
+                    <span className="badge" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--line-dark)", color: "var(--on-dark)" }}>
                         {country.flag} {country.name}
                     </span>
-                    <h1 style={{ color: "var(--white)", marginTop: "var(--space-4)" }}>{data.h1}</h1>
-                    <p style={{ color: "rgba(255,255,255,0.85)", maxWidth: 680, margin: "var(--space-4) auto 0", fontSize: "var(--text-lg)" }}>
+                    <h1 style={{ color: "var(--on-dark)", marginTop: "var(--space-4)" }}>{data.h1}</h1>
+                    <p style={{ color: "var(--on-dark)", maxWidth: 680, margin: "var(--space-4) auto 0", fontSize: "var(--text-lg)" }}>
                         {data.intro}
                     </p>
-                    <div className="breadcrumb" style={{ color: "rgba(255,255,255,0.65)", marginTop: "var(--space-6)" }}>
-                        <Link href="/" style={{ color: "rgba(255,255,255,0.8)" }}>Home</Link>{" "}
+                    <div className="breadcrumb" style={{ color: "var(--on-dark-muted)", marginTop: "var(--space-6)" }}>
+                        <Link href="/" style={{ color: "var(--on-dark-muted)" }}>Home</Link>{" "}
                         <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
-                        <Link href="/destinations" style={{ color: "rgba(255,255,255,0.8)" }}>Destinations</Link>{" "}
+                        <Link href="/destinations" style={{ color: "var(--on-dark-muted)" }}>Destinations</Link>{" "}
                         <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
                         <span>{data.name}</span>
                     </div>
@@ -277,7 +277,7 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                                 <div style={{ padding: "var(--space-6)" }}>
                                     <h3 style={{ fontSize: "var(--text-lg)" }}>{tier.name}</h3>
                                     <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginBottom: "var(--space-2)" }}>{tier.models}</p>
-                                    <p style={{ color: "var(--accent)", fontWeight: 700, fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>
+                                    <p style={{ color: "var(--navy)", fontWeight: 700, fontSize: "var(--text-sm)", marginBottom: "var(--space-2)" }}>
                                         Up to {tier.maxPassengers} passengers · {tier.maxLuggage} bags
                                     </p>
                                     <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{tier.description}</p>
@@ -299,9 +299,9 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                         {HOW_IT_WORKS.map((step, i) => (
                             <div key={step.title} style={{ textAlign: "center" }}>
                                 <div style={{
-                                    width: 56, height: 56, borderRadius: "50%", background: "var(--accent-subtle)", color: "var(--accent-primary)",
+                                    width: 56, height: 56, borderRadius: "50%", background: "var(--white)", color: "var(--navy)",
                                     display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto var(--space-4)",
-                                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid rgba(12,32,122,0.18)",
+                                    fontWeight: 800, fontSize: "var(--text-xl)", fontFamily: "var(--font-heading)", border: "1px solid var(--line)",
                                 }}>{i + 1}</div>
                                 <h3 style={{ fontSize: "var(--text-base)", marginBottom: "var(--space-2)" }}>{step.title}</h3>
                                 <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{step.description}</p>
@@ -369,7 +369,7 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                         <div className={styles.reviewGrid}>
                             {data.reviews.map((r, i) => (
                                 <div key={i} className="card">
-                                    <div style={{ display: "flex", gap: "var(--space-1)", marginBottom: "var(--space-3)", color: "var(--accent)" }}>★★★★★</div>
+                                    <div style={{ display: "flex", gap: "var(--space-1)", marginBottom: "var(--space-3)", color: "var(--gold)" }}>★★★★★</div>
                                     <p style={{ color: "var(--text-body)", fontStyle: "italic", lineHeight: 1.75, marginBottom: "var(--space-4)" }}>&ldquo;{r.text}&rdquo;</p>
                                     <p style={{ color: "var(--text-main)", fontWeight: 600 }}>{r.name}</p>
                                     <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{r.origin}</p>
@@ -391,7 +391,7 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                         <div style={{ maxWidth: 780, margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
                             {data.faqs.map((f, i) => (
                                 <div key={i} className="card" style={{ padding: "var(--space-6) var(--space-8)" }}>
-                                    <h3 style={{ color: "var(--accent)", fontSize: "var(--text-base)", marginBottom: "var(--space-3)" }}>{f.q}</h3>
+                                    <h3 style={{ color: "var(--navy)", fontSize: "var(--text-base)", marginBottom: "var(--space-3)" }}>{f.q}</h3>
                                     <p style={{ color: "var(--text-body)", marginBottom: 0 }}>{f.a}</p>
                                 </div>
                             ))}
@@ -463,10 +463,10 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
             )}
 
             {/* Closing CTA */}
-            <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "5rem 0", textAlign: "center" }}>
+            <section style={{ background: "var(--bg-dark)", padding: "5rem 0", textAlign: "center" }}>
                 <div className="container">
-                    <h2 style={{ color: "var(--white)", marginBottom: "1rem" }}>Ready to Book Your {data.name} Transfer?</h2>
-                    <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
+                    <h2 style={{ color: "var(--on-dark)", marginBottom: "1rem" }}>Ready to Book Your {data.name} Transfer?</h2>
+                    <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
                         Professional drivers and 24/7 availability — book online or message us on WhatsApp for an instant reply.
                     </p>
                     <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
@@ -474,7 +474,7 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                         <a href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
                             <WhatsAppIcon size={18} /> WhatsApp Us
                         </a>
-                        <Link href="/destinations" className="btn btn-outline btn-lg" style={{ color: "var(--white)", borderColor: "rgba(255,255,255,0.5)" }}>
+                        <Link href="/destinations" className="btn btn-outline btn-lg">
                             Browse All Destinations
                         </Link>
                     </div>
