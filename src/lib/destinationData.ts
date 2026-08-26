@@ -393,6 +393,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE cross-border transfer" },
       { href: "/riyadh-to-dubai-taxi-service", label: "Riyadh to Dubai taxi service" },
       { href: "/airport-transfers", label: "All airport transfer services" },
+      { href: "/distance/dammam-to-abu-dhabi", label: "Dammam to Abu Dhabi distance & travel time" },
     ],
     relatedSlugs: ["dubai", "sharjah", "ras-al-khaimah", "doha", "dammam"],
     quickFacts: [
@@ -1063,6 +1064,9 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi service" },
       { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait taxi service" },
       { href: "/border-crossing", label: "GCC border crossing routes" },
+      { href: "/distance/dammam-to-kuwait", label: "Dammam to Kuwait distance & travel time" },
+      { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait distance & travel time" },
+      { href: "/distance/khafji-to-kuwait", label: "Khafji to Kuwait distance & travel time" },
     ],
     relatedSlugs: ["salmiya", "al-shaheed-park", "failaka-island", "dammam", "manama"],
     quickFacts: [

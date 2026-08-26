@@ -45,7 +45,12 @@ export const riyadh: CityData = {
   distanceGuides: [
     { href: "/distance/riyadh-to-dammam", label: "Riyadh to Dammam Distance & Travel Time" },
     { href: "/distance/riyadh-to-makkah", label: "Riyadh to Makkah Distance & Travel Time" },
+    { href: "/distance/riyadh-to-jeddah", label: "Riyadh to Jeddah Distance & Travel Time" },
     { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh Distance & Travel Time" },
+    { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait Distance & Travel Time" },
+    { href: "/distance/riyadh-to-dubai", label: "Riyadh to Dubai Distance & Travel Time" },
+    { href: "/distance/doha-to-riyadh", label: "Doha to Riyadh Distance & Travel Time" },
+    { href: "/distance/abha-to-riyadh", label: "Abha to Riyadh Distance & Travel Time" },
   ],
   attractionsImage: "/images/images-gulf/riyadh-attractions.webp.png",
   airportImage: "/images/images-gulf/riyadh-airport-transfer.webp.png",
@@ -121,6 +126,8 @@ export const jeddah: CityData = {
   distanceGuides: [
     { href: "/distance/jeddah-to-makkah", label: "Jeddah to Makkah Distance & Travel Time" },
     { href: "/distance/jeddah-to-madinah", label: "Jeddah to Madinah Distance & Travel Time" },
+    { href: "/distance/riyadh-to-jeddah", label: "Riyadh to Jeddah Distance & Travel Time" },
+    { href: "/distance/abha-to-jeddah", label: "Abha to Jeddah Distance & Travel Time" },
   ],
   attractionsImage: "/images/images-gulf/jeddah-attractions.webp.png",
   airportImage: "/images/images-gulf/jeddah-airport-transfer.webp.png",
@@ -355,6 +362,10 @@ export const dammam: CityData = {
   distanceGuides: [
     { href: "/distance/riyadh-to-dammam", label: "Riyadh to Dammam Distance & Travel Time" },
     { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam Distance & Travel Time" },
+    { href: "/distance/dammam-to-kuwait", label: "Dammam to Kuwait Distance & Travel Time" },
+    { href: "/distance/dammam-to-abu-dhabi", label: "Dammam to Abu Dhabi Distance & Travel Time" },
+    { href: "/distance/dammam-to-dubai", label: "Dammam to Dubai Distance & Travel Time" },
+    { href: "/distance/doha-to-dammam", label: "Doha to Dammam Distance & Travel Time" },
   ],
   coverageImage: "/images/images-gulf/dammam-taxi-service-coverage.webp",
   airportImage: "/images/images-gulf/dammam-airport-transfer.webp",

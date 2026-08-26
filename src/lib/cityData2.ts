@@ -251,6 +251,8 @@ export const abha: CityData = {
   heroImageAlt: "Abha and the Asir mountains — private taxi service in Saudi Arabia's highland tourism region",
   distanceGuides: [
     { href: "/distance/abha-to-madinah", label: "Abha to Madinah Distance & Travel Guide" },
+    { href: "/distance/abha-to-riyadh", label: "Abha to Riyadh Distance & Travel Time" },
+    { href: "/distance/abha-to-jeddah", label: "Abha to Jeddah Distance & Travel Time" },
   ],
   serviceAreas: [
     { name: "Abha city centre & Lake Park", note: "The central, walkable core and the city's most popular family gathering spot." },

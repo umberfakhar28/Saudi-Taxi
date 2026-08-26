@@ -73,6 +73,23 @@ const ROUTE_DISTANCE_MAP: Record<string, { href: string; label: string }> = {
   "bahrain-to-riyadh-taxi-service": { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh: Distance & Travel Time" },
   "riyadh-to-bahrain-taxi-service": { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh: Distance & Travel Time" },
   "bahrain-to-jubail-taxi-service": { href: "/distance/bahrain-to-jubail", label: "Bahrain to Jubail: Distance & Travel Time" },
+  // Batch 2 (route-inventory audit, Priority B backlog)
+  "dammam-to-kuwait-taxi-service": { href: "/distance/dammam-to-kuwait", label: "Dammam to Kuwait: Distance & Travel Time" },
+  "kuwait-to-dammam-taxi-service": { href: "/distance/dammam-to-kuwait", label: "Dammam to Kuwait: Distance & Travel Time" },
+  "riyadh-to-kuwait-taxi-service": { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait: Distance & Travel Time" },
+  "kuwait-to-riyadh-taxi-service": { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait: Distance & Travel Time" },
+  "khafji-to-kuwait-taxi-service": { href: "/distance/khafji-to-kuwait", label: "Khafji to Kuwait: Distance & Travel Time" },
+  "kuwait-to-khafji-taxi-service": { href: "/distance/khafji-to-kuwait", label: "Khafji to Kuwait: Distance & Travel Time" },
+  "dammam-to-abu-dhabi-taxi-service": { href: "/distance/dammam-to-abu-dhabi", label: "Dammam to Abu Dhabi: Distance & Travel Time" },
+  "abu-dhabi-to-dammam-taxi-service": { href: "/distance/dammam-to-abu-dhabi", label: "Dammam to Abu Dhabi: Distance & Travel Time" },
+  "dammam-to-dubai-taxi-service": { href: "/distance/dammam-to-dubai", label: "Dammam to Dubai: Distance & Travel Time" },
+  "dubai-to-dammam-taxi-service": { href: "/distance/dammam-to-dubai", label: "Dammam to Dubai: Distance & Travel Time" },
+  "riyadh-to-dubai-taxi-service": { href: "/distance/riyadh-to-dubai", label: "Riyadh to Dubai: Distance & Travel Time" },
+  "dubai-to-riyadh-taxi-service": { href: "/distance/riyadh-to-dubai", label: "Riyadh to Dubai: Distance & Travel Time" },
+  "qatar-to-riyadh-taxi-service": { href: "/distance/doha-to-riyadh", label: "Doha to Riyadh: Distance & Travel Time" },
+  "riyadh-to-qatar-taxi-service": { href: "/distance/doha-to-riyadh", label: "Doha to Riyadh: Distance & Travel Time" },
+  "qatar-to-dammam-taxi-service": { href: "/distance/doha-to-dammam", label: "Doha to Dammam: Distance & Travel Time" },
+  "dammam-airport-to-qatar-taxi-service": { href: "/distance/doha-to-dammam", label: "Doha to Dammam: Distance & Travel Time" },
 };
 
 export interface RouteData {
