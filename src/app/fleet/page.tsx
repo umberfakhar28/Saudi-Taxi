@@ -1,10 +1,16 @@
+import type { ComponentType } from 'react';
 import styles from './fleet.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { generatePageMetadata } from "@/lib/seo";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { waLink } from "@/lib/contact";
-import { ShieldIcon, UserIcon, PackageIcon, WhatsAppIcon, ChevronRightIcon } from "@/components/Icons";
+import {
+    ShieldIcon, UserIcon, PackageIcon, WhatsAppIcon, ChevronRightIcon,
+    BriefcaseIcon, CarIcon, MoonIcon, TargetIcon, PlaneIcon, CompassIcon,
+    HeartIcon, ChauffeurCapIcon,
+} from "@/components/Icons";
+import { FLEET_CATEGORY_GUIDE, FLEET_VEHICLES, vehiclesFor } from "@/lib/fleetVehicles";
 
 export const metadata = generatePageMetadata({
     title: "Our Fleet",
@@ -77,6 +83,57 @@ const FLEET_CATEGORIES = [
         description: "Full-size touring coaches for large group transfers and multi-city itineraries — built for long-distance comfort.",
     },
 ] as const;
+
+const CATEGORY_ICONS: Record<string, ComponentType<{ size?: number }>> = {
+    executive: BriefcaseIcon,
+    "everyday-sedans": CarIcon,
+    "premium-suv": UserIcon,
+    "premium-van": PackageIcon,
+    "group-umrah": MoonIcon,
+};
+
+const BENEFITS = [
+    {
+        icon: TargetIcon,
+        title: "Vehicle Matched to Your Group",
+        text: "Reserve ahead and we'll match a vehicle to your passenger count, luggage, and journey type — not whatever happens to be free.",
+    },
+    {
+        icon: PackageIcon,
+        title: "Enough Space for Passengers & Luggage",
+        text: "Avoid arriving to a car that's too small for your group. Confirming a vehicle in advance means the right seating and boot space are ready.",
+    },
+    {
+        icon: ChauffeurCapIcon,
+        title: "Professional Chauffeur Service",
+        text: "Every vehicle comes with a licensed, professional driver — comfortable, private transportation from pickup to drop-off.",
+    },
+    {
+        icon: PlaneIcon,
+        title: "Reliable Airport Pickup & Meet & Greet",
+        text: "Pre-booked airport transfers include meet-and-greet pickup and flight tracking, so your driver is waiting regardless of delays.",
+    },
+    {
+        icon: CompassIcon,
+        title: "Comfortable Intercity Travel",
+        text: "Longer journeys between Saudi cities are more comfortable in a vehicle sized correctly for the trip, booked before you travel.",
+    },
+    {
+        icon: HeartIcon,
+        title: "Family-Friendly Transportation",
+        text: "From premium SUVs to spacious vans, families can reserve a vehicle with enough room for children, car seats and luggage.",
+    },
+    {
+        icon: MoonIcon,
+        title: "Umrah Transportation",
+        text: "Pilgrims traveling between airports, Makkah, Madinah and other destinations can pre-book a group van or minibus sized to the party.",
+    },
+    {
+        icon: BriefcaseIcon,
+        title: "Corporate & Executive Travel",
+        text: "Business travelers can reserve an executive sedan or van in advance for a punctual, professional arrival at every meeting.",
+    },
+];
 
 export default function FleetPage() {
     const schemas = [
@@ -199,6 +256,192 @@ export default function FleetPage() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 4 — Find the Right Vehicle for Your Journey (category
+                recommendations). A different card style from the exterior/
+                interior grids above — icon-led, text-first, no photos —
+                so it reads as guidance rather than a repeat of the fleet
+                grid. */}
+            <section className="section-lg">
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Vehicle Guide</span>
+                        <h2 className="section-title">Find the Right Vehicle for Your Journey</h2>
+                        <p className="section-subtitle">
+                            Not sure which vehicle type fits your trip? Here&apos;s how our fleet categories
+                            match up against the journeys travelers book most.
+                        </p>
+                    </div>
+
+                    <p style={{ maxWidth: 820, margin: '0 auto var(--space-10)', textAlign: 'center', color: 'var(--text-body)', fontSize: 'var(--text-lg)', lineHeight: 1.8 }}>
+                        Planning a private <Link href="/airport-transfers" style={{ color: 'var(--teal)', fontWeight: 600 }}>Saudi Arabia airport transfer</Link>, a
+                        family trip, or <Link href="/umrah-taxi-services" style={{ color: 'var(--teal)', fontWeight: 600 }}>Umrah transportation</Link> for
+                        a larger group? Each category below lists the vehicles best suited to that kind of journey, so you can book
+                        the right fit the first time — or explore our <Link href="/routes" style={{ color: 'var(--teal)', fontWeight: 600 }}>intercity transfer routes</Link> if
+                        you&apos;re traveling between cities.
+                    </p>
+
+                    <div className={styles.recommendGrid}>
+                        {FLEET_CATEGORY_GUIDE.map((cat) => {
+                            const Icon = CATEGORY_ICONS[cat.id] ?? CarIcon;
+                            const vehicles = vehiclesFor(cat.vehicleSlugs);
+                            return (
+                                <div key={cat.id} className={styles.recommendCard}>
+                                    <div className={styles.recommendIcon}><Icon size={24} /></div>
+                                    <h3 className={styles.recommendTitle}>{cat.title}</h3>
+                                    <p className={styles.recommendTagline}>{cat.tagline}</p>
+
+                                    <div className={styles.recommendLabel}>Recommended Vehicles</div>
+                                    <div className={styles.recommendVehicles}>
+                                        {vehicles.map((v) => (
+                                            <div key={v.slug} className={styles.recommendVehicleRow}>
+                                                {v.name} <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>· up to {v.passengers} passengers</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className={styles.recommendLabel}>Best For</div>
+                                    <div className={styles.recommendBestForRow}>
+                                        {cat.bestForList.map((b) => (
+                                            <span key={b} className={styles.recommendChip}>{b}</span>
+                                        ))}
+                                    </div>
+
+                                    <Link href="/book-online" className={`btn btn-secondary btn-sm ${styles.recommendCta}`}>
+                                        Choose Your Vehicle
+                                    </Link>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* 5 — Compare Vehicles by Capacity, Comfort & Use. A single
+                large, responsive comparison table — a different layout
+                again from the card grids above. */}
+            <section className={`section-lg ${styles.compareSection}`}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Compare</span>
+                        <h2 className="section-title">Compare Vehicles by Capacity, Comfort &amp; Use</h2>
+                    </div>
+
+                    <p className={styles.compareIntro}>
+                        Compare every vehicle in the Gulf Trip Service fleet side by side — passenger capacity,
+                        luggage space, comfort level, and the journeys each one suits best — to choose confidently
+                        before you book.
+                    </p>
+
+                    <div className={styles.compareTableWrapper}>
+                        <table className={styles.compareTable}>
+                            <caption>Gulf Trip Service fleet comparison — passenger capacity, luggage space and recommended use</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Vehicle</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Passengers</th>
+                                    <th scope="col">Luggage</th>
+                                    <th scope="col">Comfort</th>
+                                    <th scope="col">Best For</th>
+                                    <th scope="col"><span className="sr-only">Book</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {FLEET_VEHICLES.map((v) => (
+                                    <tr key={v.slug}>
+                                        <th scope="row" className={styles.compareVehicleCell}>{v.name}</th>
+                                        <td>{v.type}</td>
+                                        <td>{v.passengers}</td>
+                                        <td>{v.luggage} bags</td>
+                                        <td>{v.comfort}</td>
+                                        <td>{v.bestFor}</td>
+                                        <td>
+                                            <Link
+                                                href={`/book-online?vehicle=${v.slug}&vehicleName=${encodeURIComponent(v.name)}`}
+                                                className={styles.compareBookLink}
+                                            >
+                                                Book →
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className={styles.compareNotes}>
+                        <p>
+                            <strong>Choosing a vehicle for an airport transfer:</strong> an executive sedan or premium SUV covers
+                            most solo and family arrivals comfortably — see our <Link href="/airport-transfers" style={{ color: 'var(--teal)', fontWeight: 600 }}>airport transfer services</Link> for
+                            meet-and-greet pickup details at every major Saudi airport.
+                        </p>
+                        <p>
+                            <strong>Choosing a vehicle for families or groups:</strong> luggage is usually the deciding factor
+                            more than passenger count — a premium van or SUV gives a family room to breathe, while a minibus or
+                            Sprinter suits larger parties traveling together.
+                        </p>
+                        <p>
+                            <strong>Choosing a vehicle for Umrah:</strong> groups traveling between airports, Makkah and Madinah
+                            are usually better served by a van or minibus than several sedans — browse our <Link href="/umrah-taxi-services" style={{ color: 'var(--teal)', fontWeight: 600 }}>Umrah transportation options</Link> for
+                            package-specific guidance.
+                        </p>
+                        <p>
+                            <strong>Choosing a vehicle for intercity travel:</strong> longer road journeys between cities are
+                            more comfortable in an executive sedan or premium van — explore our <Link href="/routes" style={{ color: 'var(--teal)', fontWeight: 600 }}>intercity transfer routes</Link> or <Link href="/private-taxi" style={{ color: 'var(--teal)', fontWeight: 600 }}>private taxi service</Link> for
+                            city-to-city options.
+                        </p>
+                        <p>
+                            <strong>Choosing premium chauffeur transportation:</strong> for business travel or VIP arrivals,
+                            an executive sedan with a professional chauffeur is the standard choice — see our <Link href="/corporate-transportation-services" style={{ color: 'var(--teal)', fontWeight: 600 }}>corporate transportation services</Link> for
+                            details.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* 6 — Why Reserve Your Vehicle in Advance? Closing benefits +
+                CTA, navy band matching the sitewide closing-CTA pattern
+                used across every other page family. */}
+            <section className={`section-lg ${styles.benefitsSection}`}>
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'var(--line-dark)', color: 'var(--on-dark)' }}>Book Ahead</span>
+                        <h2 className="section-title" style={{ color: 'var(--on-dark)' }}>Why Reserve Your Vehicle in Advance?</h2>
+                        <p className="section-subtitle" style={{ color: 'var(--on-dark-muted)' }}>
+                            Confirming your vehicle before you travel means the right car — and the right driver —
+                            is ready when you land.
+                        </p>
+                    </div>
+
+                    <div className={styles.benefitsGrid}>
+                        {BENEFITS.map((b) => (
+                            <div key={b.title} className={styles.benefitCard}>
+                                <div className={styles.benefitIcon}><b.icon size={20} /></div>
+                                <h3 className={styles.benefitTitle}>{b.title}</h3>
+                                <p className={styles.benefitText}>{b.text}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className={styles.benefitsCtaRow}>
+                        <Link href="/book-online" className="btn btn-primary btn-lg">
+                            Book Your Ride
+                        </Link>
+                        <Link href="/quote" className="btn btn-outline btn-lg">
+                            Get a Quote
+                        </Link>
+                        <a
+                            href={waLink("Hi, I'd like help choosing the right vehicle for my trip.")}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-whatsapp btn-lg"
+                        >
+                            <WhatsAppIcon size={18} /> WhatsApp Us
+                        </a>
                     </div>
                 </div>
             </section>
