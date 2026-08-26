@@ -167,7 +167,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { q: "Can I request a private vehicle for a larger group or extra luggage?", a: "Yes — vehicle options range from a private sedan up to larger vehicles suited to groups and additional luggage. Share your group size when requesting a quote." },
     ],
 
-    relatedDistanceSlugs: [],
+    relatedDistanceSlugs: ["makkah-to-madinah", "riyadh-to-makkah"],
     relatedServiceLinks: [
       { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah taxi service" },
       { href: "/umrah-taxi-services", label: "Umrah taxi services" },
@@ -177,6 +177,724 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ctaText: "Get a Private Transfer Quote for Abha to Madinah",
     heroImage: "/destinations/abha-asir-mountains-view.webp",
     heroImageAlt: "The Asir mountains near Abha, starting point of the Abha to Madinah route",
+    lastReviewed: "2026-08-26",
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  // Priority-A additions (route-inventory audit): each of the routes
+  // below already has a live commercial "-taxi-service" page — this is
+  // the strongest possible justification per the audit's own criteria,
+  // since the two pages can link to and reinforce each other. Distance
+  // and drive-time figures are pulled from that existing commercial
+  // page's own data (routeData.ts) rather than re-estimated, so the two
+  // pages never state conflicting facts about the same corridor.
+  // ─────────────────────────────────────────────────────────────────
+
+  "jeddah-to-makkah": {
+    slug: "jeddah-to-makkah",
+    origin: "Jeddah",
+    destination: "Makkah",
+    originCitySlug: "jeddah",
+    destinationCitySlug: "makkah",
+    originAirportHref: "/jeddah-airport-taxi-service",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Jeddah to Makkah Distance & Travel Time",
+    intro: "How far Makkah is from Jeddah, how long the drive takes from King Abdulaziz International Airport, and why this short corridor is the single most-traveled route for Umrah pilgrims arriving in Saudi Arabia.",
+    breadcrumbLabel: "Jeddah to Makkah",
+
+    roadDistance: "approximately 80 km by road",
+    driveTime: "approximately 60–90 minutes outside peak season, 90–120 minutes during Umrah season",
+    routeType: "Domestic route within Saudi Arabia — no border crossing",
+
+    overviewParagraphs: [
+      "Jeddah to Makkah is short by the standards of Saudi Arabia's other city-to-city corridors, but it carries an outsized amount of traffic: King Abdulaziz International Airport (KAIA) is the main international gateway for Umrah pilgrims, and this 80km stretch is the very next leg of almost every arriving pilgrim's journey.",
+      "The route runs inland from the coast on a direct highway connection, without any mountain passes or complex terrain — the drive itself is straightforward. What actually varies is traffic density, which climbs noticeably during Ramadan, Dhul Qa'dah, and the weeks around Hajj as pilgrim arrival volumes rise.",
+      "Because the destination is Makkah's central Haram area, most transfers are timed and routed with Ihram etiquette in mind — pilgrims arriving already in Ihram, or who put it on before leaving the airport, expect a driver who understands the etiquette involved.",
+    ],
+    routeCharacteristics: [
+      "A direct inland highway connection — no mountain terrain or complex routing.",
+      "One of the shortest major city-to-city corridors in the country by distance.",
+      "The default first leg for the large majority of pilgrims flying into Saudi Arabia for Umrah.",
+      "No international border crossing — entirely domestic.",
+    ],
+    factorsAffectingTime: [
+      "Traffic density rises substantially during Umrah season, Ramadan, and the weeks around Hajj — the same 80km can take 90–120 minutes instead of 60–90.",
+      "Time of day matters less here than season does, though airport-adjacent traffic can add a few minutes at peak arrival banks.",
+      "Vehicles need to be Ihram-appropriate (space for Ihram clothing, driver familiarity with the etiquette) — not a time factor, but worth planning around.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "The standard option for arriving pilgrims — a driver meets you at KAIA arrivals and takes you directly to your Makkah hotel, with no need to arrange a second leg of transport.",
+      },
+      {
+        title: "Self-Driving",
+        description: "Straightforward for confident drivers given the short, direct highway distance — though most first-time visitors and pilgrims prefer not to navigate an unfamiliar city while managing luggage and Ihram clothing.",
+      },
+      {
+        title: "Shared Group Transport",
+        description: "Some pilgrim groups travel this leg together on organized package transport — a realistic option if you're already traveling with a tour group, though it typically runs on a fixed schedule rather than your own arrival time.",
+      },
+    ],
+    transferBenefits: [
+      "Meet-and-greet pickup at KAIA arrivals, with flight tracking so a delayed landing doesn't mean a missed pickup",
+      "A private vehicle for your group only, not a shared shuttle",
+      "Professional, licensed driver experienced with Ihram etiquette",
+      "Direct to your Makkah hotel — no intermediate stops unless you request one",
+      "Luggage assistance from the arrivals hall to the vehicle",
+      "Available 24/7, since pilgrim flights land at every hour",
+    ],
+
+    journeyPlanning: [
+      { title: "Book Before You Fly", note: "Pre-booking your Makkah transfer before departure avoids relying on unofficial taxis at arrivals, especially during peak Umrah periods when demand is highest." },
+      { title: "Ihram Timing", note: "If you're putting on Ihram before or at the airport, let your driver know — vehicles can be arranged with the space and privacy this involves." },
+      { title: "Peak Season Buffer", note: "During Ramadan and the weeks around Hajj, build in extra time for both traffic and higher airport arrival volumes." },
+      { title: "Flight Delays", note: "A tracked, pre-booked transfer means a delayed flight doesn't turn into a missed pickup — the driver adjusts automatically." },
+    ],
+    bestTimeToTravel: [
+      "Outside of Ramadan and the Hajj season, this route runs close to its baseline 60–90 minute drive time with relatively little variation by time of day.",
+      "During peak Umrah periods, both airport arrival volumes and road traffic increase together — if your schedule allows flexibility, traveling just before or after the very busiest weeks tends to mean a smoother transfer.",
+    ],
+
+    faqs: [
+      { q: "How far is Jeddah from Makkah?", a: "Approximately 80 km by road — one of the shortest major city-to-city distances in Saudi Arabia." },
+      { q: "How long does it take to drive from Jeddah to Makkah?", a: "Around 60–90 minutes under normal conditions, extending to 90–120 minutes during Ramadan and peak Umrah/Hajj season." },
+      { q: "Is this the route most Umrah pilgrims take first?", a: "Yes — King Abdulaziz International Airport (KAIA) is the main international gateway for Umrah, and this transfer is typically the very first leg of a pilgrim's journey in Saudi Arabia." },
+      { q: "Can I book a private transfer straight from the airport?", a: "Yes — Gulf Trip Service offers meet-and-greet pickup at KAIA arrivals with direct transfer to your Makkah hotel." },
+      { q: "Do I need to be in Ihram for this transfer?", a: "Not necessarily — it depends on your personal Umrah plan and where you intend to enter Ihram. Let your driver know your plans so the vehicle and timing suit your needs." },
+      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
+      { q: "Does traffic vary a lot by season?", a: "Yes, more than most routes — this corridor sees a genuine, noticeable increase in both airport arrivals and road traffic during Ramadan and the weeks around Hajj." },
+    ],
+
+    relatedDistanceSlugs: ["makkah-to-madinah", "jeddah-to-madinah"],
+    relatedServiceLinks: [
+      { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+      { href: "/airport-transfer-for-umrah", label: "Umrah airport transfer" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Jeddah to Makkah",
+    lastReviewed: "2026-08-26",
+  },
+
+  "makkah-to-madinah": {
+    slug: "makkah-to-madinah",
+    origin: "Makkah",
+    destination: "Madinah",
+    originCitySlug: "makkah",
+    destinationCitySlug: "madinah",
+    destinationAirportHref: "/madina-airport-taxi-service",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Makkah to Madinah Distance & Travel Time",
+    intro: "How far Madinah is from Makkah, how long the drive takes on the Haramain Expressway, and what to expect on one of the most-traveled routes between Islam's two holiest cities.",
+    breadcrumbLabel: "Makkah to Madinah",
+
+    roadDistance: "approximately 450 km by road",
+    driveTime: "approximately 4–5 hours via the Haramain Expressway",
+    routeType: "Domestic route within Saudi Arabia — no border crossing",
+
+    overviewParagraphs: [
+      "Makkah to Madinah is one of the most consistently traveled corridors in the country — most Umrah itineraries include both cities, and this is the direct road link between them, run via the Haramain Expressway.",
+      "The expressway is a modern, direct highway built specifically to connect the two Holy Cities, which is why this route's drive time is proportionally shorter than other Saudi corridors of similar distance — there's no need to route through intermediate cities.",
+      "Some travelers request the historical route instead of the expressway, trading a longer journey for more of the landscape between the two cities — a genuine option, not the default.",
+    ],
+    routeCharacteristics: [
+      "Runs via the purpose-built Haramain Expressway, connecting the two Holy Cities directly.",
+      "No intermediate major city required — a direct point-to-point highway link.",
+      "One of the most frequently traveled corridors in the country for religious travel.",
+      "No international border crossing — entirely domestic.",
+    ],
+    factorsAffectingTime: [
+      "Traffic on the expressway increases during Ramadan and the weeks around Hajj, when both cities see peak pilgrim volumes simultaneously.",
+      "A Miqat stop (for travelers beginning Umrah from Madinah, heading toward Makkah) adds time to the journey and should be planned for, not treated as a delay.",
+      "Requesting the historical route instead of the expressway will meaningfully extend the journey — confirm which route you want when booking.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "A direct, door-to-door journey via the Haramain Expressway, with drivers experienced in Ihram etiquette and — where relevant — the Miqat stop for pilgrims beginning Umrah from Madinah.",
+      },
+      {
+        title: "Self-Driving",
+        description: "A manageable single day's drive for confident long-distance drivers, on a well-built modern expressway — though most pilgrims prefer not to navigate while managing Ihram and luggage.",
+      },
+      {
+        title: "Domestic Flight",
+        description: "A short domestic flight is a realistic alternative if you'd rather skip the road entirely, though it removes the option of stopping at the Miqat en route.",
+      },
+    ],
+    transferBenefits: [
+      "Door-to-door transfer between your Makkah and Madinah hotels, no intermediate transfers",
+      "A private vehicle for your group only",
+      "Professional driver experienced with Ihram etiquette and Miqat stops",
+      "Flexible departure timing around your own schedule, not a fixed group timetable",
+      "Suitable for families and groups traveling the Umrah circuit together",
+      "Available for either direction — Makkah to Madinah or Madinah to Makkah",
+    ],
+
+    journeyPlanning: [
+      { title: "Miqat Planning", note: "If you're beginning Umrah from Madinah, plan for a stop at the Miqat en route — let your driver know in advance so it's built into the journey, not an afterthought." },
+      { title: "Choose Your Route", note: "The Haramain Expressway is fastest; the historical route takes longer but shows more of the landscape between the two cities — decide which fits your schedule when booking." },
+      { title: "Peak Season Timing", note: "Ramadan and the weeks around Hajj bring the heaviest traffic on this corridor, since both cities are at peak pilgrim volume simultaneously." },
+      { title: "Rest Stops", note: "A 4–5 hour drive is manageable in one stretch, but a single rest stop partway is common and easy to build in." },
+    ],
+    bestTimeToTravel: [
+      "Outside Ramadan and the Hajj season, this route runs close to its baseline 4–5 hour drive time with relatively predictable traffic.",
+      "During peak religious travel periods, allow extra time in both directions — the expressway itself doesn't change, but volume does.",
+    ],
+
+    faqs: [
+      { q: "How far is Makkah from Madinah?", a: "Approximately 450 km by road via the Haramain Expressway." },
+      { q: "How long does it take to drive from Makkah to Madinah?", a: "Typically 4 to 5 hours via the Haramain Expressway, depending on traffic and any requested stops." },
+      { q: "Is there a faster way than the expressway?", a: "The Haramain Expressway is already the fastest direct route — a historical alternative route exists for travelers who want more of the landscape, but it takes longer." },
+      { q: "Do you stop at the Miqat if I'm starting Umrah from Madinah?", a: "Yes — this is a standard part of the Madinah-to-Makkah direction for pilgrims beginning their Umrah, and drivers plan for it as part of the journey." },
+      { q: "Can I book this transfer in either direction?", a: "Yes — the route and journey time are the same whether you're traveling Makkah to Madinah or Madinah to Makkah." },
+      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
+      { q: "Is this route suitable for families and groups?", a: "Yes — vehicle options range from a private sedan to larger vehicles suited to families and groups traveling the Umrah circuit together." },
+    ],
+
+    relatedDistanceSlugs: ["jeddah-to-makkah", "jeddah-to-madinah", "abha-to-madinah"],
+    relatedServiceLinks: [
+      { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah taxi service" },
+      { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Makkah to Madinah",
+    lastReviewed: "2026-08-26",
+  },
+
+  "jeddah-to-madinah": {
+    slug: "jeddah-to-madinah",
+    origin: "Jeddah",
+    destination: "Madinah",
+    originCitySlug: "jeddah",
+    destinationCitySlug: "madinah",
+    originAirportHref: "/jeddah-airport-taxi-service",
+    destinationAirportHref: "/madina-airport-taxi-service",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Jeddah to Madinah Distance & Travel Time",
+    intro: "How far Madinah is from Jeddah, how long the drive takes from King Abdulaziz International Airport, and why some pilgrims choose this route to begin their Umrah in Madinah rather than Makkah.",
+    breadcrumbLabel: "Jeddah to Madinah",
+
+    roadDistance: "approximately 420 km by road",
+    driveTime: "approximately 4.5 hours",
+    routeType: "Domestic route within Saudi Arabia — no border crossing",
+
+    overviewParagraphs: [
+      "Jeddah to Madinah is the second major route out of King Abdulaziz International Airport, alongside the much shorter Jeddah-to-Makkah leg — chosen specifically by pilgrims who plan to begin their Umrah in Madinah rather than Makkah.",
+      "Unlike the Jeddah-Makkah corridor, this journey doesn't end inside a restricted Haram zone, so there's more routing flexibility, though the distance itself is considerably longer at roughly 420 km.",
+      "The Madinah-first itinerary is a genuine, common choice — some pilgrims prefer to visit the Prophet's Mosque and settle in before the more physically demanding Umrah rites in Makkah, rather than the reverse order.",
+    ],
+    routeCharacteristics: [
+      "A direct highway connection north along the western region, distinct from the shorter Jeddah-Makkah corridor.",
+      "One of two primary onward routes from King Abdulaziz International Airport, alongside Jeddah-Makkah.",
+      "Ends outside a restricted zone, giving more routing and drop-off flexibility than a Makkah-bound transfer.",
+      "No international border crossing — entirely domestic.",
+    ],
+    factorsAffectingTime: [
+      "Traffic increases during Ramadan and the weeks around Hajj, as with every major pilgrim corridor.",
+      "Flight arrival timing at KAIA affects when the road journey actually begins — a late-night landing means a late-night drive.",
+      "This is a longer drive than Jeddah-Makkah, so realistic rest-stop planning matters more here.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "A direct transfer from KAIA arrivals to your Madinah hotel, suited to pilgrims beginning their Umrah in Madinah rather than continuing straight to Makkah.",
+      },
+      {
+        title: "Self-Driving",
+        description: "A manageable single day's drive for confident drivers, though most arriving pilgrims — often managing luggage and jet lag — prefer not to navigate the route themselves.",
+      },
+      {
+        title: "Domestic Flight",
+        description: "A short domestic flight between Jeddah and Madinah is a realistic alternative for travelers who'd rather not spend 4.5 hours on the road after a long-haul flight.",
+      },
+    ],
+    transferBenefits: [
+      "Meet-and-greet pickup at KAIA arrivals with flight tracking for delays",
+      "Direct to your Madinah hotel — no need to arrange a connecting flight or second booking",
+      "A private vehicle for your group only",
+      "Professional driver experienced with pilgrim travel and Ziyarat planning around Rawdah timing",
+      "Suitable for a Madinah-first Umrah itinerary",
+      "Available 24/7, since international pilgrim flights land at every hour",
+    ],
+
+    journeyPlanning: [
+      { title: "Madinah-First Itinerary", note: "If you're beginning Umrah in Madinah, confirm this with your driver so the journey plan and any Rawdah-visit timing are set before you land." },
+      { title: "Rest After a Long Flight", note: "After a long-haul international flight, a 4.5-hour road journey is a lot in one day — a short rest stop partway is worth planning for." },
+      { title: "Peak Season Buffer", note: "Ramadan and the weeks around Hajj bring heavier traffic and higher airport volumes — build in extra time during those periods." },
+      { title: "Luggage for a Full Umrah Trip", note: "Pilgrims often travel with more luggage than a typical city transfer — mention your group size and luggage when booking so the right vehicle is arranged." },
+    ],
+    bestTimeToTravel: [
+      "Outside Ramadan and the Hajj season, this route runs close to its baseline 4.5-hour drive time.",
+      "During peak religious travel periods, both airport arrivals and road traffic increase — flexible travelers benefit from avoiding the very busiest weeks.",
+    ],
+
+    faqs: [
+      { q: "How far is Jeddah from Madinah?", a: "Approximately 420 km by road." },
+      { q: "How long does it take to drive from Jeddah to Madinah?", a: "Around 4.5 hours under typical conditions, longer during Ramadan and peak Umrah/Hajj season." },
+      { q: "Why would I go to Madinah first instead of Makkah?", a: "Some pilgrims prefer to visit the Prophet's Mosque and settle in before the more physically demanding Umrah rites in Makkah — it's a genuine, common itinerary choice, not the default one." },
+      { q: "Can I book this directly from King Abdulaziz Airport?", a: "Yes — Gulf Trip Service offers meet-and-greet pickup at KAIA arrivals with direct transfer to Madinah." },
+      { q: "Is this route longer than Jeddah to Makkah?", a: "Yes, considerably — Jeddah to Makkah is about 80 km, while Jeddah to Madinah is roughly 420 km." },
+      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
+      { q: "Can you help plan a Rawdah visit as part of this transfer?", a: "Yes — if you share your planned Rawdah time slot (booked via the Nusuk app), your driver can plan pickup and Ziyarat timing around it." },
+    ],
+
+    relatedDistanceSlugs: ["jeddah-to-makkah", "makkah-to-madinah"],
+    relatedServiceLinks: [
+      { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+      { href: "/airport-transfer-for-umrah", label: "Umrah airport transfer" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Jeddah to Madinah",
+    lastReviewed: "2026-08-26",
+  },
+
+  "riyadh-to-dammam": {
+    slug: "riyadh-to-dammam",
+    origin: "Riyadh",
+    destination: "Dammam",
+    originCitySlug: "riyadh",
+    destinationCitySlug: "dammam",
+    originAirportHref: "/riyadh-airport-taxi-service",
+    destinationAirportHref: "/dammam-airport-taxi-service",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Riyadh to Dammam Distance & Travel Time",
+    intro: "How far Dammam is from Riyadh, how long the drive takes across the central Saudi highway network, and what business and leisure travelers should know before booking this route.",
+    breadcrumbLabel: "Riyadh to Dammam",
+
+    roadDistance: "approximately 400 km by road",
+    driveTime: "approximately 4 hours",
+    routeType: "Domestic route within Saudi Arabia — no border crossing",
+
+    overviewParagraphs: [
+      "Riyadh to Dammam connects the capital to the Eastern Province's commercial and industrial hub — a route run heavily by business travelers, with Dammam's oil, petrochemical, and port-related industries drawing a steady flow of corporate trips in both directions.",
+      "The road itself runs across relatively flat, open desert highway for most of its length — there's no mountainous terrain to navigate, which keeps the drive time fairly predictable compared to routes with more complex geography.",
+      "This is a comfortable single-day round trip for a business meeting, or a straightforward one-way transfer for travelers connecting between the two cities' airports.",
+    ],
+    routeCharacteristics: [
+      "Runs across flat, open highway through central Saudi Arabia — no mountain terrain.",
+      "Connects the political capital to the Eastern Province's commercial and industrial centre.",
+      "One of the country's most consistently traveled business corridors.",
+      "No international border crossing — entirely domestic.",
+    ],
+    factorsAffectingTime: [
+      "This route has relatively little seasonal variation compared to religious-travel corridors — traffic patterns track business travel more than pilgrimage seasons.",
+      "Fuel and rest stops are straightforward to plan given the open highway, but still worth building into a 4-hour drive.",
+      "Weather (occasional dust or sandstorms) can affect visibility and driving conditions on the open desert stretches — a genuine, if infrequent, consideration.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "A direct, comfortable option for business travelers who want to work, rest, or take calls during the drive rather than self-drive across the country.",
+      },
+      {
+        title: "Self-Driving",
+        description: "A realistic option on this route given the flat, open highway — a comfortable single day's drive for confident drivers.",
+      },
+      {
+        title: "Domestic Flight",
+        description: "A very common alternative for business travelers on a tight schedule, given how frequently both cities are served by domestic flights.",
+      },
+    ],
+    transferBenefits: [
+      "Door-to-door pickup from your Riyadh or Dammam address, hotel, or airport",
+      "A private vehicle suited to business travel — comfortable for calls or work during the drive",
+      "Professional, licensed driver experienced with this corridor",
+      "Flexible departure timing around your own meeting schedule",
+      "Available for either direction — Riyadh to Dammam or Dammam to Riyadh",
+      "Suitable for both business travelers and families making the trip together",
+    ],
+
+    journeyPlanning: [
+      { title: "Business Day Trips", note: "The 4-hour drive each way makes this a realistic same-day round trip for a single meeting, though many business travelers prefer an overnight stay to avoid two long drives in one day." },
+      { title: "Airport Connections", note: "If you're connecting between Riyadh (RUH) and Dammam (DMM) airports rather than city centres, factor in the airport-to-highway leg on both ends." },
+      { title: "Weather Awareness", note: "Occasional dust or reduced-visibility conditions on the open desert stretch are worth checking before departure, though they're not a frequent occurrence." },
+      { title: "Rest Stops", note: "A straightforward highway drive makes fuel and rest stops easy to plan — most travelers take one short stop partway." },
+    ],
+    bestTimeToTravel: [
+      "This route doesn't have a strong seasonal traffic pattern the way religious-travel corridors do — road conditions and weather matter more than time of year.",
+      "Weekday daytime travel is generally the most predictable, avoiding both nighttime driving on the open highway and any weekend leisure traffic near either city.",
+    ],
+
+    faqs: [
+      { q: "How far is Riyadh from Dammam?", a: "Approximately 400 km by road." },
+      { q: "How long does it take to drive from Riyadh to Dammam?", a: "Around 4 hours under typical conditions, across flat, open highway." },
+      { q: "Is this mainly a business travel route?", a: "Yes, predominantly — Dammam's commercial and industrial sector draws a steady flow of business travelers to and from Riyadh." },
+      { q: "Can I book a same-day round trip?", a: "Yes, it's a realistic single-day round trip for one meeting, though many travelers prefer to stay overnight rather than drive 8 hours total in one day." },
+      { q: "Is self-driving realistic on this route?", a: "Yes — the highway is flat and open for most of the journey, making it a comfortable single day's drive for confident drivers." },
+      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
+      { q: "Can you connect me between the two cities' airports specifically?", a: "Yes — we run this route between Riyadh (RUH) and Dammam (DMM) airports as well as city-centre addresses." },
+    ],
+
+    relatedDistanceSlugs: [],
+    relatedServiceLinks: [
+      { href: "/riyadh-to-dammam-guide", label: "Riyadh to Dammam taxi service" },
+      { href: "/dammam-to-riyadh-taxi-service", label: "Dammam to Riyadh taxi service" },
+      { href: "/corporate-transportation-services", label: "Corporate transportation" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Riyadh to Dammam",
+    lastReviewed: "2026-08-26",
+  },
+
+  "riyadh-to-makkah": {
+    slug: "riyadh-to-makkah",
+    origin: "Riyadh",
+    destination: "Makkah",
+    originCitySlug: "riyadh",
+    destinationCitySlug: "makkah",
+    originAirportHref: "/riyadh-airport-taxi-service",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Riyadh to Makkah Distance & Travel Time",
+    intro: "How far Makkah is from Riyadh, how long the long cross-country drive actually takes, and the realistic alternatives worth knowing about for pilgrims and travelers starting their journey from the capital.",
+    breadcrumbLabel: "Riyadh to Makkah",
+
+    roadDistance: "approximately 870 km by road",
+    driveTime: "approximately 9–10 hours of continuous driving",
+    routeType: "Domestic route within Saudi Arabia — no border crossing",
+
+    overviewParagraphs: [
+      "Riyadh to Makkah is one of the longest major domestic corridors in Saudi Arabia — nearly 870 km across the width of the country, connecting the capital in the central Najd region to the Holy City on the western coast.",
+      "Given the distance, this is realistically a full-day journey by road, and a meaningful number of travelers — particularly solo pilgrims on a tight schedule — choose a domestic flight instead and arrange ground transport at each end.",
+      "For those who do drive, the route crosses genuinely varied terrain moving from the central plateau down toward the western Hejaz region, which is part of why the driving time is proportionally longer than a similar distance on flatter ground.",
+    ],
+    routeCharacteristics: [
+      "One of the longest major domestic city-to-city corridors in the country, at nearly 870 km.",
+      "Crosses from the central Najd plateau to the western Hejaz region.",
+      "A common route for pilgrims and travelers based in or connecting through Riyadh.",
+      "No international border crossing — entirely domestic.",
+    ],
+    factorsAffectingTime: [
+      "Given the length of this drive, rest, meal, and prayer stops meaningfully extend the total journey time beyond the pure driving estimate.",
+      "Traffic on the approach into Makkah increases during Ramadan and the weeks around Hajj, adding to an already long drive.",
+      "Departure timing matters — starting early avoids finishing the approach into Makkah late at night after a 9-10 hour drive.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "A direct, door-to-door option for travelers who'd rather not drive the distance themselves — the driver handles the full cross-country journey and any Ihram-related planning.",
+      },
+      {
+        title: "Domestic Flight",
+        description: "Given the distance, a short domestic flight between Riyadh and Jeddah (with a short onward transfer to Makkah) is a realistic and commonly chosen alternative to the full road journey.",
+      },
+      {
+        title: "Self-Driving",
+        description: "Realistic for confident long-distance drivers, though a 9-10 hour single-day drive is demanding — some self-drivers split the journey with an overnight stop partway.",
+      },
+    ],
+    transferBenefits: [
+      "Door-to-door pickup — no need to arrange a flight plus separate ground transport",
+      "A private vehicle for your group only, suited to a full-day journey",
+      "Professional driver experienced with Ihram etiquette and long-distance travel",
+      "Flexible departure time, so you can start early and avoid a late-night arrival",
+      "Rest stops planned around your group rather than a fixed schedule",
+      "Suitable for families and small groups making the full journey together",
+    ],
+
+    journeyPlanning: [
+      { title: "Plan for a Full Day", note: "Between the 9-10 hour driving estimate and realistic rest stops, treat this as a full-day journey — most travelers don't fit other plans around it." },
+      { title: "Consider Flying for a Quick Trip", note: "At nearly 870 km, solo travelers or those on a tight schedule are often better served flying via Jeddah and arranging a short ground transfer from there." },
+      { title: "Early Departure", note: "Starting early in the day is more comfortable than a late departure, since it avoids finishing the approach into Makkah after dark." },
+      { title: "Ihram Planning", note: "If you're beginning Umrah from Riyadh, confirm your Miqat plans with your driver before departure." },
+    ],
+    bestTimeToTravel: [
+      "Traffic on the approach into Makkah is consistently busier during Ramadan and the weeks around Hajj — outside those periods, this route doesn't have a strongly seasonal pattern.",
+      "Given the length of the drive, time of day matters more than time of year — an early start is generally more comfortable regardless of season.",
+    ],
+
+    faqs: [
+      { q: "How far is Riyadh from Makkah?", a: "Approximately 870 km by road — one of the longest major domestic corridors in Saudi Arabia." },
+      { q: "How long does it take to drive from Riyadh to Makkah?", a: "Around 9 to 10 hours of continuous driving. In practice, most journeys take longer once rest, meal, and prayer stops are added." },
+      { q: "What is the best way to travel from Riyadh to Makkah?", a: "A private taxi or chauffeur transfer covers the full distance directly. Given the length, a domestic flight via Jeddah with a short onward transfer is also a realistic and commonly chosen alternative." },
+      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges private transfers for the full Riyadh to Makkah journey." },
+      { q: "Is this route suitable for a family road trip?", a: "It's a genuinely long single-day journey, so families should plan for extra rest stops beyond the minimum, especially with young children." },
+      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
+      { q: "Would it be faster to fly instead of driving?", a: "For a single traveler or small group on a tight schedule, yes — flying to Jeddah and arranging a short onward transfer is often faster overall than the full 9-10 hour drive." },
+    ],
+
+    relatedDistanceSlugs: ["abha-to-madinah", "jeddah-to-makkah"],
+    relatedServiceLinks: [
+      { href: "/riyadh-to-makkah-taxi-service", label: "Riyadh to Makkah taxi service" },
+      { href: "/makkah-to-riyadh-taxi-service", label: "Makkah to Riyadh taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Riyadh to Makkah",
+    lastReviewed: "2026-08-26",
+  },
+
+  "bahrain-to-dammam": {
+    slug: "bahrain-to-dammam",
+    origin: "Bahrain",
+    destination: "Dammam",
+    destinationCitySlug: "dammam",
+    destinationAirportHref: "/dammam-airport-taxi-service",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Bahrain to Dammam Distance & Travel Time",
+    intro: "How far Dammam is from Bahrain, how long the King Fahd Causeway crossing takes, and what to expect on one of the most-traveled cross-border routes in the Gulf.",
+    breadcrumbLabel: "Bahrain to Dammam",
+
+    roadDistance: "approximately 65 km by road, including the causeway",
+    driveTime: "approximately 1–1.5 hours, including border processing",
+    routeType: "Cross-border route between Bahrain and Saudi Arabia via the King Fahd Causeway",
+
+    overviewParagraphs: [
+      "Bahrain to Dammam is short by distance but involves an international border crossing, which is why the travel-time range accounts for passport and customs processing rather than driving speed alone.",
+      "The King Fahd Causeway is the only land link between the two countries — a 25km bridge with its own passport control and customs point roughly midway across, before the road continues into Dammam, Khobar, and Dhahran on the Saudi side.",
+      "This is one of the most frequently traveled cross-border routes in the Gulf — a mix of shoppers, weekend visitors, families, and business travelers moving between Manama and the Eastern Province.",
+    ],
+    routeCharacteristics: [
+      "Crosses the King Fahd Causeway — the only land link between Bahrain and Saudi Arabia.",
+      "Involves a mid-causeway passport control and customs checkpoint.",
+      "One of the shortest and most frequently traveled cross-border corridors in the Gulf.",
+      "Ends in the Dammam/Khobar/Dhahran metropolitan area, Saudi Arabia's Eastern Province hub.",
+    ],
+    factorsAffectingTime: [
+      "Border processing time varies with traffic at the checkpoint — Thursday and Friday evenings see the heaviest weekend leisure crossings in both directions.",
+      "Vehicles cannot cross the border themselves — private taxis on either side hand off passengers at the checkpoint, which is a real, built-in part of the journey time.",
+      "Nationality affects processing: GCC nationals cross with a national ID, while other nationalities need a valid Saudi visa or Iqama.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "A Bahrain-side driver takes you to the causeway checkpoint, and a Saudi-side vehicle continues the journey — coordinated in advance so the handover is as smooth as possible.",
+      },
+      {
+        title: "Self-Driving",
+        description: "Realistic for travelers with their own vehicle and the correct cross-border insurance and documentation, though most visitors without a Gulf-registered vehicle rely on the taxi handover system instead.",
+      },
+    ],
+    transferBenefits: [
+      "Door-to-door pickup on the Bahrain side, with a coordinated Saudi-side vehicle waiting after the crossing",
+      "A private vehicle for your group only on each side of the border",
+      "Professional drivers experienced with the causeway's layout and peak-hour patterns",
+      "Luggage assistance through the handover",
+      "Suitable for shoppers, families, and business travelers alike",
+      "Available 24/7 for either direction of the crossing",
+    ],
+
+    journeyPlanning: [
+      { title: "Documents Ready", note: "Have your passport (and Saudi visa, Iqama, or GCC ID as applicable) ready before departure — this is the single biggest factor in how smoothly the crossing goes." },
+      { title: "Weekend Timing", note: "Thursday and Friday evenings see the heaviest weekend leisure traffic across the causeway in both directions — weekday mornings tend to be quickest." },
+      { title: "Book Ahead for the Handover", note: "Booking at least 24 hours ahead lets both the Bahrain-side and Saudi-side vehicles be properly coordinated for a smooth handover." },
+      { title: "Onward Travel", note: "If you're continuing past Dammam to Khobar, Dhahran, or further up the coast, mention your final destination when booking." },
+    ],
+    bestTimeToTravel: [
+      "Weekday mornings are typically the fastest time to cross, with lighter traffic at the checkpoint.",
+      "Thursday and Friday evenings consistently see the heaviest weekend leisure crossings — worth avoiding if your schedule is flexible.",
+    ],
+
+    faqs: [
+      { q: "How far is Bahrain from Dammam?", a: "Approximately 65 km by road, including the King Fahd Causeway crossing." },
+      { q: "How long does it take to get from Bahrain to Dammam?", a: "Around 1 to 1.5 hours including border processing — the causeway drive itself is short, but passport and customs checks add time." },
+      { q: "Do I need to change vehicles at the border?", a: "Yes — private taxis registered in either country can't cross the border themselves, so a handover happens at the causeway checkpoint, coordinated in advance." },
+      { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service arranges coordinated Bahrain-to-Dammam transfers with a vehicle handover at the causeway." },
+      { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama — confirm current requirements before you travel." },
+      { q: "Is Bahrain to Dammam by road the only option?", a: "Yes — the King Fahd Causeway is the only land link between the two countries; there's no rail or ferry alternative for this specific route." },
+      { q: "What's the best time to cross to avoid queues?", a: "Weekday mornings are typically fastest. Thursday and Friday evenings see the heaviest weekend leisure traffic." },
+    ],
+
+    relatedDistanceSlugs: ["bahrain-to-jubail"],
+    relatedServiceLinks: [
+      { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi service" },
+      { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },
+      { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain taxi service" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Bahrain to Dammam",
+    heroImage: "/destinations/manama-skyline-world-trade-center.webp",
+    heroImageAlt: "Manama skyline, Bahrain — starting point of the Bahrain to Dammam route",
+    lastReviewed: "2026-08-26",
+  },
+
+  "bahrain-to-riyadh": {
+    slug: "bahrain-to-riyadh",
+    origin: "Bahrain",
+    destination: "Riyadh",
+    destinationCitySlug: "riyadh",
+    destinationAirportHref: "/riyadh-airport-taxi-service",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Bahrain to Riyadh Distance & Travel Time",
+    intro: "How far Riyadh is from Bahrain, how long the causeway crossing plus onward drive takes, and what business travelers and families should know before planning this longer cross-border route.",
+    breadcrumbLabel: "Bahrain to Riyadh",
+
+    roadDistance: "approximately 470 km by road, including the causeway",
+    driveTime: "approximately 4.5–5.5 hours, including border processing",
+    routeType: "Cross-border route between Bahrain and Saudi Arabia via the King Fahd Causeway",
+
+    overviewParagraphs: [
+      "Bahrain to Riyadh combines the King Fahd Causeway crossing with a considerably longer onward drive than Bahrain to Dammam — the causeway gets you into Saudi Arabia, but Riyadh itself is still several hours further west across the country.",
+      "This route sees a steady flow of business travelers — Manama's financial sector and Riyadh's corporate and government districts generate regular trips in both directions — alongside families and leisure travelers making the fuller journey.",
+      "As with any causeway crossing, the border handover between a Bahrain-side and Saudi-side vehicle is a built-in part of the journey, not a delay to plan around separately.",
+    ],
+    routeCharacteristics: [
+      "Combines the King Fahd Causeway crossing with a long onward drive west to the capital.",
+      "A meaningfully longer journey than Bahrain to Dammam, which stops in the Eastern Province.",
+      "A regular business-travel corridor between Manama's financial district and Riyadh's corporate centre.",
+      "Involves one international border crossing — no other borders en route.",
+    ],
+    factorsAffectingTime: [
+      "Border processing time at the causeway varies with traffic, same as any crossing — Thursday and Friday evenings are busiest.",
+      "The onward drive from the Eastern Province to Riyadh adds several hours beyond the crossing itself, and benefits from a rest stop given the total distance.",
+      "Business travelers on a tight schedule sometimes prefer flying into Riyadh directly rather than the full causeway-plus-road journey.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "A Bahrain-side driver takes you to the causeway, and a Saudi-side vehicle continues the full onward journey to Riyadh — one coordinated booking covering both legs.",
+      },
+      {
+        title: "Domestic Flight",
+        description: "Given the combined distance, some business travelers fly from Bahrain International Airport to Riyadh directly, arranging ground transport only within Riyadh itself.",
+      },
+      {
+        title: "Self-Driving",
+        description: "Realistic for travelers with a Gulf-registered vehicle and the correct cross-border documentation, though it's a demanding single day given the combined causeway-plus-onward distance.",
+      },
+    ],
+    transferBenefits: [
+      "One coordinated booking covering both the causeway handover and the full onward drive to Riyadh",
+      "A private vehicle for your group only on each side of the border",
+      "Professional drivers experienced with both the causeway crossing and the long Eastern-Province-to-Riyadh stretch",
+      "Comfortable for business travelers who want to work or rest during the longer drive",
+      "Flexible departure timing around your own schedule",
+      "Suitable for families making the full journey together",
+    ],
+
+    journeyPlanning: [
+      { title: "Documents Ready", note: "Have your passport and Saudi visa, Iqama, or GCC ID ready before departure — this affects how smoothly the causeway crossing goes." },
+      { title: "Plan for a Long Day", note: "Between the crossing and the onward drive to Riyadh, this is a multi-hour journey — build in a rest stop rather than treating it as a quick trip." },
+      { title: "Consider Flying for Tight Schedules", note: "Business travelers on a same-day schedule sometimes prefer flying from Bahrain International Airport directly into Riyadh." },
+      { title: "Weekend Timing", note: "Thursday and Friday evenings see the heaviest causeway traffic — weekday mornings are typically quicker for the border-crossing portion." },
+    ],
+    bestTimeToTravel: [
+      "Weekday mornings are generally the smoothest time to cross the causeway, before the onward drive to Riyadh.",
+      "This route doesn't have a strongly seasonal pattern beyond the causeway's own weekend traffic — the onward drive to Riyadh is otherwise fairly consistent year-round.",
+    ],
+
+    faqs: [
+      { q: "How far is Bahrain from Riyadh?", a: "Approximately 470 km by road, including the King Fahd Causeway crossing." },
+      { q: "How long does it take to get from Bahrain to Riyadh?", a: "Around 4.5 to 5.5 hours including border processing and the onward drive to Riyadh." },
+      { q: "Do I need to change vehicles at the border?", a: "Yes — as with any causeway crossing, a Bahrain-side driver takes you to the checkpoint and a Saudi-side vehicle continues the journey, coordinated in advance." },
+      { q: "Is it faster to fly instead of driving the whole way?", a: "For business travelers on a tight schedule, yes — flying from Bahrain International Airport directly to Riyadh is often faster than the combined causeway-and-road journey." },
+      { q: "Can I book one transfer for the whole trip?", a: "Yes — Gulf Trip Service coordinates the full journey as one booking, covering both the causeway handover and the onward drive to Riyadh." },
+      { q: "Do I need a visa to cross into Saudi Arabia this way?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama — confirm current requirements before traveling." },
+      { q: "Is this route suitable for a family trip?", a: "Yes, with realistic planning — it's a longer journey than a simple Dammam crossing, so build in a rest stop given the total distance." },
+    ],
+
+    relatedDistanceSlugs: ["bahrain-to-dammam", "bahrain-to-jubail"],
+    relatedServiceLinks: [
+      { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh taxi service" },
+      { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi service" },
+      { href: "/corporate-transportation-services", label: "Corporate transportation" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Bahrain to Riyadh",
+    heroImage: "/destinations/manama-skyline-world-trade-center.webp",
+    heroImageAlt: "Manama skyline, Bahrain — starting point of the Bahrain to Riyadh route",
+    lastReviewed: "2026-08-26",
+  },
+
+  "bahrain-to-jubail": {
+    slug: "bahrain-to-jubail",
+    origin: "Bahrain",
+    destination: "Jubail",
+    destinationCitySlug: "jubail",
+
+    eyebrow: "Distance & Travel Guide",
+    h1: "Bahrain to Jubail Distance & Travel Time",
+    intro: "How far Jubail is from Bahrain, how long the causeway crossing plus the onward leg past Dammam takes, and what contractors and business travelers should know before booking this extended route.",
+    breadcrumbLabel: "Bahrain to Jubail",
+
+    roadDistance: "approximately 150 km by road, including the causeway",
+    driveTime: "approximately 2–2.5 hours, including border processing",
+    routeType: "Cross-border route between Bahrain and Saudi Arabia via the King Fahd Causeway",
+
+    overviewParagraphs: [
+      "Bahrain to Jubail is really the King Fahd Causeway crossing plus a further stretch north past Dammam and Khobar — Jubail sits roughly an hour up the coast from where most causeway traffic stops.",
+      "A meaningful share of travelers on this route are contractors and technical staff heading to Jubail Industrial City or a Royal Commission assignment, rather than the shopping or family-visit trips that dominate the shorter Bahrain-to-Dammam crossing.",
+      "The border-handover mechanics are identical to any causeway crossing — what differs here is simply the longer onward leg once you're on the Saudi side.",
+    ],
+    routeCharacteristics: [
+      "Crosses the King Fahd Causeway, then continues north past Dammam and Khobar to Jubail.",
+      "Roughly twice the distance of the shorter Bahrain-to-Dammam crossing.",
+      "A route with a notably higher share of business and contractor travel than Bahrain's shorter Saudi crossings.",
+      "Involves one international border crossing — no other borders en route.",
+    ],
+    factorsAffectingTime: [
+      "Border processing time at the causeway varies with traffic, same as any crossing.",
+      "The additional Dammam-to-Jubail leg adds roughly 50–70 minutes beyond a standard Bahrain-to-Dammam crossing.",
+      "First-time arrivals at Jubail Industrial City gates should confirm site-pass requirements in advance to avoid delays at the final stretch.",
+    ],
+
+    travelOptions: [
+      {
+        title: "Private Taxi / Chauffeur Transfer",
+        description: "A Bahrain-side driver takes you to the causeway, and a Jubail-based vehicle continues the journey through to your specific gate, site, or address.",
+      },
+      {
+        title: "Self-Driving",
+        description: "Realistic for travelers with a Gulf-registered vehicle and correct documentation, though most contractors and first-time visitors rely on the coordinated taxi handover instead.",
+      },
+    ],
+    transferBenefits: [
+      "One coordinated booking covering the causeway handover and the full onward leg to Jubail",
+      "Drivers familiar with Jubail Industrial City's major entry gates and standard site-pass procedures",
+      "A private vehicle for your group only on each side of the border",
+      "Suitable for solo contractors, technical teams, and business travelers alike",
+      "Luggage space for equipment or extended-stay baggage",
+      "Available 24/7 for either direction",
+    ],
+
+    journeyPlanning: [
+      { title: "Confirm Your Gate", note: "For first-time arrivals at Jubail Industrial City, confirm your exact gate, site, or badge requirements a day ahead so the driver isn't held up at security." },
+      { title: "Documents Ready", note: "Have your passport and Saudi visa, Iqama, or GCC ID ready before departure for the causeway crossing." },
+      { title: "Longer Than Dammam", note: "Budget roughly an hour more than a standard Bahrain-to-Dammam trip, since Jubail is a further stretch up the coast." },
+      { title: "Book Ahead", note: "At least 24 hours' notice lets both the Bahrain-side and Jubail-based vehicles be properly coordinated for the handover." },
+    ],
+    bestTimeToTravel: [
+      "Weekday mornings are typically the smoothest time to cross the causeway before the onward drive to Jubail.",
+      "This route tracks business and contractor schedules more than seasonal or weekend leisure patterns.",
+    ],
+
+    faqs: [
+      { q: "How far is Bahrain from Jubail?", a: "Approximately 150 km by road, combining the King Fahd Causeway crossing with the onward leg past Dammam." },
+      { q: "How long does it take to get from Bahrain to Jubail?", a: "Around 2 to 2.5 hours including border processing and the drive up the coast past Dammam and Khobar." },
+      { q: "Is this route mostly for business travelers?", a: "A meaningful share, yes — contractors and technical staff heading to Jubail Industrial City or a Royal Commission assignment make up a steady portion of this route's traffic." },
+      { q: "Do I need to change vehicles at the border?", a: "Yes — the same handover applies as any causeway crossing, with a Jubail-based vehicle continuing the journey on the Saudi side." },
+      { q: "Is there an airport in Jubail I could fly into instead?", a: "No — Jubail has no airport of its own. This causeway route or a connection via King Fahd International Airport in Dammam are the two realistic options." },
+      { q: "Can you drop me at a specific Industrial City gate?", a: "Yes — share your exact gate, site, or address when booking, and confirm badge or pass requirements in advance for a first-time arrival." },
+      { q: "How much longer is this than Bahrain to Dammam?", a: "Roughly 50 to 70 minutes longer, since Jubail is a further stretch up the coast past Dammam and Khobar." },
+    ],
+
+    relatedDistanceSlugs: ["bahrain-to-dammam"],
+    relatedServiceLinks: [
+      { href: "/bahrain-to-jubail-taxi-service", label: "Bahrain to Jubail taxi service" },
+      { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi service" },
+      { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain taxi service" },
+    ],
+
+    ctaText: "Get a Private Transfer Quote for Bahrain to Jubail",
+    heroImage: "/destinations/manama-skyline-world-trade-center.webp",
+    heroImageAlt: "Manama skyline, Bahrain — starting point of the Bahrain to Jubail route",
     lastReviewed: "2026-08-26",
   },
 };

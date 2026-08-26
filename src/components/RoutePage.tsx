@@ -52,6 +52,29 @@ const ROUTE_GUIDE_MAP: Record<string, { href: string; label: string }> = {
   "makkah-to-madinah-taxi-service": { href: "/makkah-to-madinah-guide", label: "Makkah to Madinah: Full Travel Guide" },
 };
 
+/** Maps a commercial route slug to the /distance/[route] page covering the
+ * same corridor's informational intent (distance/drive-time research,
+ * ahead of the booking decision) — both directions of a pair point at the
+ * same canonical distance page, since the underlying geography is
+ * identical either way (route-inventory audit, §5). */
+const ROUTE_DISTANCE_MAP: Record<string, { href: string; label: string }> = {
+  "jeddah-to-makkah-taxi-service": { href: "/distance/jeddah-to-makkah", label: "Jeddah to Makkah: Distance & Travel Time" },
+  "makkah-to-jeddah-taxi-service": { href: "/distance/jeddah-to-makkah", label: "Jeddah to Makkah: Distance & Travel Time" },
+  "makkah-to-madinah-taxi-service": { href: "/distance/makkah-to-madinah", label: "Makkah to Madinah: Distance & Travel Time" },
+  "madinah-to-makkah-taxi-service": { href: "/distance/makkah-to-madinah", label: "Makkah to Madinah: Distance & Travel Time" },
+  "jeddah-airport-to-madinah-taxi-service": { href: "/distance/jeddah-to-madinah", label: "Jeddah to Madinah: Distance & Travel Time" },
+  "madinah-to-jeddah-airport-taxi-service": { href: "/distance/jeddah-to-madinah", label: "Jeddah to Madinah: Distance & Travel Time" },
+  "riyadh-to-dammam-guide": { href: "/distance/riyadh-to-dammam", label: "Riyadh to Dammam: Distance & Travel Time" },
+  "dammam-to-riyadh-taxi-service": { href: "/distance/riyadh-to-dammam", label: "Riyadh to Dammam: Distance & Travel Time" },
+  "riyadh-to-makkah-taxi-service": { href: "/distance/riyadh-to-makkah", label: "Riyadh to Makkah: Distance & Travel Time" },
+  "makkah-to-riyadh-taxi-service": { href: "/distance/riyadh-to-makkah", label: "Riyadh to Makkah: Distance & Travel Time" },
+  "bahrain-to-dammam-taxi-service": { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam: Distance & Travel Time" },
+  "dammam-airport-to-bahrain-taxi-service": { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam: Distance & Travel Time" },
+  "bahrain-to-riyadh-taxi-service": { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh: Distance & Travel Time" },
+  "riyadh-to-bahrain-taxi-service": { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh: Distance & Travel Time" },
+  "bahrain-to-jubail-taxi-service": { href: "/distance/bahrain-to-jubail", label: "Bahrain to Jubail: Distance & Travel Time" },
+};
+
 export interface RouteData {
   slug: string;
   origin: string;
@@ -239,6 +262,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
   const relatedCities = relatedCitiesFor(data);
   const routeDestination = destinationPageFor(data);
   const routeGuide = ROUTE_GUIDE_MAP[data.slug];
+  const routeDistance = ROUTE_DISTANCE_MAP[data.slug];
   // Data-driven — automatically picks up any hotel added for either endpoint
   // city later (Phase 19 internal-linking pass), no per-route hardcoding.
   const routeHotels = [
@@ -688,6 +712,14 @@ export default function RoutePage({ data }: { data: RouteData }) {
                   <h3 style={{ marginBottom: "var(--space-4)" }}>Travel Guide</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     <Link href={routeGuide.href} className="btn btn-outline-gold btn-sm">{routeGuide.label}</Link>
+                  </div>
+                </div>
+              )}
+              {routeDistance && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Distance & Travel Time</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    <Link href={routeDistance.href} className="btn btn-outline-gold btn-sm">{routeDistance.label}</Link>
                   </div>
                 </div>
               )}

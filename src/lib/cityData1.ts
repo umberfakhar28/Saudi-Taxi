@@ -42,6 +42,11 @@ export const riyadh: CityData = {
   ],
   heroImage: "/images/images-gulf/riyadh-taxi-service.webp.png",
   heroImageAlt: "Private chauffeur vehicle on a Riyadh highway with the Kingdom Centre Tower skyline at sunset — taxi and chauffeur service in Saudi Arabia's capital",
+  distanceGuides: [
+    { href: "/distance/riyadh-to-dammam", label: "Riyadh to Dammam Distance & Travel Time" },
+    { href: "/distance/riyadh-to-makkah", label: "Riyadh to Makkah Distance & Travel Time" },
+    { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh Distance & Travel Time" },
+  ],
   attractionsImage: "/images/images-gulf/riyadh-attractions.webp.png",
   airportImage: "/images/images-gulf/riyadh-airport-transfer.webp.png",
   coverageImage: "/images/images-gulf/riyadh-taxi-service-coverage.webp.png",
@@ -113,6 +118,10 @@ export const jeddah: CityData = {
   ],
   heroImage: "/images/images-gulf/jeddah-taxi-service.webp.png",
   heroImageAlt: "Private chauffeur vehicle along the Jeddah Corniche waterfront at sunset — taxi and airport transfer service on Saudi Arabia's Red Sea coast",
+  distanceGuides: [
+    { href: "/distance/jeddah-to-makkah", label: "Jeddah to Makkah Distance & Travel Time" },
+    { href: "/distance/jeddah-to-madinah", label: "Jeddah to Madinah Distance & Travel Time" },
+  ],
   attractionsImage: "/images/images-gulf/jeddah-attractions.webp.png",
   airportImage: "/images/images-gulf/jeddah-airport-transfer.webp.png",
   coverageImage: "/images/images-gulf/jeddah-taxi-service-coverage.webp.png",
@@ -183,6 +192,11 @@ export const makkah: CityData = {
   ],
   heroImage: "/images/images-gulf/makkah-taxi-service.webp.png",
   heroImageAlt: "Private chauffeur vehicle on the mountain road into Makkah with the Abraj Al-Bait Clock Tower and Masjid al-Haram at dusk — taxi service for Umrah pilgrims",
+  distanceGuides: [
+    { href: "/distance/jeddah-to-makkah", label: "Jeddah to Makkah Distance & Travel Time" },
+    { href: "/distance/makkah-to-madinah", label: "Makkah to Madinah Distance & Travel Time" },
+    { href: "/distance/riyadh-to-makkah", label: "Riyadh to Makkah Distance & Travel Time" },
+  ],
   attractionsImage: "/images/images-gulf/makkah-attractions.webp.png",
   coverageImage: "/images/images-gulf/makkah-taxi-service-coverage.webp",
   airportImage: "/images/images-gulf/makkah-airport-transfer.webp",
@@ -266,6 +280,8 @@ export const madinah: CityData = {
   airportImage: "/images/images-gulf/madinah-airport-transfer.webp",
   distanceGuides: [
     { href: "/distance/abha-to-madinah", label: "Abha to Madinah Distance & Travel Guide" },
+    { href: "/distance/makkah-to-madinah", label: "Makkah to Madinah Distance & Travel Time" },
+    { href: "/distance/jeddah-to-madinah", label: "Jeddah to Madinah Distance & Travel Time" },
   ],
   serviceAreas: [
     { name: "Central Haram hotel belt (Anbar / Bab Al-Salam)", note: "The closest hotel cluster to the Prophet's Mosque, our busiest Madinah pickup zone." },
@@ -336,6 +352,10 @@ export const dammam: CityData = {
   ],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Dammam Eastern Province skyline — private taxi and airport transfer service near King Fahd International Airport",
+  distanceGuides: [
+    { href: "/distance/riyadh-to-dammam", label: "Riyadh to Dammam Distance & Travel Time" },
+    { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam Distance & Travel Time" },
+  ],
   coverageImage: "/images/images-gulf/dammam-taxi-service-coverage.webp",
   airportImage: "/images/images-gulf/dammam-airport-transfer.webp",
   serviceAreas: [

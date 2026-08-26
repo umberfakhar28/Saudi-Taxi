@@ -114,6 +114,9 @@ export const jubail: CityData = {
   ],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Eastern Province skyline near Jubail Industrial City — private chauffeur and corporate transfer service",
+  distanceGuides: [
+    { href: "/distance/bahrain-to-jubail", label: "Bahrain to Jubail Distance & Travel Time" },
+  ],
   serviceAreas: [
     { name: "Jubail Industrial City gates", note: "Multiple entry gates serve the industrial zone — drivers confirm which one matches your site pass before pickup." },
     { name: "Royal Commission residential area", note: "The planned residential district housing most Royal Commission and contractor staff." },
