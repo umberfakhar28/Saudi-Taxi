@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MenuIcon, XIcon, ChevronDownIcon, GlobeIcon, WhatsAppIcon } from './Icons';
@@ -41,17 +41,65 @@ const DropdownPanel = ({ groups, open, onLinkClick }: { groups: NavGroup[]; open
     </div>
 );
 
-const Navbar = ({ transparent = false }: { transparent?: boolean }) => {
+interface NavbarProps {
+    transparent?: boolean;
+    // Drawer open state now lives in PublicLayout so the mobile bottom
+    // nav's "Menu" button can drive the exact same drawer as the
+    // hamburger below, instead of each maintaining its own copy.
+    menuOpen: boolean;
+    onToggleMenu: () => void;
+    onCloseMenu: () => void;
+}
+
+const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: NavbarProps) => {
     const pathname = usePathname();
-    const [menuOpen, setMenuOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState<DropdownKey | null>(null);
 
+    // Logo.tsx sizes its wordmark from an inline `fontSize: size * 0.5`
+    // computed from this numeric prop — plain CSS `font-size` on `.logo`
+    // has no effect on it, so shrinking it for mobile has to happen here.
+    // A smaller logo is part of what makes room for the hamburger to
+    // actually fit in the top bar below 900px (see the overflow root-cause
+    // note in Navbar.module.css).
+    const [logoSize, setLogoSize] = useState(44);
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 900px)');
+        const apply = () => setLogoSize(mq.matches ? 32 : 44);
+        apply();
+        mq.addEventListener('change', apply);
+        return () => mq.removeEventListener('change', apply);
+    }, []);
+
     const close = () => {
-        setMenuOpen(false);
+        onCloseMenu();
         setOpenDropdown(null);
     };
 
     const toggle = (key: DropdownKey) => setOpenDropdown((cur) => (cur === key ? null : key));
+
+    // Mobile drawer: lock body scroll while open, close on Escape, and
+    // restore scroll on unmount so navigating away never leaves the page
+    // stuck unscrollable.
+    useEffect(() => {
+        if (!menuOpen) return;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKeyDown = (e: KeyboardEvent) => {
+            // Inlined rather than calling close() — that function is
+            // redefined every render, so putting it in the deps array
+            // below would re-run this effect (and re-lock/re-listen) on
+            // every render instead of only when menuOpen actually changes.
+            if (e.key === 'Escape') {
+                onCloseMenu();
+                setOpenDropdown(null);
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [menuOpen, onCloseMenu]);
 
     const navItems: { key: DropdownKey; label: string; groups: NavGroup[] }[] = [
         { key: 'services', label: 'Services', groups: serviceGroups },
@@ -62,11 +110,15 @@ const Navbar = ({ transparent = false }: { transparent?: boolean }) => {
 
     return (
         <nav className={`${styles.navbar} ${styles.navbarShifted} ${transparent ? styles.navbarTransparent : ''}`}>
+            {/* Backdrop — tapping outside the drawer closes it, matching the
+                Escape-key/scroll-lock behaviour above. Mobile-only via CSS
+                (only rendered/visible once the drawer itself can open). */}
+            {menuOpen && <div className={styles.backdrop} onClick={close} aria-hidden="true" />}
             <div className={styles.container}>
 
                 {/* ---- LOGO (Balance: anchors the left side; also serves as the Home link) ---- */}
                 <Link href="/" className={styles.logo} onClick={close} aria-label="Gulf Trip Service — Home">
-                    <Logo size={44} variant="white" />
+                    <Logo size={logoSize} variant="white" />
                 </Link>
 
                 {/* ---- NAV LINKS (Balance: centered between logo and language/CTA actions) ---- */}
@@ -124,7 +176,7 @@ const Navbar = ({ transparent = false }: { transparent?: boolean }) => {
                     {/* ---- HAMBURGER — mobile toggle ---- */}
                     <button
                         className={styles.hamburger}
-                        onClick={() => setMenuOpen(!menuOpen)}
+                        onClick={onToggleMenu}
                         aria-label={menuOpen ? 'Close menu' : 'Open menu'}
                         aria-expanded={menuOpen}
                     >

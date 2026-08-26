@@ -1,0 +1,70 @@
+/*
+  MOBILE BOTTOM NAV — fixed, mobile-only (hidden ≥901px, matching the
+  header's own hamburger breakpoint so there's no gap where neither the
+  header's WhatsApp CTA nor this bar's WhatsApp item is available).
+  z-index sits above the mobile drawer (999) and its backdrop (998) so the
+  "Menu" button stays reachable to close the drawer even while it's open —
+  see the z-index hierarchy note in FloatingWhatsApp.module.css.
+*/
+
+.bar {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: var(--bottom-nav-height);
+        padding-bottom: env(safe-area-inset-bottom);
+        background: var(--navy);
+        border-top: 1px solid var(--line-dark);
+        box-shadow: 0 -4px 20px rgba(8, 24, 39, 0.2);
+        z-index: 1002;
+    }
+}
+
+.item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 100%;
+    min-width: 0;
+    background: none;
+    border: none;
+    color: var(--on-dark-muted);
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color var(--ease-fast);
+}
+
+.item:hover,
+.item:focus-visible {
+    color: var(--on-dark);
+}
+
+/* Current page — gold, matching the sitewide "active state" role. */
+.itemActive {
+    color: var(--gold);
+}
+
+/* Book Now — the one primary action in this bar; a gold icon is enough
+   emphasis without turning the whole tab into a competing button shape. */
+.itemPrimary {
+    color: var(--on-dark);
+}
+
+.itemPrimary svg {
+    color: var(--gold);
+}

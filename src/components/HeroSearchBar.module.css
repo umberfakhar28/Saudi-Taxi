@@ -407,14 +407,30 @@
 
 .sheetHeader .tablist {
     background: rgba(255, 255, 255, 0.08);
+    /* Fills the space actually left after the close button, rather than
+       the tabs' own full-padding intrinsic width (~422px) forcing the
+       close button off the right edge of a 375px sheet. */
+    flex: 1;
+    min-width: 0;
 }
 
 /* The tablist's default text colours (var(--text-muted)/var(--text-primary))
    assume a light background — inside the navy sheet header they'd render
    as dark-on-dark. The active tab's own text still sits on the gold
-   indicator pill, so it's unaffected and stays navy. */
+   indicator pill, so it's unaffected and stays navy. Padding/font-size
+   are also trimmed here — the full-padding desktop tab size is what was
+   pushing the row past 375px in the first place. */
 .sheetHeader .tab {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 4px;
+    gap: 4px;
+    font-size: 0.7rem;
     color: var(--on-dark-muted);
+}
+
+.sheetHeader .tab svg {
+    display: none;
 }
 
 .sheetHeader .tab:hover {

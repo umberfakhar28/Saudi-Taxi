@@ -72,6 +72,18 @@
     100% { opacity: 0; transform: scale(1.35); }
 }
 
+/* Hidden below the mobile bottom nav's breakpoint, but only on the pages
+   that actually have that bar (body.has-bottom-nav — set by PublicLayout,
+   never by the /ar layout, which mounts this same component with no
+   bottom nav to replace it). The bar has its own WhatsApp item there, and
+   a floating bubble in the same corner would be a duplicate control.
+   Kept for tablet/desktop, and for /ar at every width. */
+@media (max-width: 900px) {
+    :global(body.has-bottom-nav) .button {
+        display: none;
+    }
+}
+
 @media (max-width: 767px) {
     .button {
         width: 52px;

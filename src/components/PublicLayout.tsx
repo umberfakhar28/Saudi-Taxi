@@ -6,6 +6,7 @@ import TopBar from './TopBar';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import FloatingWhatsApp from './FloatingWhatsApp';
+import MobileBottomNav from './MobileBottomNav';
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -31,6 +32,31 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         return () => window.removeEventListener('scroll', onScroll);
     }, [isHome]);
 
+    // Lifted up (rather than kept local to Navbar) so the mobile bottom
+    // nav's "Menu" button can open/close the exact same drawer as the
+    // header's hamburger, instead of the two maintaining separate state.
+    const [menuOpen, setMenuOpen] = useState(false);
+    const closeMenu = () => setMenuOpen(false);
+
+    // No separate "close drawer on route change" effect — every Link
+    // inside the drawer (Navbar.tsx) already calls close() in its own
+    // onClick, synchronously, before navigation ever starts, which covers
+    // every actual way the drawer's own contents can trigger a route
+    // change. An effect keyed on `pathname` would be redundant and would
+    // also trip this project's react-hooks/set-state-in-effect rule for
+    // no real benefit.
+
+    // Marks <body> only on the pages that actually render MobileBottomNav
+    // below (not /admin, not /ar), so the fixed bar's reserved bottom
+    // padding (globals.css, `body.has-bottom-nav`) never applies to a page
+    // that doesn't have the bar — admin's own fixed layout in particular
+    // shouldn't gain unrelated bottom spacing.
+    useEffect(() => {
+        const hasBottomNav = !isAdmin && !isArabic;
+        document.body.classList.toggle('has-bottom-nav', hasBottomNav);
+        return () => document.body.classList.remove('has-bottom-nav');
+    }, [isAdmin, isArabic]);
+
     if (isAdmin) return <>{children}</>;
     if (isArabic) return <>{children}</>;
 
@@ -39,10 +65,11 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     return (
         <>
             <TopBar transparent={transparentHeader} />
-            <Navbar transparent={transparentHeader} />
+            <Navbar transparent={transparentHeader} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} onCloseMenu={closeMenu} />
             {children}
             <Footer />
             <FloatingWhatsApp />
+            <MobileBottomNav menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} />
         </>
     );
 }

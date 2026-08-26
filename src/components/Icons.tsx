@@ -32,6 +32,12 @@ export const UserIcon = ({ size = 24, className = "", style }: IconProps) => (
     </svg>
 );
 
+export const HomeIcon = ({ size = 24, className = "", style }: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={style}>
+        <path d="M11.3 2.3a1 1 0 0 1 1.4 0l8 7.5a1 1 0 0 1 .3.7V20a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-5H10v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5a1 1 0 0 1 .3-.7z"/>
+    </svg>
+);
+
 export const CarIcon = ({ size = 24, className = "", style }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={style}>
         <path d="M19.8 8.6l-2-4.5A2 2 0 0 0 16 3H8a2 2 0 0 0-1.8 1.1l-2 4.5A2 2 0 0 0 4 10v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9a2 2 0 0 0-.2-.4zM7.5 16A1.5 1.5 0 1 1 9 14.5 1.5 1.5 0 0 1 7.5 16zm9 0A1.5 1.5 0 1 1 18 14.5 1.5 1.5 0 0 1 16.5 16zM7 8l1-2.5h8L17 8z"/>

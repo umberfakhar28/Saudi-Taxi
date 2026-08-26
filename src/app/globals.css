@@ -181,6 +181,7 @@
   --container-width: 1200px;
   --nav-height: 80px;
   --topbar-height: 38px;
+  --bottom-nav-height: 60px;
   --section-pad: var(--space-20);
   --section-pad-lg: var(--space-24);
 
@@ -233,6 +234,15 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* html, not just body, is this document's scrolling element (body sets
+     its own overflow below, which doesn't get promoted to the viewport
+     here). Off-canvas fixed panels (the mobile nav drawer, etc.) are
+     positioned via `transform: translateX(...)` relative to the viewport,
+     and Chromium still counts their off-screen geometry toward the
+     scrollable area even though nothing is visibly wrong — without this,
+     the page is horizontally swipeable/scrollable by exactly the drawer's
+     width on any viewport narrower than its open breakpoint. */
+  overflow-x: hidden;
 }
 
 body {
@@ -241,6 +251,18 @@ body {
   color: var(--text-secondary);
   line-height: 1.7;
   overflow-x: hidden;
+}
+
+/* Reserves room for the fixed mobile bottom nav so the last section of
+   every page — footer links, a closing CTA button, a form's submit — is
+   never rendered underneath it. Scoped to `.has-bottom-nav` (set by
+   PublicLayout only on the pages that actually render the bar) and to the
+   same max-width the bar itself uses, so desktop/tablet and /admin, /ar
+   are unaffected. */
+@media (max-width: 900px) {
+  body.has-bottom-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  }
 }
 
 /* Arabic (/ar) typography — additive only, scoped to [dir="rtl"], zero

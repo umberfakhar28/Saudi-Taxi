@@ -12,7 +12,10 @@
     top: 0;
     width: 100%;
     z-index: 1000;
-    background: var(--accent-dark);
+    /* Navy, not teal-dark — the header must always be navy per the
+       sitewide colour system; this was a leftover pre-rebrand value that
+       never got corrected in that pass. */
+    background: var(--navy);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     height: var(--nav-height);
     transition: background var(--ease-base), box-shadow var(--ease-base);
@@ -333,6 +336,23 @@
     box-shadow: 0 14px 34px rgba(37, 199, 102, 0.34);
 }
 
+/* ---- Backdrop — behind the mobile drawer, above page content; tapping it
+   closes the menu (outside-click). Only ever rendered while menuOpen, and
+   only reachable on the widths where the drawer itself can open. ---- */
+.backdrop {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 24, 39, 0.5);
+        z-index: 998;
+    }
+}
+
 /* ---- Hamburger — mobile only ---- */
 .hamburger {
     display: none;
@@ -375,6 +395,19 @@
         z-index: 1001;
     }
 
+    /* Root cause of the hamburger being pushed off-screen at every mobile
+       width: .logo (~215px) and .rightGroup both carry flex-shrink:0, and
+       together they no longer fit the ~327px available in the top bar once
+       padding is subtracted — nothing could give, so the row overflowed and
+       shoved .rightGroup (and the hamburger inside it) past the viewport
+       edge. The mobile bottom nav (MobileBottomNav) now carries the
+       WhatsApp action, so it's redundant here below this width — freeing
+       enough room, together with a slightly smaller wordmark, for
+       "Book Now" + the hamburger to actually fit on screen. */
+    .navActions .ctaWhatsapp {
+        display: none;
+    }
+
     /* Language switcher moves inside the drawer; only the CTA stays in the top bar */
     .langSwitcher {
         display: none;
@@ -394,7 +427,10 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        padding: calc(var(--nav-height) + var(--topbar-height) + var(--space-6)) var(--space-6) var(--space-8);
+        /* Bottom padding clears the fixed mobile bottom nav (higher
+           z-index, always on top) so the drawer's last link is never
+           hidden behind it. */
+        padding: calc(var(--nav-height) + var(--topbar-height) + var(--space-6)) var(--space-6) calc(var(--bottom-nav-height) + var(--space-8) + env(safe-area-inset-bottom));
         gap: 0;
         transform: translateX(100%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);

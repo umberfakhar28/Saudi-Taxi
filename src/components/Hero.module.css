@@ -204,7 +204,16 @@
     z-index: 10;
     width: 100%;
     max-width: 1120px;
-    animation: heroFadeInUp 0.9s ease-out 0.15s both;
+    /* `backwards`, not `both` — a lingering `transform: translateY(0)`
+       after the animation ends (what `both` leaves behind) creates a new
+       containing block for any `position: fixed` descendant. The search
+       bar's mobile full-screen sheet is exactly that, and it was
+       resolving `inset: 0` against this wrapper's small box instead of
+       the real viewport — a tiny, badly-clipped "full-screen" sheet.
+       `backwards` still applies the from-state during the animation
+       delay (no flash-in before it starts) but correctly reverts
+       `transform` to `none` once the animation finishes. */
+    animation: heroFadeInUp 0.9s ease-out 0.15s backwards;
 }
 
 /* ---- Keyframes ---- */

@@ -63,10 +63,19 @@ export default function SearchAutocomplete({ label, placeholder, value, onChange
                 if (entry) commit(entry);
             }
         } else if (e.key === 'Escape') {
+            // Only claim the key when there's actually something local to
+            // dismiss (a suggestion list open, or text to clear) — stopping
+            // propagation here unconditionally would also swallow Escape
+            // for an ancestor that's listening for it too (the mobile
+            // search sheet closes on Escape), meaning a user could never
+            // close the sheet itself by pressing Escape while this field
+            // happened to be focused but already empty/closed.
             if (value) {
                 onChange('');
-            } else {
+                e.stopPropagation();
+            } else if (open) {
                 setOpen(false);
+                e.stopPropagation();
             }
             setActiveId(null);
         }

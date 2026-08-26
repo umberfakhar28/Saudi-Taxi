@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useId, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
     CarIcon, ClockIcon, CompassIcon, CalendarIcon,
@@ -59,6 +60,32 @@ function HeroSearchBarInner() {
     const [luggage, setLuggage] = useState(DEFAULT_LUGGAGE);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+
+    // The sheet is portaled straight to <body> (see the render below) so it
+    // escapes .wrap/.searchWrap's own stacking context — both set
+    // `position: relative` + `z-index: 10`, which previously trapped the
+    // sheet's z-index:1200 inside that lower-ranked context, making the
+    // "full-screen" sheet render behind the fixed header instead of above
+    // it (hiding its close button and mode tabs under the nav bar).
+    // `document` doesn't exist during SSR, hence the mount check.
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    // Lock body scroll while the sheet is open, and close on Escape —
+    // same pattern as the mobile nav drawer (Navbar.tsx).
+    useEffect(() => {
+        if (!mobileSheetOpen) return;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setMobileSheetOpen(false);
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [mobileSheetOpen]);
 
     const tabsId = useId();
     const isRtl = useIsRtl();
@@ -122,10 +149,17 @@ function HeroSearchBarInner() {
         return params;
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    /** Returns whether the submission was valid — the sheet's own submit
+     * handler needs this to decide whether to close itself, and reading
+     * the `errors` state right after calling this would see the stale
+     * pre-update value (React state setters aren't synchronous), which is
+     * exactly what made the sheet close on a failed validation instead of
+     * staying open to show the just-set error messages. */
+    function handleSubmit(e: React.FormEvent): boolean {
         e.preventDefault();
-        if (!validate()) return;
+        if (!validate()) return false;
         router.push(`/book-online?${buildParams().toString()}`);
+        return true;
     }
 
     const middleField = (idPrefix: string) => {
@@ -201,7 +235,11 @@ function HeroSearchBarInner() {
 
     const errorList = Object.values(errors);
 
-    const barContent = (idPrefix: string) => (
+    // The sheet renders its own trailing .sheetSubmit after the return-trip
+    // fields (a better position — after "Add return trip", not before it),
+    // so it opts out of this shared helper's own inline .submit button
+    // rather than ending up with two "Search" buttons stacked in one form.
+    const barContent = (idPrefix: string, showInlineSubmit = true) => (
         <>
             <div className={styles.field}>
                 <SearchAutocomplete
@@ -253,9 +291,11 @@ function HeroSearchBarInner() {
                 />
             </div>
 
-            <button type="submit" className={styles.submit}>
-                Search
-            </button>
+            {showInlineSubmit && (
+                <button type="submit" className={styles.submit}>
+                    Search
+                </button>
+            )}
         </>
     );
 
@@ -309,7 +349,7 @@ function HeroSearchBarInner() {
                 {from && (mode === 'transfers' ? to : mode === 'hourly' ? `${duration}h` : (dayTrip === 'other' ? dayTripCustom : dayTrip)) ? 'Edit your search' : 'Where are you going?'}
             </button>
 
-            {mobileSheetOpen && (
+            {mounted && mobileSheetOpen && createPortal(
                 <div className={styles.sheetOverlay} role="dialog" aria-modal="true" aria-label="Search">
                     <div className={styles.sheet}>
                         <div className={styles.sheetHeader}>
@@ -345,11 +385,11 @@ function HeroSearchBarInner() {
                             </button>
                         </div>
                         <form
-                            onSubmit={(e) => { handleSubmit(e); if (Object.keys(errors).length === 0) setMobileSheetOpen(false); }}
+                            onSubmit={(e) => { if (handleSubmit(e)) setMobileSheetOpen(false); }}
                             className={styles.sheetForm}
                             noValidate
                         >
-                            {barContent('sheet')}
+                            {barContent('sheet', false)}
 
                             {mode === 'transfers' && (
                                 <label className={styles.returnToggle}>
@@ -379,7 +419,8 @@ function HeroSearchBarInner() {
                             <button type="submit" className={styles.sheetSubmit}>Search</button>
                         </form>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* Transfers-only add-return toggle, sits below the desktop bar */}
