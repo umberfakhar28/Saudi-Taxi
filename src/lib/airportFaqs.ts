@@ -12,7 +12,12 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
   },
   {
     q: "Riyadh Airport has several terminals — which one will my driver meet me at?",
-    a: "King Khalid International has both the newer Terminal 5 (most international flights) and the older Terminals 1–4 (mostly domestic Saudia flights). Tell us your flight number when booking and we'll confirm exactly which terminal and exit your driver will be waiting at.",
+    a: "King Khalid International has the newer Terminal 5 (most international flights) plus Terminal 1, Terminal 3 and Terminal 4 (mostly domestic Saudia flights). Tell us your flight number when booking and we'll confirm exactly which terminal and exit your driver will be waiting at.",
+    airports: ["RUH"],
+  },
+  {
+    q: "Do you offer taxi pickup at Riyadh Airport Terminal 1, 3 or 4 specifically?",
+    a: "Yes — we cover pickup at every King Khalid International terminal, including Terminal 1, Terminal 3 and Terminal 4, not just the newer Terminal 5. Your driver waits at your specific terminal's arrivals exit, confirmed once you share your flight number.",
     airports: ["RUH"],
   },
   {

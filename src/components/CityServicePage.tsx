@@ -7,7 +7,7 @@ import { FLEET_TIERS } from "@/lib/fleetConfig";
 import {
   WhatsAppIcon, ChevronRightIcon, PlaneIcon, MapPinIcon, CalendarIcon,
   ClockIcon, CarIcon, ShieldCheckIcon, HotelIcon, CheckCircleIcon,
-  BriefcaseIcon, MoonIcon,
+  BriefcaseIcon, MoonIcon, GlobeIcon, ChauffeurCapIcon,
 } from "@/components/Icons";
 import { waLink } from "@/lib/contact";
 import DestinationEnquiryForm from "@/components/DestinationEnquiryForm";
@@ -84,6 +84,18 @@ export interface CityData {
    * live page (see distanceRouteData.ts). Omitted entirely until one exists
    * for this city, rather than a placeholder link. */
   distanceGuides?: { href: string; label: string }[];
+  /** Present only for cities with genuine, repeated cross-border transfer
+   * demand from a specific GCC country (currently Jubail, from Bahrain via
+   * the King Fahd Causeway) — a short acknowledgment that links out to the
+   * dedicated route page for the full journey details, rather than
+   * duplicating that page's content here (Search Query Content Map, §D). */
+  crossBorderTravel?: { fromCountry: string; intro: string; linkHref: string; linkLabel: string };
+  /** Present only where premium/luxury chauffeur positioning is a genuine,
+   * distinct selling point for this city — a dedicated section rather than
+   * folded into `benefit`, since it directly answers a repeated "luxury
+   * chauffeur service" search pattern (Search Query Content Map, Cluster:
+   * Luxury chauffeur & business travel). */
+  premiumChauffeur?: { intro: string; features: string[] };
 
   // --- Execution Brief v3 D1 additions (RouteData's reverseSlug/fromSlug/
   // toSlug don't apply here — nearbyCities already covers the relational
@@ -171,7 +183,19 @@ const TOUR_PAGE_BY_SLUG: Record<string, string> = {
  * are invented for this pass. */
 function relatedServicesFor(data: CityData): { href: string; label: string }[] {
   const links: { href: string; label: string }[] = [];
-  if (data.airport) links.push({ href: "/airport-transfers", label: "Airport Transfers" });
+  if (data.airport) {
+    // Link to this city's own dedicated airport page where one exists
+    // (e.g. Riyadh -> riyadh-airport-taxi-service) rather than only the
+    // generic hub — a more specific, more useful link for a visitor who's
+    // already on this exact city's page (Search Query Content Map, internal
+    // linking map).
+    const dedicatedAirport = AIRPORTS.find((a) => a.code === data.airport!.code);
+    links.push(
+      dedicatedAirport
+        ? { href: dedicatedAirport.pageHref, label: `${dedicatedAirport.name} Taxi Service` }
+        : { href: "/airport-transfers", label: "Airport Transfers" }
+    );
+  }
   links.push({ href: "/hotel-transfers", label: "Hotel Transfers" });
   links.push({ href: "/private-taxi", label: "Private Taxi" });
   if (data.tags.includes("business")) links.push({ href: "/corporate-transportation-services", label: "Corporate Transportation" });
@@ -531,6 +555,33 @@ export default function CityServicePage({ data }: { data: CityData }) {
           </section>
         )}
 
+        {/* Premium/Luxury Chauffeur — only rendered where genuinely relevant
+            (data.premiumChauffeur present), for cities where that specific
+            positioning is a real, repeated search pattern rather than
+            generic upsell copy (Search Query Content Map, §C). */}
+        {data.premiumChauffeur && (
+          <section className="section" style={{ background: "var(--bg-subtle)" }}>
+            <div className="container">
+              <div className="section-header centered">
+                <ChauffeurCapIcon size={32} style={{ color: "var(--accent)", marginBottom: "var(--space-4)" }} />
+                <span className="section-eyebrow">Luxury Chauffeur</span>
+                <h2 className="section-title">Luxury Chauffeur Service in {data.city}</h2>
+              </div>
+              <p style={{ color: "var(--text-body)", lineHeight: 1.8, maxWidth: 760, margin: "0 auto var(--space-8)", textAlign: "center" }}>
+                {data.premiumChauffeur.intro}
+              </p>
+              <div className="grid-3">
+                {data.premiumChauffeur.features.map((f) => (
+                  <div key={f} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start" }}>
+                    <CheckCircleIcon size={20} style={{ color: "var(--success)", flexShrink: 0, marginTop: 2 }} />
+                    <span style={{ color: "var(--text-body)" }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Religious Travel — only rendered where genuinely relevant
             (data.religiousTravel present); links to the dedicated Umrah/
             Ziyarat pages rather than duplicating their content. */}
@@ -546,6 +597,23 @@ export default function CityServicePage({ data }: { data: CityData }) {
                   <Link key={l.href} href={l.href} className="btn btn-secondary">{l.label}</Link>
                 ))}
               </div>
+            </div>
+          </section>
+        )}
+
+        {/* Cross-Border Travel — only rendered where genuinely relevant
+            (data.crossBorderTravel present); acknowledges the intent and
+            links to the dedicated route page rather than duplicating its
+            content (Search Query Content Map, §D — Jubail page should stay
+            broader city intent, the route page owns the journey detail). */}
+        {data.crossBorderTravel && (
+          <section className="section">
+            <div className="container" style={{ maxWidth: 780, margin: "0 auto", textAlign: "center" }}>
+              <GlobeIcon size={32} style={{ color: "var(--accent)", marginBottom: "var(--space-4)" }} />
+              <span className="section-eyebrow">Cross-Border Transfers</span>
+              <h2 className="section-title" style={{ textAlign: "center" }}>Traveling to {data.city} from {data.crossBorderTravel.fromCountry}?</h2>
+              <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{data.crossBorderTravel.intro}</p>
+              <Link href={data.crossBorderTravel.linkHref} className="btn btn-secondary">{data.crossBorderTravel.linkLabel}</Link>
             </div>
           </section>
         )}

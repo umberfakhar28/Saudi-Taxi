@@ -319,8 +319,14 @@ export const AIRPORTS: AirportPageInfo[] = [
     guidePageHref: "/guides/king-khalid-airport",
     // Terminal facility details kept generic/high-confidence only (immigration,
     // baggage claim — near-universal airport basics), not asserting airline-
-    // specific gate assignments we can't verify. Flagged for a fact-check pass
-    // on the Terminal 5 vs 1-4 split before this is marked fully reviewed.
+    // specific gate assignments we can't verify. Terminals 1, 3 and 4 are
+    // split into their own entries (rather than one "1-4" bucket) because
+    // travelers search for them by number specifically — but each one's
+    // `flights`/`facilities` text stays deliberately general (all three are
+    // part of the same older domestic complex) rather than claiming a
+    // specific airline-to-terminal assignment we haven't verified. The
+    // driver's exact meeting point is still confirmed by flight number, per
+    // practicalInfo below.
     terminals: [
       {
         name: "Terminal 5",
@@ -330,14 +336,28 @@ export const AIRPORTS: AirportPageInfo[] = [
         facilities: ["Immigration and customs", "Baggage claim", "Currency exchange", "Retail and dining"],
       },
       {
-        name: "Terminals 1–4",
-        type: "Domestic & Legacy Terminals",
-        flights: "Domestic Saudia flights and some regional routes using the original terminal buildings.",
-        meeting: "Your driver waits at the arrivals exit of your specific terminal — confirmed with you once your flight is booked.",
+        name: "Terminal 1",
+        type: "Domestic & Legacy Terminal",
+        flights: "Domestic Saudia flights and some regional routes using one of the original terminal buildings.",
+        meeting: "Your driver waits at Terminal 1's own arrivals exit — confirmed with you once your flight is booked.",
+        facilities: ["Domestic baggage claim", "Ground transport pickup area"],
+      },
+      {
+        name: "Terminal 3",
+        type: "Domestic & Legacy Terminal",
+        flights: "Domestic Saudia flights and some regional routes using one of the original terminal buildings.",
+        meeting: "Your driver waits at Terminal 3's own arrivals exit — confirmed with you once your flight is booked.",
+        facilities: ["Domestic baggage claim", "Ground transport pickup area"],
+      },
+      {
+        name: "Terminal 4",
+        type: "Domestic & Legacy Terminal",
+        flights: "Domestic Saudia flights and some regional routes using one of the original terminal buildings.",
+        meeting: "Your driver waits at Terminal 4's own arrivals exit — confirmed with you once your flight is booked.",
         facilities: ["Domestic baggage claim", "Ground transport pickup area"],
       },
     ],
-    lastReviewed: "August 2026",
+    lastReviewed: "August 26, 2026",
     hotelZones: [
       { name: "Olaya hotel corridor", note: "Riyadh's densest concentration of international hotel brands, about 35–50 minutes from the airport." },
       { name: "KAFD hotels", note: "Newer high-rise hotels built for conference and corporate travelers visiting the financial district." },

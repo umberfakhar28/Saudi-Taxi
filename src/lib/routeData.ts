@@ -314,6 +314,7 @@ export const bahrainToDammam: RouteData = {
     { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain Taxi" },
     { href: "/services/dammam", label: "Dammam Taxi Service" },
     { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain Taxi" },
+    { href: "/bahrain-to-jubail-taxi-service", label: "Bahrain to Jubail Transfer" },
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Crossing to Dammam",
@@ -322,6 +323,76 @@ export const bahrainToDammam: RouteData = {
     { name: "Ahmed S.", origin: "Shopper, Manama", text: "The vehicle handover at the causeway was seamless — both drivers were already coordinated before we arrived." },
     { name: "Grace L.", origin: "Expat, Bahrain", text: "Booked for a family visit to Khobar — punctual on both sides of the border." },
   ],
+};
+
+/* ── 5b. Bahrain → Jubail ───────────────────────────────────────
+   Search Query Content Map, §D — the one new route page the query audit
+   justified: every other significant Bahrain<->Saudi city pair (Dammam,
+   Riyadh) already has its own dedicated page in this family, so a
+   Jubail-only FAQ buried on the city page would be the inconsistent
+   choice. Distinct content angle from bahrainToDammam: Jubail's traffic is
+   overwhelmingly contractor/business travel (SABIC, the Royal Commission,
+   Industrial City gate access), not the shopper/family framing that fits
+   Dammam and Khobar. */
+export const bahrainToJubail: RouteData = {
+  slug: "bahrain-to-jubail-taxi-service",
+  tags: ["gcc", "business"],
+  priority: 2,
+  reverseSlug: "jubail-to-bahrain-taxi-service",
+  toSlug: "jubail",
+  origin: "Bahrain",
+  destination: "Jubail",
+  isCrossBorder: true,
+  borderCrossingName: "King Fahd Causeway",
+  eyebrow: "Border Crossing Transfer",
+  h1: "Bahrain to Jubail Taxi & Private Transfer Service",
+  intro: "Private car and chauffeur transfer from Bahrain across the King Fahd Causeway and on to Jubail Industrial City — the extended leg past Dammam and Khobar that a regular causeway taxi doesn't cover.",
+  breadcrumbLabel: "Bahrain → Jubail",
+  distance: "~150 km (causeway + onward leg)",
+  travelTime: "2 – 2.5 hours (incl. causeway)",
+  heroImage: "/destinations/dammam-eastern-province-skyline.webp",
+  overviewTitle: "Bahrain to Jubail: The Causeway Plus the Onward Leg",
+  overviewParagraphs: [
+    "Jubail sits roughly an hour further up the coast from Dammam and Khobar, which means a Bahrain to Jubail trip is really two legs joined into one booking: the King Fahd Causeway crossing itself, then a further stretch north into Jubail Industrial City or the Royal Commission residential district.",
+    "A meaningful share of this route's travelers are contractors, technical staff, and business visitors continuing on to a SABIC or petrochemical-sector assignment rather than stopping in Dammam — Jubail's own service area is built around that same traffic, and this route exists specifically to connect the two without a separate booking or a layover in Khobar.",
+    "As with every causeway crossing, a private taxi can't cross the border itself — a Bahrain-side driver takes you to the checkpoint, and our Jubail-based vehicle picks up the journey from the Saudi side through to your final gate or address.",
+  ],
+  borderProcessTitle: "Crossing from Bahrain, Then On to Jubail",
+  borderProcessParagraphs: [
+    "Your Bahrain-side driver collects you from your hotel, residence, or Bahrain International Airport and takes you to the causeway checkpoint — roughly 20–25 minutes from central Manama.",
+    "GCC nationals cross with a national ID; other nationalities need a valid Saudi visa or Iqama if returning as a resident. Once you clear Saudi passport control and customs, our Jubail-based driver takes over for the onward leg.",
+    "The final stretch from the causeway through Dammam/Khobar and up to Jubail typically adds another 50–70 minutes, depending on which part of the Industrial City or residential district you're headed to.",
+  ],
+  documents: [
+    "Valid passport (6+ months validity)",
+    "Saudi visa, Iqama (residency permit), or GCC national ID",
+    "Confirmed Bahrain pickup address and time",
+    "Jubail gate, site, or address details for first-time Industrial City arrivals",
+  ],
+  pickupPoints: ["Manama hotels", "Seef District", "Bahrain International Airport", "Juffair area"],
+  dropoffInfo: "Standard drop-off anywhere in Jubail — Industrial City gates, SABIC headquarters area, Royal Commission guesthouses, or the Jubail Commercial Area. Confirm your exact gate or site pass requirements in advance for first-time contractor arrivals.",
+  vehicleOptions: [
+    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for a solo contractor or business traveler making the full trip." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Extra room for technical staff traveling with equipment or extra luggage." },
+    { name: "Van", capacity: "6–10 passengers", note: "For project teams or family groups making the trip together." },
+  ],
+  faqs: [
+    { q: "Will I need to change vehicles at the causeway?", a: "Yes — the same handover applies as any King Fahd Causeway crossing. Bahrain-plated and Saudi-plated taxis can't cross the border themselves, so a Jubail-based driver picks up the journey once you clear Saudi customs." },
+    { q: "Is Bahrain to Jubail a common route, or mostly one-off trips?", a: "It's a regular route for us — a steady share of Bahrain-side pickups are contractors and technical staff continuing on to Jubail Industrial City or a Royal Commission assignment, not just Dammam or Khobar." },
+    { q: "Do your drivers have access to Jubail Industrial City gates?", a: "Yes — the same drivers who serve Jubail's own contractor traffic run this route, and are familiar with the major entry gates and standard site-pass procedures." },
+    { q: "How much longer is this than a Bahrain to Dammam trip?", a: "Roughly 50–70 minutes longer than stopping in Dammam or Khobar, since Jubail is a further stretch up the coast — worth knowing when planning arrival timing." },
+    { q: "Can you drop me at a specific SABIC or contractor site?", a: "Yes — share your exact gate, site, or address when booking, and for first-time arrivals we recommend confirming badge/pass requirements a day ahead so the driver isn't held up at security." },
+    { q: "Is there an airport in Jubail I could fly into instead?", a: "No — Jubail has no airport of its own. Most travelers either take this causeway route from Bahrain or connect via King Fahd International Airport in Dammam, about an hour south of Jubail." },
+    { q: "How far in advance should I book?", a: "At least 24 hours ahead, so we can properly coordinate the Bahrain-side pickup and the Jubail-based onward vehicle for a smooth handover." },
+  ],
+  relatedRoutes: [
+    { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam Taxi" },
+    { href: "/services/jubail", label: "Jubail Taxi Service" },
+    { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain Taxi" },
+    { href: "/border-crossing", label: "All Border Crossing Routes" },
+  ],
+  ctaText: "Book Your Jubail Transfer",
+  lastReviewed: "August 26, 2026",
 };
 
 /* ── 6. Qatar → Riyadh ──────────────────────────────────────── */
@@ -2257,4 +2328,6 @@ export const allRoutes: RouteData[] = [
   abuDhabiToDammam,
   madinahToJeddahAirport,
   makkahToRiyadh,
+  // Search Query Content Map, §D — the one new route page the query audit justified
+  bahrainToJubail,
 ];

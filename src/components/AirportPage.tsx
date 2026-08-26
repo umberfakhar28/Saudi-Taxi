@@ -341,7 +341,10 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             </h2>
           </div>
           {data.terminals && data.terminals.length > 1 ? (
-            <div className="grid-3">
+            // auto-fit rather than the fixed 3-column .grid-3 — RUH now has
+            // 4 terminal entries (Terminal 5, 1, 3, 4), which would leave an
+            // orphaned card alone on a second row in a strict 3-column grid.
+            <div className="grid-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
               {data.terminals.map((t) => (
                 <div key={t.name} className="card">
                   <span className="badge badge-gold" style={{ marginBottom: "1rem", display: "inline-flex" }}>{t.type}</span>

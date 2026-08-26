@@ -204,9 +204,9 @@ export const tabuk: CityData = {
   priority: 2,
   nearbyCities: [{ city: "AlUla", slug: "alula" }, { city: "NEOM", slug: "neom" }],
   city: "Tabuk",
-  h1: "Car Transfer & Airport Transfer across Tabuk — Book Anytime",
+  h1: "Luxury Chauffeur & Car Transfer Service in Tabuk",
   region: "Tabuk Province",
-  intro: "Reliable taxi services in Tabuk — Tabuk Airport transfers, NEOM connectivity, Wadi Disah and Qaraqir canyon day trips, and access to the Aqaba border.",
+  intro: "Private chauffeur and taxi services in Tabuk — Tabuk Airport transfers, NEOM connectivity, Wadi Disah and Qaraqir canyon day trips, and access to the Aqaba border.",
   whyVisit: "Tabuk is northwest Saudi Arabia's gateway city — a base for NEOM project access, the dramatic Wadi Disah canyon, ancient Tabuk Castle, and proximity to the Gulf of Aqaba coastline. It's growing rapidly as both a military hub and adventure tourism destination.",
   challenge: "Tabuk's sprawling geography makes it difficult to navigate without local knowledge. Distances to Wadi Disah, the Aqaba coastal road, and NEOM sites can exceed 200km from the city centre.",
   benefit: "Our Tabuk service connects the city to its key attractions and infrastructure — airport transfers, NEOM contractor routing, Wadi Disah excursions, and Aqaba border drop-offs for travelers continuing into Jordan or Egypt.",
@@ -226,6 +226,7 @@ export const tabuk: CityData = {
     { q: "Is the old Hejaz Railway station worth visiting?", a: "Yes — Tabuk's restored railway station museum is a genuine piece of the historic line that once ran toward Madinah, and it's a quick, easy stop in the city centre." },
     { q: "Do you serve NEOM contractor arrivals through Tabuk Airport?", a: "Yes — Tabuk International Airport is the main hub for NEOM workforce travel, and we run this connection regularly for contractors continuing on by road." },
     { q: "Is a 4WD required for Wadi Disah?", a: "Yes — the canyon's sandstone terrain requires a 4WD-capable vehicle, which we provide for the round trip." },
+    { q: "Do you offer a luxury chauffeur service in Tabuk, or only standard taxis?", a: "Both — alongside standard airport and city transfers, we offer a premium chauffeur-driven option with an executive vehicle and a professionally presented driver, suited to business travel, NEOM executive visits, and guests who want a more comfortable long-distance ride to Wadi Disah or the Aqaba border." },
   ],
   reviews: [
     { name: "Lucas V.", origin: "Adventure Traveler, France", text: "Wadi Disah from Tabuk in a proper 4WD. Spectacular. Driver was fantastic." },
@@ -257,6 +258,17 @@ export const tabuk: CityData = {
     { title: "Best season for Wadi Disah", note: "Winter, roughly November through February — noticeably cooler, making canyon exploration considerably more comfortable." },
     { title: "Long distances", note: "Distances to Wadi Disah, the Aqaba coastal road and NEOM sites can exceed 200km from the city centre — plan for a full day, not a quick trip." },
   ],
+  premiumChauffeur: {
+    intro: "Alongside standard airport and city transfers, Tabuk is also where a meaningful share of our bookings call for something more than a standard taxi — NEOM executives, business delegations, and travelers covering the long stretches to Wadi Disah or the Aqaba border in comfort rather than a quick city hop.",
+    features: [
+      "Executive-class vehicle, not a standard sedan",
+      "Professionally presented, experienced driver",
+      "Suited to NEOM business travel and executive visits",
+      "Comfortable for the longer drives to Wadi Disah, Haql, and the Aqaba border",
+      "Available for Tabuk Airport meet-and-greet as well as hotel and city pickups",
+      "Flexible scheduling for multi-stop business itineraries",
+    ],
+  },
 };
 
 export const alAhsa: CityData = {

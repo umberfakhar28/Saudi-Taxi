@@ -3,10 +3,10 @@ import CityServicePage from "@/components/CityServicePage";
 import { tabuk } from "@/lib/cityData3";
 
 export const metadata = generatePageMetadata({
-  title: "Private Taxi & Chauffeur Service in Tabuk",
-  description: "Book a private taxi, airport transfer or chauffeur in Tabuk. Professional drivers, meet-and-greet, 24/7 availability. Reserve on WhatsApp in minutes.",
+  title: "Luxury Chauffeur & Private Taxi Service in Tabuk",
+  description: "Book a luxury chauffeur, private taxi, or airport transfer in Tabuk. Executive vehicles, professional drivers, 24/7 availability. Reserve on WhatsApp.",
   path: "/services/tabuk",
-  keywords: ["Tabuk taxi", "Tabuk airport transfer", "Tabuk to NEOM taxi", "Wadi Disah tour taxi", "Tabuk Aqaba transfer"],
+  keywords: ["luxury chauffeur service in Tabuk", "Tabuk taxi", "Tabuk airport transfer", "Tabuk to NEOM taxi", "private chauffeur Tabuk"],
   ogImage: tabuk.heroImage,
   ogImageAlt: tabuk.heroImageAlt,
 });

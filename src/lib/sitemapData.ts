@@ -248,6 +248,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { slug: "/kuwait-to-khafji-taxi-service", priority: 0.72 },
     { slug: "/riyadh-to-kuwait-taxi-service", priority: 0.75 },
     { slug: "/abu-dhabi-to-dammam-taxi-service", priority: 0.72 },
+    // Search Query Content Map, §D — the one new route page the query audit justified
+    { slug: "/bahrain-to-jubail-taxi-service", priority: 0.76 },
   ].map(({ slug, priority }) => {
     const hasArabic = slug === "/dammam-airport-to-bahrain-taxi-service" || slug === "/dammam-airport-to-qatar-taxi-service";
     return {
