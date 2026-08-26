@@ -182,12 +182,12 @@ export default function Home() {
           ═══════════════════════════════════════════════════════════════════ */}
       <section className="section-lg" style={{ background: 'var(--ivory)' }}>
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-6)' }}>
+          <div className={styles.ourPromiseRow}>
 
             {/* Navy card — the primary visual element. */}
             <div
+              className={styles.ourPromiseCard}
               style={{
-                flex: '1 1 480px',
                 background: 'var(--navy)',
                 borderRadius: 'var(--radius-xl)',
                 padding: 'var(--space-12)',
@@ -241,28 +241,19 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Compact supporting photo — fixed-width accent, not a second
-                card. Native 16:9 ratio, so cover never crops the chauffeur
-                or the car; a small, premium-feeling frame beside the copy
-                rather than a competing panel. */}
-            <div
-              style={{
-                position: 'relative',
-                flex: '0 1 360px',
-                width: '100%',
-                maxWidth: 360,
-                aspectRatio: '16 / 9',
-                borderRadius: '18px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 24px rgba(8, 24, 39, 0.14)',
-              }}
-            >
+            {/* Supporting photo — a real, intentional visual component of
+                the section (not a small floating thumbnail): 4:3, sized to
+                ~34% of the container's usable width on desktop, scaling
+                down proportionally on tablet and going full-width once the
+                layout stacks on mobile. See page.module.css for the
+                breakpoints. */}
+            <div className={styles.ourPromiseImage}>
               <Image
                 src="/images/private-chauffeur-luggage-assistance-saudi-arabia.webp"
                 alt="Professional Gulf Trip Service chauffeur assisting a guest with luggage at a Saudi Arabia hotel entrance"
                 title="Private Chauffeur & Luggage Assistance Service in Saudi Arabia"
                 fill
-                sizes="(max-width: 640px) 90vw, 360px"
+                sizes="(max-width: 680px) 100vw, (max-width: 1100px) 300px, 400px"
                 style={{ objectFit: 'cover' }}
               />
             </div>
