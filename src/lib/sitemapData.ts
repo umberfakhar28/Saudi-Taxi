@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { DESTINATION_DETAILS } from "./destinationData";
 import { allHotels } from "./hotelData";
+import { allDistanceRoutes } from "./distanceRouteData";
 
 export const BASE_URL = "https://gulftripservice.com";
 
@@ -152,7 +153,23 @@ export function buildSitemapEntries(): SitemapEntry[] {
       changeFrequency: "weekly",
       priority: 0.85,
     },
+    {
+      url: `${BASE_URL}/distance`,
+      lastModified: lastMod("/distance"),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
   ];
+
+  // Distance/travel-time guides — one entry per distanceRouteData.ts record,
+  // same auto-derived pattern as destinationPages/hotelPages below so a new
+  // route added there is sitemapped automatically.
+  const distancePages: SitemapEntry[] = allDistanceRoutes.map((r) => ({
+    url: `${BASE_URL}/distance/${r.slug}`,
+    lastModified: lastMod(`/distance/${r.slug}`),
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
 
   const airportTransferPages: SitemapEntry[] = [
     { slug: "/airport-transfers", priority: 0.85 },
@@ -382,6 +399,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     ...borderCrossingPages,
     ...crossBorderRoutePages,
     ...cityTourPages,
+    ...distancePages,
     ...longFormGuides,
     { url: `${BASE_URL}/blog`, lastModified: lastMod("/blog"), changeFrequency: "weekly", priority: 0.80 },
     ...blogPages,

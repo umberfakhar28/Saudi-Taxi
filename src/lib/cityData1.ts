@@ -264,6 +264,9 @@ export const madinah: CityData = {
   attractionsImage: "/images/images-gulf/madinah-attractions.webp",
   coverageImage: "/images/images-gulf/madinah-taxi-service-coverage.webp",
   airportImage: "/images/images-gulf/madinah-airport-transfer.webp",
+  distanceGuides: [
+    { href: "/distance/abha-to-madinah", label: "Abha to Madinah Distance & Travel Guide" },
+  ],
   serviceAreas: [
     { name: "Central Haram hotel belt (Anbar / Bab Al-Salam)", note: "The closest hotel cluster to the Prophet's Mosque, our busiest Madinah pickup zone." },
     { name: "Quba & Al-Baqi corridor", note: "The Ziyarat route linking Quba Mosque and the Al-Baqi cemetery, just outside the central zone." },

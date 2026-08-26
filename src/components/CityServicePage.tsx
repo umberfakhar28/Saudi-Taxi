@@ -79,6 +79,11 @@ export interface CityData {
   /** 3 practical, non-invented travel considerations specific to this city
    * (traffic patterns, airport quirks, family/luggage notes, etc.). */
   practicalInfo?: { title: string; note: string }[];
+  /** Links to /distance/[route] guides that genuinely cover a corridor
+   * starting or ending at this city — every href must resolve to a real,
+   * live page (see distanceRouteData.ts). Omitted entirely until one exists
+   * for this city, rather than a placeholder link. */
+  distanceGuides?: { href: string; label: string }[];
 
   // --- Execution Brief v3 D1 additions (RouteData's reverseSlug/fromSlug/
   // toSlug don't apply here — nearbyCities already covers the relational
@@ -696,7 +701,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
         {/* Related Services & Nearby Cities */}
         <section className="section">
           <div className="container">
-            <div className="grid-2" style={{ gap: "var(--space-10)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-10)" }}>
               <div>
                 <h3 style={{ marginBottom: "var(--space-4)" }}>Related Services</h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
@@ -711,6 +716,16 @@ export default function CityServicePage({ data }: { data: CityData }) {
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     {data.nearbyCities.map((n) => (
                       <Link key={n.slug} href={`/services/${n.slug}`} className="btn btn-outline-gold btn-sm">{n.city}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {data.distanceGuides && data.distanceGuides.length > 0 && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Distance & Travel Guides</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    {data.distanceGuides.map((g) => (
+                      <Link key={g.href} href={g.href} className="btn btn-outline-gold btn-sm">{g.label}</Link>
                     ))}
                   </div>
                 </div>
