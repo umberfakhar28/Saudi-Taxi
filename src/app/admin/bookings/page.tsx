@@ -285,6 +285,7 @@ function BookingsPageInner() {
         if (loading || bookings.length === 0) return;
         const editId = searchParams.get('edit');
         const invoiceId = searchParams.get('invoice');
+        const viewId = searchParams.get('view');
         if (editId) {
             const b = bookings.find((x) => x.id === editId);
             if (b) setEditModal(b);
@@ -292,6 +293,14 @@ function BookingsPageInner() {
         if (invoiceId) {
             const b = bookings.find((x) => x.id === invoiceId);
             if (b) generateInvoice(b);
+        }
+        // ?view=<id> — the notification system's "View Booking" action
+        // (NotificationBell.tsx / NotificationToast.tsx) links here so a
+        // click always opens the real booking it refers to, not a generic
+        // dashboard link (Admin Portal audit §5).
+        if (viewId) {
+            const b = bookings.find((x) => x.id === viewId);
+            if (b) setViewModal(b);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading, bookings]);

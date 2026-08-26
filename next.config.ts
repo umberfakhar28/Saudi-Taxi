@@ -1,6 +1,28 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async headers() {
+    // Conservative, non-breaking security headers only (Admin Portal audit
+    // §23). A strict Content-Security-Policy is deliberately NOT included
+    // here: this site renders JSON-LD structured data via
+    // dangerouslySetInnerHTML inline <script> tags on most pages, and a
+    // script-src CSP would need a per-request nonce threaded through every
+    // one of those to avoid breaking them — a much larger, higher-risk
+    // change than this pass warrants. Everything below is safe because it
+    // doesn't restrict what the page itself is allowed to load or render.
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

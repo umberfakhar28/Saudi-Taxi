@@ -19,6 +19,9 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { LogoMark } from '@/components/Logo';
+import NotificationProvider from '@/components/NotificationProvider';
+import NotificationBell from '@/components/NotificationBell';
+import NotificationToast from '@/components/NotificationToast';
 import './admin.css';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -72,6 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const currentPage = allItems.find(i => pathname.startsWith(i.href));
 
     return (
+        <NotificationProvider>
         <div className="admin-shell">
             {/* ── Sidebar ── */}
             <aside className="admin-sidebar">
@@ -129,7 +133,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* ── Main ── */}
             <main className="admin-main">
                 {/* Page breadcrumb strip */}
-                <div className="admin-page-bar">
+                <div className="admin-page-bar" style={{ justifyContent: 'space-between' }}>
                     <div className="admin-breadcrumb">
                         <span>Admin</span>
                         <ChevronRight size={14} />
@@ -137,12 +141,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             {currentPage?.name ?? 'Page'}
                         </span>
                     </div>
+                    <NotificationBell />
                 </div>
 
                 <div className="admin-content">
                     {children}
                 </div>
             </main>
+            <NotificationToast />
         </div>
+        </NotificationProvider>
     );
 }

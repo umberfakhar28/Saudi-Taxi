@@ -258,7 +258,10 @@ export default function BookOnlineClient() {
 
             // 2. Save to Supabase — the operation that actually matters. If
             // this fails, nothing else should pretend to have succeeded.
-            const { error: dbError } = await supabase.from('bookings').insert([bookingData]);
+            // .select().single() gets the generated id back so the Admin
+            // Portal's notification "View Booking" action can link to this
+            // exact row instead of a generic list (Admin Portal audit §5).
+            const { data: insertedBooking, error: dbError } = await supabase.from('bookings').insert([bookingData]).select().single();
             if (dbError) throw dbError;
 
             // 3. Send notification emails. The booking is already safely
@@ -269,7 +272,7 @@ export default function BookOnlineClient() {
                 const emailRes = await fetch('/api/emails/send', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'new_booking', bookingData }),
+                    body: JSON.stringify({ type: 'new_booking', bookingData: { ...bookingData, id: insertedBooking?.id } }),
                 });
                 if (!emailRes.ok) {
                     const j = await emailRes.json().catch(() => ({}));

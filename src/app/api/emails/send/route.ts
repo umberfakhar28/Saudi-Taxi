@@ -2,6 +2,57 @@ import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { requireAdmin } from '@/utils/supabase/requireAdmin';
+import { sendPushToAdmins } from '@/lib/webpush';
+
+/**
+ * Writes the row the Admin Portal's realtime subscription and notification
+ * bell read (NotificationProvider.tsx), and best-effort pushes it to any
+ * subscribed browser. Called from this route rather than a DB trigger
+ * because this is already the one trusted server-side code path that runs
+ * at the exact moment a customer submits a booking or enquiry — adding a
+ * trigger/webhook would duplicate that for no benefit (Admin Portal audit
+ * §3, §11).
+ */
+async function createNotification(
+    supabase: ReturnType<typeof createAdminClient>,
+    type: 'new_booking' | 'new_enquiry',
+    b: Record<string, unknown>,
+    title: string
+) {
+    try {
+        const { data } = await supabase
+            .from('notifications')
+            .insert({
+                type,
+                booking_id: (b.id as string) || null,
+                title,
+                summary: `${b.pickup_location ?? ''} → ${b.dropoff_location ?? ''}`.trim(),
+                customer_name: b.customer_name ?? null,
+                pickup_location: b.pickup_location ?? null,
+                dropoff_location: b.dropoff_location ?? null,
+                travel_date: b.travel_date ?? null,
+                travel_time: b.travel_time ?? null,
+                passengers_count: b.passengers_count ?? null,
+                service_type: b.service_type ?? null,
+            })
+            .select('id')
+            .single();
+
+        await sendPushToAdmins({
+            title,
+            body: `${b.customer_name ?? 'A customer'} — ${b.pickup_location ?? ''} → ${b.dropoff_location ?? ''}`,
+            url: b.id ? `/admin/bookings?view=${b.id}` : '/admin/bookings',
+        });
+
+        return data?.id ?? null;
+    } catch {
+        // The notifications/push_subscriptions tables may not exist yet if
+        // supabase/sql/001_notifications_and_push.sql hasn't been run —
+        // never let that block the actual email send.
+        return null;
+    }
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 // onboarding@resend.dev is Resend's shared sandbox domain — it's rate-limited
@@ -88,6 +139,16 @@ async function logEmail(supabase: SupabaseClient, bookingId: string | null, type
 
 const SUPPORTED_TYPES = ['new_booking', 'booking_confirmed', 'booking_completed', 'quote_sent', 'destination_enquiry', 'invoice'] as const;
 
+// `new_booking` and `destination_enquiry` are triggered by unauthenticated
+// customers right after they submit a public form (BookOnlineClient.tsx,
+// DestinationEnquiryForm.tsx) — those two must stay callable without a
+// session. The other four are admin-only actions (confirm/complete a
+// booking, send a quote, send an invoice) that previously had no auth
+// check at all and accepted arbitrary client-supplied data, so anyone
+// could POST here directly and send spoofed emails from this business's
+// Resend account (Admin Portal audit §15).
+const ADMIN_ONLY_TYPES = ['booking_confirmed', 'booking_completed', 'quote_sent', 'invoice'] as const;
+
 export async function POST(req: Request) {
     const supabase = createAdminClient();
 
@@ -103,6 +164,13 @@ export async function POST(req: Request) {
                 { error: `Unsupported email type: "${type}". Supported: ${SUPPORTED_TYPES.join(', ')}` },
                 { status: 400 }
             );
+        }
+
+        if ((ADMIN_ONLY_TYPES as readonly string[]).includes(type)) {
+            const admin = await requireAdmin();
+            if (!admin) {
+                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            }
         }
 
         // Fetch booking from DB if only ID provided
@@ -122,11 +190,12 @@ export async function POST(req: Request) {
             const adminHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📩 New Booking Request</p></div>
                 ${buildBookingRows(b)}
-                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings" style="${btnStyle}">View in Admin Panel</a></p>
+                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
             const { data: r1, error: e1 } = await resend.emails.send({ from: FROM, to: ADMIN_EMAIL, subject, html: adminHtml });
             await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message);
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
+            await createNotification(supabase, 'new_booking', b, `New Booking — ${b.customer_name}`);
 
             const custSubject = `Booking Request Received – Gulf Trip Service`;
             const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
@@ -222,11 +291,12 @@ export async function POST(req: Request) {
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📍 New Destination Enquiry</p></div>
                 ${rowsTable(row('Destination', destLabel))}
                 ${buildBookingRows(b)}
-                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings" style="${btnStyle}">View in Admin Panel</a></p>
+                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
             const { data: r1, error: e1 } = await resend.emails.send({ from: FROM, to: ADMIN_EMAIL, subject, html: adminHtml });
             await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message);
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
+            await createNotification(supabase, 'new_enquiry', b, `New ${destLabel} Enquiry — ${b.customer_name}`);
 
             const custSubject = `We've Received Your ${destLabel} Enquiry – Gulf Trip Service`;
             const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">

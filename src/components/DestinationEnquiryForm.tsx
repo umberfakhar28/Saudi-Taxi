@@ -101,7 +101,10 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             const custJson = await custRes.json();
             if (!custRes.ok) throw new Error(custJson.error || 'Could not save your contact details.');
 
-            const { error: dbError } = await supabase.from('bookings').insert([{ ...dbPayload, customer_id: custJson.customerId }]);
+            // .select().single() gets the generated id back so the Admin
+            // Portal's notification "View Booking" action can link to this
+            // exact row instead of a generic list (Admin Portal audit §5).
+            const { data: insertedBooking, error: dbError } = await supabase.from('bookings').insert([{ ...dbPayload, customer_id: custJson.customerId }]).select().single();
             if (dbError) throw dbError;
 
             // The enquiry is already saved at this point — an email hiccup
@@ -113,7 +116,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         type: 'destination_enquiry',
-                        bookingData: { ...dbPayload, destination_name: destinationLabel },
+                        bookingData: { ...dbPayload, destination_name: destinationLabel, id: insertedBooking?.id },
                     }),
                 });
                 if (!emailRes.ok) {
