@@ -115,6 +115,7 @@ export const crossBorderGroups: NavGroup[] = [
         .slice(0, 5)
         .map((r) => ({ href: `/${r.slug}`, label: `${r.origin} → ${r.destination}` })),
       { href: "/routes", label: "View All Routes" },
+      { href: "/distance", label: "Distance & Travel Time Guides" },
     ],
   },
 ];

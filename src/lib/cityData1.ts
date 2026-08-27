@@ -34,6 +34,7 @@ export const riyadh: CityData = {
     { q: "Can you take me to the Edge of the World?", a: "Yes — this popular day-trip needs a driver familiar with the unmarked desert track. We offer it as a half-day charter from Riyadh, roughly 90 minutes each way." },
     { q: "Do you serve KAFD and Olaya for business meetings?", a: "Yes — these are two of our most regular Riyadh pickup zones, with drivers used to the office-tower access points in both districts." },
     { q: "Is Riyadh's airport far from the city centre?", a: "King Khalid International Airport is about 35km north of central Riyadh, typically a 35–50 minute transfer depending on traffic." },
+    { q: "Do you offer a chauffeur service in Riyadh, or only standard taxis?", a: "Both — alongside standard airport and city transfers, we offer an executive chauffeur option with a professionally presented driver, suited to government visits, KAFD and Olaya business meetings, and multi-stop delegation schedules." },
   ],
   reviews: [
     { name: "Ahmed Al-Rashid", origin: "Business Traveler, Riyadh", text: "Impeccable service for my KAFD meetings. Driver was punctual and the vehicle was spotless." },
@@ -79,6 +80,17 @@ export const riyadh: CityData = {
     { title: "City size", note: "Riyadh's districts can be 30–50km apart; one driver for a multi-stop day is far more practical than switching rides." },
     { title: "Summer heat", note: "Daytime temperatures routinely pass 45°C from June–August — most riders shift outdoor plans to early morning or evening." },
   ],
+  premiumChauffeur: {
+    intro: "As the capital, Riyadh is where most of our executive and delegation bookings originate — government-related visits, KAFD and Olaya boardroom meetings, and multi-day conference schedules where a standard taxi doesn't fit the itinerary or the image.",
+    features: [
+      "Executive-class vehicle, not a standard sedan",
+      "Professionally presented driver, briefed on your day's itinerary in advance",
+      "Suited to government, diplomatic, and corporate delegation travel",
+      "Comfortable for multi-stop days across KAFD, Olaya, and Riyadh Season venues",
+      "Available as an hourly or full-day charter, not just point-to-point transfers",
+      "Coordinated pickup for King Khalid International Airport executive arrivals",
+    ],
+  },
 };
 
 export const jeddah: CityData = {

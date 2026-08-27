@@ -8,10 +8,10 @@ import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia Border Crossing Taxi | All Routes 24/7",
-    description: "Cross-border taxi and private transfer from Saudi Arabia to Bahrain, Qatar, UAE, Kuwait and Jordan. Licensed drivers, meet-and-greet. Book on WhatsApp 24/7.",
+    title: "Saudi Arabia Border Crossing Taxi — Bahrain, UAE, Qatar & Kuwait",
+    description: "Private cross-border transfers from Saudi Arabia to Bahrain, UAE, Qatar, Kuwait and Oman. Licensed drivers, document support, executive vehicles. Book on WhatsApp 24/7.",
     path: "/border-crossing",
-    keywords: ["border crossing taxi Saudi Arabia", "Saudi border transfer", "cross border taxi", "Saudi Arabia to GCC taxi"],
+    keywords: ["border crossing taxi Saudi Arabia", "Saudi border transfer", "cross border taxi", "Saudi Arabia to GCC taxi", "private cross-border transfer"],
     hreflangPath: "/border-crossing",
 });
 
@@ -23,7 +23,7 @@ const faqs = [
 ];
 
 const schemas = [
-    serviceSchema({ name: "Saudi Arabia Border Crossing Taxi | All Routes 24/7", description: "Cross-border taxi and private transfer from Saudi Arabia to Bahrain, Qatar, UAE, Kuwait, Oman and Jordan. Licensed drivers, meet-and-greet. Book on WhatsApp 24/7.", url: "/border-crossing", areaServed: ["Saudi Arabia", "Bahrain", "Jordan", "UAE", "Kuwait", "Qatar", "Oman"] }),
+    serviceSchema({ name: "Saudi Arabia Border Crossing Taxi — Bahrain, UAE, Qatar & Kuwait", description: "Private cross-border transfers from Saudi Arabia to Bahrain, UAE, Qatar, Kuwait, Oman and Jordan. Licensed drivers, document support, executive vehicles. Book on WhatsApp 24/7.", url: "/border-crossing", areaServed: ["Saudi Arabia", "Bahrain", "Jordan", "UAE", "Kuwait", "Qatar", "Oman"] }),
     faqSchema(faqs.map((f) => ({ question: f.q, answer: f.a }))),
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Border Crossing", path: "/border-crossing" }]),
 ];
@@ -292,6 +292,59 @@ export default function BorderCrossing() {
                         <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginTop: 'var(--space-8)', paddingTop: 'var(--space-6)', borderTop: '1px solid rgba(20, 23, 31, 0.08)' }}>
                             Visa and entry requirements vary by nationality and can change without notice — always confirm current requirements with the relevant embassy or an official government source before you travel. We are a transportation provider, not an immigration authority.
                         </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Private chauffeur vs self-driving, and why a private transfer */}
+            <section className="section-lg">
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Choosing How to Cross</span>
+                        <h2 className="section-title">Private Chauffeur vs. Self-Driving the Border</h2>
+                    </div>
+                    <div className="grid-2" style={{ marginBottom: 'var(--space-10)' }}>
+                        <div className="card">
+                            <h3 style={{ color: 'var(--accent)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-3)' }}>Private Chauffeur</h3>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.75 }}>
+                                A licensed driver who already knows each crossing&apos;s checkpoint layout and peak-hour patterns handles the drive, so you&apos;re not learning a foreign country&apos;s road rules mid-journey. Where a route requires a vehicle handover — the King Fahd Causeway to Bahrain, for example — we coordinate the Saudi-side and other-side drivers in advance so the switch is smooth rather than something you have to arrange yourself at the checkpoint.
+                            </p>
+                        </div>
+                        <div className="card">
+                            <h3 style={{ color: 'var(--accent)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-3)' }}>Self-Driving or Rental Car</h3>
+                            <p style={{ color: 'var(--text-body)', lineHeight: 1.75 }}>
+                                A realistic option if you already hold the correct cross-border vehicle insurance and documentation and are comfortable driving unfamiliar roads and checkpoint procedures yourself. On the longer corridors — Riyadh to Dubai or Doha to Riyadh, for instance — that also means several continuous hours behind the wheel rather than being free to rest, work, or manage the trip for a family or group.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">The Case for a Private Transfer</span>
+                        <h2 className="section-title">Why Choose a Private Cross-Border Transfer?</h2>
+                    </div>
+                    <div className="grid-2" style={{ gap: 'var(--space-8)' }}>
+                        <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                            {[
+                                "One booking covers the full journey, including the vehicle handover on causeway routes, instead of arranging transport separately on each side of the border.",
+                                "A driver who already knows the specific checkpoint — not a generic rental-car crossing for the first time.",
+                                "Door-to-door pickup and drop-off, from a Saudi hotel or airport straight through to your destination address.",
+                            ].map((item, i) => (
+                                <li key={i} style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--text-body)', alignItems: 'flex-start' }}>
+                                    <CheckCircleIcon size={16} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 2 }} /> {item}
+                                </li>
+                            ))}
+                        </ul>
+                        <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                            {[
+                                "Executive vehicle options for business travelers and delegations, not just a standard sedan.",
+                                "A private vehicle for your group only — comfortable for the multi-hour drives that come with the longer corridors (Riyadh–Dubai, Doha–Riyadh).",
+                                "Real-time WhatsApp coordination if a flight is delayed or a crossing is busier than expected.",
+                            ].map((item, i) => (
+                                <li key={i} style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--text-body)', alignItems: 'flex-start' }}>
+                                    <CheckCircleIcon size={16} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 2 }} /> {item}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </section>

@@ -178,6 +178,7 @@ export const dammamAirportToQatar: RouteData = {
     { q: "Can I be dropped at Hamad International Airport instead of a hotel?", a: "Yes, we can route your drop-off directly to Hamad International Airport (DOH) if you have an onward connecting flight." },
   ],
   relatedRoutes: [
+    { href: "/distance/doha-to-dammam", label: "Doha–Dammam Distance & Travel Time Guide" },
     { href: "/qatar-to-dammam-taxi-service", label: "Qatar to Dammam Taxi" },
     { href: "/qatar-to-riyadh-taxi-service", label: "Qatar to Riyadh Taxi" },
     { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar Taxi" },
@@ -308,8 +309,10 @@ export const bahrainToDammam: RouteData = {
     { q: "Can you drop me directly at Dammam Airport for a flight?", a: "Yes, we can route your final drop-off to King Fahd International Airport instead of a city address if you have an onward flight." },
     { q: "How far in advance should I book a Bahrain to Dammam transfer?", a: "We recommend booking at least 24 hours ahead so we can properly coordinate both the Bahrain-side and Saudi-side vehicles for a smooth handover." },
     { q: "Is the causeway busy on weekends?", a: "Yes, Thursday and Friday evenings see the heaviest weekend leisure traffic in both directions. Weekday mornings are typically the quickest time to cross." },
+    { q: "What is the road distance from Bahrain to Dammam?", a: "Around 65 km including the King Fahd Causeway itself — short in distance, though total journey time runs 1–1.5 hours once passport and customs processing at the mid-causeway checkpoint are included. See our full distance and travel-time guide for a detailed breakdown." },
   ],
   relatedRoutes: [
+    { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam Distance & Travel Time Guide" },
     { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain Taxi" },
     { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain Taxi" },
     { href: "/services/dammam", label: "Dammam Taxi Service" },
@@ -386,6 +389,7 @@ export const bahrainToJubail: RouteData = {
     { q: "How far in advance should I book?", a: "At least 24 hours ahead, so we can properly coordinate the Bahrain-side pickup and the Jubail-based onward vehicle for a smooth handover." },
   ],
   relatedRoutes: [
+    { href: "/distance/bahrain-to-jubail", label: "Bahrain to Jubail Distance & Travel Time Guide" },
     { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam Taxi" },
     { href: "/services/jubail", label: "Jubail Taxi Service" },
     { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain Taxi" },
@@ -447,6 +451,7 @@ export const qatarToRiyadh: RouteData = {
     { q: "Is it better to fly or drive this route?", a: "Flying is faster overall, but for groups, those with excess luggage, or travelers who prefer privacy and flexibility over airport processes, the direct drive is a strong alternative." },
   ],
   relatedRoutes: [
+    { href: "/distance/doha-to-riyadh", label: "Doha to Riyadh Distance & Travel Time Guide" },
     { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport to Qatar Taxi" },
     { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar Taxi" },
     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
@@ -518,6 +523,7 @@ export const khafjiToKuwait: RouteData = {
     { q: "Can I combine this with a Dammam Airport pickup?", a: "Yes — book our Dammam Airport to Khafji service first, then continue with this Khafji to Kuwait leg, or ask us to arrange the combined itinerary in one booking." },
   ],
   relatedRoutes: [
+    { href: "/distance/khafji-to-kuwait", label: "Khafji to Kuwait Distance & Border Crossing Time" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
     { href: "/dammam-airport-to-khafji-taxi-service", label: "Dammam Airport to Khafji Taxi" },
     { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait Taxi" },
@@ -584,6 +590,7 @@ export const riyadhToBahrain: RouteData = {
     { q: "Do you offer executive vehicles for this route?", a: "Yes, we offer executive sedans with extra comfort features specifically suited to the longer Riyadh-to-Bahrain distance." },
   ],
   relatedRoutes: [
+    { href: "/distance/bahrain-to-riyadh", label: "Bahrain–Riyadh Distance & Travel Time Guide" },
     { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh Taxi" },
     { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam Taxi" },
     { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain Taxi" },
@@ -653,6 +660,7 @@ export const dammamToKuwait: RouteData = {
     { q: "Can I break the journey into two legs via Khafji?", a: "Yes, you can book our Dammam Airport to Khafji and Khafji to Kuwait services separately if you want a stopover, or book this combined direct route for a single non-stop journey." },
   ],
   relatedRoutes: [
+    { href: "/distance/dammam-to-kuwait", label: "Dammam to Kuwait Distance & Travel Time Guide" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
     { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait Taxi" },
     { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh Taxi" },
@@ -718,6 +726,7 @@ export const kuwaitToDammam: RouteData = {
     { q: "Can I break the journey into two legs via Khafji?", a: "Yes — you can book a Kuwait to Khafji leg and a separate Khafji onward connection if you prefer a stopover, or book this route for a single non-stop journey." },
   ],
   relatedRoutes: [
+    { href: "/distance/dammam-to-kuwait", label: "Dammam–Kuwait Distance & Travel Time Guide" },
     { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait Taxi" },
     { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait Taxi" },
     { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh Taxi" },
@@ -783,6 +792,7 @@ export const kuwaitToRiyadh: RouteData = {
     { q: "Is it better to fly or drive this route?", a: "Flying is faster overall, but for groups, those with excess luggage, or travelers who prefer privacy and flexibility over airport processes, the direct drive is a strong alternative." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-kuwait", label: "Riyadh–Kuwait Distance & Travel Time Guide" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
     { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait Taxi" },
     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
@@ -851,6 +861,7 @@ export const qatarToDammam: RouteData = {
     { q: "Can I be dropped directly at Dammam Airport instead of a hotel?", a: "Yes, we can route your drop-off directly to King Fahd International Airport if you have an onward flight." },
   ],
   relatedRoutes: [
+    { href: "/distance/doha-to-dammam", label: "Doha to Dammam Distance & Travel Time Guide" },
     { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport to Qatar Taxi" },
     { href: "/qatar-to-riyadh-taxi-service", label: "Qatar to Riyadh Taxi" },
     { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar Taxi" },
@@ -917,6 +928,7 @@ export const dammamToAbuDhabi: RouteData = {
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
   ],
   relatedRoutes: [
+    { href: "/distance/dammam-to-abu-dhabi", label: "Dammam to Abu Dhabi Distance & Travel Time Guide" },
     { href: "/dammam-to-dubai-taxi-service", label: "Dammam to Dubai Taxi" },
     { href: "/dubai-to-dammam-taxi-service", label: "Dubai to Dammam Taxi" },
     { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE Taxi" },
@@ -990,6 +1002,7 @@ export const dammamToDubai: RouteData = {
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
   ],
   relatedRoutes: [
+    { href: "/distance/dammam-to-dubai", label: "Dammam to Dubai Distance & Travel Time Guide" },
     { href: "/dubai-to-dammam-taxi-service", label: "Dubai to Dammam Taxi" },
     { href: "/dammam-to-abu-dhabi-taxi-service", label: "Dammam to Abu Dhabi Taxi" },
     { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE Taxi" },
@@ -1062,6 +1075,7 @@ export const dubaiToDammam: RouteData = {
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
   ],
   relatedRoutes: [
+    { href: "/distance/dammam-to-dubai", label: "Dammam–Dubai Distance & Travel Time Guide" },
     { href: "/dammam-to-dubai-taxi-service", label: "Dammam to Dubai Taxi" },
     { href: "/dammam-to-abu-dhabi-taxi-service", label: "Dammam to Abu Dhabi Taxi" },
     { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE Taxi" },
@@ -1130,6 +1144,7 @@ export const bahrainToRiyadh: RouteData = {
     { q: "Do you offer executive vehicles for this route?", a: "Yes, we offer executive sedans with extra comfort features suited to the longer Bahrain-to-Riyadh distance." },
   ],
   relatedRoutes: [
+    { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh Distance & Travel Time Guide" },
     { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain Taxi" },
     { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain Taxi" },
     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
@@ -1194,8 +1209,10 @@ export const riyadhToDubai: RouteData = {
     { q: "Do I need a UAE visa for this route?", a: "GCC nationals cross with just their national ID. Other nationalities should confirm current UAE visa-on-arrival eligibility or arrange a visa in advance of travel — requirements vary by nationality." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
+    { q: "Can I get a car with driver instead of renting and self-driving?", a: "Yes — this service is exactly that: a private car with a professional driver for the full Riyadh-to-Dubai journey, so you're not navigating an 11-12.5 hour cross-border drive yourself." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-dubai", label: "Riyadh to Dubai Distance & Travel Time Guide" },
     { href: "/dubai-to-riyadh-taxi-service", label: "Dubai to Riyadh Taxi" },
     { href: "/dammam-to-dubai-taxi-service", label: "Dammam to Dubai Taxi" },
     { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE Taxi" },
@@ -1265,8 +1282,10 @@ export const dubaiToRiyadh: RouteData = {
     { q: "Do I need a Saudi visa for this route?", a: "Non-GCC nationals need a valid Saudi entry visa. GCC nationals can cross with just their national ID." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
+    { q: "Can I book a car with driver rather than self-driving this route?", a: "Yes — this is exactly what this service is: a private car with a professional driver for the full Dubai-to-Riyadh journey, so you're not navigating an 11-12.5 hour cross-border drive yourself." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-dubai", label: "Riyadh–Dubai Distance & Travel Time Guide" },
     { href: "/riyadh-to-dubai-taxi-service", label: "Riyadh to Dubai Taxi" },
     { href: "/dammam-to-abu-dhabi-taxi-service", label: "Dammam to Abu Dhabi Taxi" },
     { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE Taxi" },
@@ -1330,6 +1349,7 @@ export const jeddahToMakkah: RouteData = {
     { q: "Do you provide child seats?", a: "Yes, child and booster seats are available on request — just mention your child's age when booking so the right seat is ready." },
   ],
   relatedRoutes: [
+    { href: "/distance/jeddah-to-makkah", label: "Jeddah to Makkah Distance & Travel Time Guide" },
     { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
     { href: "/makkah-to-jeddah-taxi-service", label: "Makkah to Jeddah Taxi (Return Trip)" },
     { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
@@ -1393,6 +1413,7 @@ export const makkahToMadinah: RouteData = {
     { q: "Do you offer corporate or group accounts for this route?", a: "Yes — WhatsApp us about your travel pattern and we'll set up an account with consolidated billing for regular group bookings." },
   ],
   relatedRoutes: [
+    { href: "/distance/makkah-to-madinah", label: "Makkah to Madinah Distance & Travel Time Guide" },
     { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
     { href: "/makkah-to-madinah-guide", label: "Makkah to Madinah Travel Guide" },
     { href: "/services/makkah", label: "Makkah Taxi Service" },
@@ -1462,6 +1483,7 @@ export const riyadhToDammam: RouteData = {
     { q: "Do you serve all areas of Dammam and Khobar?", a: "Yes — business districts, residential areas, industrial zones, and the airport are all covered door-to-door." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-dammam", label: "Riyadh to Dammam Distance & Travel Time Guide" },
     { href: "/dammam-to-riyadh-taxi-service", label: "Dammam to Riyadh Taxi (Return Trip)" },
     { href: "/dammam-airport-to-riyadh-taxi-service", label: "Dammam Airport → Riyadh" },
     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
@@ -1524,6 +1546,7 @@ export const makkahToJeddah: RouteData = {
     { q: "Can I book this alongside my original Jeddah-to-Makkah arrival transfer?", a: "Yes — many travelers book both legs together at the start of their trip so the return pickup is already arranged before they even land." },
   ],
   relatedRoutes: [
+    { href: "/distance/jeddah-to-makkah", label: "Jeddah–Makkah Distance & Travel Time Guide" },
     { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
     { href: "/jeddah-to-makkah-guide", label: "Jeddah to Makkah Travel Guide" },
     { href: "/services/makkah", label: "Makkah Taxi Service" },
@@ -1585,6 +1608,7 @@ export const madinahToMakkah: RouteData = {
     { q: "Can we request a female driver or family vehicle?", a: "Yes — mention this when booking and we'll arrange accordingly, subject to availability." },
   ],
   relatedRoutes: [
+    { href: "/distance/makkah-to-madinah", label: "Makkah–Madinah Distance & Travel Time Guide" },
     { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
     { href: "/makkah-to-madinah-guide", label: "Makkah to Madinah Travel Guide" },
     { href: "/services/madinah", label: "Madinah Taxi Service" },
@@ -1646,6 +1670,7 @@ export const dammamToRiyadh: RouteData = {
     { q: "Can you pick me up directly from Dammam Airport?", a: "Yes — see our dedicated Dammam Airport to Riyadh page if you're arriving by air rather than starting from a Dammam city address." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-dammam", label: "Riyadh–Dammam Distance & Travel Time Guide" },
     { href: "/riyadh-to-dammam-guide", label: "Riyadh to Dammam Travel Guide" },
     { href: "/dammam-airport-to-riyadh-taxi-service", label: "Dammam Airport → Riyadh" },
     { href: "/services/dammam", label: "Dammam Taxi Service" },
@@ -1767,6 +1792,7 @@ export const jeddahAirportToMadinah: RouteData = {
     { q: "Can you also book the onward Madinah to Makkah leg?", a: "Yes — WhatsApp us your full itinerary and we can arrange both legs, including the Miqat stop, in one coordinated booking." },
   ],
   relatedRoutes: [
+    { href: "/distance/jeddah-to-madinah", label: "Jeddah to Madinah Distance & Travel Time Guide" },
     { href: "/madinah-to-jeddah-airport-taxi-service", label: "Madinah to Jeddah Airport Taxi (Return Trip)" },
     { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
     { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah Taxi" },
@@ -1829,6 +1855,7 @@ export const riyadhToMakkah: RouteData = {
     { q: "Can this be booked for a large family group?", a: "Yes — Van-class vehicles with conference-style seating are popular for exactly this trip." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-makkah", label: "Riyadh to Makkah Distance & Travel Time Guide" },
     { href: "/makkah-to-riyadh-taxi-service", label: "Makkah to Riyadh Taxi (Return Trip)" },
     { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport Taxi Service" },
     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
@@ -1899,6 +1926,7 @@ export const riyadhToQatar: RouteData = {
     { q: "Can this trip be booked for a delegation?", a: "Yes, we regularly arrange multi-vehicle convoys for delegations, corporate groups, and event attendees traveling between Riyadh and Doha." },
   ],
   relatedRoutes: [
+    { href: "/distance/doha-to-riyadh", label: "Riyadh–Doha Distance & Travel Time Guide" },
     { href: "/qatar-to-riyadh-taxi-service", label: "Qatar to Riyadh Taxi" },
     { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport to Qatar Taxi" },
     { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar Taxi" },
@@ -2023,6 +2051,7 @@ export const kuwaitToKhafji: RouteData = {
     { q: "Can I continue on to Dammam Airport after crossing?", a: "Yes — book our Khafji to Dammam Airport service to continue, or ask us to arrange the combined itinerary in one booking." },
   ],
   relatedRoutes: [
+    { href: "/distance/khafji-to-kuwait", label: "Khafji–Kuwait Distance & Border Crossing Time" },
     { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait Taxi" },
     { href: "/khafji-to-dammam-airport-taxi-service", label: "Khafji to Dammam Airport Taxi" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
@@ -2088,6 +2117,7 @@ export const riyadhToKuwait: RouteData = {
     { q: "Can this trip be booked for a group or delegation?", a: "Yes, we regularly arrange multi-vehicle convoys for delegations, corporate groups, and families traveling between Riyadh and Kuwait." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait Distance & Travel Time Guide" },
     { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh Taxi" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
@@ -2156,6 +2186,7 @@ export const abuDhabiToDammam: RouteData = {
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
   ],
   relatedRoutes: [
+    { href: "/distance/dammam-to-abu-dhabi", label: "Dammam–Abu Dhabi Distance & Travel Time Guide" },
     { href: "/dammam-to-abu-dhabi-taxi-service", label: "Dammam to Abu Dhabi Taxi" },
     { href: "/dubai-to-dammam-taxi-service", label: "Dubai to Dammam Taxi" },
     { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE Taxi" },
@@ -2215,6 +2246,7 @@ export const madinahToJeddahAirport: RouteData = {
     { q: "Can I book this alongside my original arrival transfer?", a: "Yes — many travelers book both legs of their trip together at the start, so the return pickup is already arranged before they even land." },
   ],
   relatedRoutes: [
+    { href: "/distance/jeddah-to-madinah", label: "Jeddah–Madinah Distance & Travel Time Guide" },
     { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah Taxi" },
     { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED) Taxi" },
     { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (KAIA) Taxi" },
@@ -2275,6 +2307,7 @@ export const makkahToRiyadh: RouteData = {
     { q: "How long does the full drive take?", a: "Typically 9–10 hours including rest breaks, depending on traffic." },
   ],
   relatedRoutes: [
+    { href: "/distance/riyadh-to-makkah", label: "Riyadh–Makkah Distance & Travel Time Guide" },
     { href: "/riyadh-to-makkah-taxi-service", label: "Riyadh to Makkah Taxi" },
     { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport Taxi Service" },
     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
