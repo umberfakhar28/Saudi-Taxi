@@ -1,0 +1,220 @@
+/*
+  DISTANCE ROUTE CARD — premium cover-image card for the /distance hub grid.
+  Reuses sitewide tokens only (radius/shadow/spacing/colour) — same family
+  as DestinationCard's image-card pattern, extended with a structured body
+  (stats / description / features / CTA) per the card-redesign brief.
+*/
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--line-strong);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--gold-dark);
+  outline-offset: 3px;
+}
+
+/* ---- Cover ---- */
+.coverWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--bg-subtle);
+  flex-shrink: 0;
+}
+
+.coverImage {
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.card:hover .coverImage {
+  transform: scale(1.05);
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 24, 39, 0) 45%, rgba(8, 24, 39, 0.78) 100%);
+}
+
+.typeBadge {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(8, 24, 39, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--on-dark);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  border: 1px solid rgba(245, 242, 234, 0.22);
+}
+
+.coverTitle {
+  position: absolute;
+  inset: auto var(--space-5) var(--space-5) var(--space-5);
+  color: var(--on-dark);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.25;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* ---- Body ---- */
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  gap: var(--space-4);
+}
+
+.stats {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  overflow: hidden;
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-3);
+  min-width: 0;
+}
+
+.stat + .stat {
+  border-left: 1px solid var(--line);
+}
+
+.statIcon {
+  color: var(--gold-dark);
+  flex-shrink: 0;
+}
+
+.statText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.statLabel {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--text-muted);
+}
+
+.statValue {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.description {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.featureIcon {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cta {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.ctaLabel {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ctaIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  background: var(--gold);
+  color: var(--navy);
+  flex-shrink: 0;
+  transition: background var(--ease-base), transform var(--ease-base);
+}
+
+.card:hover .ctaIcon {
+  background: var(--gold-dark);
+  transform: translateX(3px);
+}
+
+@media (max-width: 480px) {
+  .body { padding: var(--space-5) var(--space-5) var(--space-4); }
+  .coverTitle { font-size: var(--text-lg); }
+}

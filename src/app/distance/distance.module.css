@@ -1,0 +1,16 @@
+/* Card grid for the redesigned DistanceRouteCard — auto-fit so it steps
+   3 → 2 → 1 columns by available width rather than fixed breakpoints,
+   independent of the sitewide .grid-3 class used elsewhere. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-8);
+  align-items: stretch;
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}

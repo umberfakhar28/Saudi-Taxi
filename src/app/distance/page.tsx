@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
-import { MapPinIcon, ClockIcon, ChevronRightIcon, WhatsAppIcon, GlobeIcon } from "@/components/Icons";
+import { WhatsAppIcon } from "@/components/Icons";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { waLink } from "@/lib/contact";
 import { allDistanceRoutes, type DistanceRouteData } from "@/lib/distanceRouteData";
+import DistanceRouteCard from "@/components/DistanceRouteCard";
+import styles from "./distance.module.css";
 
 /**
  * Distance-guide hub — reads `allDistanceRoutes` directly (same pattern as
@@ -27,23 +29,6 @@ const schemas = [breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Distanc
 
 function isCrossBorder(route: DistanceRouteData): boolean {
   return route.routeType.toLowerCase().includes("cross-border");
-}
-
-function RouteCard({ route }: { route: DistanceRouteData }) {
-  return (
-    <div className="card" style={{ display: "flex", flexDirection: "column" }}>
-      <div className="card-icon">{isCrossBorder(route) ? <GlobeIcon size={22} /> : <MapPinIcon size={22} />}</div>
-      <h3>
-        <Link href={`/distance/${route.slug}`} style={{ color: "var(--text-main)" }}>{route.origin} → {route.destination}</Link>
-      </h3>
-      <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-        <ClockIcon size={14} /> {route.driveTime} · {route.roadDistance}
-      </p>
-      <Link href={`/distance/${route.slug}`} style={{ color: "var(--accent)", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: "var(--space-2)", marginTop: "auto" }}>
-        View guide <ChevronRightIcon size={14} />
-      </Link>
-    </div>
-  );
 }
 
 export default function DistanceHubPage() {
@@ -72,8 +57,8 @@ export default function DistanceHubPage() {
                 <span className="section-eyebrow">{saudiRoutes.length} Routes</span>
                 <h2 className="section-title">Saudi Arabia Routes</h2>
               </div>
-              <div className="grid-3">
-                {saudiRoutes.map((route) => <RouteCard key={route.slug} route={route} />)}
+              <div className={styles.grid}>
+                {saudiRoutes.map((route, i) => <DistanceRouteCard key={route.slug} route={route} priority={i < 3} />)}
               </div>
             </div>
           </section>
@@ -86,8 +71,8 @@ export default function DistanceHubPage() {
                 <span className="section-eyebrow">{crossBorderRoutes.length} Routes</span>
                 <h2 className="section-title">Cross-Border Routes</h2>
               </div>
-              <div className="grid-3">
-                {crossBorderRoutes.map((route) => <RouteCard key={route.slug} route={route} />)}
+              <div className={styles.grid}>
+                {crossBorderRoutes.map((route) => <DistanceRouteCard key={route.slug} route={route} />)}
               </div>
             </div>
           </section>
