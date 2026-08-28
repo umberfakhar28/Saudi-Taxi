@@ -8,6 +8,7 @@ import { HOURLY_DURATIONS } from "@/lib/searchBarConfig";
 import { TOURS } from "@/lib/tourData";
 import { SEARCH_INDEX } from "@/lib/searchIndex";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
+import styles from "./BookOnlineClient.module.css";
 
 const services = [
     { id: "airport-transfer", label: "Airport Transfer", icon: "✈️" },
@@ -15,6 +16,7 @@ const services = [
     { id: "private-taxi", label: "Private Taxi", icon: "🚗" },
     { id: "umrah-package", label: "Umrah Transport Package", icon: "🕌" },
     { id: "hourly-driver", label: "Hourly Chauffeur", icon: "🕐" },
+    { id: "corporate-transport", label: "Corporate Transportation", icon: "💼" },
     { id: "ziyarat", label: "Ziyarat Tour", icon: "🌙" },
     { id: "jeddah-tour", label: "Jeddah City Tour", icon: "🌆" },
     { id: "alula-tour", label: "AlUla Tour", icon: "🏜️" },
@@ -150,7 +152,15 @@ export default function BookOnlineClient() {
         let service = '';
         let to = searchParams.get('to') ?? '';
 
-        if (mode === 'hourly') {
+        // An explicit `service` param (route/airport quick-booking forms
+        // that already know exactly what they are — e.g. "airport-transfer"
+        // from an airport page) wins over the mode-based inference below.
+        const serviceParam = searchParams.get('service');
+        const knownService = serviceParam && services.some((s) => s.id === serviceParam) ? serviceParam : '';
+
+        if (knownService) {
+            service = knownService;
+        } else if (mode === 'hourly') {
             const durationValue = searchParams.get('duration');
             const duration = HOURLY_DURATIONS.find((d) => d.value === durationValue);
             service = 'hourly-driver';
@@ -201,6 +211,10 @@ export default function BookOnlineClient() {
     };
 
     const clearVehicle = () => setFormData((f) => ({ ...f, vehicleSlug: '', vehicleName: '' }));
+
+    const swapLocations = () => setFormData((f) => ({ ...f, from: f.to, to: f.from }));
+
+    const selectedService = services.find((s) => s.id === formData.service);
 
     const validateStep2 = (): boolean => {
         const e: Record<string, string> = {};
@@ -323,6 +337,18 @@ export default function BookOnlineClient() {
                         </div>
                     ) : (
                         <>
+                            {/* Selected service — visible confirmation that the Step 1 choice
+                                carried forward, mirroring the vehicle chip below. Fixes the
+                                "did my selection disappear?" perception: the data was always
+                                retained in formData.service, it just wasn't shown again after
+                                Step 1. */}
+                            {step > 1 && selectedService && (
+                                <div className={styles.selectionChip}>
+                                    <span>{selectedService.icon} Service: <strong>{selectedService.label}</strong></span>
+                                    <button type="button" onClick={() => setStep(1)}>Change</button>
+                                </div>
+                            )}
+
                             {/* Selected vehicle — persists across all 3 steps once set from a
                                 vehicle's "Book Now" button; never needs reselecting. */}
                             {formData.vehicleName && (
@@ -406,9 +432,10 @@ export default function BookOnlineClient() {
                                                 Please fill in all required fields before continuing.
                                             </div>
                                         )}
-                                        <div className="grid-2">
-                                            <div className="form-group">
+                                        <div className={styles.locationRow} style={{ marginBottom: 'var(--space-6)' }}>
+                                            <div className="form-group" style={{ marginBottom: 0 }}>
                                                 <SearchAutocomplete
+                                                    variant="field"
                                                     label="Pickup Location *"
                                                     placeholder="e.g. Jeddah Airport"
                                                     value={formData.from}
@@ -418,8 +445,12 @@ export default function BookOnlineClient() {
                                                 />
                                                 {step2Errors.from && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.from}</p>}
                                             </div>
-                                            <div className="form-group">
+                                            <button type="button" className={styles.swapBtn} onClick={swapLocations} aria-label="Swap pickup and drop-off locations" title="Swap pickup and drop-off">
+                                                ⇄
+                                            </button>
+                                            <div className="form-group" style={{ marginBottom: 0 }}>
                                                 <SearchAutocomplete
+                                                    variant="field"
                                                     label="Drop-off Location *"
                                                     placeholder="e.g. Makkah Hotel"
                                                     value={formData.to}
@@ -429,6 +460,8 @@ export default function BookOnlineClient() {
                                                 />
                                                 {step2Errors.to && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.to}</p>}
                                             </div>
+                                        </div>
+                                        <div className="grid-2">
                                             <div className="form-group">
                                                 <label className="form-label">Travel Date *</label>
                                                 <input type="date" name="date" className="form-input" value={formData.date} onChange={handleChange} aria-invalid={!!step2Errors.date} style={step2Errors.date ? { borderColor: 'var(--error)' } : undefined} required />

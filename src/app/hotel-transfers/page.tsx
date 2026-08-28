@@ -3,6 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WhatsAppIcon } from "@/components/Icons";
 import { waLink } from "@/lib/contact";
+import QuickBookForm from "@/components/QuickBookForm";
 
 export const metadata = generatePageMetadata({
     title: "Hotel Transfer Taxi Service | Makkah, Jeddah, Madinah",
@@ -78,6 +79,13 @@ export default function HotelTransfers() {
                 <p>Professional door-to-door transfers between hotels, airports and holy sites across Makkah, Madinah, and Jeddah.</p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Hotel Transfers</span>
+                </div>
+            </section>
+
+            {/* Quick booking form (booking-flow revision brief §2) */}
+            <section className="section-lg" style={{ background: 'var(--bg-subtle)' }}>
+                <div className="container">
+                    <QuickBookForm service="hotel-transfer" heading="Book Your Hotel Transfer" />
                 </div>
             </section>
 

@@ -1,0 +1,81 @@
+/* Pickup/drop-off row — desktop: two bordered fields with a swap control
+   between them; mobile: stacks, swap control centres itself and rotates
+   90deg so it still reads as "swap" for a vertical pair. */
+.locationRow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    gap: var(--space-3);
+}
+
+.swapBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-top: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--white);
+    color: var(--teal);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color var(--ease-base), color var(--ease-base), transform var(--ease-base);
+    flex-shrink: 0;
+}
+
+.swapBtn:hover {
+    border-color: var(--teal);
+    transform: rotate(180deg);
+}
+
+@media (max-width: 720px) {
+    .locationRow {
+        grid-template-columns: 1fr;
+    }
+
+    .swapBtn {
+        margin: 0 auto;
+        transform: rotate(90deg);
+    }
+
+    .swapBtn:hover {
+        transform: rotate(270deg);
+    }
+}
+
+/* Persistent "you selected X" chip — same treatment for the service choice
+   (Step 1) as the vehicle chip already had, so nothing a customer picked
+   earlier in the flow ever looks like it silently disappeared. */
+.selectionChip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    background: rgba(8, 24, 39, 0.04);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.selectionChip span {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    min-width: 0;
+    word-break: break-word;
+}
+
+.selectionChip button {
+    background: none;
+    border: none;
+    color: var(--teal);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    flex-shrink: 0;
+}

@@ -168,7 +168,6 @@ const groups: Group[] = [
             { href: "/prices", label: "Pricing" },
             { href: "/contact-us", label: "Contact Us" },
             { href: "/book-online", label: "Book Online" },
-            { href: "/quote", label: "Get a Quote" },
             { href: "/privacy-policy", label: "Privacy Policy" },
             { href: "/terms-conditions", label: "Terms & Conditions" },
         ],

@@ -40,6 +40,71 @@
     color: var(--danger, #C0392B);
 }
 
+/* ── 'field' variant — a self-contained, bordered form field, same visual
+   language as .form-input (globals.css): 1.5px line border, radius-md,
+   teal focus ring. Used wherever this combobox stands alone rather than
+   inside the homepage's segmented pill bar. ── */
+.wrapField {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+}
+
+.labelField {
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--text-body);
+    letter-spacing: 0.3px;
+}
+
+.inputBox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: 0 16px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    transition: border-color var(--ease-base), box-shadow var(--ease-base);
+}
+
+.inputBox:hover {
+    border-color: var(--line-strong);
+}
+
+.inputBox:focus-within {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(47, 111, 115, 0.16);
+}
+
+.fieldIcon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.inputFieldEl {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    min-width: 0;
+    padding: 13px 0;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--ink);
+}
+
+.inputFieldEl::placeholder {
+    color: var(--muted, var(--text-muted));
+}
+
+.inputFieldEl[aria-invalid="true"] {
+    color: var(--danger, #C0392B);
+}
+
 .listbox {
     position: absolute;
     top: calc(100% + var(--space-4));

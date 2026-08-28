@@ -6,6 +6,7 @@ import {
   PlaneIcon,
 } from "@/components/Icons";
 import RelatedLinks from "@/components/RelatedLinks";
+import QuickBookForm from "@/components/QuickBookForm";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 // Value import (not just the RouteData type) so the reverse-route callout
 // below can confirm `reverseSlug` resolves to a real, live page before
@@ -355,6 +356,20 @@ export default function RoutePage({ data }: { data: RouteData }) {
           </div>
         </section>
 
+        {/* Quick booking form — pickup/drop-off pre-filled from this
+            route's own origin/destination, still editable (booking-flow
+            revision brief §2/§3). */}
+        <section style={{ padding: "var(--space-10) 0 0" }}>
+          <div className="container">
+            <QuickBookForm
+              defaultFrom={data.origin}
+              defaultTo={data.destination}
+              heading={`Book Your ${data.origin} to ${data.destination} Transfer`}
+              subheading="Pickup and drop-off are already filled in — edit them if your trip is slightly different."
+            />
+          </div>
+        </section>
+
         {/* Journey visualization — lightweight text/chip chain, not an
             embedded map (no mapping dependency exists in the project, and
             adding one here would cost more than it's worth for a linear
@@ -589,7 +604,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
               ))}
             </div>
             <div style={{ textAlign: "center", marginTop: "var(--space-10)" }}>
-              <Link href="/quote" className="btn btn-primary btn-lg">Get a Quote for This Route</Link>
+              <Link href={`/book-online?from=${encodeURIComponent(data.origin)}&to=${encodeURIComponent(data.destination)}&mode=transfers`} className="btn btn-primary btn-lg">Book Now</Link>
             </div>
           </div>
         </section>

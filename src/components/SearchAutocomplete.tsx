@@ -12,6 +12,12 @@ interface SearchAutocompleteProps {
     onChange: (value: string) => void;
     required?: boolean;
     invalid?: boolean;
+    /** 'bar' (default) — the borderless segment used inside the homepage's
+     * pill-shaped search bar, unchanged. 'field' — a self-contained,
+     * bordered form field (label above, pin icon, visible box, focus
+     * ring) for use as a standalone input, e.g. Book Online Step 2 and the
+     * route/airport quick-booking form (booking-flow revision brief §6). */
+    variant?: 'bar' | 'field';
 }
 
 /**
@@ -21,7 +27,7 @@ interface SearchAutocompleteProps {
  * yet), grouped by type, with full keyboard support and ARIA listbox
  * semantics rather than a plain unstyled <input>.
  */
-export default function SearchAutocomplete({ label, placeholder, value, onChange, required, invalid }: SearchAutocompleteProps) {
+export default function SearchAutocomplete({ label, placeholder, value, onChange, required, invalid, variant = 'bar' }: SearchAutocompleteProps) {
     const [open, setOpen] = useState(false);
     const [activeId, setActiveId] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -109,31 +115,34 @@ export default function SearchAutocomplete({ label, placeholder, value, onChange
         );
 
     return (
-        <div className={styles.wrap}>
-            <label htmlFor={inputId} className={styles.label}>{label}</label>
-            <input
-                ref={inputRef}
-                id={inputId}
-                type="text"
-                role="combobox"
-                aria-expanded={open}
-                aria-controls={listboxId}
-                aria-activedescendant={activeId ?? undefined}
-                aria-autocomplete="list"
-                aria-invalid={invalid || undefined}
-                autoComplete="off"
-                className={styles.input}
-                placeholder={placeholder}
-                value={value}
-                required={required}
-                onChange={(e) => {
-                    onChange(e.target.value);
-                    setOpen(true);
-                }}
-                onFocus={() => setOpen(true)}
-                onBlur={() => setTimeout(() => setOpen(false), 120)}
-                onKeyDown={onKeyDown}
-            />
+        <div className={variant === 'field' ? styles.wrapField : styles.wrap}>
+            <label htmlFor={inputId} className={variant === 'field' ? styles.labelField : styles.label}>{label}</label>
+            <div className={variant === 'field' ? styles.inputBox : undefined}>
+                {variant === 'field' && <MapPinIcon size={16} className={styles.fieldIcon} />}
+                <input
+                    ref={inputRef}
+                    id={inputId}
+                    type="text"
+                    role="combobox"
+                    aria-expanded={open}
+                    aria-controls={listboxId}
+                    aria-activedescendant={activeId ?? undefined}
+                    aria-autocomplete="list"
+                    aria-invalid={invalid || undefined}
+                    autoComplete="off"
+                    className={variant === 'field' ? styles.inputFieldEl : styles.input}
+                    placeholder={placeholder}
+                    value={value}
+                    required={required}
+                    onChange={(e) => {
+                        onChange(e.target.value);
+                        setOpen(true);
+                    }}
+                    onFocus={() => setOpen(true)}
+                    onBlur={() => setTimeout(() => setOpen(false), 120)}
+                    onKeyDown={onKeyDown}
+                />
+            </div>
             {open && (
                 <div id={listboxId} role="listbox" aria-label={label} className={styles.listbox}>
                     {flat.length === 0 ? (

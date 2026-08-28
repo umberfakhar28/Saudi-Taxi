@@ -1,0 +1,108 @@
+/*
+  QUICK BOOK FORM — compact, horizontal on desktop (booking-flow revision
+  brief §4). Same field visual language as SearchAutocomplete's 'field'
+  variant / globals.css .form-input, so it reads as part of the same
+  booking system rather than a one-off component.
+*/
+
+.card {
+    background: var(--white, var(--bg-card));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl, 20px);
+    box-shadow: var(--shadow-lg, var(--shadow-md));
+    padding: var(--space-8);
+}
+
+.header {
+    margin-bottom: var(--space-6);
+}
+
+.title {
+    font-size: var(--text-xl);
+    color: var(--text-main, var(--navy));
+    margin-bottom: var(--space-1);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    margin: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1.3fr) repeat(3, 1fr);
+    gap: var(--space-4);
+    align-items: end;
+}
+
+.field {
+    min-width: 0;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--text-body);
+    margin-bottom: var(--space-2);
+}
+
+.input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--white);
+    outline: none;
+    transition: border-color var(--ease-base), box-shadow var(--ease-base);
+}
+
+.input:hover {
+    border-color: var(--line-strong);
+}
+
+.input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(47, 111, 115, 0.16);
+}
+
+.actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+}
+
+.submitBtn {
+    flex: 1;
+    justify-content: center;
+}
+
+/* Tablet — 3 columns: pickup/drop-off keep more room, date/time/passengers
+   wrap onto their own row rather than cramming to 5-across. */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Mobile — single column, full-width fields and stacked CTAs. */
+@media (max-width: 640px) {
+    .card {
+        padding: var(--space-6) var(--space-5);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+}

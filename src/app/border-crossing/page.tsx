@@ -488,8 +488,8 @@ export default function BorderCrossing() {
                         and ensure a hassle-free journey across the border.
                     </p>
                     <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/quote" className="btn btn-primary btn-lg">
-                            Get a Quote
+                        <Link href="/book-online" className="btn btn-primary btn-lg">
+                            Book Now
                         </Link>
                         <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                             <MessageIcon size={18} /> WhatsApp Us

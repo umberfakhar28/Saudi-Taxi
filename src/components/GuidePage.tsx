@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { waLink } from "@/lib/contact";
+import { WhatsAppIcon } from "@/components/Icons";
 
 export interface GuideSection {
   heading: string;
@@ -129,7 +131,9 @@ export default function GuidePage({ data }: { data: GuideData }) {
           <h2 style={{ color: "var(--text-main)", marginBottom: "var(--space-6)" }}>Ready to Travel? Book with Gulf Trip Service</h2>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href={data.ctaLink} className="btn btn-primary btn-lg">{data.ctaText}</Link>
-            <Link href="/quote" className="btn btn-secondary btn-lg">Get Instant Quote</Link>
+            <a href={waLink("Hi, I'd like to book a ride.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+              <WhatsAppIcon size={18} /> Book on WhatsApp
+            </a>
           </div>
         </div>
       </section>

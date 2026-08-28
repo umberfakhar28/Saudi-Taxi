@@ -431,9 +431,6 @@ export default function FleetPage() {
                         <Link href="/book-online" className="btn btn-primary btn-lg">
                             Book Your Ride
                         </Link>
-                        <Link href="/quote" className="btn btn-outline btn-lg">
-                            Get a Quote
-                        </Link>
                         <a
                             href={waLink("Hi, I'd like help choosing the right vehicle for my trip.")}
                             target="_blank"

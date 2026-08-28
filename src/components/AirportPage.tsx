@@ -8,6 +8,7 @@ import { AIRPORT_WAIT_TIMES } from "@/lib/airportTransferConfig";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 import { allCities } from "@/lib/cityData3";
 import AirportFaqAccordion from "@/components/AirportFaqAccordion";
+import QuickBookForm from "@/components/QuickBookForm";
 import { getDestination } from "@/lib/destinationData";
 import { hotelsForCity } from "@/lib/hotelData";
 import {
@@ -116,8 +117,8 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
               <WhatsAppIcon size={18} /> Book via WhatsApp <ChevronRightIcon size={16} />
             </a>
-            <Link href="/quote" className="btn btn-outline btn-lg">
-              Request a Quote
+            <Link href={`/book-online?from=${encodeURIComponent(data.name)}&service=airport-transfer`} className="btn btn-outline btn-lg">
+              Book Now
             </Link>
           </div>
           <div className="breadcrumb" style={{ color: "var(--on-dark-muted)", marginTop: "var(--space-6)" }}>
@@ -155,6 +156,19 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               <span className={styles.factValue}>Private, door-to-door</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Quick booking form — pickup pre-filled with this airport, still
+          editable (booking-flow revision brief §2/§3). */}
+      <section className="section-lg">
+        <div className="container">
+          <QuickBookForm
+            defaultFrom={data.name}
+            service="airport-transfer"
+            heading={`Book Your ${data.name} Transfer`}
+            subheading="Pickup is already set to this airport — just add where you're headed."
+          />
         </div>
       </section>
 
@@ -660,7 +674,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             {/* Primary (navy) leads, WhatsApp (green, functional channel)
                 follows as secondary — matching every other page family's
                 closing CTA. This page previously had no primary CTA at all. */}
-            <Link href="/quote" className="btn btn-primary btn-lg">Request a Quote</Link>
+            <Link href={`/book-online?from=${encodeURIComponent(data.name)}&service=airport-transfer`} className="btn btn-primary btn-lg">Book Now</Link>
             <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
               <WhatsAppIcon size={18} /> Book via WhatsApp
             </a>

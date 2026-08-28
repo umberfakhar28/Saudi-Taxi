@@ -116,8 +116,9 @@ export default function RootLayout({
         },
         execute: async function (args) {
           window.location.href =
-            '/quote?from=' + encodeURIComponent(args.from || '') +
+            '/book-online?from=' + encodeURIComponent(args.from || '') +
             '&to='   + encodeURIComponent(args.to   || '') +
+            '&mode=transfers' +
             (args.passengers ? '&passengers=' + args.passengers : '');
           return { status: 'navigating', url: window.location.href };
         }

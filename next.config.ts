@@ -34,6 +34,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // /quote was a CTA-only marketing page with no actual form —
+        // every /quote link sitewide now points straight at /book-online
+        // (booking-flow revision brief §1); this redirect catches any
+        // remaining bookmarks/indexed links/external references instead
+        // of leaving them at a 404.
+        source: "/quote",
+        destination: "/book-online",
+        permanent: true,
+      },
+      {
         // /services was a noindex stub duplicating /our-services (zero
         // inbound links, orphaned by design) — 301 instead of leaving a
         // dead route live. See docs/page-inventory.md (Duplicates).

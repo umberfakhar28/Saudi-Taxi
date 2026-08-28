@@ -4,7 +4,18 @@ import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld
 import { WhatsAppIcon, CheckCircleIcon, MapPinIcon } from "@/components/Icons";
 import { waLink } from "@/lib/contact";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
+import QuickBookForm from "@/components/QuickBookForm";
 import styles from "./CoreServicePage.module.css";
+
+/** Maps this page's slug onto the matching Book Online Step-1 service id
+ * (src/app/book-online/BookOnlineClient.tsx `services`) — undefined falls
+ * back to the generic mode=transfers default rather than a guessed id. */
+const BOOK_ONLINE_SERVICE: Record<string, string> = {
+  "private-taxi": "private-taxi",
+  "umrah-transport-package": "umrah-package",
+  "ziyarat-services-in-saudi-arabia": "ziyarat",
+  "corporate-transportation-services": "corporate-transport",
+};
 
 // No Guide-family cross-links live here — the two guides that used to cover
 // Umrah taxi topics (/madinah-umrah-taxi-guide, /makkah-umrah-taxi-guide)
@@ -141,6 +152,16 @@ export default function CoreServicePage({ data }: { data: ServiceData }) {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Quick booking form (booking-flow revision brief §2) */}
+        <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
+          <div className="container">
+            <QuickBookForm
+              service={BOOK_ONLINE_SERVICE[data.slug]}
+              heading={`Book ${data.breadcrumbLabel}`}
+            />
           </div>
         </section>
 

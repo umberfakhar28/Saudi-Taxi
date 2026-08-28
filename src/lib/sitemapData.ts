@@ -130,12 +130,6 @@ export function buildSitemapEntries(): SitemapEntry[] {
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/quote`,
-      lastModified: lastMod("/quote"),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
       url: `${BASE_URL}/site-map`,
       lastModified: lastMod("/site-map"),
       changeFrequency: "monthly",
