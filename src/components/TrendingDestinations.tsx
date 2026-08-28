@@ -5,7 +5,7 @@ import styles from './TrendingDestinations.module.css';
 
 /**
  * Homepage "Popular / Trending Destinations" section — sits above the
- * existing vehicle-type cards (VehicleTypeCarousel) in src/app/page.tsx.
+ * fleet section (VehiclesSection) in src/app/page.tsx.
  * Featured cards are the 6 flagship Gulf cities (see
  * src/lib/destinationData.ts's `featured` flag); "View All Popular
  * Destinations" leads to the full /destinations directory covering every
@@ -16,7 +16,6 @@ export default function TrendingDestinations() {
         <section className={`section-lg ${styles.section}`}>
             <div className="container">
                 <div className="section-header centered">
-                    <span className="section-eyebrow">Trending Destinations</span>
                     <h2 className="section-title">Premium Travel, Every Ride</h2>
                     <p className="section-subtitle">
                         Private chauffeur service, airport transfers, and city-to-city travel across Saudi Arabia

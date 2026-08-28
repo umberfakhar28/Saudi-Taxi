@@ -85,10 +85,11 @@ export default function VehiclesSection() {
       <div className="container">
         {/* Section header */}
         <div className="section-header centered">
-          <span className="section-eyebrow">Our Fleet</span>
-          <h2 className="section-title">Vehicles Available For Convenient Ride</h2>
+          <h2 className="section-title">Vehicles Available For Convenient Rides</h2>
           <p className="section-subtitle">
-            Choose from our hand-picked selection of premium vehicles — each maintained to the highest standards for your comfort and safety.
+            From an efficient sedan for a solo airport run to a chauffeur-driven executive car or a full-size van for
+            the whole group — every vehicle is hand-picked, professionally maintained, and driven by a licensed
+            chauffeur.
           </p>
         </div>
 
@@ -133,6 +134,12 @@ export default function VehiclesSection() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className={styles.viewAll}>
+          <Link href="/fleet" className="btn btn-secondary">
+            Explore Our Fleet
+          </Link>
         </div>
       </div>
     </section>

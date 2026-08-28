@@ -33,22 +33,6 @@
     text-align: center;
 }
 
-.eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: var(--text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2.5px;
-    color: var(--text-muted, var(--text));
-    background: var(--surface, var(--bg-subtle));
-    border: 1px solid var(--ivory-300, var(--line));
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-full);
-    margin-bottom: var(--space-4);
-}
-
 /* Title */
 .title {
     font-size: var(--text-4xl);
@@ -81,62 +65,82 @@
     gap: var(--space-6);
 }
 
-/* Card — flat surface, no gradient */
+/* Card — cover photo + body, flat surface, no gradient */
 .card {
     background: var(--surface, var(--bg-card));
-    padding: var(--space-10) var(--space-8);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
-    text-align: center;
+    text-align: left;
     transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
     position: relative;
     overflow: hidden;
     border: 1px solid var(--ivory-300, rgba(16, 18, 26, 0.07));
+    display: flex;
+    flex-direction: column;
 }
 
-/* The gold top-bar this card used to have on hover was removed — six
-   cards in this grid each showing a gold accent would put six gold marks
-   in one screenful, well past "gold appears once or twice per section,
-   maximum." Hover feedback is border + shadow only now, no colour. */
 .card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-xl);
     border-color: var(--line-strong);
 }
 
-/* Icon badge — monochrome per the sitewide rule: white circle, line
-   border, ink icon. No tint, no colour change on hover. */
+/* Cover photo — fixed ratio across every card, no distortion, no layout
+   shift once the image resolves. */
+.cardImage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--bg-subtle);
+    flex-shrink: 0;
+}
+
+.image {
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.card:hover .image {
+    transform: scale(1.05);
+}
+
+/* Icon badge — now a small accent chip over the photo's bottom-left
+   corner, not the card's whole visual identity. Monochrome fill, one
+   subtle border — no colour change on hover, per the "gold appears once
+   or twice per section" cap. */
 .icon {
-    width: 56px;
-    height: 56px;
+    position: absolute;
+    left: var(--space-4);
+    bottom: -20px;
+    width: 44px;
+    height: 44px;
     background: var(--white, var(--bg-subtle));
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--ink, var(--text));
-    margin: 0 auto var(--space-5);
-    transition: border-color var(--ease-base);
     border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
 }
 
-.card:hover .icon {
-    border-color: var(--line-strong);
+.cardBody {
+    padding: var(--space-8) var(--space-6) var(--space-6);
 }
 
 /* Card Title */
 .cardTitle {
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
     color: var(--text, var(--text-main));
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
     font-weight: 600;
 }
 
 /* Card Text */
 .cardText {
     color: var(--text-muted, var(--text));
-    line-height: 1.75;
-    font-size: var(--text-base);
+    line-height: 1.7;
+    font-size: var(--text-sm);
 }
 
 /* ===== RESPONSIVE ===== */

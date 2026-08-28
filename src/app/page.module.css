@@ -66,64 +66,72 @@
 */
 
 /* ===================================================================
-   OUR PROMISE — image sizing/placement pass. Real breakpoints (inline
-   styles can't do media queries), so this section's row + image moved
-   here. Three tiers per the brief: desktop image at a fixed ~400px
-   (34% of the 1200px container's usable width — inside the requested
-   32–38% band), tablet keeps the same two-column layout with a
-   proportionally smaller image, mobile stacks with a full-width image.
-   Text content, colours, and copy are all untouched — this file only
-   ever touches the image's own presentation.
+   OUR PROMISE ("Why Thousands Choose Gulf Trip Service") — homepage
+   revision brief §3: large, genuinely editorial imagery rather than a
+   small accent thumbnail, so the photo is a true equal-weight element of
+   the section, not a footnote beside the navy card. True 50/50 split on
+   desktop, narrowing gracefully on tablet, stacking full-width on mobile.
    =================================================================== */
 .ourPromiseRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: var(--space-10);
 }
 
 .ourPromiseCard {
-  flex: 1 1 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .ourPromiseImage {
   position: relative;
-  flex: 0 0 400px;
-  width: 400px;
-  max-width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 20px;
+  width: 100%;
+  min-height: 420px;
+  border-radius: var(--radius-xl, 20px);
   overflow: hidden;
-  /* Soft and integrated, not a floating thumbnail — same navy-tinted
-     shadow family as the content card beside it, just much lighter. */
-  box-shadow: 0 16px 40px rgba(8, 24, 39, 0.16);
+  box-shadow: 0 20px 48px rgba(8, 24, 39, 0.2);
 }
 
-/* Tablet — still two columns, image scales down proportionally rather
-   than jumping straight to a stacked layout. 4:3 is preserved by
-   aspect-ratio regardless of the width change. */
+/* Benefit tiles — the checklist redrawn as a compact 2-column grid of
+   subtle, dark-surface tiles (same rgba(255,255,255,0.06) treatment as
+   the sitewide .badge-dark pattern) instead of one long vertical list,
+   so the section reads as "multiple benefit cards" per the brief. */
+.promiseTiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.promiseTile {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4);
+}
+
 @media (max-width: 1100px) {
-  .ourPromiseCard {
-    flex-basis: 380px;
-  }
-
   .ourPromiseImage {
-    flex-basis: 300px;
-    width: 300px;
+    min-height: 360px;
   }
 }
 
-/* Mobile — stacks; image becomes full-width, ratio still locked at 4:3. */
-@media (max-width: 680px) {
+/* Mobile — stacks; image on top, full-width, tiles collapse to 1 column. */
+@media (max-width: 780px) {
   .ourPromiseRow {
-    flex-wrap: wrap;
-  }
-
-  .ourPromiseCard {
-    flex-basis: 100%;
+    grid-template-columns: 1fr;
   }
 
   .ourPromiseImage {
-    flex-basis: 100%;
-    width: 100%;
+    min-height: 320px;
+    order: -1;
+  }
+
+  .promiseTiles {
+    grid-template-columns: 1fr;
   }
 }

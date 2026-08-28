@@ -13,6 +13,11 @@
   gap: var(--space-8);
 }
 
+.viewAll {
+  text-align: center;
+  margin-top: var(--space-10);
+}
+
 .card {
   background: var(--surface, var(--bg-card));
   border-radius: var(--radius-lg);

@@ -4,14 +4,13 @@ import TrendingDestinations from "@/components/TrendingDestinations";
 import Features from "@/components/Features";
 import FAQSection from "@/components/FAQSection";
 import VehiclesSection from "@/components/VehiclesSection";
-import VehicleTypeCarousel from "@/components/VehicleTypeCarousel";
+import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Link from "next/link";
 import Image from "next/image";
-import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, ArrowRightIcon, GlobeIcon } from "@/components/Icons";
+import { CheckCircleIcon, GlobeIcon } from "@/components/Icons";
 import { generatePageMetadata } from "@/lib/seo";
 import AnimatedCounter from "@/components/AnimatedCounter";
-import QuickBookingForm from "@/components/QuickBookingForm";
 import { homeFaqs } from "@/lib/homeFaqs";
 import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import styles from "./page.module.css";
@@ -26,57 +25,6 @@ export const metadata = generatePageMetadata({
 /* =======================================================================
    DATA
    ======================================================================= */
-
-const services = [
-  {
-    icon: <LandmarkIcon size={26} />,
-    title: "Umrah Taxi Services",
-    description:
-      "Direct transport between Holy sites. Our licensed drivers ensure a comfortable, safe, and efficient journey for all Umrah pilgrims.",
-    link: "/umrah-taxi-services",
-    highlights: ["Makkah · Madinah · Jeddah", "Licensed Drivers", "Fixed Fare"],
-  },
-  {
-    icon: <PlaneIcon size={26} />,
-    title: "Airport Transfers",
-    description:
-      "Instant Jeddah Airport (KAIA) pickups with 24/7 meet-and-greet services and real-time flight tracking for zero wait time.",
-    link: "/airport-transfer-for-umrah",
-    highlights: ["KAIA · REHF", "Flight Tracking", "Meet & Greet"],
-  },
-  {
-    icon: <CarIcon size={26} />,
-    title: "Jeddah to Makkah",
-    description:
-      "The fastest way to reach Makkah from Jeddah. Enjoy fixed-rate, direct transfers with professional chauffeurs in premium vehicles.",
-    link: "/jeddah-to-makkah-taxi-service",
-    highlights: ["~1.5 hrs", "No Hidden Fees", "Premium Cars"],
-  },
-  {
-    icon: <HotelIcon size={26} />,
-    title: "Hotel Transfers",
-    description:
-      "Seamless hotel-to-hotel and hotel-to-Haram transfers. We handle your luggage so you can focus on your pilgrimage.",
-    link: "/hotel-transfers",
-    highlights: ["Door-to-Door", "Luggage Help", "24/7"],
-  },
-  {
-    icon: <CompassIcon size={26} />,
-    title: "Ziyarat Services",
-    description:
-      "Guided visits to important Islamic historical sites in and around Makkah and Madinah with knowledgeable, courteous drivers.",
-    link: "/ziyarat-services-in-saudi-arabia",
-    highlights: ["Historic Sites", "Guided Routes", "Group Options"],
-  },
-  {
-    icon: <CarIcon size={26} />,
-    title: "Private Taxi",
-    description:
-      "Exclusive private vehicle bookings for families and groups. Your car, your schedule — full comfort and privacy guaranteed.",
-    link: "/private-taxi",
-    highlights: ["Exclusive Vehicle", "Flexible Hours", "Family Friendly"],
-  },
-];
 
 const stats = [
   { number: "15,000+", label: "Happy Travelers" },
@@ -114,20 +62,99 @@ export default function Home() {
       <Hero />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          SOCIAL PROOF — Repetition: consistent logo/badge strip
-          ═══════════════════════════════════════════════════════════════════ */}
-      <SocialProof />
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          TRENDING DESTINATIONS — Popular Gulf cities, above the vehicle-type
-          cards per the Popular Destinations brief §2
+          TRENDING DESTINATIONS — Popular Gulf cities
           ═══════════════════════════════════════════════════════════════════ */}
       <TrendingDestinations />
 
       {/* ═══════════════════════════════════════════════════════════════════
-          BOOK BY VEHICLE TYPE — carousel of vehicles from /public/vehicles
+          VEHICLES — "Vehicles Available For Convenient Rides", replacing
+          the old scrolling "Book by Vehicle Type" carousel in this slot
+          (homepage revision brief §2).
           ═══════════════════════════════════════════════════════════════════ */}
-      <VehicleTypeCarousel />
+      <VehiclesSection />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          WHY CHOOSE US / OUR PROMISE — large editorial photo (brief §3),
+          benefit checklist redrawn as compact tiles rather than one long
+          list, so the section reads as "multiple benefit cards."
+          ═══════════════════════════════════════════════════════════════════ */}
+      <section className="section-lg" style={{ background: 'var(--ivory)' }}>
+        <div className="container">
+          <div className={styles.ourPromiseRow}>
+
+            {/* Navy card — the primary visual element. */}
+            <div
+              className={styles.ourPromiseCard}
+              style={{
+                background: 'var(--navy)',
+                borderRadius: 'var(--radius-xl)',
+                padding: 'var(--space-12)',
+                boxShadow: '0 20px 48px rgba(8, 24, 39, 0.25)',
+              }}
+            >
+              <div className="section-header">
+                <h2 className="section-title" style={{ color: 'var(--on-dark)' }}>
+                  Why Thousands Choose Gulf Trip Service
+                </h2>
+              </div>
+              <p style={{ color: 'var(--on-dark)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-4)', lineHeight: 1.8 }}>
+                We&apos;ve been serving Umrah pilgrims and travellers in Saudi Arabia for
+                over a decade. Every aspect of our service is designed around your
+                comfort and peace of mind.
+              </p>
+              <p style={{ color: 'var(--on-dark-muted)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>
+                Beyond the Holy Cities, we run dedicated services in{' '}
+                <Link href="/services/madinah" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Madinah</Link>,{' '}
+                <Link href="/services/makkah" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Makkah</Link>,{' '}
+                <Link href="/services/taif" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Taif</Link> and{' '}
+                <Link href="/services/alula" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>AlUla</Link>, with the same fixed-rate, pre-booked chauffeur model.
+              </p>
+
+              {/* Benefit tiles — 2-column grid of compact, self-contained cards. */}
+              <div className={styles.promiseTiles}>
+                {whyUs.map((item, i) => (
+                  <div key={i} className={styles.promiseTile}>
+                    <CheckCircleIcon
+                      size={18}
+                      style={{ color: 'var(--success)', marginTop: '2px', flexShrink: 0 }}
+                    />
+                    <span style={{ color: 'var(--on-dark)', fontSize: 'var(--text-sm)', lineHeight: 1.5 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Large editorial photo — a real, equal-weight visual element,
+                not a small accent thumbnail (brief §3, "large imagery"). */}
+            <div className={styles.ourPromiseImage}>
+              <Image
+                src="/images/private-chauffeur-luggage-assistance-madinah.webp"
+                alt="Gulf Trip Service chauffeur opening the car door for a guest, with the Prophet's Mosque in Madinah behind them"
+                title="Private Chauffeur Service in Madinah, Saudi Arabia"
+                fill
+                sizes="(max-width: 780px) 100vw, 50vw"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          BUILT AROUND YOUR COMFORT — from Features component (brief §4)
+          ═══════════════════════════════════════════════════════════════════ */}
+      <Features />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          SOCIAL PROOF — Trustpilot + free-cancellation row
+          ═══════════════════════════════════════════════════════════════════ */}
+      <SocialProof />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          SERVICES — new section (brief §5), positioned immediately after
+          the Trustpilot/cancellation row per the brief's required ordering.
+          ═══════════════════════════════════════════════════════════════════ */}
+      <ServicesSection />
 
       {/* ═══════════════════════════════════════════════════════════════════
           STATS BANNER — navy background, gold numbers (Fix 3)
@@ -168,102 +195,6 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          FEATURES — from Features component (Repetition: consistent feature cards)
-          ═══════════════════════════════════════════════════════════════════ */}
-      <Features />
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          WHY CHOOSE US / OUR PROMISE — the navy card is the dominant
-          element; the photo is a small supporting accent beside it, not a
-          second equal-sized panel. A flex row (not the 60/40 grid) so the
-          card can grow to fill the space the compact image doesn't need,
-          and so the image wraps onto its own line — still compact, never
-          full-width — once the viewport can't fit both side by side.
-          ═══════════════════════════════════════════════════════════════════ */}
-      <section className="section-lg" style={{ background: 'var(--ivory)' }}>
-        <div className="container">
-          <div className={styles.ourPromiseRow}>
-
-            {/* Navy card — the primary visual element. */}
-            <div
-              className={styles.ourPromiseCard}
-              style={{
-                background: 'var(--navy)',
-                borderRadius: 'var(--radius-xl)',
-                padding: 'var(--space-12)',
-                boxShadow: '0 20px 48px rgba(8, 24, 39, 0.25)',
-              }}
-            >
-              <div className="section-header">
-                <span className="section-eyebrow" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'var(--line-dark)', color: 'var(--on-dark)' }}>Our Promise</span>
-                <h2 className="section-title" style={{ color: 'var(--on-dark)' }}>
-                  Why Thousands Choose Gulf Trip Service
-                </h2>
-              </div>
-              <p style={{ color: 'var(--on-dark)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-4)', lineHeight: 1.8 }}>
-                We&apos;ve been serving Umrah pilgrims and travellers in Saudi Arabia for
-                over a decade. Every aspect of our service is designed around your
-                comfort and peace of mind.
-              </p>
-              <p style={{ color: 'var(--on-dark-muted)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', lineHeight: 1.8 }}>
-                Beyond the Holy Cities, we run dedicated services in{' '}
-                <Link href="/services/madinah" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Madinah</Link>,{' '}
-                <Link href="/services/makkah" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Makkah</Link>,{' '}
-                <Link href="/services/taif" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>Taif</Link> and{' '}
-                <Link href="/services/alula" style={{ color: 'var(--on-dark)', fontWeight: 600, textDecoration: 'underline' }}>AlUla</Link>, with the same fixed-rate, pre-booked chauffeur model.
-              </p>
-
-              {/* Checklist — Proximity: each item is a self-contained unit; consistent spacing */}
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-                {whyUs.map((item, i) => (
-                  <li
-                    key={i}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: 'var(--space-3)',
-                      fontSize: 'var(--text-base)',
-                      color: 'var(--on-dark)',
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {/* Success-green checkmark, not gold — six of these appear in one
-                        section, and gold is capped at 1-2 marks per section. A
-                        checkmark is semantically a success indicator anyway, which
-                        the token set has a dedicated colour for. */}
-                    <CheckCircleIcon
-                      size={20}
-                      style={{ color: 'var(--success)', marginTop: '2px', flexShrink: 0 }}
-                    />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Supporting photo — a real, intentional visual component of
-                the section (not a small floating thumbnail): 4:3, sized to
-                ~34% of the container's usable width on desktop, scaling
-                down proportionally on tablet and going full-width once the
-                layout stacks on mobile. See page.module.css for the
-                breakpoints. */}
-            <div className={styles.ourPromiseImage}>
-              <Image
-                src="/images/private-chauffeur-luggage-assistance-saudi-arabia.webp"
-                alt="Professional Gulf Trip Service chauffeur assisting a guest with luggage at a Saudi Arabia hotel entrance"
-                title="Private Chauffeur & Luggage Assistance Service in Saudi Arabia"
-                fill
-                sizes="(max-width: 680px) 100vw, (max-width: 1100px) 300px, 400px"
-                style={{ objectFit: 'cover' }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* ═══════════════════════════════════════════════════════════════════
           GCC CROSS-BORDER — supports /border-crossing + route pages beyond
           the Makkah/Jeddah/Madinah core, covering the Eastern Province and
           cross-border transfers to Bahrain and Qatar.
@@ -273,7 +204,6 @@ export default function Home() {
           <div className="grid-60-40" style={{ alignItems: 'center' }}>
             <div>
               <div className="section-header">
-                <span className="section-eyebrow" style={{ background: 'var(--ivory-200)', borderColor: 'var(--ivory-300)', color: 'var(--text-muted)' }}>Beyond the Holy Cities</span>
                 <h2 className="section-title" style={{ color: 'var(--text)' }}>Eastern Province &amp; GCC Cross-Border Transfers</h2>
               </div>
               <p style={{ color: 'var(--text)', fontSize: 'var(--text-lg)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
@@ -339,11 +269,6 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          VEHICLES — Vehicle showcase with images, descriptions & CTA
-          ═══════════════════════════════════════════════════════════════════ */}
-      <VehiclesSection />
-
-      {/* ═══════════════════════════════════════════════════════════════════
           TESTIMONIALS — Real customer stories
           ═══════════════════════════════════════════════════════════════════ */}
       <TestimonialsSection />
@@ -368,7 +293,9 @@ export default function Home() {
         }}
       >
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          {/* Badge — on-light, matching every other ivory-section eyebrow */}
+          {/* Badge — a genuine availability/contact fact, not a mechanical
+              section-topic label, so it stays despite the sitewide eyebrow
+              cleanup (brief §6). */}
           <div
             style={{
               display: 'inline-flex',

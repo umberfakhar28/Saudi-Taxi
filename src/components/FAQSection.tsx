@@ -18,7 +18,6 @@ const FAQSection = () => {
 
                 {/* Section header */}
                 <div className="section-header centered">
-                    <span className="section-eyebrow">FAQ</span>
                     <h2 className="section-title">Common Questions</h2>
                     <p className="section-subtitle">
                         Everything you need to know about booking our Saudi taxi services.

@@ -1,0 +1,119 @@
+/*
+  SERVICES — homepage revision brief §5. Subtle ivory background, plain
+  white cards with a soft border/shadow (no heavy colour, no icon-style
+  mixing — every icon comes from the same stroke-based Icons.tsx set).
+*/
+
+.section {
+  background: var(--ivory, var(--bg-subtle));
+  padding: var(--space-20) 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+.card {
+  background: var(--surface, var(--bg-card));
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--ivory-300, rgba(16, 18, 26, 0.07));
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-8) var(--space-7);
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--line-strong);
+}
+
+.icon {
+  width: 56px;
+  height: 56px;
+  background: var(--white, var(--bg-subtle));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy, var(--ink));
+  border: 1px solid var(--line);
+  margin-bottom: var(--space-5);
+  transition: border-color var(--ease-base);
+}
+
+.card:hover .icon {
+  border-color: var(--line-strong);
+}
+
+.cardTitle {
+  font-size: var(--text-xl);
+  color: var(--text, var(--text-main));
+  margin-bottom: var(--space-3);
+  font-weight: 600;
+}
+
+.cardText {
+  color: var(--text-muted, var(--text));
+  line-height: 1.7;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-5);
+}
+
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.chip {
+  background: var(--ivory-200, var(--bg-subtle));
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--ivory-300, var(--line));
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--teal, var(--accent-primary));
+  font-weight: 700;
+  font-size: var(--text-sm);
+  margin-top: auto;
+}
+
+.cta svg {
+  transition: transform var(--ease-base);
+}
+
+.card:hover .cta svg {
+  transform: translateX(4px);
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: var(--space-12) 0;
+  }
+}
