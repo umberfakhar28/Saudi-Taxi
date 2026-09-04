@@ -67,6 +67,9 @@ export const khobar: CityData = {
     { title: "Summer humidity", note: "Significant from June through September, like the rest of the Eastern Province coast — evenings are more comfortable than midday." },
     { title: "Rapid growth", note: "Khobar's fast development means traffic patterns between the centre, Corniche and airport can shift — we plan routes with current conditions in mind rather than a fixed assumption." },
   ],
+  relatedGuides: [
+    { href: "/guides/bahrain-saudi-commuter-guide", label: "Bahrain-Saudi Commuter Guide" },
+  ],
 };
 
 export const jubail: CityData = {
@@ -146,6 +149,9 @@ export const jubail: CityData = {
     { title: "Quiet Fridays", note: "Roads are noticeably quieter on Fridays, in contrast to the weekday shift-driven pattern." },
     { title: "No local airport", note: "Every airport connection routes through Dammam, about an hour away — factor this into arrival planning." },
   ],
+  relatedGuides: [
+    { href: "/guides/business-travel", label: "Business Travel Guide" },
+  ],
 };
 
 export const taif: CityData = {
@@ -204,6 +210,9 @@ export const taif: CityData = {
     { title: "Rose season", note: "Roughly March into early April — the fields are in bloom and rose-water souks are busiest, so book ahead if visiting specifically for the harvest." },
     { title: "Summer cooling effect", note: "Taif's elevation keeps it noticeably cooler than Makkah or Jeddah, drawing a steady wave of domestic visitors from June through August." },
     { title: "Mountain road driving", note: "The Al-Hada road can see winter fog — our drivers are experienced on the route year-round." },
+  ],
+  relatedGuides: [
+    { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
   ],
 };
 
@@ -269,5 +278,8 @@ export const abha: CityData = {
     { title: "Peak summer season", note: "June–August draws a steady wave of domestic tourism as visitors escape the heat elsewhere — book ahead, as hotels and drivers both get busier." },
     { title: "Winter mist", note: "Mountain roads can see fog in winter months; our drivers are experienced with the conditions." },
     { title: "Cable car timing", note: "Al Souda and Habala both get queues at peak times — an early or late booking usually means shorter waits." },
+  ],
+  relatedGuides: [
+    { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
   ],
 };

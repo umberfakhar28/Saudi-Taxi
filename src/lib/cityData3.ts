@@ -67,6 +67,9 @@ export const yanbu: CityData = {
     { title: "Summer diving conditions", note: "Heat and humidity make diving considerably less comfortable in summer, and tourism generally quiets down." },
     { title: "Limited public transport", note: "Distances between the Industrial Zone, old town, Royal Commission area and airport make a private driver the practical option for most visitors." },
   ],
+  relatedGuides: [
+    { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+  ],
 };
 
 export const alula: CityData = {
@@ -258,6 +261,10 @@ export const tabuk: CityData = {
     { title: "Best season for Wadi Disah", note: "Winter, roughly November through February — noticeably cooler, making canyon exploration considerably more comfortable." },
     { title: "Long distances", note: "Distances to Wadi Disah, the Aqaba coastal road and NEOM sites can exceed 200km from the city centre — plan for a full day, not a quick trip." },
   ],
+  relatedGuides: [
+    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
+    { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+  ],
   premiumChauffeur: {
     intro: "Alongside standard airport and city transfers, Tabuk is also where a meaningful share of our bookings call for something more than a standard taxi — NEOM executives, business delegations, and travelers covering the long stretches to Wadi Disah or the Aqaba border in comfort rather than a quick city hop.",
     features: [
@@ -319,6 +326,9 @@ export const alAhsa: CityData = {
   ],
   hotelZones: [
     { name: "Hofuf city-centre hotels", note: "A modest but growing selection, the practical base for exploring the oasis and old town." },
+  ],
+  relatedGuides: [
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Rent a Car vs Private Driver" },
   ],
   businessTravel: {
     intro: "Al-Ahsa is a well-known waypoint on the Riyadh–Dammam and Riyadh–Qatar/Bahrain highway corridors, and a share of our bookings here are business travelers building in a stop rather than passing straight through.",

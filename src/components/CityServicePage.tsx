@@ -84,6 +84,12 @@ export interface CityData {
    * live page (see distanceRouteData.ts). Omitted entirely until one exists
    * for this city, rather than a placeholder link. */
   distanceGuides?: { href: string; label: string }[];
+  /** Reciprocal links to /guides/[slug] informational articles that
+   * genuinely relate to this city — the reverse direction of each guide's
+   * own "Related Resources" links back to this page (informational-blog
+   * brief §8, reciprocal internal linking). Every href must resolve to a
+   * real, live guide. */
+  relatedGuides?: { href: string; label: string }[];
   /** Present only for cities with genuine, repeated cross-border transfer
    * demand from a specific GCC country (currently Jubail, from Bahrain via
    * the King Fahd Causeway) — a short acknowledgment that links out to the
@@ -793,6 +799,16 @@ export default function CityServicePage({ data }: { data: CityData }) {
                   <h3 style={{ marginBottom: "var(--space-4)" }}>Distance & Travel Guides</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     {data.distanceGuides.map((g) => (
+                      <Link key={g.href} href={g.href} className="btn btn-outline-gold btn-sm">{g.label}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {data.relatedGuides && data.relatedGuides.length > 0 && (
+                <div>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>Planning Your Trip?</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                    {data.relatedGuides.map((g) => (
                       <Link key={g.href} href={g.href} className="btn btn-outline-gold btn-sm">{g.label}</Link>
                     ))}
                   </div>

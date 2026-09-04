@@ -337,6 +337,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
   const guidePages: SitemapEntry[] = [
     "king-khalid-airport", "king-abdulaziz-airport", "umrah-transportation",
     "hajj-transportation", "business-travel", "family-travel",
+    "chauffeur-vs-taxi-saudi-arabia", "regional-airport-transfer-guide",
+    "rent-a-car-vs-private-driver", "bahrain-saudi-commuter-guide",
   ].map((slug) => ({
     url: `${BASE_URL}/guides/${slug}`,
     lastModified: lastMod(`/guides/${slug}`),

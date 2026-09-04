@@ -169,6 +169,8 @@ export const corporateTransportation: ServiceData = {
     { href: "/educational-tours-transport", label: "Educational Tours Transport" },
     { href: "/private-taxi", label: "Private Taxi" },
     { href: "/airport-transfers", label: "Airport Transfers" },
+    { href: "/guides/business-travel", label: "Business Travel Guide" },
+    { href: "/guides/bahrain-saudi-commuter-guide", label: "Bahrain-Saudi Commuter Guide" },
   ],
   ctaText: "Inquire About Corporate Accounts",
 };

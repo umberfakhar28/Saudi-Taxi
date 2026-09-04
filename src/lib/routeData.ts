@@ -313,6 +313,7 @@ export const bahrainToDammam: RouteData = {
   ],
   relatedRoutes: [
     { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam Distance & Travel Time Guide" },
+    { href: "/guides/bahrain-saudi-commuter-guide", label: "Commuting Between Bahrain & the Eastern Province" },
     { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain Taxi" },
     { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain Taxi" },
     { href: "/services/dammam", label: "Dammam Taxi Service" },

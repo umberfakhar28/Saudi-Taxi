@@ -393,6 +393,7 @@ export const AIRPORTS: AirportPageInfo[] = [
     pageHref: "/abha-airport-taxi-service",
     relatedLinks: [
       { href: "/services/abha", label: "Abha Taxi Service" },
+      { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
     ],
     relatedServices: [
       { href: "/hotel-transfers", label: "Hotel Transfers" },
@@ -427,6 +428,7 @@ export const AIRPORTS: AirportPageInfo[] = [
     relatedLinks: [
       { href: "/services/taif", label: "Taif Taxi Service" },
       { href: "/taif-ziyarat-taxi-service", label: "Taif Ziyarat Tour" },
+      { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
     ],
     relatedServices: [
       { href: "/hotel-transfers", label: "Hotel Transfers" },
@@ -463,6 +465,8 @@ export const AIRPORTS: AirportPageInfo[] = [
     relatedLinks: [
       { href: "/services/tabuk", label: "Tabuk Taxi Service" },
       { href: "/services/neom", label: "NEOM Transfers" },
+      { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+      { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
     ],
     relatedServices: [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },
@@ -502,6 +506,7 @@ export const AIRPORTS: AirportPageInfo[] = [
     relatedLinks: [
       { href: "/services/yanbu", label: "Yanbu Taxi Service" },
       { href: "/services/madinah", label: "Madinah Taxi Service" },
+      { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
     ],
     relatedServices: [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },

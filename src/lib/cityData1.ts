@@ -80,6 +80,10 @@ export const riyadh: CityData = {
     { title: "City size", note: "Riyadh's districts can be 30–50km apart; one driver for a multi-stop day is far more practical than switching rides." },
     { title: "Summer heat", note: "Daytime temperatures routinely pass 45°C from June–August — most riders shift outdoor plans to early morning or evening." },
   ],
+  relatedGuides: [
+    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
+    { href: "/guides/business-travel", label: "Business Travel Guide" },
+  ],
   premiumChauffeur: {
     intro: "As the capital, Riyadh is where most of our executive and delegation bookings originate — government-related visits, KAFD and Olaya boardroom meetings, and multi-day conference schedules where a standard taxi doesn't fit the itinerary or the image.",
     features: [
@@ -242,6 +246,9 @@ export const makkah: CityData = {
     { title: "Hajj season", note: "The city reaches its busiest point of the year during Hajj (Dhul-Hijjah) — book transport weeks in advance if traveling then." },
     { title: "Ramadan congestion", note: "The final ten nights of Ramadan bring the heaviest congestion near the Haram; weekday mornings outside those windows are consistently easier." },
     { title: "Hotel-to-Haram distance", note: "Distance from your hotel to the Haram varies enormously by district — Clock Tower hotels are a short walk, Aziziyah is not — factor this into transfer timing." },
+  ],
+  relatedGuides: [
+    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
   ],
 };
 
