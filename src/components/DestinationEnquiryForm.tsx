@@ -90,9 +90,6 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
         };
 
         try {
-            const { createClient } = await import('@/utils/supabase/client');
-            const supabase = createClient();
-
             const custRes = await fetch('/api/customers/upsert', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -101,11 +98,19 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             const custJson = await custRes.json();
             if (!custRes.ok) throw new Error(custJson.error || 'Could not save your contact details.');
 
-            // .select().single() gets the generated id back so the Admin
-            // Portal's notification "View Booking" action can link to this
-            // exact row instead of a generic list (Admin Portal audit §5).
-            const { data: insertedBooking, error: dbError } = await supabase.from('bookings').insert([{ ...dbPayload, customer_id: custJson.customerId }]).select().single();
-            if (dbError) throw dbError;
+            // Routed through a server-side endpoint (not a direct client
+            // supabase.from('bookings').insert() with the anon key) — the
+            // `bookings` table's RLS policy blocks anonymous inserts, so
+            // this call was failing at the database step for every public
+            // submission (Postgres 42501). See /api/bookings/create.
+            const bookingRes = await fetch('/api/bookings/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...dbPayload, customer_id: custJson.customerId }),
+            });
+            const bookingJson = await bookingRes.json();
+            if (!bookingRes.ok) throw new Error(bookingJson.error || 'Could not save your booking.');
+            const insertedBooking = bookingJson.booking;
 
             // The enquiry is already saved at this point — an email hiccup
             // shouldn't make the customer think their request wasn't

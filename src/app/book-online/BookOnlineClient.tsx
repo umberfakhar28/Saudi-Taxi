@@ -66,36 +66,22 @@ const EMPTY_FORM: FormData = {
     name: '', email: '', phone: '', notes: '',
 };
 
-// Fix 6 (Homepage Colour System brief). The submit handler below does a
+// Fix 6 (Homepage Colour System brief). The submit handler used to do a
 // genuine dynamic `import("@/utils/supabase/client")` — a real webpack/
-// Turbopack chunk boundary, even though nothing on this page uses
-// next/dynamic or React.lazy. If a user has this tab open across a
-// deploy, that import requests a chunk file by a build hash the server no
-// longer serves, and throws — exactly the "Loading chunk ... failed" class
-// of error, surfacing today as the generic submitError message with no
-// actual recovery path. Two real fixes below: retry (handles a transient
-// network blip / slow connection / ad-blocker interference, where the
-// same chunk URL can succeed on a second attempt) and, if that's
-// exhausted or the message signature is unambiguously a stale-chunk 404
-// (retrying an identical missing URL is futile), persist the in-progress
-// form and reload once to fetch the new build.
+// Turbopack chunk boundary. That import is gone now (the booking insert
+// moved server-side — see /api/bookings/create), but this guard stays as
+// generic protection for any other stale-chunk failure during submission
+// (a user with the tab open across a deploy hitting a 404'd chunk
+// elsewhere in the bundle): retry first (handles a transient network blip
+// / slow connection / ad-blocker interference), then — if that's
+// exhausted or the message signature is unambiguously a stale-chunk 404 —
+// persist the in-progress form and reload once to fetch the new build.
 const RELOAD_GUARD_KEY = 'gts-book-online-chunk-reload-v1';
 const SAVED_FORM_KEY = 'gts-book-online-saved-form-v1';
 
 function isChunkLoadError(err: unknown): boolean {
     const message = err instanceof Error ? err.message : String(err);
     return /loading chunk .* failed|failed to load chunk|failed to fetch dynamically imported module|importing a module script failed/i.test(message);
-}
-
-async function importSupabaseClient(retries = 2, delaysMs = [400, 1200]) {
-    for (let attempt = 0; ; attempt++) {
-        try {
-            return await import('@/utils/supabase/client');
-        } catch (err) {
-            if (attempt >= retries) throw err;
-            await new Promise((resolve) => setTimeout(resolve, delaysMs[attempt] ?? 1200));
-        }
-    }
 }
 
 export default function BookOnlineClient() {
@@ -236,9 +222,6 @@ export default function BookOnlineClient() {
         setSubmitError(null);
 
         try {
-            const { createClient } = await importSupabaseClient();
-            const supabase = createClient();
-
             // 1. Create/update the customer record (Admin Portal audit §10 —
             // the `customers` table existed but nothing ever wrote to it).
             // Done before the booking insert so the booking can carry a real
@@ -270,13 +253,24 @@ export default function BookOnlineClient() {
                 status: 'pending',
             };
 
-            // 2. Save to Supabase — the operation that actually matters. If
+            // 2. Save the booking — the operation that actually matters. If
             // this fails, nothing else should pretend to have succeeded.
-            // .select().single() gets the generated id back so the Admin
-            // Portal's notification "View Booking" action can link to this
-            // exact row instead of a generic list (Admin Portal audit §5).
-            const { data: insertedBooking, error: dbError } = await supabase.from('bookings').insert([bookingData]).select().single();
-            if (dbError) throw dbError;
+            // Routed through a server-side endpoint (not a direct client
+            // supabase.from('bookings').insert() with the anon key) because
+            // the `bookings` table's RLS policy blocks anonymous inserts —
+            // every public submission was failing with a Postgres 42501
+            // error that this component's catch block couldn't even show,
+            // since a PostgrestError isn't `instanceof Error`. Returns the
+            // generated id so the Admin Portal's notification "View
+            // Booking" action can link to this exact row.
+            const bookingRes = await fetch('/api/bookings/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookingData),
+            });
+            const bookingJson = await bookingRes.json();
+            if (!bookingRes.ok) throw new Error(bookingJson.error || 'Could not save your booking.');
+            const insertedBooking = bookingJson.booking;
 
             // 3. Send notification emails. The booking is already safely
             // persisted at this point, so an email hiccup is logged, not
