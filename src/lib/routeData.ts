@@ -310,6 +310,15 @@ export const bahrainToDammam: RouteData = {
     { q: "How far in advance should I book a Bahrain to Dammam transfer?", a: "We recommend booking at least 24 hours ahead so we can properly coordinate both the Bahrain-side and Saudi-side vehicles for a smooth handover." },
     { q: "Is the causeway busy on weekends?", a: "Yes, Thursday and Friday evenings see the heaviest weekend leisure traffic in both directions. Weekday mornings are typically the quickest time to cross." },
     { q: "What is the road distance from Bahrain to Dammam?", a: "Around 65 km including the King Fahd Causeway itself — short in distance, though total journey time runs 1–1.5 hours once passport and customs processing at the mid-causeway checkpoint are included. See our full distance and travel-time guide for a detailed breakdown." },
+    { q: "How long does the Bahrain to Dammam journey actually take?", a: "Plan for 1–1.5 hours door to door. Roughly 20–25 minutes from central Manama to the causeway entry point, then the crossing itself (the variable part, depending on checkpoint traffic), then a further 25–35 minutes into Dammam, Khobar or Dhahran. Weekday mornings run at the quicker end of that range." },
+    { q: "Is the King Fahd Causeway open 24 hours?", a: "Yes, the causeway operates around the clock, and we run this transfer 24/7 — including overnight crossings, which are typically quieter at the checkpoint than daytime or weekend-evening ones." },
+    { q: "Can you collect me from Bahrain International Airport?", a: "Yes — airport pickup in Bahrain is one of our standard collection points for this route, alongside Manama hotels, Seef, Juffair and Amwaj Islands. Share your flight number when booking so the pickup is timed to your landing." },
+    { q: "I'm crossing for shopping — is there space for bags on the return?", a: "Yes, and it's worth mentioning at booking. Shopping trips into the Eastern Province are one of the most common reasons for this crossing, and if you expect to return with significantly more luggage than you left with, we'll allocate an SUV or van rather than a sedan." },
+  ],
+  practicalInfo: [
+    { title: "Weekend timing", note: "Thursday and Friday evenings carry the heaviest leisure traffic across the causeway in both directions. If your schedule is flexible, a weekday morning crossing is consistently the quickest." },
+    { title: "Documents decide your crossing speed", note: "The single biggest variable you control is paperwork readiness — GCC national ID, or passport plus valid Saudi visa or Iqama, in hand before you reach the checkpoint rather than in a bag in the boot." },
+    { title: "Onward Eastern Province destinations", note: "Dammam, Al Khobar and Dhahran are each a slightly different final leg from the causeway exit. Confirming which one you're heading to at booking lets the Saudi-side driver plan the route rather than ask on arrival." },
   ],
   relatedRoutes: [
     { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam Distance & Travel Time Guide" },

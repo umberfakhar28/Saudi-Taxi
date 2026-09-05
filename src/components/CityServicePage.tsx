@@ -439,8 +439,13 @@ export default function CityServicePage({ data }: { data: CityData }) {
                       </li>
                     ))}
                   </ul>
+                  {/* Anchor names the destination page's actual subject —
+                      airport transfers — rather than "Guide". The city page
+                      and the airport page were competing for airport-taxi
+                      queries; this passes the airport intent to the page
+                      that should own it. */}
                   <Link href={airportInfo?.pageHref ?? bookingHref({ from: data.airport.name, to: data.city })} className="btn btn-secondary">
-                    Full {data.airport.name} Guide
+                    {data.airport.name} Transfers &amp; Taxi
                   </Link>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>

@@ -5,7 +5,10 @@ export const metadata = generatePageMetadata({
   title: "King Khalid Airport Guide (RUH)",
   description: "Everything you need to know about King Khalid International Airport in Riyadh — terminals, taxi services, transport options, tips, and how to book your transfer.",
   path: "/guides/king-khalid-airport",
-  keywords: ["King Khalid Airport guide", "RUH airport taxi", "Riyadh airport transport", "King Khalid International Airport terminals"],
+  // "RUH airport taxi" removed — that commercial term belongs to
+  // /riyadh-airport-taxi-service. This guide keeps the informational
+  // terminal/navigation intent it genuinely serves.
+  keywords: ["King Khalid Airport guide", "King Khalid International Airport terminals", "RUH terminals", "Riyadh airport arrivals"],
 });
 
 const data = {

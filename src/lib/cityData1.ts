@@ -248,6 +248,8 @@ export const makkah: CityData = {
     { title: "Hotel-to-Haram distance", note: "Distance from your hotel to the Haram varies enormously by district — Clock Tower hotels are a short walk, Aziziyah is not — factor this into transfer timing." },
   ],
   relatedGuides: [
+    { href: "/guides/umrah-transportation", label: "Complete Umrah Transportation Guide" },
+    { href: "/guides/hajj-transportation", label: "Hajj Transportation Guide" },
     { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
   ],
 };
@@ -332,6 +334,10 @@ export const madinah: CityData = {
     { title: "Rawdah timing", note: "Rawdah access is booked through the Nusuk app in advance — plan your pickup time around your slot, not the other way around." },
     { title: "Restricted-zone pickup", note: "Vehicles can't enter the area immediately around the Prophet's Mosque — your driver waits at the nearest designated point, coordinated via WhatsApp." },
     { title: "Ramadan & Hajj season", note: "Like Makkah, Madinah sees its busiest periods during Ramadan and the weeks around Hajj — book ahead if traveling then." },
+  ],
+  relatedGuides: [
+    { href: "/guides/umrah-transportation", label: "Complete Umrah Transportation Guide" },
+    { href: "/guides/hajj-transportation", label: "Hajj Transportation Guide" },
   ],
 };
 

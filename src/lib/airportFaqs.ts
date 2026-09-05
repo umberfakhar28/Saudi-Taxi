@@ -11,6 +11,16 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
     airports: ["JED"],
   },
   {
+    q: "How do I get from Jeddah Airport to the city centre?",
+    a: "King Abdulaziz International sits about 19 km north of central Jeddah, so the options are a pre-booked private transfer, an airport taxi from the rank, or a ride-hailing app. A pre-booked transfer is the one that has a named driver waiting at your terminal when you land — useful after a long-haul flight, and the difference matters more at 2am than at midday. Most travelers continuing to Makkah or Madinah book the onward leg directly rather than stopping in the city at all.",
+    airports: ["JED"],
+  },
+  {
+    q: "What is the difference between a Jeddah airport taxi and a private airport transfer?",
+    a: "An airport taxi is taken from the rank on arrival — whatever vehicle is next in line, with the fare running as you go. A private airport transfer is arranged before you land, so the vehicle size, the driver, and the price are all confirmed in advance, and the driver tracks your flight and waits with a name board. For a family with luggage or an overnight arrival, that certainty is usually the deciding factor.",
+    airports: ["JED"],
+  },
+  {
     q: "Riyadh Airport has several terminals — which one will my driver meet me at?",
     a: "King Khalid International has the newer Terminal 5 (most international flights) plus Terminal 1, Terminal 3 and Terminal 4 (mostly domestic Saudia flights). Tell us your flight number when booking and we'll confirm exactly which terminal and exit your driver will be waiting at.",
     airports: ["RUH"],
@@ -18,6 +28,16 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
   {
     q: "Do you offer taxi pickup at Riyadh Airport Terminal 1, 3 or 4 specifically?",
     a: "Yes — we cover pickup at every King Khalid International terminal, including Terminal 1, Terminal 3 and Terminal 4, not just the newer Terminal 5. Your driver waits at your specific terminal's arrivals exit, confirmed once you share your flight number.",
+    airports: ["RUH"],
+  },
+  {
+    q: "How do I get from Riyadh Airport to the city centre?",
+    a: "King Khalid International sits about 35 km north of central Riyadh, so it's a longer run than most Saudi airport transfers — typically 35–50 minutes depending on traffic. A pre-booked private transfer means a driver waiting at your terminal with a name board; the alternative is the airport taxi rank or a ride-hailing app. Traffic peaks between 7–9am and 4–7pm on weekdays, and evening congestion around Boulevard City is heavier during Riyadh Season (roughly October–March).",
+    airports: ["RUH"],
+  },
+  {
+    q: "Can I book a Riyadh airport taxi service in advance for a business trip?",
+    a: "Yes — advance booking is the norm for corporate arrivals at King Khalid International. You share the flight number, we confirm the terminal, and the driver tracks the flight so a delay doesn't cost you the pickup. Executive vehicles and monthly invoiced corporate accounts are both available for travelers making the trip regularly.",
     airports: ["RUH"],
   },
   {

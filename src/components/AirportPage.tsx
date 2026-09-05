@@ -64,7 +64,10 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
 
   const specificFaqs = AIRPORT_FAQS.filter((f) => f.airports?.includes(data.code));
   const genericFaqs = AIRPORT_FAQS.filter((f) => !f.airports);
-  const faqs = [...specificFaqs, ...genericFaqs].slice(0, 7);
+  // 8 rather than 7 so an airport with several tagged questions of its own
+  // (Jeddah, Riyadh) still shows a useful spread of the generic ones too,
+  // instead of airport-specific entries pushing them all out.
+  const faqs = [...specificFaqs, ...genericFaqs].slice(0, 8);
 
   const whatsappHref = waLink(`Hi, I'd like to book a ${data.name} (${data.code}) transfer.`);
 
@@ -103,8 +106,13 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
           <span className="badge" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--line-dark)", color: "var(--on-dark)" }}>
             {data.city.toUpperCase()} AIRPORT TRANSFERS
           </span>
+          {/* "Airport Transfer" leads the H1 deliberately: Search Console
+              shows transfer-phrased queries consistently outranking taxi-
+              phrased ones for the same page (Jeddah pos ~65 vs ~85, Madinah
+              pos ~64), and the H1 previously omitted the word entirely.
+              "Private Taxi" and "Chauffeur Service" are both retained. */}
           <h1 style={{ color: "var(--on-dark)", marginTop: "var(--space-4)" }}>
-            Private Car, Taxi and Chauffeur Service
+            Airport Transfer, Private Taxi &amp; Chauffeur Service
             <br />
             <span style={{ color: "var(--brass-bright)" }}>from {data.name} ({data.code})</span>
           </h1>

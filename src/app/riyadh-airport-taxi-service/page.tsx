@@ -5,10 +5,13 @@ import { AIRPORTS } from "@/lib/airportRoutesData";
 // Renders through the shared AirportPage template (Airport Page Spec,
 // addendum to Execution Brief v3 §W2) — see docs/page-inventory.md D1/D4.
 export const metadata = generatePageMetadata({
-    title: "Riyadh Airport (KKIA) Taxi & Private Transfer | 24/7",
-    description: "Private taxi from King Khalid International Airport (RUH) — meet & greet at every terminal, flight tracking, transfers to Riyadh City, the Diplomatic Quarter, Diriyah, and beyond. Book on WhatsApp.",
+    // This page is the designated owner of Riyadh airport-taxi queries
+    // (see the ownership note on /services/riyadh). Description now carries
+    // the concrete distance/time facts that make the snippet more useful.
+    title: "Riyadh Airport Taxi & Transfer (KKIA) | 24/7",
+    description: "Private Riyadh airport taxi and transfer from King Khalid International (RUH) — 35 km to the city, meet & greet at every terminal, flight tracking, and transfers to KAFD, Olaya and Diriyah.",
     path: "/riyadh-airport-taxi-service",
-    keywords: ["Riyadh airport taxi", "KKIA taxi", "Riyadh airport transfer", "King Khalid airport taxi"],
+    keywords: ["Riyadh airport taxi", "airport taxi Riyadh", "Riyadh airport taxi service", "KKIA taxi", "Riyadh airport transfer", "King Khalid airport taxi"],
 });
 
 const riyadh = AIRPORTS.find((a) => a.code === "RUH")!;

@@ -151,6 +151,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/umrah-transport-package", label: "Umrah Transport Package" },
       { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
       { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
+      { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Airport Taxi vs Private Transfer" },
     ],
     terminals: [
       {
@@ -197,6 +198,7 @@ export const AIRPORTS: AirportPageInfo[] = [
         { href: "/umrah-transport-package", label: "Umrah Transport Package" },
         { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah Airport to Makkah Taxi" },
         { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah Taxi" },
+        { href: "/guides/umrah-transportation", label: "Umrah Transportation Guide" },
       ],
     },
     practicalInfo: [
@@ -239,6 +241,7 @@ export const AIRPORTS: AirportPageInfo[] = [
         { href: "/umrah-transport-package", label: "Umrah Transport Package" },
         { href: "/ziyarat-services-in-saudi-arabia", label: "Ziyarat Services" },
         { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah Taxi" },
+        { href: "/guides/umrah-transportation", label: "Umrah Transportation Guide" },
       ],
     },
     practicalInfo: [
@@ -308,8 +311,11 @@ export const AIRPORTS: AirportPageInfo[] = [
     intro: "The capital's main airport, serving government, business, and leisure travelers across Riyadh and long-distance transfers to the Holy Cities.",
     pageHref: "/riyadh-airport-taxi-service",
     relatedLinks: [
+      // Previously contained a self-link to /riyadh-airport-taxi-service —
+      // removed; replaced with links that actually take the reader somewhere.
       { href: "/services/riyadh", label: "Riyadh Taxi Service" },
-      { href: "/riyadh-airport-taxi-service", label: "Riyadh Airport Taxi Service" },
+      { href: "/guides/king-khalid-airport", label: "King Khalid Airport Terminal Guide" },
+      { href: "/riyadh-to-makkah-taxi-service", label: "Riyadh to Makkah Taxi" },
     ],
     relatedServices: [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },
