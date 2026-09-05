@@ -17,6 +17,11 @@ export interface BlogPostData {
   featuredImage?: string;
   featuredImageAlt?: string;
   body: { heading?: string; text: string; image?: string; imageAlt?: string }[];
+  /** Contextual links out to real service/city/route/guide pages. Blog
+   * posts previously linked only to other blog posts, which left them
+   * topically isolated — they passed no relevance to the commercial pages
+   * they're written to support. Every href must resolve to a live page. */
+  relatedServiceLinks?: { href: string; label: string; reason: string }[];
 }
 
 /** Same-category posts first, then fill to 4 with the rest — every post
@@ -100,6 +105,20 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
                 </div>
               ))}
             </div>
+            {data.relatedServiceLinks && data.relatedServiceLinks.length > 0 && (
+              <div style={{ marginTop: "var(--space-16)" }}>
+                <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)", marginBottom: "var(--space-5)" }}>Plan Your Trip</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-4)" }}>
+                  {data.relatedServiceLinks.map((l) => (
+                    <Link key={l.href} href={l.href} className="card" style={{ display: "block", textDecoration: "none" }}>
+                      <h4 style={{ color: "var(--text-main)", fontSize: "var(--text-base)", lineHeight: 1.4, marginBottom: "var(--space-2)" }}>{l.label}</h4>
+                      <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", margin: 0 }}>{l.reason}</p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {related.length > 0 && (
               <div style={{ marginTop: "var(--space-16)" }}>
                 <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)", marginBottom: "var(--space-5)" }}>Related Reading</h3>

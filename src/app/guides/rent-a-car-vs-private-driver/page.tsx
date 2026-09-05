@@ -79,6 +79,19 @@ const data: GuideData = {
       content: "A fair comparison looks at the full cost of each option, not just the headline rate. A rental's total cost is the daily rate plus fuel, tolls, and any insurance add-ons across the whole trip — a private driver's quote is a single all-inclusive figure for the same distance. For a short, single-stop trip, a rental's per-day rate can look cheaper on its own; once you add fuel and the time spent navigating and parking, the comparison against a fixed-rate private transfer is often closer than it first appears, especially for a longer or multi-stop day.",
     },
     {
+      heading: "What Rental Comparisons Usually Leave Out",
+      content: "Two things rarely appear in a rental quote but reliably affect the trip. The first is city driving conditions: Riyadh and Jeddah both move fast, with frequent lane changes and limited pedestrian crossings, and satellite navigation will occasionally route you through a closed construction zone — first-time visitors consistently underestimate this. The second is arrival fatigue. Picking up a rental and driving an unfamiliar city immediately after a long-haul flight is a very different proposition from doing it on day three of a trip.",
+      list: [
+        "City-centre parking is a real time cost at every stop, not just a fee",
+        "Navigation apps don't always reflect current road closures or construction detours",
+        "Collecting a rental straight off a long-haul flight is the hardest version of self-driving",
+      ],
+    },
+    {
+      heading: "The Combination Approach",
+      content: "These aren't mutually exclusive for a longer trip. A pattern that works well for visitors staying a week or more: a private driver for the arrival transfer, city legs, and any spread-out sightseeing day, then a rental car for the stretch of the trip spent on open highway or exploring independently away from city centres. You get the parts of each that actually help, rather than committing to one for the whole stay.",
+    },
+    {
       heading: "Common Mistakes",
       content: "A few patterns come up repeatedly when travelers are deciding between the two.",
       list: [

@@ -346,10 +346,14 @@ export function buildSitemapEntries(): SitemapEntry[] {
     priority: 0.75,
   }));
 
+  // private-vs-rental-car and hajj-transport-guide are omitted deliberately:
+  // both are permanent 301s into their guide-cluster equivalents (see
+  // next.config.ts), so listing them here would put redirecting URLs in the
+  // sitemap.
   const blogSlugs = [
-    "airport-transfer-tips", "private-vs-rental-car", "umrah-travel-planning",
+    "airport-transfer-tips", "umrah-travel-planning",
     "top-attractions-riyadh", "jeddah-hidden-gems", "alula-complete-guide",
-    "benefits-private-airport-transfer", "hajj-transport-guide",
+    "benefits-private-airport-transfer",
     "family-saudi-destinations", "vip-transport-saudi",
     "riyadh-to-jeddah-travel", "safe-travel-tips-saudi",
   ];

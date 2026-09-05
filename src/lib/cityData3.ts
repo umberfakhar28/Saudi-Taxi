@@ -129,6 +129,9 @@ export const alula: CityData = {
     { title: "Site distances", note: "Distances between the airport, Old Town, Hegra, Elephant Rock and Sharaan Nature Reserve can exceed 100km — a single driver for your full stay is far more practical than separate bookings." },
     { title: "Guide requirement at Hegra", note: "Hegra requires a licensed guide, bookable through Saudi Tourism separately from transport — we handle the driving, not the guiding." },
   ],
+  relatedGuides: [
+    { href: "/blog/alula-complete-guide", label: "AlUla Complete Travel Guide" },
+  ],
 };
 
 export const neom: CityData = {

@@ -90,6 +90,7 @@ const data: GuideData = {
     { href: "/services/alula", label: "AlUla Taxi & Transfer Service", reason: "Multi-day driver bookings for AlUla's heritage sites." },
     { href: "/services/abha", label: "Abha Taxi & Transfer Service", reason: "Mountain-road transfers to Al-Souda and Habala." },
     { href: "/services/taif", label: "Taif Taxi & Transfer Service", reason: "A popular one-day family trip from Makkah or Jeddah." },
+    { href: "/blog/family-saudi-destinations", label: "Best Family Destinations in Saudi Arabia", reason: "Where to actually go — AlUla, Abha, Taif, Jeddah and Riyadh compared by children's ages." },
     { href: "/guides/rent-a-car-vs-private-driver", label: "Rent a Car vs Private Driver", reason: "Whether self-driving or a private driver suits your family trip better." },
     { href: "/hotel-transfers", label: "Hotel Transfers", reason: "Door-to-door transfers with luggage assistance for the whole family." },
   ],

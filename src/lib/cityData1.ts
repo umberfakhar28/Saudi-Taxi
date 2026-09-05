@@ -83,6 +83,7 @@ export const riyadh: CityData = {
   relatedGuides: [
     { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
     { href: "/guides/business-travel", label: "Business Travel Guide" },
+    { href: "/blog/top-attractions-riyadh", label: "Top Attractions in Riyadh" },
   ],
   premiumChauffeur: {
     intro: "As the capital, Riyadh is where most of our executive and delegation bookings originate — government-related visits, KAFD and Olaya boardroom meetings, and multi-day conference schedules where a standard taxi doesn't fit the itinerary or the image.",
@@ -170,6 +171,9 @@ export const jeddah: CityData = {
     { title: "Ramadan & Hajj season traffic", note: "Roads toward Makkah get noticeably heavier during Ramadan and the weeks before Hajj — build in extra time for airport pickups on those dates." },
     { title: "Coastal humidity", note: "Summer humidity peaks June–September; early-morning or evening Corniche visits are far more comfortable than midday." },
     { title: "Al-Balad access", note: "Vehicles can't enter the historic old town's narrow lanes — we drop you at the edge and arrange a fixed return pickup point." },
+  ],
+  relatedGuides: [
+    { href: "/blog/jeddah-hidden-gems", label: "Hidden Gems in Jeddah" },
   ],
 };
 
@@ -271,7 +275,10 @@ export const madinah: CityData = {
   priority: 1,
   nearbyCities: [{ city: "Makkah", slug: "makkah" }, { city: "Yanbu", slug: "yanbu" }],
   city: "Madinah",
-  h1: "Executive Car Service & Airport Transfer in Madinah — Book Anytime",
+  // H1 leads with the city/Ziyarat intent this page owns rather than
+  // "Airport Transfer", which /madina-airport-taxi-service owns — the two
+  // were competing for the same query (see that page's metadata note).
+  h1: "Private Taxi, Chauffeur & Ziyarat Transfers in Madinah",
   region: "Madinah Province",
   intro: "Professional taxi services in Madinah — transfers from Prince Mohammad Bin Abdulaziz Airport, Prophet's Mosque vicinity hotels, and Ziyarat tours across the holy city.",
   whyVisit: "Madinah is the second holiest city in Islam, home to Al-Masjid an-Nabawi (the Prophet's Mosque) and numerous sacred historical sites. Every Umrah pilgrim and Hajj visitor typically spends several days here.",

@@ -1689,6 +1689,12 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { href: "/private-taxi", label: "Private taxi service" },
       { href: "/corporate-transportation-services", label: "Corporate transportation" },
       { href: "/jeddah-airport-taxi-service", label: "Jeddah airport taxi service" },
+      // Deliberately cross-linked rather than consolidated: the blog post
+      // compares the full set of travel options (fly / drive / bus /
+      // private transfer) and is this corridor's better-performing page in
+      // Search Console, while this page owns the distance and drive-time
+      // facts. Two distinct intents, so both are kept and linked.
+      { href: "/blog/riyadh-to-jeddah-travel", label: "Riyadh to Jeddah: all travel options compared" },
     ],
 
     ctaText: "Get a Private Transfer Quote for Riyadh to Jeddah",

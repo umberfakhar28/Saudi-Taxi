@@ -31,6 +31,11 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
     airports: ["RUH"],
   },
   {
+    q: "How do I get from Madinah Airport to the Prophet's Mosque?",
+    a: "Prince Mohammad Bin Abdulaziz International sits about 15 km from the Haram area — one of the shortest airport-to-holy-site transfers in the Kingdom, typically 20–30 minutes. A pre-booked transfer means a driver waiting at arrivals; note that vehicles can't enter the restricted zone immediately around the Prophet's Mosque, so your driver stops at the nearest designated point and coordinates the exact spot with you.",
+    airports: ["MED"],
+  },
+  {
     q: "How do I get from Riyadh Airport to the city centre?",
     a: "King Khalid International sits about 35 km north of central Riyadh, so it's a longer run than most Saudi airport transfers — typically 35–50 minutes depending on traffic. A pre-booked private transfer means a driver waiting at your terminal with a name board; the alternative is the airport taxi rank or a ride-hailing app. Traffic peaks between 7–9am and 4–7pm on weekdays, and evening congestion around Boulevard City is heavier during Riyadh Season (roughly October–March).",
     airports: ["RUH"],

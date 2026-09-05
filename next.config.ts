@@ -34,6 +34,28 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // Blog/guide consolidation (Search Console cannibalization audit):
+        // /blog/private-vs-rental-car and /guides/rent-a-car-vs-private-driver
+        // targeted the same primary intent (rental car vs private driver).
+        // The guide is the stronger, more complete page and sits in the
+        // guides cluster with real inbound links; the blog post had no
+        // Search Console impressions, so nothing is lost. Its two genuinely
+        // unique points (city driving conditions, the combination approach)
+        // were merged into the guide before this redirect was added.
+        source: "/blog/private-vs-rental-car",
+        destination: "/guides/rent-a-car-vs-private-driver",
+        permanent: true,
+      },
+      {
+        // Same audit: /blog/hajj-transport-guide was a strict subset of
+        // /guides/hajj-transportation (4 sections vs 5 — the guide also
+        // covers group delegations) and was titled "Hajj 2025", which is
+        // now stale. Consolidated into the evergreen guide.
+        source: "/blog/hajj-transport-guide",
+        destination: "/guides/hajj-transportation",
+        permanent: true,
+      },
+      {
         // /quote was a CTA-only marketing page with no actual form —
         // every /quote link sitewide now points straight at /book-online
         // (booking-flow revision brief §1); this redirect catches any

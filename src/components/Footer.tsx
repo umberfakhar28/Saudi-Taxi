@@ -75,6 +75,7 @@ const Footer = () => {
                             <li className={styles.listItem}><Link href="/jeddah-city-tour-services-in-saudi-arabia" className={styles.link}>Jeddah City Tour</Link></li>
                             <li className={styles.listItem}><Link href="/reliable-alula-tour-taxi-service-in-saudi-arabia" className={styles.link}>AlUla Tour</Link></li>
                             <li className={styles.listItem}><Link href="/taif-ziyarat-taxi-service" className={styles.link}>Taif Ziyarat Tour</Link></li>
+                            <li className={styles.listItem}><Link href="/blog" className={styles.link}>Travel Blog</Link></li>
                             <li className={styles.listItem}><Link href="/our-gallery" className={styles.link}>Our Gallery</Link></li>
                             <li className={styles.listItem}><Link href="/testimonials" className={styles.link}>Testimonials</Link></li>
                             <li className={styles.listItem}><Link href="/about-us" className={styles.link}>About Us</Link></li>

@@ -10,10 +10,13 @@ import { AIRPORTS } from "@/lib/airportRoutesData";
 // Renders through the shared AirportPage template (Airport Page Spec,
 // addendum to Execution Brief v3 §W2) — see docs/page-inventory.md D1/D4.
 export const metadata = generatePageMetadata({
-    title: "Madinah Airport (MED) Taxi & Private Transfer | 24/7",
-    description: "Private taxi from Prince Mohammad Bin Abdulaziz International Airport (MED) — meet & greet, flight tracking, direct transfers to Al-Masjid an-Nabawi hotels, Makkah, and Yanbu. Book on WhatsApp.",
+    // Designated owner of Madinah airport queries. Title leads with
+    // "Transfer" — the phrasing that consistently outranks taxi-phrased
+    // variants in Search Console for this site's airport pages.
+    title: "Madinah Airport Transfer & Taxi (MED) | 24/7",
+    description: "Private Madinah airport transfer from Prince Mohammad Bin Abdulaziz International (MED) — 15 km to the Prophet's Mosque hotel district, meet & greet, flight tracking, plus Makkah and Yanbu routes.",
     path: "/madina-airport-taxi-service",
-    keywords: ["Madinah airport taxi", "Madinah airport transfer", "Prince Mohammad Airport taxi", "MED airport taxi"],
+    keywords: ["Madinah airport transfer", "Madinah airport taxi", "airport transfer Madinah", "Prince Mohammad Airport taxi", "MED airport taxi"],
 });
 
 const madinah = AIRPORTS.find((a) => a.code === "MED")!;

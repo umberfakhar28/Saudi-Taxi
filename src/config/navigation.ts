@@ -126,6 +126,11 @@ export const companyGroups: NavGroup[] = [
     label: "Company",
     items: [
       { href: "/about-us", label: "About Us" },
+      // Blog placed in this existing dropdown rather than as a new
+      // top-level nav item — the header already carries four dropdowns, and
+      // the whole blog cluster previously depended on two inline paragraph
+      // mentions (/about-us, /our-gallery) for discovery.
+      { href: "/blog", label: "Travel Blog" },
       { href: "/our-gallery", label: "Gallery" },
       { href: "/testimonials", label: "Testimonials" },
       { href: "/contact-us", label: "Contact Us" },
