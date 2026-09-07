@@ -4,6 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
+import { SITE_CONFIG } from '@/lib/seo';
 
 /**
  * Writes the row the Admin Portal's realtime subscription and notification
@@ -60,7 +61,40 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // dashboard, then set RESEND_FROM_EMAIL in .env.local to switch over.
 const FROM = process.env.RESEND_FROM_EMAIL || 'Gulf Trip Service <onboarding@resend.dev>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'umberfakhar10@gmail.com';
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+/**
+ * Base URL for links inside outgoing emails ("View in Admin Panel", "View
+ * Invoice").
+ *
+ * This previously read `process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'`.
+ * Whenever that variable was unset on the host — or copied over from
+ * .env.local, where localhost is correct — real booking notification emails
+ * shipped with admin buttons pointing at localhost, which is unreachable for
+ * whoever opens the email. Confirmed happening in production.
+ *
+ * NEXT_PUBLIC_SITE_URL still wins so a staging/preview deploy can point at
+ * itself, but a localhost value is now ignored in production rather than
+ * silently breaking every admin link, and the canonical domain is taken from
+ * SITE_CONFIG so there's one source of truth rather than a fourth hardcoded
+ * copy of it.
+ */
+function resolveEmailBaseUrl(): string {
+    const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, '');
+    const isLocal = !!configured && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(configured);
+
+    if (!configured) return SITE_CONFIG.baseUrl;
+
+    if (isLocal && process.env.NODE_ENV === 'production') {
+        console.warn(
+            '[EMAIL_LINKS] NEXT_PUBLIC_SITE_URL is set to a localhost address in production — ' +
+            `using ${SITE_CONFIG.baseUrl} for email links instead. Set NEXT_PUBLIC_SITE_URL to the live domain and redeploy.`
+        );
+        return SITE_CONFIG.baseUrl;
+    }
+
+    return configured;
+}
+
+const SITE = resolveEmailBaseUrl();
 
 /* ─────────────────────────────────────────────────────────────────────────
    Shared HTML email layout — table-based, not flexbox.
