@@ -2,8 +2,14 @@
 import { useState, useEffect, useCallback, useRef, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { Search, RefreshCw, ChevronDown, X, Download, Trash, CheckSquare, Square, FileText, MessageCircle, AlertTriangle, Eye, Edit, FilePlus, ChevronLeft, ChevronRight, Calendar, Mail, Share2 } from 'lucide-react';
+import { Search, RefreshCw, ChevronDown, X, Download, Trash, CheckSquare, Square, FileText, MessageCircle, AlertTriangle, Eye, Edit, FilePlus, ChevronLeft, ChevronRight, Calendar, Mail, Share2, Clock, CreditCard, PhoneOff, Send } from 'lucide-react';
 import { format, isWithinInterval, startOfDay, endOfDay, addDays, parseISO } from 'date-fns';
+import { displayDate, displayTime, toTimeInputValue, toStorableTime } from '@/lib/datetime';
+import { formatMoney, CURRENCY_CODES, toCurrencyCode } from '@/lib/currency';
+import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
+import { useFeedback } from '@/components/admin/AdminFeedback';
+import Tooltip from '@/components/admin/Tooltip';
+import { bookingMessage, canWhatsApp, toWhatsAppNumber, waLinkTo } from '@/lib/whatsapp';
 
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
 const PAYMENT_OPTIONS = ['all', 'paid', 'unpaid', 'partially_paid'];
@@ -38,8 +44,15 @@ function BookingsPageInner() {
     const [viewModal, setViewModal] = useState<any | null>(null);
     const [invoiceModal, setInvoiceModal] = useState<any | null>(null);
     const [newBookingModal, setNewBookingModal] = useState(false);
-    const [newBooking, setNewBooking] = useState<any>({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending' });
+    const [newBooking, setNewBooking] = useState<any>({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending', currency:'SAR' });
     const [notes, setNotes] = useState('');
+    const [savingEdit, setSavingEdit] = useState(false);
+    const [busyId, setBusyId] = useState<string | null>(null);
+    const [whatsAppModal, setWhatsAppModal] = useState<any | null>(null);
+    const [whatsAppText, setWhatsAppText] = useState('');
+
+    const { allowed } = useAdminAuth();
+    const { showToast, confirm } = useFeedback();
     
     const supabase = createClient();
 
@@ -55,11 +68,47 @@ function BookingsPageInner() {
 
     useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
+    // Close menus on an outside click.
+    //
+    // This listener sits on `document`. So does React's own delegated
+    // listener, because the App Router hydrates <html>/<body> and therefore
+    // uses `document` as the React root container. stopPropagation() inside a
+    // React handler stops propagation to the *next* node — it cannot stop a
+    // sibling listener on the same node (only stopImmediatePropagation can).
+    // The trigger buttons relied on stopPropagation, so every click opened a
+    // menu and closed it again within the same event: the date-range picker
+    // and the row Actions menu could never be opened at all. Hit-test the DOM
+    // instead of trusting propagation.
     useEffect(() => {
-        const handler = (e: MouseEvent) => { setOpenDropdown(null); setShowCalendar(false); };
+        const handler = (e: MouseEvent) => {
+            const target = e.target as HTMLElement | null;
+            if (target && typeof target.closest === 'function' && target.closest('[data-menu-root]')) return;
+            setOpenDropdown(null);
+            setShowCalendar(false);
+        };
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') { setOpenDropdown(null); setShowCalendar(false); }
+        };
         document.addEventListener('click', handler);
-        return () => document.removeEventListener('click', handler);
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.removeEventListener('click', handler);
+            document.removeEventListener('keydown', onKey);
+        };
     }, []);
+
+    // The Actions menu is position:fixed, so it would drift away from its row
+    // as soon as the page scrolls. Close it instead of letting it float.
+    useEffect(() => {
+        if (!openDropdown) return;
+        const close = () => setOpenDropdown(null);
+        window.addEventListener('scroll', close, true);
+        window.addEventListener('resize', close);
+        return () => {
+            window.removeEventListener('scroll', close, true);
+            window.removeEventListener('resize', close);
+        };
+    }, [openDropdown]);
 
     // Derived properties for bookings (to simplify filtering/sorting)
     const processedBookings = useMemo(() => {
@@ -152,38 +201,91 @@ function BookingsPageInner() {
         }).catch(() => { /* non-critical */ });
     }, []);
 
+    // Opening the WhatsApp composer seeds it with a factual summary of the
+    // booking, which the admin can rewrite before anything is sent.
+    useEffect(() => {
+        if (whatsAppModal) setWhatsAppText(bookingMessage(whatsAppModal));
+    }, [whatsAppModal]);
+
+    const sendWhatsApp = () => {
+        if (!whatsAppModal) return;
+        const link = waLinkTo(whatsAppModal.customer_phone, whatsAppText);
+        if (!link) {
+            showToast('error', 'This customer has no usable phone number on file.');
+            return;
+        }
+        window.open(link, '_blank', 'noopener,noreferrer');
+        logActivity('booking', whatsAppModal.id, 'whatsapp_opened', `WhatsApp message drafted to ${whatsAppModal.customer_name}`);
+        setWhatsAppModal(null);
+    };
+
+    const deleteBooking = async (b: any) => {
+        setOpenDropdown(null);
+        const ok = await confirm({
+            title: 'Delete this booking?',
+            body: `${b.customer_name || 'This booking'} (${b.booking_number || b.id.slice(0, 8).toUpperCase()}) will be permanently removed. Any invoice already issued against it is kept. This cannot be undone.`,
+            confirmLabel: 'Delete permanently',
+        });
+        if (!ok) return;
+        setBusyId(b.id);
+        const { error } = await supabase.from('bookings').delete().eq('id', b.id);
+        setBusyId(null);
+        if (error) {
+            // A Supervisor or Manager reaching this point means they bypassed
+            // the UI; the database policy is what actually refuses them.
+            showToast('error', 'Failed to delete booking: ' + error.message);
+            return;
+        }
+        logActivity('booking', b.id, 'deleted', `Booking ${b.booking_number || b.id} deleted`);
+        showToast('success', 'Booking deleted.');
+        fetchBookings();
+    };
+
     // Actions
     const updateStatus = async (id: string, newStatus: string) => {
-        if (newStatus === 'cancelled' && !confirm('Are you sure you want to cancel this booking?')) return;
+        if (newStatus === 'cancelled') {
+            const ok = await confirm({
+                title: 'Cancel this booking?',
+                body: 'The booking will be marked cancelled. It stays in the list and can be set back to another status later.',
+                confirmLabel: 'Cancel booking',
+            });
+            if (!ok) return;
+        }
 
         const target = bookings.find(b => b.id === id);
+        setBusyId(id);
         const { error } = await supabase.from('bookings').update({ status: newStatus }).eq('id', id);
-        if (error) { alert('Failed to update status: ' + error.message); return; }
+        setBusyId(null);
+        if (error) { showToast('error', 'Failed to update status: ' + error.message); return; }
         logActivity('booking', id, 'status_changed', `${target?.customer_name ?? 'Booking'} marked ${newStatus}`);
+        showToast('success', `Booking marked ${newStatus}.`);
 
         if (newStatus === 'confirmed') {
             const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_confirmed', bookingId: id }) });
             if (!res.ok) {
                 const j = await res.json().catch(() => ({}));
-                alert('Booking confirmed, but the confirmation email failed to send: ' + (j.error || 'unknown error'));
+                showToast('error', 'Booking confirmed, but the confirmation email failed to send: ' + (j.error || 'unknown error'));
             }
         }
         if (newStatus === 'completed') {
             const b = bookings.find(b => b.id === id);
             if (b && (!b.invoices || b.invoices.length === 0)) {
-                if (confirm('Booking marked as completed. Would you like to generate an invoice now?')) {
-                    generateInvoice(b);
-                }
+                const wantsInvoice = await confirm({
+                    title: 'Generate an invoice?',
+                    body: 'This booking is now complete and has no invoice yet. Create one now?',
+                    confirmLabel: 'Generate invoice',
+                });
+                if (wantsInvoice) generateInvoice(b);
             }
         }
         setOpenDropdown(null); fetchBookings();
     };
 
     const duplicateTrip = async (b: any) => {
-        const { error } = await supabase.from('bookings').insert({ customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, customer_id: b.customer_id, service_type: b.service_type, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, pickup_location_type: b.pickup_location_type, dropoff_location_type: b.dropoff_location_type, travel_date: b.travel_date, travel_time: b.travel_time, passengers_count: b.passengers_count, special_notes: b.special_notes, status: 'pending', quote_amount: b.quote_amount, car_type: b.car_type, vehicle_slug: b.vehicle_slug });
-        if (error) { alert('Failed to duplicate trip: ' + error.message); return; }
+        const { error } = await supabase.from('bookings').insert({ customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, customer_id: b.customer_id, service_type: b.service_type, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, pickup_location_type: b.pickup_location_type, dropoff_location_type: b.dropoff_location_type, travel_date: b.travel_date, travel_time: b.travel_time, passengers_count: b.passengers_count, special_notes: b.special_notes, status: 'pending', quote_amount: b.quote_amount, currency: toCurrencyCode(b.currency), car_type: b.car_type, vehicle_slug: b.vehicle_slug });
+        if (error) { showToast('error', 'Failed to duplicate trip: ' + error.message); return; }
         logActivity('booking', null, 'duplicated', `Trip duplicated for ${b.customer_name}`);
-        alert('Trip duplicated successfully!'); setOpenDropdown(null); fetchBookings();
+        showToast('success', 'Trip duplicated.'); setOpenDropdown(null); fetchBookings();
     };
 
     const addTag = async (id: string, tag: string) => {
@@ -213,7 +315,7 @@ function BookingsPageInner() {
             await fetchBookings();
             setInvoiceModal({ ...b, invoice_number: invNum, invoice_db_id: invData.id, total_amount: b.quote_amount || 0 });
         } else {
-            alert('Failed to create invoice: ' + (error?.message || 'unknown error'));
+            showToast('error', 'Failed to create invoice: ' + (error?.message || 'unknown error'));
         }
     };
 
@@ -223,13 +325,13 @@ function BookingsPageInner() {
             const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             const json = await res.json();
             if (!res.ok) {
-                alert('Failed to send: ' + (json.error || 'unknown error'));
+                showToast('error', 'Failed to send: ' + (json.error || 'unknown error'));
                 return;
             }
             logActivity('booking', payload.id || payload.booking_id || null, 'email_sent', `${type === 'invoice' ? 'Invoice' : 'Confirmation'} email sent to ${payload.customer_email || 'customer'}`);
-            alert('Communication sent!');
+            showToast('success', 'Message sent to the customer.');
         } catch (err: any) {
-            alert('Failed to send: ' + (err?.message || 'unknown error'));
+            showToast('error', 'Failed to send: ' + (err?.message || 'unknown error'));
         } finally {
             setOpenDropdown(null);
         }
@@ -238,22 +340,48 @@ function BookingsPageInner() {
     const saveNotes = async () => {
         if (!notesModal) return;
         const { error } = await supabase.from('bookings').update({ internal_notes: notes }).eq('id', notesModal.id);
-        if (error) { alert('Failed to save notes: ' + error.message); return; }
+        if (error) { showToast('error', 'Failed to save notes: ' + error.message); return; }
+        showToast('success', 'Notes saved.');
         setNotesModal(null); fetchBookings();
     };
 
     const saveEdit = async () => {
         if (!editModal) return;
-        const { error } = await supabase.from('bookings').update({ customer_name: editModal.customer_name, customer_phone: editModal.customer_phone, customer_email: editModal.customer_email, service_type: editModal.service_type, pickup_location: editModal.pickup_location, dropoff_location: editModal.dropoff_location, travel_date: editModal.travel_date, travel_time: editModal.travel_time, passengers_count: parseInt(editModal.passengers_count) || 1, quote_amount: parseFloat(editModal.quote_amount) || null, internal_notes: editModal.internal_notes }).eq('id', editModal.id);
-        if (error) { alert('Failed to save changes: ' + error.message); return; }
+        const previousStatus = bookings.find(b => b.id === editModal.id)?.status;
+        const nextStatus = STATUS_OPTIONS.includes(editModal.status) && editModal.status !== 'all'
+            ? editModal.status
+            : previousStatus;
+
+        setSavingEdit(true);
+        const { error } = await supabase.from('bookings').update({
+            customer_name: editModal.customer_name,
+            customer_phone: editModal.customer_phone,
+            customer_email: editModal.customer_email,
+            service_type: editModal.service_type,
+            pickup_location: editModal.pickup_location,
+            dropoff_location: editModal.dropoff_location,
+            travel_date: editModal.travel_date,
+            travel_time: toStorableTime(editModal.travel_time),
+            passengers_count: parseInt(editModal.passengers_count) || 1,
+            quote_amount: parseFloat(editModal.quote_amount) || null,
+            currency: toCurrencyCode(editModal.currency),
+            status: nextStatus,
+            internal_notes: editModal.internal_notes,
+        }).eq('id', editModal.id);
+        setSavingEdit(false);
+        if (error) { showToast('error', 'Failed to save changes: ' + error.message); return; }
         logActivity('booking', editModal.id, 'updated', `Booking details updated for ${editModal.customer_name}`);
+        if (nextStatus && nextStatus !== previousStatus) {
+            logActivity('booking', editModal.id, 'status_changed', `${editModal.customer_name} marked ${nextStatus}`);
+        }
+        showToast('success', 'Booking updated.');
         setEditModal(null); fetchBookings();
         if (searchParams.get('edit')) router.replace('/admin/bookings');
     };
 
     const createBooking = async () => {
         if (!newBooking.customer_name || !newBooking.customer_phone || !newBooking.customer_email || !newBooking.pickup_location || !newBooking.dropoff_location) {
-            alert('Please fill in customer name, phone, email, pickup and dropoff locations.'); return;
+            showToast('error', 'Please fill in customer name, phone, email, pickup and drop-off locations.'); return;
         }
         // Create/update the customer record too — same pipeline the public
         // booking form uses, so a booking created from the admin panel
@@ -263,15 +391,23 @@ function BookingsPageInner() {
             body: JSON.stringify({ name: newBooking.customer_name, email: newBooking.customer_email, phone: newBooking.customer_phone }),
         });
         const custJson = await custRes.json();
-        if (!custRes.ok) { alert('Error saving customer: ' + custJson.error); return; }
+        if (!custRes.ok) { showToast('error', 'Error saving customer: ' + custJson.error); return; }
 
-        const { error } = await supabase.from('bookings').insert({ ...newBooking, customer_id: custJson.customerId, passengers_count: parseInt(newBooking.passengers_count) || 1, quote_amount: parseFloat(newBooking.quote_amount) || null });
+        const { error } = await supabase.from('bookings').insert({
+            ...newBooking,
+            customer_id: custJson.customerId,
+            passengers_count: parseInt(newBooking.passengers_count) || 1,
+            quote_amount: parseFloat(newBooking.quote_amount) || null,
+            travel_time: toStorableTime(newBooking.travel_time),
+            currency: toCurrencyCode(newBooking.currency),
+        });
         if (!error) {
             setNewBookingModal(false);
-            setNewBooking({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending' });
+            setNewBooking({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending', currency:'SAR' });
             logActivity('booking', null, 'created', `Booking created for ${newBooking.customer_name} (admin panel)`);
             fetchBookings();
-        } else { alert('Error creating booking: ' + error.message); }
+            showToast('success', 'Booking created.');
+        } else { showToast('error', 'Error creating booking: ' + error.message); }
     };
 
     // Deep-linked actions from outside this page — the Dashboard's Recent
@@ -314,21 +450,33 @@ function BookingsPageInner() {
 
     // Bulk Actions
     const handleBulkDelete = async () => {
-        if (!confirm(`Are you sure you want to delete ${selectedIds.size} bookings? This cannot be undone.`)) return;
+        const ok = await confirm({
+            title: `Delete ${selectedIds.size} booking${selectedIds.size === 1 ? '' : 's'}?`,
+            body: 'This permanently removes the booking records. Any invoices already issued against them are kept. This cannot be undone.',
+            confirmLabel: 'Delete permanently',
+        });
+        if (!ok) return;
         const ids = Array.from(selectedIds);
         const { error } = await supabase.from('bookings').delete().in('id', ids);
-        if (error) { alert('Failed to delete: ' + error.message); return; }
+        if (error) { showToast('error', 'Failed to delete: ' + error.message); return; }
         logActivity('booking', null, 'deleted', `${ids.length} booking(s) deleted`);
+        showToast('success', `${ids.length} booking${ids.length === 1 ? '' : 's'} deleted.`);
         setSelectedIds(new Set());
         fetchBookings();
     };
 
     const handleBulkStatus = async (status: string) => {
-        if (!confirm(`Update ${selectedIds.size} bookings to ${status}?`)) return;
+        const ok = await confirm({
+            title: `Mark ${selectedIds.size} booking${selectedIds.size === 1 ? '' : 's'} as ${status}?`,
+            body: 'The status change applies to every selected booking.',
+            confirmLabel: `Mark ${status}`,
+        });
+        if (!ok) return;
         const ids = Array.from(selectedIds);
         const { error } = await supabase.from('bookings').update({ status }).in('id', ids);
-        if (error) { alert('Failed to update: ' + error.message); return; }
+        if (error) { showToast('error', 'Failed to update: ' + error.message); return; }
         logActivity('booking', null, 'status_changed', `${ids.length} booking(s) marked ${status}`);
+        showToast('success', `${ids.length} booking${ids.length === 1 ? '' : 's'} marked ${status}.`);
         setSelectedIds(new Set());
         fetchBookings();
     };
@@ -339,7 +487,7 @@ function BookingsPageInner() {
     const markInvoicePaid = async (b: any) => {
         const { data: inv } = await supabase.from('invoices').select('id, total_amount').eq('booking_id', b.id).single();
         const { error } = await supabase.from('invoices').update({ status: 'paid', paid_amount: inv?.total_amount ?? b.quote_amount ?? 0 }).eq('booking_id', b.id);
-        if (error) { alert('Failed to mark invoice paid: ' + error.message); setOpenDropdown(null); return; }
+        if (error) { showToast('error', 'Failed to mark invoice paid: ' + error.message); setOpenDropdown(null); return; }
         if (b.customer_id) {
             const { data: cust } = await supabase.from('customers').select('total_spent').eq('id', b.customer_id).single();
             if (cust) {
@@ -347,6 +495,7 @@ function BookingsPageInner() {
             }
         }
         logActivity('invoice', inv?.id ?? null, 'paid', `Invoice for ${b.customer_name} marked paid`);
+        showToast('success', 'Invoice marked paid.');
         setOpenDropdown(null);
         fetchBookings();
     };
@@ -358,7 +507,7 @@ function BookingsPageInner() {
         dataToExport.forEach(b => {
             const values = [
                 b.id, `"${b.customer_name}"`, `"${b.customer_phone}"`, `"${b.pickup_location}"`, `"${b.dropoff_location}"`,
-                b.travel_date, b.travel_time, `"${b.service_type}"`, b.status, b.payment_status, b.quote_amount || 0
+                b.travel_date, `"${displayTime(b.travel_time, '')}"`, `"${b.service_type}"`, b.status, b.payment_status, b.quote_amount || 0
             ];
             csvRows.push(values.join(','));
         });
@@ -410,7 +559,7 @@ function BookingsPageInner() {
                                     <div style={{ fontSize: '0.9rem', color: '#475569', marginTop: 8 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {viewModal.dropoff_location}</div>
                                     <div style={{ display: 'flex', gap: '1rem', marginTop: 12, paddingTop: 12, borderTop: '1px solid #f1f5f9' }}>
                                         <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Date</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.travel_date ? format(new Date(viewModal.travel_date), 'dd MMM yyyy') : 'TBD'}</div></div>
-                                        <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Time</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.travel_time || 'TBD'}</div></div>
+                                        <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Time</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{displayTime(viewModal.travel_time, 'TBD')}</div></div>
                                         <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Pax</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.passengers_count}</div></div>
                                     </div>
                                 </div>
@@ -420,7 +569,7 @@ function BookingsPageInner() {
                                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '1rem' }}>Billing & Service</div>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
                                     <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Service Type</div><div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{viewModal.service_type || 'N/A'}</div></div>
-                                    <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Quote Amount</div><div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a' }}>SAR {viewModal.quote_amount || 0}</div></div>
+                                    <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Quote Amount</div><div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a' }}>{formatMoney(viewModal.quote_amount, viewModal.currency)}</div></div>
                                     <div>
                                         <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Payment Status</div>
                                         <div style={{ fontSize: '0.85rem', fontWeight: 700, color: paymentStatusColor(viewModal.payment_status), textTransform: 'capitalize' }}>{viewModal.payment_status.replace('_', ' ')}</div>
@@ -465,13 +614,55 @@ function BookingsPageInner() {
                                 { key: 'travel_date', label: 'Date', type: 'date' },
                                 { key: 'travel_time', label: 'Time', type: 'time' },
                                 { key: 'passengers_count', label: 'Passengers', type: 'number' },
-                                { key: 'quote_amount', label: 'Quote (SAR)', type: 'number' },
+                                { key: 'quote_amount', label: 'Quote Amount', type: 'number' },
                             ].map(f => (
                                 <div key={f.key} style={{ gridColumn: f.span ? '1/-1' : 'auto' }}>
                                     <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>{f.label}</label>
-                                    <input type={f.type || 'text'} value={editModal[f.key] || ''} onChange={e => setEditModal({ ...editModal, [f.key]: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box' }} />
+                                    <input
+                                        type={f.type || 'text'}
+                                        /* A Postgres `time` column hands back "04:00:00", which an
+                                           <input type="time"> rejects outright: the field rendered
+                                           blank, and saving then wiped the booking's real time. */
+                                        value={f.type === 'time' ? toTimeInputValue(editModal[f.key]) : (editModal[f.key] ?? '')}
+                                        onChange={e => setEditModal({ ...editModal, [f.key]: e.target.value })}
+                                        className="admin-search-input"
+                                        style={{ width: '100%', boxSizing: 'border-box' }}
+                                        disabled={!allowed('bookings.edit')}
+                                    />
                                 </div>
                             ))}
+
+                            {/* Currency travels with the amount, so a Dubai or Kuwait job is
+                                never silently reported as riyals. */}
+                            <div>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Currency</label>
+                                <select
+                                    value={toCurrencyCode(editModal.currency)}
+                                    onChange={e => setEditModal({ ...editModal, currency: e.target.value })}
+                                    className="admin-search-input"
+                                    style={{ width: '100%', boxSizing: 'border-box' }}
+                                    disabled={!allowed('bookings.edit')}
+                                >
+                                    {CURRENCY_CODES.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                            </div>
+
+                            {/* Status was previously only reachable through the row Actions
+                                menu, which was itself unusable. */}
+                            <div>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Status</label>
+                                <select
+                                    value={editModal.status || 'pending'}
+                                    onChange={e => setEditModal({ ...editModal, status: e.target.value })}
+                                    className="admin-search-input"
+                                    style={{ width: '100%', boxSizing: 'border-box' }}
+                                    disabled={!allowed('bookings.status')}
+                                >
+                                    {STATUS_OPTIONS.filter(o => o !== 'all').map(o => (
+                                        <option key={o} value={o}>{o.charAt(0).toUpperCase() + o.slice(1)}</option>
+                                    ))}
+                                </select>
+                            </div>
                             <div style={{ gridColumn: '1/-1' }}>
                                 <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Internal Notes (admin only)</label>
                                 <textarea value={editModal.internal_notes || ''} onChange={e => setEditModal({ ...editModal, internal_notes: e.target.value })} rows={3} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit' }} />
@@ -479,7 +670,9 @@ function BookingsPageInner() {
                         </div>
                         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', justifyContent: 'flex-end' }}>
                             <button onClick={() => setEditModal(null)} className="admin-btn-secondary">Cancel</button>
-                            <button onClick={saveEdit} className="admin-btn-primary">Save Changes</button>
+                            <button onClick={saveEdit} className="admin-btn-primary" disabled={savingEdit || !allowed('bookings.edit')}>
+                                {savingEdit ? 'Saving…' : 'Save Changes'}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -511,7 +704,9 @@ function BookingsPageInner() {
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button onClick={() => exportCSV(filteredBookings)} className="admin-btn-secondary"><Download size={15} /> Export CSV</button>
                     <button onClick={fetchBookings} className="admin-btn-secondary"><RefreshCw size={15} /> Refresh</button>
-                    <button onClick={(e) => { e.stopPropagation(); setNewBookingModal(true); }} className="admin-btn-primary"><FilePlus size={15} /> New Booking</button>
+                    {allowed('bookings.create') && (
+                        <button onClick={() => setNewBookingModal(true)} className="admin-btn-primary"><FilePlus size={15} /> New Booking</button>
+                    )}
                 </div>
             </div>
 
@@ -534,7 +729,7 @@ function BookingsPageInner() {
                 
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
                     {/* Calendar Date Range Filter */}
-                    <div style={{ position: 'relative' }} onClick={e => e.stopPropagation()}>
+                    <div data-menu-root style={{ position: 'relative' }}>
                         <button
                             onClick={() => setShowCalendar(v => !v)}
                             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.55rem 0.9rem', borderRadius: 8, border: `1.5px solid ${(dateFrom || dateTo) ? '#fbbf24' : '#cbd5e1'}`, background: (dateFrom || dateTo) ? '#fffbeb' : '#f8fafc', fontSize: '0.8rem', fontWeight: 600, color: (dateFrom || dateTo) ? '#92400e' : '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}
@@ -582,6 +777,7 @@ function BookingsPageInner() {
                         {selectedIds.size} bookings selected
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        {allowed('bookings.status') && (
                         <select onChange={(e) => { if (e.target.value) handleBulkStatus(e.target.value); e.target.value = ''; }} style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: '1px solid #93c5fd', fontSize: '0.75rem', outline: 'none' }}>
                             <option value="">Change Status...</option>
                             <option value="pending">Mark Pending</option>
@@ -589,8 +785,11 @@ function BookingsPageInner() {
                             <option value="completed">Mark Completed</option>
                             <option value="cancelled">Mark Cancelled</option>
                         </select>
+                        )}
                         <button onClick={() => exportCSV(processedBookings.filter(b => selectedIds.has(b.id)))} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: '#fff', borderColor: '#93c5fd', color: '#1e3a8a' }}>Export Selected</button>
-                        <button onClick={handleBulkDelete} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: '#fef2f2', borderColor: '#fca5a5', color: '#991b1b' }}><Trash size={14} style={{ marginRight: 4 }}/> Delete</button>
+                        {allowed('bookings.delete') && (
+                            <button onClick={handleBulkDelete} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: '#fef2f2', borderColor: '#fca5a5', color: '#991b1b' }}><Trash size={14} style={{ marginRight: 4 }}/> Delete</button>
+                        )}
                     </div>
                 </div>
             )}
@@ -626,11 +825,42 @@ function BookingsPageInner() {
                                 </td>
                                 <td>
                                     <div style={{ fontSize: '0.72rem', color: '#1e293b', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.5px' }}>{b.booking_number || b.id.substring(0,8).toUpperCase()}</div>
-                                    <div style={{ display: 'flex', gap: '0.2rem', marginTop: 4 }}>
-                                        {b.is_upcoming && b.status !== 'completed' && b.status !== 'cancelled' && <span title="Upcoming within 24-48h"><AlertTriangle size={12} color="#f59e0b" /></span>}
-                                        {b.payment_status === 'unpaid' && <span title="Unpaid"><AlertTriangle size={12} color="#ef4444" /></span>}
-                                        {b.payment_status === 'no_invoice' && b.status === 'completed' && <span title="Missing Invoice"><FileText size={12} color="#8b5cf6" /></span>}
-                                        {b.internal_notes && <span title="Has Internal Notes"><MessageCircle size={12} color="#3b82f6" /></span>}
+                                    <div style={{ display: 'flex', gap: '0.3rem', marginTop: 4, alignItems: 'center' }}>
+                                        {b.status === 'pending' && (
+                                            <Tooltip label="Pending" text="Booking requires confirmation — the customer has not been told it is confirmed yet.">
+                                                <Clock size={13} color="#f59e0b" />
+                                            </Tooltip>
+                                        )}
+                                        {b.is_upcoming && b.status !== 'completed' && b.status !== 'cancelled' && (
+                                            <Tooltip label="Travelling soon" text="Pickup is within the next 24–48 hours.">
+                                                <AlertTriangle size={13} color="#f59e0b" />
+                                            </Tooltip>
+                                        )}
+                                        {b.payment_status === 'unpaid' && (
+                                            <Tooltip label="Unpaid" text="Payment has not been received for this booking's invoice.">
+                                                <CreditCard size={13} color="#ef4444" />
+                                            </Tooltip>
+                                        )}
+                                        {b.payment_status === 'partially_paid' && (
+                                            <Tooltip label="Partially paid" text="Some of the invoice total has been received, but a balance remains.">
+                                                <CreditCard size={13} color="#f59e0b" />
+                                            </Tooltip>
+                                        )}
+                                        {b.payment_status === 'no_invoice' && b.status === 'completed' && (
+                                            <Tooltip label="Missing invoice" text="This trip is complete but no invoice has been generated yet.">
+                                                <FileText size={13} color="#8b5cf6" />
+                                            </Tooltip>
+                                        )}
+                                        {b.internal_notes && (
+                                            <Tooltip label="Internal notes" text="An admin has added private notes to this booking. They are never shown to the customer.">
+                                                <MessageCircle size={13} color="#3b82f6" />
+                                            </Tooltip>
+                                        )}
+                                        {!canWhatsApp(b.customer_phone) && (
+                                            <Tooltip label="No usable phone number" text="The stored phone number cannot be dialled, so WhatsApp contact is unavailable for this booking.">
+                                                <PhoneOff size={13} color="#94a3b8" />
+                                            </Tooltip>
+                                        )}
                                     </div>
                                 </td>
                                 <td>
@@ -642,12 +872,12 @@ function BookingsPageInner() {
                                     <div style={{ fontSize: '0.8rem', lineHeight: 1.3, display: 'flex', alignItems: 'flex-start', gap: 4, marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> <span>{b.dropoff_location}</span></div>
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#334155' }}>{b.travel_date ? format(new Date(b.travel_date), 'dd MMM yyyy') : '—'}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: 2 }}>{b.travel_time || '—'}</div>
+                                    <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#334155' }}>{displayDate(b.travel_date)}</div>
+                                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: 2 }}>{displayTime(b.travel_time)}</div>
                                     <div style={{ fontSize: '0.7rem', color: '#6366f1', fontWeight: 600, marginTop: 4 }}>{b.service_type}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>SAR {b.quote_amount || 0}</div>
+                                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>{formatMoney(b.quote_amount, b.currency)}</div>
                                     <div style={{ fontSize: '0.7rem', fontWeight: 700, color: paymentStatusColor(b.payment_status), textTransform: 'capitalize', marginTop: 2 }}>{b.payment_status.replace('_', ' ')}</div>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginTop: 6 }}>
                                         {(b.tags || []).map((tag: string) => (
@@ -659,14 +889,50 @@ function BookingsPageInner() {
                                     <span className={statusClass(b.status)}>{b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>
                                 </td>
                                 <td style={{ textAlign: 'right' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                                        <button onClick={() => setViewModal(b)} title="Deep View" style={{ background: '#f1f5f9', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#3b82f6' }}><Eye size={14} /></button>
-                                        <button onClick={() => setEditModal(b)} title="Quick Edit" style={{ background: '#f1f5f9', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#10b981' }}><Edit size={14} /></button>
-                                        {b.status === 'confirmed' && <button onClick={() => updateStatus(b.id, 'completed')} title="Mark Completed" style={{ background: '#e0e7ff', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#4f46e5' }}><CheckSquare size={14} /></button>}
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.4rem', marginBottom: '0.4rem' }}>
+                                        <Tooltip label="View booking" text="Open the full booking record, including internal notes.">
+                                            <button onClick={() => setViewModal(b)} aria-label="View booking" style={{ background: '#f1f5f9', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#3b82f6' }}><Eye size={14} /></button>
+                                        </Tooltip>
+                                        {allowed('bookings.edit') && (
+                                            <Tooltip label="Edit booking" text="Change trip details, fare, currency or status.">
+                                                <button onClick={() => setEditModal(b)} aria-label="Edit booking" style={{ background: '#f1f5f9', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#10b981' }}><Edit size={14} /></button>
+                                            </Tooltip>
+                                        )}
+                                        {allowed('comms.send') && canWhatsApp(b.customer_phone) && (
+                                            <Tooltip label="WhatsApp customer" text="Open WhatsApp with a booking summary you can edit before sending.">
+                                                <button onClick={() => setWhatsAppModal(b)} aria-label="WhatsApp customer" style={{ background: '#dcfce7', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#15803d' }}><MessageCircle size={14} /></button>
+                                            </Tooltip>
+                                        )}
+                                        {allowed('bookings.status') && b.status === 'confirmed' && (
+                                            <Tooltip label="Mark completed" text="Marks the trip as finished and offers to raise an invoice.">
+                                                <button onClick={() => updateStatus(b.id, 'completed')} aria-label="Mark completed" style={{ background: '#e0e7ff', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#4f46e5' }}><CheckSquare size={14} /></button>
+                                            </Tooltip>
+                                        )}
                                     </div>
                                     
-                                    <div style={{ position: 'relative', display: 'inline-block' }}>
-                                        <button className="admin-btn-secondary" style={{ padding: '0.35rem 0.6rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap', marginLeft: 'auto' }} onClick={(e) => { e.stopPropagation(); const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); setDropdownPos({ top: rect.bottom + window.scrollY + 4, right: window.innerWidth - rect.right }); setOpenDropdown(openDropdown === b.id ? null : b.id); }}>
+                                    <div data-menu-root style={{ position: 'relative', display: 'inline-block' }}>
+                                        <button
+                                            className="admin-btn-secondary"
+                                            aria-haspopup="menu"
+                                            aria-expanded={openDropdown === b.id}
+                                            style={{ padding: '0.35rem 0.6rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap', marginLeft: 'auto' }}
+                                            onClick={(e) => {
+                                                const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                                                // The menu is position:fixed, so these are viewport
+                                                // coordinates — adding window.scrollY (as this did
+                                                // before) pushed it below the fold on any scrolled
+                                                // page, which is why Actions looked like it did
+                                                // nothing. Flip it above the row when there isn't
+                                                // room underneath.
+                                                const MENU_H = 430;
+                                                const openUp = rect.bottom + MENU_H > window.innerHeight && rect.top > MENU_H;
+                                                setDropdownPos({
+                                                    top: openUp ? Math.max(8, rect.top - MENU_H - 4) : rect.bottom + 4,
+                                                    right: Math.max(8, window.innerWidth - rect.right),
+                                                });
+                                                setOpenDropdown(openDropdown === b.id ? null : b.id);
+                                            }}
+                                        >
                                             Actions <ChevronDown size={12} />
                                         </button>
                                     </div>
@@ -705,26 +971,106 @@ function BookingsPageInner() {
 
             {/* ── Portal Dropdown (fixed, never clipped) ── */}
             {openDropdown && paginatedBookings.map(b => b.id === openDropdown ? (
-                <div key={`dd-${b.id}`} onClick={e => e.stopPropagation()} style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.15)', zIndex: 9999, minWidth: 230, overflow: 'hidden', textAlign: 'left', animation: 'fadeIn 0.15s' }}>
-                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>Billing &amp; Invoice</div>
-                    <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 Generate Invoice</button>
-                    {b.invoice_id && <button onClick={() => { setInvoiceModal(b); setOpenDropdown(null); }} className="dropdown-item">👁️ View Invoice</button>}
-                    {b.invoice_id && b.payment_status !== 'paid' && <button onClick={() => markInvoicePaid(b)} className="dropdown-item">✅ Mark Invoice Paid</button>}
-                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Booking Status</div>
-                    <button onClick={() => updateStatus(b.id, 'pending')} className="dropdown-item text-amber-600">Mark Pending</button>
-                    <button onClick={() => updateStatus(b.id, 'confirmed')} className="dropdown-item text-blue-600">Confirm Booking</button>
-                    <button onClick={() => updateStatus(b.id, 'completed')} className="dropdown-item text-indigo-600">Mark Completed</button>
-                    <button onClick={() => updateStatus(b.id, 'cancelled')} className="dropdown-item text-red-600">Cancel Booking</button>
-                    <button onClick={() => duplicateTrip(b)} className="dropdown-item">📋 Duplicate Trip</button>
-                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Communication</div>
-                    <button onClick={() => sendEmail('booking_confirmed', b)} className="dropdown-item">📩 Email Confirmation</button>
-                    <button onClick={() => { window.open(`https://wa.me/${b.customer_phone.replace(/\D/g, '')}?text=Hello ${b.customer_name}, regarding your booking with Gulf Trip Service...`, '_blank'); setOpenDropdown(null); }} className="dropdown-item">💬 WhatsApp Customer</button>
-                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>More</div>
-                    <button onClick={() => { setNotesModal(b); setNotes(b.internal_notes || ''); setOpenDropdown(null); }} className="dropdown-item">📝 Internal Notes</button>
-                    <button onClick={() => addTag(b.id, 'VIP')} className="dropdown-item">🏷️ Toggle VIP Tag</button>
-                    <button onClick={() => addTag(b.id, 'Urgent')} className="dropdown-item">🏷️ Toggle Urgent Tag</button>
+                <div key={`dd-${b.id}`} data-menu-root role="menu" style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, maxHeight: 'calc(100vh - 16px)', overflowY: 'auto', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.15)', zIndex: 9999, minWidth: 230, overflow: 'hidden', textAlign: 'left', animation: 'fadeIn 0.15s' }}>
+                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>Booking</div>
+                    <button onClick={() => { setViewModal(b); setOpenDropdown(null); }} className="dropdown-item">👁️ View Booking</button>
+                    {allowed('bookings.edit') && (
+                        <button onClick={() => { setEditModal(b); setOpenDropdown(null); }} className="dropdown-item">✏️ Edit Booking</button>
+                    )}
+                    {allowed('bookings.create') && (
+                        <button onClick={() => duplicateTrip(b)} className="dropdown-item">📋 Duplicate Trip</button>
+                    )}
+
+                    {allowed('invoices.create') && (
+                        <>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Billing &amp; Invoice</div>
+                            <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 {b.invoice_id ? 'View Invoice' : 'Generate Invoice'}</button>
+                            {b.invoice_id && <button onClick={() => { setInvoiceModal(b); setOpenDropdown(null); }} className="dropdown-item">📄 Invoice Preview</button>}
+                            {b.invoice_id && b.payment_status !== 'paid' && <button onClick={() => markInvoicePaid(b)} className="dropdown-item">✅ Mark Invoice Paid</button>}
+                        </>
+                    )}
+
+                    {allowed('bookings.status') && (
+                        <>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Booking Status</div>
+                            <button onClick={() => updateStatus(b.id, 'pending')} className="dropdown-item text-amber-600" disabled={b.status === 'pending'}>Mark Pending</button>
+                            <button onClick={() => updateStatus(b.id, 'confirmed')} className="dropdown-item text-blue-600" disabled={b.status === 'confirmed'}>Confirm Booking</button>
+                            <button onClick={() => updateStatus(b.id, 'completed')} className="dropdown-item text-indigo-600" disabled={b.status === 'completed'}>Mark Completed</button>
+                            <button onClick={() => updateStatus(b.id, 'cancelled')} className="dropdown-item text-red-600" disabled={b.status === 'cancelled'}>Cancel Booking</button>
+                        </>
+                    )}
+
+                    {allowed('comms.send') && (
+                        <>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Communication</div>
+                            {b.customer_email && (
+                                <button onClick={() => sendEmail('booking_confirmed', b)} className="dropdown-item">📩 Email Confirmation</button>
+                            )}
+                            {/* Only offered when the stored number can actually be dialled —
+                                this used to call .replace() on a possibly-null phone, which
+                                threw, and sent local "05…" numbers to a dead wa.me link. */}
+                            {canWhatsApp(b.customer_phone) && (
+                                <button onClick={() => { setWhatsAppModal(b); setOpenDropdown(null); }} className="dropdown-item">💬 WhatsApp Customer</button>
+                            )}
+                        </>
+                    )}
+
+                    {allowed('bookings.edit') && (
+                        <>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>More</div>
+                            <button onClick={() => { setNotesModal(b); setNotes(b.internal_notes || ''); setOpenDropdown(null); }} className="dropdown-item">📝 Internal Notes</button>
+                            <button onClick={() => addTag(b.id, 'VIP')} className="dropdown-item">🏷️ Toggle VIP Tag</button>
+                            <button onClick={() => addTag(b.id, 'Urgent')} className="dropdown-item">🏷️ Toggle Urgent Tag</button>
+                        </>
+                    )}
+
+                    {allowed('bookings.delete') && (
+                        <>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#fef2f2', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #fee2e2' }}>Danger Zone</div>
+                            <button onClick={() => deleteBooking(b)} className="dropdown-item text-red-600">🗑️ Delete Booking</button>
+                        </>
+                    )}
                 </div>
             ) : null)}
+
+            {/* ── WhatsApp Composer ──
+                 §7: the admin reviews and edits the message before it is sent,
+                 rather than firing a canned string straight at wa.me. */}
+            {whatsAppModal && (
+                <div
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+                    onClick={() => setWhatsAppModal(null)}
+                >
+                    <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '1.75rem', width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '1rem' }}>
+                            <div>
+                                <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>WhatsApp {whatsAppModal.customer_name}</div>
+                                <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 2 }}>
+                                    Sending to +{toWhatsAppNumber(whatsAppModal.customer_phone)}
+                                </div>
+                            </div>
+                            <button onClick={() => setWhatsAppModal(null)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                        </div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Message</label>
+                        <textarea
+                            value={whatsAppText}
+                            onChange={e => setWhatsAppText(e.target.value)}
+                            rows={10}
+                            className="admin-search-input"
+                            style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }}
+                        />
+                        <p style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 8 }}>
+                            WhatsApp opens in a new tab with this text prefilled. Nothing is sent until you press send there.
+                        </p>
+                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                            <button onClick={() => setWhatsAppModal(null)} className="admin-btn-secondary">Cancel</button>
+                            <button onClick={sendWhatsApp} className="admin-btn-primary" disabled={!whatsAppText.trim()}>
+                                <Send size={14} style={{ marginRight: 6 }} /> Open WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* ── Invoice PDF Modal ── */}
             {invoiceModal && (
@@ -739,7 +1085,13 @@ function BookingsPageInner() {
                             <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
                                 <button onClick={() => { const url = `/admin/invoices/${invoiceModal.invoice_id || invoiceModal.invoice_db_id}`; window.open(url, '_blank'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#1e293b', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Download size={14} /> Download</button>
                                 <button onClick={() => sendEmail('invoice', invoiceModal)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Mail size={14} /> Email</button>
-                                <button onClick={() => { const msg = `Invoice ${invoiceModal.invoice_number} for ${invoiceModal.customer_name}. Amount: SAR ${invoiceModal.quote_amount || 0}. Booking: ${invoiceModal.booking_number}`; window.open(`https://wa.me/${(invoiceModal.customer_phone||'').replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#25D366', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Share2 size={14} /> WhatsApp</button>
+                                {canWhatsApp(invoiceModal.customer_phone) && (
+                                    <button onClick={() => {
+                                        const msg = `Invoice ${invoiceModal.invoice_number} for ${invoiceModal.customer_name}. Amount: ${formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}. Booking: ${invoiceModal.booking_number}`;
+                                        const link = waLinkTo(invoiceModal.customer_phone, msg);
+                                        if (link) window.open(link, '_blank', 'noopener,noreferrer');
+                                    }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#25D366', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Share2 size={14} /> WhatsApp</button>
+                                )}
                                 <button onClick={() => setInvoiceModal(null)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: '#fff', display: 'flex' }}><X size={18} /></button>
                             </div>
                         </div>
@@ -777,13 +1129,13 @@ function BookingsPageInner() {
                                     </tr></thead>
                                     <tbody><tr style={{ borderBottom: '1px solid #f1f5f9' }}>
                                         <td style={{ padding: '1rem', fontSize: '0.85rem', color: '#334155' }}>{invoiceModal.service_type || 'Transportation Service'}<br/><span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Booking Ref: {invoiceModal.booking_number}</span></td>
-                                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>SAR {invoiceModal.quote_amount || 0}</td>
+                                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>{formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}</td>
                                     </tr></tbody>
                                 </table>
                                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     <div style={{ background: '#0f172a', color: '#fff', padding: '1rem 1.5rem', borderRadius: 10, minWidth: 200 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Subtotal</span><span>SAR {invoiceModal.quote_amount || 0}</span></div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>SAR {invoiceModal.quote_amount || 0}</span></div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Subtotal</span><span>{formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}</span></div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>{formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}</span></div>
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1rem', borderTop: '1px solid #f1f5f9', fontSize: '0.78rem', color: '#94a3b8' }}>
@@ -818,7 +1170,7 @@ function BookingsPageInner() {
                                     { key: 'travel_date', label: 'Travel Date', type: 'date' },
                                     { key: 'travel_time', label: 'Travel Time', type: 'time' },
                                     { key: 'passengers_count', label: 'Passengers', type: 'number' },
-                                    { key: 'quote_amount', label: 'Quote (SAR)', type: 'number' },
+                                    { key: 'quote_amount', label: 'Quote Amount', type: 'number' },
                                     { key: 'car_type', label: 'Car Type' },
                                 ].map(f => (
                                     <div key={f.key} style={{ gridColumn: (f as any).span ? '1/-1' : 'auto' }}>
@@ -826,6 +1178,12 @@ function BookingsPageInner() {
                                         <input type={f.type || 'text'} value={newBooking[f.key] || ''} onChange={e => setNewBooking({ ...newBooking, [f.key]: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem', paddingLeft: '1rem' }} />
                                     </div>
                                 ))}
+                                <div>
+                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>Currency</label>
+                                    <select value={toCurrencyCode(newBooking.currency)} onChange={e => setNewBooking({ ...newBooking, currency: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem' }}>
+                                        {CURRENCY_CODES.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
                                 <div>
                                     <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>Status</label>
                                     <select value={newBooking.status} onChange={e => setNewBooking({ ...newBooking, status: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem' }}>

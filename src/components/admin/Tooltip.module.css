@@ -1,0 +1,45 @@
+.trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    /* Icons are often wrapped in a span; make the tooltip reachable by keyboard. */
+    cursor: help;
+    border-radius: 4px;
+}
+
+.trigger:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.bubble {
+    position: fixed;
+    z-index: 10050;
+    max-width: min(260px, calc(100vw - 24px));
+    padding: 0.45rem 0.65rem;
+    border-radius: 8px;
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: 0.73rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.28);
+    pointer-events: none;
+    /* Wrap rather than overflow the viewport on a narrow screen. */
+    white-space: normal;
+    word-break: break-word;
+    animation: fade 0.12s ease-out;
+}
+
+.label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 1px;
+}
+
+@keyframes fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

@@ -388,3 +388,36 @@
     .admin-main, .admin-content { padding: 0 !important; margin: 0 !important; }
     body { background: #fff !important; }
 }
+
+/* ── Role badge (page bar) ─────────────────────────────────────────────
+   Shows who is signed in and with what role, so a Manager or Supervisor
+   can see at a glance why some actions are missing for them. */
+.admin-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: capitalize;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    cursor: help;
+}
+.admin-role-badge[data-role="admin"]      { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
+.admin-role-badge[data-role="manager"]    { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.admin-role-badge[data-role="supervisor"] { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
+
+@media (max-width: 720px) {
+    /* The breadcrumb already names the page; the badge is the first thing
+       to give up its space on a phone. */
+    .admin-role-badge { max-width: 42vw; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* Disabled menu items must not look clickable. */
+.dropdown-item:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}

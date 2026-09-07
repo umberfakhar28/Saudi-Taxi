@@ -5,6 +5,7 @@ import DashboardFilters from './components/DashboardFilters';
 import { DashboardCharts } from './components/DashboardCharts';
 import { ConversionFunnel, AlertsSection, UpcomingBookings, RecentActivity } from './components/DashboardWidgets';
 import { startOfDay, endOfDay, startOfWeek, startOfMonth, subDays, subWeeks, subMonths, format } from 'date-fns';
+import { displayTime } from '@/lib/datetime';
 
 type TrendView = 'daily' | 'weekly' | 'monthly';
 
@@ -319,7 +320,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                         </td>
                                         <td>
                                             <div style={{ fontWeight: 600, fontSize: '0.82rem' }}>{new Date(b.travel_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-                                            <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{b.travel_time}</div>
+                                            <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{displayTime(b.travel_time)}</div>
                                         </td>
                                         <td>
                                             <span className={statusClass(b.status)}>{b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>

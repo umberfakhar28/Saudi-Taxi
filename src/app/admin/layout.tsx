@@ -16,21 +16,42 @@ import {
     BarChart3,
     Calendar,
     Zap,
+    ShieldCheck,
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { LogoMark } from '@/components/Logo';
+import { ROLE_LABELS, ROLE_DESCRIPTIONS } from '@/lib/roles';
 import NotificationProvider from '@/components/NotificationProvider';
+import AdminAuthProvider, { useAdminAuth } from '@/components/admin/AdminAuthProvider';
+import AdminFeedbackProvider from '@/components/admin/AdminFeedback';
+import Tooltip from '@/components/admin/Tooltip';
 import NotificationBell from '@/components/NotificationBell';
 import NotificationToast from '@/components/NotificationToast';
 import './admin.css';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+
+    // The login page must not be wrapped in the portal chrome or the
+    // providers — none of them can resolve a role before sign-in.
+    if (pathname === '/admin/login') return <>{children}</>;
+
+    return (
+        <AdminAuthProvider>
+            <AdminFeedbackProvider>
+                <NotificationProvider>
+                    <AdminShell>{children}</AdminShell>
+                </NotificationProvider>
+            </AdminFeedbackProvider>
+        </AdminAuthProvider>
+    );
+}
+
+function AdminShell({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
     const router = useRouter();
     const supabase = createClient();
-
-    const isLoginPage = pathname === '/admin/login';
-    if (isLoginPage) return <>{children}</>;
+    const { role, email, name, isOwner, allowed } = useAdminAuth();
 
     const handleSignOut = async () => {
         await supabase.auth.signOut();
@@ -66,6 +87,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             items: [
                 { name: 'Reports', href: '/admin/reports', icon: BarChart3, desc: 'Analytics & Export' },
                 { name: 'Automation', href: '/admin/automation', icon: Zap, desc: 'Pricing Rules' },
+                // Only a full admin may manage portal users, so the section is
+                // hidden for everyone else. /api/admin/users enforces the same
+                // rule server-side; this only avoids showing a dead end.
+                ...(allowed('users.manage')
+                    ? [{ name: 'Users', href: '/admin/users', icon: ShieldCheck, desc: 'Portal Access' }]
+                    : []),
                 { name: 'Settings', href: '/admin/settings', icon: Settings, desc: 'Configuration' },
             ],
         },
@@ -75,7 +102,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const currentPage = allItems.find(i => pathname.startsWith(i.href));
 
     return (
-        <NotificationProvider>
         <div className="admin-shell">
             {/* ── Sidebar ── */}
             <aside className="admin-sidebar">
@@ -141,7 +167,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             {currentPage?.name ?? 'Page'}
                         </span>
                     </div>
-                    <NotificationBell />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        {role && (
+                            <Tooltip
+                                label={ROLE_LABELS[role]}
+                                text={`${ROLE_DESCRIPTIONS[role]}${isOwner ? ' This is the owner account.' : ''}`}
+                            >
+                                <span className="admin-role-badge" data-role={role}>
+                                    {name || email?.split('@')[0] || 'Signed in'} · {role}
+                                </span>
+                            </Tooltip>
+                        )}
+                        <NotificationBell />
+                    </div>
                 </div>
 
                 <div className="admin-content">
@@ -150,6 +188,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </main>
             <NotificationToast />
         </div>
-        </NotificationProvider>
     );
 }

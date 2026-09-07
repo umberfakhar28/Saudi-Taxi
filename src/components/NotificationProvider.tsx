@@ -27,6 +27,9 @@ interface NotificationContextValue {
     notifications: AdminNotification[];
     unreadCount: number;
     connectionState: ConnectionState;
+    /** Set when the initial history fetch failed, so the bell can say so
+     *  instead of showing an empty list that looks like "no notifications". */
+    loadError: boolean;
     toast: AdminNotification | null;
     dismissToast: () => void;
     markRead: (id: string) => void;
@@ -46,6 +49,7 @@ const MAX_HISTORY = 30;
 export default function NotificationProvider({ children }: { children: React.ReactNode }) {
     const [notifications, setNotifications] = useState<AdminNotification[]>([]);
     const [connectionState, setConnectionState] = useState<ConnectionState>('connecting');
+    const [loadError, setLoadError] = useState(false);
     const [toast, setToast] = useState<AdminNotification | null>(null);
     // Every id we've ever shown, so a reconnect's initial replay (or a
     // duplicate realtime event) never produces a second toast/row for the
@@ -71,8 +75,18 @@ export default function NotificationProvider({ children }: { children: React.Rea
             .select('*')
             .order('created_at', { ascending: false })
             .limit(MAX_HISTORY)
-            .then(({ data }) => {
-                if (!mounted || !data) return;
+            .then(({ data, error }) => {
+                if (!mounted) return;
+                if (error) {
+                    // Most often an RLS/permission problem or a dropped
+                    // connection. Log it rather than failing silently, and
+                    // let the bell show a real message.
+                    console.error('[NOTIFICATIONS] Failed to load history', error);
+                    setLoadError(true);
+                    return;
+                }
+                if (!data) return;
+                setLoadError(false);
                 data.forEach((row) => seenIds.current.add(row.id));
                 setNotifications(data as AdminNotification[]);
             });
@@ -145,7 +159,7 @@ export default function NotificationProvider({ children }: { children: React.Rea
 
     return (
         <NotificationContext.Provider
-            value={{ notifications, unreadCount, connectionState, toast, dismissToast, markRead, markAllRead }}
+            value={{ notifications, unreadCount, connectionState, loadError, toast, dismissToast, markRead, markAllRead }}
         >
             {children}
         </NotificationContext.Provider>

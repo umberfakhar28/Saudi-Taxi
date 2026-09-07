@@ -5,11 +5,30 @@ import Link from 'next/link';
 import { Bell } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications } from './NotificationProvider';
+import ErrorBoundary from './ErrorBoundary';
 import { pushSupported, pushPromptDismissed, dismissPushPrompt, subscribeToPush } from '@/lib/push-client';
 import styles from './NotificationBell.module.css';
 
+/**
+ * formatDistanceToNow throws RangeError on an invalid date, and that throw
+ * happens during render of the open panel — which unmounted the whole admin
+ * tree and produced "Application error: a client-side exception has
+ * occurred" the moment the bell was clicked. A missing timestamp is not
+ * worth destroying the page for, so it degrades to no timestamp.
+ */
+function safeRelativeTime(value: string | null | undefined): string | null {
+    if (!value) return null;
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return null;
+    try {
+        return formatDistanceToNow(parsed, { addSuffix: true });
+    } catch {
+        return null;
+    }
+}
+
 export default function NotificationBell() {
-    const { notifications, unreadCount, connectionState, markRead, markAllRead } = useNotifications();
+    const { notifications, unreadCount, connectionState, loadError, markRead, markAllRead } = useNotifications();
     const [open, setOpen] = useState(false);
     const wrapRef = useRef<HTMLDivElement>(null);
     const [pushOffer, setPushOffer] = useState<'hidden' | 'offer' | 'enabling' | 'enabled' | 'error'>('hidden');
@@ -62,6 +81,20 @@ export default function NotificationBell() {
             </button>
 
             {open && (
+                <ErrorBoundary
+                    label="NotificationBell panel"
+                    fallback={
+                        <div className={styles.panel}>
+                            <div className={styles.panelHeader}>
+                                <span className={styles.panelTitle}>Notifications</span>
+                            </div>
+                            <div className={styles.empty}>
+                                This panel couldn&apos;t be displayed. The rest of the portal is unaffected —
+                                open Bookings to see the latest activity.
+                            </div>
+                        </div>
+                    }
+                >
                 <div className={styles.panel}>
                     <div className={styles.panelHeader}>
                         <span className={styles.panelTitle}>Notifications</span>
@@ -76,7 +109,11 @@ export default function NotificationBell() {
                     </div>
 
                     <div className={styles.list}>
-                        {notifications.length === 0 ? (
+                        {loadError ? (
+                            <div className={styles.empty}>
+                                Couldn&apos;t load notifications. They&apos;ll reappear once the connection recovers.
+                            </div>
+                        ) : notifications.length === 0 ? (
                             <div className={styles.empty}>No notifications yet.</div>
                         ) : (
                             notifications.map((n) => (
@@ -92,7 +129,9 @@ export default function NotificationBell() {
                                     {!n.is_read && <span className={styles.unreadDot} />}
                                     <div className={styles.itemTop}>
                                         <span className={styles.itemTitle}>{n.title}</span>
-                                        <span className={styles.itemTime}>{formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}</span>
+                                        {safeRelativeTime(n.created_at) && (
+                                            <span className={styles.itemTime}>{safeRelativeTime(n.created_at)}</span>
+                                        )}
                                     </div>
                                     {n.summary && <div className={styles.itemSummary}>{n.summary}</div>}
                                 </Link>
@@ -117,6 +156,7 @@ export default function NotificationBell() {
                     {pushOffer === 'enabled' && <div className={styles.pushOffer}><p>Browser notifications enabled for this device.</p></div>}
                     {pushOffer === 'error' && <div className={styles.pushOffer}><p>Couldn&apos;t enable browser notifications. You can allow this from your browser&apos;s site settings instead.</p></div>}
                 </div>
+                </ErrorBoundary>
             )}
         </div>
     );

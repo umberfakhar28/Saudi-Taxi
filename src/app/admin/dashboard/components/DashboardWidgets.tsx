@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Clock, AlertTriangle, FileText, Activity, Users } from 'lucide-react';
+import { displayTime } from '@/lib/datetime';
 
 export function ConversionFunnel({ quotesCreated, quotesSent, bookingsCreated, bookingsCompleted }: any) {
     const qCreated = quotesCreated || 1; // prevent div by 0
@@ -79,7 +80,7 @@ export function UpcomingBookings({ bookings }: { bookings: any[] }) {
                     <Link key={b.id} href={`/admin/bookings?edit=${b.id}`} style={{ display: 'block', textDecoration: 'none', border: '1px solid #f1f5f9', padding: '0.875rem', borderRadius: 8 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                             <div style={{ fontWeight: 600, color: '#1e293b', fontSize: '0.9rem' }}>{b.customer_name}</div>
-                            <div style={{ fontSize: '0.8rem', color: '#3b82f6', fontWeight: 600 }}>{b.travel_time}</div>
+                            <div style={{ fontSize: '0.8rem', color: '#3b82f6', fontWeight: 600 }}>{displayTime(b.travel_time)}</div>
                         </div>
                         <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                             <Clock size={14} /> {new Date(b.travel_date).toLocaleDateString()}

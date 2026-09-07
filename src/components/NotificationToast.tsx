@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { X } from 'lucide-react';
 import { useNotifications } from './NotificationProvider';
 import styles from './NotificationToast.module.css';
+import { displayDateTime } from '@/lib/datetime';
 
 const AUTO_DISMISS_MS = 12000;
 
@@ -36,7 +37,7 @@ export default function NotificationToast() {
                 )}
                 {(toast.travel_date || toast.travel_time) && (
                     <div className={styles.detailRow}>
-                        {toast.travel_date} {toast.travel_time}
+                        {displayDateTime(toast.travel_date, toast.travel_time)}
                     </div>
                 )}
                 {toast.passengers_count != null && (

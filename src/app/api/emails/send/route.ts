@@ -2,6 +2,8 @@ import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { displayDate, displayDateTime, displayTime } from '@/lib/datetime';
+import { formatMoney } from '@/lib/currency';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
@@ -156,10 +158,14 @@ function buildBookingRows(b: Record<string, unknown>): string {
         row('To', b.dropoff_location),
         row('Service', serviceLabel(b.service_type as string | null | undefined)),
         row('Vehicle', b.car_type),
-        row('Date', b.travel_date),
-        row('Time', b.travel_time),
+        row('Date', displayDate(b.travel_date as string | null | undefined, '')),
+        // travel_time arrives as "04:00:00" from the bookings `time` column
+        // and "04:00" from the notifications text column; both were printed
+        // raw, so 4am and 4pm were indistinguishable in the customer's
+        // confirmation and the admin's alert.
+        row('Time', displayTime(b.travel_time as string | null | undefined, '')),
         row('Passengers', b.passengers_count),
-        row('Quote Amount', b.quote_amount ? `SAR ${b.quote_amount}` : ''),
+        row('Quote Amount', b.quote_amount ? formatMoney(b.quote_amount as number, b.currency as string | null | undefined) : ''),
         row('Notes', b.special_notes),
     ].join(''));
 }
@@ -235,7 +241,7 @@ export async function POST(req: Request) {
             const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Booking Received!</p></div>
                 <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
-                <p style="color:#475569;">We received your booking request for <strong>${escapeHtml(String(b.travel_date))}</strong>. Our team will review the details and contact you within 30 minutes to confirm your final quote.</p>
+                <p style="color:#475569;">We received your booking request for <strong>${escapeHtml(displayDateTime(b.travel_date as string | null | undefined, b.travel_time as string | null | undefined))}</strong>. Our team will review the details and contact you within 30 minutes to confirm your final quote.</p>
                 ${buildBookingRows(b)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">For urgent queries, reply to this email or message us on WhatsApp.</p>
             </div></div>`;
@@ -296,11 +302,12 @@ export async function POST(req: Request) {
                     row('To', q.dropoff_location),
                     row('Vehicle', q.vehicle_type),
                     row('Distance', q.distance_km ? `${q.distance_km} km` : ''),
-                    row('Date', q.travel_date || 'TBD'),
+                    row('Date', displayDate(q.travel_date as string | null | undefined, 'TBD')),
+                    row('Time', displayTime(q.travel_time as string | null | undefined, 'TBD')),
                 ].join(''))}
                 <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-top:16px;text-align:center;">
                     <p style="color:#94a3b8;margin:0;font-size:0.8rem;">QUOTED PRICE</p>
-                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">SAR ${Number(finalAmount ?? 0).toFixed(2)}</p>
+                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">${formatMoney(Number(finalAmount ?? 0), q.currency as string | null | undefined)}</p>
                     <p style="color:#f59e0b;font-size:0.8rem;margin:0;">⏱️ Valid for 24 hours</p>
                 </div>
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">To accept this quote or for any queries, reply to this email or contact us on WhatsApp.</p>
@@ -364,12 +371,12 @@ export async function POST(req: Request) {
                     row('From', inv.pickup_location),
                     row('To', inv.dropoff_location),
                     row('Service', serviceLabel(inv.service_type)),
-                    row('Date', inv.travel_date),
+                    row('Date', displayDate(inv.travel_date as string | null | undefined, '')),
                     row('Status', inv.status ? String(inv.status).replace('_', ' ').toUpperCase() : ''),
                 ].join(''))}
                 <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-top:16px;text-align:center;">
                     <p style="color:#94a3b8;margin:0;font-size:0.8rem;">TOTAL AMOUNT</p>
-                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">SAR ${Number(inv.total_amount ?? 0).toFixed(2)}</p>
+                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">${formatMoney(Number(inv.total_amount ?? 0), inv.currency as string | null | undefined)}</p>
                 </div>
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/invoices/${inv.invoice_db_id || inv.id || ''}" style="${btnStyle}">View Invoice</a></p>
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>

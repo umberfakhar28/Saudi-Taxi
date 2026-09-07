@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { ChevronLeft, ChevronRight, Plus, X } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, startOfWeek, addDays, isSameMonth, isSameDay, addMonths, subMonths } from 'date-fns';
+import { displayTime, formatTime12h } from '@/lib/datetime';
+import { formatMoney } from '@/lib/currency';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
     pending:   { bg: '#fef9c3', text: '#854d0e', dot: '#f59e0b' },
@@ -74,7 +76,7 @@ export default function CalendarPage() {
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: c.dot, flexShrink: 0 }} />
                 <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {compact ? b.customer_name.split(' ')[0] : b.customer_name}
-                    {b.travel_time && <span style={{ opacity: 0.7 }}> · {b.travel_time.slice(0, 5)}</span>}
+                    {formatTime12h(b.travel_time) && <span style={{ opacity: 0.7 }}> · {formatTime12h(b.travel_time)}</span>}
                 </span>
             </div>
         );
@@ -99,10 +101,10 @@ export default function CalendarPage() {
                             ['📍 Pickup', selectedBooking.pickup_location],
                             ['📍 Dropoff', selectedBooking.dropoff_location],
                             ['📅 Date', selectedBooking.travel_date],
-                            ['🕐 Time', selectedBooking.travel_time],
+                            ['🕐 Time', displayTime(selectedBooking.travel_time)],
                             ['🚗 Service', selectedBooking.service_type],
                             ['👥 Passengers', selectedBooking.passengers_count],
-                            ['💰 Quote', selectedBooking.quote_amount ? `SAR ${selectedBooking.quote_amount}` : '—'],
+                            ['💰 Quote', selectedBooking.quote_amount ? formatMoney(selectedBooking.quote_amount, selectedBooking.currency) : '—'],
                         ].map(([label, value]) => value ? (
                             <div key={label as string} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f1f5f9', fontSize: '0.85rem' }}>
                                 <span style={{ color: '#94a3b8' }}>{label}</span>

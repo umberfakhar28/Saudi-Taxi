@@ -6,6 +6,7 @@ import { Search, Plus, Filter, FileText, CheckCircle, XCircle, Clock, RefreshCw,
 import { format } from 'date-fns';
 import { formatSAR } from '@/utils/pricing';
 import Link from 'next/link';
+import { displayTime } from '@/lib/datetime';
 
 export default function QuotesPage() {
     const [quotes, setQuotes] = useState<any[]>([]);
@@ -220,7 +221,7 @@ export default function QuotesPage() {
                             <Row label="Vehicle">{viewModal.vehicle_type}</Row>
                             <Row label="Distance">{viewModal.distance_km} km</Row>
                             <Row label="Travel Date">{viewModal.travel_date || 'TBD'}</Row>
-                            <Row label="Travel Time">{viewModal.travel_time || '—'}</Row>
+                            <Row label="Travel Time">{displayTime(viewModal.travel_time)}</Row>
                             <Row label="Passengers">{viewModal.passengers_count || '—'}</Row>
                             <Row label="Calculated Price">{formatSAR(viewModal.total_amount)}</Row>
                             {viewModal.admin_override_amount && <Row label="Final (Override)">{formatSAR(viewModal.admin_override_amount)}</Row>}
