@@ -9,6 +9,7 @@ import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Trash2 } f
 import { LogoMark } from '@/components/Logo';
 import { formatMoney } from '@/lib/currency';
 import { displayDate } from '@/lib/datetime';
+import { serviceLabel } from '@/lib/serviceLabels';
 import { EMAIL, PHONE_DISPLAY } from '@/lib/contact';
 import { downloadInvoicePng } from '@/lib/invoicePng';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
@@ -217,7 +218,7 @@ export default function InvoiceDetailPage() {
                         <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
                         <div style={{ fontSize: '0.82rem', color: '#334155' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {invoice.pickup_location || '—'}</div>
                         <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {invoice.dropoff_location || '—'}</div>
-                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{displayDate(invoice.travel_date)} · {invoice.service_type || 'Transportation'}</div>
+                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{displayDate(invoice.travel_date)} · {serviceLabel(invoice.service_type) || 'Transportation'}</div>
                     </div>
                 </div>
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1.5rem' }}>
@@ -227,7 +228,7 @@ export default function InvoiceDetailPage() {
                     </tr></thead>
                     <tbody><tr style={{ borderBottom: '1px solid #f1f5f9' }}>
                         <td style={{ padding: '1rem', fontSize: '0.85rem', color: '#334155' }}>
-                            {invoice.service_type || 'Transportation Service'}<br />
+                            {serviceLabel(invoice.service_type) || 'Transportation Service'}<br />
                             <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{bookingNumber ? `Booking Ref: ${bookingNumber}` : ''}</span>
                         </td>
                         <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>{formatMoney(invoice.subtotal ?? invoice.total_amount ?? 0, invoice.currency)}</td>

@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Download, FileText, TrendingUp, Users, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
+import { serviceLabel } from '@/lib/serviceLabels';
 
 type ReportType = 'trips' | 'revenue' | 'customers';
 
@@ -113,7 +114,7 @@ export default function ReportsPage() {
                                 <td><div style={{ fontWeight:600 }}>{b.customer_name}</div><div style={{ fontSize:'0.75rem', color:'#94a3b8' }}>{b.customer_phone}</div></td>
                                 <td style={{ fontSize:'0.8rem' }}><div>↑ {b.pickup_location}</div><div style={{ marginTop:2 }}>↓ {b.dropoff_location}</div></td>
                                 <td style={{ fontSize:'0.82rem' }}>{b.travel_date}</td>
-                                <td style={{ fontSize:'0.82rem' }}>{b.service_type}</td>
+                                <td style={{ fontSize:'0.82rem' }}>{serviceLabel(b.service_type)}</td>
                                 <td><span className={`badge-${b.status}`}>{b.status}</span></td>
                                 <td style={{ fontWeight:700 }}>{b.quote_amount ? `SAR ${b.quote_amount}` : '—'}</td>
                             </tr>)}</tbody></table>

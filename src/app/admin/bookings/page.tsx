@@ -6,6 +6,7 @@ import { Search, RefreshCw, ChevronDown, X, Download, Trash, CheckSquare, Square
 import { format, isWithinInterval, startOfDay, endOfDay, addDays, parseISO } from 'date-fns';
 import { displayDate, displayTime, toTimeInputValue, toStorableTime } from '@/lib/datetime';
 import { formatMoney, CURRENCY_CODES, toCurrencyCode } from '@/lib/currency';
+import { serviceLabel } from '@/lib/serviceLabels';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
@@ -347,6 +348,26 @@ function BookingsPageInner() {
 
     const saveEdit = async () => {
         if (!editModal) return;
+        // The same NOT NULL columns apply on update: clearing the date or
+        // time in the form would otherwise fail at the database with an
+        // opaque message.
+        const storableTime = toStorableTime(editModal.travel_time);
+        const requiredNow: [unknown, string][] = [
+            [String(editModal.customer_name ?? '').trim(), 'customer name'],
+            [String(editModal.customer_email ?? '').trim(), 'customer email'],
+            [String(editModal.customer_phone ?? '').trim(), 'phone number'],
+            [String(editModal.service_type ?? '').trim(), 'service type'],
+            [String(editModal.pickup_location ?? '').trim(), 'pickup location'],
+            [String(editModal.dropoff_location ?? '').trim(), 'drop-off location'],
+            [String(editModal.travel_date ?? '').trim(), 'travel date'],
+            [storableTime, 'travel time'],
+        ];
+        const blank = requiredNow.filter(([value]) => !value).map(([, label]) => label);
+        if (blank.length) {
+            showToast('error', `These cannot be left empty: ${blank.join(', ')}.`);
+            return;
+        }
+
         const previousStatus = bookings.find(b => b.id === editModal.id)?.status;
         const nextStatus = STATUS_OPTIONS.includes(editModal.status) && editModal.status !== 'all'
             ? editModal.status
@@ -361,7 +382,7 @@ function BookingsPageInner() {
             pickup_location: editModal.pickup_location,
             dropoff_location: editModal.dropoff_location,
             travel_date: editModal.travel_date,
-            travel_time: toStorableTime(editModal.travel_time),
+            travel_time: storableTime,
             passengers_count: parseInt(editModal.passengers_count) || 1,
             quote_amount: parseFloat(editModal.quote_amount) || null,
             currency: toCurrencyCode(editModal.currency),
@@ -380,8 +401,24 @@ function BookingsPageInner() {
     };
 
     const createBooking = async () => {
-        if (!newBooking.customer_name || !newBooking.customer_phone || !newBooking.customer_email || !newBooking.pickup_location || !newBooking.dropoff_location) {
-            showToast('error', 'Please fill in customer name, phone, email, pickup and drop-off locations.'); return;
+        // Every one of these is NOT NULL in the bookings table with no
+        // default, so a missing value used to surface as a raw Postgres
+        // error ("null value in column ... violates not-null constraint").
+        // Name the field that is actually missing instead.
+        const REQUIRED: [string, string][] = [
+            ['customer_name', 'customer name'],
+            ['customer_email', 'customer email'],
+            ['customer_phone', 'phone number'],
+            ['service_type', 'service type'],
+            ['pickup_location', 'pickup location'],
+            ['dropoff_location', 'drop-off location'],
+            ['travel_date', 'travel date'],
+            ['travel_time', 'travel time'],
+        ];
+        const missing = REQUIRED.filter(([key]) => !String(newBooking[key] ?? '').trim()).map(([, label]) => label);
+        if (missing.length) {
+            showToast('error', `Still needed: ${missing.join(', ')}.`);
+            return;
         }
         // Create/update the customer record too — same pipeline the public
         // booking form uses, so a booking created from the admin panel
@@ -507,7 +544,7 @@ function BookingsPageInner() {
         dataToExport.forEach(b => {
             const values = [
                 b.id, `"${b.customer_name}"`, `"${b.customer_phone}"`, `"${b.pickup_location}"`, `"${b.dropoff_location}"`,
-                b.travel_date, `"${displayTime(b.travel_time, '')}"`, `"${b.service_type}"`, b.status, b.payment_status, b.quote_amount || 0
+                b.travel_date, `"${displayTime(b.travel_time, '')}"`, `"${serviceLabel(b.service_type)}"`, b.status, b.payment_status, b.quote_amount || 0
             ];
             csvRows.push(values.join(','));
         });
@@ -568,7 +605,7 @@ function BookingsPageInner() {
                             <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid #e2e8f0' }}>
                                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '1rem' }}>Billing & Service</div>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
-                                    <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Service Type</div><div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{viewModal.service_type || 'N/A'}</div></div>
+                                    <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Service Type</div><div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{serviceLabel(viewModal.service_type) || 'N/A'}</div></div>
                                     <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Quote Amount</div><div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a' }}>{formatMoney(viewModal.quote_amount, viewModal.currency)}</div></div>
                                     <div>
                                         <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Payment Status</div>
@@ -874,7 +911,7 @@ function BookingsPageInner() {
                                 <td>
                                     <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#334155' }}>{displayDate(b.travel_date)}</div>
                                     <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: 2 }}>{displayTime(b.travel_time)}</div>
-                                    <div style={{ fontSize: '0.7rem', color: '#6366f1', fontWeight: 600, marginTop: 4 }}>{b.service_type}</div>
+                                    <div style={{ fontSize: '0.7rem', color: '#6366f1', fontWeight: 600, marginTop: 4 }}>{serviceLabel(b.service_type)}</div>
                                 </td>
                                 <td>
                                     <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>{formatMoney(b.quote_amount, b.currency)}</div>
@@ -1128,7 +1165,7 @@ function BookingsPageInner() {
                                         <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontSize: '0.78rem', fontWeight: 700, borderRadius: '0 8px 8px 0' }}>Amount</th>
                                     </tr></thead>
                                     <tbody><tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                        <td style={{ padding: '1rem', fontSize: '0.85rem', color: '#334155' }}>{invoiceModal.service_type || 'Transportation Service'}<br/><span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Booking Ref: {invoiceModal.booking_number}</span></td>
+                                        <td style={{ padding: '1rem', fontSize: '0.85rem', color: '#334155' }}>{serviceLabel(invoiceModal.service_type) || 'Transportation Service'}<br/><span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Booking Ref: {invoiceModal.booking_number}</span></td>
                                         <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>{formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}</td>
                                     </tr></tbody>
                                 </table>
@@ -1163,12 +1200,12 @@ function BookingsPageInner() {
                                 {[
                                     { key: 'customer_name', label: 'Customer Name *', span: true },
                                     { key: 'customer_phone', label: 'Phone *' },
-                                    { key: 'customer_email', label: 'Email' },
-                                    { key: 'service_type', label: 'Service Type' },
+                                    { key: 'customer_email', label: 'Email *' },
+                                    { key: 'service_type', label: 'Service Type *' },
                                     { key: 'pickup_location', label: 'Pickup Location *', span: true },
                                     { key: 'dropoff_location', label: 'Dropoff Location *', span: true },
-                                    { key: 'travel_date', label: 'Travel Date', type: 'date' },
-                                    { key: 'travel_time', label: 'Travel Time', type: 'time' },
+                                    { key: 'travel_date', label: 'Travel Date *', type: 'date' },
+                                    { key: 'travel_time', label: 'Travel Time *', type: 'time' },
                                     { key: 'passengers_count', label: 'Passengers', type: 'number' },
                                     { key: 'quote_amount', label: 'Quote Amount', type: 'number' },
                                     { key: 'car_type', label: 'Car Type' },

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -17,6 +18,7 @@ import {
     Calendar,
     Zap,
     ShieldCheck,
+    Menu,
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { LogoMark } from '@/components/Logo';
@@ -52,6 +54,10 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const supabase = createClient();
     const { role, email, name, isOwner, allowed } = useAdminAuth();
+    const [navOpen, setNavOpen] = useState(false);
+
+    // The drawer must not stay open over the page you just navigated to.
+    useEffect(() => { setNavOpen(false); }, [pathname]);
 
     const handleSignOut = async () => {
         await supabase.auth.signOut();
@@ -102,7 +108,9 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     const currentPage = allItems.find(i => pathname.startsWith(i.href));
 
     return (
-        <div className="admin-shell">
+        <div className={`admin-shell${navOpen ? ' nav-open' : ''}`}>
+            {/* Tapping away from the drawer closes it. */}
+            <div className="admin-nav-backdrop" onClick={() => setNavOpen(false)} aria-hidden="true" />
             {/* ── Sidebar ── */}
             <aside className="admin-sidebar">
                 {/* Logo */}
@@ -161,6 +169,15 @@ function AdminShell({ children }: { children: React.ReactNode }) {
                 {/* Page breadcrumb strip */}
                 <div className="admin-page-bar" style={{ justifyContent: 'space-between' }}>
                     <div className="admin-breadcrumb">
+                        <button
+                            type="button"
+                            className="admin-nav-toggle"
+                            onClick={() => setNavOpen((v) => !v)}
+                            aria-label={navOpen ? 'Close navigation' : 'Open navigation'}
+                            aria-expanded={navOpen}
+                        >
+                            <Menu size={18} />
+                        </button>
                         <span>Admin</span>
                         <ChevronRight size={14} />
                         <span className="admin-breadcrumb-current">

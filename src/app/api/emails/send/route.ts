@@ -4,6 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { displayDate, displayDateTime, displayTime } from '@/lib/datetime';
 import { formatMoney } from '@/lib/currency';
+import { serviceLabel } from '@/lib/serviceLabels';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
@@ -130,22 +131,6 @@ function escapeHtml(s: string): string {
 
 function rowsTable(rowsHtml: string): string {
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">${rowsHtml}</table>`;
-}
-
-const SERVICE_LABELS: Record<string, string> = {
-    'airport-transfer': 'Airport Transfer',
-    'hotel-transfer': 'Hotel Transfer',
-    'private-taxi': 'Private Taxi',
-    'umrah-package': 'Umrah Transport Package',
-    'hourly-driver': 'Hourly Chauffeur',
-    'ziyarat': 'Ziyarat Tour',
-    'jeddah-tour': 'Jeddah City Tour',
-    'alula-tour': 'AlUla Tour',
-};
-
-function serviceLabel(serviceType?: string | null): string {
-    if (!serviceType) return '';
-    return SERVICE_LABELS[serviceType] ?? serviceType.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /** Booking/enquiry detail rows shared by every booking-shaped email. */

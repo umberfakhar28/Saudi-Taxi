@@ -442,3 +442,69 @@
 .text-blue-600 { color: #2563eb !important; }
 .text-indigo-600 { color: #4f46e5 !important; }
 .text-red-600 { color: #dc2626 !important; }
+
+/* ── Mobile / tablet navigation ────────────────────────────────────────
+   The sidebar was a permanently-fixed 260px column with no breakpoint at
+   all, so on a 390px phone it consumed two thirds of the screen and left
+   the actual content unusable. Below 900px it becomes an off-canvas drawer
+   opened from the page bar. */
+.admin-nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.4rem;
+    color: #334155;
+    cursor: pointer;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+.admin-nav-toggle:hover { background: #e2e8f0; }
+
+.admin-nav-backdrop { display: none; }
+
+@media (max-width: 900px) {
+    .admin-nav-toggle { display: inline-flex; }
+
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.22s ease;
+        width: min(280px, 82vw);
+        min-width: 0;
+    }
+    .admin-shell.nav-open .admin-sidebar {
+        transform: translateX(0);
+        box-shadow: 0 0 48px rgba(0, 0, 0, 0.45);
+    }
+
+    .admin-shell.nav-open .admin-nav-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        z-index: 45;
+    }
+
+    .admin-main { margin-left: 0; min-width: 0; }
+    .admin-page-bar { padding: 0.65rem 1rem; }
+    .admin-content { padding: 1rem; }
+
+    /* Wide tables scroll inside their own container rather than pushing
+       the page sideways. */
+    .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .admin-table { min-width: 720px; }
+}
+
+@media (max-width: 560px) {
+    .admin-content { padding: 0.75rem; }
+    .admin-page-title { font-size: 1.35rem; }
+    /* Stacked, full-width action buttons beat a cramped horizontal row. */
+    .admin-filter-bar { flex-wrap: wrap; }
+}
+
+/* Modals must never exceed the screen on a phone. */
+@media (max-width: 640px) {
+    .admin-role-badge { display: none; }
+}

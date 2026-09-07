@@ -16,6 +16,7 @@ import { brandMarkDataUrl } from './brandMark';
 import { formatMoney } from './currency';
 import { displayDate } from './datetime';
 import { EMAIL, PHONE_DISPLAY } from './contact';
+import { serviceLabel } from './serviceLabels';
 
 export interface InvoicePngData {
     /** "INVOICE" by default; quotes pass "QUOTATION". */
@@ -129,7 +130,8 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     measure.font = font(400, 13);
     const pickupLines = wrap(measure, inv.pickup_location || '—', innerCol - 16);
     const dropoffLines = wrap(measure, inv.dropoff_location || '—', innerCol - 16);
-    const serviceLines = wrap(measure, inv.service_type || 'Transportation Service', contentWidth - 200);
+    const serviceText = serviceLabel(inv.service_type) || 'Transportation Service';
+    const serviceLines = wrap(measure, serviceText, contentWidth - 200);
     const notesLines = inv.notes ? wrap(measure, String(inv.notes), contentWidth - 32) : [];
 
     const tripBoxHeight = 58 + (pickupLines.length + dropoffLines.length) * 19 + 22;
@@ -243,7 +245,7 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     ctx.fillStyle = FAINT;
     ctx.font = font(400, 11.5);
     ctx.fillText(
-        `${displayDate(inv.travel_date)} · ${inv.service_type || 'Transportation'}`,
+        `${displayDate(inv.travel_date)} · ${serviceText}`,
         tx + 16,
         ty + 10
     );
