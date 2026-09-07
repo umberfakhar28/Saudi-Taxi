@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -9,8 +9,25 @@ export default function AdminLogin() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [notice, setNotice] = useState<string | null>(null);
     const router = useRouter();
     const supabase = createClient();
+
+    // proxy.ts sends us back here with ?error=... when the sign-in itself
+    // succeeded but the account failed the admin check. Without this the
+    // bounce is silent and looks identical to a wrong password.
+    useEffect(() => {
+        const reason = new URLSearchParams(window.location.search).get('error');
+        if (reason === 'config') {
+            setNotice(
+                'Admin access is not configured on this deployment: the ADMIN_EMAIL environment variable is missing. Add it in the hosting environment settings and redeploy.'
+            );
+        } else if (reason === 'unauthorized') {
+            setNotice(
+                'That account signed in successfully, but it is not the configured admin account, so it cannot open the admin portal.'
+            );
+        }
+    }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -47,6 +64,21 @@ export default function AdminLogin() {
                 </div>
 
                 <form onSubmit={handleLogin}>
+                    {notice && (
+                        <div style={{
+                            padding: '1rem',
+                            background: 'rgba(245, 158, 11, 0.1)',
+                            border: '1px solid #f59e0b',
+                            borderRadius: 'var(--radius-sm)',
+                            color: '#f59e0b',
+                            marginBottom: '1.5rem',
+                            fontSize: '0.9rem',
+                            lineHeight: 1.5
+                        }}>
+                            {notice}
+                        </div>
+                    )}
+
                     {error && (
                         <div style={{ 
                             padding: '1rem', 

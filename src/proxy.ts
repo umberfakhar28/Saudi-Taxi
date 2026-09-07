@@ -93,9 +93,15 @@ export async function proxy(request: NextRequest) {
 
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
+    // Compare case-insensitively: Supabase stores account emails lowercased,
+    // so an ADMIN_EMAIL entered with capitals would never match.
+    const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+    const userEmail = user?.email?.trim().toLowerCase();
+    const isAdmin = !!adminEmail && !!userEmail && userEmail === adminEmail;
+
     // Exclude the login page itself to avoid redirect loops
     if (request.nextUrl.pathname === "/admin/login") {
-      if (user && user.email === process.env.ADMIN_EMAIL) {
+      if (isAdmin) {
         return NextResponse.redirect(new URL("/admin/dashboard", request.url));
       }
       return response;
@@ -105,10 +111,27 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
 
-    // Check for specific admin email from .env.local
-    if (user.email !== process.env.ADMIN_EMAIL) {
-      // Not an admin, redirect to home
-      return NextResponse.redirect(new URL("/", request.url));
+    if (!adminEmail) {
+      // Server misconfiguration, not an unauthorised visitor. With ADMIN_EMAIL
+      // unset every address mismatches, so the real admin signs in
+      // successfully and is then bounced with no explanation at all. Fail
+      // loudly rather than silently dropping them on the homepage.
+      console.error(
+        "[ADMIN_AUTH] ADMIN_EMAIL is not set in this environment — no account can pass the admin check. " +
+          "Set ADMIN_EMAIL to the admin's Supabase account email and redeploy."
+      );
+      return NextResponse.redirect(
+        new URL("/admin/login?error=config", request.url)
+      );
+    }
+
+    if (!isAdmin) {
+      // Signed in, but not the admin account. Return them to the login screen
+      // with a reason: bouncing to the homepage is indistinguishable from a
+      // failed sign-in and leaves nothing to diagnose.
+      return NextResponse.redirect(
+        new URL("/admin/login?error=unauthorized", request.url)
+      );
     }
   }
 
