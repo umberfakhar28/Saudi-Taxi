@@ -5,9 +5,10 @@ import { audit, guard, isUuid, badRequest, notFound, serverError } from '@/utils
 /**
  * DELETE /api/admin/quotes/:id — Admin only (§8.1).
  *
- * A quote that has already been converted into a booking is refused rather
- * than silently removed: the booking references it, and deleting it would
- * erase how that booking was priced.
+ * A quote may carry a booking_id, either because it was converted into a
+ * booking or because it was raised from one ("Create Quote for Customer").
+ * The foreign key runs quote -> booking, so deleting the quote never orphans
+ * or alters the booking; the link is recorded in the audit entry instead.
  */
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
     const gate = await guard('quotes.delete');
@@ -27,17 +28,10 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
         if (readError) return serverError('quote lookup failed', readError);
         if (!quote) return notFound('That quote no longer exists.');
 
-        if (quote.booking_id) {
-            return NextResponse.json(
-                {
-                    error:
-                        'This quote has been converted into a booking, so it cannot be deleted. ' +
-                        'Delete the booking first if you really need to remove it.',
-                },
-                { status: 409 }
-            );
-        }
-
+        // The foreign key runs quote -> booking, so removing the quote cannot
+        // orphan or alter the booking; only the pricing record is lost. The
+        // link is recorded in the audit entry so the history still shows what
+        // was removed and from where.
         const { error: deleteError } = await supabase.from('quotes').delete().eq('id', id);
         if (deleteError) return serverError('quote delete failed', deleteError);
 
@@ -46,7 +40,8 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
             'quote',
             id,
             'deleted',
-            `Quote for ${quote.customer_name ?? 'unknown customer'} deleted`
+            `Quote for ${quote.customer_name ?? 'unknown customer'} deleted` +
+                (quote.booking_id ? ` (was linked to booking ${quote.booking_id})` : '')
         );
 
         return NextResponse.json({ ok: true });

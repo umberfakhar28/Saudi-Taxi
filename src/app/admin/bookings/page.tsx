@@ -940,6 +940,17 @@ function BookingsPageInner() {
                                                 <button onClick={() => setWhatsAppModal(b)} aria-label="WhatsApp customer" style={{ background: '#dcfce7', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#15803d' }}><MessageCircle size={14} /></button>
                                             </Tooltip>
                                         )}
+                                        {allowed('quotes.create') && (
+                                            <Tooltip label="Create quote" text="Opens a new quote with this booking's customer and trip details already filled in.">
+                                                <button
+                                                    onClick={() => router.push(`/admin/quotes/new?fromBooking=${b.id}`)}
+                                                    aria-label="Create quote for this booking"
+                                                    style={{ background: '#fef3c7', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#b45309' }}
+                                                >
+                                                    <FileText size={14} />
+                                                </button>
+                                            </Tooltip>
+                                        )}
                                         {allowed('bookings.status') && b.status === 'confirmed' && (
                                             <Tooltip label="Mark completed" text="Marks the trip as finished and offers to raise an invoice.">
                                                 <button onClick={() => updateStatus(b.id, 'completed')} aria-label="Mark completed" style={{ background: '#e0e7ff', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#4f46e5' }}><CheckSquare size={14} /></button>
@@ -1016,6 +1027,14 @@ function BookingsPageInner() {
                     )}
                     {allowed('bookings.create') && (
                         <button onClick={() => duplicateTrip(b)} className="dropdown-item">📋 Duplicate Trip</button>
+                    )}
+                    {allowed('quotes.create') && (
+                        <button
+                            onClick={() => { setOpenDropdown(null); router.push(`/admin/quotes/new?fromBooking=${b.id}`); }}
+                            className="dropdown-item"
+                        >
+                            💱 Create Quote for Customer
+                        </button>
                     )}
 
                     {allowed('invoices.create') && (
