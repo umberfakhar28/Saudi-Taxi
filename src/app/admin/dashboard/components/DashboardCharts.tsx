@@ -1,67 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, Legend } from 'recharts';
+import { Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar } from 'recharts';
+import { BookingsByStatus, type StatusDatum } from './BookingsByStatus';
 
-export function DashboardCharts({ bookingsByStatus, revenueTrend, bookingTrend }: { 
-    bookingsByStatus: any[], 
+export function DashboardCharts({ bookingsByStatus, revenueTrend, bookingTrend }: {
+    bookingsByStatus: StatusDatum[],
     revenueTrend: any[],
     bookingTrend: any[]
 }) {
-    const [pieView, setPieView] = useState<'count' | 'revenue'>('count');
     const [trendView, setTrendView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
-
-    const COLORS = {
-        pending: '#f59e0b',
-        confirmed: '#10b981',
-        completed: '#6366f1',
-        cancelled: '#f43f5e',
-    };
-
-    const pieData = bookingsByStatus.map(b => ({
-        name: b.status.charAt(0).toUpperCase() + b.status.slice(1),
-        value: pieView === 'count' ? b.count : b.revenue,
-        color: COLORS[b.status as keyof typeof COLORS] || '#94a3b8'
-    }));
 
     // Filter trend data based on view
     const filteredRevTrend = revenueTrend.filter(t => t.view === trendView);
     const filteredBookingTrend = bookingTrend.filter(t => t.view === trendView);
 
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
-            {/* Bookings by Status */}
-            <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 14, border: '1px solid #e8edf2' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <div style={{ fontWeight: 700, color: '#0f172a' }}>Bookings by Status</div>
-                    <select 
-                        value={pieView} 
-                        onChange={e => setPieView(e.target.value as any)}
-                        style={{ fontSize: '0.75rem', padding: '0.2rem 0.4rem', borderRadius: 4, border: '1px solid #cbd5e1' }}
-                    >
-                        <option value="count">Count</option>
-                        <option value="revenue">Revenue</option>
-                    </select>
-                </div>
-                <div style={{ height: 220 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                            <Pie
-                                data={pieData}
-                                innerRadius={60}
-                                outerRadius={80}
-                                paddingAngle={5}
-                                dataKey="value"
-                            >
-                                {pieData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                            </Pie>
-                            <RechartsTooltip formatter={(value: any) => pieView === 'revenue' ? `SAR ${Number(value).toFixed(2)}` : value} />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-            </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+            <BookingsByStatus data={bookingsByStatus} />
 
             {/* Revenue Trend */}
             <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 14, border: '1px solid #e8edf2' }}>

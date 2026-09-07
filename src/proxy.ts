@@ -75,7 +75,7 @@ export async function proxy(request: NextRequest) {
 
   // Refresh session — wrapped in try/catch so a paused/unreachable
   // Supabase project never crashes public pages.
-  let user: { email?: string } | null = null;
+  let user: { id?: string; email?: string } | null = null;
   try {
     const { data } = await supabase.auth.getUser();
     user = data.user;
@@ -97,11 +97,36 @@ export async function proxy(request: NextRequest) {
     // so an ADMIN_EMAIL entered with capitals would never match.
     const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
     const userEmail = user?.email?.trim().toLowerCase();
-    const isAdmin = !!adminEmail && !!userEmail && userEmail === adminEmail;
+
+    // The ADMIN_EMAIL account is the owner: always a full admin, never
+    // dependent on a database row. That is what makes it impossible to lock
+    // the business out of its own portal, and it is why the portal keeps
+    // working unchanged if supabase/sql/002 has not been run yet.
+    const isOwner = !!adminEmail && !!userEmail && userEmail === adminEmail;
+
+    // Anyone else needs an active row in admin_users. The query runs as the
+    // visitor's own session, and the table's RLS policy only returns rows to
+    // sessions that already hold a role — so a non-member simply sees
+    // nothing, which is exactly the answer we want.
+    let isPortalUser = isOwner;
+    if (user?.id && !isOwner) {
+      try {
+        const { data: membership } = await supabase
+          .from("admin_users")
+          .select("is_active")
+          .eq("id", user.id as string)
+          .maybeSingle();
+        isPortalUser = !!membership && membership.is_active !== false;
+      } catch {
+        // Table absent (migration pending) or unreachable — fall back to the
+        // previous single-admin rule rather than letting anyone through.
+        isPortalUser = false;
+      }
+    }
 
     // Exclude the login page itself to avoid redirect loops
     if (request.nextUrl.pathname === "/admin/login") {
-      if (isAdmin) {
+      if (isPortalUser) {
         return NextResponse.redirect(new URL("/admin/dashboard", request.url));
       }
       return response;
@@ -111,22 +136,23 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
 
-    if (!adminEmail) {
-      // Server misconfiguration, not an unauthorised visitor. With ADMIN_EMAIL
-      // unset every address mismatches, so the real admin signs in
-      // successfully and is then bounced with no explanation at all. Fail
-      // loudly rather than silently dropping them on the homepage.
-      console.error(
-        "[ADMIN_AUTH] ADMIN_EMAIL is not set in this environment — no account can pass the admin check. " +
-          "Set ADMIN_EMAIL to the admin's Supabase account email and redeploy."
-      );
-      return NextResponse.redirect(
-        new URL("/admin/login?error=config", request.url)
-      );
-    }
+    if (!isPortalUser) {
+      if (!adminEmail) {
+        // Server misconfiguration rather than an unauthorised visitor: with
+        // ADMIN_EMAIL unset the owner cannot be identified, so a legitimate
+        // admin signs in successfully and is then bounced with no
+        // explanation. Fail loudly instead of silently dropping them on the
+        // homepage.
+        console.error(
+          "[ADMIN_AUTH] ADMIN_EMAIL is not set in this environment — the owner account cannot be identified. " +
+            "Set ADMIN_EMAIL to the admin's Supabase account email and redeploy."
+        );
+        return NextResponse.redirect(
+          new URL("/admin/login?error=config", request.url)
+        );
+      }
 
-    if (!isAdmin) {
-      // Signed in, but not the admin account. Return them to the login screen
+      // Signed in, but not a portal user. Return them to the login screen
       // with a reason: bouncing to the homepage is indistinguishable from a
       // failed sign-in and leaves nothing to diagnose.
       return NextResponse.redirect(

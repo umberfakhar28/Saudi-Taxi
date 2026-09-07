@@ -4,11 +4,23 @@
  * viewBox is 0 0 100 100 throughout so the mark stays crisp from favicon (16–32px) to hero (300px+).
  */
 
+import {
+  BRAND_GOLD,
+  BRAND_IVORY,
+  BRAND_NAVY,
+  PIN_DOT,
+  PIN_PATH,
+  WAVE_PATHS,
+} from "@/lib/brandMark";
+
 export type LogoVariant = "color" | "white";
 
-const NAVY = "#081827";
-const IVORY = "#F5F2EA";
-const GOLD = "#B8945B";
+// Re-exported under the original local names so the rest of this file reads
+// unchanged. The geometry now lives in src/lib/brandMark.ts so the invoice
+// PNG exporter can draw the identical mark from the same source.
+const NAVY = BRAND_NAVY;
+const IVORY = BRAND_IVORY;
+const GOLD = BRAND_GOLD;
 
 export function LogoMark({
   size = 40,
@@ -37,28 +49,18 @@ export function LogoMark({
       {/* Gulf waves rising toward the base — ivory-toned in both variants,
          since the icon always sits on a dark surface (the navy tile itself
          in "color" variant, the page's own navy header/footer in "white"). */}
-      <path
-        d="M-4 66 Q 14 54 32 66 T 68 66 T 104 66 V 104 H -4 Z"
-        fill={IVORY}
-        opacity={isWhite ? 0.14 : 0.2}
-      />
-      <path
-        d="M-4 74 Q 14 62 32 74 T 68 74 T 104 74 V 104 H -4 Z"
-        fill={IVORY}
-        opacity={isWhite ? 0.24 : 0.32}
-      />
-      <path
-        d="M-4 82 Q 14 70 32 82 T 68 82 T 104 82 V 104 H -4 Z"
-        fill={IVORY}
-        opacity={isWhite ? 0.4 : 0.5}
-      />
+      {WAVE_PATHS.map((wave) => (
+        <path
+          key={wave.d}
+          d={wave.d}
+          fill={IVORY}
+          opacity={isWhite ? wave.whiteOpacity : wave.colorOpacity}
+        />
+      ))}
 
       {/* Location pin */}
-      <path
-        d="M50 24 C 60.5 24 69 32.5 69 43 C 69 56 50 74 50 74 C 50 74 31 56 31 43 C 31 32.5 39.5 24 50 24 Z"
-        fill="#FFFFFF"
-      />
-      <circle cx="50" cy="43" r="7.5" fill={GOLD} />
+      <path d={PIN_PATH} fill="#FFFFFF" />
+      <circle cx={PIN_DOT.cx} cy={PIN_DOT.cy} r={PIN_DOT.r} fill={GOLD} />
     </svg>
   );
 }

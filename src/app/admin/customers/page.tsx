@@ -3,9 +3,13 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { Search, Filter, User, Mail, Phone, Calendar as CalendarIcon, RefreshCw, Plus } from 'lucide-react';
-import { format } from 'date-fns';
-import { formatSAR } from '@/utils/pricing';
+import { Search, Filter, User, Mail, Phone, Calendar as CalendarIcon, RefreshCw, Plus, Edit, Trash2, MessageCircle } from 'lucide-react';
+import { formatMoney } from '@/lib/currency';
+import { displayDate } from '@/lib/datetime';
+import { canWhatsApp, waLinkTo } from '@/lib/whatsapp';
+import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
+import { useFeedback } from '@/components/admin/AdminFeedback';
+import Tooltip from '@/components/admin/Tooltip';
 
 function CustomersPageInner() {
     const [customers, setCustomers] = useState<any[]>([]);
@@ -15,17 +19,28 @@ function CustomersPageInner() {
     const [saving, setSaving] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
     const [form, setForm] = useState({ name: '', email: '', phone: '', notes: '', is_vip: false });
+    // When set, the modal is editing this customer instead of creating one.
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [busyId, setBusyId] = useState<string | null>(null);
+
+    const { allowed } = useAdminAuth();
+    const { showToast, confirm } = useFeedback();
     const supabase = createClient();
     const searchParams = useSearchParams();
     const router = useRouter();
 
     const fetchCustomers = useCallback(async () => {
         setLoading(true);
+        // Soft-deleted customers are hidden from the portal but their rows —
+        // and every booking, quote and invoice that references them — remain
+        // intact. `.is('deleted_at', null)` is applied client-side after the
+        // fetch so the page still works if supabase/sql/002 has not been run
+        // and the column does not exist yet.
         const { data, error } = await supabase
             .from('customers')
             .select('*')
             .order('total_bookings', { ascending: false });
-        if (!error) setCustomers(data ?? []);
+        if (!error) setCustomers((data ?? []).filter((c: any) => !c.deleted_at));
         setLoading(false);
     }, []);
 
@@ -39,7 +54,62 @@ function CustomersPageInner() {
         }
     }, [searchParams, router]);
 
-    const openAdd = () => { setFormError(null); setForm({ name: '', email: '', phone: '', notes: '', is_vip: false }); setModal(true); };
+    const openAdd = () => {
+        setFormError(null);
+        setEditingId(null);
+        setForm({ name: '', email: '', phone: '', notes: '', is_vip: false });
+        setModal(true);
+    };
+
+    // §10.2 — Edit Customer. Pre-populated with the existing values.
+    const openEdit = (c: any) => {
+        setFormError(null);
+        setEditingId(c.id);
+        setForm({
+            name: c.name ?? '',
+            email: c.email ?? '',
+            phone: c.phone ?? '',
+            notes: c.notes ?? '',
+            is_vip: !!c.is_vip,
+        });
+        setModal(true);
+    };
+
+    // §10.1 — Delete Customer. Soft delete through the API, which checks the
+    // permission server-side and reports how much history is being kept.
+    const deleteCustomer = async (c: any) => {
+        const ok = await confirm({
+            title: `Remove ${c.name}?`,
+            body:
+                `${c.name} will no longer appear in the portal. Their ${c.total_bookings || 0} booking(s) and any ` +
+                'invoices are kept exactly as they are — removing the customer never rewrites booking history.',
+            confirmLabel: 'Remove customer',
+        });
+        if (!ok) return;
+        setBusyId(c.id);
+        try {
+            const res = await fetch(`/api/admin/customers/${c.id}`, { method: 'DELETE' });
+            const json = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(json.error || 'The customer could not be removed.');
+            setCustomers(prev => prev.filter(x => x.id !== c.id));
+            showToast(
+                'success',
+                json.bookingsPreserved
+                    ? `${c.name} removed. ${json.bookingsPreserved} booking(s) kept.`
+                    : `${c.name} removed.`
+            );
+        } catch (err: any) {
+            showToast('error', err.message);
+        } finally {
+            setBusyId(null);
+        }
+    };
+
+    const messageCustomer = (c: any) => {
+        const link = waLinkTo(c.phone, `Hello ${c.name}, this is Gulf Trip Service.`);
+        if (!link) { showToast('error', 'This customer has no usable phone number on file.'); return; }
+        window.open(link, '_blank', 'noopener,noreferrer');
+    };
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -48,17 +118,54 @@ function CustomersPageInner() {
         if (!form.email.trim() && !form.phone.trim()) { setFormError('Provide at least an email or phone number.'); return; }
 
         setSaving(true);
+
         // Dedupe by phone the same way the public booking flow does
         // (/api/customers/upsert), so manually-added customers never
-        // collide with one created automatically from a real booking.
+        // collide with one created automatically from a real booking. When
+        // editing, the customer's own row is obviously not a duplicate.
         if (form.phone.trim()) {
-            const { data: existing } = await supabase.from('customers').select('id').eq('phone', form.phone.trim()).maybeSingle();
-            if (existing) {
+            const { data: existing } = await supabase
+                .from('customers')
+                .select('id')
+                .eq('phone', form.phone.trim())
+                .maybeSingle();
+            if (existing && existing.id !== editingId) {
                 setSaving(false);
                 setFormError('A customer with this phone number already exists.');
                 return;
             }
         }
+
+        if (editingId) {
+            // Edits go through the API so the permission is enforced on the
+            // server and the change is written to the audit log. Derived
+            // totals are never sent — they come from real activity.
+            try {
+                const res = await fetch(`/api/admin/customers/${editingId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: form.name.trim(),
+                        email: form.email.trim(),
+                        phone: form.phone.trim(),
+                        notes: form.notes.trim(),
+                        is_vip: form.is_vip,
+                    }),
+                });
+                const json = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(json.error || 'The customer could not be saved.');
+                showToast('success', `${form.name.trim()} updated.`);
+                setModal(false);
+                setEditingId(null);
+                fetchCustomers();
+            } catch (err: any) {
+                setFormError(err.message);
+            } finally {
+                setSaving(false);
+            }
+            return;
+        }
+
         const { error } = await supabase.from('customers').insert({
             name: form.name.trim(),
             email: form.email.trim() || null,
@@ -69,6 +176,7 @@ function CustomersPageInner() {
         });
         setSaving(false);
         if (error) { setFormError(error.message); return; }
+        showToast('success', `${form.name.trim()} added.`);
         setModal(false);
         fetchCustomers();
     };
@@ -90,9 +198,11 @@ function CustomersPageInner() {
                     <button onClick={fetchCustomers} className="admin-btn-secondary">
                         <RefreshCw size={15} /> Refresh
                     </button>
+                    {allowed('customers.edit') && (
                     <button onClick={openAdd} className="admin-btn-primary">
                         <Plus size={15} /> Add Customer
                     </button>
+                    )}
                 </div>
             </div>
 
@@ -123,11 +233,14 @@ function CustomersPageInner() {
                             <th>Total Spent</th>
                             <th>Last Booking</th>
                             <th>Status</th>
+                            <th style={{ textAlign: 'right' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={6} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading customers...</td></tr>
+                            <tr><td colSpan={7} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>
+                                <RefreshCw className="animate-spin" style={{ margin: '0 auto', display: 'block', marginBottom: '0.75rem' }} /> Loading customers…
+                            </td></tr>
                         ) : filtered.length > 0 ? filtered.map(c => (
                             <tr key={c.id}>
                                 <td>
@@ -149,12 +262,12 @@ function CustomersPageInner() {
                                     <div style={{ fontWeight: 700, fontSize: '1rem', color: '#0f172a' }}>{c.total_bookings}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#10b981' }}>{formatSAR(c.total_spent)}</div>
+                                    <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#10b981' }}>{formatMoney(c.total_spent, 'SAR')}</div>
                                 </td>
                                 <td>
                                     {c.last_booking_date ? (
                                         <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                            <CalendarIcon size={12} /> {format(new Date(c.last_booking_date), 'dd MMM yyyy')}
+                                            <CalendarIcon size={12} /> {displayDate(c.last_booking_date)}
                                         </div>
                                     ) : <span style={{ color: '#cbd5e1', fontSize: '0.8rem' }}>No bookings</span>}
                                 </td>
@@ -167,9 +280,49 @@ function CustomersPageInner() {
                                         <span className="badge-pending">New</span>
                                     )}
                                 </td>
+                                <td style={{ textAlign: 'right' }}>
+                                    <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                                        {allowed('comms.send') && canWhatsApp(c.phone) && (
+                                            <Tooltip label="WhatsApp customer" text="Open WhatsApp with this customer's stored number.">
+                                                <button
+                                                    onClick={() => messageCustomer(c)}
+                                                    aria-label={`WhatsApp ${c.name}`}
+                                                    style={{ background: '#dcfce7', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: '#15803d' }}
+                                                >
+                                                    <MessageCircle size={14} />
+                                                </button>
+                                            </Tooltip>
+                                        )}
+                                        {allowed('customers.edit') && (
+                                            <Tooltip label="Edit customer" text="Change this customer's name, phone, email, notes or VIP status.">
+                                                <button
+                                                    onClick={() => openEdit(c)}
+                                                    aria-label={`Edit ${c.name}`}
+                                                    style={{ background: '#f1f5f9', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: '#10b981' }}
+                                                >
+                                                    <Edit size={14} />
+                                                </button>
+                                            </Tooltip>
+                                        )}
+                                        {allowed('customers.delete') && (
+                                            <Tooltip label="Remove customer" text="Hides the customer from the portal. Their bookings and invoices are kept.">
+                                                <button
+                                                    onClick={() => deleteCustomer(c)}
+                                                    disabled={busyId === c.id}
+                                                    aria-label={`Remove ${c.name}`}
+                                                    style={{ background: '#fef2f2', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: '#991b1b' }}
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </Tooltip>
+                                        )}
+                                    </div>
+                                </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>No customers found.</td></tr>
+                            <tr><td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>
+                                {search ? `No customers match “${search}”.` : 'No customers yet. They are added automatically when a booking comes in.'}
+                            </td></tr>
                         )}
                     </tbody>
                 </table>
@@ -179,8 +332,8 @@ function CustomersPageInner() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)', padding: '1rem' }}>
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', maxWidth: 440, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>Add New Customer</h2>
-                            <button onClick={() => setModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
+                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>{editingId ? 'Edit Customer' : 'Add New Customer'}</h2>
+                            <button onClick={() => { setModal(false); setEditingId(null); }} aria-label="Close" style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
                         </div>
                         <form onSubmit={handleSave}>
                             <div className="form-group">
@@ -213,8 +366,8 @@ function CustomersPageInner() {
                                 </div>
                             )}
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
-                                <button type="button" className="admin-btn-secondary" onClick={() => setModal(false)}>Cancel</button>
-                                <button type="submit" className="admin-btn-primary" disabled={saving}>{saving ? 'Saving...' : 'Add Customer'}</button>
+                                <button type="button" className="admin-btn-secondary" onClick={() => { setModal(false); setEditingId(null); }}>Cancel</button>
+                                <button type="submit" className="admin-btn-primary" disabled={saving}>{saving ? 'Saving…' : editingId ? 'Save Changes' : 'Add Customer'}</button>
                             </div>
                         </form>
                     </div>

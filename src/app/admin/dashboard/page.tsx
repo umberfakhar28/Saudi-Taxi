@@ -6,6 +6,7 @@ import { DashboardCharts } from './components/DashboardCharts';
 import { ConversionFunnel, AlertsSection, UpcomingBookings, RecentActivity } from './components/DashboardWidgets';
 import { startOfDay, endOfDay, startOfWeek, startOfMonth, subDays, subWeeks, subMonths, format } from 'date-fns';
 import { displayTime } from '@/lib/datetime';
+import { formatMoney, toCurrencyCode } from '@/lib/currency';
 
 type TrendView = 'daily' | 'weekly' | 'monthly';
 
@@ -89,8 +90,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
             ? supabase.from('bookings').select('id, status, created_at').gte('created_at', prevStart.toISOString()).lte('created_at', prevEnd.toISOString())
             : Promise.resolve({ data: [] as { id: string; status: string; created_at: string }[] }),
         prevStart && prevEnd
-            ? supabase.from('invoices').select('total_amount, status, created_at').gte('created_at', prevStart.toISOString()).lte('created_at', prevEnd.toISOString())
-            : Promise.resolve({ data: [] as { total_amount: number; status: string; created_at: string }[] }),
+            ? supabase.from('invoices').select('total_amount, status, created_at, currency').gte('created_at', prevStart.toISOString()).lte('created_at', prevEnd.toISOString())
+            : Promise.resolve({ data: [] as { total_amount: number; status: string; created_at: string; currency: string | null }[] }),
         supabase.from('bookings').select('created_at').gte('created_at', trendWindowStart.toISOString()),
         supabase.from('invoices').select('created_at, total_amount, status').gte('created_at', trendWindowStart.toISOString()),
     ]);
@@ -112,9 +113,24 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     const paidInvoices = invoicesList.filter(i => i.status === 'paid');
     const unpaidInvoices = invoicesList.filter(i => i.status === 'unpaid' || i.status === 'partially_paid');
 
-    const totalRevenue = paidInvoices.reduce((sum, i) => sum + (Number(i.total_amount) || 0), 0);
-    const pendingRevenue = unpaidInvoices.reduce((sum, i) => sum + (Number(i.total_amount) || 0) - (Number(i.paid_amount) || 0), 0);
-    const avgBookingValue = totalBookings > 0 ? totalRevenue / totalBookings : 0;
+    // Money is only ever added up within one currency. The headline figures
+    // report the currency that carries the most invoices, and name any others
+    // rather than folding them in at an invented rate.
+    const revenueByCurrency = paidInvoices.reduce((acc: Record<string, number>, i) => {
+        const code = toCurrencyCode(i.currency);
+        acc[code] = (acc[code] ?? 0) + (Number(i.total_amount) || 0);
+        return acc;
+    }, {});
+    const currenciesInPlay = Object.keys(revenueByCurrency).filter(c => revenueByCurrency[c] > 0);
+    const baseCurrency = currenciesInPlay.sort((a, b) => revenueByCurrency[b] - revenueByCurrency[a])[0] ?? 'SAR';
+
+    const totalRevenue = revenueByCurrency[baseCurrency] ?? 0;
+    const pendingRevenue = unpaidInvoices
+        .filter(i => toCurrencyCode(i.currency) === baseCurrency)
+        .reduce((sum, i) => sum + (Number(i.total_amount) || 0) - (Number(i.paid_amount) || 0), 0);
+    const bookingsInBaseCurrency = bookingsList.filter(b => toCurrencyCode(b.currency) === baseCurrency).length;
+    const avgBookingValue = bookingsInBaseCurrency > 0 ? totalRevenue / bookingsInBaseCurrency : 0;
+    const otherCurrencies = currenciesInPlay.filter(c => c !== baseCurrency);
 
     const totalQuotes = quotesList.length;
     const sentQuotes = quotesList.filter(q => q.status === 'sent' || q.status === 'accepted' || q.status === 'converted').length;
@@ -132,15 +148,17 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
     const prevTotalBookings = prevBookingsList.length;
     const prevCompletedBookings = prevBookingsList.filter((b) => b.status === 'completed').length;
-    const prevRevenue = prevInvoicesList.filter((i) => i.status === 'paid').reduce((s, i) => s + (Number(i.total_amount) || 0), 0);
+    const prevRevenue = prevInvoicesList
+        .filter((i) => i.status === 'paid' && toCurrencyCode(i.currency) === baseCurrency)
+        .reduce((s, i) => s + (Number(i.total_amount) || 0), 0);
 
     const stats = [
         { name: 'Total Bookings', value: totalBookings, icon: CalendarCheck, color: '#6366f1', bg: '#eef2ff', href: '/admin/bookings', trend: pctChange(totalBookings, prevTotalBookings) },
         { name: 'Pending', value: pendingBookings, icon: Clock, color: '#f59e0b', bg: '#fffbeb', href: '/admin/bookings?status=pending', trend: null },
         { name: 'Completed', value: completedBookings, icon: CheckCircle2, color: '#10b981', bg: '#ecfdf5', href: '/admin/bookings?status=completed', trend: pctChange(completedBookings, prevCompletedBookings) },
         { name: 'Cancelled', value: cancelledBookings, icon: XCircle, color: '#f43f5e', bg: '#ffe4e6', href: '/admin/bookings?status=cancelled', trend: null },
-        { name: 'Revenue (Paid)', value: `SAR ${totalRevenue.toFixed(0)}`, icon: TrendingUp, color: '#fbbf24', bg: '#fffbeb', href: '/admin/invoices', trend: pctChange(totalRevenue, prevRevenue) },
-        { name: 'Avg Booking Value', value: `SAR ${avgBookingValue.toFixed(0)}`, icon: Receipt, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/invoices', trend: null },
+        { name: 'Revenue (Paid)', value: formatMoney(totalRevenue, baseCurrency), icon: TrendingUp, color: '#fbbf24', bg: '#fffbeb', href: '/admin/invoices', trend: pctChange(totalRevenue, prevRevenue) },
+        { name: 'Avg Booking Value', value: formatMoney(avgBookingValue, baseCurrency), icon: Receipt, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/invoices', trend: null },
         { name: 'Active Quotes', value: quotesList.filter(q => q.status === 'draft' || q.status === 'sent').length, icon: FileText, color: '#8b5cf6', bg: '#f5f3ff', href: '/admin/quotes', trend: null },
         { name: 'Customers', value: customersList.length, icon: Users, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/customers', trend: null },
     ];
@@ -154,11 +172,23 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     };
 
     // Prepare data for charts
+    // Revenue is bucketed per currency rather than summed into one number.
+    // There is no exchange rate anywhere in this system, and inventing one
+    // would misstate real money, so SAR/AED/KWD totals stay separate.
+    const revenueFor = (status: string): Record<string, number> =>
+        bookingsList
+            .filter(b => b.status === status)
+            .reduce((acc: Record<string, number>, b) => {
+                const code = toCurrencyCode(b.currency);
+                acc[code] = (acc[code] ?? 0) + (Number(b.quote_amount) || 0);
+                return acc;
+            }, {});
+
     const bookingsByStatus = [
-        { status: 'pending', count: pendingBookings, revenue: bookingsList.filter(b=>b.status==='pending').reduce((s, b)=>s+(Number(b.quote_amount)||0),0) },
-        { status: 'confirmed', count: confirmedBookings, revenue: bookingsList.filter(b=>b.status==='confirmed').reduce((s, b)=>s+(Number(b.quote_amount)||0),0) },
-        { status: 'completed', count: completedBookings, revenue: bookingsList.filter(b=>b.status==='completed').reduce((s, b)=>s+(Number(b.quote_amount)||0),0) },
-        { status: 'cancelled', count: cancelledBookings, revenue: bookingsList.filter(b=>b.status==='cancelled').reduce((s, b)=>s+(Number(b.quote_amount)||0),0) }
+        { status: 'pending', count: pendingBookings, revenueByCurrency: revenueFor('pending') },
+        { status: 'confirmed', count: confirmedBookings, revenueByCurrency: revenueFor('confirmed') },
+        { status: 'completed', count: completedBookings, revenueByCurrency: revenueFor('completed') },
+        { status: 'cancelled', count: cancelledBookings, revenueByCurrency: revenueFor('cancelled') },
     ];
 
     // Real trend buckets from the 6-month window above — replaces the old
@@ -229,6 +259,11 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
             <DashboardFilters />
 
+            {/* Attention Required leads the page — it is the only widget that
+                asks the admin to act, so it comes before the stat cards and
+                charts rather than after them (§3.2). */}
+            <AlertsSection overdueInvoices={overdueInvoicesCount} expiredQuotes={expiredQuotesCount} pendingOldBookings={pendingBookings} />
+
             {/* Stats Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 {stats.map(s => {
@@ -256,6 +291,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 })}
             </div>
 
+            {otherCurrencies.length > 0 && (
+                <div style={{ fontSize: '0.75rem', color: '#64748b', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '0.6rem 0.9rem', marginBottom: '1.25rem' }}>
+                    Revenue figures above are in <strong>{baseCurrency}</strong>. Invoices also exist in{' '}
+                    {otherCurrencies.map(c => `${c} ${(revenueByCurrency[c] ?? 0).toFixed(2)}`).join(', ')} — these are reported
+                    separately because no exchange rate is stored.
+                </div>
+            )}
+
             <DashboardCharts bookingsByStatus={bookingsByStatus} revenueTrend={revenueTrend} bookingTrend={bookingTrend} />
 
             {/* Content grid */}
@@ -273,8 +316,6 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                             bookingsCompleted={completedBookings} 
                         />
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            <AlertsSection overdueInvoices={overdueInvoicesCount} expiredQuotes={expiredQuotesCount} pendingOldBookings={pendingBookings} />
-                            
                             {/* Quick Actions Panel */}
                             <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e8edf2', padding: '1.25rem' }}>
                                 <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0f172a', marginBottom: '1rem' }}>Quick Actions</div>

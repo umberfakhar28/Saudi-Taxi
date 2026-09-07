@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Clock, AlertTriangle, FileText, Activity, Users } from 'lucide-react';
+import { Clock, AlertTriangle, FileText, Activity, Users, CheckCircle2 } from 'lucide-react';
 import { displayTime } from '@/lib/datetime';
 
 export function ConversionFunnel({ quotesCreated, quotesSent, bookingsCreated, bookingsCompleted }: any) {
@@ -37,25 +37,71 @@ function FunnelStage({ label, count, max, color }: any) {
     );
 }
 
+/**
+ * Attention Required.
+ *
+ * Moved to the very top of the dashboard: it is the only widget that asks
+ * the admin to DO something, so sitting below the stat cards and three
+ * charts meant the actionable items were the last thing seen. Laid out
+ * horizontally to suit a full-width slot, and it now says so when there is
+ * nothing to do instead of rendering an empty red box.
+ */
 export function AlertsSection({ overdueInvoices, expiredQuotes, pendingOldBookings }: any) {
+    const items = [
+        {
+            label: 'Overdue Invoices',
+            count: Number(overdueInvoices) || 0,
+            href: '/admin/invoices?status=unpaid',
+            help: 'Invoices past their due date with payment still outstanding.',
+        },
+        {
+            label: 'Expired Quotes',
+            count: Number(expiredQuotes) || 0,
+            href: '/admin/quotes?status=expired',
+            help: 'Quotes whose validity window passed without being accepted.',
+        },
+        {
+            label: 'Pending Bookings',
+            count: Number(pendingOldBookings) || 0,
+            href: '/admin/bookings?status=pending',
+            help: 'Bookings the customer has not yet been told are confirmed.',
+        },
+    ];
+
+    const actionable = items.filter((i) => i.count > 0);
+
+    if (actionable.length === 0) {
+        return (
+            <div style={{ background: '#f0fdf4', padding: '1rem 1.25rem', borderRadius: 14, border: '1px solid #bbf7d0', display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '2rem' }}>
+                <CheckCircle2 size={18} color="#16a34a" />
+                <div>
+                    <div style={{ fontWeight: 700, color: '#166534', fontSize: '0.92rem' }}>Nothing needs attention</div>
+                    <div style={{ fontSize: '0.78rem', color: '#15803d', marginTop: 1 }}>
+                        No overdue invoices, expired quotes or unconfirmed bookings.
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div style={{ background: '#fef2f2', padding: '1.25rem', borderRadius: 14, border: '1px solid #fecaca' }}>
+        <div style={{ background: '#fef2f2', padding: '1.25rem', borderRadius: 14, border: '1px solid #fecaca', marginBottom: '2rem' }}>
             <div style={{ fontWeight: 700, color: '#991b1b', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <AlertTriangle size={18} /> Attention Required
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <AlertItem label="Overdue Invoices" count={overdueInvoices} href="/admin/invoices?status=unpaid" />
-                <AlertItem label="Expired Quotes" count={expiredQuotes} href="/admin/quotes?status=expired" />
-                <AlertItem label="Pending Bookings (>24h)" count={pendingOldBookings} href="/admin/bookings?status=pending" />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
+                {actionable.map((item) => (
+                    <AlertItem key={item.label} label={item.label} count={item.count} href={item.href} help={item.help} />
+                ))}
             </div>
         </div>
     );
 }
 
-function AlertItem({ label, count, href }: any) {
+function AlertItem({ label, count, href, help }: any) {
     if (!count) return null;
     return (
-        <Link href={href} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: '#fff', borderRadius: 8, textDecoration: 'none', border: '1px solid #fee2e2' }}>
+        <Link href={href} title={help} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0.9rem', background: '#fff', borderRadius: 8, textDecoration: 'none', border: '1px solid #fee2e2' }}>
             <span style={{ color: '#7f1d1d', fontSize: '0.85rem', fontWeight: 500 }}>{label}</span>
             <span style={{ background: '#ef4444', color: '#fff', padding: '2px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 700 }}>{count}</span>
         </Link>

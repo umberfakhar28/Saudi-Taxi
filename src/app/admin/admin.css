@@ -421,3 +421,24 @@
     opacity: 0.45;
     cursor: not-allowed;
 }
+
+/* ── Row action menus ──────────────────────────────────────────────────
+   Promoted out of the Bookings page's inline <style> block so the Quotes
+   page (and anything else with a row menu) shares one definition. */
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #334155;
+    font-weight: 500;
+}
+.dropdown-item:hover:not(:disabled) { background: #f8fafc; color: #0f172a; }
+.text-amber-600 { color: #d97706 !important; }
+.text-blue-600 { color: #2563eb !important; }
+.text-indigo-600 { color: #4f46e5 !important; }
+.text-red-600 { color: #dc2626 !important; }

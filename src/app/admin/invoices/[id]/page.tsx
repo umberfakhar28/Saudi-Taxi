@@ -3,10 +3,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { formatSAR } from '@/utils/pricing';
-import { format } from 'date-fns';
-import { ArrowLeft, Download, Mail, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Trash2 } from 'lucide-react';
+import { LogoMark } from '@/components/Logo';
+import { formatMoney } from '@/lib/currency';
+import { displayDate } from '@/lib/datetime';
+import { EMAIL, PHONE_DISPLAY } from '@/lib/contact';
+import { downloadInvoicePng } from '@/lib/invoicePng';
+import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
+import { useFeedback } from '@/components/admin/AdminFeedback';
 
 export default function InvoiceDetailPage() {
     const params = useParams();
@@ -19,6 +25,12 @@ export default function InvoiceDetailPage() {
     const [notFound, setNotFound] = useState(false);
     const [emailing, setEmailing] = useState(false);
     const [marking, setMarking] = useState(false);
+    const [exporting, setExporting] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+    const router = useRouter();
+    const { allowed } = useAdminAuth();
+    const { showToast, confirm } = useFeedback();
 
     const fetchInvoice = useCallback(async () => {
         setLoading(true);
@@ -40,7 +52,7 @@ export default function InvoiceDetailPage() {
     // exist at all, so Invoices list's View/Download/Email actions were all
     // dead buttons (Admin Portal audit §8).
     const sendInvoiceEmail = async () => {
-        if (!invoice?.customer_email) { alert('This invoice has no customer email on file.'); return; }
+        if (!invoice?.customer_email) { showToast('error', 'This invoice has no customer email on file.'); return; }
         setEmailing(true);
         try {
             const res = await fetch('/api/emails/send', {
@@ -53,9 +65,9 @@ export default function InvoiceDetailPage() {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ entityType: 'invoice', entityId: invoice.id, action: 'email_sent', description: `Invoice ${invoice.invoice_number} emailed to ${invoice.customer_email}` }),
             }).catch(() => {});
-            alert('Invoice emailed to ' + invoice.customer_email);
+            showToast('success', 'Invoice emailed to ' + invoice.customer_email);
         } catch (err: any) {
-            alert('Failed to send invoice email: ' + err.message);
+            showToast('error', 'Failed to send invoice email: ' + err.message);
         } finally {
             setEmailing(false);
         }
@@ -78,9 +90,44 @@ export default function InvoiceDetailPage() {
                 body: JSON.stringify({ entityType: 'invoice', entityId: invoice.id, action: 'paid', description: `Invoice ${invoice.invoice_number} marked paid` }),
             }).catch(() => {});
         } catch (err: any) {
-            alert('Failed to mark paid: ' + err.message);
+            showToast('error', 'Failed to mark paid: ' + err.message);
         } finally {
             setMarking(false);
+        }
+    };
+
+    // PNG export (§9.4). Drawn on a canvas rather than screenshotting the
+    // page, so the output is high-resolution and a long invoice extends the
+    // image instead of being cropped.
+    const exportPng = async () => {
+        setExporting(true);
+        try {
+            await downloadInvoicePng({ ...invoice, bookingNumber });
+            showToast('success', 'Invoice image saved.');
+        } catch (err: any) {
+            showToast('error', 'Could not create the image: ' + (err?.message || 'unknown error'));
+        } finally {
+            setExporting(false);
+        }
+    };
+
+    const deleteInvoice = async () => {
+        const ok = await confirm({
+            title: 'Delete this invoice?',
+            body: `Invoice ${invoice.invoice_number} will be permanently deleted. The booking it was raised against is kept, and can be invoiced again later.`,
+            confirmLabel: 'Delete invoice',
+        });
+        if (!ok) return;
+        setDeleting(true);
+        try {
+            const res = await fetch(`/api/admin/invoices/${invoice.id}`, { method: 'DELETE' });
+            const json = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(json.error || 'Unknown error');
+            showToast('success', 'Invoice deleted.');
+            router.push('/admin/invoices');
+        } catch (err: any) {
+            showToast('error', 'Failed to delete invoice: ' + err.message);
+            setDeleting(false);
         }
     };
 
@@ -104,17 +151,32 @@ export default function InvoiceDetailPage() {
                     <ArrowLeft size={16} /> Back to Invoices
                 </Link>
                 <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-                    {invoice.status !== 'paid' && (
+                    {invoice.status !== 'paid' && allowed('invoices.edit') && (
                         <button onClick={markPaid} disabled={marking} className="admin-btn-secondary">
                             <CheckCircle2 size={15} /> {marking ? 'Marking...' : 'Mark as Paid'}
                         </button>
                     )}
-                    <button onClick={sendInvoiceEmail} disabled={emailing} className="admin-btn-secondary">
-                        <Mail size={15} /> {emailing ? 'Sending...' : 'Email to Customer'}
+                    {allowed('comms.send') && (
+                        <button onClick={sendInvoiceEmail} disabled={emailing} className="admin-btn-secondary">
+                            <Mail size={15} /> {emailing ? 'Sending...' : 'Email to Customer'}
+                        </button>
+                    )}
+                    <button onClick={exportPng} disabled={exporting} className="admin-btn-secondary">
+                        <ImageIcon size={15} /> {exporting ? 'Preparing...' : 'Download PNG'}
                     </button>
                     <button onClick={() => window.print()} className="admin-btn-primary">
                         <Download size={15} /> Print / Save as PDF
                     </button>
+                    {allowed('invoices.delete') && (
+                        <button
+                            onClick={deleteInvoice}
+                            disabled={deleting}
+                            className="admin-btn-secondary"
+                            style={{ background: '#fef2f2', borderColor: '#fca5a5', color: '#991b1b' }}
+                        >
+                            <Trash2 size={15} /> {deleting ? 'Deleting...' : 'Delete'}
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -129,9 +191,19 @@ export default function InvoiceDetailPage() {
                             </span>
                         </div>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#f59e0b' }}>Gulf Trip Service</div>
-                        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>Jeddah, Saudi Arabia<br />+966 XXX XXX XXXX</div>
+                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+                        {/* The brand's own full-colour mark, from the same geometry the
+                            site header uses — not a flattened one-colour stand-in. */}
+                        <LogoMark size={46} variant="color" />
+                        <div>
+                            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>Gulf Trip Service</div>
+                            {/* Contact details come from src/lib/contact.ts, the single
+                                source of truth the rest of the site already uses, rather
+                                than being hardcoded here. */}
+                            <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>
+                                {PHONE_DISPLAY}<br />{EMAIL}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
@@ -145,7 +217,7 @@ export default function InvoiceDetailPage() {
                         <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
                         <div style={{ fontSize: '0.82rem', color: '#334155' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {invoice.pickup_location || '—'}</div>
                         <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {invoice.dropoff_location || '—'}</div>
-                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{invoice.travel_date ? format(new Date(invoice.travel_date), 'dd MMM yyyy') : '—'} · {invoice.service_type || 'Transportation'}</div>
+                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{displayDate(invoice.travel_date)} · {invoice.service_type || 'Transportation'}</div>
                     </div>
                 </div>
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1.5rem' }}>
@@ -158,21 +230,21 @@ export default function InvoiceDetailPage() {
                             {invoice.service_type || 'Transportation Service'}<br />
                             <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{bookingNumber ? `Booking Ref: ${bookingNumber}` : ''}</span>
                         </td>
-                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>SAR {Number(invoice.subtotal ?? invoice.total_amount ?? 0).toFixed(2)}</td>
+                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>{formatMoney(invoice.subtotal ?? invoice.total_amount ?? 0, invoice.currency)}</td>
                     </tr></tbody>
                 </table>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <div style={{ background: '#0f172a', color: '#fff', padding: '1rem 1.5rem', borderRadius: 10, minWidth: 220 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Subtotal</span><span>SAR {Number(invoice.subtotal ?? invoice.total_amount ?? 0).toFixed(2)}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Subtotal</span><span>{formatMoney(invoice.subtotal ?? invoice.total_amount ?? 0, invoice.currency)}</span></div>
                         {Number(invoice.tax_amount) > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Tax</span><span>SAR {Number(invoice.tax_amount).toFixed(2)}</span></div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Tax</span><span>{formatMoney(invoice.tax_amount, invoice.currency)}</span></div>
                         )}
                         {Number(invoice.discount_amount) > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Discount</span><span>-SAR {Number(invoice.discount_amount).toFixed(2)}</span></div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Discount</span><span>−{formatMoney(invoice.discount_amount, invoice.currency)}</span></div>
                         )}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>{formatSAR(Number(invoice.total_amount || 0))}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>{formatMoney(invoice.total_amount ?? 0, invoice.currency)}</span></div>
                         {Number(invoice.paid_amount) > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: 8 }}><span>Paid</span><span>SAR {Number(invoice.paid_amount).toFixed(2)}</span></div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: 8 }}><span>Paid</span><span>{formatMoney(invoice.paid_amount, invoice.currency)}</span></div>
                         )}
                     </div>
                 </div>
@@ -181,8 +253,24 @@ export default function InvoiceDetailPage() {
                         <strong>Notes:</strong> {invoice.notes}
                     </div>
                 )}
-                <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1rem', borderTop: '1px solid #f1f5f9', fontSize: '0.78rem', color: '#94a3b8' }}>
-                    Thank you for choosing Gulf Trip Service. Safe travels! 🚗
+                {/* Footer — given real hierarchy rather than a single grey line of
+                    text with an emoji: a hairline rule, a confident thank-you, and
+                    the contact details a customer needs if they have a question
+                    about this invoice. */}
+                <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }}>
+                        Thank you for travelling with Gulf Trip Service
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 6, lineHeight: 1.6 }}>
+                        Questions about this invoice? Call or message {PHONE_DISPLAY} — or email {EMAIL}.
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 14 }}>
+                        <span style={{ width: 28, height: 1, background: '#e2e8f0' }} />
+                        <span style={{ fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#b8945b', fontWeight: 700 }}>
+                            Gulf Trip Service
+                        </span>
+                        <span style={{ width: 28, height: 1, background: '#e2e8f0' }} />
+                    </div>
                 </div>
             </div>
         </div>
