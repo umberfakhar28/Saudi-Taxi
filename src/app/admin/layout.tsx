@@ -19,6 +19,7 @@ import {
     Zap,
     ShieldCheck,
     Menu,
+    Mail,
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { LogoMark } from '@/components/Logo';
@@ -92,6 +93,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             label: 'System',
             items: [
                 { name: 'Reports', href: '/admin/reports', icon: BarChart3, desc: 'Analytics & Export' },
+                { name: 'Email Log', href: '/admin/emails', icon: Mail, desc: 'Sent & Failed' },
                 { name: 'Automation', href: '/admin/automation', icon: Zap, desc: 'Pricing Rules' },
                 // Only a full admin may manage portal users, so the section is
                 // hidden for everyone else. /api/admin/users enforces the same

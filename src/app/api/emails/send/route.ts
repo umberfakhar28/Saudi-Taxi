@@ -158,11 +158,36 @@ function buildBookingRows(b: Record<string, unknown>): string {
     ].join(''));
 }
 
-async function logEmail(supabase: SupabaseClient, bookingId: string | null, type: string, to: string, subject: string, resendId: string | null, status: 'sent' | 'failed', error?: string) {
-    await supabase.from('email_logs').insert({
+async function logEmail(supabase: SupabaseClient, bookingId: string | null, type: string, to: string, subject: string, resendId: string | null, status: 'sent' | 'failed', error?: string, fromAddress?: string) {
+    const base = {
         booking_id: bookingId, email_type: type, recipient_email: to,
-        subject, status, resend_id: resendId, error_message: error || null, sent_at: new Date().toISOString()
-    });
+        subject, status, resend_id: resendId, error_message: error || null,
+        sent_at: new Date().toISOString(),
+    };
+
+    // Recording the sender makes the log self-sufficient: it previously
+    // showed who an email went TO but not what it went out AS, so the
+    // sandbox-sender fault could only be diagnosed through the Resend API.
+    //
+    // from_address arrives with supabase/sql/003. If that migration has not
+    // been run yet, the insert is rejected for the unknown column — and
+    // because supabase-js returns errors rather than throwing, the row would
+    // simply vanish and logging would stop silently. Retry without the
+    // column so the log keeps working either side of the migration.
+    const { error: withSender } = await supabase
+        .from('email_logs')
+        .insert({ ...base, from_address: fromAddress ?? null });
+
+    if (withSender && /from_address/i.test(withSender.message ?? '')) {
+        console.warn(
+            '[EMAIL_LOG] email_logs.from_address is missing — run supabase/sql/003_email_log_and_rls_hardening.sql. ' +
+            'Logging the send without its sender for now.'
+        );
+        const { error: fallback } = await supabase.from('email_logs').insert(base);
+        if (fallback) console.error('[EMAIL_LOG] Could not write the send log', fallback);
+    } else if (withSender) {
+        console.error('[EMAIL_LOG] Could not write the send log', withSender);
+    }
 }
 
 const SUPPORTED_TYPES = ['new_booking', 'booking_confirmed', 'booking_completed', 'quote_sent', 'destination_enquiry', 'invoice'] as const;
@@ -240,7 +265,7 @@ export async function POST(req: Request) {
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
             const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
-            await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message);
+            await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message, from);
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
             await createNotification(supabase, 'new_booking', b, `New Booking — ${b.customer_name}`);
 
@@ -253,7 +278,7 @@ export async function POST(req: Request) {
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">For urgent queries, reply to this email or message us on WhatsApp.</p>
             </div></div>`;
             const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message);
+            await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
             if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
 
             results.push({ admin: r1?.id, customer: r2?.id });
@@ -272,7 +297,7 @@ export async function POST(req: Request) {
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You'll receive a reminder 24 hours before your trip. Thank you for choosing Gulf Trip Service.</p>
             </div></div>`;
             const { data: r, error: e } = await sendMail(b.customer_email, subject, html);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
+            await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }
@@ -289,7 +314,7 @@ export async function POST(req: Request) {
                 <p style="color:#94a3b8;font-size:0.85rem;">We'd love to hear your feedback. Book your next trip at any time.</p>
             </div></div>`;
             const { data: r, error: e } = await sendMail(b.customer_email, subject, html);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
+            await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }
@@ -320,7 +345,7 @@ export async function POST(req: Request) {
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">To accept this quote or for any queries, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
             const { data: r, error: e } = await sendMail(q.customer_email, subject, html);
-            await logEmail(supabase, null, type, q.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
+            await logEmail(supabase, null, type, q.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }
@@ -342,7 +367,7 @@ export async function POST(req: Request) {
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
             const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
-            await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message);
+            await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message, from);
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
             await createNotification(supabase, 'new_enquiry', b, `New ${destLabel} Enquiry — ${b.customer_name}`);
 
@@ -354,7 +379,7 @@ export async function POST(req: Request) {
                 <p style="color:#94a3b8;font-size:0.85rem;">Need an instant reply? Message us on WhatsApp any time.</p>
             </div></div>`;
             const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message);
+            await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
             if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
 
             results.push({ admin: r1?.id, customer: r2?.id });
@@ -389,7 +414,7 @@ export async function POST(req: Request) {
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
             const { data: r, error: e } = await sendMail(inv.customer_email, subject, html);
-            await logEmail(supabase, inv.booking_id || bookingId || null, type, inv.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
+            await logEmail(supabase, inv.booking_id || bookingId || null, type, inv.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }
