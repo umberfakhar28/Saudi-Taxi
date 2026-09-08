@@ -15,8 +15,14 @@ interface Toast {
 interface ConfirmOptions {
     title: string;
     body: string;
-    /** Label for the destructive button. */
+    /** Label for the confirming button. */
     confirmLabel?: string;
+    /**
+     * 'danger' (default) paints the confirm button red, for deletions.
+     * 'primary' is for consequential-but-not-destructive choices, where red
+     * would overstate what is about to happen.
+     */
+    tone?: 'danger' | 'primary';
 }
 
 interface FeedbackValue {
@@ -124,7 +130,12 @@ export default function AdminFeedbackProvider({ children }: { children: React.Re
                             <button type="button" className="admin-btn-secondary" onClick={() => settle(false)}>
                                 Cancel
                             </button>
-                            <button type="button" className={styles.danger} autoFocus onClick={() => settle(true)}>
+                            <button
+                                type="button"
+                                className={pending.tone === 'primary' ? 'admin-btn-primary' : styles.danger}
+                                autoFocus
+                                onClick={() => settle(true)}
+                            >
                                 {pending.confirmLabel ?? 'Delete'}
                             </button>
                         </div>

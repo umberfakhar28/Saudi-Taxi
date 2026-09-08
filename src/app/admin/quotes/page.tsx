@@ -13,6 +13,30 @@ import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
 
+/**
+ * The complete quote lifecycle, matching the quotes_status_check constraint
+ * added in supabase/sql/002. The database rejects anything outside this set,
+ * so the UI and the schema cannot drift apart.
+ */
+const QUOTE_STATUSES = ['draft', 'sent', 'accepted', 'expired', 'converted'] as const;
+type QuoteStatus = (typeof QUOTE_STATUSES)[number];
+
+const STATUS_ICONS: Record<QuoteStatus, string> = {
+    draft: '📝',
+    sent: '📤',
+    accepted: '✅',
+    expired: '⌛',
+    converted: '🚗',
+};
+
+const QUOTE_STATUS_HELP: Record<QuoteStatus, string> = {
+    draft: 'Prepared but not yet given to the customer.',
+    sent: 'The customer has been given this quote.',
+    accepted: 'The customer agreed to this price.',
+    expired: 'The validity window passed without acceptance.',
+    converted: 'This quote became a real booking.',
+};
+
 /** Quotes have no number column of their own, so the id gives a stable ref. */
 function quoteRef(q: any): string {
     return `Q-${String(q?.id ?? '').slice(0, 8).toUpperCase()}`;
@@ -30,6 +54,9 @@ export default function QuotesPage() {
     const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [viewModal, setViewModal] = useState<any | null>(null);
     const [editModal, setEditModal] = useState<any | null>(null);
+    // The status the quote had when the modal opened, so the save can tell
+    // whether it actually changed.
+    const [originalStatus, setOriginalStatus] = useState<string>('draft');
     const [savingEdit, setSavingEdit] = useState(false);
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [menuPos, setMenuPos] = useState({ top: 0, right: 0 });
@@ -136,7 +163,12 @@ export default function QuotesPage() {
             return;
         }
         setSavingEdit(true);
+        const nextStatus: QuoteStatus = QUOTE_STATUSES.includes(editModal.status)
+            ? editModal.status
+            : (originalStatus as QuoteStatus);
+
         const patch = {
+            status: nextStatus,
             customer_name: editModal.customer_name,
             customer_email: editModal.customer_email || null,
             customer_phone: editModal.customer_phone || null,
@@ -158,7 +190,12 @@ export default function QuotesPage() {
         if (error) { showToast('error', 'Could not save the quote: ' + error.message); return; }
         setQuotes(prev => prev.map(x => (x.id === editModal.id ? { ...x, ...patch } : x)));
         logActivity(editModal.id, 'updated', `Quote for ${editModal.customer_name} edited`);
-        showToast('success', 'Quote updated.');
+        if (nextStatus !== originalStatus) {
+            logActivity(editModal.id, 'status_changed', `Quote for ${editModal.customer_name} marked ${nextStatus}`);
+        }
+        showToast('success', nextStatus !== originalStatus
+            ? `Quote updated and marked ${nextStatus}.`
+            : 'Quote updated.');
         setEditModal(null);
     };
 
@@ -261,12 +298,39 @@ export default function QuotesPage() {
         }
     };
 
-    const updateStatus = async (q: any, status: 'accepted' | 'expired') => {
+    const updateStatus = async (q: any, status: QuoteStatus) => {
+        setOpenMenu(null);
+        if (status === q.status) return;
+
+        // "Sent" is the one status that normally carries a side effect: the
+        // Send to Customer action emails the quote and only then records
+        // 'sent', so the column means the customer genuinely received it.
+        // Setting it by hand is still legitimate — the quote may have gone
+        // out over WhatsApp or as a downloaded file — but the difference has
+        // to be stated rather than assumed.
+        if (status === 'sent') {
+            const ok = await confirm({
+                title: 'Mark as sent without emailing?',
+                body: 'This records the status only — no email goes to the customer. Choose this if you have already shared the quote another way, such as WhatsApp. To actually email it, use "Send to Customer" instead.',
+                confirmLabel: 'Mark as sent',
+                tone: 'primary',
+            });
+            if (!ok) return;
+        }
+
         setActionLoading(q.id);
         try {
-            const { error } = await supabase.from('quotes').update({ status }).eq('id', q.id);
+            const patch: Record<string, unknown> = { status };
+            // A quote that is now "sent" needs a validity window, or the
+            // Expires column would stay blank for it.
+            if (status === 'sent' && !q.valid_until) {
+                const validUntil = new Date();
+                validUntil.setHours(validUntil.getHours() + 24);
+                patch.valid_until = validUntil.toISOString();
+            }
+            const { error } = await supabase.from('quotes').update(patch).eq('id', q.id);
             if (error) throw new Error(error.message);
-            setQuotes(prev => prev.map(x => x.id === q.id ? { ...x, status } : x));
+            setQuotes(prev => prev.map(x => x.id === q.id ? { ...x, ...patch } : x));
             logActivity(q.id, 'status_changed', `Quote for ${q.customer_name} marked ${status}`);
             showToast('success', `Quote marked ${status}.`);
         } catch (err: any) {
@@ -410,7 +474,7 @@ export default function QuotesPage() {
                     <button onClick={() => { setViewModal(q); setOpenMenu(null); }} className="dropdown-item">👁️ View Quote</button>
 
                     {allowed('quotes.edit') && (
-                        <button onClick={() => { setEditModal({ ...q }); setOpenMenu(null); }} className="dropdown-item">✏️ Edit Quote</button>
+                        <button onClick={() => { setEditModal({ ...q }); setOriginalStatus(q.status); setOpenMenu(null); }} className="dropdown-item">✏️ Edit Quote</button>
                     )}
 
                     <button onClick={() => downloadQuote(q)} className="dropdown-item">⬇️ Download Quote</button>
@@ -422,11 +486,27 @@ export default function QuotesPage() {
                     {allowed('quotes.send') && q.status === 'draft' && q.customer_email && (
                         <button onClick={() => { setOpenMenu(null); markAsSent(q); }} className="dropdown-item">📩 Send to Customer</button>
                     )}
-                    {allowed('quotes.edit') && q.status === 'sent' && (
-                        <button onClick={() => { setOpenMenu(null); updateStatus(q, 'accepted'); }} className="dropdown-item">✅ Mark Accepted</button>
-                    )}
-                    {allowed('quotes.edit') && q.status !== 'expired' && q.status !== 'converted' && q.status !== 'accepted' && (
-                        <button onClick={() => { setOpenMenu(null); updateStatus(q, 'expired'); }} className="dropdown-item">⌛ Mark Expired</button>
+
+                    {/* Every status is reachable from every other one. The menu
+                        previously offered "Mark Accepted" only from 'sent' and
+                        never offered 'converted' at all, so a draft quote could
+                        only ever become sent or expired. */}
+                    {allowed('quotes.edit') && (
+                        <>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Quote Status</div>
+                            {QUOTE_STATUSES.map(st => (
+                                <button
+                                    key={st}
+                                    onClick={() => updateStatus(q, st)}
+                                    className="dropdown-item"
+                                    disabled={q.status === st}
+                                    title={QUOTE_STATUS_HELP[st]}
+                                >
+                                    {STATUS_ICONS[st]} {st.charAt(0).toUpperCase() + st.slice(1)}
+                                    {q.status === st && <span style={{ color: '#94a3b8', fontWeight: 400 }}> — current</span>}
+                                </button>
+                            ))}
+                        </>
                     )}
 
                     {allowed('quotes.delete') && (
@@ -485,6 +565,23 @@ export default function QuotesPage() {
                                 >
                                     {CURRENCY_CODES.map(c => <option key={c} value={c}>{c}</option>)}
                                 </select>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Status</label>
+                                <select
+                                    value={QUOTE_STATUSES.includes(editModal.status) ? editModal.status : 'draft'}
+                                    onChange={e => setEditModal({ ...editModal, status: e.target.value })}
+                                    className="admin-search-input"
+                                    style={{ width: '100%', boxSizing: 'border-box' }}
+                                >
+                                    {QUOTE_STATUSES.map(st => (
+                                        <option key={st} value={st}>{st.charAt(0).toUpperCase() + st.slice(1)}</option>
+                                    ))}
+                                </select>
+                                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 5, lineHeight: 1.45 }}>
+                                    {QUOTE_STATUS_HELP[(QUOTE_STATUSES.includes(editModal.status) ? editModal.status : 'draft') as QuoteStatus]}
+                                    {editModal.status === 'sent' && editModal.status !== originalStatus && ' Saving does not email the customer.'}
+                                </div>
                             </div>
                             <div style={{ gridColumn: '1/-1' }}>
                                 <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Notes</label>
