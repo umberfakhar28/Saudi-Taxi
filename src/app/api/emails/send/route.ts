@@ -5,6 +5,7 @@ import { createAdminClient } from '@/utils/supabase/admin';
 import { displayDate, displayDateTime, displayTime } from '@/lib/datetime';
 import { formatMoney } from '@/lib/currency';
 import { serviceLabel } from '@/lib/serviceLabels';
+import { resolveSender } from '@/lib/emailSender';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
@@ -58,11 +59,13 @@ async function createNotification(
     }
 }
 
+// RESEND_API_KEY is read here, in a server-only route handler. It has no
+// NEXT_PUBLIC_ prefix, so Next.js never inlines it into the client bundle.
 const resend = new Resend(process.env.RESEND_API_KEY);
-// onboarding@resend.dev is Resend's shared sandbox domain — it's rate-limited
-// and lands in spam more often. Verify gulftripservice.com in the Resend
-// dashboard, then set RESEND_FROM_EMAIL in .env.local to switch over.
-const FROM = process.env.RESEND_FROM_EMAIL || 'Gulf Trip Service <onboarding@resend.dev>';
+
+// The sender identity lives in src/lib/emailSender.ts and is resolved per
+// request inside POST(), so a misconfiguration surfaces as a clear error
+// instead of silently falling back to Resend's sandbox address.
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'umberfakhar10@gmail.com';
 /**
  * Base URL for links inside outgoing emails ("View in Admin Panel", "View
@@ -205,6 +208,25 @@ export async function POST(req: Request) {
             b = data;
         }
 
+        // One sender identity for every type below. Resolved per request so a
+        // corrected environment variable takes effect on the next call, and
+        // checked BEFORE anything is sent so a misconfiguration can never
+        // reach Resend as a sandbox address.
+        const senderResult = resolveSender();
+        if (!senderResult.ok) {
+            console.error('[EMAIL_CONFIG]', senderResult.message);
+            return NextResponse.json({ error: senderResult.message }, { status: 500 });
+        }
+        const { from, replyTo } = senderResult.sender;
+
+        /**
+         * Every outgoing email goes through here, so no call site can omit
+         * the from/reply-to pair or drift from the others. Recipients are
+         * unchanged — each caller still passes its own.
+         */
+        const sendMail = (to: string, subject: string, html: string) =>
+            resend.emails.send({ from, replyTo, to, subject, html });
+
         const results: Array<Record<string, unknown>> = [];
 
         // ─── NEW BOOKING ───────────────────────────────────────────────
@@ -217,7 +239,7 @@ export async function POST(req: Request) {
                 ${buildBookingRows(b)}
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
-            const { data: r1, error: e1 } = await resend.emails.send({ from: FROM, to: ADMIN_EMAIL, subject, html: adminHtml });
+            const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
             await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message);
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
             await createNotification(supabase, 'new_booking', b, `New Booking — ${b.customer_name}`);
@@ -230,7 +252,7 @@ export async function POST(req: Request) {
                 ${buildBookingRows(b)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">For urgent queries, reply to this email or message us on WhatsApp.</p>
             </div></div>`;
-            const { data: r2, error: e2 } = await resend.emails.send({ from: FROM, to: b.customer_email, subject: custSubject, html: custHtml });
+            const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message);
             if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
 
@@ -249,7 +271,7 @@ export async function POST(req: Request) {
                 ${buildBookingRows(b)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You'll receive a reminder 24 hours before your trip. Thank you for choosing Gulf Trip Service.</p>
             </div></div>`;
-            const { data: r, error: e } = await resend.emails.send({ from: FROM, to: b.customer_email, subject, html });
+            const { data: r, error: e } = await sendMail(b.customer_email, subject, html);
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
@@ -266,7 +288,7 @@ export async function POST(req: Request) {
                 <p style="color:#475569;">Thank you for travelling with Gulf Trip Service! We hope you had a great experience. An invoice has been generated for your records.</p>
                 <p style="color:#94a3b8;font-size:0.85rem;">We'd love to hear your feedback. Book your next trip at any time.</p>
             </div></div>`;
-            const { data: r, error: e } = await resend.emails.send({ from: FROM, to: b.customer_email, subject, html });
+            const { data: r, error: e } = await sendMail(b.customer_email, subject, html);
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
@@ -297,7 +319,7 @@ export async function POST(req: Request) {
                 </div>
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">To accept this quote or for any queries, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
-            const { data: r, error: e } = await resend.emails.send({ from: FROM, to: q.customer_email, subject, html });
+            const { data: r, error: e } = await sendMail(q.customer_email, subject, html);
             await logEmail(supabase, null, type, q.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
@@ -319,7 +341,7 @@ export async function POST(req: Request) {
                 ${buildBookingRows(b)}
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
-            const { data: r1, error: e1 } = await resend.emails.send({ from: FROM, to: ADMIN_EMAIL, subject, html: adminHtml });
+            const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
             await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message);
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
             await createNotification(supabase, 'new_enquiry', b, `New ${destLabel} Enquiry — ${b.customer_name}`);
@@ -331,7 +353,7 @@ export async function POST(req: Request) {
                 <p style="color:#475569;">Thank you for your ${escapeHtml(destLabel)} travel enquiry. Our travel team will review your request and get back to you shortly.</p>
                 <p style="color:#94a3b8;font-size:0.85rem;">Need an instant reply? Message us on WhatsApp any time.</p>
             </div></div>`;
-            const { data: r2, error: e2 } = await resend.emails.send({ from: FROM, to: b.customer_email, subject: custSubject, html: custHtml });
+            const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message);
             if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
 
@@ -366,7 +388,7 @@ export async function POST(req: Request) {
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/invoices/${inv.invoice_db_id || inv.id || ''}" style="${btnStyle}">View Invoice</a></p>
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
-            const { data: r, error: e } = await resend.emails.send({ from: FROM, to: inv.customer_email, subject, html });
+            const { data: r, error: e } = await sendMail(inv.customer_email, subject, html);
             await logEmail(supabase, inv.booking_id || bookingId || null, type, inv.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
