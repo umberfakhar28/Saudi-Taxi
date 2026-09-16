@@ -9,13 +9,11 @@
  * rather than inventing new fleet inventory. The brief that requested this
  * file explicitly warned against claiming a vehicle is available if it
  * isn't part of the actual fleet/service offering, so models suggested by
- * the research reference (Mercedes Vito, Hyundai Staria/Starex, GMC Yukon
- * XL, Toyota Veloz, a standalone "Premium Coach" SKU) were left out rather
- * than added speculatively — Gulf Trip Service doesn't list them anywhere
- * else on the site today. If any of those are genuinely offered, add a
- * row here (and to VehicleTypeCarousel's `vehicleTypes`, the source of
- * truth for individual named vehicles) rather than duplicating the shape
- * elsewhere.
+ * the research reference (Mercedes Vito, GMC Yukon XL, Toyota Veloz, a
+ * standalone "Premium Coach" SKU) were left out rather than added
+ * speculatively. The Hyundai Staria, Hyundai Starex and Chevrolet Suburban
+ * were added in September 2026, once the business confirmed them and
+ * supplied photos.
  *
  * `slug`/`bookingName` match the existing `/book-online?vehicle=&vehicleName=`
  * query pattern used by every other vehicle card on the site, so these
@@ -51,8 +49,11 @@ export const FLEET_VEHICLES: FleetVehicle[] = [
   { slug: "bmw-7-series", name: "BMW 7 Series", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "Corporate travel & executive meetings" },
   { slug: "genesis-g90", name: "Genesis G90", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "VIP airport pickups & flagship comfort" },
   { slug: "gmc-yukon", name: "GMC Yukon", type: "Premium SUV", passengers: 6, luggage: 6, comfort: "Premium", bestFor: "Families & groups with extra luggage", image: "/fleet/gmc-yukon.avif" },
+  { slug: "chevrolet-suburban", name: "Chevrolet Suburban", type: "Premium SUV", passengers: 6, luggage: 7, comfort: "Premium", bestFor: "Families & long cross-border journeys with luggage", image: "/fleet/chevrolet-suburban.webp" },
   { slug: "cadillac-escalade-esv", name: "Cadillac Escalade ESV", type: "Premium SUV", passengers: 6, luggage: 7, comfort: "Executive", bestFor: "VIP groups wanting a commanding, spacious ride" },
   { slug: "mercedes-v-class", name: "Mercedes-Benz V-Class", type: "Premium Van", passengers: 7, luggage: 6, comfort: "Premium", bestFor: "Families & small groups who want sedan-level comfort" },
+  { slug: "hyundai-staria", name: "Hyundai Staria", type: "Premium Van", passengers: 7, luggage: 6, comfort: "Premium", bestFor: "Families & small groups wanting a modern, spacious cabin", image: "/fleet/hyundai-staria.avif" },
+  { slug: "hyundai-starex", name: "Hyundai Starex", type: "Group Van", passengers: 9, luggage: 7, comfort: "Standard", bestFor: "Families & groups on airport and Umrah transfers", image: "/fleet/hyundai-starex.avif" },
   { slug: "toyota-hiace", name: "Toyota Hiace", type: "Group Van", passengers: 12, luggage: 8, comfort: "Standard", bestFor: "Medium-size groups & full Umrah party transfers", image: "/fleet/toyota-hiace.avif" },
   { slug: "mercedes-sprinter", name: "Mercedes-Benz Sprinter", type: "Executive Van", passengers: 12, luggage: 10, comfort: "Premium", bestFor: "Corporate groups & larger party transfers" },
   { slug: "toyota-coaster-18-seater", name: "Toyota Coaster (18-Seater)", type: "Minibus", passengers: 18, luggage: 12, comfort: "Standard", bestFor: "Mid-size Umrah groups & multi-family transfers", image: "/fleet/toyota-coaster.avif" },
@@ -79,14 +80,14 @@ export const FLEET_CATEGORY_GUIDE: FleetCategory[] = [
     title: "Premium SUVs for Families & Groups",
     tagline: "Extra seating and cargo room for families traveling with more luggage.",
     bestForList: ["Families", "Larger luggage requirements", "Airport transfers", "Long-distance travel"],
-    vehicleSlugs: ["gmc-yukon", "cadillac-escalade-esv"],
+    vehicleSlugs: ["gmc-yukon", "chevrolet-suburban", "cadillac-escalade-esv"],
   },
   {
     id: "premium-van",
     title: "Premium Vans for Families & Small Groups",
     tagline: "Sedan-level comfort with the seating and luggage room of a van.",
     bestForList: ["Families", "Small groups", "Umrah transportation", "Intercity travel"],
-    vehicleSlugs: ["mercedes-v-class", "toyota-hiace"],
+    vehicleSlugs: ["mercedes-v-class", "hyundai-staria", "hyundai-starex", "toyota-hiace"],
   },
   {
     id: "group-umrah",

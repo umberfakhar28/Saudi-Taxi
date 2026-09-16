@@ -90,7 +90,7 @@ export const saudiToBahrain: BorderData = {
   faqs: [
     { q: "Do I need a visa to cross into Bahrain?", a: "It depends on your nationality — many travelers can get a Bahrain eVisa or visa-on-arrival, and GCC nationals typically cross with a national ID. Requirements can change, so confirm current eligibility with an official Bahraini source before you travel." },
     { q: "Can you pick me up from anywhere in the Eastern Province?", a: "Yes — Dammam, Khobar, Jubail and Dhahran are all regular pickup points, and we also cover Riyadh and other Saudi cities for the full journey to the causeway." },
-    { q: "Do I stay in the same vehicle the whole way to Bahrain?", a: "Private taxis registered in Saudi Arabia don't cross into Bahraini territory. We take you to the Saudi exit point on the causeway; for onward travel into Manama, we can coordinate a licensed Bahrain-side driver in advance if requested." },
+    { q: "Do I stay in the same vehicle the whole way to Bahrain?", a: "Not on the causeway — taxis can't cross it themselves, so the journey continues with a licensed Bahrain-side driver after a handover at the causeway, arranged in advance as part of your booking." },
     { q: "How long does the crossing usually take?", a: "Typically 1–2 hours depending on traffic and processing time at the crossing itself — Thursday and Friday evenings tend to be busiest." },
   ],
 
@@ -182,7 +182,7 @@ export const saudiToQatar: BorderData = {
   faqs: [
     { q: "Do I need a Hayya Card or visa to enter Qatar?", a: "It depends on your nationality — a Hayya Card, a Qatar visa, or a GCC national ID may apply. Requirements can change, so confirm current eligibility with an official Qatari source before you travel." },
     { q: "Can you pick me up from Al-Ahsa or another Eastern Province city?", a: "Yes — Al-Ahsa, Dammam, Khobar and Riyadh are all regular pickup points for the journey to the Salwa border." },
-    { q: "Do I need to change vehicles at the border?", a: "Saudi-registered private taxis don't cross into Qatari territory. We take you to the Saudi exit point at Salwa; onward travel into Doha can be coordinated with a licensed Qatar-side driver if arranged in advance." },
+    { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver take you from your pickup address, through the Salwa crossing, to your destination in Qatar." },
     { q: "How long does the trip to Doha usually take?", a: "From the Eastern Province, typically 2.5–3 hours to the border plus crossing time; from Riyadh, allow for a considerably longer drive." },
   ],
 
@@ -271,7 +271,7 @@ export const saudiToUae: BorderData = {
   faqs: [
     { q: "Do I need a visa to enter the UAE?", a: "GCC nationals typically cross with a national ID; other nationalities should confirm current UAE visa requirements with an official source, as rules vary by nationality and can change." },
     { q: "How long does the drive from Riyadh or Dammam to the UAE take?", a: "This is a long overland journey — typically the better part of a day including the border crossing, depending on your starting city and traffic." },
-    { q: "Can you take me all the way to my hotel in Dubai or Abu Dhabi?", a: "Saudi-registered private taxis don't cross into UAE territory. We take you to the Saudi exit point at Al Batha; onward travel into Dubai or Abu Dhabi can be coordinated with a licensed UAE-side driver if arranged in advance." },
+    { q: "Can you take me all the way to my hotel in Dubai or Abu Dhabi?", a: "Yes — one vehicle and driver take you from your pickup address, through the Al Batha crossing, to your hotel in Dubai or Abu Dhabi." },
     { q: "How far in advance should I book?", a: "We recommend at least 72 hours given the length of the journey and the vehicle preparation involved." },
   ],
 

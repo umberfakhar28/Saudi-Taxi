@@ -17,7 +17,7 @@ export const metadata = generatePageMetadata({
 
 const faqs = [
     { q: "Do you offer help with visa or entry requirements?", a: "We can share general guidance, but we are a transportation provider, not an immigration authority. Visa and entry requirements vary by nationality and can change — always confirm current requirements with the relevant embassy or an official government source before you travel." },
-    { q: "Do the same driver and vehicle take me all the way across the border?", a: "Saudi-registered private taxis don't cross into neighboring countries' territory. We take you to the Saudi exit point at the relevant crossing; for onward travel, we can coordinate a licensed driver on the other side if arranged in advance." },
+    { q: "Do the same driver and vehicle take me all the way across the border?", a: "On the land routes to Qatar, Kuwait and the UAE, yes — one vehicle and driver take you from your pickup address, through the border, to your destination. The King Fahd Causeway to Bahrain works differently: the journey continues with a licensed driver on the other side, after a handover we arrange in advance." },
     { q: "How far in advance should I book a border crossing transfer?", a: "We recommend at least 48 hours ahead for most crossings, and longer for the UAE and Jordan routes given the distance involved." },
     { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Al Khafji/Al Nuwaiseeb to Kuwait, and the Halat Ammar, Ad-Durra and Al-Haditha crossings to Jordan — see the routes below for journey-specific pages." },
 ];
@@ -133,6 +133,36 @@ export default function BorderCrossing() {
             {/* Intro */}
             <section className="section-lg">
                 <div className="container">
+                    {/* Service scope — a statement of what we don't offer, kept
+                        apart from the page copy so it reads as a notice. */}
+                    <div role="note" style={{
+                        display: 'flex', alignItems: 'flex-start', gap: 'var(--space-4)',
+                        background: 'linear-gradient(135deg, rgba(184, 148, 91, 0.14), rgba(184, 148, 91, 0.05))',
+                        border: '1px solid rgba(184, 148, 91, 0.45)',
+                        borderInlineStart: '5px solid var(--gold)',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: 'var(--space-5) var(--space-6)',
+                        marginBottom: 'var(--space-12)',
+                        boxShadow: 'var(--shadow-md)',
+                    }}>
+                        <span aria-hidden="true" style={{
+                            flexShrink: 0, width: 40, height: 40, borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            background: 'var(--gold)', color: 'var(--navy)',
+                            fontWeight: 800, fontSize: '1.15rem', fontFamily: 'var(--font-heading)',
+                        }}>i</span>
+                        <div style={{ minWidth: 0 }}>
+                            <p style={{ margin: '0 0 var(--space-1)', fontSize: 'var(--text-xs)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--navy)' }}>
+                                Please note
+                            </p>
+                            <p style={{ margin: 0, color: 'var(--text-primary)', fontWeight: 600, lineHeight: 1.6 }}>
+                                We don&apos;t provide short rides just across the border, or short street-to-street
+                                rides within a city. Our border service is for planned door-to-door journeys
+                                between cities and countries.
+                            </p>
+                        </div>
+                    </div>
+
                     <div className="grid-60-40">
                         <div>
                             <div className="section-header">

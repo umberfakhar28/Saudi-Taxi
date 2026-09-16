@@ -42,6 +42,9 @@ const galleryItems: GalleryItem[] = [
     { emoji: "🚐", title: "GMC Savana", category: "Fleet", caption: "Our executive 8-seater passenger van", image: "/images/chauffeur.jpg", objectPosition: "center 30%" },
     { emoji: "🏔️", title: "Al-Shafa, Taif", category: "Taif", caption: "Cool mountains of Al-Shafa above Makkah" },
     { emoji: "🌃", title: "Makkah Skyline", category: "Makkah", caption: "Makkah Clock Tower and Holy Mosque at night" },
+    { emoji: "🚙", title: "Chevrolet Suburban", category: "Fleet", caption: "Our full-size SUV for long journeys", image: "/fleet/chevrolet-suburban.webp", objectPosition: "center 55%" },
+    { emoji: "🚐", title: "Hyundai Staria", category: "Fleet", caption: "Our modern premium family van", image: "/fleet/hyundai-staria.avif", objectPosition: "center 62%" },
+    { emoji: "🚐", title: "Hyundai Starex", category: "Fleet", caption: "Our group van for airport and Umrah transfers", image: "/fleet/hyundai-starex.avif", objectPosition: "center 60%" },
     { emoji: "🚌", title: "Toyota Coaster", category: "Fleet", caption: "Our minibus for Umrah groups and tours", image: "/fleet/toyota-coaster.avif", objectPosition: "center 60%" },
 ];
 
