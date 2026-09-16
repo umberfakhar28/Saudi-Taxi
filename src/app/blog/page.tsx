@@ -34,6 +34,7 @@ export const posts: BlogPostSummary[] = [
   { slug: "family-saudi-destinations",   category: "Travel Tips",        title: "Best Family Destinations in Saudi Arabia in 2025",                       excerpt: "AlUla, Abha, Taif, and the Red Sea coast — the top spots for Saudi family vacations and how to get there." },
   { slug: "vip-transport-saudi",         category: "Luxury Travel",      title: "VIP & Executive Transportation in Saudi Arabia: What to Expect",         excerpt: "From Mercedes chauffeur service to dedicated executive accounts — the premium transport experience explained." },
   { slug: "riyadh-to-jeddah-travel",     category: "Transportation",     title: "Riyadh to Jeddah: All Your Travel Options Compared",                     excerpt: "Fly, drive, take the bus, or book a private transfer? We compare every Riyadh–Jeddah option by cost, time, and comfort." },
+  { slug: "bahrain-to-dammam-travel-options", category: "Transportation", title: "Bahrain to Dammam: Every Way to Cross the King Fahd Causeway, Compared", excerpt: "Taxi, Uber, coach, your own car or a private transfer? Only some of them actually cross the causeway end to end — here’s how each works." },
   { slug: "safe-travel-tips-saudi",      category: "Travel Tips",        title: "Safe Travel Tips for First-Time Visitors to Saudi Arabia",               excerpt: "Everything a first-time visitor needs to know about staying safe, navigating transport, and respecting local customs." },
 ];
 

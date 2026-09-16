@@ -62,7 +62,22 @@ export interface GuideData {
   lastReviewed?: string;
 }
 
-function GuideTable({ table }: { table: NonNullable<GuideSection["table"]> }) {
+/** Exported so BlogPost can render the identical checklist markup. */
+export function GuideList({ items }: { items: string[] }) {
+  return (
+    <ul style={{ marginTop: "var(--space-4)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+      {items.map((item, j) => (
+        <li key={j} style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-3)", color: "var(--text-body)", lineHeight: 1.6 }}>
+          <CheckCircleIcon size={16} style={{ color: "var(--accent)", flexShrink: 0, marginTop: 3 }} />
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Exported so BlogPost can reuse the same table rather than a copy of it. */
+export function GuideTable({ table }: { table: NonNullable<GuideSection["table"]> }) {
   return (
     <div style={{ marginTop: "var(--space-6)", overflowX: "auto", borderRadius: "var(--radius-md)", border: "1px solid var(--line)" }}>
       <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 480 }}>
@@ -87,7 +102,8 @@ function GuideTable({ table }: { table: NonNullable<GuideSection["table"]> }) {
   );
 }
 
-function SectionCta({ cta }: { cta: NonNullable<GuideSection["cta"]> }) {
+/** Exported so BlogPost can place the same contextual CTA card mid-article. */
+export function SectionCta({ cta }: { cta: NonNullable<GuideSection["cta"]> }) {
   if (cta.isWhatsapp) {
     return (
       <div style={{ marginTop: "var(--space-6)", padding: "var(--space-6)", borderRadius: "var(--radius-md)", background: "var(--bg-subtle)", border: "1px solid var(--line)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "var(--space-4)" }}>
@@ -176,16 +192,7 @@ export default function GuidePage({ data }: { data: GuideData }) {
               <div key={i}>
                 <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)", marginBottom: "var(--space-4)", borderLeft: "3px solid var(--accent)", paddingLeft: "var(--space-5)" }}>{s.heading}</h2>
                 <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>{s.content}</p>
-                {s.list && s.list.length > 0 && (
-                  <ul style={{ marginTop: "var(--space-4)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-                    {s.list.map((item, j) => (
-                      <li key={j} style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-3)", color: "var(--text-body)", lineHeight: 1.6 }}>
-                        <CheckCircleIcon size={16} style={{ color: "var(--accent)", flexShrink: 0, marginTop: 3 }} />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                {s.list && s.list.length > 0 && <GuideList items={s.list} />}
                 {s.table && <GuideTable table={s.table} />}
                 {s.image && (
                   <div style={{ marginTop: "var(--space-6)", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)" }}>

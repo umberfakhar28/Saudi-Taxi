@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { blogPostingSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { blogPostingSchema, breadcrumbSchema, faqSchema, jsonLd } from "@/lib/jsonld";
 import { posts as allPosts } from "@/app/blog/page";
 import { waLink } from "@/lib/contact";
 import { WhatsAppIcon } from "@/components/Icons";
+import { GuideList, GuideTable, SectionCta, type GuideSection } from "@/components/GuidePage";
 
 export interface BlogPostData {
   title: string;
@@ -16,12 +17,31 @@ export interface BlogPostData {
    * two long-form/editorial families read consistently. */
   featuredImage?: string;
   featuredImageAlt?: string;
-  body: { heading?: string; text: string; image?: string; imageAlt?: string }[];
+  /** Every field beyond heading/text is optional, so existing posts render
+   * exactly as before. The list, table and CTA reuse GuidePage's own
+   * renderers rather than a second copy of the same markup. */
+  body: {
+    heading?: string;
+    text: string;
+    image?: string;
+    imageAlt?: string;
+    list?: string[];
+    /** Every cell must be genuine, verifiable information — never an invented figure. */
+    table?: GuideSection["table"];
+    /** Used sparingly — a contextual next step, not a CTA after every section. */
+    cta?: GuideSection["cta"];
+  }[];
   /** Contextual links out to real service/city/route/guide pages. Blog
    * posts previously linked only to other blog posts, which left them
    * topically isolated — they passed no relevance to the commercial pages
    * they're written to support. Every href must resolve to a live page. */
   relatedServiceLinks?: { href: string; label: string; reason: string }[];
+  /** Rendered as a visible FAQ and emitted as FAQPage structured data. Only
+   * questions the article genuinely answers — never keyword filler. */
+  faqs?: { q: string; a: string }[];
+  /** Editorial freshness stamp — only set when the post has actually just
+   * been reviewed. `date` stays the original publication date. */
+  lastReviewed?: string;
 }
 
 /** Same-category posts first, then fill to 4 with the rest — every post
@@ -37,7 +57,7 @@ function relatedPosts(currentSlug: string, category: string) {
 export default function BlogPost({ data }: { data: BlogPostData }) {
   const slug = data.path.replace("/blog/", "");
   const related = relatedPosts(slug, data.category);
-  const schemas = [
+  const schemas: object[] = [
     blogPostingSchema({
       headline: data.title,
       description: data.excerpt,
@@ -50,6 +70,9 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
       { name: data.title, path: data.path },
     ]),
   ];
+  if (data.faqs && data.faqs.length > 0) {
+    schemas.push(faqSchema(data.faqs.map((f) => ({ question: f.q, answer: f.a }))));
+  }
 
   return (
     <main>
@@ -90,6 +113,8 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
                 <div key={i}>
                   {block.heading && <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)", marginBottom: "var(--space-4)" }}>{block.heading}</h2>}
                   <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>{block.text}</p>
+                  {block.list && block.list.length > 0 && <GuideList items={block.list} />}
+                  {block.table && <GuideTable table={block.table} />}
                   {block.image && (
                     <div style={{ marginTop: "var(--space-6)", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)" }}>
                       <Image
@@ -102,9 +127,29 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
                       />
                     </div>
                   )}
+                  {block.cta && <SectionCta cta={block.cta} />}
                 </div>
               ))}
             </div>
+
+            {data.lastReviewed && (
+              <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginTop: "var(--space-8)", marginBottom: 0 }}>Last reviewed: {data.lastReviewed}</p>
+            )}
+
+            {data.faqs && data.faqs.length > 0 && (
+              <div style={{ marginTop: "var(--space-16)" }}>
+                <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)", marginBottom: "var(--space-6)" }}>Frequently Asked Questions</h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+                  {data.faqs.map((f, i) => (
+                    <div key={i} className="card" style={{ padding: "var(--space-6) var(--space-8)" }}>
+                      <h3 style={{ color: "var(--accent)", fontSize: "var(--text-base)", marginBottom: "var(--space-3)" }}>{f.q}</h3>
+                      <p style={{ color: "var(--text-body)", marginBottom: 0 }}>{f.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {data.relatedServiceLinks && data.relatedServiceLinks.length > 0 && (
               <div style={{ marginTop: "var(--space-16)" }}>
                 <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)", marginBottom: "var(--space-5)" }}>Plan Your Trip</h3>

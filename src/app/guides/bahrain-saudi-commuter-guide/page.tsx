@@ -108,6 +108,7 @@ const data: GuideData = {
     { href: "/border-crossing", label: "Saudi Arabia Border Crossing Guide", reason: "The full hub covering every GCC land border, not just the causeway." },
     { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain Taxi Service", reason: "For commutes reaching further into Saudi Arabia beyond the Eastern Province." },
     { href: "/guides/business-travel", label: "Business Travel Transportation Guide", reason: "Broader Eastern Province business travel logistics." },
+    { href: "/blog/bahrain-to-dammam-travel-options", label: "Every Way to Cross the Causeway", reason: "Taxi, ride-hailing, coach, self-drive or private transfer — which ones actually cross end to end." },
   ],
   ctaText: "Set Up a Regular Crossing Arrangement",
   ctaLink: "/corporate-transportation-services",

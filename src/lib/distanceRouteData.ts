@@ -715,6 +715,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi service" },
       { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },
       { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain taxi service" },
+      { href: "/blog/bahrain-to-dammam-travel-options", label: "Every way to cross the causeway, compared" },
     ],
 
     ctaText: "Get a Private Transfer Quote for Bahrain to Dammam",

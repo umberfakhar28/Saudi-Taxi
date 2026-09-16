@@ -356,6 +356,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     "benefits-private-airport-transfer",
     "family-saudi-destinations", "vip-transport-saudi",
     "riyadh-to-jeddah-travel", "safe-travel-tips-saudi",
+    "bahrain-to-dammam-travel-options",
   ];
   const blogPages: SitemapEntry[] = blogSlugs.map((slug) => ({
     url: `${BASE_URL}/blog/${slug}`,
