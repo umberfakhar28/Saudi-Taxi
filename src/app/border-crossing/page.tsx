@@ -19,7 +19,7 @@ const faqs = [
     { q: "Do you offer help with visa or entry requirements?", a: "We can share general guidance, but we are a transportation provider, not an immigration authority. Visa and entry requirements vary by nationality and can change — always confirm current requirements with the relevant embassy or an official government source before you travel." },
     { q: "Do the same driver and vehicle take me all the way across the border?", a: "Saudi-registered private taxis don't cross into neighboring countries' territory. We take you to the Saudi exit point at the relevant crossing; for onward travel, we can coordinate a licensed driver on the other side if arranged in advance." },
     { q: "How far in advance should I book a border crossing transfer?", a: "We recommend at least 48 hours ahead for most crossings, and longer for the UAE and Jordan routes given the distance involved." },
-    { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Haradh/Wajir to Kuwait, and the Durra/Halat Ammar crossing to Jordan — see the routes below for journey-specific pages." },
+    { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Al Khafji/Al Nuwaiseeb to Kuwait, and the Durra/Halat Ammar crossing to Jordan — see the routes below for journey-specific pages." },
 ];
 
 const schemas = [
@@ -56,12 +56,19 @@ const borders = [
         note: "The main land route between Saudi Arabia and the UAE. GCC nationals typically cross with a national ID; other nationalities should confirm current UAE visa requirements.",
         highlights: ["GCC ID often sufficient for GCC nationals", "Entry permit may apply for others", "Well-maintained highway route", "Open 24 hours"],
     },
+    // Previously labelled "Haradh / Wajir", which is not a Kuwait crossing:
+    // Haradh is an inland town south-west of Hofuf, far from Kuwait, and no
+    // crossing is called "Wajir". Every Eastern Province route page on this
+    // site (Khafji, Dammam and Kuwait-to-Dammam) correctly names Al
+    // Nuwaiseeb. The ~530 km figure was right but mislabelled "from Riyadh" —
+    // it is this site's own Dammam-to-Kuwait distance via the coastal Highway
+    // 95. Every fact below is taken from those pages.
     {
-        name: "Haradh / Wajir (Kuwait)",
+        name: "Al Khafji / Al Nuwaiseeb (Kuwait)",
         route: "Saudi Arabia ↔ Kuwait",
-        distance: "~530 km from Riyadh",
-        note: "Connects the Eastern Province to Kuwait, commonly used by GCC nationals and residents with a valid Kuwait entry status.",
-        highlights: ["GCC ID often sufficient for GCC nationals", "Confirm work/residency visa requirements for others", "Fuel and services available en route", "Single-lane highway route"],
+        distance: "~15 km from Khafji / ~530 km from Dammam",
+        note: "The primary land crossing between Saudi Arabia and Kuwait, on the coast just north of Khafji. Commonly used by GCC nationals and residents with a valid Kuwait entry status.",
+        highlights: ["GCC ID often sufficient for GCC nationals", "Confirm work/residency visa requirements for others", "Open 24 hours — usually 30–90 min outside peak times", "Vehicle insurance is mandatory on the Kuwaiti side"],
     },
     {
         name: "Abu Samra / Salwa (Qatar)",

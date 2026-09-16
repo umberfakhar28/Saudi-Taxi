@@ -1006,34 +1006,34 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
     eyebrow: "Distance & Travel Guide",
     h1: "Riyadh to Kuwait Distance & Travel Time",
-    intro: "How far Kuwait is from Riyadh, how long the drive via the Haradh/Wajir border takes, and what business travelers should know before booking.",
+    intro: "How far Kuwait is from Riyadh, how long the road journey takes, which border crossings it can use, and what business travelers should know before booking.",
     breadcrumbLabel: "Riyadh to Kuwait",
 
-    roadDistance: "approximately 550 km by road",
-    driveTime: "approximately 6–7 hours, including border processing",
-    routeType: "Cross-border route between Saudi Arabia and Kuwait via the Haradh / Wajir border",
+    roadDistance: "about 535 km in a straight line — longer by road",
+    driveTime: "most of a day, including border processing and rest stops",
+    routeType: "Cross-border route between Saudi Arabia and Kuwait",
 
     overviewParagraphs: [
-      "Riyadh to Kuwait runs north-east through Saudi Arabia's central and eastern regions to the Haradh/Wajir border crossing, a different and more direct crossing point than the Eastern Province's Al Nuwaiseeb route.",
-      "This is a genuine long-distance drive at 550 km, favored by business travelers, GCC nationals, and families who prefer a private overland journey over flying and arranging separate ground transport.",
+      "Riyadh to Kuwait runs north-east across Saudi Arabia to one of two land crossings into Kuwait: Al Khafji / Al Nuwaiseeb on the Gulf coast, reached through the Eastern Province, or Al Ruqi'i / Al Salmi inland, in the Hafar Al Batin area.",
+      "This is a genuine long-distance journey — Kuwait City is about 535 km from Riyadh as the crow flies, and the road route is longer — favored by business travelers, GCC nationals, and families who prefer a private overland journey over flying and arranging separate ground transport.",
       "Given the distance, a scheduled rest stop roughly midway is standard, and executive vehicles with extra legroom are commonly used for the multi-hour drive.",
     ],
     routeCharacteristics: [
       "Runs north-east through Saudi Arabia's central and eastern regions.",
-      "Crosses at Haradh/Wajir, a more direct route from Riyadh than via the Eastern Province.",
+      "Crosses into Kuwait at Al Khafji / Al Nuwaiseeb or Al Ruqi'i / Al Salmi, depending on the route chosen.",
       "A regular corridor for business travelers and GCC nationals.",
       "Involves one international border crossing — no other borders en route.",
     ],
     factorsAffectingTime: [
-      "Border processing time at Haradh/Wajir varies with traffic, same as any crossing.",
-      "Given the 550 km distance, rest and meal stops meaningfully extend the total journey beyond pure driving time.",
+      "Border processing time varies with traffic at whichever crossing the route uses.",
+      "Given the distance, rest and meal stops meaningfully extend the total journey beyond pure driving time.",
       "GCC nationals cross with a national ID, while other nationalities need a valid visa.",
     ],
 
     travelOptions: [
       {
         title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle and driver cover the full journey from Riyadh through the Haradh/Wajir crossing to your Kuwait destination.",
+        description: "A single vehicle and driver cover the full journey from Riyadh across the border to your Kuwait destination, door to door.",
       },
       {
         title: "Domestic/Regional Flight",
@@ -1045,8 +1045,8 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One vehicle for the entire journey, no handover required at the border",
-      "Professional driver experienced with the Haradh/Wajir crossing",
+      "One vehicle for the entire journey, arranged in advance",
+      "Professional driver experienced with the Saudi–Kuwait border crossings",
       "Executive vehicle options with extra legroom for the multi-hour drive",
       "A scheduled rest stop planned into the journey",
       "Suitable for business travelers and GCC nationals making regular trips",
@@ -1054,9 +1054,9 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     journeyPlanning: [
-      { title: "Plan for a Full Day", note: "Between the 6–7 hour driving estimate and realistic rest stops, treat this as a full-day journey." },
+      { title: "Plan for a Full Day", note: "Between the long drive, border processing and realistic rest stops, treat this as a full-day journey." },
       { title: "Consider Flying for Tight Schedules", note: "Business travelers on a same-day schedule often prefer a direct flight between Riyadh and Kuwait City instead of the full drive." },
-      { title: "Documents Ready", note: "Have your passport and Saudi/Kuwaiti visa or GCC ID ready before departure for the Haradh/Wajir crossing." },
+      { title: "Documents Ready", note: "Have your passport and Saudi/Kuwaiti visa or GCC ID ready before departure for the border crossing." },
       { title: "Executive Vehicle for Comfort", note: "Given the distance, an executive vehicle with extra legroom is worth requesting for a more comfortable multi-hour drive." },
     ],
     bestTimeToTravel: [
@@ -1065,12 +1065,12 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     faqs: [
-      { q: "How far is Riyadh from Kuwait?", a: "Approximately 550 km by road via the Haradh/Wajir border crossing." },
-      { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Around 6 to 7 hours including border processing." },
-      { q: "Is it faster to fly instead of driving?", a: "For business travelers on a tight schedule, yes — a direct flight between Riyadh and Kuwait City is often faster than the full 6–7 hour drive." },
-      { q: "Do I need to change vehicles at the border?", a: "No — this crossing allows a single authorized vehicle to complete the full journey without a handover." },
-      { q: "Can I book a private transfer for the whole trip?", a: "Yes — Gulf Trip Service arranges direct Riyadh to Kuwait transfers via the Haradh/Wajir border." },
-      { q: "Is this route different from the Dammam to Kuwait route?", a: "Yes — it uses the Haradh/Wajir crossing rather than Al Nuwaiseeb, a more direct route from Riyadh than routing via the Eastern Province." },
+      { q: "How far is Riyadh from Kuwait?", a: "Kuwait City is about 535 km from Riyadh in a straight line. The road journey is longer, and the exact distance depends on which border crossing the route uses." },
+      { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Plan for most of a day, including border processing and rest stops. The exact time depends on the route, traffic and border queues." },
+      { q: "Is it faster to fly instead of driving?", a: "For business travelers on a tight schedule, yes — a direct flight between Riyadh and Kuwait City is usually faster than the full-day drive." },
+      { q: "Do I need to change vehicles at the border?", a: "Ask when you book. Whether one vehicle can complete the whole journey depends on its cross-border authorization, and we confirm the arrangement in advance." },
+      { q: "Can I book a private transfer for the whole trip?", a: "Yes — Gulf Trip Service arranges door-to-door Riyadh to Kuwait transfers across the Saudi–Kuwait land border." },
+      { q: "Is this route different from the Dammam to Kuwait route?", a: "It can be. From Dammam the natural crossing is Al Khafji / Al Nuwaiseeb on the coast; from Riyadh the inland Al Ruqi'i / Al Salmi crossing is also an option. Your driver confirms the route before departure." },
       { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid visa — confirm current requirements before traveling." },
     ],
 

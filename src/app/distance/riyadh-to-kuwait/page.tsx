@@ -4,7 +4,7 @@ import { distanceRoutes } from "@/lib/distanceRouteData";
 
 export const metadata = generatePageMetadata({
   title: "Riyadh to Kuwait Distance & Travel Time",
-  description: "Riyadh to Kuwait distance via the Haradh/Wajir border, driving time, and private transfer options. Plan your trip or book a private taxi.",
+  description: "Riyadh to Kuwait distance, journey time, border crossings and private transfer options. Plan your door-to-door trip or request a quote.",
   path: "/distance/riyadh-to-kuwait",
 });
 
