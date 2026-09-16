@@ -30,6 +30,9 @@ export interface FleetVehicle {
   luggage: number;
   comfort: "Standard" | "Premium" | "Executive";
   bestFor: string;
+  /** A photo of this exact model in public/fleet. Only set where one really
+   * exists — vehicles without a photo keep the icon tile until one is added. */
+  image?: string;
 }
 
 export interface FleetCategory {
@@ -41,19 +44,19 @@ export interface FleetCategory {
 }
 
 export const FLEET_VEHICLES: FleetVehicle[] = [
-  { slug: "toyota-camry", name: "Toyota Camry", type: "Sedan", passengers: 4, luggage: 3, comfort: "Standard", bestFor: "Couples & small families on a comfortable budget" },
+  { slug: "toyota-camry", name: "Toyota Camry", type: "Sedan", passengers: 4, luggage: 3, comfort: "Standard", bestFor: "Couples & small families on a comfortable budget", image: "/fleet/toyota-camry.avif" },
   { slug: "ford-taurus", name: "Ford Taurus", type: "Sedan", passengers: 3, luggage: 2, comfort: "Standard", bestFor: "Solo travelers & short city transfers" },
   { slug: "lexus-es", name: "Lexus ES", type: "Premium Sedan", passengers: 4, luggage: 3, comfort: "Premium", bestFor: "Executives & couples who want extra refinement" },
   { slug: "mercedes-s-class", name: "Mercedes-Benz S-Class", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "VIP travel & business-class comfort" },
   { slug: "bmw-7-series", name: "BMW 7 Series", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "Corporate travel & executive meetings" },
   { slug: "genesis-g90", name: "Genesis G90", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "VIP airport pickups & flagship comfort" },
-  { slug: "gmc-yukon", name: "GMC Yukon", type: "Premium SUV", passengers: 6, luggage: 6, comfort: "Premium", bestFor: "Families & groups with extra luggage" },
+  { slug: "gmc-yukon", name: "GMC Yukon", type: "Premium SUV", passengers: 6, luggage: 6, comfort: "Premium", bestFor: "Families & groups with extra luggage", image: "/fleet/gmc-yukon.avif" },
   { slug: "cadillac-escalade-esv", name: "Cadillac Escalade ESV", type: "Premium SUV", passengers: 6, luggage: 7, comfort: "Executive", bestFor: "VIP groups wanting a commanding, spacious ride" },
   { slug: "mercedes-v-class", name: "Mercedes-Benz V-Class", type: "Premium Van", passengers: 7, luggage: 6, comfort: "Premium", bestFor: "Families & small groups who want sedan-level comfort" },
-  { slug: "toyota-hiace", name: "Toyota Hiace", type: "Group Van", passengers: 12, luggage: 8, comfort: "Standard", bestFor: "Medium-size groups & full Umrah party transfers" },
+  { slug: "toyota-hiace", name: "Toyota Hiace", type: "Group Van", passengers: 12, luggage: 8, comfort: "Standard", bestFor: "Medium-size groups & full Umrah party transfers", image: "/fleet/toyota-hiace.avif" },
   { slug: "mercedes-sprinter", name: "Mercedes-Benz Sprinter", type: "Executive Van", passengers: 12, luggage: 10, comfort: "Premium", bestFor: "Corporate groups & larger party transfers" },
-  { slug: "toyota-coaster-18-seater", name: "Toyota Coaster (18-Seater)", type: "Minibus", passengers: 18, luggage: 12, comfort: "Standard", bestFor: "Mid-size Umrah groups & multi-family transfers" },
-  { slug: "toyota-coaster", name: "Toyota Coaster", type: "Minibus", passengers: 22, luggage: 15, comfort: "Standard", bestFor: "Large Umrah groups, tours & full-party transfers" },
+  { slug: "toyota-coaster-18-seater", name: "Toyota Coaster (18-Seater)", type: "Minibus", passengers: 18, luggage: 12, comfort: "Standard", bestFor: "Mid-size Umrah groups & multi-family transfers", image: "/fleet/toyota-coaster.avif" },
+  { slug: "toyota-coaster", name: "Toyota Coaster", type: "Minibus", passengers: 22, luggage: 15, comfort: "Standard", bestFor: "Large Umrah groups, tours & full-party transfers", image: "/fleet/toyota-coaster.avif" },
 ];
 
 export const FLEET_CATEGORY_GUIDE: FleetCategory[] = [

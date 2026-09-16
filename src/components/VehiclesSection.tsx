@@ -8,8 +8,8 @@ const vehicles = [
     slug: "toyota-camry",
     name: "Toyota Camry",
     category: "Standard",
-    image: "/images/fleet-sedan2.jpg",
-    objectPosition: "20% center",
+    image: "/fleet/toyota-camry.avif",
+    objectPosition: "center 62%",
     desc1: "Smooth, fuel-efficient rides perfect for city commutes and airport transfers — dependable comfort every trip.",
     desc2:
       "Best suited for <strong>solo travelers &amp; small groups</strong> seeking reliability.",
@@ -32,8 +32,8 @@ const vehicles = [
     slug: "gmc-yukon",
     name: "GMC Yukon",
     category: "SUV",
-    image: "/images/fleet-suv.jpg",
-    objectPosition: "center top",
+    image: "/fleet/gmc-yukon.avif",
+    objectPosition: "center 68%",
     desc1: "Commanding 7-seat SUV with generous cargo room — built for long journeys and rugged road conditions.",
     desc2:
       "Best suited for <strong>families &amp; groups</strong> exploring inter-city destinations.",
@@ -70,8 +70,8 @@ const vehicles = [
     slug: "toyota-hiace",
     name: "Toyota HiAce",
     category: "Van",
-    image: "/images/fleet-van.jpg",
-    objectPosition: "center top",
+    image: "/fleet/toyota-hiace.avif",
+    objectPosition: "center 58%",
     desc1: "Spacious 12-passenger van with enormous luggage capacity — the ultimate group travel solution.",
     desc2:
       "Best suited for <strong>large groups &amp; full Umrah party transfers</strong> all together.",

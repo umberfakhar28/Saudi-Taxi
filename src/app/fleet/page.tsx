@@ -353,7 +353,24 @@ export default function FleetPage() {
                             <tbody>
                                 {FLEET_VEHICLES.map((v) => (
                                     <tr key={v.slug}>
-                                        <th scope="row" className={styles.compareVehicleCell}>{v.name}</th>
+                                        <th scope="row" className={styles.compareVehicleCell}>
+                                            <span className={styles.compareVehicle}>
+                                                <span className={styles.compareThumb}>
+                                                    {v.image ? (
+                                                        <Image
+                                                            src={v.image}
+                                                            alt={`${v.name} — ${v.type.toLowerCase()} in the Gulf Trip Service fleet`}
+                                                            fill
+                                                            sizes="96px"
+                                                            className={styles.compareThumbImage}
+                                                        />
+                                                    ) : (
+                                                        <CarIcon size={22} />
+                                                    )}
+                                                </span>
+                                                {v.name}
+                                            </span>
+                                        </th>
                                         <td>{v.type}</td>
                                         <td>{v.passengers}</td>
                                         <td>{v.luggage} bags</td>

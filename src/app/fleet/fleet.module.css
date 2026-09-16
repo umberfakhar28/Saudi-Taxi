@@ -362,7 +362,11 @@
     line-height: 1.8;
 }
 
+/* position: relative keeps the table's absolutely positioned sr-only
+   labels inside this scroll box — without it they were laid out against
+   the page and widened the document on phones. */
 .compareTableWrapper {
+    position: relative;
     overflow-x: auto;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
@@ -418,6 +422,36 @@
 
 .compareTable tbody tr:hover {
     background: var(--row-hover);
+}
+
+/* Model photo beside the vehicle name. Photos are square, so a 4:3 frame
+   with object-fit: cover crops a little sky and road rather than squashing
+   the car; vehicles without a photo show a quiet icon tile at the same
+   size, so rows stay aligned. */
+.compareVehicle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.compareThumb {
+    position: relative;
+    flex-shrink: 0;
+    width: 88px;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg-subtle);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+}
+
+.compareThumbImage {
+    object-fit: cover;
+    object-position: center 60%;
 }
 
 .compareVehicleCell {
