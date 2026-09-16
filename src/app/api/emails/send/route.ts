@@ -136,6 +136,21 @@ function rowsTable(rowsHtml: string): string {
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">${rowsHtml}</table>`;
 }
 
+/**
+ * A highlighted note in a customer email — the team's message, or the
+ * customer's own trip requirements echoed back. Empty notes render nothing.
+ * Line breaks the author typed are kept.
+ */
+function noteBlock(label: string, text: string | null | undefined, tint: string, accent: string, labelColor: string): string {
+    const body = String(text ?? '').trim();
+    if (!body) return '';
+    const html = escapeHtml(body).replace(/\r?\n/g, '<br>');
+    return `<div style="background:${tint};border-left:4px solid ${accent};border-radius:8px;padding:14px 16px;margin-top:16px;">
+        <p style="color:${labelColor};margin:0 0 6px;font-size:0.72rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;">${escapeHtml(label)}</p>
+        <p style="color:#0f172a;margin:0;font-size:0.95rem;font-weight:600;line-height:1.55;">${html}</p>
+    </div>`;
+}
+
 /** Booking/enquiry detail rows shared by every booking-shaped email. */
 function buildBookingRows(b: Record<string, unknown>): string {
     return rowsTable([
@@ -339,9 +354,10 @@ export async function POST(req: Request) {
                 ].join(''))}
                 <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-top:16px;text-align:center;">
                     <p style="color:#94a3b8;margin:0;font-size:0.8rem;">QUOTED PRICE</p>
-                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">${formatMoney(Number(finalAmount ?? 0), q.currency as string | null | undefined)}</p>
-                    <p style="color:#f59e0b;font-size:0.8rem;margin:0;">⏱️ Valid for 24 hours</p>
+                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0 0;">${formatMoney(Number(finalAmount ?? 0), q.currency as string | null | undefined)}</p>
                 </div>
+                ${noteBlock('A note from our team', q.admin_note as string | null | undefined, '#fbf6ec', '#b8945b', '#8a6a35')}
+                ${noteBlock('Your trip requirements', q.notes as string | null | undefined, '#f8fafc', '#94a3b8', '#64748b')}
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">To accept this quote or for any queries, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
             const { data: r, error: e } = await sendMail(q.customer_email, subject, html);

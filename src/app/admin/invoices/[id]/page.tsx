@@ -5,13 +5,13 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Trash2 } from 'lucide-react';
+import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Printer, Trash2 } from 'lucide-react';
 import { LogoMark } from '@/components/Logo';
 import { formatMoney } from '@/lib/currency';
 import { displayDate } from '@/lib/datetime';
 import { serviceLabel } from '@/lib/serviceLabels';
 import { EMAIL, PHONE_DISPLAY } from '@/lib/contact';
-import { downloadInvoicePng } from '@/lib/invoicePng';
+import { downloadInvoicePdf, downloadInvoicePng } from '@/lib/invoicePng';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 
@@ -26,7 +26,8 @@ export default function InvoiceDetailPage() {
     const [notFound, setNotFound] = useState(false);
     const [emailing, setEmailing] = useState(false);
     const [marking, setMarking] = useState(false);
-    const [exporting, setExporting] = useState(false);
+    // Which export is running, so each button shows its own progress.
+    const [exporting, setExporting] = useState<'png' | 'pdf' | null>(null);
     const [deleting, setDeleting] = useState(false);
 
     const router = useRouter();
@@ -100,15 +101,19 @@ export default function InvoiceDetailPage() {
     // PNG export (§9.4). Drawn on a canvas rather than screenshotting the
     // page, so the output is high-resolution and a long invoice extends the
     // image instead of being cropped.
-    const exportPng = async () => {
-        setExporting(true);
+    // The PDF is the same canvas rendering wrapped in a PDF file, so the two
+    // downloads always match — and unlike "Print", it saves a real file.
+    const exportDoc = async (kind: 'png' | 'pdf') => {
+        setExporting(kind);
         try {
-            await downloadInvoicePng({ ...invoice, bookingNumber });
-            showToast('success', 'Invoice image saved.');
+            const doc = { ...invoice, bookingNumber };
+            if (kind === 'pdf') await downloadInvoicePdf(doc);
+            else await downloadInvoicePng(doc);
+            showToast('success', kind === 'pdf' ? 'Invoice PDF saved.' : 'Invoice image saved.');
         } catch (err: any) {
-            showToast('error', 'Could not create the image: ' + (err?.message || 'unknown error'));
+            showToast('error', 'Could not create the file: ' + (err?.message || 'unknown error'));
         } finally {
-            setExporting(false);
+            setExporting(null);
         }
     };
 
@@ -162,11 +167,14 @@ export default function InvoiceDetailPage() {
                             <Mail size={15} /> {emailing ? 'Sending...' : 'Email to Customer'}
                         </button>
                     )}
-                    <button onClick={exportPng} disabled={exporting} className="admin-btn-secondary">
-                        <ImageIcon size={15} /> {exporting ? 'Preparing...' : 'Download PNG'}
+                    <button onClick={() => exportDoc('pdf')} disabled={exporting !== null} className="admin-btn-primary">
+                        <Download size={15} /> {exporting === 'pdf' ? 'Preparing...' : 'Download PDF'}
                     </button>
-                    <button onClick={() => window.print()} className="admin-btn-primary">
-                        <Download size={15} /> Print / Save as PDF
+                    <button onClick={() => exportDoc('png')} disabled={exporting !== null} className="admin-btn-secondary">
+                        <ImageIcon size={15} /> {exporting === 'png' ? 'Preparing...' : 'Download Image'}
+                    </button>
+                    <button onClick={() => window.print()} className="admin-btn-secondary">
+                        <Printer size={15} /> Print
                     </button>
                     {allowed('invoices.delete') && (
                         <button

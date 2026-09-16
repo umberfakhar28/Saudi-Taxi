@@ -233,7 +233,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
     // Prepare data for widgets
     const overdueInvoicesCount = unpaidInvoices.filter(i => new Date(i.due_date) < new Date()).length;
-    const expiredQuotesCount = quotesList.filter(q => q.status === 'expired' || (q.valid_until && new Date(q.valid_until) < new Date())).length;
+    // Quotes no longer carry a validity window, so only an explicit status counts.
+    const expiredQuotesCount = quotesList.filter(q => q.status === 'expired').length;
     
     // Recent bookings for table
     const recentBookings = [...bookingsList].sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 5);

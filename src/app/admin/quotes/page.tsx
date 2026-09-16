@@ -2,12 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Search, Plus, Filter, FileText, CheckCircle, XCircle, Clock, RefreshCw, Send, X, ChevronDown, Trash2, Download, Share2, Edit } from 'lucide-react';
-import { format } from 'date-fns';
+import { Search, Plus, Filter, FileText, RefreshCw, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { displayDate, displayTime, toStorableTime, toTimeInputValue } from '@/lib/datetime';
+import { displayDate, displayTime, formatTime12h, toStorableTime, toTimeInputValue } from '@/lib/datetime';
 import { CURRENCY_CODES, formatMoney, toCurrencyCode } from '@/lib/currency';
-import { downloadInvoicePng } from '@/lib/invoicePng';
+import { downloadInvoicePdf, downloadInvoicePng, type InvoicePngData } from '@/lib/invoicePng';
 import { canWhatsApp, waLinkTo } from '@/lib/whatsapp';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
@@ -33,7 +32,7 @@ const QUOTE_STATUS_HELP: Record<QuoteStatus, string> = {
     draft: 'Prepared but not yet given to the customer.',
     sent: 'The customer has been given this quote.',
     accepted: 'The customer agreed to this price.',
-    expired: 'The validity window passed without acceptance.',
+    expired: 'No longer on offer.',
     converted: 'This quote became a real booking.',
 };
 
@@ -42,7 +41,20 @@ function quoteRef(q: any): string {
     return `Q-${String(q?.id ?? '').slice(0, 8).toUpperCase()}`;
 }
 
-/** The price actually being offered: an admin override wins over the calculation. */
+/** "08 Sep 2026, 04:30 PM" — when a quote was created. */
+function createdAt(value?: string | null): string {
+    if (!value) return '—';
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return '—';
+    const hhmm = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return `${displayDate(ymd)}, ${formatTime12h(hhmm)}`;
+}
+
+/**
+ * The price being offered. New quotes store it in total_amount; quotes made
+ * before the calculator was removed may carry an admin override, which wins.
+ */
 function quoteTotal(q: any): number {
     return Number(q?.admin_override_amount ?? q?.total_amount ?? 0);
 }
@@ -132,19 +144,17 @@ export default function QuotesPage() {
     const markAsSent = async (q: any) => {
         setActionLoading(q.id);
         try {
-            const validUntil = new Date();
-            validUntil.setHours(validUntil.getHours() + 24);
             const emailRes = await fetch('/api/emails/send', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'quote_sent', quoteData: { ...q, valid_until: validUntil.toISOString() } }),
+                body: JSON.stringify({ type: 'quote_sent', quoteData: q }),
             });
             if (!emailRes.ok) {
                 const e = await emailRes.json().catch(() => ({}));
                 throw new Error(e.error || 'Failed to send quote email');
             }
-            const { error } = await supabase.from('quotes').update({ status: 'sent', valid_until: validUntil.toISOString() }).eq('id', q.id);
+            const { error } = await supabase.from('quotes').update({ status: 'sent' }).eq('id', q.id);
             if (error) throw new Error(error.message);
-            setQuotes(prev => prev.map(x => x.id === q.id ? { ...x, status: 'sent', valid_until: validUntil.toISOString() } : x));
+            setQuotes(prev => prev.map(x => x.id === q.id ? { ...x, status: 'sent' } : x));
             logActivity(q.id, 'quote_sent', `Quote sent to ${q.customer_name} (${q.customer_email})`);
             showToast('success', `Quote emailed to ${q.customer_email}.`);
         } catch (err: any) {
@@ -179,11 +189,13 @@ export default function QuotesPage() {
             travel_date: editModal.travel_date || null,
             travel_time: toStorableTime(editModal.travel_time),
             passengers_count: parseInt(editModal.passengers_count) || 1,
-            admin_override_amount: editModal.admin_override_amount === '' || editModal.admin_override_amount === null
-                ? null
-                : parseFloat(editModal.admin_override_amount),
+            // One price. Any legacy override is folded into total_amount so the
+            // quote carries a single figure from here on.
+            total_amount: Number.isFinite(parseFloat(editModal.price)) ? parseFloat(editModal.price) : quoteTotal(editModal),
+            admin_override_amount: null,
             currency: toCurrencyCode(editModal.currency),
-            notes: editModal.notes || null,
+            notes: editModal.notes?.trim() || null,
+            admin_note: editModal.admin_note?.trim() || null,
         };
         const { error } = await supabase.from('quotes').update(patch).eq('id', editModal.id);
         setSavingEdit(false);
@@ -201,14 +213,13 @@ export default function QuotesPage() {
 
     // §8.2 — Download. Reuses the same canvas renderer as invoices, so the
     // quote goes out as a sharp image the customer can read on a phone.
-    const downloadQuote = async (q: any) => {
+    const downloadQuote = async (q: any, kind: 'png' | 'pdf') => {
         setOpenMenu(null);
         setActionLoading(q.id);
         try {
-            await downloadInvoicePng({
+            const doc: InvoicePngData = {
                 documentTitle: 'Quotation',
                 invoice_number: quoteRef(q),
-                validUntil: q.valid_until,
                 status: q.status,
                 customer_name: q.customer_name,
                 customer_phone: q.customer_phone,
@@ -220,9 +231,13 @@ export default function QuotesPage() {
                 subtotal: quoteTotal(q),
                 total_amount: quoteTotal(q),
                 currency: q.currency,
+                adminNote: q.admin_note,
                 notes: q.notes,
-            });
-            showToast('success', 'Quote image saved.');
+                notesLabel: 'Your trip requirements',
+            };
+            if (kind === 'pdf') await downloadInvoicePdf(doc);
+            else await downloadInvoicePng(doc);
+            showToast('success', kind === 'pdf' ? 'Quote PDF saved.' : 'Quote image saved.');
         } catch (err: any) {
             showToast('error', 'Could not create the file: ' + (err?.message || 'unknown error'));
         } finally {
@@ -240,7 +255,8 @@ export default function QuotesPage() {
         q.vehicle_type ? `Vehicle: ${q.vehicle_type}` : '',
         q.travel_date ? `Date: ${displayDate(q.travel_date)}${q.travel_time ? ` at ${displayTime(q.travel_time)}` : ''}` : '',
         `Price: ${formatMoney(quoteTotal(q), q.currency)}`,
-        q.valid_until ? `Valid until: ${displayDate(q.valid_until)}` : '',
+        q.admin_note ? `\n${q.admin_note}` : '',
+        q.notes ? `\nYour trip requirements: ${q.notes}` : '',
         '',
         'Reply to confirm and we will hold the vehicle for you.',
     ].filter(Boolean).join('\n');
@@ -321,13 +337,6 @@ export default function QuotesPage() {
         setActionLoading(q.id);
         try {
             const patch: Record<string, unknown> = { status };
-            // A quote that is now "sent" needs a validity window, or the
-            // Expires column would stay blank for it.
-            if (status === 'sent' && !q.valid_until) {
-                const validUntil = new Date();
-                validUntil.setHours(validUntil.getHours() + 24);
-                patch.valid_until = validUntil.toISOString();
-            }
             const { error } = await supabase.from('quotes').update(patch).eq('id', q.id);
             if (error) throw new Error(error.message);
             setQuotes(prev => prev.map(x => x.id === q.id ? { ...x, ...patch } : x));
@@ -415,10 +424,7 @@ export default function QuotesPage() {
                                     )}
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.82rem', fontWeight: 500 }}>{format(new Date(q.created_at), 'dd MMM yyyy, HH:mm')}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 3, marginTop: 2 }}>
-                                        <Clock size={11} /> Expires: {q.valid_until ? format(new Date(q.valid_until), 'dd MMM HH:mm') : 'N/A'}
-                                    </div>
+                                    <div style={{ fontSize: '0.82rem', fontWeight: 500 }}>{createdAt(q.created_at)}</div>
                                 </td>
                                 <td>
                                     <span className={statusClass(q.status)}>
@@ -474,10 +480,11 @@ export default function QuotesPage() {
                     <button onClick={() => { setViewModal(q); setOpenMenu(null); }} className="dropdown-item">👁️ View Quote</button>
 
                     {allowed('quotes.edit') && (
-                        <button onClick={() => { setEditModal({ ...q }); setOriginalStatus(q.status); setOpenMenu(null); }} className="dropdown-item">✏️ Edit Quote</button>
+                        <button onClick={() => { setEditModal({ ...q, price: quoteTotal(q) ? String(quoteTotal(q)) : '' }); setOriginalStatus(q.status); setOpenMenu(null); }} className="dropdown-item">✏️ Edit Quote</button>
                     )}
 
-                    <button onClick={() => downloadQuote(q)} className="dropdown-item">⬇️ Download Quote</button>
+                    <button onClick={() => downloadQuote(q, 'pdf')} className="dropdown-item">📄 Download PDF</button>
+                    <button onClick={() => downloadQuote(q, 'png')} className="dropdown-item">🖼️ Download Image</button>
                     <button onClick={() => shareQuote(q)} className="dropdown-item">🔗 Share / Copy</button>
                     {canWhatsApp(q.customer_phone) && allowed('comms.send') && (
                         <button onClick={() => shareQuoteOnWhatsApp(q)} className="dropdown-item">💬 Share on WhatsApp</button>
@@ -542,7 +549,7 @@ export default function QuotesPage() {
                                 { key: 'travel_date', label: 'Travel Date', type: 'date' },
                                 { key: 'travel_time', label: 'Travel Time', type: 'time' },
                                 { key: 'passengers_count', label: 'Passengers', type: 'number' },
-                                { key: 'admin_override_amount', label: 'Final Price (override)', type: 'number' },
+                                { key: 'price', label: 'Quote Price', type: 'number' },
                             ].map(f => (
                                 <div key={f.key} style={{ gridColumn: (f as any).span ? '1/-1' : 'auto' }}>
                                     <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>{f.label}</label>
@@ -584,7 +591,18 @@ export default function QuotesPage() {
                                 </div>
                             </div>
                             <div style={{ gridColumn: '1/-1' }}>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Notes</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Message to Customer</label>
+                                <textarea
+                                    value={editModal.admin_note || ''}
+                                    onChange={e => setEditModal({ ...editModal, admin_note: e.target.value })}
+                                    rows={3}
+                                    className="admin-search-input"
+                                    style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit' }}
+                                />
+                                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 5 }}>Shown prominently in the quote email and on the downloaded quote.</div>
+                            </div>
+                            <div style={{ gridColumn: '1/-1' }}>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Customer&apos;s Trip Requirements</label>
                                 <textarea
                                     value={editModal.notes || ''}
                                     onChange={e => setEditModal({ ...editModal, notes: e.target.value })}
@@ -596,8 +614,7 @@ export default function QuotesPage() {
                         </div>
 
                         <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.9rem', lineHeight: 1.5 }}>
-                            The calculated price stays as it was; entering a final price records an admin override,
-                            which is what the customer is shown.
+                            Both notes are visible to the customer — keep internal remarks out of them.
                         </div>
 
                         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', justifyContent: 'flex-end' }}>
@@ -629,11 +646,10 @@ export default function QuotesPage() {
                             <Row label="Travel Date">{displayDate(viewModal.travel_date, 'TBD')}</Row>
                             <Row label="Travel Time">{displayTime(viewModal.travel_time)}</Row>
                             <Row label="Passengers">{viewModal.passengers_count || '—'}</Row>
-                            <Row label="Calculated Price">{formatMoney(viewModal.total_amount, viewModal.currency)}</Row>
-                            {viewModal.admin_override_amount && <Row label="Final (Override)">{formatMoney(viewModal.admin_override_amount, viewModal.currency)}</Row>}
-                            <Row label="Created">{format(new Date(viewModal.created_at), 'dd MMM yyyy, HH:mm')}</Row>
-                            <Row label="Expires">{viewModal.valid_until ? format(new Date(viewModal.valid_until), 'dd MMM yyyy, HH:mm') : 'N/A'}</Row>
-                            {viewModal.notes && <Row label="Notes">{viewModal.notes}</Row>}
+                            <Row label="Calculated Price">{formatMoney(quoteTotal(viewModal), viewModal.currency)}</Row>
+                            <Row label="Created">{createdAt(viewModal.created_at)}</Row>
+                            {viewModal.admin_note && <Row label="Message to Customer"><span style={{ whiteSpace: 'pre-line' }}>{viewModal.admin_note}</span></Row>}
+                            {viewModal.notes && <Row label="Trip Requirements"><span style={{ whiteSpace: 'pre-line' }}>{viewModal.notes}</span></Row>}
                         </div>
                     </div>
                 </div>

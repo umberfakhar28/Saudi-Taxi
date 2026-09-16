@@ -1,15 +1,18 @@
 /**
- * Invoice → PNG, for sharing over WhatsApp and email.
+ * Invoice / quotation → PNG or PDF, for sharing over WhatsApp and email.
  *
  * Drawn onto a canvas rather than screenshotting the DOM. That keeps the
- * feature dependency-free (no html2canvas), avoids the CSS-parsing fidelity
- * problems those libraries have, and — most usefully — lets the height be
- * computed from the content, so a long address or a long notes field extends
- * the image instead of being cut off.
+ * feature dependency-free (no html2canvas, no PDF library), avoids the
+ * CSS-parsing fidelity problems those libraries have, and — most usefully —
+ * lets the height be computed from the content, so a long address or a long
+ * note extends the document instead of being cut off.
+ *
+ * The PDF is the same rendering wrapped in a minimal hand-written PDF file,
+ * so the image and the PDF can never disagree.
  *
  * The only external asset is the brand mark, which is inlined as a `data:`
  * URL SVG. Nothing is fetched cross-origin, so the canvas is never tainted
- * and toBlob() always succeeds.
+ * and exporting always succeeds.
  */
 
 import { brandMarkDataUrl } from './brandMark';
@@ -23,8 +26,6 @@ export interface InvoicePngData {
     documentTitle?: string;
     /** Shown under the title. For a quote this is its reference. */
     invoice_number?: string | null;
-    /** Quotes only: the date the price stops being held. */
-    validUntil?: string | null;
     status?: string | null;
     customer_name?: string | null;
     customer_phone?: string | null;
@@ -39,7 +40,11 @@ export interface InvoicePngData {
     total_amount?: number | string | null;
     paid_amount?: number | string | null;
     currency?: string | null;
+    /** A message written by the team for the customer — shown most prominently. */
+    adminNote?: string | null;
     notes?: string | null;
+    /** Heading for `notes`; invoices say "Notes", quotes say "Trip requirements". */
+    notesLabel?: string;
     bookingNumber?: string | null;
 }
 
@@ -55,10 +60,15 @@ const LINE = '#e2e8f0';
 const SURFACE = '#f8fafc';
 const NAVY = '#0f172a';
 const GOLD = '#fbbf24';
+const BRASS = '#b8945b';
 
 const FONT =
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+
+/** Note blocks: body type and rhythm. */
+const NOTE_FONT = { weight: 600, size: 13.5 };
+const NOTE_LINE = 21;
 
 function font(weight: number, size: number, family = FONT) {
     return `${weight} ${size}px ${family}`;
@@ -83,13 +93,22 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): st
     return lines;
 }
 
+/** Like wrap(), but keeps the author's own line breaks between paragraphs. */
+function wrapParagraphs(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+    return String(text)
+        .split(/\r?\n/)
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .flatMap((p) => wrap(ctx, p, maxWidth));
+}
+
 function roundRect(
     ctx: CanvasRenderingContext2D,
     x: number, y: number, w: number, h: number, r: number
 ) {
     ctx.beginPath();
     // roundRect is widely supported, but fall back so an older browser still
-    // produces a correct (square-cornered) invoice rather than throwing.
+    // produces a correct (square-cornered) document rather than throwing.
     if (typeof ctx.roundRect === 'function') ctx.roundRect(x, y, w, h, r);
     else ctx.rect(x, y, w, h);
     ctx.closePath();
@@ -108,12 +127,21 @@ function titleCase(value: string): string {
     return value.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-/**
- * Renders the invoice and returns a PNG blob.
- * Exported separately from the download helper so it can also be attached or
- * previewed without forcing a download.
- */
-export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
+interface NoteBlock {
+    label: string;
+    lines: string[];
+    tint: string;
+    accent: string;
+    labelColor: string;
+}
+
+/** Height of one note block: label band + wrapped lines + bottom padding. */
+function noteHeight(block: NoteBlock) {
+    return 40 + block.lines.length * NOTE_LINE + 14;
+}
+
+/** Lays the document out and draws it. Shared by the PNG and PDF exports. */
+async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasElement> {
     const currency = inv.currency;
     const logo = await loadImage(brandMarkDataUrl(200, 'color'));
 
@@ -132,7 +160,32 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     const dropoffLines = wrap(measure, inv.dropoff_location || '—', innerCol - 16);
     const serviceText = serviceLabel(inv.service_type) || 'Transportation Service';
     const serviceLines = wrap(measure, serviceText, contentWidth - 200);
-    const notesLines = inv.notes ? wrap(measure, String(inv.notes), contentWidth - 32) : [];
+
+    // Notes sit directly under the customer and trip boxes, full width and in
+    // heavier type — they used to trail after the totals in small grey text,
+    // where a customer could easily miss them.
+    measure.font = font(NOTE_FONT.weight, NOTE_FONT.size);
+    const noteTextWidth = contentWidth - 48;
+    const noteBlocks: NoteBlock[] = [];
+    if (inv.adminNote && inv.adminNote.trim()) {
+        noteBlocks.push({
+            label: 'A note from our team',
+            lines: wrapParagraphs(measure, inv.adminNote, noteTextWidth),
+            tint: '#fbf6ec',
+            accent: BRASS,
+            labelColor: '#8a6a35',
+        });
+    }
+    if (inv.notes && inv.notes.trim()) {
+        noteBlocks.push({
+            label: inv.notesLabel || 'Notes',
+            lines: wrapParagraphs(measure, inv.notes, noteTextWidth),
+            tint: SURFACE,
+            accent: '#94a3b8',
+            labelColor: MUTED,
+        });
+    }
+    const notesHeight = noteBlocks.reduce((sum, b) => sum + noteHeight(b) + 16, 0);
 
     const tripBoxHeight = 58 + (pickupLines.length + dropoffLines.length) * 19 + 22;
     const billBoxHeight = 58 + 3 * 19 + 8;
@@ -146,13 +199,11 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     if (Number(inv.paid_amount) > 0) totalsRows++;
     const totalsHeight = 24 + totalsRows * 24 + 44;
 
-    const notesHeight = notesLines.length ? 24 + notesLines.length * 19 + 12 : 0;
-
     const HEADER_H = 132;
-    const FOOTER_H = inv.validUntil ? 136 : 118;
+    const FOOTER_H = 118;
     const height =
-        PAD + HEADER_H + 28 + boxHeight + 28 + 44 + tableRowHeight + 24 +
-        totalsHeight + notesHeight + FOOTER_H + PAD;
+        PAD + HEADER_H + 28 + boxHeight + 28 + notesHeight + 44 + tableRowHeight + 24 +
+        totalsHeight + FOOTER_H + PAD;
 
     // ── Drawing pass ──────────────────────────────────────────────────
     const canvas = document.createElement('canvas');
@@ -244,13 +295,35 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     ty += dropoffLines.length * 19 + 4;
     ctx.fillStyle = FAINT;
     ctx.font = font(400, 11.5);
+    // Skip the date entirely when there isn't one, rather than printing "— ·".
     ctx.fillText(
-        `${displayDate(inv.travel_date)} · ${serviceText}`,
+        [displayDate(inv.travel_date, ''), serviceText].filter(Boolean).join(' · '),
         tx + 16,
         ty + 10
     );
 
     y += boxHeight + 28;
+
+    // ── Notes ─────────────────────────────────────────────────────────
+    for (const block of noteBlocks) {
+        const h = noteHeight(block);
+        ctx.fillStyle = block.tint;
+        roundRect(ctx, PAD, y, contentWidth, h, 10);
+        ctx.fill();
+        ctx.fillStyle = block.accent;
+        roundRect(ctx, PAD, y, 4, h, 2);
+        ctx.fill();
+
+        ctx.fillStyle = block.labelColor;
+        ctx.font = font(800, 10.5);
+        ctx.fillText(block.label.toUpperCase(), PAD + 24, y + 26);
+
+        ctx.fillStyle = INK;
+        ctx.font = font(NOTE_FONT.weight, NOTE_FONT.size);
+        block.lines.forEach((line, i) => ctx.fillText(line, PAD + 24, y + 48 + i * NOTE_LINE));
+
+        y += h + 16;
+    }
 
     // ── Line-item table ───────────────────────────────────────────────
     ctx.fillStyle = NAVY;
@@ -322,17 +395,6 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
 
     y += totalsHeight;
 
-    // ── Notes ─────────────────────────────────────────────────────────
-    if (notesLines.length) {
-        y += 24;
-        ctx.fillStyle = MUTED;
-        ctx.font = font(700, 12);
-        ctx.fillText('Notes', PAD, y);
-        ctx.font = font(400, 12.5);
-        notesLines.forEach((line, i) => ctx.fillText(line, PAD, y + 20 + i * 19));
-        y += notesLines.length * 19 + 12;
-    }
-
     // ── Footer ────────────────────────────────────────────────────────
     y += 34;
     ctx.strokeStyle = LINE;
@@ -348,13 +410,18 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     ctx.fillStyle = MUTED;
     ctx.font = font(400, 11.5);
     ctx.fillText(`${PHONE_DISPLAY}  ·  ${EMAIL}`, WIDTH / 2, y + 50);
-    if (inv.validUntil) {
-        ctx.fillStyle = FAINT;
-        ctx.font = font(400, 11);
-        ctx.fillText(`This price is held until ${displayDate(inv.validUntil)}.`, WIDTH / 2, y + 68);
-    }
     ctx.textAlign = 'left';
 
+    return canvas;
+}
+
+/**
+ * Renders the document and returns a PNG blob.
+ * Exported separately from the download helper so it can also be attached or
+ * previewed without forcing a download.
+ */
+export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
+    const canvas = await renderInvoiceCanvas(inv);
     return new Promise<Blob>((resolve, reject) => {
         canvas.toBlob(
             (blob) => (blob ? resolve(blob) : reject(new Error('Could not encode the PNG.'))),
@@ -363,16 +430,96 @@ export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     });
 }
 
-/** Renders the invoice and saves it as <invoice-number>.png. */
-export async function downloadInvoicePng(inv: InvoicePngData): Promise<void> {
-    const blob = await renderInvoicePng(inv);
+function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob(
+            (blob) => (blob ? resolve(blob) : reject(new Error('Could not encode the document.'))),
+            type,
+            quality
+        );
+    });
+}
+
+/**
+ * Wraps a JPEG in a single-page PDF.
+ *
+ * The page is A4 wide. It is A4 tall too unless the document is longer, in
+ * which case the page grows rather than cutting the content across a break.
+ * PDF viewers embed JPEG natively (DCTDecode), so no re-encoding happens.
+ */
+function jpegToPdf(jpeg: Uint8Array, pxWidth: number, pxHeight: number): Blob {
+    const A4_W = 595.28;
+    const A4_H = 841.89;
+    const drawH = (A4_W * pxHeight) / pxWidth;
+    const pageH = Math.max(A4_H, drawH);
+    const n = (v: number) => v.toFixed(2);
+
+    const enc = new TextEncoder();
+    const parts: Uint8Array[] = [];
+    const offsets: number[] = [];
+    let length = 0;
+    const push = (chunk: string | Uint8Array) => {
+        const bytes = typeof chunk === 'string' ? enc.encode(chunk) : chunk;
+        parts.push(bytes);
+        length += bytes.length;
+    };
+    const object = (id: number, body: string) => {
+        offsets[id] = length;
+        push(`${id} 0 obj\n${body}\nendobj\n`);
+    };
+
+    push('%PDF-1.4\n');
+    object(1, '<< /Type /Catalog /Pages 2 0 R >>');
+    object(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+    object(3, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${n(A4_W)} ${n(pageH)}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`);
+
+    offsets[4] = length;
+    push(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${pxWidth} /Height ${pxHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
+    push(jpeg);
+    push('\nendstream\nendobj\n');
+
+    // Image anchored to the top of the page; any spare A4 height stays white.
+    const content = `q ${n(A4_W)} 0 0 ${n(drawH)} 0 ${n(pageH - drawH)} cm /Im0 Do Q`;
+    object(5, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+
+    const xrefAt = length;
+    let xref = 'xref\n0 6\n0000000000 65535 f \n';
+    for (let id = 1; id <= 5; id++) xref += `${String(offsets[id]).padStart(10, '0')} 00000 n \n`;
+    push(xref);
+    push(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefAt}\n%%EOF\n`);
+
+    return new Blob(parts as BlobPart[], { type: 'application/pdf' });
+}
+
+/** Renders the document as a PDF blob. */
+export async function renderInvoicePdf(inv: InvoicePngData): Promise<Blob> {
+    const canvas = await renderInvoiceCanvas(inv);
+    const jpeg = new Uint8Array(await (await toBlob(canvas, 'image/jpeg', 0.92)).arrayBuffer());
+    return jpegToPdf(jpeg, canvas.width, canvas.height);
+}
+
+function fileBase(inv: InvoicePngData): string {
+    return inv.invoice_number || (inv.documentTitle || 'invoice').toLowerCase();
+}
+
+function saveBlob(blob: Blob, filename: string) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${inv.invoice_number || (inv.documentTitle || 'invoice').toLowerCase()}.png`;
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     // Revoked on the next tick so the click has certainly been handled.
     setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+/** Renders the document and saves it as <number>.png. */
+export async function downloadInvoicePng(inv: InvoicePngData): Promise<void> {
+    saveBlob(await renderInvoicePng(inv), `${fileBase(inv)}.png`);
+}
+
+/** Renders the document and saves it as <number>.pdf. */
+export async function downloadInvoicePdf(inv: InvoicePngData): Promise<void> {
+    saveBlob(await renderInvoicePdf(inv), `${fileBase(inv)}.pdf`);
 }

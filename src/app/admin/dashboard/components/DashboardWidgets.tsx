@@ -58,7 +58,7 @@ export function AlertsSection({ overdueInvoices, expiredQuotes, pendingOldBookin
             label: 'Expired Quotes',
             count: Number(expiredQuotes) || 0,
             href: '/admin/quotes?status=expired',
-            help: 'Quotes whose validity window passed without being accepted.',
+            help: 'Quotes marked as expired.',
         },
         {
             label: 'Pending Bookings',
