@@ -806,6 +806,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh taxi service" },
       { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi service" },
       { href: "/corporate-transportation-services", label: "Corporate transportation" },
+      { href: "/guides/long-distance-private-transfers", label: "How long-distance private transfers work" },
     ],
 
     ctaText: "Get a Private Transfer Quote for Bahrain to Riyadh",
@@ -1424,6 +1425,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { href: "/riyadh-to-dubai-taxi-service", label: "Riyadh to Dubai taxi service" },
       { href: "/dubai-to-riyadh-taxi-service", label: "Dubai to Riyadh taxi service" },
       { href: "/corporate-transportation-services", label: "Corporate transportation" },
+      { href: "/guides/long-distance-private-transfers", label: "How long-distance private transfers work" },
     ],
 
     ctaText: "Get a Private Transfer Quote for Riyadh to Dubai",

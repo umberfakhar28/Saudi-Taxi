@@ -99,6 +99,16 @@ const data: GuideData = {
       ],
     },
     {
+      heading: "Door-to-Door Private Umrah Transport",
+      content: "A private car turns an Umrah itinerary into a handful of direct journeys instead of a chain of connections. The driver collects you at the airport arrivals hall and takes you to your hotel door in Makkah; later, the same kind of booking carries you from that hotel to your hotel in Madinah, and finally back to the airport for your flight home. There is no bus station to reach, no taxi to find with luggage, and no waiting for other passengers.",
+      list: [
+        "Arrival: airport arrivals hall to your Makkah hotel, with your flight tracked",
+        "Between the holy cities: Makkah hotel to Madinah hotel, with a rest stop if you want one",
+        "Departure: your hotel to the airport, timed around your check-in",
+        "One vehicle sized to your family or group, with space for Zamzam water and gifts on the way home",
+      ],
+    },
+    {
       heading: "Booking Tips for Umrah Transport",
       content: "Book all transfers before your departure — availability tightens dramatically during Ramadan, Shawwal, and Dhul Qa'dah. Provide your hotel names and full flight details at booking. WhatsApp is the primary communication channel with your driver. Keep the driver's number saved before you land. Always confirm your pickup time the evening before each journey.",
     },
@@ -111,6 +121,7 @@ const data: GuideData = {
     { q: "How long does the Makkah to Madinah journey take?", a: "About 4–5 hours for the roughly 450 km via the Haramain Expressway, plus any rest stop. Traffic on this corridor increases noticeably during Ramadan and the weeks around Hajj, when both cities are at peak pilgrim volume simultaneously." },
     { q: "Should I fly into Jeddah or Madinah for Umrah?", a: "Both work, and it depends on which city you intend to start in. Jeddah is the main international gateway and is roughly 80 km from Makkah; Madinah's airport is the closer option if you plan to visit the Prophet's Mosque first and travel on to Makkah afterwards." },
     { q: "Can non-Muslim family members travel with us to Makkah?", a: "No — non-Muslims are not permitted beyond the checkpoints on the Makkah Expressway. Travel plans for a mixed group need to account for this, with non-Muslim travellers staying in Jeddah or another city." },
+    { q: "Is a private car service worth it for Umrah?", a: "For families, groups, older pilgrims and anyone with a lot of luggage, usually yes — a private car goes door to door between the airport and your hotels, runs on your schedule rather than a timetable, and avoids finding transport while tired or in Ihram." },
     { q: "When should I book Umrah transport?", a: "Before you depart your home country wherever possible. Availability tightens sharply during Ramadan, Shawwal and Dhul Qa'dah, and pre-booking also avoids arranging transport at the airport after a long-haul flight." },
   ],
   relatedLinks: [

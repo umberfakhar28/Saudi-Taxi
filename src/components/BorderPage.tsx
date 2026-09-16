@@ -6,6 +6,7 @@ import { waLink } from "@/lib/contact";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 import { destinationsByCountry, type CountrySlug } from "@/lib/destinationData";
 import styles from "./BorderPage.module.css";
+import { GuideList, GuideTable, SectionCta, type GuideSection } from "@/components/GuidePage";
 
 /**
  * Shared template for the Border / Cross-Border country-level page family
@@ -40,6 +41,10 @@ export interface BorderData {
 
   overviewTitle: string;
   overviewParagraphs: string[];
+  /** Optional long-form planning sections rendered after the overview —
+   * for journeys that need more than the fixed template (crossings,
+   * destinations, airports). Pages without it render exactly as before. */
+  guideSections?: GuideSection[];
 
   quickFacts: { label: string; value: string }[];
   audience: { icon: string; title: string; description: string }[];
@@ -163,6 +168,22 @@ export default function BorderPage({ data }: { data: BorderData }) {
             )}
           </div>
         </section>
+
+        {data.guideSections && data.guideSections.length > 0 && (
+          <section className="section-lg" style={{ paddingTop: 0 }}>
+            <div className="container" style={{ maxWidth: 850, display: "flex", flexDirection: "column", gap: "var(--space-12)" }}>
+              {data.guideSections.map((sec) => (
+                <div key={sec.heading}>
+                  <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)", marginBottom: "var(--space-4)", borderLeft: "3px solid var(--accent)", paddingLeft: "var(--space-5)" }}>{sec.heading}</h2>
+                  <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>{sec.content}</p>
+                  {sec.list && sec.list.length > 0 && <GuideList items={sec.list} />}
+                  {sec.table && <GuideTable table={sec.table} />}
+                  {sec.cta && <SectionCta cta={sec.cta} />}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Border Crossing Overview — a key authority section (Phase 14);
             never claims control over immigration, customs or admission. */}

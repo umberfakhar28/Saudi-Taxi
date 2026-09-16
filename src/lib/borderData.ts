@@ -290,71 +290,149 @@ export const saudiToUae: BorderData = {
 
 export const saudiToJordan: BorderData = {
   slug: "saudi-arabia-to-jordan-land-transfer",
-  title: "Saudi Arabia to Jordan Taxi",
-  h1: "Saudi Arabia to Jordan — Private Car & Chauffeur Transfer",
+  title: "Saudi Arabia to Jordan Private Transfer",
+  h1: "Saudi Arabia to Jordan — Private Door-to-Door Transfer by Road",
   breadcrumbLabel: "Jordan",
-  intro: "Dependable long-distance taxi service to the Jordan border, popular with Hajj and Umrah pilgrims and families. Expert drivers for a safe overland journey.",
+  intro: "Private long-distance transfers between Saudi Arabia and Jordan — from your hotel, home or airport in Tabuk, Madinah, Jeddah or Riyadh to Amman, Aqaba and beyond, with the route and border crossing planned before you set off.",
 
   originCountry: "Saudi Arabia",
   destinationCountry: "Jordan",
-  borderCrossingName: "Durra / Halat Ammar Border",
+  // Previously "Durra / Halat Ammar Border", which merged two different
+  // crossings into one. Saudi Arabia and Jordan have several road
+  // crossings; the one used depends on the route (see guideSections).
+  borderCrossingName: "Saudi–Jordan land border",
 
-  overviewTitle: "Jordan Border Crossing (Durra / Halat Ammar)",
+  overviewTitle: "Travelling Between Saudi Arabia and Jordan by Road",
   overviewParagraphs: [
-    "Traveling from Saudi Arabia to Jordan by land is a journey that calls for comfort and reliability, especially for pilgrims and families. Our service connects major Saudi cities including Tabuk, Madinah and Jeddah directly to the Jordanian border crossings at Durra and Halat Ammar.",
-    "We use vehicles equipped for long-distance desert travel, and our drivers are familiar with the route north from the Hejaz region toward the border.",
+    "Saudi Arabia and Jordan share a long land border with several road crossings, which makes a private overland journey a practical alternative to flying — particularly for families, for pilgrims combining a Jordan visit with Umrah, and for travellers carrying more than an airline allows.",
+    "Which crossing you use depends on where the journey starts and where it ends. A trip from Tabuk heads for a different border post than one from Riyadh, and a journey to Aqaba follows a different route from one to Amman. We plan the route, the crossing and the rest stops before departure, so the day runs as one continuous journey rather than a string of connections.",
+    "This is a long-distance road trip, not a short border run. Most journeys take the better part of a day, so vehicle comfort, luggage space and well-timed breaks matter as much as the route itself.",
+  ],
+
+  guideSections: [
+    {
+      heading: "Which Border Crossing Suits Your Journey",
+      content: "Three road crossings cover most private journeys between the two countries. We confirm the right one with you when you book, because crossing hours and procedures can change.",
+      table: {
+        headers: ["Crossing (Saudi / Jordan side)", "Where it is", "Usually suits"],
+        rows: [
+          ["Halat Ammar / Al-Mudawwara", "Inland, north of Tabuk", "Journeys from Tabuk and north-west Saudi Arabia towards Ma'an, Petra and Amman"],
+          ["Ad-Durra", "On the Gulf of Aqaba coast, reached from the Saudi side via Haql", "Journeys to Aqaba and Jordan's Red Sea coast"],
+          ["Al-Haditha / Al-Omari", "Northern Saudi Arabia, in the Al Jouf region near Qurayyat", "Journeys from Riyadh and central or eastern Saudi Arabia towards Amman"],
+        ],
+      },
+    },
+    {
+      heading: "Door to Door, Not Border to Border",
+      content: "A private transfer begins where you are — a hotel near the Prophet's Mosque in Madinah, an arrivals hall in Tabuk, a family home in Riyadh — and ends at your address in Jordan. There is no bus station to reach and no onward taxi to find after the border.",
+      list: [
+        "Pickup from your hotel, home or airport, at a time that suits your plans",
+        "The route, the crossing and the rest stops planned before departure",
+        "A vehicle sized to your group, with room for suitcases, pilgrimage luggage and children's seats",
+        "One point of contact on WhatsApp from pickup to drop-off",
+      ],
+    },
+    {
+      heading: "Where Travellers Go in Jordan",
+      content: "Most journeys end in one of a handful of places, and the destination is what decides the route and the crossing.",
+      list: [
+        "Amman — the capital, with Queen Alia International Airport (AMM) to the south of the city",
+        "Aqaba — Jordan's Red Sea port, served by King Hussein International Airport (AQJ)",
+        "Petra — the rock-cut Nabataean city beside Wadi Musa, a UNESCO World Heritage Site",
+        "Wadi Rum — the desert valley north-east of Aqaba, known for its camps and landscapes",
+        "The Dead Sea — the resort shore south-west of Amman",
+      ],
+    },
+    {
+      heading: "Where Journeys Start in Saudi Arabia",
+      content: "The shortest journeys start in the north-west; the longest begin in the capital.",
+      list: [
+        "Tabuk — the closest major Saudi city to the Jordanian border, served by Prince Sultan bin Abdulaziz Airport (TUU)",
+        "AlUla and the NEOM region — often paired with Jordan by travellers exploring north-west Saudi Arabia",
+        "Madinah — popular with pilgrims continuing to Jordan after Umrah or Ziyarat",
+        "Jeddah — for travellers arriving at King Abdulaziz International or finishing an Umrah in Makkah",
+        "Riyadh — the longest of the common journeys, usually heading north towards Amman",
+      ],
+    },
+    {
+      heading: "Planning a Long Overland Day",
+      content: "A few simple habits make a full day on the road far more comfortable.",
+      list: [
+        "Start early — daylight makes the border and the long desert stretches easier",
+        "Plan a rest stop every few hours, especially with children or older passengers",
+        "Keep passports and visas within reach rather than packed in a suitcase",
+        "Carry water and snacks for the longer sections between towns",
+        "Share your hotel or address in Jordan in advance, so the final stretch is planned too",
+      ],
+      cta: { text: "Travelling with family or a lot of luggage? Choose the right vehicle.", link: "/fleet" },
+    },
+    {
+      heading: "Travelling from Jordan to Saudi Arabia",
+      content: "The journey works in reverse too — from Amman or Aqaba across the border to Tabuk, AlUla, Madinah, Jeddah or Riyadh. Share your pickup point in Jordan when you request a quote and we will confirm the arrangement. Travellers entering Saudi Arabia must meet Saudi entry requirements — a valid visa or eVisa where one is needed, or a GCC national ID — so confirm your eligibility through official Saudi channels before you travel. Pilgrims should also check any Umrah requirements that apply to their dates.",
+    },
   ],
 
   quickFacts: [
-    { label: "Border Crossing", value: "Durra / Halat Ammar" },
-    { label: "Distance", value: "~340 km from Tabuk" },
-    { label: "Typical Duration", value: "Full-day drive, depending on origin" },
-    { label: "Common Departure", value: "Tabuk, Madinah, Jeddah" },
+    { label: "Main Crossings", value: "Halat Ammar · Ad-Durra · Al-Haditha" },
+    { label: "Journey Type", value: "Long-distance, usually most of a day" },
+    { label: "Common Saudi Pickups", value: "Tabuk, Madinah, Jeddah, Riyadh" },
+    { label: "Jordan Destinations", value: "Amman, Aqaba, Petra, Wadi Rum" },
   ],
 
   audience: [
-    { icon: "🕋", title: "Hajj & Umrah Pilgrims", description: "Overland travel between Jordan and the Hejaz region as part of a wider pilgrimage itinerary." },
-    { icon: "👨‍👩‍👧‍👦", title: "Families", description: "Long-distance journeys to Jordan with a private vehicle for the whole group." },
-    { icon: "🚗", title: "Long-Distance Travelers", description: "Travelers who prefer a private overland journey over flying between the two countries." },
+    { icon: "🕋", title: "Hajj & Umrah Pilgrims", description: "Overland travel between Jordan and the Hejaz as part of a wider pilgrimage itinerary." },
+    { icon: "👨‍👩‍👧‍👦", title: "Families", description: "A private vehicle for the whole group, with room for luggage on a long day's journey." },
+    { icon: "🏜️", title: "North-West Explorers", description: "Travellers combining Tabuk, AlUla or the NEOM region with Petra, Wadi Rum or Aqaba." },
+    { icon: "💼", title: "Business Travellers", description: "Door-to-door travel between Saudi and Jordanian cities without separate flights and transfers." },
   ],
 
   included: [
-    "Private, air-conditioned SUV or van suited to long-distance travel",
-    "Professional driver familiar with the desert route north to the border",
-    "Door-to-door pickup from Tabuk, Madinah, Jeddah or another Saudi city",
+    "Private, air-conditioned sedan, SUV or van suited to long-distance travel",
+    "Professional driver familiar with the long desert routes north",
+    "Door-to-door pickup from your hotel, home or airport in Saudi Arabia",
+    "Route, crossing and rest stops planned before departure",
     "Luggage assistance",
     "24/7 WhatsApp coordination throughout the journey",
   ],
 
   process: [
-    { title: "Book Your Journey", description: "Share your pickup location in Saudi Arabia and your Jordan destination." },
-    { title: "Confirm Trip Details", description: "We confirm your vehicle, driver and departure time." },
-    { title: "Prepare Your Documents", description: "Passport and any required Jordanian visa, checked and ready before departure." },
-    { title: "Travel North to the Border", description: "Your driver handles the long desert drive and the border crossing itself." },
+    { title: "Request Your Journey", description: "Share your pickup point, your Jordan destination, your travel date and the size of your group." },
+    { title: "Confirm the Plan", description: "We confirm the vehicle, the route and crossing, and your departure time." },
+    { title: "Prepare Your Documents", description: "Passports and any visas required for your nationality, checked and ready before departure." },
+    { title: "Travel Door to Door", description: "Your driver handles the long drive and the planned stops, through to your address in Jordan." },
   ],
 
   cityLinks: [
     { href: "/services/tabuk", label: "Tabuk" },
     { href: "/services/madinah", label: "Madinah" },
     { href: "/services/jeddah", label: "Jeddah" },
+    { href: "/services/riyadh", label: "Riyadh" },
+    { href: "/services/alula", label: "AlUla" },
+    { href: "/services/neom", label: "NEOM" },
   ],
   airportLinks: [
     { href: "/tabuk-airport-taxi-service", label: "Tabuk Airport (TUU)" },
     { href: "/madina-airport-taxi-service", label: "Madinah Airport (MED)" },
+    { href: "/jeddah-airport-taxi-service", label: "Jeddah Airport (JED)" },
+    { href: "/alula-airport-taxi-service", label: "AlUla Airport (ULH)" },
   ],
   hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
 
   travelPreparation: [
-    { title: "Passport Validity", note: "Most travelers need a passport valid for at least 6 months from the travel date — confirm the current requirement before you go." },
-    { title: "Jordan Visa", note: "Visa requirements and visa-free eligibility vary by nationality and can change — confirm your current status with an official Jordanian source before traveling." },
-    { title: "Border Hours & Timing", note: "Crossing hours can vary — we recommend traveling during daylight for the smoothest processing at the border." },
+    { title: "Passport Validity", note: "Most travellers need a passport valid for at least 6 months from the travel date — confirm the current requirement before you go." },
+    { title: "Jordan Visa", note: "Visa requirements and visa-free eligibility vary by nationality and can change — confirm your current status with an official Jordanian source before travelling." },
+    { title: "Returning to Saudi Arabia", note: "Re-entry depends on your visa, eVisa, Iqama or GCC status — make sure it remains valid for the dates you plan to return." },
+    { title: "Border Hours & Timing", note: "Crossing hours can vary — we recommend travelling in daylight for the smoothest processing at the border." },
   ],
 
   faqs: [
-    { q: "Do I need a visa to enter Jordan?", a: "It depends on your nationality — some travelers are eligible for visa-free or visa-on-arrival entry, others need a visa in advance. Confirm your current requirement with an official Jordanian source before you travel, as rules can change." },
-    { q: "Which Saudi cities do you serve for this route?", a: "Tabuk, Madinah and Jeddah are our most common pickup points, along with other cities in the Hejaz region — contact us to confirm availability from your specific location." },
-    { q: "Is this journey suitable for Hajj or Umrah pilgrims combining a Jordan visit?", a: "Yes — this is a common request. Share your full itinerary when booking so we can plan pickup and timing around your pilgrimage schedule." },
-    { q: "How long does the journey to the border take?", a: "From Tabuk, roughly 340 km to the border; from Madinah or Jeddah, allow for a considerably longer full-day drive north." },
+    { q: "Do I need a visa to enter Jordan?", a: "It depends on your nationality — some travellers are eligible for visa-free or visa-on-arrival entry, others need a visa in advance. Confirm your current requirement with an official Jordanian source before you travel, as rules can change." },
+    { q: "Which border crossing will my journey use?", a: "It depends on the route. Halat Ammar is the usual choice from Tabuk, Ad-Durra suits journeys to Aqaba, and Al-Haditha / Al-Omari is the common crossing from Riyadh and eastern Saudi Arabia towards Amman. We confirm the route with you before departure." },
+    { q: "Which Saudi cities do you serve for this route?", a: "Tabuk, Madinah, Jeddah and Riyadh are the most common starting points, along with AlUla and the NEOM region — contact us to confirm availability from your location." },
+    { q: "How long does the journey take?", a: "Plan for most of a day. Journeys from Tabuk are the shortest; from Madinah, Jeddah or Riyadh expect a long full-day drive. The exact time depends on the route, border queues and rest stops." },
+    { q: "Is this journey suitable for pilgrims combining Umrah with a Jordan visit?", a: "Yes — this is a common request. Share your full itinerary when booking so we can plan pickup and timing around your pilgrimage schedule." },
+    { q: "Can I travel from Jordan to Saudi Arabia?", a: "Yes — share your pickup point in Jordan when you request a quote and we will confirm the arrangement. Saudi entry requirements apply, so check your visa or eVisa eligibility through official Saudi channels before you travel." },
+    { q: "Is a private transfer better than flying?", a: "Flying is faster between the capitals. A private road journey suits families and groups, travellers with a lot of luggage, and anyone combining stops — such as Tabuk, AlUla or Petra — that no single flight connects." },
   ],
 
   reviews: [
@@ -364,9 +442,10 @@ export const saudiToJordan: BorderData = {
   relatedServices: [
     { href: "/private-taxi", label: "Private Taxi" },
     { href: "/umrah-transport-package", label: "Umrah Transport Package" },
+    { href: "/border-crossing", label: "All Border Crossings" },
   ],
 
-  ctaText: "Ready to Book Your Journey to Jordan?",
+  ctaText: "Plan Your Door-to-Door Journey to Jordan",
 };
 
 export const allBorderJourneys: BorderData[] = [saudiToBahrain, saudiToQatar, saudiToUae, saudiToJordan];

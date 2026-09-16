@@ -19,7 +19,7 @@ const faqs = [
     { q: "Do you offer help with visa or entry requirements?", a: "We can share general guidance, but we are a transportation provider, not an immigration authority. Visa and entry requirements vary by nationality and can change — always confirm current requirements with the relevant embassy or an official government source before you travel." },
     { q: "Do the same driver and vehicle take me all the way across the border?", a: "Saudi-registered private taxis don't cross into neighboring countries' territory. We take you to the Saudi exit point at the relevant crossing; for onward travel, we can coordinate a licensed driver on the other side if arranged in advance." },
     { q: "How far in advance should I book a border crossing transfer?", a: "We recommend at least 48 hours ahead for most crossings, and longer for the UAE and Jordan routes given the distance involved." },
-    { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Al Khafji/Al Nuwaiseeb to Kuwait, and the Durra/Halat Ammar crossing to Jordan — see the routes below for journey-specific pages." },
+    { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Al Khafji/Al Nuwaiseeb to Kuwait, and the Halat Ammar, Ad-Durra and Al-Haditha crossings to Jordan — see the routes below for journey-specific pages." },
 ];
 
 const schemas = [
@@ -43,9 +43,11 @@ const borders = [
         highlights: ["Bahrain eVisa available for many nationalities", "Typical crossing ~1–2 hrs", "Open 24 hours", "Duty-free zone at the crossing"],
     },
     {
-        name: "Durra / Halat Ammar (Jordan)",
+        // "Durra / Halat Ammar" merged two separate crossings, and the
+        // "~340 km from Tabuk" figure could not be verified.
+        name: "Halat Ammar · Ad-Durra · Al-Haditha (Jordan)",
         route: "Saudi Arabia ↔ Jordan",
-        distance: "~340 km from Tabuk",
+        distance: "Tabuk is the closest major city",
         note: "A key overland route for Hajj/Umrah pilgrims traveling to or from Jordan. Advance planning is recommended given the distance.",
         highlights: ["Popular Hajj/Umrah overland route", "Visa requirements vary by nationality", "Crossing hours can vary", "Daylight travel recommended"],
     },

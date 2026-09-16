@@ -225,7 +225,8 @@ export const tabuk: CityData = {
   pickupPoints: ["Tabuk Regional Airport", "Tabuk Castle historic site", "KKIA University area", "Wadi Disah canyon entrance", "Haql Red Sea coast", "Aqaba border crossing"],
   faqs: [
     { q: "Can I book a Wadi Disah day trip from Tabuk?", a: "Yes — we offer round-trip transfers to Wadi Disah and Qaraqir. The canyon is approximately 2 hours from Tabuk and requires a 4WD-capable vehicle." },
-    { q: "Is Tabuk a good base for Aqaba trips?", a: "Yes — we transfer guests to the Aqaba border crossing (Durra) for ferry connections to Jordan and Egypt." },
+    { q: "Is Tabuk a good base for Aqaba trips?", a: "Yes — Tabuk is the closest major Saudi city to Jordan. We arrange transfers towards Aqaba via the Ad-Durra crossing on the coast, and to other Jordanian destinations via Halat Ammar." },
+    { q: "Do you offer a luxury chauffeur service from Tabuk for long journeys?", a: "Yes — an executive vehicle with a professionally presented driver for long-distance travel from Tabuk to NEOM, AlUla, Madinah or Jordan, door to door, with the route and rest stops planned in advance." },
     { q: "How far is Tabuk from NEOM Sharma Airport?", a: "Approximately 230km, typically 2.5–3 hours. We run this route regularly for contractors." },
     { q: "Is Tabuk mostly NEOM-related traffic now?", a: "A large share of it, yes — Tabuk functions as a gateway city for NEOM workforce travel, so airport and highway patterns tend to track project activity more than tourist seasons." },
     { q: "When is the best time to visit Al-Disah Valley?", a: "Winter, roughly November through February — the region is notably cooler then, which makes exploring the sandstone canyons and palm groves considerably more comfortable." },
@@ -254,29 +255,31 @@ export const tabuk: CityData = {
   businessTravel: {
     intro: "Tabuk functions as a gateway city for NEOM workforce travel, and a meaningful share of our bookings here connect contractors and consultants between the airport and onward routes to the project.",
     areas: [
-      { name: "Tabuk Regional Airport", note: "The main arrival point for contractors continuing on to NEOM by road." },
+      { name: "Tabuk Airport (Prince Sultan bin Abdulaziz)", note: "The main arrival point for contractors continuing on to NEOM by road." },
       { name: "NEOM/Haql corridor", note: "The primary route for workforce and business travel toward the project zone." },
-      { name: "Aqaba border crossing", note: "Used by international teams and business travelers continuing into Jordan or Egypt." },
+      { name: "Jordan border crossings", note: "Halat Ammar to the north and Ad-Durra on the coast towards Aqaba — used by teams and travellers continuing into Jordan." },
     ],
   },
   practicalInfo: [
     { title: "NEOM-driven traffic", note: "Weekday airport and highway patterns tend to track NEOM project activity more than tourist seasons." },
     { title: "Best season for Wadi Disah", note: "Winter, roughly November through February — noticeably cooler, making canyon exploration considerably more comfortable." },
-    { title: "Long distances", note: "Distances to Wadi Disah, the Aqaba coastal road and NEOM sites can exceed 200km from the city centre — plan for a full day, not a quick trip." },
+    { title: "Long distances", note: "Distances to Wadi Disah, the coastal road towards Haql and NEOM sites can exceed 200km from the city centre — plan for a full day, not a quick trip." },
   ],
   relatedGuides: [
     { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
     { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+    { href: "/guides/long-distance-private-transfers", label: "Long-Distance Private Transfers Guide" },
   ],
   premiumChauffeur: {
-    intro: "Alongside standard airport and city transfers, Tabuk is also where a meaningful share of our bookings call for something more than a standard taxi — NEOM executives, business delegations, and travelers covering the long stretches to Wadi Disah or the Aqaba border in comfort rather than a quick city hop.",
+    intro: "Alongside standard airport and city transfers, Tabuk is also where a meaningful share of our bookings call for something more than a standard taxi — NEOM executives, business delegations, and travelers covering the long stretches to Wadi Disah, NEOM or the Jordanian border in comfort rather than a quick city hop.",
     features: [
       "Executive-class vehicle, not a standard sedan",
       "Professionally presented, experienced driver",
       "Suited to NEOM business travel and executive visits",
-      "Comfortable for the longer drives to Wadi Disah, Haql, and the Aqaba border",
+      "Comfortable for the longer drives to Wadi Disah, Haql, NEOM and the Jordanian border",
       "Available for Tabuk Airport meet-and-greet as well as hotel and city pickups",
       "Flexible scheduling for multi-stop business itineraries",
+      "Door-to-door long-distance journeys to AlUla, Madinah and Jordan",
     ],
   },
 };

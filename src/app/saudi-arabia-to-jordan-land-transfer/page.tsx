@@ -3,10 +3,10 @@ import BorderPage from "@/components/BorderPage";
 import { saudiToJordan } from "@/lib/borderData";
 
 export const metadata = generatePageMetadata({
-  title: "Saudi Arabia to Jordan Taxi | Land Border Transfer 24/7",
-  description: "Private overland taxi from Saudi Arabia to Jordan, popular with Hajj pilgrims and families. Licensed drivers, meet-and-greet, 24/7. Reserve on WhatsApp today.",
+  title: "Saudi Arabia to Jordan by Road | Private Transfer",
+  description: "Door-to-door private transfers between Saudi Arabia and Jordan — Tabuk, Madinah, Jeddah or Riyadh to Amman, Aqaba and Petra, with the border crossing planned in advance.",
   path: "/saudi-arabia-to-jordan-land-transfer",
-  keywords: ["Saudi to Jordan taxi", "Durra border crossing", "Jordan overland transfer", "Saudi to Jordan car"],
+  keywords: ["Saudi to Jordan taxi", "Halat Ammar border crossing", "Jordan overland transfer", "Saudi to Jordan car"],
 });
 
 export default function SaudiToJordan() {

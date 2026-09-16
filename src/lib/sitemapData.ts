@@ -339,6 +339,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     "hajj-transportation", "business-travel", "family-travel",
     "chauffeur-vs-taxi-saudi-arabia", "regional-airport-transfer-guide",
     "rent-a-car-vs-private-driver", "bahrain-saudi-commuter-guide",
+    "long-distance-private-transfers",
   ].map((slug) => ({
     url: `${BASE_URL}/guides/${slug}`,
     lastModified: lastMod(`/guides/${slug}`),

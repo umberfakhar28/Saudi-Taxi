@@ -22,12 +22,12 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
   },
   {
     q: "Riyadh Airport has several terminals — which one will my driver meet me at?",
-    a: "King Khalid International has the newer Terminal 5 (most international flights) plus Terminal 1, Terminal 3 and Terminal 4 (mostly domestic Saudia flights). Tell us your flight number when booking and we'll confirm exactly which terminal and exit your driver will be waiting at.",
+    a: "King Khalid International has five passenger terminals, and which one you use depends on your airline and whether the flight is domestic or international — allocations can change. Tell us your flight number when booking and we'll confirm exactly which terminal and exit your driver will be waiting at.",
     airports: ["RUH"],
   },
   {
-    q: "Do you offer taxi pickup at Riyadh Airport Terminal 1, 3 or 4 specifically?",
-    a: "Yes — we cover pickup at every King Khalid International terminal, including Terminal 1, Terminal 3 and Terminal 4, not just the newer Terminal 5. Your driver waits at your specific terminal's arrivals exit, confirmed once you share your flight number.",
+    q: "Do you offer pickup at Riyadh Airport Terminal 1, 2, 3, 4 or 5 specifically?",
+    a: "Yes — we cover pickup at every King Khalid International terminal, from Terminal 1 through Terminal 5. Your driver waits at your specific terminal's arrivals exit, confirmed once you share your flight number.",
     airports: ["RUH"],
   },
   {
@@ -44,6 +44,16 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
     q: "Can I book a Riyadh airport taxi service in advance for a business trip?",
     a: "Yes — advance booking is the norm for corporate arrivals at King Khalid International. You share the flight number, we confirm the terminal, and the driver tracks the flight so a delay doesn't cost you the pickup. Executive vehicles and monthly invoiced corporate accounts are both available for travelers making the trip regularly.",
     airports: ["RUH"],
+  },
+  {
+    q: "Can you take me from my Madinah hotel back to the airport?",
+    a: "Yes — pickup is from your hotel near the Prophet's Mosque, straight to the departures entrance at Prince Mohammad Bin Abdulaziz International. Share your flight time when booking and the pickup is planned around your check-in.",
+    airports: ["MED"],
+  },
+  {
+    q: "How early should I leave my Madinah hotel for my flight?",
+    a: "The drive is usually 20–30 minutes, but allow extra time for the restricted streets around the Haram, and add the check-in time your airline advises. Leave more margin during Ramadan and the busiest Umrah weeks.",
+    airports: ["MED"],
   },
   {
     q: "What happens if my flight is delayed, or lands at 3am?",

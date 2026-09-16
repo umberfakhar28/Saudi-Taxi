@@ -306,6 +306,7 @@ export const bahrainToDammam: RouteData = {
   faqs: [
     { q: "Will I need to change vehicles at the causeway?", a: "Yes — Bahrain-plated and Saudi-plated taxis cannot cross the border themselves, so a handover happens at the causeway checkpoint. We coordinate the timing so both drivers meet you with minimal wait." },
     { q: "Do GCC nationals need a visa to enter Saudi Arabia this way?", a: "No, GCC nationals cross with just their national ID. Other nationalities need a valid Saudi visa or valid Iqama if returning as a resident." },
+    { q: "How much time should I allow from Bahrain to catch a flight at Dammam Airport?", a: "Allow for the causeway crossing, then roughly 45–55 minutes from the causeway to King Fahd International Airport, plus the check-in time your airline advises. Leave extra margin on Thursday and Friday evenings, when the causeway is busiest." },
     { q: "Can you drop me directly at Dammam Airport for a flight?", a: "Yes, we can route your final drop-off to King Fahd International Airport instead of a city address if you have an onward flight." },
     { q: "How far in advance should I book a Bahrain to Dammam transfer?", a: "We recommend booking at least 24 hours ahead so we can properly coordinate both the Bahrain-side and Saudi-side vehicles for a smooth handover." },
     { q: "Is the causeway busy on weekends?", a: "Yes, Thursday and Friday evenings see the heaviest weekend leisure traffic in both directions. Weekday mornings are typically the quickest time to cross." },
