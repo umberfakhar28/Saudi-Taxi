@@ -28,3 +28,8 @@ export const MAX_LUGGAGE = 10;
  * van genuinely becomes the right vehicle, not an arbitrary cutoff. */
 export const VAN_HINT_THRESHOLD_PASSENGERS = 6;
 export const VAN_HINT_THRESHOLD_LUGGAGE = 5;
+
+/** Generic vehicle types a customer can ask for without choosing a specific
+ * vehicle — offered on the homepage request's details step and on Book
+ * Online. Same vocabulary as the admin Fleet page's CAR_TYPES. */
+export const VEHICLE_OPTIONS = ["Sedan", "SUV", "Luxury", "Van", "Minibus"];

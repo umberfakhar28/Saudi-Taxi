@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { WHATSAPP_URL, waLink } from "@/lib/contact";
-import { HOURLY_DURATIONS } from "@/lib/searchBarConfig";
+import { waLink } from "@/lib/contact";
+import { HOURLY_DURATIONS, VEHICLE_OPTIONS } from "@/lib/searchBarConfig";
+import { bookingWhatsAppText, formatWhen } from "@/lib/bookingMessage";
 import { TOURS } from "@/lib/tourData";
 import { SEARCH_INDEX } from "@/lib/searchIndex";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
@@ -21,12 +22,6 @@ const services = [
     { id: "jeddah-tour", label: "Jeddah City Tour", icon: "🌆" },
     { id: "alula-tour", label: "AlUla Tour", icon: "🏜️" },
 ];
-
-// Generic vehicle-type list, shared vocabulary with the admin Fleet page's
-// CAR_TYPES and the admin Quotes calculator's VEHICLES — used here only when
-// the customer did NOT arrive via a specific vehicle's "Book Now" button
-// (see VEHICLE PRESELECTION below).
-const VEHICLE_OPTIONS = ["Sedan", "SUV", "Luxury", "Van", "Minibus"];
 
 // Maps the homepage search bar's Day Trips mode (src/lib/tourData.ts slugs)
 // onto this page's own service radio-button ids — the two lists evolved
@@ -54,6 +49,9 @@ interface FormData {
     date: string;
     time: string;
     passengers: string;
+    luggage: string;
+    /** Human-readable return leg ("12 Oct 2026 at 02:30 PM"), from the homepage. */
+    returnTrip: string;
     name: string;
     email: string;
     phone: string;
@@ -62,7 +60,7 @@ interface FormData {
 
 const EMPTY_FORM: FormData = {
     service: '', vehicleSlug: '', vehicleName: '',
-    from: '', to: '', date: '', time: '', passengers: '1',
+    from: '', to: '', date: '', time: '', passengers: '1', luggage: '', returnTrip: '',
     name: '', email: '', phone: '', notes: '',
 };
 
@@ -105,7 +103,7 @@ export default function BookOnlineClient() {
         if (!saved) return;
         try {
             const { formData: savedFormData, step: savedStep } = JSON.parse(saved) as { formData: FormData; step: number };
-            setFormData(savedFormData);
+            setFormData({ ...EMPTY_FORM, ...savedFormData });
             setStep(savedStep);
         } catch {
             // Malformed saved state — nothing to restore, fail silently rather
@@ -163,10 +161,14 @@ export default function BookOnlineClient() {
         // left blank on purpose so the customer confirms it on Step 1
         // themselves; the vehicle choice is retained regardless (below).
 
-        const notesParts = [
-            luggage && luggage !== '0' ? `Luggage: ${luggage} bag(s)` : null,
-            returnDate ? `Return: ${returnDate}${returnTime ? ` at ${returnTime}` : ''}` : null,
-        ].filter(Boolean);
+        // Name, email, vehicle and note come from the homepage request's
+        // details step (HeroSearchBar). Luggage and the return leg get their
+        // own fields rather than being written into the notes box, where a
+        // customer editing their note could delete them without noticing.
+        const nameParam = searchParams.get('name') ?? '';
+        const emailParam = searchParams.get('email') ?? '';
+        const notesParam = searchParams.get('notes') ?? '';
+        const returnTrip = returnDate ? formatWhen(returnDate, returnTime ?? '') : '';
 
         setFormData((prev) => ({
             ...prev,
@@ -176,9 +178,13 @@ export default function BookOnlineClient() {
             date: date || prev.date,
             time: time || prev.time,
             passengers: passengers || prev.passengers,
+            luggage: luggage ?? prev.luggage,
+            returnTrip: returnTrip || prev.returnTrip,
             vehicleSlug: vehicleSlug || prev.vehicleSlug,
-            vehicleName: vehicleNameParam ? decodeURIComponent(vehicleNameParam) : prev.vehicleName,
-            notes: notesParts.length ? notesParts.join(' | ') : prev.notes,
+            vehicleName: vehicleNameParam || prev.vehicleName,
+            name: nameParam || prev.name,
+            email: emailParam || prev.email,
+            notes: notesParam || prev.notes,
         }));
 
         // Only skip ahead to Trip Details once a concrete service is
@@ -186,7 +192,12 @@ export default function BookOnlineClient() {
         // exactly how a booking used to reach the database with no service
         // recorded at all. A vehicle-only arrival (no mode) stays on Step 1
         // so the customer picks a service, with the vehicle already retained.
-        if (service) {
+        // Arriving from the homepage with the customer's details already
+        // entered: the trip is complete, so open straight on the final step.
+        const tripComplete = !!(from.trim() && to.trim() && date && time);
+        if (service && tripComplete && nameParam && emailParam) {
+            setStep(3);
+        } else if (service) {
             setStep(2);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,6 +212,22 @@ export default function BookOnlineClient() {
     const swapLocations = () => setFormData((f) => ({ ...f, from: f.to, to: f.from }));
 
     const selectedService = services.find((s) => s.id === formData.service);
+
+    const whatsappText = bookingWhatsAppText({
+        tripType: selectedService?.label,
+        from: formData.from,
+        to: formData.to,
+        date: formData.date,
+        time: formData.time,
+        returnTrip: formData.returnTrip,
+        passengers: formData.from ? formData.passengers : '',
+        luggage: formData.luggage,
+        vehicle: formData.vehicleName,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        notes: formData.notes,
+    });
 
     const validateStep2 = (): boolean => {
         const e: Record<string, string> = {};
@@ -234,6 +261,15 @@ export default function BookOnlineClient() {
             const custJson = await custRes.json();
             if (!custRes.ok) throw new Error(custJson.error || 'Could not save your contact details.');
 
+            // Luggage and the return leg have no columns of their own, so the
+            // stored notes carry them ahead of the customer's own note — the
+            // admin panel shows the whole request in one place.
+            const storedNotes = [
+                formData.luggage !== '' ? `Luggage: ${formData.luggage} bag(s)` : '',
+                formData.returnTrip ? `Return: ${formData.returnTrip}` : '',
+                formData.notes.trim(),
+            ].filter(Boolean).join(' | ');
+
             const bookingData = {
                 customer_id: custJson.customerId,
                 customer_name: formData.name,
@@ -247,7 +283,7 @@ export default function BookOnlineClient() {
                 travel_date: formData.date,
                 travel_time: formData.time,
                 passengers_count: parseInt(formData.passengers, 10) || 1,
-                special_notes: formData.notes,
+                special_notes: storedNotes,
                 car_type: formData.vehicleName || null,
                 vehicle_slug: formData.vehicleSlug || null,
                 status: 'pending',
@@ -280,7 +316,18 @@ export default function BookOnlineClient() {
                 const emailRes = await fetch('/api/emails/send', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'new_booking', bookingData: { ...bookingData, id: insertedBooking?.id } }),
+                    // The email shows luggage and the return leg as rows of
+                    // their own, so its Notes row is just the customer's note.
+                    body: JSON.stringify({
+                        type: 'new_booking',
+                        bookingData: {
+                            ...bookingData,
+                            id: insertedBooking?.id,
+                            luggage_count: formData.luggage,
+                            return_trip: formData.returnTrip,
+                            special_notes: formData.notes.trim(),
+                        },
+                    }),
                 });
                 if (!emailRes.ok) {
                     const j = await emailRes.json().catch(() => ({}));
@@ -326,7 +373,7 @@ export default function BookOnlineClient() {
                             </p>
                             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <Link href="/" className="btn btn-primary">Back to Home</Link>
-                                <a href={WHATSAPP_URL} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">💬 WhatsApp Us</a>
+                                <a href={waLink(whatsappText)} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">💬 Send Details on WhatsApp</a>
                             </div>
                         </div>
                     ) : (
@@ -409,7 +456,7 @@ export default function BookOnlineClient() {
                                                 </label>
                                             ))}
                                         </div>
-                                        <div style={{ marginTop: '2rem', textAlign: 'right' }}>
+                                        <div className={`${styles.actions} ${styles.actionsEnd}`} style={{ marginTop: '2rem' }}>
                                             <button type="button" className="btn btn-primary" disabled={!formData.service} onClick={() => setStep(2)} style={{ opacity: formData.service ? 1 : 0.5, cursor: formData.service ? 'pointer' : 'not-allowed' }}>
                                                 Next: Trip Details →
                                             </button>
@@ -475,6 +522,15 @@ export default function BookOnlineClient() {
                                                 </select>
                                             </div>
                                             <div className="form-group">
+                                                <label className="form-label">Luggage</label>
+                                                <select name="luggage" className="form-select" value={formData.luggage} onChange={handleChange}>
+                                                    <option value="">Not sure yet</option>
+                                                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={String(n)}>{n} bag{n === 1 ? '' : 's'}</option>)}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="grid-2">
+                                            <div className="form-group">
                                                 <label className="form-label">Vehicle {formData.vehicleName ? '' : '(optional)'}</label>
                                                 {formData.vehicleName ? (
                                                     <div className="form-input" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-dark)', fontWeight: 600 }}>
@@ -489,7 +545,7 @@ export default function BookOnlineClient() {
                                                 )}
                                             </div>
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                                        <div className={styles.actions} style={{ marginTop: '1rem' }}>
                                             <button type="button" className="btn btn-outline-gold" onClick={() => setStep(1)}>← Back</button>
                                             <button type="button" className="btn btn-primary" onClick={goToStep3}>Next: Your Info →</button>
                                         </div>
@@ -500,6 +556,15 @@ export default function BookOnlineClient() {
                                 {step === 3 && (
                                     <div className="card">
                                         <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>Your Information</h2>
+                                        <div className={styles.tripSummary}>
+                                            <dl>
+                                                <div><dt>Route</dt><dd>{formData.from} → {formData.to}</dd></div>
+                                                <div><dt>When</dt><dd>{formatWhen(formData.date, formData.time)}</dd></div>
+                                                {formData.returnTrip && <div><dt>Return</dt><dd>{formData.returnTrip}</dd></div>}
+                                                <div><dt>Passengers</dt><dd>{formData.passengers}{formData.luggage !== '' ? ` · ${formData.luggage} bag${formData.luggage === '1' ? '' : 's'}` : ''}</dd></div>
+                                            </dl>
+                                            <button type="button" onClick={() => setStep(2)}>Edit trip</button>
+                                        </div>
                                         {submitError && (
                                             <div style={{ background: 'rgba(179, 38, 30, 0.08)', border: '1px solid var(--error)', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: 'var(--error)', fontSize: '0.85rem' }}>
                                                 {submitError} Your entered details are still here — please try again.
@@ -508,24 +573,24 @@ export default function BookOnlineClient() {
                                         <div className="grid-2">
                                             <div className="form-group">
                                                 <label className="form-label">Full Name *</label>
-                                                <input type="text" name="name" className="form-input" placeholder="Your full name" value={formData.name} onChange={handleChange} required />
+                                                <input type="text" name="name" className="form-input" placeholder="Your full name" autoComplete="name" value={formData.name} onChange={handleChange} required />
                                             </div>
                                             <div className="form-group">
                                                 <label className="form-label">Email Address *</label>
-                                                <input type="email" name="email" className="form-input" placeholder="your@email.com" value={formData.email} onChange={handleChange} required />
+                                                <input type="email" name="email" className="form-input" placeholder="your@email.com" autoComplete="email" value={formData.email} onChange={handleChange} required />
                                             </div>
                                         </div>
                                         <div className="form-group">
                                             <label className="form-label">Phone / WhatsApp *</label>
-                                            <input type="tel" name="phone" className="form-input" placeholder="+966 50 123 4567" value={formData.phone} onChange={handleChange} required />
+                                            <input type="tel" name="phone" className="form-input" placeholder="+966 50 123 4567" autoComplete="tel" value={formData.phone} onChange={handleChange} required />
                                         </div>
                                         <div className="form-group">
                                             <label className="form-label">Special Requirements / Notes</label>
                                             <textarea name="notes" className="form-textarea" placeholder="Any special requests, wheelchair access, extra luggage, etc." value={formData.notes} onChange={handleChange} rows={4} />
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+                                        <div className={styles.actions} style={{ marginTop: '0.5rem' }}>
                                             <button type="button" className="btn btn-outline-gold" onClick={() => setStep(2)}>← Back</button>
-                                            <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
+                                            <button type="submit" className={`btn btn-primary btn-lg ${styles.confirmBtn}`} disabled={isSubmitting}>
                                                 {isSubmitting ? 'Processing...' : 'Confirm Booking ✓'}
                                             </button>
                                         </div>
@@ -538,7 +603,7 @@ export default function BookOnlineClient() {
                     {/* WhatsApp Alternative */}
                     <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
                         <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>Prefer to book instantly via WhatsApp?</p>
-                        <a href={waLink("Hi, I'd like to book a ride.")} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                        <a href={waLink(whatsappText)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                             💬 Book via WhatsApp
                         </a>
                     </div>

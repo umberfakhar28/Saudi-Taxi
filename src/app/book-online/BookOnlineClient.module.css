@@ -79,3 +79,96 @@
     text-decoration: underline;
     flex-shrink: 0;
 }
+
+/* Step footer (Back / Next / Confirm Booking). The buttons are
+   `white-space: nowrap` sitewide and .btn-lg carries 44px side padding, so
+   the old space-between row pushed "Confirm Booking" past the card edge on
+   narrow phones. It now wraps, and below 560px each button takes the full
+   width with the primary action on top. */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+}
+
+.actionsEnd {
+    justify-content: flex-end;
+}
+
+.actions > :global(.btn) {
+    min-height: 48px;
+    max-width: 100%;
+}
+
+.confirmBtn {
+    padding-inline: var(--space-8);
+    text-align: center;
+}
+
+@media (max-width: 559px) {
+    .actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .actions > :global(.btn) {
+        width: 100%;
+        padding-inline: var(--space-4);
+        white-space: normal;
+    }
+}
+
+/* Trip recap on the final step — the customer arriving from the homepage
+   never saw this page's Trip Details step, so what they are confirming is
+   shown here, with a way back to change it. */
+.tripSummary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-4);
+    background: rgba(8, 24, 39, 0.04);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-6);
+}
+
+.tripSummary dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--space-3) var(--space-5);
+    flex: 1 1 320px;
+    min-width: 0;
+    margin: 0;
+}
+
+.tripSummary dt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+.tripSummary dd {
+    margin: 2px 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    overflow-wrap: anywhere;
+}
+
+.tripSummary button {
+    background: none;
+    border: none;
+    color: var(--teal);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    min-height: 32px;
+    flex-shrink: 0;
+}

@@ -9,9 +9,10 @@ import {
 } from './Icons';
 import SearchAutocomplete from './SearchAutocomplete';
 import PassengerLuggageStepper from './PassengerLuggageStepper';
-import { HOURLY_DURATIONS, DEFAULT_PASSENGERS, DEFAULT_LUGGAGE } from '@/lib/searchBarConfig';
+import { HOURLY_DURATIONS, DEFAULT_PASSENGERS, DEFAULT_LUGGAGE, VEHICLE_OPTIONS } from '@/lib/searchBarConfig';
 import { TOURS } from '@/lib/tourData';
 import { waLink } from '@/lib/contact';
+import { bookingWhatsAppText, formatWhen } from '@/lib/bookingMessage';
 import styles from './HeroSearchBar.module.css';
 
 type Mode = 'transfers' | 'hourly' | 'daytrips';
@@ -61,6 +62,15 @@ function HeroSearchBarInner() {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
 
+    // Step 2 — the customer's details, collected here on the homepage
+    // instead of redirecting straight after the trip details. Step 3 is the
+    // existing Book Online confirmation, which opens with all of this filled.
+    const [step, setStep] = useState<1 | 2>(1);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [vehicle, setVehicle] = useState('');
+    const [note, setNote] = useState('');
+
     // The sheet is portaled straight to <body> (see the render below) so it
     // escapes .wrap/.searchWrap's own stacking context — both set
     // `position: relative` + `z-index: 10`, which previously trapped the
@@ -93,6 +103,7 @@ function HeroSearchBarInner() {
 
     function selectMode(next: Mode) {
         setMode(next);
+        setStep(1);
         setErrors({});
         const params = new URLSearchParams(window.location.search);
         params.set('mode', next);
@@ -146,21 +157,74 @@ function HeroSearchBarInner() {
         }
         params.set('passengers', String(passengers));
         params.set('luggage', String(luggage));
+        if (name.trim()) params.set('name', name.trim());
+        if (email.trim()) params.set('email', email.trim());
+        if (vehicle) params.set('vehicleName', vehicle);
+        if (note.trim()) params.set('notes', note.trim());
         return params;
     }
 
-    /** Returns whether the submission was valid — the sheet's own submit
-     * handler needs this to decide whether to close itself, and reading
-     * the `errors` state right after calling this would see the stale
-     * pre-update value (React state setters aren't synchronous), which is
-     * exactly what made the sheet close on a failed validation instead of
-     * staying open to show the just-set error messages. */
-    function handleSubmit(e: React.FormEvent): boolean {
+    function validateDetails(): boolean {
+        const e: Record<string, string> = {};
+        if (!name.trim()) e.name = 'Enter your name';
+        if (!email.trim()) e.email = 'Enter your email';
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = 'Enter a valid email address';
+        setErrors(e);
+        return Object.keys(e).length === 0;
+    }
+
+    /** Step 1 → Step 2, in place. No navigation. */
+    function handleTripSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (!validate()) return false;
+        if (!validate()) return;
+        setStep(2);
+    }
+
+    /** Step 2 → Book Online's confirmation step. Returns whether it was
+     * valid — the sheet needs this to decide whether to close itself, and
+     * reading `errors` right after calling validate would see the stale
+     * pre-update value (React state setters aren't synchronous). */
+    function handleDetailsSubmit(e: React.FormEvent): boolean {
+        e.preventDefault();
+        if (!validateDetails()) return false;
         router.push(`/book-online?${buildParams().toString()}`);
         return true;
     }
+
+    function backToTrip() {
+        setErrors({});
+        setStep(1);
+    }
+
+    const tripTypeLabel = MODE_TABS.find((t) => t.key === mode)?.label ?? '';
+    const destinationText =
+        mode === 'transfers' ? to
+            : mode === 'hourly' ? (HOURLY_DURATIONS.find((d) => d.value === duration)?.label ?? '')
+                : dayTrip === 'other' ? dayTripCustom
+                    : (TOURS.find((t) => t.slug === dayTrip)?.label ?? '');
+    const returnText = mode === 'transfers' && addReturn && returnDate ? formatWhen(returnDate, returnTime) : '';
+
+    const tripSummary = [
+        [from, destinationText].filter(Boolean).join(mode === 'hourly' ? ' · ' : ' → '),
+        formatWhen(date, time),
+        `${passengers} passenger${passengers === 1 ? '' : 's'}`,
+    ].filter(Boolean).join(' · ');
+
+    // The WhatsApp shortcut carries whatever has been entered so far.
+    const whatsappText = bookingWhatsAppText({
+        tripType: tripTypeLabel,
+        from,
+        to: destinationText,
+        date,
+        time,
+        returnTrip: returnText,
+        passengers: from ? passengers : '',
+        luggage: from ? luggage : '',
+        name,
+        email,
+        vehicle,
+        notes: note,
+    });
 
     const middleField = (idPrefix: string) => {
         if (mode === 'transfers') {
@@ -293,10 +357,99 @@ function HeroSearchBarInner() {
 
             {showInlineSubmit && (
                 <button type="submit" className={styles.submit}>
-                    Search
+                    Next
                 </button>
             )}
         </>
+    );
+
+    const detailsContent = (idPrefix: string, showInlineSubmit = true) => (
+        <>
+            <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor={`${idPrefix}-name`}>Name</label>
+                <input
+                    id={`${idPrefix}-name`}
+                    type="text"
+                    className={styles.textInput}
+                    placeholder="Your full name"
+                    autoComplete="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    aria-invalid={!!errors.name || undefined}
+                    required
+                />
+            </div>
+
+            <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor={`${idPrefix}-email`}>Email</label>
+                <input
+                    id={`${idPrefix}-email`}
+                    type="email"
+                    className={styles.textInput}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    aria-invalid={!!errors.email || undefined}
+                    required
+                />
+            </div>
+
+            <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor={`${idPrefix}-vehicle`}>Vehicle</label>
+                <select
+                    id={`${idPrefix}-vehicle`}
+                    className={styles.select}
+                    value={vehicle}
+                    onChange={(e) => setVehicle(e.target.value)}
+                >
+                    <option value="">No preference</option>
+                    {VEHICLE_OPTIONS.map((v) => <option key={v} value={v}>{v}</option>)}
+                </select>
+            </div>
+
+            <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor={`${idPrefix}-note`}>Note</label>
+                {showInlineSubmit ? (
+                    <input
+                        id={`${idPrefix}-note`}
+                        type="text"
+                        className={styles.textInput}
+                        placeholder="Flight number, child seats…"
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                    />
+                ) : (
+                    <textarea
+                        id={`${idPrefix}-note`}
+                        className={styles.textInput}
+                        placeholder="Flight number, child seats, stops on the way…"
+                        rows={3}
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                    />
+                )}
+            </div>
+
+            {showInlineSubmit && (
+                <button type="submit" className={styles.submit}>
+                    Continue
+                </button>
+            )}
+        </>
+    );
+
+    // Trip summary shown above Step 2, with a way back to edit it.
+    const stepHeader = (
+        <div className={styles.stepHeader}>
+            <div className={styles.stepText}>
+                <span className={styles.stepBadge}>Step 2 of 3 · Your details</span>
+                <span className={styles.stepSummary}>{tripTypeLabel}: {tripSummary}</span>
+            </div>
+            <button type="button" className={styles.stepBack} onClick={backToTrip}>
+                ← Edit trip
+            </button>
+        </div>
     );
 
     return (
@@ -327,16 +480,17 @@ function HeroSearchBarInner() {
                 ))}
             </div>
 
-            {/* Desktop / tablet bar */}
+            {/* Desktop / tablet: Step 2 swaps into the same bar, in place */}
+            {step === 2 && <div className={styles.desktopOnly}>{stepHeader}</div>}
             <form
                 id={`${tabsId}-panel`}
                 role="tabpanel"
                 aria-labelledby={`${tabsId}-tab-${mode}`}
-                onSubmit={handleSubmit}
+                onSubmit={step === 1 ? handleTripSubmit : handleDetailsSubmit}
                 className={styles.bar}
                 noValidate
             >
-                {barContent('bar')}
+                {step === 1 ? barContent('bar') : detailsContent('bar')}
             </form>
 
             {/* Mobile collapsed summary — opens the full-screen sheet (<768px) */}
@@ -346,7 +500,7 @@ function HeroSearchBarInner() {
                 onClick={() => setMobileSheetOpen(true)}
             >
                 <CompassIcon size={16} />
-                {from && (mode === 'transfers' ? to : mode === 'hourly' ? `${duration}h` : (dayTrip === 'other' ? dayTripCustom : dayTrip)) ? 'Edit your search' : 'Where are you going?'}
+                {step === 2 ? 'Add your details' : from && destinationText ? 'Edit your search' : 'Where are you going?'}
             </button>
 
             {mounted && mobileSheetOpen && createPortal(
@@ -385,19 +539,23 @@ function HeroSearchBarInner() {
                             </button>
                         </div>
                         <form
-                            onSubmit={(e) => { if (handleSubmit(e)) setMobileSheetOpen(false); }}
+                            onSubmit={(e) => {
+                                if (step === 1) handleTripSubmit(e);
+                                else if (handleDetailsSubmit(e)) setMobileSheetOpen(false);
+                            }}
                             className={styles.sheetForm}
                             noValidate
                         >
-                            {barContent('sheet', false)}
+                            {step === 2 && stepHeader}
+                            {step === 1 ? barContent('sheet', false) : detailsContent('sheet', false)}
 
-                            {mode === 'transfers' && (
+                            {step === 1 && mode === 'transfers' && (
                                 <label className={styles.returnToggle}>
                                     <input type="checkbox" checked={addReturn} onChange={(e) => setAddReturn(e.target.checked)} />
                                     Add return trip
                                 </label>
                             )}
-                            {mode === 'transfers' && addReturn && (
+                            {step === 1 && mode === 'transfers' && addReturn && (
                                 <div className={styles.returnFields}>
                                     <div className={styles.field}>
                                         <label className={styles.fieldLabel} htmlFor="sheet-return-date">Return date</label>
@@ -416,7 +574,7 @@ function HeroSearchBarInner() {
                                 </div>
                             )}
 
-                            <button type="submit" className={styles.sheetSubmit}>Search</button>
+                            <button type="submit" className={styles.sheetSubmit}>{step === 1 ? 'Next' : 'Continue'}</button>
                         </form>
                     </div>
                 </div>,
@@ -424,7 +582,7 @@ function HeroSearchBarInner() {
             )}
 
             {/* Transfers-only add-return toggle, sits below the desktop bar */}
-            {mode === 'transfers' && (
+            {step === 1 && mode === 'transfers' && (
                 <div className={styles.returnRow}>
                     <label className={styles.returnToggle}>
                         <input type="checkbox" checked={addReturn} onChange={(e) => setAddReturn(e.target.checked)} />
@@ -458,7 +616,7 @@ function HeroSearchBarInner() {
                     <span className={styles.trustItem}><UserIcon size={15} /> 15,000+ Travelers</span>
                 </div>
                 <a
-                    href={waLink("Hi, I'd like an instant quote.")}
+                    href={from ? waLink(whatsappText) : waLink("Hi, I'd like an instant quote.")}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.whatsappLink}

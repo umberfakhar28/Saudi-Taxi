@@ -168,6 +168,10 @@ function buildBookingRows(b: Record<string, unknown>): string {
         // confirmation and the admin's alert.
         row('Time', displayTime(b.travel_time as string | null | undefined, '')),
         row('Passengers', b.passengers_count),
+        // Present on new booking requests only — luggage and the return leg
+        // have no booking columns, so the form passes them alongside.
+        row('Luggage', b.luggage_count !== undefined && b.luggage_count !== null && b.luggage_count !== '' ? `${b.luggage_count} bag(s)` : ''),
+        row('Return Trip', b.return_trip),
         row('Quote Amount', b.quote_amount ? formatMoney(b.quote_amount as number, b.currency as string | null | undefined) : ''),
         row('Notes', b.special_notes),
     ].join(''));
