@@ -188,7 +188,7 @@ export const saudiToQatar: BorderData = {
 
   reviews: [
     { name: "Abdulrahman S.", origin: "Business Traveler, Riyadh–Doha", text: "Long drive but the car was comfortable and the driver kept us on schedule for our Salwa crossing." },
-    { name: "Noura F.", origin: "Event Trip, Dammam–Doha", text: "Booked for a conference in Doha — smooth handover at the border and on time for our meeting." },
+    { name: "Noura F.", origin: "Event Trip, Dammam–Doha", text: "Booked for a conference in Doha — same car the whole way, through the border, and on time for our meeting." },
   ],
 
   relatedServices: [
@@ -276,7 +276,7 @@ export const saudiToUae: BorderData = {
   ],
 
   reviews: [
-    { name: "Khalid M.", origin: "Business Traveler, Riyadh–Dubai", text: "Long drive but the driver paced it well with rest stops, and the handover at the border was straightforward." },
+    { name: "Khalid M.", origin: "Business Traveler, Riyadh–Dubai", text: "Long drive but the driver paced it well with rest stops, and the border crossing was straightforward." },
     { name: "Aisha R.", origin: "Family Trip, Dammam–Abu Dhabi", text: "Comfortable SUV for the whole family on a long journey — driver was well prepared for the crossing." },
   ],
 

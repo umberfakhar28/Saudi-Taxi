@@ -432,7 +432,7 @@ export default function BorderCrossing() {
                         {[
                             { name: "Faisal M.", origin: "Business Traveler, Dammam–Bahrain", text: "Driver was waiting right at pickup and handled the causeway paperwork like clockwork." },
                             { name: "Abdulrahman S.", origin: "Riyadh–Doha", text: "Long drive but the car was comfortable and the driver kept us on schedule for the Salwa crossing." },
-                            { name: "Khalid M.", origin: "Riyadh–Dubai", text: "Long journey but well paced with rest stops, and the handover at the border was straightforward." },
+                            { name: "Khalid M.", origin: "Riyadh–Dubai", text: "Long journey but well paced with rest stops, and the border crossing was straightforward." },
                         ].map((r, i) => (
                             <div key={i} className="card">
                                 <div style={{ display: 'flex', gap: 'var(--space-1)', marginBottom: 'var(--space-3)', color: 'var(--accent)' }}>★★★★★</div>

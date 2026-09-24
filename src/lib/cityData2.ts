@@ -181,6 +181,8 @@ export const taif: CityData = {
   ],
   pickupPoints: ["Taif Regional Airport", "Shubra Palace", "Al-Hada resort area", "Al-Shafa mountain village", "Taif Rose Festival grounds", "Souq Al-Dabab honey market"],
   faqs: [
+    { q: "Do you offer car rental in Taif?", a: "Not self-drive rental — we provide a car with a professional driver, which is what most visitors to Taif are really after. Book it point to point, by the hour, or for a full day covering the rose farms, Al-Hada and Al-Shafa." },
+    { q: "Can I hire a car with a driver for a full day in Taif?", a: "Yes — a full-day booking keeps the same car and driver with you, waiting between stops, which suits the rose farms, Souq Al-Dabab and the mountain viewpoints in one day. The day rate is agreed before you travel." },
     { q: "Can I do a Makkah–Taif day trip?", a: "Yes — this is one of our most popular routes. We offer round-trip day-trip packages from Makkah or Jeddah to Taif." },
     { q: "Is the road to Taif safe?", a: "The Al-Hada road is a beautiful mountain highway. Our drivers are experienced on this route year-round, including in winter fog conditions." },
     { q: "Do you cover the Al-Hada cable car area?", a: "Yes — Al-Hada and Al-Shafa are within our Taif service zone, including cable car entrance pickups." },
@@ -213,6 +215,7 @@ export const taif: CityData = {
   ],
   relatedGuides: [
     { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Rent a Car vs a Car With a Driver" },
   ],
 };
 

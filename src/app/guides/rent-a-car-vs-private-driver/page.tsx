@@ -3,9 +3,9 @@ import GuidePage, { type GuideData } from "@/components/GuidePage";
 
 export const metadata = generatePageMetadata({
   title: "Rent a Car vs Private Driver in Saudi Arabia",
-  description: "Rent a car or book a private driver in Saudi Arabia? Compare navigation, cost structure, and fatigue on spread-out trips like Al-Ahsa's oasis before you decide.",
+  description: "Rent a car, hire a car with a driver, or book a private transfer in Saudi Arabia? Compare navigation, cost structure and fatigue before you decide.",
   path: "/guides/rent-a-car-vs-private-driver",
-  keywords: ["rent a car vs private driver", "rent a car Al-Ahsa", "car rental vs chauffeur Saudi Arabia", "self drive vs private transfer Saudi Arabia"],
+  keywords: ["rent a car vs private driver", "car rental with driver Saudi Arabia", "rent a car with driver", "rent a car Al-Ahsa", "car rental vs chauffeur Saudi Arabia", "self drive vs private transfer Saudi Arabia"],
 });
 
 /*
@@ -52,6 +52,30 @@ const data: GuideData = {
           ["Cost structure", "Daily rate + fuel + tolls + any insurance add-ons", "One agreed rate for the trip"],
           ["Parking", "Find and pay for parking at every stop", "Not your concern — the driver handles it"],
           ["Fatigue on long days", "You do the driving on top of the day's plans", "You arrive rested, having done nothing but ride"],
+        ],
+      },
+    },
+    {
+      heading: "Renting a Car With a Driver",
+      content: "A lot of people searching for car rental don't actually want to drive — they want a car available to them, with someone else at the wheel. That is a third option, and it is the one we provide: you book a vehicle with a professional driver for a transfer, a set number of hours, or a full day. We do not rent self-drive cars, so if you want the keys to yourself, a rental company is the right call. If what you pictured was a car waiting for you with a driver ready to go, that is a private hire, and it works like this:",
+      list: [
+        "You choose the vehicle class — sedan, SUV, van or minibus — for your group and luggage",
+        "The driver stays with you for the booked period, waiting between stops rather than leaving",
+        "No licence, deposit, insurance excess or fuel card in your name",
+        "The price is agreed before you travel, with fuel and the driver included",
+        "It works in one city, across several cities, or over a land border on the routes we cover",
+      ],
+      cta: { text: "Tell us your dates and group size for a quote.", link: "/book-online" },
+    },
+    {
+      heading: "Hourly, Daily or Point to Point",
+      content: "Hiring a car with a driver is not only for airport runs. Three shapes of booking cover almost every request we get, and the right one depends on how much of the day you need the car for.",
+      table: {
+        headers: ["Booking", "What it suits", "How it is priced"],
+        rows: [
+          ["Point to point", "A single journey — airport to hotel, or city to city", "One agreed fare for the journey"],
+          ["Hourly", "A few meetings, a shopping trip, a half-day of sightseeing", "By the hour, with the driver waiting between stops"],
+          ["Full day", "A full day out, a multi-stop itinerary, a long intercity trip", "A day rate agreed in advance"],
         ],
       },
     },
@@ -104,6 +128,9 @@ const data: GuideData = {
   ],
   faqs: [
     { q: "Is it cheaper to rent a car or book a private driver in Saudi Arabia?", a: "It depends on the trip. A short, single-stop rental can look cheaper on the daily rate alone, but once fuel, tolls, and insurance are added, the total often narrows against a private driver's single fixed-rate quote — particularly for a longer or multi-stop day." },
+    { q: "Can I rent a car with a driver in Saudi Arabia?", a: "Yes — that is what we provide: a vehicle with a professional driver, booked point to point, by the hour or for a full day. We don't rent self-drive cars, so you need no licence, deposit or insurance of your own; fuel and the driver are included in the agreed price." },
+    { q: "What's the difference between car rental with a driver and a taxi?", a: "A taxi is a single ride, taken when you find one. A car with a driver is booked in advance for a journey, a number of hours or a day, with the same driver and vehicle staying with you and waiting between stops." },
+    { q: "Can I hire a car with a driver for several days?", a: "Yes — multi-day bookings are arranged as a day rate, which suits touring itineraries and longer business visits. Share your dates and the cities involved and the whole period is quoted together." },
     { q: "Do I need a special license to rent a car in Saudi Arabia?", a: "You'll need a driving license valid for use in the Kingdom — requirements vary by nationality and license type, so confirm the current rules with your rental provider before booking. A private driver requires no license or paperwork from you at all." },
     { q: "Is a private driver better for visiting Al-Ahsa's oasis?", a: "For most visitors, yes — the oasis, Qaisariah Souq, and Al-Qarah Mountain are spread across a wide area with limited public transport, and a driver who already knows the roads makes it easier to see everything in one day without navigating unfamiliar routes yourself." },
     { q: "Can I still make spontaneous stops with a private driver?", a: "Yes — most private transfer bookings can adjust stops and timing on request. It's not the same as having your own car for unlimited spontaneity, but genuine flexibility is still available." },

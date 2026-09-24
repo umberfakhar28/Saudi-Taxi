@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useId, useState } from 'react';
+import { Suspense, useEffect, useId, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -28,16 +28,21 @@ function todayISO() {
     return new Date().toISOString().slice(0, 10);
 }
 
+/** Neither of the two values below ever changes after hydration, so there is
+ * nothing to subscribe to — the store is read once per render, with a server
+ * snapshot that keeps the markup identical on both sides. */
+const noSubscribe = () => () => { };
+
 /** The tab indicator's transform is physical (translateX), so it's the one
  * piece of this component that needs an explicit RTL flip rather than a
  * logical CSS property — everything else uses margin-inline/inset-inline-*
  * so the browser mirrors it for free. */
 function useIsRtl() {
-    const [rtl, setRtl] = useState(false);
-    useEffect(() => {
-        setRtl(document.documentElement.dir === 'rtl');
-    }, []);
-    return rtl;
+    return useSyncExternalStore(
+        noSubscribe,
+        () => document.documentElement.dir === 'rtl',
+        () => false,
+    );
 }
 
 function HeroSearchBarInner() {
@@ -78,8 +83,7 @@ function HeroSearchBarInner() {
     // "full-screen" sheet render behind the fixed header instead of above
     // it (hiding its close button and mode tabs under the nav bar).
     // `document` doesn't exist during SSR, hence the mount check.
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    const mounted = useSyncExternalStore(noSubscribe, () => true, () => false);
 
     // Lock body scroll while the sheet is open, and close on Escape —
     // same pattern as the mobile nav drawer (Navbar.tsx).
