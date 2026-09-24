@@ -14,6 +14,7 @@
 
 import { displayDate, displayTime } from './datetime';
 import { formatMoney } from './currency';
+import { TRUSTPILOT_REVIEW_URL } from './trustpilot';
 
 /**
  * Country dialling codes for the markets served, longest first so that a
@@ -92,6 +93,19 @@ interface BookingLike {
 export function bookingMessage(b: BookingLike): string {
     const reference = b.booking_number || (b.id ? b.id.slice(0, 8).toUpperCase() : '');
     const lines: string[] = [];
+
+    // A finished trip calls for a thank-you and a review request, not a
+    // restatement of details the customer has already travelled.
+    if (b.status === 'completed') {
+        lines.push(`Hello${b.customer_name ? ` ${b.customer_name}` : ''}, this is Gulf Trip Service.`);
+        lines.push('');
+        lines.push('Thank you for travelling with us. We hope the journey was comfortable.');
+        if (reference) lines.push(`Booking reference: ${reference}`);
+        lines.push('');
+        lines.push('If you have a minute, we would be grateful for a review:');
+        lines.push(TRUSTPILOT_REVIEW_URL);
+        return lines.join('\n');
+    }
 
     lines.push(`Hello${b.customer_name ? ` ${b.customer_name}` : ''}, this is Gulf Trip Service.`);
     lines.push('');

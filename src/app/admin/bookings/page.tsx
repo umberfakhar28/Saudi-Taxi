@@ -269,6 +269,23 @@ function BookingsPageInner() {
             }
         }
         if (newStatus === 'completed') {
+            // Marking a trip complete used to send nothing. The completion
+            // email is also what triggers the Trustpilot invitation (it
+            // carries the review link and is blind-copied to Trustpilot),
+            // so it goes out here rather than being a manual step.
+            if (target?.customer_email) {
+                const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_completed', bookingId: id }) });
+                if (res.ok) {
+                    logActivity('booking', id, 'review_request_sent', `Thank-you and review request emailed to ${target.customer_name ?? 'the customer'}`);
+                    showToast('success', 'Thank-you email with the review link sent.');
+                } else {
+                    const j = await res.json().catch(() => ({}));
+                    showToast('error', 'Booking completed, but the thank-you email failed to send: ' + (j.error || 'unknown error'));
+                }
+            } else {
+                showToast('info', 'Booking completed. No email on file, so no review request was sent — you can still send it on WhatsApp.');
+            }
+
             const b = bookings.find(b => b.id === id);
             if (b && (!b.invoices || b.invoices.length === 0)) {
                 const wantsInvoice = await confirm({

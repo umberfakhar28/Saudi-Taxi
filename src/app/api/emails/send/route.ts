@@ -9,6 +9,7 @@ import { resolveSender } from '@/lib/emailSender';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
+import { TRUSTPILOT_REVIEW_URL, trustpilotBcc } from '@/lib/trustpilot';
 
 /**
  * Writes the row the Admin Portal's realtime subscription and notification
@@ -268,8 +269,8 @@ export async function POST(req: Request) {
          * the from/reply-to pair or drift from the others. Recipients are
          * unchanged — each caller still passes its own.
          */
-        const sendMail = (to: string, subject: string, html: string) =>
-            resend.emails.send({ from, replyTo, to, subject, html });
+        const sendMail = (to: string, subject: string, html: string, bcc?: string) =>
+            resend.emails.send({ from, replyTo, to, subject, html, ...(bcc ? { bcc } : {}) });
 
         const results: Array<Record<string, unknown>> = [];
 
@@ -330,9 +331,16 @@ export async function POST(req: Request) {
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">🚗 Trip Completed</p></div>
                 <p style="color:#475569;">Dear <strong>${escapeHtml(b.customer_name)}</strong>,</p>
                 <p style="color:#475569;">Thank you for travelling with Gulf Trip Service! We hope you had a great experience. An invoice has been generated for your records.</p>
-                <p style="color:#94a3b8;font-size:0.85rem;">We'd love to hear your feedback. Book your next trip at any time.</p>
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:20px;text-align:center;">
+                    <p style="color:#0f172a;font-weight:700;margin:0 0 6px;font-size:1rem;">How did we do?</p>
+                    <p style="color:#475569;margin:0 0 16px;font-size:0.9rem;">Your review helps other travellers choose with confidence — it takes a minute.</p>
+                    <a href="${TRUSTPILOT_REVIEW_URL}" style="${btnStyle}">⭐ Leave a review on Trustpilot</a>
+                </div>
+                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">Book your next trip at any time.</p>
             </div></div>`;
-            const { data: r, error: e } = await sendMail(b.customer_email, subject, html);
+            // Blind-copied to the Trustpilot invite address so Trustpilot
+            // sends its own invitation to this customer as well.
+            const { data: r, error: e } = await sendMail(b.customer_email, subject, html, trustpilotBcc() ?? undefined);
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
