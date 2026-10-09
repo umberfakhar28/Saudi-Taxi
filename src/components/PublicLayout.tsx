@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import AnnouncementSlider from './AnnouncementSlider';
 import TopBar from './TopBar';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -64,6 +65,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
     return (
         <>
+            {isHome && <AnnouncementSlider />}
             <TopBar transparent={transparentHeader} />
             <Navbar transparent={transparentHeader} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} onCloseMenu={closeMenu} />
             {children}
