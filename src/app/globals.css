@@ -181,6 +181,7 @@
   --container-width: 1200px;
   --nav-height: 80px;
   --topbar-height: 38px;
+  --announce-height: 0px;   /* switched on by body:has([data-announcement-bar]) below */
   --bottom-nav-height: 60px;
   --section-pad: var(--space-20);
   --section-pad-lg: var(--space-24);
@@ -259,6 +260,22 @@ body {
    PublicLayout only on the pages that actually render the bar) and to the
    same max-width the bar itself uses, so desktop/tablet and /admin, /ar
    are unaffected. */
+/* AnnouncementSlider sits above the fixed TopBar + Navbar. Page heroes
+   already pad for that TopBar + Navbar stack, so the body is pushed down
+   by exactly the extra announcement strip. On phones the TopBar is hidden
+   (TopBar.module.css) and the announcement takes its slot, so the total
+   header height is unchanged there and no extra padding is needed. */
+body:has([data-announcement-bar]) {
+  --announce-height: 38px;
+  padding-top: var(--announce-height);
+}
+@media (max-width: 640px) {
+  body:has([data-announcement-bar]) {
+    --topbar-height: 0px;
+    padding-top: 0;
+  }
+}
+
 @media (max-width: 900px) {
   body.has-bottom-nav {
     padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));

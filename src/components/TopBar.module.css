@@ -6,7 +6,8 @@
 
 .topBar {
     position: fixed;
-    top: 0;
+    /* Sits directly below the AnnouncementSlider (0 when it isn't rendered) */
+    top: var(--announce-height);
     left: 0;
     width: 100%;
     z-index: 1001;
@@ -82,21 +83,11 @@ a.item:hover {
     }
 }
 
+/* Phones: hidden entirely so the header doesn't eat ~1/4 of the screen.
+   globals.css zeroes --topbar-height at the same breakpoint so the Navbar
+   moves up into the freed space. Email stays reachable via Contact. */
 @media (max-width: 640px) {
-    /* Drop the trust badge too; center the email address alone */
-    .right {
+    .topBar {
         display: none;
-    }
-    .container {
-        justify-content: center;
-    }
-}
-
-@media (max-width: 420px) {
-    .item {
-        font-size: 0.68rem;
-    }
-    .container {
-        padding: 0 var(--space-3);
     }
 }

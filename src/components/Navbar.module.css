@@ -25,9 +25,9 @@
     box-shadow: 0 4px 28px rgba(16, 18, 26, 0.24);
 }
 
-/* English site only: sits below the slim top bar (Arabic header has none, stays at top:0) */
+/* English site only: sits below the announcement + slim top bar (Arabic header has none, stays at top:0) */
 .navbarShifted {
-    top: var(--topbar-height);
+    top: calc(var(--announce-height) + var(--topbar-height));
 }
 
 /* Homepage-only, pre-scroll: floats transparently over the hero photo
@@ -430,7 +430,7 @@
         /* Bottom padding clears the fixed mobile bottom nav (higher
            z-index, always on top) so the drawer's last link is never
            hidden behind it. */
-        padding: calc(var(--nav-height) + var(--topbar-height) + var(--space-6)) var(--space-6) calc(var(--bottom-nav-height) + var(--space-8) + env(safe-area-inset-bottom));
+        padding: calc(var(--nav-height) + var(--topbar-height) + var(--announce-height) + var(--space-6)) var(--space-6) calc(var(--bottom-nav-height) + var(--space-8) + env(safe-area-inset-bottom));
         gap: 0;
         transform: translateX(100%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);

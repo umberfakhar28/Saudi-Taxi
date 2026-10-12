@@ -17,8 +17,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     // layout mounts its own <FloatingWhatsApp /> too (§3 of the Homepage
     // Hero + Multi-Mode Search addendum calls for it site-wide).
     const isArabic = pathname.startsWith('/ar');
-    // Show announcement bar on all pages
-const showAnnouncement = true;
+    const isHome = pathname === '/';
 
     // Homepage-only: the header floats transparently over the hero photo
     // until the user scrolls past it, then solidifies like every other
@@ -62,12 +61,12 @@ const showAnnouncement = true;
     if (isAdmin) return <>{children}</>;
     if (isArabic) return <>{children}</>;
 
-    const transparentHeader = !scrolledPastHero; // Top bar transparency based only on scroll
+    const transparentHeader = isHome && !scrolledPastHero;
 
     return (
         <>
             <AnnouncementSlider />
-            <TopBar transparent={transparentHeader} offsetTop={38} />
+            <TopBar transparent={transparentHeader} />
             <Navbar transparent={transparentHeader} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} onCloseMenu={closeMenu} />
             {children}
             <Footer />
