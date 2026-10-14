@@ -29,9 +29,15 @@ The 28-day window contains **two completely different traffic regimes**, and eve
 2. **Something is working.** Before changing anything broadly, we should understand what moved, so we don't undo it. This matches your own instruction to preserve existing rankings.
 3. **A 4-day run is not a trend.** It could be a core update, a seasonal spike, or something that reverts. The plan below is sequenced so the low-risk, high-certainty work happens first and the risky rewrites wait for a cleaner baseline.
 
-🔍 **Hypothesis for the spike — needs investigation, do not act on it yet.** The query export contains a distinct cluster of conversational fragments that are not search phrasings: `yes` (4 impressions), `most reputable one`, `yes like`, `yes please`, `i mean routes`, `which border`, `how is it done`, `at what speed`, `company nams`, `my friend car`, `evet`, `نعم`, `كل شي`, `تفاصيل اكثر`. These read as follow-up turns in an assistant conversation rather than queries typed into a search box. That pattern is consistent with traffic from Google's AI-assisted search surfaces being reported in the Web search type. **This is inference from query shape alone — it is not confirmed.** To confirm: check GSC's Search Appearance / Insights breakdown in the UI (the exported `Search appearance.csv` is empty, so the export cannot answer it), and check referrer data in analytics.
+✅ **RESOLVED 2026-10-14 — cause confirmed by the business owner, not a data artifact.** The export is correct. The spike is **real demand driven by the current regional conflict**: flight disruption is pushing travellers onto overland transfers and alternative airports, which is exactly where this site's strength lies (§1.2 — the cross-border GCC corridors are its best-performing pages).
 
-**Recommended first action: none of the content work below. Re-export GSC for 2026-10-08 → onward once ~14 clean days exist, and compare.** Everything else can proceed in parallel, but the big title rewrites (§3) should be judged against that cleaner baseline.
+⛔ **My earlier AI-surface hypothesis was wrong and is withdrawn.** I had read the conversational query fragments (`yes`, `most reputable one`, `i mean routes`, `which border`, `نعم`) as a signature of Google's AI-assisted search surfaces. That was inference from query shape alone, and the business explanation supersedes it. Those fragments are not the story.
+
+**What this changes:**
+
+1. **The demand is durable enough to build for, but event-driven.** It is not a ranking fluke to be protected nervously, nor a permanent baseline to plan around. It justifies serving the disruption intent directly — see §14.1.
+2. **The re-export (§10.4) is still worth doing**, but as a measurement baseline rather than a diagnosis. The cause is known.
+3. **§1.2's strategic read is reinforced:** the cross-border corridors are both the site's organic strength *and* where the current demand is landing. The recommendation to lean into them and away from the Jeddah/Makkah/Madinah head terms stands, with more confidence than when written.
 
 ---
 
@@ -885,3 +891,61 @@ Per instruction, **not** added: designated pickup bays, per-terminal meeting ins
 2. **Red Sea:** do you serve Umluj / the Red Sea Project area, and have there been enquiries? Gates §12.6.
 
 Everything else in §12.4–§12.7 needs no further input from you — it needs a decision to proceed, and the recommendations stand as written.
+
+---
+
+## 14. Implemented — 2026-10-14, phase 4 (pushed to `main`)
+
+### 14.1 Flight-disruption banner — homepage, below the hero
+
+New `FlightDisruptionBanner` component, rendered in `src/app/page.tsx` between `<Hero />` and `<TrendingDestinations />`.
+
+> ✈️ **Riyadh flight cancelled?** We drive you from Riyadh to Dammam, Bahrain, Doha or Dubai airport. Fixed fares, one car for your group. → **Compare airports**
+
+**Why here:** §0's demand is disruption-driven, and the homepage had **no entry point for that intent at all** — `/riyadh-alternative-airports` could only be reached by search, and until §10.1 it wasn't even in the sitemap.
+
+**Deliberate decisions, so a later edit doesn't quietly undo them:**
+
+| Decision | Reason |
+| --- | --- |
+| **Jeddah is not named**, though the supplied reference listed it | ✅ `/riyadh-alternative-airports` covers exactly four airports — DMM, BAH, DOH, DXB — and there is **no Riyadh→Jeddah commercial route page** (`ls src/app/riyadh-to-*`). Naming Jeddah would promise a landing place that does not exist. See §14.4. |
+| Airport names are **plain text**, not four inline links | One full-size CTA beats four fiddly inline tap targets on mobile, which is **73% of this site's traffic** (§1.3). The comparison page routes on to each transfer page anyway. |
+| CTA reuses the global `.btn-outline-gold` | Inherits the site's existing contrast and hover/active states instead of re-inventing them. |
+| Palette is existing tokens only (`--brass`, `--brass-veil`, `--line-strong`, `--text-secondary`) | Same rule `TopBar.module.css` follows — no new colours. |
+| "Fixed fares" | ✅ Restates an existing site-wide claim (`airportTransferConfig.ts` → `fixedFareNote`), not a new promise. |
+
+**Responsive:** one row on desktop; at ≤900px the padding tightens; at ≤640px it stacks and the CTA becomes a full-width tap target. **Accessibility:** `<section aria-labelledby>` bound to the bold lead, decorative icon, real `<Link>` with visible focus from the global button styles.
+
+### 14.2 Tabuk ↔ Jordan internal link
+
+`src/lib/cityData3.ts` — added `/saudi-arabia-to-jordan-land-transfer` to Tabuk's `relatedGuides`.
+
+✅ Tabuk already named both Jordanian crossings (Halat Ammar, Ad-Durra) in its landmarks and premium-chauffeur copy but **never linked to the transfer page**. The reciprocal direction already existed (`borderData.ts` → `/services/tabuk`), so the pair is now complete.
+
+✅ **Tabuk → AlUla needed no work** — already present via `nearbyCities: [{ city: "AlUla", slug: "alula" }, …]`. My §12.4 suggestion to add it was redundant.
+
+### 14.3 Jordan and Red Sea — resolved
+
+| | Status |
+| --- | --- |
+| **Jordan** ✅ | Service confirmed real: delivered by **partner drivers using their own vehicles**, licensed, holding the documentation required for the border crossing. The existing page's framing ("we plan the route, the crossing and the rest stops") is consistent with a partner model and needs **no accuracy correction**. §12.5's recommendation stands: improve the existing page, build no Amman/Aqaba/Petra pages. |
+| **Red Sea** ⛔ | No specific Umluj / Red Sea Project presence confirmed. **Parked** — building for it would be exactly the speculative page-creation the brief rules out. Revisit only if enquiries actually appear. |
+
+### 14.4 Follow-up worth considering (not actioned)
+
+**There is no Riyadh→Jeddah commercial route page**, yet `/distance/riyadh-to-jeddah` draws **463 impressions at 0 clicks** (position 8.15) — the site's third-largest impression source. Jeddah also could not be named in the disruption banner for this reason. That is a coherent gap: real logged demand, an informational page absorbing it, and no commercial page to convert it. Same diagnosis as the Kuwait corridor in §11.2, which is now fixed.
+
+🔍 Not proposing it yet — it is a new page, and §0's re-export should inform whether the disruption demand is durable enough to justify one.
+
+### 14.5 Validation
+
+| Check | Result |
+| --- | --- |
+| `npx tsc --noEmit` | ✅ 0 errors |
+| `npx eslint` (changed files) | ✅ 0 warnings |
+| `npx next build` | ✅ compiled, 211/211 static pages |
+| Banner in homepage DOM | ✅ exactly 1 `aria-labelledby="flight-disruption-heading"` |
+| Banner placement | ✅ renders before "Premium Travel, Every Ride" (TrendingDestinations) |
+| CTA target | ✅ `/riyadh-alternative-airports` |
+| Jeddah not named | ✅ 0 occurrences |
+| Tabuk → Jordan link | ✅ present in built `/services/tabuk` |

@@ -269,6 +269,10 @@ export const tabuk: CityData = {
     { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
     { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
     { href: "/guides/long-distance-private-transfers", label: "Long-Distance Private Transfers Guide" },
+    // Tabuk is the Saudi city nearest Halat Ammar (~1.5h) and already names
+    // both Jordanian crossings in its landmarks/premiumChauffeur copy — but
+    // nothing on the page linked to the transfer page itself until now.
+    { href: "/saudi-arabia-to-jordan-land-transfer", label: "Saudi Arabia to Jordan Land Transfer" },
   ],
   premiumChauffeur: {
     intro: "Alongside standard airport and city transfers, Tabuk is also where a meaningful share of our bookings call for something more than a standard taxi — NEOM executives, business delegations, and travelers covering the long stretches to Wadi Disah, NEOM or the Jordanian border in comfort rather than a quick city hop.",

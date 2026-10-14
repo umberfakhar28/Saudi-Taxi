@@ -3,6 +3,7 @@ import SocialProof from "@/components/SocialProof";
 import TrendingDestinations from "@/components/TrendingDestinations";
 import Features from "@/components/Features";
 import FAQSection from "@/components/FAQSection";
+import FlightDisruptionBanner from "@/components/FlightDisruptionBanner";
 import VehiclesSection from "@/components/VehiclesSection";
 import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
@@ -60,6 +61,12 @@ export default function Home() {
           HERO — Balance: 2-col asymmetric layout
           ═══════════════════════════════════════════════════════════════════ */}
       <Hero />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          FLIGHT DISRUPTION — entry point for travellers whose Riyadh flight
+          has fallen through, routing to /riyadh-alternative-airports.
+          ═══════════════════════════════════════════════════════════════════ */}
+      <FlightDisruptionBanner />
 
       {/* ═══════════════════════════════════════════════════════════════════
           TRENDING DESTINATIONS — Popular Gulf cities
