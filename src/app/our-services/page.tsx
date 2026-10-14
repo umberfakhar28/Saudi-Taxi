@@ -196,6 +196,7 @@ export default function OurServices() {
                     <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Ready to Book Your Service?</h2>
                     <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>
                         Choose from any of our services and book online in minutes, or reach us via WhatsApp for instant assistance.
+                        Not sure what a trip will cost? See <Link href="/prices" style={{ color: 'var(--white)', fontWeight: 600, textDecoration: 'underline' }}>how our pricing and quotes work</Link> first.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>

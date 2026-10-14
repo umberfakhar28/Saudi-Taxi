@@ -40,9 +40,26 @@ export function generatePageMetadata({
 }): Metadata {
   const url = `${SITE_CONFIG.baseUrl}${path}`;
   const brandSuffix = ` | ${SITE_CONFIG.siteName}`;
-  const fullTitle = title.endsWith(brandSuffix) ? title : `${title}${brandSuffix}`;
+  // The old check was `title.endsWith(brandSuffix)`, an exact match on
+  // " | Gulf Trip Service". 22 titles ended with the shorter " | Gulf Trip"
+  // instead, so they failed that test and had a second brand appended —
+  // rendering e.g. "Riyadh to Qatar Taxi & Cross-Border Transfer | Gulf Trip
+  // | Gulf Trip Service" at 80 characters, past Google's display limit.
+  //
+  // Stripping any trailing brand variant before appending fixes all of them
+  // centrally, keeps every title's keywords and wording untouched, and makes
+  // the documented "pass only the primary-keyword portion" contract above
+  // self-enforcing rather than something each caller has to get right.
+  //
+  // Anchored to the literal brand, so titles that merely END in the word
+  // "Gulf" are left alone — e.g. "Distance & Travel Time Guides | Saudi
+  // Arabia & Gulf Routes" and "Shortest Airport Transfer in the Gulf".
+  const base = title.replace(/\s*\|\s*Gulf Trip(?:\s+Service)?\s*$/i, "").trim();
+  // Guard against a title that is nothing but the brand collapsing to "".
+  const titleBase = base.length > 0 ? base : title.trim();
+  const fullTitle = `${titleBase}${brandSuffix}`;
   const image = `${SITE_CONFIG.baseUrl}${ogImage ?? SITE_CONFIG.defaultOgImage}`;
-  const imageAlt = ogImageAlt ?? `${SITE_CONFIG.siteName} — ${title}`;
+  const imageAlt = ogImageAlt ?? `${SITE_CONFIG.siteName} — ${titleBase}`;
 
   return {
     title: { absolute: fullTitle },

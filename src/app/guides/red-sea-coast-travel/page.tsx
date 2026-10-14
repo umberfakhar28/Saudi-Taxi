@@ -66,7 +66,7 @@ const guide: GuideData = {
         "Jeddah — the southern gateway and the largest international hub on the coast",
         "Yanbu — an established coastal city with its own airport, port and dive scene",
         "Umluj — a smaller coastal town known for its offshore islands and sandbars",
-        "Al Wajh — further north, the nearest established town to the Red Sea Project area",
+        "Al Wajh — further north again, roughly four and a half hours' drive beyond Umluj, and the nearest established town to the Red Sea Project area",
         "The Red Sea Project — a purpose-built resort development with its own airport",
       ],
     },

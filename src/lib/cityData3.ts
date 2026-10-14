@@ -201,6 +201,11 @@ export const neom: CityData = {
     { title: "Remote distances", note: "NEOM's construction zones span a vast, remote area — routes to Haql or Tabuk can take hours, not minutes." },
     { title: "Security checkpoints", note: "Reaching project sites involves checkpoint procedures — our drivers work with pre-approved access rosters provided by contractor clients." },
   ],
+  // NEOM sits at the northern end of the same Red Sea shoreline the guide
+  // covers, so travellers combining the two have a genuine reason to read it.
+  relatedGuides: [
+    { href: "/guides/red-sea-coast-travel", label: "Travelling Saudi Arabia's Red Sea Coast" },
+  ],
 };
 
 export const tabuk: CityData = {

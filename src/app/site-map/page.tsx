@@ -143,13 +143,19 @@ const groups: Group[] = [
         links: [
             { href: "/blog", label: "All Blog Posts" },
             { href: "/blog/airport-transfer-tips", label: "10 Airport Transfer Tips" },
-            { href: "/blog/private-vs-rental-car", label: "Private Taxi vs Rental Car" },
+            // Points at the live guide, not /blog/private-vs-rental-car — that
+            // URL is a permanent 301 into this one (next.config.ts), so linking
+            // it sent users and crawlers through a needless redirect hop.
+            { href: "/guides/rent-a-car-vs-private-driver", label: "Private Taxi vs Rental Car" },
             { href: "/blog/umrah-travel-planning", label: "Umrah Travel Planning Checklist" },
             { href: "/blog/top-attractions-riyadh", label: "Top 10 Attractions in Riyadh" },
             { href: "/blog/jeddah-hidden-gems", label: "Hidden Gems in Jeddah" },
             { href: "/blog/alula-complete-guide", label: "AlUla Complete Travel Guide" },
             { href: "/blog/benefits-private-airport-transfer", label: "5 Reasons Private Airport Transfers Win" },
-            { href: "/blog/hajj-transport-guide", label: "Hajj 2025 Transportation Guide" },
+            // /blog/hajj-transport-guide dropped rather than relinked: it is a
+            // permanent 301 into /guides/hajj-transportation, which the Travel
+            // Guides section above already lists. Relinking it here would have
+            // duplicated that entry on the same page.
             { href: "/blog/family-saudi-destinations", label: "Best Family Destinations in Saudi Arabia" },
             { href: "/blog/vip-transport-saudi", label: "VIP & Executive Transportation" },
             { href: "/blog/riyadh-to-jeddah-travel", label: "Riyadh to Jeddah Travel Options" },
