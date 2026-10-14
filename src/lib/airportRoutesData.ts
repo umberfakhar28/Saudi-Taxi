@@ -321,6 +321,13 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/services/riyadh", label: "Riyadh Taxi Service" },
       { href: "/guides/king-khalid-airport", label: "King Khalid Airport Terminal Guide" },
       { href: "/riyadh-to-makkah-taxi-service", label: "Riyadh to Makkah Taxi" },
+      // Someone reading the RUH page after a cancelled or rerouted flight is
+      // exactly the audience for the alternative-airports comparison. Also
+      // gives that page a crawler-visible inbound link: its only others come
+      // from AnnouncementSlider and FlightDisruptionBanner, and the link-graph
+      // tool scans only Navbar/Footer among components, so it was still being
+      // reported as orphaned by `npm run seo:links`.
+      { href: "/riyadh-alternative-airports", label: "Riyadh Alternative Airports" },
     ],
     relatedServices: [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },

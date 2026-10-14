@@ -12,7 +12,9 @@ export const yanbu: CityData = {
   seasonalNote: "Yanbu runs on two overlapping economies — petrochemical industry traffic on weekdays, and a growing dive-tourism season roughly October through April when Red Sea water conditions are calmest. Summer heat and humidity make diving less comfortable and quieter for tourism generally.",
   tags: ["tourism"],
   priority: 2,
-  nearbyCities: [{ city: "Madinah", slug: "madinah" }, { city: "AlUla", slug: "alula" }],
+  // Umluj is the next stop up the coast (~2 hrs) and the pairing travellers
+  // most often make from here — added with the Red Sea coverage, 2026-10-14.
+  nearbyCities: [{ city: "Madinah", slug: "madinah" }, { city: "AlUla", slug: "alula" }, { city: "Umluj", slug: "umluj" }],
   city: "Yanbu",
   h1: "Airport Transfer, Private Taxi & Car Transfer in Yanbu",
   region: "Madinah Province",
@@ -480,9 +482,95 @@ export const khamisMushait: CityData = {
  * any future consumer that needs to iterate every CityData entry (gap
  * analysis, sitemap/nav generation in W9) without importing cityData1/2/3
  * separately. Individual named exports are unchanged for existing pages. */
+/**
+ * Umluj — Red Sea coast, Tabuk Province. Coverage confirmed by the operator
+ * (private taxi with driver, full-day vehicle + driver, destination
+ * transfers), which is what distinguishes this from the speculative Red Sea
+ * pages previously declined in docs/seo-action-plan-2026-10.md §12.6.
+ *
+ * ACCURACY NOTE — published distances along this coast disagree badly
+ * between sources (see the header of /guides/red-sea-coast-travel). Every
+ * duration below is an approximate range drawn from routing data, never a
+ * single precise figure, and no kilometre distance is stated anywhere.
+ *
+ * No `airport` field: Red Sea International (RSI) is the nearest airport,
+ * but the template renders that field as "City distance: {value}" and no
+ * verifiable Umluj–RSI distance exists. It is covered in practicalInfo and
+ * the FAQs instead, where the full sentence can be written honestly.
+ *
+ * No `reviews`: this is a new page with no genuine Umluj testimonials yet.
+ * `reviewed: false` flags it for human sign-off per the W7 convention.
+ */
+export const umluj: CityData = {
+  slug: "umluj",
+  city: "Umluj",
+  h1: "Umluj Taxi, Private Driver & Red Sea Coast Transfers",
+  region: "Tabuk Province",
+  tags: ["tourism"],
+  priority: 2,
+  reviewed: false,
+  nearbyCities: [{ city: "Yanbu", slug: "yanbu" }, { city: "Tabuk", slug: "tabuk" }],
+
+  intro:
+    "Private transfers, full-day car-and-driver hire and destination transport in Umluj — the Red Sea coastal town known for the islands and sandbars sitting just offshore.",
+  whyVisit:
+    "Umluj sits on Saudi Arabia's north-western Red Sea coast, and the draw is the water: a scatter of low islands and pale sandbars a short boat ride from the harbour, which is why travel writing often reaches for a Maldives comparison. It is a small working town rather than a resort, so most visitors come for the coast and the boat trips rather than the town itself.",
+  challenge:
+    "Getting around here is the real constraint. Scheduled public transport is thin — there is no quick link along the coast to Yanbu, and bus routes tend to run inland via Madinah, which turns a two-hour drive into most of a day. Distances between the town, the harbour and the beaches north and south of it are too long to walk.",
+  benefit:
+    "We cover Umluj with private taxi runs, full-day vehicle-and-driver bookings for people combining several beaches or a boat trip in one day, and point-to-point transfers along the coast — including north to Al Wajh and the Red Sea Project.",
+
+  landmarks: [
+    { name: "The offshore islands", description: "A group of low islands and sandbars lying a short boat ride off the coast, reached from the town's harbour and the main reason most visitors come." },
+    { name: "Umluj harbour", description: "The working departure point for boat trips out to the islands, and the practical centre of gravity for any visit." },
+    { name: "The coastal beaches", description: "Long, quiet stretches of shoreline running north and south of the town, spread out enough that reaching them means driving rather than walking." },
+  ],
+  seasonalNote:
+    "The calm season on this coast runs roughly October through April, which is when boat trips and diving are most dependable and when Umluj sees most of its visitors. Summer brings heat and humidity that reshape a trip entirely — time on the water gets planned around early mornings, and the town is noticeably quieter.",
+
+  popularRoutes: [
+    { from: "Umluj", to: "Yanbu", time: "~2 hrs", href: "/services/yanbu" },
+    { from: "Umluj", to: "Al Wajh", time: "~4.5 hrs" },
+    { from: "Umluj", to: "Madinah", time: "~5–6 hrs", href: "/services/madinah" },
+  ],
+  pickupPoints: ["Umluj town centre", "Umluj harbour", "Coastal beach access points", "Umluj hotels and guesthouses"],
+
+  serviceAreas: [
+    { name: "Umluj town and harbour", note: "The town itself and the harbour boat trips depart from — the two points most visits revolve around." },
+    { name: "The coast north and south", note: "Beach access points spread along the shoreline, far enough apart that a car is the practical way to reach them." },
+    { name: "Al Wajh", note: "Further up the coast — roughly four and a half hours north, and a separate journey rather than a side trip.", href: "/guides/red-sea-coast-travel" },
+    { name: "The Red Sea Project", note: "The resort development on the northern coast. Arrival arrangements vary by property, so tell us your hotel when booking." },
+  ],
+
+  practicalInfo: [
+    { title: "Which airport to use", note: "Red Sea International (RSI) is the nearest airport. Travellers already on the central coast often fly into Yanbu (YNB) instead and drive up — roughly two hours." },
+    { title: "Plan by time, not distance", note: "Published distances for legs along this coast disagree noticeably between sources. Journey times here are approximate; plan around hours rather than kilometres." },
+    { title: "Fuel and stops thin out", note: "Services become sparse on the open stretches north of Yanbu, so coastal legs are better started early in the day than late." },
+  ],
+
+  faqs: [
+    { q: "Do you cover Umluj?", a: "Yes — private taxi rides with a driver, full-day vehicle-and-driver bookings, and destination transfers along the coast." },
+    { q: "Which airport is nearest to Umluj?", a: "Red Sea International (RSI). If you are already on the central coast, Yanbu (YNB) is the practical alternative, with a road journey of roughly two hours north from there." },
+    { q: "How long is the drive from Yanbu to Umluj?", a: "Roughly two hours up the coast road. Published distances for this leg vary between sources, so plan by time and allow for stops." },
+    { q: "Can you take me from Umluj to the Red Sea Project or Al Wajh?", a: "Yes. Al Wajh is roughly four and a half hours north of Umluj, so it is a full journey rather than a short hop. For the Red Sea Project, tell us which property you are booked into — arrival arrangements differ between them." },
+    { q: "Can I book a car and driver for a full day in Umluj?", a: "Yes — full-day bookings are a common choice here, since the beaches are spread along the coast and a boat trip usually takes up part of the day." },
+    { q: "Is there public transport to Umluj?", a: "It is limited. There is no quick scheduled service along the coast from Yanbu, and bus routes generally run inland via Madinah, which makes the journey considerably longer than driving." },
+    { q: "When is the best time to visit Umluj?", a: "Roughly October through April, when conditions on the water are calmest. Summer is hot and humid, and the town is much quieter." },
+  ],
+
+  heroImage: "/destinations/jeddah-corniche-skyline.webp",
+  heroImageAlt: "Red Sea coastline in north-western Saudi Arabia — private taxi and transfer service in Umluj",
+
+  relatedGuides: [
+    { href: "/guides/red-sea-coast-travel", label: "Travelling Saudi Arabia's Red Sea Coast" },
+    { href: "/guides/long-distance-private-transfers", label: "Long-Distance Private Transfers Guide" },
+  ],
+};
+
 export const allCities: CityData[] = [
   riyadh, jeddah, makkah, madinah, dammam,
   khobar, jubail, taif, abha,
   yanbu, alula, neom, tabuk,
   alAhsa, dhahran, khamisMushait,
+  umluj,
 ];

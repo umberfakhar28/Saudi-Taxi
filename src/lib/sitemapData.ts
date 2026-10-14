@@ -334,6 +334,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
     "jubail", "taif", "abha", "yanbu", "alula", "neom", "tabuk",
     // W7 P2 (docs/page-gap-analysis.md)
     "al-ahsa", "dhahran", "khamis-mushait",
+    // Red Sea coast — coverage confirmed 2026-10-14
+    "umluj",
   ].map((city) => ({
     url: `${BASE_URL}/services/${city}`,
     lastModified: lastMod(`/services/${city}`),

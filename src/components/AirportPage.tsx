@@ -31,6 +31,38 @@ function useCasesFor(data: AirportPageInfo, routeCount: number): string[] {
 /** Related /services/[slug] city pages for this airport — the airport's own
  * city plus its real, existing nearby-city relationships, never a guessed
  * slug (matched against the live CityData list by city name). */
+/**
+ * `relatedLinks` was previously rendered only by /airport-transfers, never by
+ * the individual airport pages this template drives — so curated per-airport
+ * cross-links sat unused in airportRoutesData.ts on all nine of them.
+ *
+ * Rendering them raw would duplicate links the page already shows elsewhere
+ * (Related Services, Related Cities, the Tour block, the terminal-guide link
+ * in the intro) and, on several airports, link the page to itself: every
+ * entry lists its own `pageHref` among its relatedLinks. This filters all of
+ * that out, so what's left is genuinely additional.
+ *
+ * Returns [] when there is nothing new to show, and the caller renders
+ * nothing — the field is optional in practice even though the type requires
+ * it, and an airport whose relatedLinks are wholly covered elsewhere simply
+ * gets no extra block.
+ */
+function extraRelatedLinks(data: AirportPageInfo): { href: string; label: string }[] {
+  const alreadyShown = new Set<string>([
+    data.pageHref,
+    ...data.relatedServices.map((s) => s.href),
+    ...relatedCitiesFor(data).map((c) => `/services/${c.slug}`),
+    ...(data.tourLinks ?? []).map((l) => l.href),
+    ...(data.guidePageHref ? [data.guidePageHref] : []),
+  ]);
+  const seen = new Set<string>();
+  return (data.relatedLinks ?? []).filter((l) => {
+    if (alreadyShown.has(l.href) || seen.has(l.href)) return false;
+    seen.add(l.href);
+    return true;
+  });
+}
+
 function relatedCitiesFor(data: AirportPageInfo): { slug: string; city: string }[] {
   const ownCity = allCities.find((c) => c.city.toLowerCase() === data.city.toLowerCase());
   if (!ownCity) return [];
@@ -661,6 +693,16 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
               <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                 {relatedCitiesFor(data).map((c) => (
                   <Link key={c.slug} href={`/services/${c.slug}`} className="btn btn-outline-gold btn-sm">{c.city}</Link>
+                ))}
+              </div>
+            </div>
+          )}
+          {extraRelatedLinks(data).length > 0 && (
+            <div style={{ marginTop: "var(--space-10)", paddingTop: "var(--space-10)", borderTop: "1px solid var(--line)" }}>
+              <h3 style={{ marginBottom: "var(--space-4)" }}>Explore More</h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+                {extraRelatedLinks(data).map((l) => (
+                  <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
                 ))}
               </div>
             </div>

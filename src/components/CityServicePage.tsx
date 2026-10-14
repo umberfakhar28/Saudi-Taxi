@@ -29,7 +29,11 @@ export interface CityData {
   popularRoutes: { from: string; to: string; time: string; href?: string }[];
   pickupPoints: string[];
   faqs: { q: string; a: string }[];
-  reviews: { name: string; origin: string; text: string }[];
+  /** Genuine, city-specific customer reviews. Optional: a new city hub has
+   * no real testimonials yet, and inventing them is not an option — the
+   * section is omitted entirely rather than padded with generic quotes.
+   * Same rule AirportPageInfo.reviews already follows. */
+  reviews?: { name: string; origin: string; text: string }[];
   heroImage?: string;
   /** Alt text for heroImage — falls back to a generic "{city} skyline"
    * description when omitted. Also reused as the Sightseeing cards' image
@@ -739,7 +743,8 @@ export default function CityServicePage({ data }: { data: CityData }) {
           </section>
         )}
 
-        {/* Reviews */}
+        {/* Reviews — omitted entirely for a city with no genuine ones yet */}
+        {data.reviews && data.reviews.length > 0 && (
         <section className="section">
           <div className="container">
             <div className="section-header centered">
@@ -758,6 +763,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
             </div>
           </div>
         </section>
+        )}
 
         {/* FAQs */}
         <section className="section" style={{ background: "var(--bg-subtle)" }}>

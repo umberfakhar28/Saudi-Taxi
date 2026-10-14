@@ -32,10 +32,12 @@ export const metadata = generatePageMetadata({
  * for that reason — drive times are given as ranges and labelled as
  * approximate, per the site-wide rule against presenting estimates as facts.
  *
- * This guide deliberately makes NO claim that Gulf Trip Service operates
- * transfers to Umluj, Al Wajh or the Red Sea Project. Coverage there is
- * unconfirmed. The CTA points at Yanbu, which is served, and invites an
- * enquiry rather than asserting availability.
+ * COVERAGE CONFIRMED 2026-10-14: Umluj, Al Wajh and the Red Sea Project are
+ * served — private taxi with driver, full-day vehicle-and-driver bookings,
+ * and destination transfers. The guide's commercial framing was updated
+ * accordingly, and it now points at /services/umluj as well as
+ * /services/yanbu. It still stops short of describing per-resort arrival
+ * arrangements at the Red Sea Project, which genuinely vary by property.
  */
 
 const guide: GuideData = {
@@ -98,6 +100,7 @@ const guide: GuideData = {
         "Accommodation is limited — most visitors stay in Yanbu or continue onward",
         "Scheduled public transport is indirect; routes tend to go via Madinah",
       ],
+      cta: { text: "Umluj Transfers & Private Driver", link: "/services/umluj" },
     },
     {
       heading: "The Red Sea Project and Red Sea International Airport",
@@ -146,6 +149,7 @@ const guide: GuideData = {
   ],
 
   relatedLinks: [
+    { href: "/services/umluj", label: "Umluj Transfers & Private Driver", reason: "Private taxi, full-day car and driver, and coastal transfers in Umluj — including north to Al Wajh and the Red Sea Project." },
     { href: "/services/yanbu", label: "Yanbu Transfer Service", reason: "The coastal city we cover — airport pickups, dive-site drop-offs and city transfers." },
     { href: "/yanbu-airport-taxi-service", label: "Yanbu Airport (YNB) Transfers", reason: "Meet-and-greet pickup if you're flying into the coast's own regional airport." },
     { href: "/services/madinah", label: "Madinah Transfer Service", reason: "The inland gateway most travellers use to reach the central coast by road." },
@@ -157,9 +161,9 @@ const guide: GuideData = {
 
   closingHeading: "Planning a Trip Along the Red Sea Coast?",
   ctaHelper:
-    "We run private, pre-booked transfers in Yanbu, Madinah, Jeddah and Tabuk. Tell us where on the coast you're heading and we'll confirm what we can arrange before you book anything.",
-  ctaText: "Yanbu Transfer Service",
-  ctaLink: "/services/yanbu",
+    "We cover Umluj, Al Wajh and the Red Sea Project, as well as Yanbu, Madinah, Jeddah and Tabuk — private taxi with a driver, full-day vehicle-and-driver bookings, and point-to-point transfers along the coast. Tell us your dates and where you're heading.",
+  ctaText: "Umluj Transfers & Private Driver",
+  ctaLink: "/services/umluj",
 };
 
 export default function RedSeaCoastTravelGuide() {
