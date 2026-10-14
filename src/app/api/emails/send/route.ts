@@ -432,6 +432,9 @@ export async function POST(req: Request) {
                     row('To', inv.dropoff_location),
                     row('Service', serviceLabel(inv.service_type)),
                     row('Date', displayDate(inv.travel_date as string | null | undefined, '')),
+                    // The booking and quote emails above already showed a Time
+                    // row; the invoice email was the one format that did not.
+                    row('Time', displayTime(inv.travel_time as string | null | undefined, '')),
                     row('Status', inv.status ? String(inv.status).replace('_', ' ').toUpperCase() : ''),
                 ].join(''))}
                 <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-top:16px;text-align:center;">

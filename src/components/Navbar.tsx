@@ -7,6 +7,7 @@ import { MenuIcon, XIcon, ChevronDownIcon, GlobeIcon, WhatsAppIcon } from './Ico
 import Logo from './Logo';
 import { arabicPathFor } from '@/lib/bilingualPages';
 import { WHATSAPP_URL } from '@/lib/contact';
+import { scrollToTopIfOn } from '@/lib/scrollToTop';
 import { serviceGroups, locationGroups, crossBorderGroups, companyGroups, type NavGroup } from '@/config/navigation';
 import styles from './Navbar.module.css';
 
@@ -117,7 +118,12 @@ const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: Na
             <div className={styles.container}>
 
                 {/* ---- LOGO (Balance: anchors the left side; also serves as the Home link) ---- */}
-                <Link href="/" className={styles.logo} onClick={close} aria-label="Gulf Trip Service — Home">
+                {/* Clicking it from a scrolled homepage has to return to the
+                    top explicitly: the App Router only restores scroll when a
+                    navigation actually happens, and clicking Home while
+                    already on "/" is a no-op, so the page just sat where it
+                    was. From any other page the normal navigation handles it. */}
+                <Link href="/" className={styles.logo} onClick={(e) => { close(); scrollToTopIfOn('/', pathname, e); }} aria-label="Gulf Trip Service — Home">
                     <Logo size={logoSize} variant="white" />
                 </Link>
 

@@ -186,3 +186,16 @@
     padding-left: 0;
     padding-right: 4px;
 }
+/* Footer logo is now a Home link (HomeLogoLink). Inline-block so the anchor
+   wraps the mark tightly instead of spanning the column, with a visible focus
+   ring since it carries no text of its own. */
+.footerLogoLink {
+    display: inline-block;
+    line-height: 0;
+    border-radius: var(--radius-sm, 6px);
+}
+
+.footerLogoLink:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+}

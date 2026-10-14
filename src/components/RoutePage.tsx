@@ -315,7 +315,9 @@ export default function RoutePage({ data }: { data: RouteData }) {
           <div className="container" style={{ position: "relative", zIndex: 1 }}>
             <span className="section-eyebrow">{data.eyebrow}</span>
             <h1>{data.h1}</h1>
-            <p>{data.intro}</p>
+            {/* data.intro moved below the quick-booking form (booking-flow
+                brief §1) so the form is visible at first glance; the text
+                keeps its styling via .lead-intro. */}
             <div className="breadcrumb">
               <Link href="/">Home</Link> /{" "}
               {data.isCrossBorder ? (
@@ -325,6 +327,27 @@ export default function RoutePage({ data }: { data: RouteData }) {
               )}{" "}
               / <span>{data.breadcrumbLabel}</span>
             </div>
+          </div>
+        </section>
+
+        {/* Quick booking form — directly under the H1, with pickup/drop-off
+            pre-filled from this route's own origin/destination and still
+            editable (booking-flow brief §1/§2). */}
+        <section style={{ padding: "var(--space-8) 0 0" }}>
+          <div className="container">
+            <QuickBookForm
+              defaultFrom={data.origin}
+              defaultTo={data.destination}
+              heading={`Book Your ${data.origin} to ${data.destination} Transfer`}
+              subheading="Pickup and drop-off are already filled in — edit them if your trip is slightly different."
+            />
+          </div>
+        </section>
+
+        {/* Route summary, now below the form. */}
+        <section style={{ padding: "var(--space-8) 0 0" }}>
+          <div className="container">
+            <p className="lead-intro">{data.intro}</p>
           </div>
         </section>
 
@@ -382,19 +405,8 @@ export default function RoutePage({ data }: { data: RouteData }) {
           </div>
         </section>
 
-        {/* Quick booking form — pickup/drop-off pre-filled from this
-            route's own origin/destination, still editable (booking-flow
-            revision brief §2/§3). */}
-        <section style={{ padding: "var(--space-10) 0 0" }}>
-          <div className="container">
-            <QuickBookForm
-              defaultFrom={data.origin}
-              defaultTo={data.destination}
-              heading={`Book Your ${data.origin} to ${data.destination} Transfer`}
-              subheading="Pickup and drop-off are already filled in — edit them if your trip is slightly different."
-            />
-          </div>
-        </section>
+        {/* The quick-booking form that used to sit here has moved up to
+            directly below the H1 — see above. Not duplicated. */}
 
         {/* Journey visualization — lightweight text/chip chain, not an
             embedded map (no mapping dependency exists in the project, and

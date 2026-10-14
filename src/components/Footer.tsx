@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons';
 import Logo from './Logo';
+import HomeLogoLink from './HomeLogoLink';
 import styles from './Footer.module.css';
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from '@/lib/contact';
 import { locationLinks } from '@/config/navigation';
@@ -11,8 +12,13 @@ const Footer = () => {
             <div className="container">
                 <div className={styles.grid}>
                     <div className={styles.column}>
+                        {/* Was a bare <Logo> — not a link at all, so the one
+                            logo a visitor reaches after scrolling did nothing
+                            when clicked. */}
                         <div style={{ marginBottom: '1.5rem' }}>
-                            <Logo size={32} variant="white" />
+                            <HomeLogoLink className={styles.footerLogoLink}>
+                                <Logo size={32} variant="white" />
+                            </HomeLogoLink>
                         </div>
                         <p className={styles.text}>
                             Your trusted partner for reliable taxi and transportation services across Saudi Arabia. Serving Umrah pilgrims, tourists and travelers with comfort, safety and dedication since 2014.

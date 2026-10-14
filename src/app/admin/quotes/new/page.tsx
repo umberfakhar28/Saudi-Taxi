@@ -8,6 +8,7 @@ import { CURRENCY_CODES, formatMoney, toCurrencyCode } from '@/lib/currency';
 import { displayDate, displayTime, toStorableTime, toTimeInputValue } from '@/lib/datetime';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
+import { QUOTE_CUSTOMER_NOTE } from '@/lib/contact';
 
 const VEHICLES = ['Sedan', 'SUV', 'Luxury', 'Van', 'Minibus'];
 
@@ -88,6 +89,12 @@ function NewQuoteInner() {
                     price: data.quote_amount ? String(data.quote_amount) : '',
                     // The customer's own requirements from the booking form.
                     notes: data.special_notes ?? '',
+                    // Seed the customer-facing note with the standard WhatsApp
+                    // follow-up line. Only ever fills an empty field: if the
+                    // admin has already typed something (or edits it and the
+                    // effect re-runs) their text is kept, so reopening or
+                    // regenerating a quote cannot duplicate or clobber it.
+                    admin_note: f.admin_note.trim() ? f.admin_note : QUOTE_CUSTOMER_NOTE,
                 }));
             });
         return () => { active = false; };

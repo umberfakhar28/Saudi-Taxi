@@ -8,6 +8,7 @@ import Logo from './Logo';
 import { englishPathFor } from '@/lib/bilingualPages';
 import styles from './Navbar.module.css';
 import { WHATSAPP_URL } from '@/lib/contact';
+import { scrollToTopIfOn } from '@/lib/scrollToTop';
 
 const links = [
     { href: '/ar', label: 'الرئيسية' },
@@ -25,7 +26,10 @@ const ArabicNavbar = () => {
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                <Link href="/ar" className={styles.logo} onClick={close} aria-label="Gulf Trip Service — الصفحة الرئيسية">
+                {/* Stays on /ar — the Arabic homepage — rather than sending
+                    Arabic visitors to the English one. Same already-here
+                    scroll fix as the English navbar. */}
+                <Link href="/ar" className={styles.logo} onClick={(e) => { close(); scrollToTopIfOn('/ar', pathname, e); }} aria-label="Gulf Trip Service — الصفحة الرئيسية">
                     <Logo size={38} variant="white" />
                 </Link>
 

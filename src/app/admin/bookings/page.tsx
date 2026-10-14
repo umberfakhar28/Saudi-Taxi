@@ -11,6 +11,7 @@ import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
 import { bookingMessage, canWhatsApp, toWhatsAppNumber, waLinkTo } from '@/lib/whatsapp';
+import { PHONE_DISPLAY } from '@/lib/contact';
 
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
 const PAYMENT_OPTIONS = ['all', 'paid', 'unpaid', 'partially_paid'];
@@ -322,7 +323,10 @@ function BookingsPageInner() {
             if (existing) { setInvoiceModal({ ...b, invoice_number: existing.invoice_number, invoice_db_id: existing.id, total_amount: existing.total_amount }); return; }
         }
         const invNum = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const { data: invData, error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() }).select().single();
+        const { data: invData, error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, travel_time: b.travel_time, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() }).select().single();
+        // NOTE: travel_time requires supabase/sql/005_invoice_travel_time.sql
+        // to have been run. It was dropped here before, which is why invoices
+        // had no time to show in any format.
         if (!error && invData) {
             // Keep the booking's own invoice_id pointer in sync so future
             // lookups (and the "already has an invoice" branch above) find
@@ -1178,7 +1182,11 @@ function BookingsPageInner() {
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
                                         <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#f59e0b' }}>Gulf Trip Service</div>
-                                        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>Jeddah, Saudi Arabia<br/>+966 XXX XXX XXXX</div>
+                                        {/* Was a hardcoded "+966 XXX XXX XXXX" placeholder that shipped
+                                            to the invoice preview. Reads from lib/contact.ts, the single
+                                            source of truth the PNG/PDF renderer already uses, so preview
+                                            and exported document now agree. */}
+                                        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>Jeddah, Saudi Arabia<br/>{PHONE_DISPLAY}</div>
                                     </div>
                                 </div>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
@@ -1192,7 +1200,11 @@ function BookingsPageInner() {
                                         <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
                                         <div style={{ fontSize: '0.82rem', color: '#334155' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {invoiceModal.pickup_location}</div>
                                         <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {invoiceModal.dropoff_location}</div>
-                                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{invoiceModal.travel_date ? format(new Date(invoiceModal.travel_date), 'dd MMM yyyy') : '—'} · {invoiceModal.service_type}</div>
+                                        {/* Date AND time. Uses the shared datetime helpers rather than
+                                            date-fns directly, so the preview matches the PNG/PDF and the
+                                            emails; a booking with no time recorded shows the date alone
+                                            instead of a fabricated one. */}
+                                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{[displayDate(invoiceModal.travel_date, ''), displayTime(invoiceModal.travel_time, '')].filter(Boolean).join(', ') || '—'} · {invoiceModal.service_type}</div>
                                     </div>
                                 </div>
                                 <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1.5rem' }}>

@@ -17,7 +17,7 @@
 
 import { brandMarkDataUrl } from './brandMark';
 import { formatMoney } from './currency';
-import { displayDate } from './datetime';
+import { displayDate, displayTime } from './datetime';
 import { EMAIL, PHONE_DISPLAY } from './contact';
 import { serviceLabel } from './serviceLabels';
 
@@ -33,6 +33,10 @@ export interface InvoicePngData {
     pickup_location?: string | null;
     dropoff_location?: string | null;
     travel_date?: string | null;
+    /** Pickup time exactly as stored on the booking/quote (e.g. "04:00:00").
+     * Rendered beside the date; omitted cleanly when no time was recorded,
+     * rather than substituting a default. */
+    travel_time?: string | null;
     service_type?: string | null;
     subtotal?: number | string | null;
     tax_amount?: number | string | null;
@@ -295,9 +299,14 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ty += dropoffLines.length * 19 + 4;
     ctx.fillStyle = FAINT;
     ctx.font = font(400, 11.5);
-    // Skip the date entirely when there isn't one, rather than printing "— ·".
+    // Each part is dropped when genuinely absent rather than printing "— ·",
+    // so a record with no time recorded shows the date alone and never an
+    // invented or default one.
+    const whenText = [displayDate(inv.travel_date, ''), displayTime(inv.travel_time, '')]
+        .filter(Boolean)
+        .join(', ');
     ctx.fillText(
-        [displayDate(inv.travel_date, ''), serviceText].filter(Boolean).join(' · '),
+        [whenText, serviceText].filter(Boolean).join(' · '),
         tx + 16,
         ty + 10
     );

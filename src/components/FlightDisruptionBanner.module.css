@@ -10,8 +10,13 @@
 
 .wrap {
     /* Tighter than a full `section` — this is a strip between the hero and
-       the first real section, not a section of its own. */
-    padding: var(--space-6) 0 0;
+       the first real section, not a section of its own.
+       Padding is symmetrical: with `0` on the bottom the card's border sat
+       flush against the start of the next section, whose ivory background
+       begins exactly where this white one ends, so the two read as one
+       merged edge. The bottom value matches the top rather than being an
+       arbitrary gap. */
+    padding: var(--space-6) 0;
     background: var(--surface-1);
 }
 
@@ -66,7 +71,10 @@
    proper block target rather than a nowrap pill squeezed beside the text. */
 @media (max-width: 640px) {
     .wrap {
-        padding-top: var(--space-4);
+        /* Symmetrical here too — the merged-edge problem is worst on mobile,
+           where the banner wraps to two rows and sits closest to the next
+           section. */
+        padding: var(--space-4) 0;
     }
 
     .banner {

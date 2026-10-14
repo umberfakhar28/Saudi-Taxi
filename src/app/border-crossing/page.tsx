@@ -3,6 +3,7 @@ import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
 import RelatedLinks from "@/components/RelatedLinks";
+import QuickBookForm from "@/components/QuickBookForm";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
@@ -107,12 +108,33 @@ export default function BorderCrossing() {
             {/* Hero */}
             <section className="page-hero">
                 <h1>Border Crossing Taxi & Chauffeur Service — Trusted Local Drivers</h1>
-                <p>
-                    Safe, reliable transfer service across Saudi Arabia&apos;s land borders.
-                    Licensed drivers and full journey coordination.
-                </p>
+                {/* Intro moved below the form (booking-flow brief §1). */}
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Border Crossing</span>
+                </div>
+            </section>
+
+            {/* Quick booking form. This is the hub page for every crossing, so
+                only the pickup side can be determined from it — every journey
+                here starts in Saudi Arabia. Drop-off is deliberately left
+                empty rather than guessed at, per the fallback rule: the
+                visitor picks or types their destination country or city. */}
+            <section style={{ padding: 'var(--space-8) 0 0' }}>
+                <div className="container">
+                    <QuickBookForm
+                        defaultFrom="Saudi Arabia"
+                        heading="Get a Quick Quote for Your Border Crossing"
+                        subheading="Tell us where you are heading — both fields are editable, and you can type a city that isn't listed."
+                    />
+                </div>
+            </section>
+
+            <section style={{ padding: 'var(--space-8) 0 0' }}>
+                <div className="container">
+                    <p className="lead-intro">
+                        Safe, reliable transfer service across Saudi Arabia&apos;s land borders.
+                        Licensed drivers and full journey coordination.
+                    </p>
                 </div>
             </section>
 

@@ -227,6 +227,7 @@ export default function QuotesPage() {
                 pickup_location: q.pickup_location,
                 dropoff_location: q.dropoff_location,
                 travel_date: q.travel_date,
+                travel_time: q.travel_time,
                 service_type: q.vehicle_type ? `${q.vehicle_type} transfer` : 'Private transfer',
                 subtotal: quoteTotal(q),
                 total_amount: quoteTotal(q),

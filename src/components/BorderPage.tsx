@@ -7,6 +7,7 @@ import { FLEET_TIERS } from "@/lib/fleetConfig";
 import { destinationsByCountry, type CountrySlug } from "@/lib/destinationData";
 import styles from "./BorderPage.module.css";
 import { GuideList, GuideTable, SectionCta, type GuideSection } from "@/components/GuidePage";
+import QuickBookForm from "@/components/QuickBookForm";
 
 /**
  * Shared template for the Border / Cross-Border country-level page family
@@ -114,9 +115,33 @@ export default function BorderPage({ data }: { data: BorderData }) {
       <main>
         <section className="page-hero">
           <h1>{data.h1}</h1>
-          <p>{data.intro}</p>
+          {/* data.intro moved below the quick-booking form (booking-flow
+              brief §1); styling preserved via .lead-intro. */}
           <div className="breadcrumb">
             <Link href="/">Home</Link> / <Link href="/border-crossing">Border Crossing</Link> / <span>{data.breadcrumbLabel}</span>
+          </div>
+        </section>
+
+        {/* Quick booking form — directly under the H1. Pickup/drop-off are
+            seeded from this journey's own countries (originCountry /
+            destinationCountry), never hardcoded, and both stay editable:
+            SearchAutocomplete is a free-text input with suggestions, so a
+            customer can type a city the list doesn't offer. */}
+        <section style={{ padding: "var(--space-8) 0 0" }}>
+          <div className="container">
+            <QuickBookForm
+              defaultFrom={data.originCountry}
+              defaultTo={data.destinationCountry}
+              heading={`Book Your ${data.originCountry} to ${data.destinationCountry} Transfer`}
+              subheading="Pickup and drop-off are pre-filled for this crossing — change either to your exact city or hotel."
+            />
+          </div>
+        </section>
+
+        {/* Journey summary, now below the form. */}
+        <section style={{ padding: "var(--space-8) 0 0" }}>
+          <div className="container">
+            <p className="lead-intro">{data.intro}</p>
           </div>
         </section>
 
