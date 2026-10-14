@@ -69,6 +69,9 @@ export const yanbu: CityData = {
   ],
   relatedGuides: [
     { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+    // Yanbu is the practical base for the central Red Sea coast, and this
+    // page's own dive-tourism content is the site's only prior mention of it.
+    { href: "/guides/red-sea-coast-travel", label: "Travelling Saudi Arabia's Red Sea Coast" },
   ],
 };
 
@@ -273,6 +276,8 @@ export const tabuk: CityData = {
     // both Jordanian crossings in its landmarks/premiumChauffeur copy — but
     // nothing on the page linked to the transfer page itself until now.
     { href: "/saudi-arabia-to-jordan-land-transfer", label: "Saudi Arabia to Jordan Land Transfer" },
+    // Red Sea International Airport and the northern coast sit in Tabuk Province.
+    { href: "/guides/red-sea-coast-travel", label: "Travelling Saudi Arabia's Red Sea Coast" },
   ],
   premiumChauffeur: {
     intro: "Alongside standard airport and city transfers, Tabuk is also where a meaningful share of our bookings call for something more than a standard taxi — NEOM executives, business delegations, and travelers covering the long stretches to Wadi Disah, NEOM or the Jordanian border in comfort rather than a quick city hop.",

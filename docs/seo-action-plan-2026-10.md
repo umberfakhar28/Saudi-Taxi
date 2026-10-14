@@ -949,3 +949,73 @@ New `FlightDisruptionBanner` component, rendered in `src/app/page.tsx` between `
 | CTA target | ✅ `/riyadh-alternative-airports` |
 | Jeddah not named | ✅ 0 occurrences |
 | Tabuk → Jordan link | ✅ present in built `/services/tabuk` |
+
+---
+
+## 15. Implemented — 2026-10-14, phase 5: Red Sea coast guide
+
+⚠️ **Supersedes §12.6 and §14.3, which recommended parking this.** Built on your instruction. The approach below is informational-only, for the reason in §15.3.
+
+### 15.1 New page: `/guides/red-sea-coast-travel`
+
+**"Travelling Saudi Arabia's Red Sea Coast"** — a destination guide in the existing `/guides/*` family, using the established `GuidePage` / `GuideData` template.
+
+| | |
+| --- | --- |
+| Primary intent | Informational — orientation and trip planning for a coast most visitors can't place on a map |
+| Content gap it fills | `/services/yanbu` (58 impressions, pos 13.83) and `/yanbu-airport-taxi-service` (67 impressions, pos 11.37) both already reference Red Sea dive tourism, but are single-city service pages. Nothing covered the coast as a region, and **Umluj, Al Wajh and Red Sea International Airport (RSI) appeared nowhere on the site.** |
+| Primary commercial page | `/services/yanbu` — the coastal city actually served, and the one with proven rankings |
+| Does not compete with | `/services/yanbu` (booking intent) or `/services/neom` (different region) |
+
+**Sections:** where the coast begins and ends · which airport to fly into (comparison table: JED, MED, YNB, RSI) · Yanbu as the practical base · Umluj and its islands · the Red Sea Project and RSI · driving the coast road · when to go. Plus 5 FAQs and a quick-answer summary box.
+
+### 15.2 Accuracy discipline — why there are no kilometre figures
+
+🔴 **Public sources disagree sharply on distances along this coast.** Rome2rio alone gives both ~147 km and ~198 km for Yanbu–Umluj on different pages, and quotes an RSI–Umluj taxi time that is not physically consistent with its own stated distance.
+
+**So the guide states no kilometre figure for any leg.** Drive times are given as approximate ranges and explicitly flagged as varying between sources, and the page tells readers to plan by time rather than distance. This follows the same rule as `distanceRouteData.ts` — never present an estimate as a fact. A note at the top of the file records this so a later edit doesn't "helpfully" add a precise number.
+
+Also deliberately not claimed: resort transfer arrangements (these vary per property, and the guide says to check the resort's own instructions), airline schedules (named as "reported" and flagged as changeable), and any price.
+
+### 15.3 ⚠️ No service claim is made for Umluj, Al Wajh or the Red Sea Project
+
+Your answer on Red Sea coverage was *"not sure about your question; but we provide taxi service for different areas"* — which does not confirm you operate there. **The guide therefore makes no claim that Gulf Trip Service runs transfers to Umluj, Al Wajh or the Red Sea Project.**
+
+The closing CTA points at `/services/yanbu` and reads: *"We run private, pre-booked transfers in Yanbu, Madinah, Jeddah and Tabuk. Tell us where on the coast you're heading and we'll confirm what we can arrange before you book anything."* — an invitation to enquire, not an assertion of availability.
+
+**→ If you do serve Umluj or the Red Sea Project, tell me and I'll strengthen the page's commercial framing. Until then it stays informational.** See §15.5.
+
+### 15.4 Internal linking
+
+**Outbound** (7 contextual `relatedLinks`, each with a reason a reader would click): `/services/yanbu` · `/yanbu-airport-taxi-service` · `/services/madinah` · `/jeddah-airport-taxi-service` · `/services/tabuk` · `/services/neom` · `/guides/long-distance-private-transfers`. Plus a mid-article CTA to `/services/yanbu`.
+
+**Inbound** — 4 links, each from a page with a genuine topical reason:
+
+| From | Why |
+| --- | --- |
+| `/services/yanbu` | The practical base for the central coast; its dive content was the site's only prior Red Sea mention |
+| `/services/tabuk` | RSI and the northern coast sit in Tabuk Province |
+| `/airport-transfers` | Via the YNB entry's `relatedLinks` |
+| `/site-map` | Travel Guides section |
+
+🔍 **Incidental finding:** `airportRoutesData`'s `relatedLinks` render on `/airport-transfers`, **not** on the individual airport pages — `AirportPage.tsx` never reads the field. So YNB's existing `/guides/regional-airport-transfer-guide` link has never appeared on `/yanbu-airport-taxi-service`. Pre-existing, not introduced here, and not fixed — surfacing `relatedLinks` on all 9 airport pages is a template change that needs your approval.
+
+### 15.5 Needs your approval / input
+
+1. **Do you serve Umluj, Al Wajh or the Red Sea Project?** Gates whether this page gains commercial framing (§15.3).
+2. **Should `AirportPage` render `relatedLinks`?** Would add a contextual link block to all 9 airport pages (§15.4).
+3. **No Red Sea *service* pages were created** — deliberately. Building `/services/umluj` or similar without confirmed coverage would be the speculative page-creation the brief rules out.
+
+### 15.6 Validation
+
+| Check | Result |
+| --- | --- |
+| `npx tsc --noEmit` | ✅ 0 errors |
+| `npx eslint` (5 changed files) | ✅ 0 warnings |
+| `npx next build` | ✅ 212/212 static pages (was 211) |
+| Page prerendered | ✅ `○ /guides/red-sea-coast-travel` |
+| Title | ✅ `Travelling Saudi Arabia's Red Sea Coast \| Gulf Trip Service` (59 chars) |
+| Canonical | ✅ `https://gulftripservice.com/guides/red-sea-coast-travel` |
+| In sitemap | ✅ 168 → 169 entries |
+| 7 outbound links | ✅ all resolve in built HTML |
+| 4 inbound links | ✅ verified in built HTML |

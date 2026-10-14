@@ -135,6 +135,7 @@ const groups: Group[] = [
             { href: "/guides/hajj-transportation", label: "Hajj Transportation Guide" },
             { href: "/guides/business-travel", label: "Business Travel Guide" },
             { href: "/guides/family-travel", label: "Family Travel Guide" },
+            { href: "/guides/red-sea-coast-travel", label: "Travelling Saudi Arabia's Red Sea Coast" },
         ],
     },
     {

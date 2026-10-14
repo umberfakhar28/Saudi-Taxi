@@ -525,6 +525,9 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/services/yanbu", label: "Yanbu Taxi Service" },
       { href: "/services/madinah", label: "Madinah Taxi Service" },
       { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+      // YNB is the coast's own regional airport — the arrival point the Red
+      // Sea coast guide sends central-coast travellers to.
+      { href: "/guides/red-sea-coast-travel", label: "Travelling Saudi Arabia's Red Sea Coast" },
     ],
     relatedServices: [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },
