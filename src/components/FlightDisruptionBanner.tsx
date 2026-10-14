@@ -14,11 +14,12 @@ import styles from './FlightDisruptionBanner.module.css';
  *
  * Scope decisions, so a later edit doesn't undo them by accident:
  *
- * - Airports listed are exactly the four that /riyadh-alternative-airports
- *   actually covers (DMM, BAH, DOH, DXB). Jeddah is deliberately NOT named:
- *   there is no Riyadh->Jeddah commercial route page and the comparison page
- *   doesn't cover it, so naming it would promise a landing place that isn't
- *   there.
+ * - Airports listed are the four with a commercial Riyadh route page behind
+ *   them (DMM, BAH, DOH, DXB). The comparison page now also covers Jeddah,
+ *   but Jeddah stays unnamed here: there is still no Riyadh->Jeddah
+ *   commercial route page, so the comparison page sends that one to the
+ *   quote form and the /distance guide instead of a transfer page. Naming it
+ *   in a one-line banner would promise a landing place that isn't there.
  * - Airport names are plain text, not four inline links. The single CTA is a
  *   full-size tap target; four inline links inside a sentence are a poor one,
  *   and 73% of this site's traffic is mobile. The comparison page routes on

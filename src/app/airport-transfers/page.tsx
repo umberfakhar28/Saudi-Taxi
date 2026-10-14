@@ -213,6 +213,7 @@ export default function AirportTransfers() {
                 links={[
                     { href: "/umrah-transport-package", label: "Umrah Transport Package" },
                     { href: "/border-crossing", label: "GCC Border Crossing Routes" },
+                    { href: "/riyadh-alternative-airports", label: "Riyadh Alternative Airports" },
                     { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
                     { href: "/services/riyadh", label: "Riyadh Taxi Service" },
                     { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },

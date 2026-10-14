@@ -4,8 +4,8 @@ import { generatePageMetadata } from "@/lib/seo";
 import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import QuickBookForm from "@/components/QuickBookForm";
 import RelatedLinks from "@/components/RelatedLinks";
-import { CheckCircleIcon, MapPinIcon, ClockIcon, MessageIcon, ArrowRightIcon, PlaneIcon, GlobeIcon } from "@/components/Icons";
-import { WHATSAPP_URL, waLink } from "@/lib/contact";
+import { CheckCircleIcon, MapPinIcon, ClockIcon, MessageIcon, ArrowRightIcon, PlaneIcon, GlobeIcon, ChevronRightIcon, CarIcon } from "@/components/Icons";
+import { waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
   title: "Riyadh Alternative Airports | Private Airport Transfers",
@@ -13,57 +13,86 @@ export const metadata = generatePageMetadata({
   path: "/riyadh-alternative-airports",
 });
 
+/**
+ * Every distance and driving estimate below is the figure this site already
+ * publishes for the same corridor (src/lib/distanceRouteData.ts), so the
+ * comparison can never contradict the route page it links to. Where the
+ * airport sits outside the city centre, the range is widened rather than a
+ * new number invented. The vehicle notes come from the route pages too:
+ * the causeway needs a handover, the Qatar and UAE land crossings do not.
+ */
 const AIRPORT_ALTERNATIVES = [
   {
     name: "King Fahd International Airport",
     code: "DMM",
     location: "Dammam, Saudi Arabia",
-    distance: "~400 km from Riyadh",
-    duration: "Approx. 4 hours driving",
-    type: "Domestic Route",
+    distance: "~400 km by road from Riyadh",
+    duration: "Around 4 hours of driving",
+    type: "Domestic — no border",
     border: null,
-    useCase: "The most popular alternative airport for Riyadh. Excellent domestic and regional flight coverage without needing to cross an international border.",
+    note: "One vehicle from your Riyadh address to the terminal.",
+    useCase: "The closest full-service alternative, and the simplest: no border, no passport queue, and wide domestic and regional coverage. Usually the first option worth checking when a Riyadh departure falls through.",
     href: "/dammam-airport-to-riyadh-taxi-service",
+    hrefLabel: "Explore Route",
   },
   {
     name: "Bahrain International Airport",
     code: "BAH",
-    location: "Manama, Bahrain",
-    distance: "~480 km from Riyadh",
-    duration: "Approx. 5 hours driving",
-    type: "International Route",
-    border: "Via King Fahd Causeway",
-    useCase: "A strong alternative for international travel, offering extensive global connections. Requires cross-border travel via the King Fahd Causeway.",
+    location: "Muharraq, Bahrain",
+    distance: "~480 km by road, including the causeway",
+    duration: "4.5–5.5 hours, including border processing",
+    type: "International — border crossing",
+    border: "King Fahd Causeway",
+    note: "Taxis cannot cross the causeway themselves, so the journey continues with a licensed Bahrain-side driver after a handover we arrange in advance.",
+    useCase: "Wide international connections for a drive not much longer than Dammam. Worth considering when the onward flight you need leaves from Bahrain rather than Saudi Arabia.",
     href: "/riyadh-to-bahrain-taxi-service",
+    hrefLabel: "Explore Route",
   },
   {
     name: "Hamad International Airport",
     code: "DOH",
     location: "Doha, Qatar",
-    distance: "~600 km from Riyadh",
-    duration: "Approx. 6.5 hours driving",
-    type: "International Route",
-    border: "Via Salwa Border",
-    useCase: "A major global aviation hub. This route involves crossing the Saudi-Qatar land border, requiring passport and visa checks.",
+    distance: "~580–600 km by road from Riyadh",
+    duration: "6.5–7.5 hours, including border processing",
+    type: "International — border crossing",
+    border: "Salwa / Abu Samra crossing",
+    note: "One vehicle and driver cover the whole route, including the crossing.",
+    useCase: "A major long-haul hub reachable in a single day's drive. Suits travellers rebooked onto a Qatar Airways connection, or anyone who needs intercontinental options sooner than a Saudi departure allows.",
     href: "/riyadh-to-qatar-taxi-service",
+    hrefLabel: "Explore Route",
+  },
+  {
+    name: "King Abdulaziz International Airport",
+    code: "JED",
+    location: "Jeddah, Saudi Arabia",
+    distance: "~950–1,000 km by road from Riyadh",
+    duration: "10–11 hours of continuous driving",
+    type: "Domestic — no border",
+    note: "A full travel day: plan rest stops, and treat it as an overnight-style journey rather than a quick hop.",
+    border: null,
+    useCase: "The longest domestic option, and rarely the quickest way to a seat. It earns its place when your itinerary already continues to Makkah or Madinah, or when Jeddah has the departure you need and no closer airport does.",
+    href: "/distance/riyadh-to-jeddah",
+    hrefLabel: "Route Details",
   },
   {
     name: "Dubai International Airport",
     code: "DXB",
     location: "Dubai, UAE",
-    distance: "~1,000 km from Riyadh",
-    duration: "Approx. 10 hours driving",
-    type: "International Route",
-    border: "Via Al Batha Border",
-    useCase: "Ideal when alternative regional flights are unavailable and you need access to the world's busiest international transit hub.",
+    distance: "~1,100 km by road from Riyadh",
+    duration: "11–12.5 hours, including border processing",
+    type: "International — border crossing",
+    border: "Al Batha / Ghuwaifat crossing",
+    note: "One vehicle and driver cover the whole route, including the crossing.",
+    useCase: "The longest journey on this page and a full day on the road, so it suits groups and travellers with heavy luggage more than a solo traveller in a hurry. Consider it when the connection you need only exists from Dubai.",
     href: "/riyadh-to-dubai-taxi-service",
-  }
+    hrefLabel: "Explore Route",
+  },
 ];
 
 const FAQS = [
   {
     q: "Which alternative airports can travellers consider when departing from Riyadh?",
-    a: "The most accessible alternative airports by road are King Fahd International Airport (DMM) in Dammam and Bahrain International Airport (BAH). For wider international connections, Hamad International Airport (DOH) in Qatar and Dubai International Airport (DXB) are also reachable via private road transfers."
+    a: "By road, the closest is King Fahd International Airport (DMM) in Dammam, followed by Bahrain International Airport (BAH) across the causeway. Hamad International Airport (DOH) in Qatar and Dubai International Airport (DXB) are longer cross-border drives, and King Abdulaziz International Airport (JED) in Jeddah is the longest domestic option. Which one suits you depends far more on where your replacement flight actually leaves from than on distance alone."
   },
   {
     q: "How far is Dammam Airport from Riyadh by road?",
@@ -92,6 +121,14 @@ const FAQS = [
   {
     q: "What trip details are needed to request a transfer quotation?",
     a: "To provide an accurate quote and check availability, we need your exact pickup location in Riyadh, the destination airport, travel date, preferred departure time, total number of passengers, and luggage requirements."
+  },
+  {
+    q: "Can luggage and vehicle requirements be included in the request?",
+    a: "Yes. Tell us how many suitcases you are carrying and anything else that affects space, such as child seats or sports equipment, and the vehicle is matched to that rather than to passenger numbers alone. You can also state a preference — a sedan, an SUV, a van or a minibus — and we will confirm what is available for your date before anything is booked."
+  },
+  {
+    q: "How far is Jeddah airport from Riyadh, and is driving there sensible?",
+    a: "King Abdulaziz International Airport is roughly 950–1,000 km away, which is 10–11 hours of driving before stops — a full travel day. It is rarely the fastest route to a seat, so it usually makes sense only when your plans already continue to Makkah or Madinah, or when Jeddah has the departure you need and no closer airport does."
   }
 ];
 
@@ -109,26 +146,47 @@ export default function RiyadhAlternativeAirportsPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       <main>
-        {/* A. Breadcrumbs & B. Hero Section */}
-        <section className="page-hero">
-          <div className="container" style={{ position: "relative", zIndex: 1 }}>
-            <span className="section-eyebrow">Alternative Airports</span>
-            <h1>Riyadh Alternative Airports: Private Transfers by Road</h1>
-            <p>
-              When your flight plans change, explore alternative airports reachable from Riyadh by private car. 
-              Review driving routes, travel times, and border considerations, then request a transfer quote.
+        {/* A. Breadcrumbs & B. Hero Section — same image + navy scrim
+            treatment every other airport page uses (AirportPage.tsx), so
+            this page sits in the same family rather than inventing a hero. */}
+        <section style={{ position: "relative", padding: "9rem 0 5rem", overflow: "hidden", color: "var(--white)", textAlign: "center" }}>
+          <Image
+            src="/images/airport-terminal.jpg"
+            alt="Airport departures terminal — private road transfers from Riyadh to alternative airports"
+            fill
+            style={{ objectFit: "cover", zIndex: 0 }}
+            sizes="100vw"
+            priority
+          />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(8, 24, 39, 0.72)", zIndex: 1 }} />
+          <div className="container" style={{ position: "relative", zIndex: 2 }}>
+            <span className="badge" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid var(--line-dark)", color: "var(--on-dark)" }}>
+              ALTERNATIVE AIRPORTS
+            </span>
+            <h1 style={{ color: "var(--on-dark)", marginTop: "var(--space-4)" }}>
+              Riyadh Alternative Airports:
+              <br />
+              <span style={{ color: "var(--brass-bright)" }}>Private Transfers by Road</span>
+            </h1>
+            <p style={{ color: "var(--on-dark-muted)", maxWidth: 720, margin: "var(--space-4) auto 0", fontSize: "var(--text-lg)", lineHeight: 1.7 }}>
+              When your flight plans change, another airport within driving distance can get you moving again.
+              Compare the road routes from Riyadh, the driving estimates and what each border involves, then
+              send us your trip details for a quote.
             </p>
-            <div className="breadcrumb">
-              <Link href="/">Home</Link> /{" "}
-              <Link href="/airport-transfers">Airport Transfers</Link> /{" "}
-              <span>Riyadh Alternative Airports</span>
-            </div>
-            
-            <div style={{ marginTop: "var(--space-8)", display: "flex", gap: "var(--space-4)", flexWrap: "wrap" }}>
+
+            <div style={{ marginTop: "var(--space-8)", display: "flex", gap: "var(--space-4)", flexWrap: "wrap", justifyContent: "center" }}>
               <Link href="#quote" className="btn btn-primary btn-lg">Request a Transfer Quote</Link>
               <a href={waLink("Hi, I'm looking for a transfer to an alternative airport from Riyadh.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> Discuss Your Travel Plans
               </a>
+            </div>
+
+            <div className="breadcrumb" style={{ color: "var(--on-dark-muted)", marginTop: "var(--space-6)" }}>
+              <Link href="/" style={{ color: "var(--on-dark-muted)" }}>Home</Link>{" "}
+              <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
+              <Link href="/airport-transfers" style={{ color: "var(--on-dark-muted)" }}>Airport Transfers</Link>{" "}
+              <ChevronRightIcon size={12} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
+              <span>Riyadh Alternative Airports</span>
             </div>
           </div>
         </section>
@@ -138,7 +196,7 @@ export default function RiyadhAlternativeAirportsPage() {
           <div className="container">
             <QuickBookForm
               defaultFrom="Riyadh"
-              service="airport-transfers"
+              service="airport-transfer"
               heading="Request a Transfer to Your Alternative Airport"
               subheading="Submit your travel details to check route availability and receive a quotation."
             />
@@ -184,17 +242,27 @@ export default function RiyadhAlternativeAirportsPage() {
                   </div>
                   
                   <p style={{ color: "var(--text-body)", lineHeight: 1.6, flexGrow: 1 }}>{airport.useCase}</p>
-                  
+
+                  {airport.note && (
+                    <p style={{ display: "flex", gap: "var(--space-2)", alignItems: "flex-start", color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.6, marginTop: "var(--space-3)" }}>
+                      <CarIcon size={16} style={{ flexShrink: 0, marginTop: 3 }} />
+                      <span>{airport.note}</span>
+                    </p>
+                  )}
+
                   <div style={{ marginTop: "var(--space-4)", paddingTop: "var(--space-4)", borderTop: "1px solid var(--line)" }}>
                     <Link href={airport.href} className="btn btn-outline-gold btn-sm" style={{ width: "100%", justifyContent: "center" }}>
-                      Explore Route <ArrowRightIcon size={14} />
+                      {airport.hrefLabel} <ArrowRightIcon size={14} />
                     </Link>
                   </div>
                 </div>
               ))}
             </div>
-            <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "var(--text-sm)", marginTop: "var(--space-6)" }}>
-              Note: Driving durations are estimates. Actual travel times depend on traffic conditions, rest stops, and border queues.
+            <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "var(--text-sm)", marginTop: "var(--space-6)", maxWidth: 760, marginInline: "auto" }}>
+              Distances and driving times are estimates for planning only. Real journeys vary with traffic, roadworks,
+              rest stops, the time of day and — on the international routes — how busy the border is. Confirm your flight
+              with the airline before arranging ground transport, and tell us your check-in deadline so the departure
+              time can be planned backwards from it.
             </p>
           </div>
         </section>
@@ -262,10 +330,17 @@ export default function RiyadhAlternativeAirportsPage() {
                   <GlobeIcon size={20} style={{ color: "var(--accent)" }} /> Cross-Border International Transfers
                 </h3>
                 <p style={{ color: "var(--text-body)", lineHeight: 1.7 }}>
-                  Travelling to Bahrain, Qatar, or the UAE involves crossing an international land border. 
-                  While your driver navigates the vehicle through the crossing, passengers are strictly responsible 
-                  for their own immigration status, travel documents, visas, and ensuring they meet all entry requirements.
-                  Border processing times can vary significantly based on the day of the week and holidays.
+                  Travelling to Bahrain, Qatar or the UAE means crossing an international land border, and the
+                  routes do not all work the same way. On the Qatar and UAE land crossings, one vehicle and driver
+                  stay with you for the whole journey. The King Fahd Causeway to Bahrain is different: taxis cannot
+                  cross it themselves, so the journey continues with a licensed Bahrain-side driver after a handover
+                  arranged in advance.
+                </p>
+                <p style={{ color: "var(--text-body)", lineHeight: 1.7, marginBottom: 0 }}>
+                  Your driver handles the vehicle and its paperwork at the crossing. Passports, visas, permits and
+                  entry eligibility remain the passenger&apos;s own responsibility, and the rules vary by nationality
+                  and residency — confirm yours with the relevant embassy or an official government source before you
+                  travel. Processing times also swing with the day of the week and public holidays.
                 </p>
               </div>
             </div>
@@ -289,6 +364,11 @@ export default function RiyadhAlternativeAirportsPage() {
               <Link href="/qatar-to-riyadh-taxi-service" className="btn btn-outline-gold">Doha to Riyadh</Link>
               <Link href="/dubai-to-riyadh-taxi-service" className="btn btn-outline-gold">Dubai to Riyadh</Link>
             </div>
+            <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "var(--text-sm)", marginTop: "var(--space-6)" }}>
+              Landing somewhere else, Jeddah included?{" "}
+              <Link href="#quote" style={{ color: "var(--teal)", fontWeight: 600 }}>Send us the arrival details</Link>{" "}
+              — share your flight number and landing time and we will confirm what can be arranged before you book.
+            </p>
           </div>
         </section>
 
@@ -316,6 +396,8 @@ export default function RiyadhAlternativeAirportsPage() {
           { href: "/distance/bahrain-to-riyadh", label: "Bahrain to Riyadh Guide" },
           { href: "/distance/riyadh-to-dubai", label: "Riyadh to Dubai Guide" },
           { href: "/distance/doha-to-riyadh", label: "Doha to Riyadh Guide" },
+          { href: "/distance/riyadh-to-jeddah", label: "Riyadh to Jeddah Guide" },
+          { href: "/guides/king-khalid-airport", label: "King Khalid Airport (RUH) Guide" },
           { href: "/border-crossing", label: "Border Crossing Services" },
           { href: "/airport-transfers", label: "All Airport Transfers" }
         ]} />
