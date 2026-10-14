@@ -178,6 +178,13 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { slug: "/tabuk-airport-taxi-service", priority: 0.75 },
     { slug: "/yanbu-airport-taxi-service", priority: 0.75 },
     { slug: "/alula-airport-taxi-service", priority: 0.78 },
+    // Supporting page rather than an airport hub of its own: it compares DMM /
+    // BAH / DOH as alternatives to RUH and funnels into the existing route
+    // pages. Hence 0.75 rather than /riyadh-airport-taxi-service's 0.85.
+    // Belongs to no generated page family, so it has to be listed by hand —
+    // it was missed when the page shipped (b49839b) and was consequently
+    // absent from the sitemap entirely.
+    { slug: "/riyadh-alternative-airports", priority: 0.75 },
   ].map(({ slug, priority }) => ({
     url: `${BASE_URL}${slug}`,
     lastModified: lastMod(slug),

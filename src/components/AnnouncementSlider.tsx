@@ -15,7 +15,7 @@ const MESSAGES: { text: string; short: string; href: string }[] = [
     {
         text: 'Need a Private Transfer? Contact Us to Check Current Vehicle Availability.',
         short: 'Check current vehicle availability',
-        href: '/contact',
+        href: '/contact-us',
     },
     {
         text: 'Flexible Airport Transfers Across Saudi Arabia and the Gulf Region.',
@@ -25,7 +25,7 @@ const MESSAGES: { text: string; short: string; href: string }[] = [
     {
         text: 'Planning a Journey? Contact Our Team for Your Transfer Quote.',
         short: 'Planning a journey? Get your quote',
-        href: '/contact',
+        href: '/contact-us',
     },
 ];
 
