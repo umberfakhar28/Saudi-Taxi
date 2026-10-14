@@ -67,7 +67,12 @@ export const AIRPORT_ROUTES: AirportRoute[] = [
 export interface AirportTerminal {
   name: string;
   type: string;
-  flights: string;
+  /** Which carriers/routes use this terminal. Optional on purpose: airline-to-
+   * terminal allocations change (RUH reshuffled its in Feb 2026) and a wrong
+   * one sends a passenger to the wrong building. Omit it rather than state an
+   * allocation we haven't verified against the airport's own published list —
+   * AirportPage.tsx drops the line entirely when it's absent. */
+  flights?: string;
   meeting: string;
   facilities: string[];
 }
@@ -323,47 +328,54 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/private-taxi", label: "Private Taxi" },
     ],
     guidePageHref: "/guides/king-khalid-airport",
-    // Terminal facility details kept generic/high-confidence only (immigration,
-    // baggage claim — near-universal airport basics), not asserting airline-
-    // specific gate assignments we can't verify. Terminals 1, 3 and 4 are
-    // split into their own entries (rather than one "1-4" bucket) because
-    // travelers search for them by number specifically — but each one's
-    // `flights`/`facilities` text stays deliberately general (all three are
-    // part of the same older domestic complex) rather than claiming a
-    // specific airline-to-terminal assignment we haven't verified. The
-    // driver's exact meeting point is still confirmed by flight number, per
-    // practicalInfo below.
+    // All five passenger terminals, each carrying only what we can actually
+    // stand behind: we collect from every terminal, and the driver meets the
+    // passenger outside the terminal or in the airport parking area.
+    //
+    // No `flights` line on any of them — deliberately. The previous version
+    // assigned carriers per terminal ("Most international carriers" on T5,
+    // "Domestic Saudia flights" on T1/T3/T4). RUH reshuffled its terminal
+    // allocations in February 2026 and public sources still disagree about
+    // the result, so those claims could not be verified and could have sent
+    // a passenger to the wrong building. Terminal 2 was missing entirely
+    // despite `airportFaqs.ts` correctly stating the airport has five.
+    //
+    // Which terminal a given flight uses is confirmed from the flight number
+    // at booking (see practicalInfo below) rather than asserted here. Restore
+    // a `flights` line only from the airport's own published allocation.
     terminals: [
       {
-        name: "Terminal 5",
-        type: "Main International Terminal",
-        flights: "Most international carriers, plus Saudia's international flights.",
-        meeting: "Exit to the arrivals hall — your driver waits near the main exit with a name board.",
-        facilities: ["Immigration and customs", "Baggage claim", "Currency exchange", "Retail and dining"],
+        name: "Terminal 1",
+        type: "Passenger Terminal",
+        meeting: "Your driver meets you outside the terminal or in the airport parking area.",
+        facilities: ["Baggage claim", "Ground transport pickup area"],
       },
       {
-        name: "Terminal 1",
-        type: "Domestic & Legacy Terminal",
-        flights: "Domestic Saudia flights and some regional routes using one of the original terminal buildings.",
-        meeting: "Your driver waits at Terminal 1's own arrivals exit — confirmed with you once your flight is booked.",
-        facilities: ["Domestic baggage claim", "Ground transport pickup area"],
+        name: "Terminal 2",
+        type: "Passenger Terminal",
+        meeting: "Your driver meets you outside the terminal or in the airport parking area.",
+        facilities: ["Baggage claim", "Ground transport pickup area"],
       },
       {
         name: "Terminal 3",
-        type: "Domestic & Legacy Terminal",
-        flights: "Domestic Saudia flights and some regional routes using one of the original terminal buildings.",
-        meeting: "Your driver waits at Terminal 3's own arrivals exit — confirmed with you once your flight is booked.",
-        facilities: ["Domestic baggage claim", "Ground transport pickup area"],
+        type: "Passenger Terminal",
+        meeting: "Your driver meets you outside the terminal or in the airport parking area.",
+        facilities: ["Baggage claim", "Ground transport pickup area"],
       },
       {
         name: "Terminal 4",
-        type: "Domestic & Legacy Terminal",
-        flights: "Domestic Saudia flights and some regional routes using one of the original terminal buildings.",
-        meeting: "Your driver waits at Terminal 4's own arrivals exit — confirmed with you once your flight is booked.",
-        facilities: ["Domestic baggage claim", "Ground transport pickup area"],
+        type: "Passenger Terminal",
+        meeting: "Your driver meets you outside the terminal or in the airport parking area.",
+        facilities: ["Baggage claim", "Ground transport pickup area"],
+      },
+      {
+        name: "Terminal 5",
+        type: "Passenger Terminal",
+        meeting: "Your driver meets you outside the terminal or in the airport parking area.",
+        facilities: ["Baggage claim", "Ground transport pickup area"],
       },
     ],
-    lastReviewed: "August 26, 2026",
+    lastReviewed: "October 14, 2026",
     hotelZones: [
       { name: "Olaya hotel corridor", note: "Riyadh's densest concentration of international hotel brands, about 35–50 minutes from the airport." },
       { name: "KAFD hotels", note: "Newer high-rise hotels built for conference and corporate travelers visiting the financial district." },
@@ -378,7 +390,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       ],
     },
     practicalInfo: [
-      { title: "Confirm your terminal", note: "RUH has both the newer Terminal 5 and the older Terminals 1–4 — tell us your flight number so your driver waits at the correct one." },
+      { title: "Confirm your terminal", note: "RUH has five passenger terminals and the airline-to-terminal allocation can change — tell us your flight number so your driver meets you at the right one." },
       { title: "Riyadh Season traffic", note: "Evenings near Boulevard City and major venues get significantly busier roughly October–March — build in extra time on event nights." },
     ],
     reviews: [

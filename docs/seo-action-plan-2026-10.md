@@ -486,3 +486,402 @@ Timing, given the spike began 2026-10-08 and today is 2026-10-14:
 | **~2026-10-24** | Re-export 28 days, and separately Oct 8 → Oct 21 | Gives **14 clean post-spike days**. GSC finalises with a ~2–3 day lag, so Oct 21 data is settled by roughly Oct 24. |
 
 Until the second export exists, §7 item 7 (the bulk distance-title test) has no trustworthy baseline to measure against — which is why it sits below the Kuwait work in the ordering.
+
+---
+
+## 11. Phase 2 proposals — awaiting approval, nothing implemented
+
+### 11.1 Corrections to this document ⚠️
+
+Two recommendations in §P1-D were **wrong**. I checked them against the code before proposing changes and they do not hold. Retracted:
+
+| Claim in §P1-D | Reality ✅ | Verified in |
+| --- | --- | --- |
+| "Strengthen the handoff from the distance page to the commercial page" | **Already complete.** `ROUTE_DISTANCE_MAP` maps both Kuwait commercial pages → `/distance/riyadh-to-kuwait`, and that distance entry's `relatedServiceLinks` already links back to *both* commercial pages plus `/destinations/kuwait-city`. | `src/components/RoutePage.tsx:78–79`, `src/lib/distanceRouteData.ts` |
+| "`destinationCitySlug` is missing — set it" | **Cannot be set, and should not be.** `destinationCitySlug` resolves to `/services/{slug}`, and `/services/*` covers Saudi cities only — there is no `/services/kuwait`. The Kuwait end is already covered via `relatedServiceLinks` → `/destinations/kuwait-city`. | `src/components/DistancePage.tsx:325`, `ls src/app/services/` |
+
+**Internal linking for the Kuwait corridor is already correct and needs no work.** This removes one of the five "next actions" I listed.
+
+### 11.2 Kuwait ↔ Riyadh — the real gap, and it is blocked on you ⚠️
+
+✅ **Verified finding: of 35 route pages, exactly two carry no distance figure — and they are the two Kuwait ↔ Riyadh pages.**
+
+| Route page | `distance` field | `travelTime` field |
+| --- | --- | --- |
+| `kuwaitToRiyadh` | **"Long-distance route"** | "Most of a day (incl. border)" |
+| `riyadhToKuwait` | **"Long-distance route"** | "Most of a day (incl. border)" |
+| `dammamToKuwait` | "~530 km" | "5.5 – 6.5 hours (incl. border)" |
+| `qatarToRiyadh` | "~580 km" | "6.5 – 7.5 hours (incl. border)" |
+| `riyadhToDubai` | "~1,100 km" | "11 – 12.5 hours (incl. border)" |
+| *(all 33 others)* | `~N km` | an hours range |
+
+`RoutePage.tsx` renders this field in two places — the hero pill (line 342) and the spec block (line 446). So both pages currently display, verbatim:
+
+> Distance: **Long-distance route**
+> Travel time: **Most of a day (incl. border)**
+
+**This is why these pages cannot compete for the corridor's actual demand.** The logged queries are almost entirely distance/road phrasings — `riyadh to kuwait by road` (26 impressions), `riyadh to kuwait distance by road` (13), `saudi to kuwait distance by road` (7), `kuwait to riyadh distance by road` (4), `kuwait to riyadh by car` (1) — and the page contains **no distance answer at all**, while every sibling route page does.
+
+#### ⛔ Blocked: I will not infer this figure
+
+What the repo already contains:
+
+- `/distance/riyadh-to-kuwait`: *"about 535 km in a straight line — longer by road"*
+- `dammamToKuwait`: ~530 km by road
+- `riyadhToDammam`: ~400 km by road
+
+It would be easy to add those to ~930 km and publish it. **I am not doing that.** The coastal route via Al Khafji / Al Nuwaiseeb goes through the Eastern Province, while the inland Al Ruqi'i / Al Salmi crossing via Hafar Al Batin is a different and shorter road — so a sum of two other routes is not this route's distance. Publishing it would be inventing an operational fact.
+
+**Need from you — one of:**
+
+1. The approximate road distance for each crossing, e.g. *"~X km via Al Khafji, ~Y km via Al Ruqi'i"*; **or**
+2. A single approximate road figure if you normally quote one; **or**
+3. Permission to publish only the straight-line figure already live on the distance page, phrased as the distance page phrases it.
+
+Option 3 is safe and needs nothing new from you, but it is the weakest for the "distance by road" queries, because it does not answer them.
+
+Proposed shape once confirmed (matching house convention exactly — ranges, `~`, no false precision):
+
+```ts
+// kuwaitToRiyadh + riyadhToKuwait
+distance: "~X km by road",          // ← from you; currently "Long-distance route"
+travelTime: "Most of a day (incl. border)",   // ← UNCHANGED
+```
+
+#### Secondary observation 🔍
+
+`riyadh to kuwait city` sits at position **41.5**, while `riyadh to kuwait by road` sits at **8.81**. Both pages use `destination: "Kuwait"`, never "Kuwait City". The body copy does say "Kuwait City" in places. Possibly worth addressing the "Kuwait City" phrasing explicitly — but it is 2 impressions, so it is an observation, not a recommendation.
+
+### 11.3 `/distance/riyadh-to-kuwait` title & meta — proposal
+
+✅ Verified: `generatePageMetadata` auto-appends `" | Gulf Trip Service"` (20 characters) to every title — confirmed in `src/lib/seo.ts:42-43` and in the built HTML. That is a hard constraint on the title budget.
+
+**Current** (built output: `<title>Riyadh to Kuwait Distance &amp; Travel Time | Gulf Trip Service</title>` — 59 chars):
+
+- Title: `Riyadh to Kuwait Distance & Travel Time`
+- Description: `Riyadh to Kuwait distance, journey time, border crossings and private transfer options. Plan your door-to-door trip or request a quote.`
+
+**Proposed — two variants, your pick:**
+
+| | Title | Total with brand |
+| --- | --- | --- |
+| **A** (recommended) | `Riyadh to Kuwait by Road: Distance & Drive Time` | 66 chars ⚠️ over |
+| **B** (safer length) | `Riyadh to Kuwait by Road — Distance & Time` | 62 chars |
+
+Proposed description (both variants):
+
+> `How far Kuwait is from Riyadh by road, which of the two border crossings the route uses, and what sets the journey time. Private door-to-door transfers available.`
+
+**Reasoning.** The query is `... by road`, which Google bolds in the snippet — matching that phrase is the single cheapest CTR lever. The border-crossing promise goes in the description rather than the title because the title has no room. Both are honest: the page genuinely covers both crossings and the timing factors. ⚠️ Neither variant comfortably fits the ~60-char budget, which raises a **separate, site-wide question I am not acting on**: the mandatory 20-char brand suffix squeezes every long-tail informational title on the site. Worth a decision of its own, outside this plan.
+
+**Risk:** this page sits at position 8.47 with 286 impressions. A title change can move rankings either way. Recommend shipping this one page alone and holding the other 19 until the §10.4 re-export gives a clean baseline.
+
+### 11.4 RUH terminals — ⚠️ possible factual error on the live site, ahead of any SEO work
+
+This started as an SEO task and turned up something more urgent.
+
+✅ **What the site currently claims** (`src/lib/airportRoutesData.ts:336–365`, stamped `lastReviewed: "August 26, 2026"`):
+
+| Terminal | Site says `type` | Site says `flights` |
+| --- | --- | --- |
+| Terminal 5 | **Main International Terminal** | "Most international carriers, plus Saudia's international flights." |
+| Terminal 1 | Domestic & Legacy Terminal | "Domestic Saudia flights and some regional routes…" |
+| Terminal 3 | Domestic & Legacy Terminal | *(identical text to T1)* |
+| Terminal 4 | Domestic & Legacy Terminal | *(identical text to T1)* |
+| **Terminal 2** | **— absent entirely —** | — |
+
+⚠️ **Three problems:**
+
+1. **Terminal 2 is missing from the data**, yet `practicalInfo` tells readers "RUH has both the newer Terminal 5 and the older Terminals 1–4", and GSC logs real demand for it: `ruh terminal 2 pickup` (8 impressions, pos 27.38), `ruh terminal 2 car service` (2, pos 27.0).
+2. **T1, T3 and T4 carry byte-identical `flights`/`meeting`/`facilities` text.** The in-code comment is candid about why (not wanting to assert unverified airline allocations), but three near-duplicate blocks is also weak for the per-terminal queries we are trying to win.
+3. 🔍 **The terminal allocations look out of date.** Public sources describe a **February 2026 terminal reshuffle at RUH**, and they *conflict with each other* on the result. Against the most recent ones, the site's claims appear wrong for T1 and T3, and are disputed for T5:
+
+   | Terminal | Site claims | Current public sources (conflicting) |
+   | --- | --- | --- |
+   | T5 | Main international | Wikipedia: all foreign carriers, international ✅ · Blacklane / Aviontourism: **domestic** (Saudia, flyadeal, flynas) ❌ |
+   | T1 | Domestic Saudia | Listed as international carriers (KLM, Lufthansa, Turkish…) **or** flyadeal/flynas — either way, not "domestic Saudia" ❌ |
+   | T2 | *(absent)* | Saudia + Riyadh Air, international |
+   | T3 | Domestic Saudia | Domestic flynas / flyadeal / Riyadh Air — **not Saudia** ❌ |
+   | T4 | Domestic Saudia | Saudia domestic, exclusively ✅ |
+
+   Also noted: **T5 is not physically connected to T1–4**, with a shuttle bus between them. The site says nothing about this, and it materially affects a pickup.
+
+**Why this outranks the SEO opportunity:** this is an airport transfer company telling travellers which terminal their flight uses. If it is wrong, someone misses a pickup. ⛔ **I am not editing it from web sources, because those sources contradict each other.** It needs the airport's official allocation.
+
+#### Operational facts I need from you — I will not publish per-terminal claims without these
+
+**Business facts (only you know these):**
+
+1. **Do you actually serve pickup at all five terminals, Terminal 2 included?** The data currently implies T2 does not exist.
+2. **Where exactly does the driver wait at each terminal?** Current text is the same generic "arrivals exit" for T1/T3/T4. The queries (`ruh terminal 4 pickup`, `car to ruh terminal 3`) want a specific answer.
+3. **Meet-and-greet inside the terminal, or kerbside only?** Does this differ per terminal?
+4. **Is there a designated pickup bay or car park level for pre-booked cars**, and does it differ by terminal?
+5. **Flight tracking and wait policy** — how long does the driver hold for a delayed flight? (`airportFaqs.ts:45` already claims flight tracking; worth confirming it is still accurate.)
+6. **T5's physical separation** — if a passenger lands at T5, does anything about the pickup change?
+7. **Who set `lastReviewed: "August 26, 2026"`, and against what source?** If it was not checked against the airport's own published allocation after the February 2026 reshuffle, that stamp is currently asserting a freshness the content may not have.
+
+**Airport-side fact to confirm from the official source** (`kingkhalidinternationalairport.com` or GACA):
+
+8. The **current airline/terminal allocation**, post-February-2026 — enough to correct T1, T3 and T5 and to add T2.
+
+#### What I would then propose (not before)
+
+Add a `Terminal 2` entry; correct T1/T3/T5 per the official allocation; replace the three identical blocks with the real per-terminal meeting-point detail from answers 2–4; note the T5 shuttle; refresh `lastReviewed`. **Target page: `/riyadh-airport-taxi-service`** (pos 28.78, 229 impressions — it needs the help and already owns the terminal data).
+
+🔍 Open question: `/guides/king-khalid-airport` ranks at **9.69**, far better than `/riyadh-airport-taxi-service`'s 28.78, on only 13 impressions. It may be the better host for depth, with the service page linking to it. I would want the §10.4 re-export before choosing.
+
+**Sources consulted** (conflicting — listed so the conflict is auditable, not as settled fact): [Time Out Riyadh — terminal changes](https://www.timeoutriyadh.com/news/king-khalid-international-airport) · [Wikipedia — King Khalid International Airport](https://en.wikipedia.org/wiki/King_Khalid_International_Airport) · [Blacklane — 2026 RUH guide](https://www.blacklane.com/en/blog/travel/airports/a-guide-to-riyadh-international-airport-ruh/) · [Aviontourism — Riyadh Airport](https://www.aviontourism.com/en/airport/riyadh-RUH) · [King Khalid International Airport (official)](https://kingkhalidinternationalairport.com/)
+
+---
+
+## 12. Phase 3 — verification results & destination report (2026-10-14)
+
+**Nothing in this section is implemented.** Two approved items (§12.1, §12.2) are held because verification surfaced problems needing your decision.
+
+### 12.1 Kuwait ↔ Riyadh: 639 km ⚠️ held — the figure fits one crossing, not both
+
+✅ **The figure is credible.** 639 km road against the 535 km straight-line figure already on the site is a ratio of 1.19 — normal for a reasonably direct road. No contradiction.
+
+⚠️ **But it corresponds to the inland crossing only.** Using the site's own published distances for the coastal alternative:
+
+| Route | Legs (all from this repo) | Total |
+| --- | --- | --- |
+| **Inland** via Al Ruqi'i / Al Salmi (Hafar Al Batin) | direct north-east road | **~639 km** ✅ matches your figure |
+| **Coastal** via Al Khafji / Al Nuwaiseeb | Riyadh→Dammam ~400 km + Dammam→Khafji ~180 km + Khafji→Kuwait City ~180 km | **~760 km** |
+
+Both pages tell the reader *either* crossing may be used — "Your driver confirms the route before departure, based on your pickup point, your Riyadh destination and conditions on the day." So a bare "~639 km" would understate the journey by roughly 120 km whenever the coastal route is taken.
+
+**Three options — your call:**
+
+| | `distance` value | Trade-off |
+| --- | --- | --- |
+| **A** (recommended) | `"~639 km by road (inland crossing)"` | Accurate and specific; names the qualifier. Precedent exists — `khafjiToKuwait` already uses the compound `"~15 km to border / ~180 km to Kuwait City"` |
+| **B** | `"from ~639 km by road"` | Shortest; "from" is honest about variation but vague |
+| **C** | `"~639–760 km by road, depending on crossing"` | Most complete, matches the house "always a range" rule — but the 760 is my arithmetic from three separate repo figures, **not a sourced number**, so I would not publish it without you confirming it |
+
+`travelTime` stays **unchanged** at `"Most of a day (incl. border)"` — per your instruction not to promise a fixed time. ✅ Confirmed the existing value already avoids this.
+
+#### 🔴 Separate bug found — and it is exactly the confusion you warned about
+
+`/distance/riyadh-to-kuwait` has this:
+
+```ts
+roadDistance: "about 535 km in a straight line — longer by road",
+```
+
+The field is named **`roadDistance`**, and its interface comment reads *"Road (driving) distance — always a range, never a single invented figure."* It currently contains a **straight-line** figure. There is a separate, unused `straightLineDistance?: string` field intended for exactly that number.
+
+So the live page presents a crow-flies distance in the road-distance slot. **Your 639 km figure fixes this**, and it should be corrected in the same change:
+
+```ts
+roadDistance: "~639 km by road via the inland crossing",   // ← was the straight-line figure
+straightLineDistance: "about 535 km in a straight line",   // ← moved to its proper field
+```
+
+🔍 Worth checking whether other `/distance/*` entries have the same field mix-up. Not yet audited.
+
+### 12.2 SEO title: Option B ⚠️ held pending your choice above
+
+✅ **Metadata generation confirmed** (`src/lib/seo.ts:42-43`, verified against built HTML):
+
+```ts
+const brandSuffix = ` | ${SITE_CONFIG.siteName}`;        // " | Gulf Trip Service" — 20 chars
+const fullTitle = title.endsWith(brandSuffix) ? title : `${title}${brandSuffix}`;
+```
+
+The suffix is unconditional and cannot be skipped per-page without changing `generatePageMetadata` itself. So Option B renders as:
+
+> `Riyadh to Kuwait by Road — Distance & Time | Gulf Trip Service` — **62 characters**
+
+Current title is 59 characters, so this adds 3. Both sit just past the ~60-char guideline; Google truncates on pixel width, not character count, so neither is safely inside. Approved and ready to apply — **held only because it should ship together with the §12.1 distance decision**, as one change to one page rather than two separate ranking disturbances on a page sitting at position 8.47.
+
+### 12.3 RUH terminals ✅ your answers resolve this — and they mean *removing* content
+
+Your instruction — *"Do not add airline-to-terminal allocations... Keep the pickup information simple and accurate"* — is the right call. ⚠️ **Note what that implies: the site already makes those claims, and they are the ones that look wrong.**
+
+| Terminal | Live site claims today | Action under your instruction |
+| --- | --- | --- |
+| T5 | "Main International Terminal" / "Most international carriers, plus Saudia's international flights" | **Remove the allocation claim** |
+| T1 | "Domestic & Legacy" / "Domestic Saudia flights…" | **Remove** |
+| T3 | *(identical text to T1)* | **Remove** |
+| T4 | *(identical text to T1)* | **Remove** |
+| T2 | — absent — | **Add, with simple pickup info only** |
+
+So this is a **content reduction**, not an expansion: strip four unverifiable airline allocations, add the missing fifth terminal, and give all five the same simple, accurate pickup line based on what you confirmed — *pickup from all five terminals; the driver meets passengers outside the terminal or in the airport parking area.*
+
+Per your instruction, I will **not** add designated pickup bays, per-terminal meeting instructions, or airline allocations.
+
+**Proposed shape** (all five identical except the name — honest, since your operation is the same at each):
+
+```ts
+{
+  name: "Terminal 2",
+  type: "Passenger Terminal",                                    // ← no airline claim
+  flights: "Domestic and international flights — tell us your flight
+            number and we'll confirm your terminal.",            // ← no allocation
+  meeting: "Your driver meets you outside the terminal or in the
+            airport parking area.",                              // ← your wording
+  facilities: ["Baggage claim", "Ground transport pickup area"],  // ← universal basics only
+}
+```
+
+⚠️ **Two things still need you:**
+
+1. **`lastReviewed: "August 26, 2026"`** — this stamp asserts the terminal information was reviewed after the February 2026 reshuffle. If it was not, it should be corrected or removed rather than refreshed. Who set it, against what source?
+2. **The `practicalInfo` line** currently reads *"RUH has both the newer Terminal 5 and the older Terminals 1–4."* 🔍 Public sources say T5 is **not physically connected** to T1–4, with a shuttle between them. If true, that is operationally relevant to a pickup and the current wording implies the opposite. Confirm before I touch it.
+
+**SEO consequence, stated honestly:** removing the fake specificity will *not* by itself win the 88 impressions of `ruh terminal N pickup` queries. Five near-identical simple blocks are weak ranking material. The honest position is that this change makes the site **accurate** — which matters more — and that the terminal-query opportunity stays largely unrealised until there is something genuinely specific and true to say. I would rather tell you that than dress up a correction as a traffic win.
+
+### 12.4 AlUla ⚠️ my earlier framing was wrong — I now recommend *against* consolidating
+
+✅ **First correction: there are four URLs, not five.** `/destinations/alula` **does not exist.** AlUla appears in the destinations *index* as a card whose `href` points at `/services/alula`; `DESTINATION_DETAILS` (which powers `/destinations/[slug]`) has 8 keys and AlUla is not among them. My §5.1 count was wrong.
+
+| URL | Intent | Content | Inbound links | Clicks | Impr | Position |
+| --- | --- | --- | --- | --- | --- | --- |
+| `/services/alula` | City transfer hub (commercial) | 6,557 chars | 11 | 3 | 54 | 11.74 |
+| `/alula-airport-taxi-service` | ULH airport pickup | 2,020 chars | 6 | 2 | 39 | 22.72 |
+| `/reliable-alula-tour-taxi-service-in-saudi-arabia` | Guided day tour from Madinah | 7,039 chars | 11 | 0 | 0 | — |
+| `/blog/alula-complete-guide` | Editorial travel guide | 3,136 chars | 4 | 0 | 0 | — |
+
+✅ **Second correction: these are four genuinely distinct intents** — point-to-point city transfer, airport pickup, a guided multi-stop day tour, and editorial. That is a legitimate structure, not cannibalization. My §5.1 called it "clear cannibalization"; having read all four, **that was overstated and I withdraw it.**
+
+**Recommendation: keep all four separate. Do not merge or redirect any of them.**
+
+The evidence against consolidation: the two pages with any visibility (`/services/alula`, `/alula-airport-taxi-service`) earn 5 clicks between them. Merging would risk those for no demonstrated gain, and the zero-impression pages are not *competing* with anything — they are simply not surfacing.
+
+#### What is actually wrong, in priority order
+
+**1. The tour page's URL is keyword-stuffed.** `/reliable-alula-tour-taxi-service-in-saudi-arabia` — "reliable" and "in-saudi-arabia" are padding. The page itself is the **largest AlUla asset on the site** (7,039 chars) with 11 inbound links, and it gets zero impressions.
+
+- Proposed: `/alula-tour-taxi-service` (matches the site's `{place}-{service}` convention)
+- ✅ **Risk is near zero** — the page has no rankings to lose. A 301 would cost nothing.
+- Requires: `next.config.ts` redirect, `tourPageData.ts` slug, `tourData.ts` href, `sitemapData.ts`, `navigation.ts`, `api/indexnow/route.ts`, and the 11 inbound links.
+- 🔍 Worth asking first: is this URL used in any advertising, print, or external listing? If so, a rename needs more care than the redirect alone.
+
+**2. `/alula-airport-taxi-service` is the weakest page and the worst-ranking** — 2,020 chars (a third of the city hub) at position 22.72. It is also the only AlUla page with real head-term exposure. ULH is a small airport, so volume is inherently capped. **Recommend: strengthen in place**, not merge.
+
+**3. The head AlUla terms are not competitive** — `al ula transfer` (3 impressions, pos **35**), `alula taxi` (2, pos **48**). Four pages and still position 35–48 for the obvious terms. 🔍 This is weak domain authority for the AlUla topic, not a page-structure problem — which is further reason consolidation would not help.
+
+**Target keywords** (from logged queries plus the pages' real content — no invented terms): `alula taxi`, `al ula transfer`, `alula airport transfer` / `ULH transfer`, `hegra tour transport`, `alula day trip from madinah`, `elephant rock tour transport`.
+
+**Internal linking (targeted, per your instruction):** `/services/tabuk` is the site's best-performing tourist-region page (6 clicks, pos 10.21) and has no AlUla link. Tabuk region borders the AlUla area. One contextual link from Tabuk → AlUla is cheap and defensible.
+
+### 12.5 Jordan — improve the existing page; do not build new ones
+
+✅ **The page is technically healthy.** `/saudi-arabia-to-jordan-land-transfer` is in the main nav (`src/config/navigation.ts:107`), the `/border-crossing` hub (two links), `/site-map`, `sitemapData.ts` (priority 0.8), and the IndexNow submission list. It covers Tabuk/Madinah/Jeddah/Riyadh → Amman/Aqaba/Petra via Halat Ammar.
+
+**It is not an orphan, and it is not a technical problem. It got zero impressions because there is no demand reaching it.**
+
+🔍 **What the research found** (and did not find):
+
+- Halat Ammar is the Saudi-side post opposite Jordan's Al Mudawara, in Tabuk region, open since 1979. A logistics database gives **~1.5 hours by car from Tabuk airport** — consistent with the page.
+- Recent coverage of the crossing is **Hajj and pilgrim traffic**: Jordanian and Palestinian pilgrims crossing *into* Saudi Arabia, with a 24-hour Pilgrims City facility.
+- ⚠️ **I found no evidence of tourist or private-transfer demand on this corridor**, no confirmation that private cars and tourist transfers are routinely processed at Halat Ammar, and no Petra-related transfer demand. Transfer-operator pricing exists only for *other* Jordanian crossings (King Hussein Bridge, Jordan River), which do not apply.
+
+**Strategic read:** the demand that demonstrably exists on this corridor is pilgrim traffic in the **opposite direction** (Jordan → Saudi), and it is group/coach business, not private chauffeur work. That is a different service and a different customer.
+
+**Recommendation: improve the existing page, create nothing new.** Specifically:
+
+1. **Link `/services/tabuk` ↔ the Jordan page.** Tabuk is the Saudi city nearest Halat Ammar (~1.5h) and is the site's strongest tourist-region page. This is the single highest-value, lowest-cost Jordan action.
+2. **Do not build Amman, Aqaba or Petra destination pages.** No demand signal, and §1.2 shows the site loses on competitive destination head terms.
+
+⛔ **Operational question that gates everything here:** does the business actually run vehicles across into Jordan, and can a Saudi-registered vehicle and driver legally complete that crossing with passengers? That is a licensing and insurance matter I cannot determine, and the page currently implies the service exists. **Please confirm before any further Jordan work** — if the answer is "we arrange it with a partner" or "we go to the border only", the existing page's framing needs correcting on accuracy grounds, independent of SEO.
+
+### 12.6 Red Sea — lowest priority; do not build yet
+
+✅ **Verified: the site has zero Red Sea Project coverage.** No mention anywhere of Umluj, Red Sea International Airport (RSI), the Red Sea Project, Amaala, Shura Island or Sheybarah. The `AirportCode` union is `"JED" | "MED" | "DMM" | "RUH" | "AHB" | "TIF" | "TUU" | "YNB" | "ULH"` — **RSI is absent.** "Red Sea" appears only as scenery around Jeddah and as Yanbu dive tourism.
+
+🔍 **What the research found:**
+
+- **RSI is the gateway airport**, with connections reported from Riyadh, Jeddah, Dubai, Doha and Milan. Resorts are around a 25-minute drive from it.
+- Shura Island connects to the mainland by a road bridge; **outer islands (Ummahat, Sheybarah) are reached by boat or seaplane** — not addressable by a road transfer at all.
+- Road access from elsewhere is poor and indirect: aggregators suggest Madinah → Umluj by bus, then taxi.
+
+⚠️ **Two reasons I rank this last, despite it looking like a gap:**
+
+1. **The resorts likely control their own guest transfers.** Four Seasons, St Regis and the other Red Sea Project properties operate at a price point where airport transfers are typically included or managed in-house. A third-party chauffeur service may have structurally limited access to this demand. 🔍 Unverified, but it is the central commercial question and it should be answered before any content is written.
+2. **There is no evidence the business serves the area.** Umluj is north of Yanbu, several hundred km from the nearest covered city.
+
+**Recommendation: extend Yanbu rather than build an RSI page.** `/services/yanbu` and `/yanbu-airport-taxi-service` already exist, already rank (`/services/yanbu`: 58 impressions, pos 13.83), and already reference Red Sea dive tourism north and south of Yanbu. If the business does serve the coast northward, extending that proven page is lower-risk and lower-effort than a speculative new RSI page.
+
+⛔ **Need from you before anything:** do you serve Umluj / the Red Sea Project area, and have you had enquiries for it?
+
+### 12.7 Prioritized next actions — all awaiting your approval
+
+| # | Action | Effort | Risk | Gated on |
+| --- | --- | --- | --- | --- |
+| 1 | Kuwait distance + Option B title, shipped as one change (§12.1, §12.2) | Small | Medium — page is at pos 8.47 | Your A/B/C choice on the distance wording |
+| 2 | Fix the `roadDistance` / `straightLineDistance` field mix-up (§12.1) | Trivial | Low | Ships with #1 |
+| 3 | RUH: strip airline allocations, add Terminal 2, simplify all five (§12.3) | Small | **Low — and it corrects a likely live inaccuracy** | `lastReviewed` provenance; T5 connectivity |
+| 4 | Audit other `/distance/*` entries for the same field mix-up (§12.1) | Small | None (read-only) | Nothing — can do on request |
+| 5 | Rename the AlUla tour URL + 301 (§12.4) | Medium | Near zero (no rankings to lose) | Confirm the URL isn't in external use |
+| 6 | Link `/services/tabuk` ↔ Jordan, and Tabuk → AlUla (§12.4, §12.5) | Trivial | Low | Jordan operational confirmation |
+| 7 | Strengthen `/alula-airport-taxi-service` in place (§12.4) | Medium | Low | Content review |
+| 8 | Red Sea / Umluj (§12.6) | Large | — | Do you serve the area? |
+| — | AlUla consolidation / merges / redirects | — | ⛔ | **Recommended against** (§12.4) |
+| — | Amman / Aqaba / Petra pages | — | ⛔ | **Recommended against** (§12.5) |
+
+### 12.8 Risks
+
+- **§12.1/§12.2 touch a page at position 8.47 with 286 impressions.** Highest-exposure change proposed so far. Ship alone, measure against the §10.4 re-export.
+- **The RUH correction removes text.** If any of the current allocations happen to be right, we lose a little specificity — but publishing possibly-wrong terminal information on a transfer site is the larger risk.
+- **The AlUla URL rename touches 7 files plus 11 inbound links.** Mechanical, but a missed reference becomes a 404. Needs the full-build verification used in §10.
+- **Jordan and Red Sea both hinge on operational facts I cannot verify.** If the site implies services that are not offered, that is an accuracy problem that outranks SEO.
+- **Everything in §12 is measured against a blended, unstable baseline** (§0). The re-export around 2026-10-24 remains the gate on judging any of it.
+
+**Research sources** (§12.5, §12.6): [Logistics Capacity Assessment — Halat Ammar](https://dlca.logcluster.org/node/5020) · [Ajel — pilgrims at Halat Ammar](https://english.ajel.sa/news/saudi-arabia/jordanian-palestinian-pilgrims-praise-services-provided-at-halat-ammar-crossing) · [Four Seasons Red Sea — getting here](https://www.fourseasons.com/redseashuraisland/getting-here/) · [Rome2rio — Mecca to The Red Sea Project](https://www.rome2rio.com/s/Mecca/The-Red-Sea-Project) · [Arabian Aerospace — Red Sea airport](https://www.arabianaerospace.aero/sea-change-for-saudi-project.html)
+
+---
+
+## 13. Implemented — 2026-10-14, phase 3
+
+Supersedes the "held" status on §12.1–§12.3. Decisions taken on professional judgment where no business fact was needed.
+
+### 13.1 Kuwait ↔ Riyadh distance
+
+| File | Change |
+| --- | --- |
+| `src/lib/distanceRouteData.ts` | `roadDistance` → `"approximately 639 km by road via the inland crossing"` (was the straight-line figure). New `straightLineDistance: "about 535 km"` — the template labels and explains the two separately. FAQ *"How far is Riyadh from Kuwait?"* now gives the road figure first, names the inland crossing, states the coastal route is longer, and keeps the straight-line figure as context. |
+| `src/lib/routeData.ts` | Both `kuwaitToRiyadh` and `riyadhToKuwait`: `distance` → `"~639 km by road (inland crossing)"` (was `"Long-distance route"`). `travelTime` **unchanged** — border clearance and traffic make a fixed time unpromisable. |
+| `src/app/distance/riyadh-to-kuwait/page.tsx` | Option B title + matching description. |
+
+**Judgment calls made rather than asked:** qualified the figure to the inland crossing instead of presenting it as *the* Riyadh–Kuwait distance (the pages tell readers either crossing may be used); matched the house `"approximately N km by road"` phrasing used by the other 19 entries; did **not** publish the ~760 km coastal figure, since that was my own arithmetic from three separate repo values and is not a sourced number.
+
+✅ **Audited all 20 `/distance/*` entries for the same field mix-up — Kuwait was the only one.** The other 19 correctly hold road distances. No further fixes needed.
+
+### 13.2 RUH terminals — unverified claims removed, Terminal 2 added
+
+| File | Change |
+| --- | --- |
+| `src/lib/airportRoutesData.ts` | Terminals array rebuilt: **five** entries (T1–T5) where there were four (T1, T3, T4, T5 — **T2 was missing** while `airportFaqs.ts` correctly said the airport has five). All airline-to-terminal claims removed. Every terminal now carries the same simple, confirmed line: *"Your driver meets you outside the terminal or in the airport parking area."* `type` → `"Passenger Terminal"` throughout. `lastReviewed` → October 14, 2026. |
+| `src/lib/airportRoutesData.ts` | `AirportTerminal.flights` made **optional**, with a comment explaining why (allocations change; a wrong one sends a passenger to the wrong building). |
+| `src/components/AirportPage.tsx` | `Flights:` line renders conditionally, so omitting the field drops the line rather than printing an empty label. |
+| `src/lib/airportRoutesData.ts` | `practicalInfo` "Confirm your terminal" reworded: five terminals, allocation can change, confirmed from the flight number. Drops the previous "newer T5 / older T1–4" framing. |
+
+**Judgment call:** made `flights` optional rather than filling it with hedged filler. Omitting a field is honest; a vague sentence under a "Flights:" heading still reads as an answer. Jeddah's three terminal entries keep their `flights` text — that data is long-standing and was not in question.
+
+Per instruction, **not** added: designated pickup bays, per-terminal meeting instructions, airline allocations.
+
+### 13.3 Validation
+
+| Check | Result |
+| --- | --- |
+| `npx tsc --noEmit` | ✅ 0 errors |
+| `npx eslint` (5 changed files) | ✅ 0 warnings |
+| `npx next build` | ✅ compiled, 211/211 static pages |
+| Distance page `<title>` | ✅ `Riyadh to Kuwait by Road — Distance & Time \| Gulf Trip Service` (62 chars) |
+| Road figure renders (hero + card) | ✅ ×2 |
+| Straight-line renders separately | ✅ `Straight-line distance: about 535 km. The gap…` |
+| Stale straight-line-in-road-slot | ✅ 0 occurrences |
+| RUH terminals rendered | ✅ T1, T2, T3, T4, T5 — 5 meeting points, **0** `Flights:` lines |
+| RUH allocation strings removed | ✅ 0 occurrences of all four |
+| RUH terminal count in prose | ✅ auto-updated to "across 5 separate terminals" / "all 5 terminals" |
+| Jeddah regression | ✅ 3 terminals, 3 `Flights:` lines retained |
+| Other airport pages | ✅ unaffected — only JED and RUH define terminal arrays |
+
+### 13.4 Still open — business facts only
+
+1. **Jordan:** does the business run vehicles across into Jordan (own vehicle/driver, partner, or border-only)? The page implies a through service. Gates §12.5.
+2. **Red Sea:** do you serve Umluj / the Red Sea Project area, and have there been enquiries? Gates §12.6.
+
+Everything else in §12.4–§12.7 needs no further input from you — it needs a decision to proceed, and the recommendations stand as written.

@@ -767,7 +767,12 @@ export const kuwaitToRiyadh: RouteData = {
   h1: "Kuwait to Riyadh — Private Taxi & Cross-Border Transfer",
   intro: "Private door-to-door transfer from Kuwait City to Riyadh by road, across the Kuwait–Saudi land border. One vehicle for the full journey — a comfortable overland alternative to flying, especially for groups and travelers with luggage.",
   breadcrumbLabel: "Kuwait → Riyadh",
-  distance: "Long-distance route",
+  // Qualified to the inland Al Ruqi'i / Al Salmi routing — the coastal Al
+  // Khafji / Al Nuwaiseeb alternative is materially longer, and this page
+  // tells the reader either crossing may be used. travelTime stays a
+  // qualitative range: border clearance and traffic make a fixed time
+  // unpromisable. See /distance/riyadh-to-kuwait for the full breakdown.
+  distance: "~639 km by road (inland crossing)",
   travelTime: "Most of a day (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Kuwait to Riyadh",
@@ -2094,7 +2099,8 @@ export const riyadhToKuwait: RouteData = {
   h1: "Riyadh to Kuwait — Private Taxi & Cross-Border Transfer",
   intro: "Private door-to-door transfer from Riyadh to Kuwait City by road, across the Saudi–Kuwait land border. One vehicle for the full journey — a comfortable overland alternative to flying for groups and travelers with luggage.",
   breadcrumbLabel: "Riyadh → Kuwait",
-  distance: "Long-distance route",
+  // See the note on kuwaitToRiyadh above — same corridor, same qualification.
+  distance: "~639 km by road (inland crossing)",
   travelTime: "Most of a day (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Riyadh to Kuwait",

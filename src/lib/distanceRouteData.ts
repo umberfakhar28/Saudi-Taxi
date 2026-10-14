@@ -1010,7 +1010,13 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     intro: "How far Kuwait is from Riyadh, how long the road journey takes, which border crossings it can use, and what business travelers should know before booking.",
     breadcrumbLabel: "Riyadh to Kuwait",
 
-    roadDistance: "about 535 km in a straight line — longer by road",
+    // Road distance is the inland Al Ruqi'i / Al Salmi routing. The coastal
+    // Al Khafji / Al Nuwaiseeb alternative is materially longer, so the figure
+    // is qualified rather than presented as "the" Riyadh–Kuwait distance.
+    // (Previously this field held the straight-line figure, which belongs in
+    // straightLineDistance below — the template labels the two differently.)
+    roadDistance: "approximately 639 km by road via the inland crossing",
+    straightLineDistance: "about 535 km",
     driveTime: "most of a day, including border processing and rest stops",
     routeType: "Cross-border route between Saudi Arabia and Kuwait",
 
@@ -1066,7 +1072,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     faqs: [
-      { q: "How far is Riyadh from Kuwait?", a: "Kuwait City is about 535 km from Riyadh in a straight line. The road journey is longer, and the exact distance depends on which border crossing the route uses." },
+      { q: "How far is Riyadh from Kuwait?", a: "By road it is roughly 639 km via the inland Al Ruqi'i / Al Salmi crossing. The coastal route through Al Khafji / Al Nuwaiseeb is longer, so the exact distance depends on which crossing the route uses. In a straight line the two cities are about 535 km apart." },
       { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Plan for most of a day, including border processing and rest stops. The exact time depends on the route, traffic and border queues." },
       { q: "Is it faster to fly instead of driving?", a: "For business travelers on a tight schedule, yes — a direct flight between Riyadh and Kuwait City is usually faster than the full-day drive." },
       { q: "Do I need to change vehicles at the border?", a: "Ask when you book. Whether one vehicle can complete the whole journey depends on its cross-border authorization, and we confirm the arrangement in advance." },

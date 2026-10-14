@@ -371,7 +371,9 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
                 <div key={t.name} className="card">
                   <span className="badge badge-gold" style={{ marginBottom: "1rem", display: "inline-flex" }}>{t.type}</span>
                   <h3>{t.name}</h3>
-                  <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}><strong>Flights:</strong> {t.flights}</p>
+                  {t.flights && (
+                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}><strong>Flights:</strong> {t.flights}</p>
+                  )}
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}><strong>Meeting point:</strong> {t.meeting}</p>
                   <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", marginBottom: "0.5rem" }}><strong>Facilities:</strong></p>
                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
