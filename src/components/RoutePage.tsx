@@ -106,6 +106,24 @@ export interface RouteData {
   distance: string;
   travelTime: string;
   heroImage?: string;
+  /** Descriptive alt text for `heroImage`. Falls back to the generic
+   * "{origin} to {destination} taxi service" when omitted, which is what
+   * every route used before — fine for a stock chauffeur photo, not for an
+   * image with its own specific subject. */
+  heroImageAlt?: string;
+  /** CSS aspect-ratio for the hero frame (e.g. "3 / 2"), replacing the
+   * default fixed 360px band.
+   *
+   * The default band is ~3.3:1 at container width, so a 3:2 source is
+   * cropped to roughly half its height — fine for a stock photo where any
+   * slice works, wrong for a composed image whose subject spans the full
+   * frame. No crop of a 3:2 composition into a 3.3:1 band can keep both a
+   * top-left caption and a centre-bottom subject; this lets such a route
+   * show the whole image instead, scaled proportionally at every width.
+   *
+   * Opt-in per route: the 35 routes using stock heroes keep the original
+   * fixed band exactly as before. */
+  heroImageAspect?: string;
   overviewTitle: string;
   overviewParagraphs: string[];
   borderProcessTitle?: string;
@@ -316,16 +334,24 @@ export default function RoutePage({ data }: { data: RouteData }) {
               <div style={{
                 position: "relative",
                 width: "100%",
-                height: "360px",
+                // With an explicit aspect the frame scales with the viewport
+                // and the image is shown whole; without one it keeps the
+                // original fixed band, so the other routes are untouched.
+                ...(data.heroImageAspect
+                  ? { aspectRatio: data.heroImageAspect }
+                  : { height: "360px" }),
                 borderRadius: "var(--radius-xl)",
                 overflow: "hidden",
                 boxShadow: "var(--shadow-xl)",
               }}>
                 <Image
                   src={data.heroImage}
-                  alt={`${data.origin} to ${data.destination} taxi service`}
+                  alt={data.heroImageAlt ?? `${data.origin} to ${data.destination} taxi service`}
                   fill
-                  style={{ objectFit: "cover" }}
+                  // `contain` only where an aspect is set: the frame already
+                  // matches the image, so there is nothing to crop, and it
+                  // guarantees nothing is cut at any width.
+                  style={{ objectFit: data.heroImageAspect ? "contain" : "cover" }}
                   sizes="(max-width: 768px) 100vw, 1200px"
                   priority={false}
                 />

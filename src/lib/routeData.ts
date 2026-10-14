@@ -1910,7 +1910,13 @@ export const riyadhToQatar: RouteData = {
   breadcrumbLabel: "Riyadh → Qatar",
   distance: "~580 km",
   travelTime: "6.5 – 7.5 hours (incl. border)",
-  heroImage: "/images/chauffeur.jpg",
+  // Route-specific hero: the destination skyline rather than the generic
+  // chauffeur stock photo the other routes share. 3:2, shown whole via
+  // heroImageAspect — see the field's note in RoutePage.tsx.
+  heroImage: "/routes/riyadh-to-qatar-taxi-doha-skyline.webp",
+  heroImageAlt:
+    "Black GMC Yukon Denali taxi on the Doha waterfront at sunset, with the crescent-shaped Katara Towers and the West Bay skyline behind — private Riyadh to Qatar cross-border transfer.",
+  heroImageAspect: "3 / 2",
   overviewTitle: "Non-Stop Land Transfer from Riyadh to Doha",
   overviewParagraphs: [
     "For business travelers, diplomatic missions, and families who prefer a private overland journey to flying, the Riyadh–Doha route runs south-east across the central desert plateau and Eastern Province to the Salwa border, then on into Qatar. It's especially popular around GCC summits and major events in Doha.",
