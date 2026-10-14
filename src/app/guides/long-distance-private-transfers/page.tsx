@@ -37,7 +37,7 @@ const data: GuideData = {
     "A long-distance private transfer collects you at your door and takes you to your destination address in another city or country — one booking, one driver, no connections.",
     "It usually makes most sense for families and groups, travellers with a lot of luggage, trips with stops along the way, and destinations without a convenient flight.",
     "Plan journeys of five hours or more as a full travel day, with rest stops every two to three hours.",
-    "Cross-border journeys need passports, visas or GCC IDs ready before departure; some crossings involve a coordinated handover between vehicles.",
+    "Cross-border journeys need passports, visas or GCC IDs ready before departure; the driver handles the vehicle side of the crossing.",
   ],
   sections: [
     {
@@ -109,7 +109,7 @@ const data: GuideData = {
     },
     {
       heading: "Crossing a Border on the Way",
-      content: "Many long journeys in the Gulf cross an international border — into Bahrain over the King Fahd Causeway, or into Qatar, Kuwait, the UAE or Jordan by land. Border processing adds time, and each crossing works a little differently. At some crossings, including the King Fahd Causeway, the journey continues in a second vehicle after a handover arranged in advance; we confirm how your crossing works when you book.",
+      content: "Many long journeys in the Gulf cross an international border — into Bahrain over the King Fahd Causeway, or into Qatar, Kuwait, the UAE or Jordan by land. Border processing adds time, and each crossing has its own rhythm. Your driver stays with you through it: the vehicle, its documents and the queueing are handled for you, and the journey continues to your destination address on the other side.",
       list: [
         "Passports valid for at least six months are the usual requirement — confirm yours before travel",
         "GCC nationals generally cross with a national ID; other nationalities need the correct visa, eVisa or Iqama",

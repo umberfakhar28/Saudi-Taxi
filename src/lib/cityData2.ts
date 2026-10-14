@@ -107,8 +107,8 @@ export const jubail: CityData = {
     { q: "Is Jubail quieter than Dammam or Khobar?", a: "Generally, yes — its Corniche and beach areas see far more residents than tourists, and traffic follows industrial shift patterns rather than typical weekend leisure surges." },
     { q: "Do you require advance notice for Industrial City gate access?", a: "Same-day bookings are usually fine, but for first-time contractor arrivals we recommend confirming your exact gate and badge requirements a day ahead so the driver isn't held up at security." },
     { q: "Is Jubail connected directly to Dammam's airport?", a: "There's no direct rail or shuttle link — our private transfer is the standard way contractors and visitors connect between King Fahd International Airport and Jubail, about an hour's drive." },
-    { q: "Can I book a private transfer from Bahrain to Jubail?", a: "Yes — this is a regular route for us. A Bahrain-side driver takes you to the King Fahd Causeway, where our Saudi-side vehicle continues the journey on to Jubail, roughly 1–1.5 hours past Dammam. See our dedicated Bahrain to Jubail transfer page for the full journey details." },
-    { q: "Is Bahrain to Jubail a common trip for contractors?", a: "Yes — a meaningful share of our Bahrain-side pickups are contractors and technical staff continuing on to Jubail Industrial City rather than stopping in Dammam or Khobar." },
+    { q: "Can I book a private transfer from Bahrain to Jubail?", a: "Yes — this is a regular route for us. One vehicle and a licensed driver take you from your Bahrain address across the King Fahd Causeway and on to Jubail, roughly 1–1.5 hours past Dammam. See our dedicated Bahrain to Jubail transfer page for the full journey details." },
+    { q: "Is Bahrain to Jubail a common trip for contractors?", a: "Yes — a meaningful share of our Bahrain pickups are contractors and technical staff continuing on to Jubail Industrial City rather than stopping in Dammam or Khobar." },
   ],
   reviews: [
     { name: "David H.", origin: "Contractor, Netherlands", text: "Used Gulf Trip for 3 months of Jubail–Airport transfers. Faultless every time." },
@@ -132,7 +132,7 @@ export const jubail: CityData = {
   airportNote: "Jubail has no airport of its own — nearly every visitor connects via King Fahd International Airport in Dammam, about an hour's drive south.",
   crossBorderTravel: {
     fromCountry: "Bahrain",
-    intro: "A steady share of our Bahrain-side pickups continue on to Jubail rather than stopping in Dammam or Khobar — mainly contractors and technical staff heading to the Industrial City or a Royal Commission assignment. The trip works the same way as any King Fahd Causeway crossing: a Bahrain-side driver takes you to the border, and our Jubail-based vehicle continues the journey from there.",
+    intro: "A steady share of our Bahrain pickups continue on to Jubail rather than stopping in Dammam or Khobar — mainly contractors and technical staff heading to the Industrial City or a Royal Commission assignment. The trip runs door to door: one vehicle and a licensed driver from your Bahrain address, across the King Fahd Causeway, through to your gate or site in Jubail.",
     linkHref: "/bahrain-to-jubail-taxi-service",
     linkLabel: "Bahrain to Jubail Transfer Service",
   },

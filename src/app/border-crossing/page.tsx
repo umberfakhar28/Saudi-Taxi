@@ -18,7 +18,7 @@ export const metadata = generatePageMetadata({
 
 const faqs = [
     { q: "Do you offer help with visa or entry requirements?", a: "We can share general guidance, but we are a transportation provider, not an immigration authority. Visa and entry requirements vary by nationality and can change — always confirm current requirements with the relevant embassy or an official government source before you travel." },
-    { q: "Do the same driver and vehicle take me all the way across the border?", a: "On the land routes to Qatar, Kuwait and the UAE, yes — one vehicle and driver take you from your pickup address, through the border, to your destination. The King Fahd Causeway to Bahrain works differently: the journey continues with a licensed driver on the other side, after a handover we arrange in advance." },
+    { q: "Do the same driver and vehicle take me all the way across the border?", a: "Yes — every crossing we cover is driven door to door. One vehicle and a licensed driver take you from your pickup address, through the border, to your destination, whether you are heading to Bahrain, Qatar, Kuwait, the UAE or Jordan." },
     { q: "How far in advance should I book a border crossing transfer?", a: "We recommend at least 48 hours ahead for most crossings, and longer for the UAE and Jordan routes given the distance involved." },
     { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Al Khafji/Al Nuwaiseeb to Kuwait, and the Halat Ammar, Ad-Durra and Al-Haditha crossings to Jordan — see the routes below for journey-specific pages." },
 ];
@@ -368,7 +368,7 @@ export default function BorderCrossing() {
                         <div className="card">
                             <h3 style={{ color: 'var(--accent)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-3)' }}>Private Chauffeur</h3>
                             <p style={{ color: 'var(--text-body)', lineHeight: 1.75 }}>
-                                A licensed driver who already knows each crossing&apos;s checkpoint layout and peak-hour patterns handles the drive, so you&apos;re not learning a foreign country&apos;s road rules mid-journey. Where a route requires a vehicle handover — the King Fahd Causeway to Bahrain, for example — we coordinate the Saudi-side and other-side drivers in advance so the switch is smooth rather than something you have to arrange yourself at the checkpoint.
+                                A licensed driver who already knows each crossing&apos;s checkpoint layout and peak-hour patterns handles the drive, so you&apos;re not learning a foreign country&apos;s road rules mid-journey. The same driver and vehicle stay with you through the crossing and on to your destination address, which keeps the paperwork and the queueing on our side rather than yours.
                             </p>
                         </div>
                         <div className="card">
@@ -386,7 +386,7 @@ export default function BorderCrossing() {
                     <div className="grid-2" style={{ gap: 'var(--space-8)' }}>
                         <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                             {[
-                                "One booking covers the full journey, including the vehicle handover on causeway routes, instead of arranging transport separately on each side of the border.",
+                                "One booking covers the full journey, door to door, instead of arranging transport separately on each side of the border.",
                                 "A driver who already knows the specific checkpoint — not a generic rental-car crossing for the first time.",
                                 "Door-to-door pickup and drop-off, from a Saudi hotel or airport straight through to your destination address.",
                             ].map((item, i) => (

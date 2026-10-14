@@ -19,7 +19,7 @@ export const metadata = generatePageMetadata({
  * comparison can never contradict the route page it links to. Where the
  * airport sits outside the city centre, the range is widened rather than a
  * new number invented. The vehicle notes come from the route pages too:
- * the causeway needs a handover, the Qatar and UAE land crossings do not.
+ * every crossing is driven door to door in one vehicle.
  */
 const AIRPORT_ALTERNATIVES = [
   {
@@ -43,7 +43,7 @@ const AIRPORT_ALTERNATIVES = [
     duration: "4.5–5.5 hours, including border processing",
     type: "International — border crossing",
     border: "King Fahd Causeway",
-    note: "Taxis cannot cross the causeway themselves, so the journey continues with a licensed Bahrain-side driver after a handover we arrange in advance.",
+    note: "One vehicle and a licensed driver, from your Riyadh address through the causeway crossing to the terminal.",
     useCase: "Wide international connections for a drive not much longer than Dammam. Worth considering when the onward flight you need leaves from Bahrain rather than Saudi Arabia.",
     href: "/riyadh-to-bahrain-taxi-service",
     hrefLabel: "Explore Route",
@@ -330,11 +330,10 @@ export default function RiyadhAlternativeAirportsPage() {
                   <GlobeIcon size={20} style={{ color: "var(--accent)" }} /> Cross-Border International Transfers
                 </h3>
                 <p style={{ color: "var(--text-body)", lineHeight: 1.7 }}>
-                  Travelling to Bahrain, Qatar or the UAE means crossing an international land border, and the
-                  routes do not all work the same way. On the Qatar and UAE land crossings, one vehicle and driver
-                  stay with you for the whole journey. The King Fahd Causeway to Bahrain is different: taxis cannot
-                  cross it themselves, so the journey continues with a licensed Bahrain-side driver after a handover
-                  arranged in advance.
+                  Travelling to Bahrain, Qatar or the UAE means crossing an international land border. On each of
+                  these routes the journey is door to door in one vehicle: your licensed driver takes you from your
+                  Riyadh address, through the crossing, to the terminal you are flying from. What changes between
+                  them is how long processing takes and which documents you need, not the car you are sitting in.
                 </p>
                 <p style={{ color: "var(--text-body)", lineHeight: 1.7, marginBottom: 0 }}>
                   Your driver handles the vehicle and its paperwork at the crossing. Passports, visas, permits and

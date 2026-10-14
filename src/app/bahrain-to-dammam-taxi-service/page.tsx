@@ -9,7 +9,7 @@ export const metadata = generatePageMetadata({
   // concrete journey facts (65 km, 1–1.5 hrs, causeway) that make the
   // snippet more useful than a generic reliability claim.
   title: "Bahrain to Dammam Taxi & Private Transfer | 24/7 Service",
-  description: "Bahrain to Dammam taxi and private transfer across the King Fahd Causeway — about 65 km, 1–1.5 hours door to door. Coordinated border handover, licensed drivers, 24/7. Book on WhatsApp.",
+  description: "Bahrain to Dammam taxi and private transfer across the King Fahd Causeway — about 65 km, 1–1.5 hours door to door. One vehicle, licensed drivers, 24/7. Book on WhatsApp.",
   path: "/bahrain-to-dammam-taxi-service",
   keywords: ["Bahrain to Dammam taxi", "taxi Bahrain to Dammam", "Bahrain to Saudi Arabia taxi", "King Fahd Causeway transfer", "Manama to Dammam taxi"],
 });

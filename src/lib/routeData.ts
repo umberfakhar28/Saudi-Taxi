@@ -22,7 +22,7 @@ export const dammamAirportToBahrain: RouteData = {
   overviewParagraphs: [
     "Landing at King Fahd International Airport and heading straight to Bahrain is one of the most common cross-border trips in the Eastern Province. Our drivers meet you at DMM arrivals and take the direct route onto the King Fahd Causeway — the 25 km bridge connecting Saudi Arabia to Bahrain — avoiding the need to first transit through Dammam or Khobar city traffic.",
     "The causeway itself has its own passport control and customs point roughly midway across. Our vehicles are causeway-permitted and our drivers know the lanes, peak-hour patterns, and documentation checks so your crossing is as fast as possible.",
-    "Because private taxis do not cross into Bahraini territory, we take you to the Saudi exit point / Bahraini entry plaza on the causeway, where — if requested in advance — we coordinate a licensed Bahrain-side driver to continue your journey into Manama or onward to your hotel, seamlessly and without you needing to arrange anything yourself.",
+    "The journey runs door to door: your driver takes you from DMM arrivals across the causeway and on to your address in Manama, Seef or wherever you are staying in Bahrain, in the same vehicle, with the crossing handled for you.",
   ],
   borderProcessTitle: "King Fahd Causeway Crossing Process",
   borderProcessParagraphs: [
@@ -38,14 +38,14 @@ export const dammamAirportToBahrain: RouteData = {
     "Confirmed pickup flight number and drop-off address",
   ],
   pickupPoints: ["DMM Airport arrivals hall (Terminal 1)", "Dammam city hotels", "Al Khobar Corniche hotels", "Dhahran business district", "Half Moon Bay resorts"],
-  dropoffInfo: "Standard drop-off is at the King Fahd Causeway Bahrain-side plaza, with optional coordinated onward transfer into Manama, Seef District, or Bahrain International Airport arranged in advance via our partner network.",
+  dropoffInfo: "Drop-off is at your address in Bahrain — a Manama or Seef hotel, a residence, or Bahrain International Airport for an onward flight. Share the exact address when you book.",
   vehicleOptions: [
     { name: "Sedan", capacity: "1–3 passengers", note: "Ideal for solo or couple airport-to-causeway transfers." },
     { name: "SUV", capacity: "1–5 passengers", note: "Extra luggage space for longer Bahrain stays." },
     { name: "Van", capacity: "6–10 passengers", note: "Best for families or groups crossing together." },
   ],
   faqs: [
-    { q: "Can your taxi drive all the way into Manama?", a: "Saudi-plated private taxis cannot legally cross into Bahraini territory. We drop you at the Bahrain-side plaza of the King Fahd Causeway, and can pre-arrange a licensed Bahrain driver to continue your journey seamlessly." },
+    { q: "Can your taxi drive all the way into Manama?", a: "Yes — we drive you door to door, from DMM arrivals through the causeway crossing to your address in Manama or anywhere else in Bahrain, with licensed drivers who make this crossing regularly." },
     { q: "Do I need a visa before arriving at the causeway?", a: "Most nationalities can get a Bahrain eVisa online in advance or a visa-on-arrival at the causeway checkpoint. GCC nationals cross with just their national ID. We recommend confirming your visa route 48 hours before travel." },
     { q: "How long does the causeway crossing itself take?", a: "The 25 km bridge takes about 20–30 minutes to drive, but total crossing time including passport and customs checks is usually 45–75 minutes depending on traffic and time of day." },
     { q: "Can you pick me up for a late-night DMM flight arrival?", a: "Yes, we operate 24/7. Late-night causeway crossings are quieter and often faster than daytime, though visa counters may have reduced staffing after midnight." },
@@ -62,7 +62,7 @@ export const dammamAirportToBahrain: RouteData = {
   lastReviewed: "August 2026",
   reviews: [
     { name: "Faisal M.", origin: "Business Traveler, Dammam", text: "Driver was waiting right at arrivals and handled the causeway paperwork like clockwork." },
-    { name: "Layla H.", origin: "Weekend Visitor, Khobar", text: "Coordinated the Bahrain-side handover perfectly — barely noticed the switch between cars." },
+    { name: "Layla H.", origin: "Weekend Visitor, Khobar", text: "Straight from the airport to our hotel in Manama — the causeway crossing was handled for us and we stayed in the same car." },
   ],
 };
 
@@ -273,22 +273,22 @@ export const bahrainToDammam: RouteData = {
   borderCrossingName: "King Fahd Causeway",
   eyebrow: "Border Crossing Transfer",
   h1: "Bahrain to Dammam — Private Car & Chauffeur Transfer",
-  intro: "Coordinated transfer from Bahrain across the King Fahd Causeway into Dammam, Saudi Arabia — with a Bahrain-side driver taking you to the border and a Saudi partner vehicle continuing seamlessly into the Eastern Province.",
+  intro: "Private door-to-door transfer from Bahrain across the King Fahd Causeway into Dammam, Saudi Arabia — one vehicle and a licensed driver from your Bahrain address through the crossing to the Eastern Province.",
   breadcrumbLabel: "Bahrain → Dammam",
   distance: "~65 km",
   travelTime: "1 – 1.5 hours (incl. causeway)",
   heroImage: "/images/chauffeur.jpg",
-  overviewTitle: "Coordinated Crossing from Bahrain into Dammam",
+  overviewTitle: "Door-to-Door Crossing from Bahrain into Dammam",
   overviewParagraphs: [
     "Traveling from Manama, Seef, or anywhere in Bahrain into Saudi Arabia's Eastern Province is a frequent trip for shoppers, families, weekend visitors, and business travelers. The King Fahd Causeway is the only land link between the two countries, and getting the logistics right on both sides makes the difference between a smooth trip and a frustrating one.",
-    "We coordinate the full journey: a licensed Bahrain-side driver collects you from your hotel or residence and takes you to the causeway checkpoint. Once you clear Saudi passport control and customs on the far side, our Dammam-based driver is waiting to continue your journey directly into the city.",
-    "This handover system exists because private taxis are not permitted to cross international borders — but with advance booking, the transition at the causeway is coordinated so you barely notice the switch between vehicles.",
+    "We cover the full journey: a licensed driver collects you from your hotel or residence in Bahrain, takes you across the causeway, and continues directly into Dammam, Khobar or Dhahran once you have cleared Saudi passport control and customs.",
+    "The crossing itself is the part most travellers worry about. Our drivers make it regularly, know the lanes and the paperwork checks, and stay with you through it — so a booking is one journey rather than a set of legs you have to join up yourself.",
   ],
   borderProcessTitle: "Crossing from Bahrain to Saudi Arabia",
   borderProcessParagraphs: [
-    "Your Bahrain-side pickup driver takes you to the causeway entry point, roughly 20–25 minutes from central Manama depending on traffic.",
+    "Your driver collects you in Bahrain and reaches the causeway entry point in roughly 20–25 minutes from central Manama, depending on traffic.",
     "At the Bahrain exit post, standard passport checks apply. On the Saudi side, GCC nationals cross with a national ID; other nationalities need a valid Saudi visa or Iqama (residency permit) if returning as a resident.",
-    "After clearing Saudi immigration and customs, you'll be met by our waiting Dammam-side vehicle for the final leg into the city — typically a further 25–35 minutes to central Dammam, Khobar, or Dhahran.",
+    "Once you have cleared Saudi immigration and customs, the drive continues to your final address — typically a further 25–35 minutes to central Dammam, Khobar or Dhahran.",
   ],
   documents: [
     "Valid passport (6+ months validity)",
@@ -304,11 +304,11 @@ export const bahrainToDammam: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups making the trip together." },
   ],
   faqs: [
-    { q: "Will I need to change vehicles at the causeway?", a: "Yes — Bahrain-plated and Saudi-plated taxis cannot cross the border themselves, so a handover happens at the causeway checkpoint. We coordinate the timing so both drivers meet you with minimal wait." },
+    { q: "Do I stay in the same vehicle across the causeway?", a: "Yes — the booking is door to door. Your driver takes you through the crossing and on to your address in the Eastern Province." },
     { q: "Do GCC nationals need a visa to enter Saudi Arabia this way?", a: "No, GCC nationals cross with just their national ID. Other nationalities need a valid Saudi visa or valid Iqama if returning as a resident." },
     { q: "How much time should I allow from Bahrain to catch a flight at Dammam Airport?", a: "Allow for the causeway crossing, then roughly 45–55 minutes from the causeway to King Fahd International Airport, plus the check-in time your airline advises. Leave extra margin on Thursday and Friday evenings, when the causeway is busiest." },
     { q: "Can you drop me directly at Dammam Airport for a flight?", a: "Yes, we can route your final drop-off to King Fahd International Airport instead of a city address if you have an onward flight." },
-    { q: "How far in advance should I book a Bahrain to Dammam transfer?", a: "We recommend booking at least 24 hours ahead so we can properly coordinate both the Bahrain-side and Saudi-side vehicles for a smooth handover." },
+    { q: "How far in advance should I book a Bahrain to Dammam transfer?", a: "At least 24 hours ahead where you can, so the pickup is scheduled around the quieter crossing times and the right vehicle is reserved for your group." },
     { q: "Is the causeway busy on weekends?", a: "Yes, Thursday and Friday evenings see the heaviest weekend leisure traffic in both directions. Weekday mornings are typically the quickest time to cross." },
     { q: "What is the road distance from Bahrain to Dammam?", a: "Around 65 km including the King Fahd Causeway itself — short in distance, though total journey time runs 1–1.5 hours once passport and customs processing at the mid-causeway checkpoint are included. See our full distance and travel-time guide for a detailed breakdown." },
     { q: "How long does the Bahrain to Dammam journey actually take?", a: "Plan for 1–1.5 hours door to door. Roughly 20–25 minutes from central Manama to the causeway entry point, then the crossing itself (the variable part, depending on checkpoint traffic), then a further 25–35 minutes into Dammam, Khobar or Dhahran. Weekday mornings run at the quicker end of that range." },
@@ -334,7 +334,7 @@ export const bahrainToDammam: RouteData = {
   ctaText: "Book Your Crossing to Dammam",
   lastReviewed: "August 2026",
   reviews: [
-    { name: "Ahmed S.", origin: "Shopper, Manama", text: "The vehicle handover at the causeway was seamless — both drivers were already coordinated before we arrived." },
+    { name: "Ahmed S.", origin: "Shopper, Manama", text: "Picked up at our building in Manama and dropped at the mall in Khobar — the causeway paperwork was handled and we barely stopped." },
     { name: "Grace L.", origin: "Expat, Bahrain", text: "Booked for a family visit to Khobar — punctual on both sides of the border." },
   ],
 };
@@ -369,12 +369,12 @@ export const bahrainToJubail: RouteData = {
   overviewParagraphs: [
     "Jubail sits roughly an hour further up the coast from Dammam and Khobar, which means a Bahrain to Jubail trip is really two legs joined into one booking: the King Fahd Causeway crossing itself, then a further stretch north into Jubail Industrial City or the Royal Commission residential district.",
     "A meaningful share of this route's travelers are contractors, technical staff, and business visitors continuing on to a SABIC or petrochemical-sector assignment rather than stopping in Dammam — Jubail's own service area is built around that same traffic, and this route exists specifically to connect the two without a separate booking or a layover in Khobar.",
-    "As with every causeway crossing, a private taxi can't cross the border itself — a Bahrain-side driver takes you to the checkpoint, and our Jubail-based vehicle picks up the journey from the Saudi side through to your final gate or address.",
+    "The booking covers the whole run door to door: one vehicle and a licensed driver from your Bahrain address, across the causeway, and north to your final gate or address in Jubail.",
   ],
   borderProcessTitle: "Crossing from Bahrain, Then On to Jubail",
   borderProcessParagraphs: [
-    "Your Bahrain-side driver collects you from your hotel, residence, or Bahrain International Airport and takes you to the causeway checkpoint — roughly 20–25 minutes from central Manama.",
-    "GCC nationals cross with a national ID; other nationalities need a valid Saudi visa or Iqama if returning as a resident. Once you clear Saudi passport control and customs, our Jubail-based driver takes over for the onward leg.",
+    "Your driver collects you from your hotel, residence or Bahrain International Airport and reaches the causeway checkpoint in roughly 20–25 minutes from central Manama.",
+    "GCC nationals cross with a national ID; other nationalities need a valid Saudi visa or Iqama if returning as a resident. Once you have cleared Saudi passport control and customs, the drive continues north without a change of vehicle.",
     "The final stretch from the causeway through Dammam/Khobar and up to Jubail typically adds another 50–70 minutes, depending on which part of the Industrial City or residential district you're headed to.",
   ],
   documents: [
@@ -391,13 +391,13 @@ export const bahrainToJubail: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For project teams or family groups making the trip together." },
   ],
   faqs: [
-    { q: "Will I need to change vehicles at the causeway?", a: "Yes — the same handover applies as any King Fahd Causeway crossing. Bahrain-plated and Saudi-plated taxis can't cross the border themselves, so a Jubail-based driver picks up the journey once you clear Saudi customs." },
-    { q: "Is Bahrain to Jubail a common route, or mostly one-off trips?", a: "It's a regular route for us — a steady share of Bahrain-side pickups are contractors and technical staff continuing on to Jubail Industrial City or a Royal Commission assignment, not just Dammam or Khobar." },
+    { q: "Do I stay in the same vehicle across the causeway?", a: "Yes — one vehicle and driver cover the journey from your Bahrain pickup, through the crossing, to your address or site gate in Jubail." },
+    { q: "Is Bahrain to Jubail a common route, or mostly one-off trips?", a: "It's a regular route for us — a steady share of our Bahrain pickups are contractors and technical staff continuing on to Jubail Industrial City or a Royal Commission assignment, not just Dammam or Khobar." },
     { q: "Do your drivers have access to Jubail Industrial City gates?", a: "Yes — the same drivers who serve Jubail's own contractor traffic run this route, and are familiar with the major entry gates and standard site-pass procedures." },
     { q: "How much longer is this than a Bahrain to Dammam trip?", a: "Roughly 50–70 minutes longer than stopping in Dammam or Khobar, since Jubail is a further stretch up the coast — worth knowing when planning arrival timing." },
     { q: "Can you drop me at a specific SABIC or contractor site?", a: "Yes — share your exact gate, site, or address when booking, and for first-time arrivals we recommend confirming badge/pass requirements a day ahead so the driver isn't held up at security." },
     { q: "Is there an airport in Jubail I could fly into instead?", a: "No — Jubail has no airport of its own. Most travelers either take this causeway route from Bahrain or connect via King Fahd International Airport in Dammam, about an hour south of Jubail." },
-    { q: "How far in advance should I book?", a: "At least 24 hours ahead, so we can properly coordinate the Bahrain-side pickup and the Jubail-based onward vehicle for a smooth handover." },
+    { q: "How far in advance should I book?", a: "At least 24 hours ahead where you can, so the pickup time, the vehicle and any site-gate requirements in Jubail are all confirmed before you travel." },
   ],
   relatedRoutes: [
     { href: "/distance/bahrain-to-jubail", label: "Bahrain to Jubail Distance & Travel Time Guide" },
@@ -562,7 +562,7 @@ export const riyadhToBahrain: RouteData = {
   borderCrossingName: "King Fahd Causeway",
   eyebrow: "Long-Distance Border Transfer",
   h1: "Riyadh to Bahrain — Executive Car Transfer Service",
-  intro: "Private long-distance transfer from Riyadh across the King Fahd Causeway into Bahrain. A comfortable executive drive across the Eastern Province with a coordinated handover at the causeway for onward travel into Manama.",
+  intro: "Private long-distance transfer from Riyadh across the King Fahd Causeway into Bahrain. One executive vehicle and a licensed driver, door to door from your Riyadh address to Manama, Seef or Bahrain International Airport.",
   breadcrumbLabel: "Riyadh → Bahrain",
   distance: "~470 km",
   travelTime: "4.5 – 5.5 hours (incl. causeway)",
@@ -570,14 +570,14 @@ export const riyadhToBahrain: RouteData = {
   overviewTitle: "Direct Transfer from the Capital to Bahrain",
   overviewParagraphs: [
     "Travelers heading from Riyadh to Bahrain for business, weekend leisure trips, or family visits often prefer a private overland transfer to avoid connecting flights or airport-to-airport logistics on both ends. The route runs east across the Najd plateau to Dammam and Al Khobar before reaching the King Fahd Causeway.",
-    "Our drivers cover the full Riyadh-to-causeway leg in an executive vehicle, then hand off at the Bahrain-side checkpoint to a coordinated partner driver who continues into Manama, Seef, or your final Bahrain destination — a smooth, pre-arranged transition.",
+    "Our drivers cover the full route in an executive vehicle — the long drive east, the causeway crossing, and the final stretch into Manama, Seef or your Bahrain address — so the journey is one booking from your door to the destination.",
     "This route is popular around Bahrain Grand Prix weekends, GCC business travel, and family visits, when demand for reliable, private cross-border transport peaks.",
   ],
   borderProcessTitle: "Crossing the King Fahd Causeway from Riyadh",
   borderProcessParagraphs: [
     "The drive from Riyadh to the causeway entry point takes roughly 4 hours via Highway 40 through Al-Ahsa and Dammam. We schedule a rest stop along the way for comfort.",
     "At the Saudi exit checkpoint, GCC nationals cross with their national ID; other nationalities require a valid Saudi exit clearance if resident, or standard passport control if visiting.",
-    "On the Bahrain side, entry is via eVisa, visa-on-arrival, or GCC ID depending on nationality. Our Bahrain-side partner driver meets you at the plaza for the final leg into the city.",
+    "On the Bahrain side, entry is via eVisa, visa-on-arrival or GCC ID depending on nationality. Once you are through, the drive continues straight to your address in the city.",
   ],
   documents: [
     "Valid passport (6+ months validity)",
@@ -594,8 +594,8 @@ export const riyadhToBahrain: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together to Bahrain." },
   ],
   faqs: [
-    { q: "How long is the full trip from Riyadh to Bahrain?", a: "Typically 4.5–5.5 hours total, including the drive to the causeway, the border crossing, and the coordinated handover into Bahrain." },
-    { q: "Will I need to switch vehicles at the border?", a: "Yes, since Saudi-plated taxis cannot cross into Bahrain, we arrange a smooth handover to a licensed Bahrain-side driver at the causeway checkpoint." },
+    { q: "How long is the full trip from Riyadh to Bahrain?", a: "Typically 4.5–5.5 hours in total, including the drive east to the causeway and the border crossing itself." },
+    { q: "Do I stay in the same vehicle across the causeway?", a: "Yes — one vehicle and driver take you from your Riyadh pickup, through the causeway crossing, to your address in Bahrain." },
     { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "Yes, demand and causeway traffic both increase significantly during F1 weekends — we recommend booking well in advance for those dates." },
     { q: "Can you arrange a return trip as well?", a: "Yes, round-trip bookings are available and often more convenient for short Bahrain visits — just let us know your return date when booking." },
     { q: "Do you offer executive vehicles for this route?", a: "Yes, we offer executive sedans with extra comfort features specifically suited to the longer Riyadh-to-Bahrain distance." },
@@ -611,11 +611,11 @@ export const riyadhToBahrain: RouteData = {
   ctaText: "Book Your Bahrain Transfer",
   lastReviewed: "August 2026",
   stops: [
-    { name: "Al-Ahsa / Dammam corridor", note: "Scheduled rest stop on the long Riyadh-to-causeway leg, before the handover into Bahrain." },
+    { name: "Al-Ahsa / Dammam corridor", note: "Scheduled rest stop on the long drive east, before the causeway crossing into Bahrain." },
   ],
   reviews: [
     { name: "Sultan M.", origin: "Race Weekend Visitor, Riyadh", text: "Booked around the Grand Prix — driver planned around the extra causeway traffic and we still arrived on schedule." },
-    { name: "Noura K.", origin: "Family Traveler, Riyadh", text: "Executive sedan made the 5-hour drive genuinely restful, and the Bahrain-side handover was smooth." },
+    { name: "Noura K.", origin: "Family Traveler, Riyadh", text: "Executive sedan made the 5-hour drive genuinely restful, and the causeway crossing was straightforward." },
   ],
 };
 
@@ -1123,22 +1123,22 @@ export const bahrainToRiyadh: RouteData = {
   borderCrossingName: "King Fahd Causeway",
   eyebrow: "Long-Distance Border Transfer",
   h1: "Bahrain to Riyadh — Chauffeur & Car Transfer Service",
-  intro: "Coordinated long-distance transfer from Bahrain across the King Fahd Causeway to Riyadh. A Bahrain-side driver takes you to the causeway, and our Saudi executive vehicle continues the journey to the capital.",
+  intro: "Private long-distance transfer from Bahrain across the King Fahd Causeway to Riyadh. One executive vehicle and a licensed driver, door to door from your Bahrain address to the capital.",
   breadcrumbLabel: "Bahrain → Riyadh",
   distance: "~470 km",
   travelTime: "4.5 – 5.5 hours (incl. causeway)",
   heroImage: "/images/chauffeur.jpg",
-  overviewTitle: "Coordinated Transfer from Bahrain to the Capital",
+  overviewTitle: "Door-to-Door Transfer from Bahrain to the Capital",
   overviewParagraphs: [
     "Travelers heading from Bahrain to Riyadh for business, government appointments, or family visits often prefer a private overland transfer to avoid connecting flights or airport-to-airport logistics. The route begins with the King Fahd Causeway crossing, then continues west across the Najd plateau to Riyadh.",
-    "A licensed Bahrain-side driver collects you from your hotel or residence and takes you to the causeway checkpoint. Once you clear Saudi passport control and customs, our Riyadh-based executive vehicle continues the journey directly into the capital.",
+    "A licensed driver collects you from your hotel or residence in Bahrain and takes you across the causeway. Once you have cleared Saudi passport control and customs, the same executive vehicle continues directly to the capital.",
     "This route is popular around Bahrain Grand Prix weekends, GCC business travel, and family visits, when demand for reliable, private cross-border transport peaks.",
   ],
   borderProcessTitle: "Crossing the King Fahd Causeway to Riyadh",
   borderProcessParagraphs: [
-    "Your Bahrain-side pickup driver takes you to the causeway entry point, roughly 20–25 minutes from central Manama depending on traffic.",
+    "Your driver collects you in Bahrain and reaches the causeway entry point in roughly 20–25 minutes from central Manama, depending on traffic.",
     "At the Bahrain exit post, standard passport checks apply. On the Saudi side, GCC nationals cross with a national ID; other nationalities need a valid Saudi visa or Iqama if returning as a resident.",
-    "After clearing Saudi immigration and customs, you'll be met by our waiting Riyadh-bound vehicle for the long final leg — roughly 4 hours via Highway 40 through Al-Ahsa and Dammam, with a scheduled rest stop along the way.",
+    "Once you have cleared Saudi immigration and customs, the long final leg begins — roughly 4 hours via Highway 40 through Al-Ahsa and Dammam, with a scheduled rest stop along the way.",
   ],
   documents: [
     "Valid passport (6+ months validity)",
@@ -1154,7 +1154,7 @@ export const bahrainToRiyadh: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together to Riyadh." },
   ],
   faqs: [
-    { q: "Will I need to switch vehicles at the causeway?", a: "Yes — Bahrain-plated and Saudi-plated taxis cannot cross the border themselves, so a handover happens at the causeway checkpoint, coordinated so both drivers meet you with minimal wait." },
+    { q: "Do I stay in the same vehicle across the causeway?", a: "Yes — one vehicle and driver cover the whole journey, from your Bahrain pickup through the crossing to your Riyadh address." },
     { q: "How long is the full trip from Bahrain to Riyadh?", a: "Typically 4.5–5.5 hours total, including the causeway crossing and the drive on to the capital." },
     { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "Yes, demand and causeway traffic both increase significantly during F1 weekends — we recommend booking well in advance for those dates." },
     { q: "Do GCC nationals need a visa for this route?", a: "No, GCC nationals cross with just their national ID. Other nationalities need a valid Saudi visa or valid Iqama if returning as a resident." },
@@ -1171,7 +1171,7 @@ export const bahrainToRiyadh: RouteData = {
   ctaText: "Book Your Riyadh Transfer",
   lastReviewed: "August 2026",
   reviews: [
-    { name: "Rashid A.", origin: "Government Official, Manama", text: "Handover at the causeway was seamless, and the Riyadh-bound vehicle was waiting exactly as promised." },
+    { name: "Rashid A.", origin: "Government Official, Manama", text: "Crossing the causeway was seamless, and the long drive on to Riyadh ran exactly as promised." },
     { name: "Zainab O.", origin: "Family Visit, Riyadh", text: "Long drive but the executive sedan was genuinely comfortable — worth it for the door-to-door convenience." },
   ],
 };

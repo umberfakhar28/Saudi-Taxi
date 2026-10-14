@@ -666,25 +666,25 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
     factorsAffectingTime: [
       "Border processing time varies with traffic at the checkpoint — Thursday and Friday evenings see the heaviest weekend leisure crossings in both directions.",
-      "Vehicles cannot cross the border themselves — private taxis on either side hand off passengers at the checkpoint, which is a real, built-in part of the journey time.",
+      "Passport and customs checks at the causeway checkpoint are a real, built-in part of the journey time, not an add-on to plan around separately.",
       "Nationality affects processing: GCC nationals cross with a national ID, while other nationalities need a valid Saudi visa or Iqama.",
     ],
 
     travelOptions: [
       {
         title: "Private Taxi / Chauffeur Transfer",
-        description: "A Bahrain-side driver takes you to the causeway checkpoint, and a Saudi-side vehicle continues the journey — coordinated in advance so the handover is as smooth as possible.",
+        description: "A licensed driver collects you in Bahrain and takes you through the causeway crossing to your address in the Eastern Province — one vehicle, door to door.",
       },
       {
         title: "Self-Driving",
-        description: "Realistic for travelers with their own vehicle and the correct cross-border insurance and documentation, though most visitors without a Gulf-registered vehicle rely on the taxi handover system instead.",
+        description: "Realistic for travelers with their own vehicle and the correct cross-border insurance and documentation, though most visitors without a Gulf-registered vehicle book a private transfer instead.",
       },
     ],
     transferBenefits: [
-      "Door-to-door pickup on the Bahrain side, with a coordinated Saudi-side vehicle waiting after the crossing",
-      "A private vehicle for your group only on each side of the border",
-      "Professional drivers experienced with the causeway's layout and peak-hour patterns",
-      "Luggage assistance through the handover",
+      "Door-to-door: collected at your Bahrain address and dropped at your Saudi one",
+      "A private vehicle for your group only, for the whole journey",
+      "Licensed drivers who make this crossing regularly and know its peak-hour patterns",
+      "Luggage handled for you, including through the checkpoint",
       "Suitable for shoppers, families, and business travelers alike",
       "Available 24/7 for either direction of the crossing",
     ],
@@ -692,7 +692,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     journeyPlanning: [
       { title: "Documents Ready", note: "Have your passport (and Saudi visa, Iqama, or GCC ID as applicable) ready before departure — this is the single biggest factor in how smoothly the crossing goes." },
       { title: "Weekend Timing", note: "Thursday and Friday evenings see the heaviest weekend leisure traffic across the causeway in both directions — weekday mornings tend to be quickest." },
-      { title: "Book Ahead for the Handover", note: "Booking at least 24 hours ahead lets both the Bahrain-side and Saudi-side vehicles be properly coordinated for a smooth handover." },
+      { title: "Book Ahead", note: "Booking at least 24 hours ahead lets the pickup be timed around the quieter crossing hours and the right vehicle reserved for your group." },
       { title: "Onward Travel", note: "If you're continuing past Dammam to Khobar, Dhahran, or further up the coast, mention your final destination when booking." },
     ],
     bestTimeToTravel: [
@@ -703,8 +703,8 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     faqs: [
       { q: "How far is Bahrain from Dammam?", a: "Approximately 65 km by road, including the King Fahd Causeway crossing." },
       { q: "How long does it take to get from Bahrain to Dammam?", a: "Around 1 to 1.5 hours including border processing — the causeway drive itself is short, but passport and customs checks add time." },
-      { q: "Do I need to change vehicles at the border?", a: "Yes — private taxis registered in either country can't cross the border themselves, so a handover happens at the causeway checkpoint, coordinated in advance." },
-      { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service arranges coordinated Bahrain-to-Dammam transfers with a vehicle handover at the causeway." },
+      { q: "Do I need to change vehicles at the border?", a: "No — the transfer is door to door. Your driver takes you through the causeway crossing and on to your address in Dammam, Khobar or Dhahran." },
+      { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service runs private Bahrain-to-Dammam transfers door to door, with licensed drivers who handle the causeway crossing with you." },
       { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama — confirm current requirements before you travel." },
       { q: "Is Bahrain to Dammam by road the only option?", a: "Yes — the King Fahd Causeway is the only land link between the two countries; there's no rail or ferry alternative for this specific route." },
       { q: "What's the best time to cross to avoid queues?", a: "Weekday mornings are typically fastest. Thursday and Friday evenings see the heaviest weekend leisure traffic." },
@@ -743,7 +743,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     overviewParagraphs: [
       "Bahrain to Riyadh combines the King Fahd Causeway crossing with a considerably longer onward drive than Bahrain to Dammam — the causeway gets you into Saudi Arabia, but Riyadh itself is still several hours further west across the country.",
       "This route sees a steady flow of business travelers — Manama's financial sector and Riyadh's corporate and government districts generate regular trips in both directions — alongside families and leisure travelers making the fuller journey.",
-      "As with any causeway crossing, the border handover between a Bahrain-side and Saudi-side vehicle is a built-in part of the journey, not a delay to plan around separately.",
+      "As with any causeway crossing, passport and customs processing is a built-in part of the journey time rather than a delay to plan around separately.",
     ],
     routeCharacteristics: [
       "Combines the King Fahd Causeway crossing with a long onward drive west to the capital.",
@@ -760,7 +760,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     travelOptions: [
       {
         title: "Private Taxi / Chauffeur Transfer",
-        description: "A Bahrain-side driver takes you to the causeway, and a Saudi-side vehicle continues the full onward journey to Riyadh — one coordinated booking covering both legs.",
+        description: "One vehicle and a licensed driver cover the whole run — your Bahrain pickup, the causeway crossing, and the long drive west to Riyadh.",
       },
       {
         title: "Domestic Flight",
@@ -772,9 +772,9 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One coordinated booking covering both the causeway handover and the full onward drive to Riyadh",
-      "A private vehicle for your group only on each side of the border",
-      "Professional drivers experienced with both the causeway crossing and the long Eastern-Province-to-Riyadh stretch",
+      "One booking covering the causeway crossing and the full onward drive to Riyadh",
+      "A private vehicle for your group only, for the whole journey",
+      "Licensed drivers experienced with both the causeway crossing and the long Eastern-Province-to-Riyadh stretch",
       "Comfortable for business travelers who want to work or rest during the longer drive",
       "Flexible departure timing around your own schedule",
       "Suitable for families making the full journey together",
@@ -794,9 +794,9 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     faqs: [
       { q: "How far is Bahrain from Riyadh?", a: "Approximately 470 km by road, including the King Fahd Causeway crossing." },
       { q: "How long does it take to get from Bahrain to Riyadh?", a: "Around 4.5 to 5.5 hours including border processing and the onward drive to Riyadh." },
-      { q: "Do I need to change vehicles at the border?", a: "Yes — as with any causeway crossing, a Bahrain-side driver takes you to the checkpoint and a Saudi-side vehicle continues the journey, coordinated in advance." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the journey from your Bahrain pickup through the crossing to your Riyadh address." },
       { q: "Is it faster to fly instead of driving the whole way?", a: "For business travelers on a tight schedule, yes — flying from Bahrain International Airport directly to Riyadh is often faster than the combined causeway-and-road journey." },
-      { q: "Can I book one transfer for the whole trip?", a: "Yes — Gulf Trip Service coordinates the full journey as one booking, covering both the causeway handover and the onward drive to Riyadh." },
+      { q: "Can I book one transfer for the whole trip?", a: "Yes — the full journey is one booking, door to door, covering the causeway crossing and the onward drive to Riyadh." },
       { q: "Do I need a visa to cross into Saudi Arabia this way?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama — confirm current requirements before traveling." },
       { q: "Is this route suitable for a family trip?", a: "Yes, with realistic planning — it's a longer journey than a simple Dammam crossing, so build in a rest stop given the total distance." },
     ],
@@ -833,7 +833,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     overviewParagraphs: [
       "Bahrain to Jubail is really the King Fahd Causeway crossing plus a further stretch north past Dammam and Khobar — Jubail sits roughly an hour up the coast from where most causeway traffic stops.",
       "A meaningful share of travelers on this route are contractors and technical staff heading to Jubail Industrial City or a Royal Commission assignment, rather than the shopping or family-visit trips that dominate the shorter Bahrain-to-Dammam crossing.",
-      "The border-handover mechanics are identical to any causeway crossing — what differs here is simply the longer onward leg once you're on the Saudi side.",
+      "The crossing itself works exactly as it does on any causeway trip — what differs here is simply the longer onward leg once you are on the Saudi side.",
     ],
     routeCharacteristics: [
       "Crosses the King Fahd Causeway, then continues north past Dammam and Khobar to Jubail.",
@@ -850,17 +850,17 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     travelOptions: [
       {
         title: "Private Taxi / Chauffeur Transfer",
-        description: "A Bahrain-side driver takes you to the causeway, and a Jubail-based vehicle continues the journey through to your specific gate, site, or address.",
+        description: "One vehicle and a licensed driver from your Bahrain address, across the causeway, through to your specific gate, site or address in Jubail.",
       },
       {
         title: "Self-Driving",
-        description: "Realistic for travelers with a Gulf-registered vehicle and correct documentation, though most contractors and first-time visitors rely on the coordinated taxi handover instead.",
+        description: "Realistic for travelers with a Gulf-registered vehicle and correct documentation, though most contractors and first-time visitors book a private transfer instead.",
       },
     ],
     transferBenefits: [
-      "One coordinated booking covering the causeway handover and the full onward leg to Jubail",
+      "One booking covering the causeway crossing and the full onward leg to Jubail",
       "Drivers familiar with Jubail Industrial City's major entry gates and standard site-pass procedures",
-      "A private vehicle for your group only on each side of the border",
+      "A private vehicle for your group only, for the whole journey",
       "Suitable for solo contractors, technical teams, and business travelers alike",
       "Luggage space for equipment or extended-stay baggage",
       "Available 24/7 for either direction",
@@ -870,7 +870,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { title: "Confirm Your Gate", note: "For first-time arrivals at Jubail Industrial City, confirm your exact gate, site, or badge requirements a day ahead so the driver isn't held up at security." },
       { title: "Documents Ready", note: "Have your passport and Saudi visa, Iqama, or GCC ID ready before departure for the causeway crossing." },
       { title: "Longer Than Dammam", note: "Budget roughly an hour more than a standard Bahrain-to-Dammam trip, since Jubail is a further stretch up the coast." },
-      { title: "Book Ahead", note: "At least 24 hours' notice lets both the Bahrain-side and Jubail-based vehicles be properly coordinated for the handover." },
+      { title: "Book Ahead", note: "At least 24 hours' notice lets the pickup time, the vehicle and any site-pass requirements all be confirmed before you travel." },
     ],
     bestTimeToTravel: [
       "Weekday mornings are typically the smoothest time to cross the causeway before the onward drive to Jubail.",
@@ -881,7 +881,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { q: "How far is Bahrain from Jubail?", a: "Approximately 150 km by road, combining the King Fahd Causeway crossing with the onward leg past Dammam." },
       { q: "How long does it take to get from Bahrain to Jubail?", a: "Around 2 to 2.5 hours including border processing and the drive up the coast past Dammam and Khobar." },
       { q: "Is this route mostly for business travelers?", a: "A meaningful share, yes — contractors and technical staff heading to Jubail Industrial City or a Royal Commission assignment make up a steady portion of this route's traffic." },
-      { q: "Do I need to change vehicles at the border?", a: "Yes — the same handover applies as any causeway crossing, with a Jubail-based vehicle continuing the journey on the Saudi side." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the journey from your Bahrain pickup, through the crossing, to your gate or address in Jubail." },
       { q: "Is there an airport in Jubail I could fly into instead?", a: "No — Jubail has no airport of its own. This causeway route or a connection via King Fahd International Airport in Dammam are the two realistic options." },
       { q: "Can you drop me at a specific Industrial City gate?", a: "Yes — share your exact gate, site, or address when booking, and confirm badge or pass requirements in advance for a first-time arrival." },
       { q: "How much longer is this than Bahrain to Dammam?", a: "Roughly 50 to 70 minutes longer, since Jubail is a further stretch up the coast past Dammam and Khobar." },
@@ -946,7 +946,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     travelOptions: [
       {
         title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle covers the full journey from Dammam to your Kuwait destination, with the driver handling the border crossing directly rather than requiring a vehicle handover.",
+        description: "A single vehicle covers the full journey from Dammam to your Kuwait destination, with your driver handling the border crossing along the way.",
       },
       {
         title: "Domestic/Regional Flight",
@@ -980,7 +980,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     faqs: [
       { q: "How far is Dammam from Kuwait?", a: "Approximately 530 km by road, following the Gulf coast highway through Jubail and Khafji to the Al Nuwaiseeb border." },
       { q: "How long does it take to drive from Dammam to Kuwait?", a: "Around 5.5 to 6.5 hours including border processing at Al Nuwaiseeb." },
-      { q: "Do I need to change vehicles at the border?", a: "No — unlike the Bahrain causeway, this crossing allows a single authorized vehicle to complete the full journey without a handover." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "What is the best way to travel from Dammam to Kuwait?", a: "A private taxi or chauffeur transfer covers the full distance in one vehicle. A short flight is a realistic alternative for travelers on a tight schedule." },
       { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service arranges direct Dammam to Kuwait transfers via the Al Nuwaiseeb border." },
       { q: "Is the route mostly used for business travel?", a: "A significant share, yes — the Eastern Province and Kuwait have close oil and gas sector ties that generate regular business travel on this corridor." },
@@ -1075,7 +1075,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { q: "How far is Riyadh from Kuwait?", a: "By road it is roughly 639 km via the inland Al Ruqi'i / Al Salmi crossing. The coastal route through Al Khafji / Al Nuwaiseeb is longer, so the exact distance depends on which crossing the route uses. In a straight line the two cities are about 535 km apart." },
       { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Plan for most of a day, including border processing and rest stops. The exact time depends on the route, traffic and border queues." },
       { q: "Is it faster to fly instead of driving?", a: "For business travelers on a tight schedule, yes — a direct flight between Riyadh and Kuwait City is usually faster than the full-day drive." },
-      { q: "Do I need to change vehicles at the border?", a: "Ask when you book. Whether one vehicle can complete the whole journey depends on its cross-border authorization, and we confirm the arrangement in advance." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the whole journey, door to door, including the crossing." },
       { q: "Can I book a private transfer for the whole trip?", a: "Yes — Gulf Trip Service arranges door-to-door Riyadh to Kuwait transfers across the Saudi–Kuwait land border." },
       { q: "Is this route different from the Dammam to Kuwait route?", a: "It can be. From Dammam the natural crossing is Al Khafji / Al Nuwaiseeb on the coast; from Riyadh the inland Al Ruqi'i / Al Salmi crossing is also an option. Your driver confirms the route before departure." },
       { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid visa — confirm current requirements before traveling." },
@@ -1134,7 +1134,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One vehicle for the entire journey — no handover required at the border",
+      "One vehicle for the entire journey, door to door across the border",
       "Professional driver experienced with the Al Nuwaiseeb crossing's commuter patterns",
       "Direct to your specific Kuwait destination",
       "A private vehicle for your group only",
@@ -1156,7 +1156,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { q: "How far is Khafji from Kuwait?", a: "About 15 km to the Al Nuwaiseeb border itself, and roughly 180 km on to Kuwait City." },
       { q: "How long does it take to get from Khafji to Kuwait?", a: "Around 2.5 to 3 hours including border processing — the shortest of the Saudi-Kuwait crossings." },
       { q: "Why is this route shorter than Dammam or Riyadh to Kuwait?", a: "Khafji is Saudi Arabia's northernmost Gulf coast city, sitting right next to the Al Nuwaiseeb border — the most direct gateway into Kuwait from anywhere in Saudi Arabia." },
-      { q: "Do I need to change vehicles at the border?", a: "No — this crossing allows a single authorized vehicle to complete the journey without a handover." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "Is this route used by daily commuters?", a: "Yes — a meaningful share of traffic here is cross-border commuters and workers in the joint Neutral Zone oil fields." },
       { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service arranges direct Khafji to Kuwait transfers via the Al Nuwaiseeb border." },
       { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid visa — confirm current requirements before traveling." },
@@ -1221,7 +1221,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One vehicle for the entire long-haul journey — no handover required at the border",
+      "One vehicle for the entire long-haul journey, door to door across the border",
       "Executive-grade vehicles built for long-distance comfort",
       "Professional driver experienced with the Al Batha/Ghuwaifat crossing",
       "Scheduled rest stops planned into the journey",
@@ -1244,7 +1244,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { q: "How far is Dammam from Abu Dhabi?", a: "Approximately 950 km by road via the Al Batha/Ghuwaifat border crossing." },
       { q: "How long does it take to drive from Dammam to Abu Dhabi?", a: "Around 10 to 11.5 hours including border processing. In practice, most journeys take longer once rest stops are added." },
       { q: "What is the best way to travel from Dammam to Abu Dhabi?", a: "A private taxi or chauffeur transfer covers the full distance in one vehicle. Given the length, a flight is also a realistic and commonly chosen alternative." },
-      { q: "Do I need to change vehicles at the border?", a: "No — this crossing allows a single authorized vehicle to complete the full journey without a handover." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "Is this route suitable for a family trip?", a: "It's a genuinely long journey, so it suits groups and families who specifically prefer a private overland drive with significant luggage over flying." },
       { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges direct Dammam to Abu Dhabi transfers via the Al Batha/Ghuwaifat border." },
       { q: "Do I need a visa to cross?", a: "Requirements vary by nationality — confirm current Saudi and UAE visa requirements before traveling." },
@@ -1309,7 +1309,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One vehicle for the entire long-haul journey — no handover required at the border",
+      "One vehicle for the entire long-haul journey, door to door across the border",
       "Executive-grade vehicles built for long-distance comfort",
       "Professional driver experienced with the Al Batha/Ghuwaifat crossing and the onward UAE stretch",
       "Scheduled rest stops planned into the journey",
@@ -1332,7 +1332,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { q: "How far is Dammam from Dubai?", a: "Approximately 1,100 km by road via the Al Batha/Ghuwaifat border crossing." },
       { q: "How long does it take to drive from Dammam to Dubai?", a: "Around 11.5 to 13 hours including border processing — one of the longer cross-border drives in this network." },
       { q: "Is it faster to fly instead of driving?", a: "For most travelers, yes — given the 1,100 km distance, a flight between Dammam and Dubai is usually the faster overall option unless you specifically want the private overland journey." },
-      { q: "Do I need to change vehicles at the border?", a: "No — this crossing allows a single authorized vehicle to complete the full journey without a handover." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "Who typically chooses to drive this route instead of flying?", a: "Groups traveling together, travelers with significant luggage, and those who specifically prefer a private overland journey without airport connections." },
       { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges direct Dammam to Dubai transfers via the Al Batha/Ghuwaifat border." },
       { q: "Do I need a visa to cross?", a: "Requirements vary by nationality — confirm current Saudi and UAE visa requirements before traveling." },
@@ -1397,7 +1397,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One vehicle for the entire long-haul journey — no handover required at the border",
+      "One vehicle for the entire long-haul journey, door to door across the border",
       "Executive-grade vehicles built for long-distance comfort",
       "Professional driver experienced with the Al Batha/Ghuwaifat crossing",
       "Scheduled rest stops planned into the journey",
@@ -1420,7 +1420,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { q: "How far is Riyadh from Dubai?", a: "Approximately 1,100 km by road via the Al Batha/Ghuwaifat border crossing." },
       { q: "How long does it take to drive from Riyadh to Dubai?", a: "Around 11 to 12.5 hours including border processing." },
       { q: "Is it faster to fly for a business trip?", a: "Usually, yes — given the strong Riyadh-Dubai business travel demand and the 1,100 km distance, a direct flight is the more common choice for fixed-schedule trips." },
-      { q: "Do I need to change vehicles at the border?", a: "No — this crossing allows a single authorized vehicle to complete the full journey without a handover." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges direct Riyadh to Dubai transfers via the Al Batha/Ghuwaifat border." },
       { q: "Who typically drives this route instead of flying?", a: "Groups traveling together, travelers with significant luggage, and those who specifically prefer a private overland journey over flying." },
       { q: "Do I need a visa to cross?", a: "Requirements vary by nationality — confirm current Saudi and UAE visa requirements before traveling." },
@@ -1486,7 +1486,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One vehicle for the entire journey — no handover required at the border",
+      "One vehicle for the entire journey, door to door across the border",
       "Executive vehicles with extra legroom for the multi-hour drive",
       "Professional driver experienced with the Salwa/Abu Samra crossing",
       "A scheduled rest stop near Al-Ahsa or Hofuf built into the journey",
@@ -1508,7 +1508,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     faqs: [
       { q: "How far is Doha from Riyadh?", a: "Approximately 580 km by road via the Salwa/Abu Samra border crossing." },
       { q: "How long does it take to drive from Doha to Riyadh?", a: "Around 6.5 to 7.5 hours including border processing and a scheduled rest stop." },
-      { q: "Do I need to change vehicles at the border?", a: "No — authorized vehicles complete the full journey from Doha into Saudi Arabia without a handover." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey from Doha into Saudi Arabia, including the crossing." },
       { q: "Is it faster to fly instead of driving?", a: "For business travelers on a tight schedule, yes — a direct flight between Doha and Riyadh is often faster than the full drive." },
       { q: "Can I book a private transfer for this whole route?", a: "Yes — Gulf Trip Service arranges direct Doha to Riyadh transfers via the Salwa/Abu Samra border." },
       { q: "Where does the rest stop happen?", a: "Typically near Al-Ahsa or Hofuf, roughly midway through the Saudi portion of the journey." },
@@ -1545,7 +1545,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     overviewParagraphs: [
       "Doha to Dammam is a common trip for business travelers, event attendees, and families with ties on both sides of the Salwa border — shorter than the Doha-Riyadh route since Dammam sits closer to the border within the Eastern Province.",
       "The route runs north-west from Doha to the Abu Samra border post, crosses into Saudi Arabia at Salwa, then continues through Al-Ahsa and Hofuf before reaching Dammam, Al Khobar, or Dhahran.",
-      "Unlike the Bahrain causeway, authorized vehicles can complete the full journey from Qatar into Saudi Arabia without a handover, meaning your driver stays with you the entire way.",
+      "Your driver stays with you the entire way — one vehicle covers the full journey from Qatar into Saudi Arabia, including the crossing.",
     ],
     routeCharacteristics: [
       "Crosses at Salwa/Abu Samra, the primary land border between Qatar and Saudi Arabia.",
@@ -1574,7 +1574,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       },
     ],
     transferBenefits: [
-      "One vehicle for the entire journey — no handover required at the border",
+      "One vehicle for the entire journey, door to door across the border",
       "Professional driver experienced with the Salwa/Abu Samra crossing",
       "Direct to Dammam, Al Khobar, or Dhahran depending on your destination",
       "A private vehicle for your group only",
@@ -1596,7 +1596,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     faqs: [
       { q: "How far is Doha from Dammam?", a: "Approximately 440 km by road via the Salwa/Abu Samra border crossing." },
       { q: "How long does it take to drive from Doha to Dammam?", a: "Around 5 to 6 hours including border processing." },
-      { q: "Do I need to change vehicles at the border?", a: "No — unlike the Bahrain causeway, authorized vehicles complete the full journey from Qatar into Saudi Arabia without a handover." },
+      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey from Qatar into Saudi Arabia, including the crossing." },
       { q: "Is this route shorter than Doha to Riyadh?", a: "Yes — Dammam sits closer to the Salwa border within the Eastern Province, making this a shorter drive than continuing on to Riyadh." },
       { q: "Can I book a private transfer for this whole route?", a: "Yes — Gulf Trip Service arranges direct Doha to Dammam transfers via the Salwa/Abu Samra border." },
       { q: "Can you drop me off in Khobar or Dhahran instead of central Dammam?", a: "Yes — all three are covered by this route; let your driver know your specific destination when booking." },

@@ -90,12 +90,12 @@ export const saudiToBahrain: BorderData = {
   faqs: [
     { q: "Do I need a visa to cross into Bahrain?", a: "It depends on your nationality — many travelers can get a Bahrain eVisa or visa-on-arrival, and GCC nationals typically cross with a national ID. Requirements can change, so confirm current eligibility with an official Bahraini source before you travel." },
     { q: "Can you pick me up from anywhere in the Eastern Province?", a: "Yes — Dammam, Khobar, Jubail and Dhahran are all regular pickup points, and we also cover Riyadh and other Saudi cities for the full journey to the causeway." },
-    { q: "Do I stay in the same vehicle the whole way to Bahrain?", a: "Not on the causeway — taxis can't cross it themselves, so the journey continues with a licensed Bahrain-side driver after a handover at the causeway, arranged in advance as part of your booking." },
+    { q: "Do I stay in the same vehicle the whole way to Bahrain?", a: "Yes — the transfer is door to door. One vehicle and a licensed driver take you from your pickup address, through the causeway crossing, to your destination in Bahrain." },
     { q: "How long does the crossing usually take?", a: "Typically 1–2 hours depending on traffic and processing time at the crossing itself — Thursday and Friday evenings tend to be busiest." },
   ],
 
   reviews: [
-    { name: "Yousef T.", origin: "Business Traveler, Khobar–Manama", text: "Regular trips across the causeway for work — driver knows the crossing well and the handover on the Bahrain side was smooth." },
+    { name: "Yousef T.", origin: "Business Traveler, Khobar–Manama", text: "Regular trips across the causeway for work — the driver knows the crossing well and gets us through it without fuss." },
     { name: "Reem A.", origin: "Family Weekend Trip, Riyadh", text: "Long drive from Riyadh but comfortable, and the driver had everything ready for the causeway crossing." },
   ],
 

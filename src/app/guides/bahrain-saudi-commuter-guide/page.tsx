@@ -36,7 +36,7 @@ const data: GuideData = {
   subtitle: "A practical guide for people crossing the King Fahd Causeway regularly for work — what changes when it's a weekly routine rather than a one-off trip.",
   keyTakeaways: [
     "A meaningful number of people live in Bahrain and work in Saudi Arabia's Eastern Province, or the reverse — a genuinely different trip pattern from a one-time tourist or business crossing.",
-    "The causeway crossing works the same way for a daily commuter as a first-time visitor: no single vehicle crosses both sides, so a handover happens at the mid-causeway checkpoint.",
+    "The causeway crossing works the same way for a daily commuter as a first-time visitor: the same checkpoint, the same documents, and a pre-booked car that takes you through it door to door.",
     "Khobar sits closest to the causeway of any Eastern Province city, making it the natural staging point for regular crossings.",
     "Thursday and Friday evenings see the heaviest weekend leisure traffic — weekday mornings are consistently the fastest time to cross, worth building into a regular commute schedule.",
   ],
@@ -47,7 +47,7 @@ const data: GuideData = {
     },
     {
       heading: "How the Crossing Works, Whether It's Your First Trip or Your Fiftieth",
-      content: "The causeway's mechanics don't change for a regular commuter. Private taxis registered in either country cannot cross into the other's territory, so a handover happens at the mid-causeway checkpoint — a Bahrain-side driver takes you to the border, and a Saudi-side vehicle continues from there (or the reverse, depending on direction). For someone crossing regularly, the practical difference is familiarity: the same handover point, the same checkpoint process, trip after trip.",
+      content: "The causeway's mechanics don't change for a regular commuter. A pre-booked private transfer collects you at your address, goes through the mid-causeway checkpoint with you, and continues to the other side — the same vehicle and, on a standing arrangement, often the same driver. What an app ride cannot do is cross at all: those services are scoped to one country, so the crossing has to be arranged in advance either way. For someone crossing regularly, the practical difference is familiarity: the same checkpoint process, trip after trip.",
       list: [
         "GCC nationals cross with a national ID — no passport stamp required in most cases",
         "Other nationalities need a valid Saudi visa or Iqama (residency permit) if returning as a resident",
@@ -78,7 +78,7 @@ const data: GuideData = {
       list: [
         "Ad-hoc booking per trip — straightforward, but means arranging a new booking every time",
         "A corporate account with monthly invoiced billing and a named driver — removes the need to book each crossing individually, and suits a predictable weekly schedule",
-        "Self-driving with a GCC-registered vehicle and the correct cross-border insurance — a realistic option for some regular commuters, though most without a Gulf-registered vehicle rely on the transfer handover system instead",
+        "Self-driving with a GCC-registered vehicle and the correct cross-border insurance — a realistic option for some regular commuters, though most without a Gulf-registered vehicle book a transfer instead",
       ],
       cta: { text: "Ask about a corporate account for regular crossings", link: "/corporate-transportation-services" },
     },
@@ -88,7 +88,7 @@ const data: GuideData = {
       list: [
         "Scheduling a recurring commute through Thursday or Friday evening without accounting for the weekend leisure surge",
         "Not setting up a corporate or standing arrangement, and losing time re-booking an identical trip every single week",
-        "Assuming a personal vehicle can make the full crossing — private vehicles still go through the same handover system unless GCC-registered with the correct cross-border insurance",
+        "Assuming any personal vehicle can make the crossing — it needs to be GCC-registered with the correct cross-border insurance, which a borrowed or hired car often isn't",
         "Not confirming Iqama or visa validity dates in advance for a long-term recurring commute, since a lapsed document affects every future crossing, not just one trip",
       ],
     },
@@ -96,10 +96,10 @@ const data: GuideData = {
   faqs: [
     { q: "Can I set up a standing arrangement instead of booking every crossing individually?", a: "Yes — a corporate account with monthly invoiced billing and a named driver is available for people with a recurring, predictable crossing schedule." },
     { q: "Which Eastern Province city is closest to the causeway?", a: "Khobar — it sits closest to the crossing of any Eastern Province city, making it the natural staging point for regular Bahrain trips." },
-    { q: "Is the crossing process different for someone who does it every week?", a: "No — the handover system and document requirements are the same regardless of how often you cross. Familiarity with the process is the main thing that changes." },
+    { q: "Is the crossing process different for someone who does it every week?", a: "No — the checkpoint process and document requirements are the same regardless of how often you cross. Familiarity with it is the main thing that changes." },
     { q: "What's the best time of day for a regular commute across the causeway?", a: "Weekday mornings are consistently the fastest. Thursday and Friday evenings see the heaviest weekend leisure traffic — worth avoiding for a recurring commute if your schedule allows." },
     { q: "Do GCC nationals need a visa for a regular commute?", a: "No — GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama, which is worth keeping a close eye on for a long-term recurring crossing specifically." },
-    { q: "Can I self-drive across the causeway instead of using a transfer service?", a: "It's realistic with a GCC-registered vehicle and the correct cross-border insurance. Most people without a Gulf-registered vehicle use the coordinated transfer handover system instead." },
+    { q: "Can I self-drive across the causeway instead of using a transfer service?", a: "It's realistic with a GCC-registered vehicle and the correct cross-border insurance. Most people without a Gulf-registered vehicle book a private transfer instead, and are driven through the crossing door to door." },
   ],
   relatedLinks: [
     { href: "/services/khobar", label: "Khobar Taxi & Transfer Service", reason: "The Eastern Province city closest to the King Fahd Causeway." },
