@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { guardPublicRequest } from '@/lib/antiSpam';
+import { requireAdmin } from '@/utils/supabase/requireAdmin';
 
 /**
  * Creates or updates the `customers` record tied to a booking (Admin Portal
@@ -17,6 +19,15 @@ import { createAdminClient } from '@/utils/supabase/admin';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+
+        // The admin panel's "New Booking" calls this too (admin/bookings),
+        // and there is no Turnstile widget there — a signed-in admin is
+        // therefore accepted in place of a pass.
+        const blocked = guardPublicRequest(req, body, { bucket: 'customer', limit: 20 });
+        if (blocked && !(await requireAdmin())) {
+            return NextResponse.json({ error: blocked.error }, { status: blocked.status });
+        }
+
         const name = (body?.name ?? '').trim();
         const email = (body?.email ?? '').trim() || null;
         const phone = (body?.phone ?? '').trim();

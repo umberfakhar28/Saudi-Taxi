@@ -6,6 +6,8 @@ import { WHATSAPP_URL, waLink } from '@/lib/contact';
 import { FLEET_TIERS } from '@/lib/fleetConfig';
 import { SEARCH_INDEX } from '@/lib/searchIndex';
 import styles from './DestinationEnquiryForm.module.css';
+import TurnstileWidget from './TurnstileWidget';
+import { getSpamPass, submissionHeaders, honeypotFieldProps } from '@/lib/antiSpamClient';
 
 const SUGGESTED_VALUES = new Set(SEARCH_INDEX.map((e) => e.value));
 
@@ -39,6 +41,9 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
         phone: '',
     });
     const [submitting, setSubmitting] = useState(false);
+    // Spam protection: the Turnstile token, and a honeypot only a bot fills.
+    const [spamToken, setSpamToken] = useState('');
+    const [honeypot, setHoneypot] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
 
@@ -90,9 +95,19 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
         };
 
         try {
+            // Redeemed once per submission; the resulting pass accompanies
+            // all three calls below (a Turnstile token is single-use).
+            const gate = await getSpamPass(spamToken, honeypot);
+            if (!gate.ok) {
+                setError(gate.message ?? 'Verification failed. Please try again.');
+                setSubmitting(false);
+                return;
+            }
+            const headers = submissionHeaders(gate.pass);
+
             const custRes = await fetch('/api/customers/upsert', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone }),
             });
             const custJson = await custRes.json();
@@ -105,7 +120,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             // submission (Postgres 42501). See /api/bookings/create.
             const bookingRes = await fetch('/api/bookings/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({ ...dbPayload, customer_id: custJson.customerId }),
             });
             const bookingJson = await bookingRes.json();
@@ -118,7 +133,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             try {
                 const emailRes = await fetch('/api/emails/send', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers,
                     body: JSON.stringify({
                         type: 'destination_enquiry',
                         bookingData: { ...dbPayload, destination_name: destinationLabel, id: insertedBooking?.id },
@@ -222,6 +237,9 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             {error && <p className={styles.error} role="alert">{error}</p>}
 
             <div className={styles.actions}>
+                <input {...honeypotFieldProps} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                <TurnstileWidget onToken={setSpamToken} />
+
                 <button type="submit" className="btn btn-primary btn-lg" disabled={submitting}>
                     {submitting ? 'Sending…' : 'Submit Enquiry'}
                 </button>

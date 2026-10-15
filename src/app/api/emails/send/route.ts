@@ -10,6 +10,7 @@ import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
 import { TRUSTPILOT_REVIEW_URL, trustpilotBcc } from '@/lib/trustpilot';
+import { guardPublicRequest } from '@/lib/antiSpam';
 
 /**
  * Writes the row the Admin Portal's realtime subscription and notification
@@ -226,7 +227,8 @@ export async function POST(req: Request) {
     const supabase = createAdminClient();
 
     try {
-        const { type, bookingData, bookingId, quoteData, invoiceData } = await req.json();
+        const payload = await req.json();
+        const { type, bookingData, bookingId, quoteData, invoiceData } = payload;
 
         if (!SUPPORTED_TYPES.includes(type)) {
             // Previously this fell through every `if` block untouched and
@@ -243,6 +245,15 @@ export async function POST(req: Request) {
             const admin = await requireAdmin();
             if (!admin) {
                 return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            }
+        } else {
+            // The two customer-triggered types are the ones a bot can reach,
+            // and each one sends two real emails from this business's Resend
+            // account. Honeypot, per-IP ceiling and the Turnstile pass apply
+            // here; skipped while TURNSTILE_SECRET_KEY is unset.
+            const blocked = guardPublicRequest(req, payload, { bucket: 'email', limit: 10 });
+            if (blocked) {
+                return NextResponse.json({ error: blocked.error }, { status: blocked.status });
             }
         }
 

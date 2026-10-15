@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { guardPublicRequest } from '@/lib/antiSpam';
 
 /**
  * Creates a `bookings` row. Public booking forms (Book Online, the
@@ -26,6 +27,12 @@ const REQUIRED_FIELDS = [
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+
+        // Spam guard: honeypot, per-IP ceiling, and the Turnstile pass the
+        // browser obtained at /api/antispam/verify. Skipped entirely while
+        // TURNSTILE_SECRET_KEY is unset — see src/lib/antiSpam.ts.
+        const blocked = guardPublicRequest(req, body, { bucket: 'booking', limit: 10 });
+        if (blocked) return NextResponse.json({ error: blocked.error }, { status: blocked.status });
 
         const missing = REQUIRED_FIELDS.filter((f) => !body?.[f] || String(body[f]).trim() === '');
         if (missing.length > 0) {

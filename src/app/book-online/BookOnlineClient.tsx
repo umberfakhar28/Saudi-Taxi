@@ -9,6 +9,8 @@ import { bookingWhatsAppText, formatWhen } from "@/lib/bookingMessage";
 import { TOURS } from "@/lib/tourData";
 import { SEARCH_INDEX } from "@/lib/searchIndex";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
+import TurnstileWidget from "@/components/TurnstileWidget";
+import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
 import styles from "./BookOnlineClient.module.css";
 
 const services = [
@@ -90,6 +92,9 @@ export default function BookOnlineClient() {
     const [submitted, setSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    // Spam protection: the Turnstile token, and a honeypot only a bot fills.
+    const [spamToken, setSpamToken] = useState('');
+    const [honeypot, setHoneypot] = useState('');
 
     // Rehydrate form state after a chunk-error-triggered reload (Fix 6) —
     // only runs when the reload guard is actually set, so a normal visit
@@ -249,13 +254,23 @@ export default function BookOnlineClient() {
         setSubmitError(null);
 
         try {
+            // Redeemed once per submission; the resulting pass accompanies
+            // all three calls below (a Turnstile token is single-use).
+            const gate = await getSpamPass(spamToken, honeypot);
+            if (!gate.ok) {
+                setSubmitError(gate.message ?? 'Verification failed. Please try again.');
+                setIsSubmitting(false);
+                return;
+            }
+            const headers = submissionHeaders(gate.pass);
+
             // 1. Create/update the customer record (Admin Portal audit §10 —
             // the `customers` table existed but nothing ever wrote to it).
             // Done before the booking insert so the booking can carry a real
             // foreign key rather than being matched up later by guesswork.
             const custRes = await fetch('/api/customers/upsert', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({ name: formData.name, email: formData.email, phone: formData.phone }),
             });
             const custJson = await custRes.json();
@@ -301,7 +316,7 @@ export default function BookOnlineClient() {
             // Booking" action can link to this exact row.
             const bookingRes = await fetch('/api/bookings/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify(bookingData),
             });
             const bookingJson = await bookingRes.json();
@@ -315,7 +330,7 @@ export default function BookOnlineClient() {
             try {
                 const emailRes = await fetch('/api/emails/send', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers,
                     // The email shows luggage and the return leg as rows of
                     // their own, so its Notes row is just the customer's note.
                     body: JSON.stringify({
@@ -588,6 +603,9 @@ export default function BookOnlineClient() {
                                             <label className="form-label">Special Requirements / Notes</label>
                                             <textarea name="notes" className="form-textarea" placeholder="Any special requests, wheelchair access, extra luggage, etc." value={formData.notes} onChange={handleChange} rows={4} />
                                         </div>
+                                        <input {...honeypotFieldProps} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                                        <TurnstileWidget onToken={setSpamToken} />
+
                                         <div className={styles.actions} style={{ marginTop: '0.5rem' }}>
                                             <button type="button" className="btn btn-outline-gold" onClick={() => setStep(2)}>← Back</button>
                                             <button type="submit" className={`btn btn-primary btn-lg ${styles.confirmBtn}`} disabled={isSubmitting}>
