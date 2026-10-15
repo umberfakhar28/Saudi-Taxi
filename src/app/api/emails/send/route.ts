@@ -176,6 +176,16 @@ function whatsappBlock(prefill: string): string {
     </div>`;
 }
 
+/** A one-line WhatsApp prompt for the top of an email. */
+function whatsappStrip(prefill: string): string {
+    const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(prefill)}`;
+    return `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;margin-bottom:20px;text-align:center;">
+        <p style="color:#166534;margin:0 0 10px;font-size:0.92rem;font-weight:700;">For a quick reply, message us on WhatsApp</p>
+        <a href="${href}" style="display:inline-block;background:#25c766;color:#ffffff;padding:10px 22px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;">💬 Chat about this quote</a>
+        <p style="color:#64748b;margin:10px 0 0;font-size:0.8rem;">${escapeHtml(PHONE_DISPLAY)}</p>
+    </div>`;
+}
+
 /** Booking/enquiry detail rows shared by every booking-shaped email. */
 function buildBookingRows(b: Record<string, unknown>): string {
     return rowsTable([
@@ -391,6 +401,7 @@ export async function POST(req: Request) {
             const subject = `Your Price Quote – Gulf Trip Service`;
             const html = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📋 Price Quote</p></div>
+                ${whatsappStrip(`Hi, about the quote you sent me${q.pickup_location ? ` for ${q.pickup_location}` : ''}${q.dropoff_location ? ` to ${q.dropoff_location}` : ''}.`)}
                 <p style="color:#475569;">Dear <strong>${escapeHtml(q.customer_name)}</strong>,</p>
                 <p style="color:#475569;">Here is your price estimate for your requested trip:</p>
                 ${rowsTable([
@@ -407,7 +418,7 @@ export async function POST(req: Request) {
                 </div>
                 ${noteBlock('A note from our team', q.admin_note as string | null | undefined, '#fbf6ec', '#b8945b', '#8a6a35')}
                 ${noteBlock('Your trip requirements', q.notes as string | null | undefined, '#f8fafc', '#94a3b8', '#64748b')}
-                <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">To accept this quote or for any queries, reply to this email or contact us on WhatsApp.</p>
+                <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">To accept this quote, reply to this email or message us on WhatsApp.</p>
             </div></div>`;
             const { data: r, error: e } = await sendMail(q.customer_email, subject, html);
             await logEmail(supabase, null, type, q.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
