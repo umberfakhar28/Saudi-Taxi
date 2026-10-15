@@ -454,6 +454,7 @@ export const khamisMushait: CityData = {
   ],
   pickupPoints: ["Abha International Airport", "Souq Al-Khamis (Friday Market)", "Khamis Mushait city centre", "Al Mahfar Al-Turki fort"],
   faqs: [
+    { q: "How far is Abha Airport from Khamis Mushait?", a: "About 25 km, which is roughly 25–30 minutes by car depending on where in the city you are staying. The airport sits between Khamis Mushait and Abha, so it is a similar distance from both." },
     { q: "Can I rent a car with a driver in Khamis Mushait?", a: "We don't rent self-drive cars — we provide a car with a professional driver, booked point to point, by the hour, or for a full day across Khamis Mushait, Abha and the wider Asir highlands. No licence, deposit or insurance of your own, and the price is agreed before you travel." },
     { q: "Does Khamis Mushait have its own airport?", a: "No — Abha International Airport, about 25 km away, serves both cities. We run this transfer as one of our core Asir Province routes." },
     { q: "Is the Friday Market still held on Fridays?", a: "Yes — Souq Al-Khamis still runs on its traditional day, and it's the market the city takes its name from." },

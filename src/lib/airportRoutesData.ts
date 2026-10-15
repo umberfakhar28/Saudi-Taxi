@@ -414,7 +414,7 @@ export const AIRPORTS: AirportPageInfo[] = [
     // Flagged for a fact-check pass — moderate rather than high confidence.
     distanceFromCity: "about 20 km east of central Abha, between the city and Khamis Mushait",
     heroImage: "/images/airport-terminal.jpg",
-    intro: "The gateway to Asir Province's mountain scenery and cool highland climate. The airport sits between Abha and Khamis Mushait, so both cities are a short drive from arrivals, with Al Souda's highland resorts a little further up the mountain. Longer journeys — Riyadh, Jeddah, Madinah — start here too.",
+    intro: "The gateway to Asir Province's mountain scenery and cool highland climate. The airport sits between Abha and Khamis Mushait, so both cities are a short drive from arrivals, with Al Souda's highland resorts a little further up the mountain. Longer journeys start here too: north to Riyadh, Jeddah and Madinah, and across the south to Jazan, Najran, Bisha and Al Baha.",
     pageHref: "/abha-airport-taxi-service",
     relatedLinks: [
       { href: "/services/abha", label: "Abha Taxi Service" },

@@ -134,6 +134,11 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
     airports: ["AHB"],
   },
   {
+    q: "Can you drive me from Abha Airport to Jazan, Najran, Bisha or Al Baha?",
+    a: "Yes — these are regular onward journeys from Abha for us, and all are long-distance drives across the Asir highlands rather than short airport runs. Jazan is roughly two and a half hours and Najran around three, with Bisha and Al Baha confirmed when you book, since the mountain roads make timing depend on the route and the season. Tell us your landing time and we will plan the departure around it.",
+    airports: ["AHB"],
+  },
+  {
     q: "What should I check before travelling to or from Abha Airport?",
     a: "Confirm your flight directly with your airline before you set out — schedules at regional airports can change at short notice — and let us know if your arrival time moves so the pickup follows it. For road conditions on the mountain routes, your driver will advise on the day.",
     airports: ["AHB"],
