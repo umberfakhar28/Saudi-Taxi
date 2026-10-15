@@ -454,6 +454,7 @@ export const khamisMushait: CityData = {
   ],
   pickupPoints: ["Abha International Airport", "Souq Al-Khamis (Friday Market)", "Khamis Mushait city centre", "Al Mahfar Al-Turki fort"],
   faqs: [
+    { q: "Can I rent a car with a driver in Khamis Mushait?", a: "We don't rent self-drive cars — we provide a car with a professional driver, booked point to point, by the hour, or for a full day across Khamis Mushait, Abha and the wider Asir highlands. No licence, deposit or insurance of your own, and the price is agreed before you travel." },
     { q: "Does Khamis Mushait have its own airport?", a: "No — Abha International Airport, about 25 km away, serves both cities. We run this transfer as one of our core Asir Province routes." },
     { q: "Is the Friday Market still held on Fridays?", a: "Yes — Souq Al-Khamis still runs on its traditional day, and it's the market the city takes its name from." },
     { q: "Can I combine a Khamis Mushait stay with visiting Abha and Al Souda?", a: "Yes — all three are within a short drive of each other, and many visitors base themselves in one city while day-tripping to the others." },

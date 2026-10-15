@@ -103,6 +103,41 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
     a: "Yes — we transfer directly to Red Sea dive clubs and sites north and south of Yanbu, not just the standard hotel or Industrial City drop-offs.",
     airports: ["YNB"],
   },
+  // ── Abha (AHB) ──────────────────────────────────────────────────
+  // The page had no airport-specific questions at all, so it rendered the
+  // generic set alone. Measured demand (GSC, 17 Aug–13 Sep 2026) is for
+  // "abha airport transportation", "abha khamis airport", "khamis mushait
+  // airport" and "abha to khamis mushait" — which is what these answer.
+  {
+    q: "How far is Abha Airport from the city centre, and how long does the drive take?",
+    a: "Abha International sits about 20 km east of central Abha, between the city and Khamis Mushait. Allow roughly 25–35 minutes to a city-centre hotel, a little more in the summer tourist season when the mountain roads are busier.",
+    airports: ["AHB"],
+  },
+  {
+    q: "Can you take me from Abha Airport to Khamis Mushait?",
+    a: "Yes — it is one of the most-booked transfers at this airport, and the two cities sit either side of it, so Khamis Mushait is roughly the same distance from the terminal as Abha itself. Allow about 25–30 minutes door to door, depending on where in the city you are staying.",
+    airports: ["AHB"],
+  },
+  {
+    q: "Do you drive from Abha Airport up to Al Souda?",
+    a: "Yes. Al Souda is about 45 minutes up the mountain from the airport, and the road climbs steadily — worth factoring into your arrival time, particularly for an evening landing or in winter, when the higher sections can be misty.",
+    airports: ["AHB"],
+  },
+  {
+    q: "Which terminal does the driver meet me at in Abha?",
+    a: "Abha has a single passenger terminal, so there is nothing to confirm — your driver meets you at the one arrivals exit with a name board.",
+    airports: ["AHB"],
+  },
+  {
+    q: "Can I book a car from Abha Airport to Riyadh, Jeddah or Madinah?",
+    a: "Yes — these are long-distance road journeys rather than short airport runs, so they are planned as a full travel day with rest stops, and the vehicle is matched to your group and luggage. Share your date and passenger count and we will confirm the timing before you book. Our distance guides for Abha to Riyadh and Abha to Jeddah set out the road distance and drive time.",
+    airports: ["AHB"],
+  },
+  {
+    q: "What should I check before travelling to or from Abha Airport?",
+    a: "Confirm your flight directly with your airline before you set out — schedules at regional airports can change at short notice — and let us know if your arrival time moves so the pickup follows it. For road conditions on the mountain routes, your driver will advise on the day.",
+    airports: ["AHB"],
+  },
   {
     q: "Do I need to book a guide as well as a driver from AlUla Airport?",
     a: "For Hegra specifically, yes — it requires a licensed guide booked through Saudi Tourism, separate from your transport. We handle the driving and know the exact site access timings; the guide is arranged on your end.",

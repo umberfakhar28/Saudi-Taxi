@@ -237,7 +237,7 @@ export const abha: CityData = {
   whyVisit: "Abha is Saudi Arabia's mountain tourism capital — situated at 2,200m above sea level in the Asir highlands. Its cool misty climate, dramatic escarpments, traditional Asiri villages, and the famous Abha cable car have made it one of Saudi Tourism's most marketed destinations.",
   challenge: "Abha's mountainous terrain makes navigation challenging for visitors. The distances between the city, Habala hanging village, Green Mountain, Rijal Alma historical village, and the cable car station require reliable local transport.",
   benefit: "Our Abha-based drivers are local experts who know every mountain road, seasonal viewpoint, and hidden village. We combine airport transfers with full-day mountain discovery tours.",
-  airport: { name: "Abha International Airport", code: "AHB", distance: "22 km from city centre" },
+  airport: { name: "Abha International Airport", code: "AHB", distance: "about 20 km from city centre" },
   popularRoutes: [
     { from: "Abha Airport (AHB)", to: "Abha city centre", time: "25–35 min" },
     { from: "Abha", to: "Jizan", time: "~2.5 hrs" },
@@ -245,6 +245,8 @@ export const abha: CityData = {
   ],
   pickupPoints: ["Abha International Airport", "Abha Palace Hotel", "Green Mountain cable car", "Habala village descent", "Rijal Alma Heritage Village", "Al-Soudah Park"],
   faqs: [
+    { q: "Can you take me to the Abha cable car?", a: "Yes — the cable cars running from Abha towards the Green Mountain and down to Habala are among the most-requested stops, and a driver can wait while you ride and bring you back. Tickets are bought on site; we handle the transfer and the timing." },
+    { q: "Can I hire a car with a driver in Abha?", a: "Yes — a car with a professional driver, by the hour or for a full day, which suits the Asir highlands where sights like Al Souda, Habala and Rijal Alma are spread far apart. We don't rent self-drive cars." },
     { q: "Is Abha accessible year-round?", a: "Yes — though summer (June–September) is peak season. Roads can be misty in winter but are safe with experienced drivers." },
     { q: "Can you combine an Abha airport pickup with a tour?", a: "Yes — many guests book an airport pickup combined with a same-day Habala or Al-Soudah tour before hotel check-in." },
     { q: "Do you cover Rijal Alma from Abha?", a: "Yes — Rijal Alma is approximately 45 minutes from Abha and a popular add-on to any Asir itinerary." },

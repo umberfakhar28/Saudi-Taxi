@@ -37,7 +37,7 @@ export const AIRPORT_ROUTES: AirportRoute[] = [
   { id: "ruh-dammam", airportCode: "RUH", from: "Riyadh Airport (RUH)", to: "Dammam", time: "~3.5-4.5 hrs", distance: "~400 km", vehicles: ["sedan", "suv", "van"], href: "/riyadh-to-dammam-airport-taxi-service" },
 
   // Abha — Abha International Airport (AHB)
-  { id: "ahb-city", airportCode: "AHB", from: "Abha Airport (AHB)", to: "Abha City Centre", time: "~20 min", distance: "~15 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/services/abha" },
+  { id: "ahb-city", airportCode: "AHB", from: "Abha Airport (AHB)", to: "Abha City Centre", time: "~25-35 min", distance: "~20 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/services/abha" },
   { id: "ahb-khamis", airportCode: "AHB", from: "Abha Airport (AHB)", to: "Khamis Mushait", time: "~25-30 min", distance: "~25 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/services/khamis-mushait" },
   { id: "ahb-souda", airportCode: "AHB", from: "Abha Airport (AHB)", to: "Al Souda", time: "~45 min", distance: "~35 km", vehicles: ["sedan", "suv", "van"] },
 
@@ -412,12 +412,15 @@ export const AIRPORTS: AirportPageInfo[] = [
     city: "Abha",
     isMajorHub: false,
     // Flagged for a fact-check pass — moderate rather than high confidence.
-    distanceFromCity: "around 20 km from central Abha, in the Sarawat mountains",
+    distanceFromCity: "about 20 km east of central Abha, between the city and Khamis Mushait",
     heroImage: "/images/airport-terminal.jpg",
-    intro: "The gateway to Asir Province's mountain scenery and cool highland climate — a short, scenic drive from Abha city, Khamis Mushait, and the Al Souda resort area.",
+    intro: "The gateway to Asir Province's mountain scenery and cool highland climate. The airport sits between Abha and Khamis Mushait, so both cities are a short drive from arrivals, with Al Souda's highland resorts a little further up the mountain. Longer journeys — Riyadh, Jeddah, Madinah — start here too.",
     pageHref: "/abha-airport-taxi-service",
     relatedLinks: [
       { href: "/services/abha", label: "Abha Taxi Service" },
+      { href: "/services/khamis-mushait", label: "Khamis Mushait Taxi Service" },
+      { href: "/distance/abha-to-riyadh", label: "Abha to Riyadh: Distance & Travel Time" },
+      { href: "/distance/abha-to-jeddah", label: "Abha to Jeddah: Distance & Travel Time" },
       { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
     ],
     relatedServices: [
@@ -428,9 +431,12 @@ export const AIRPORTS: AirportPageInfo[] = [
     lastReviewed: "August 2026",
     hotelZones: [
       { name: "Abha city-centre hotels", note: "The most convenient base for Lake Park and central attractions, a short drive from the airport." },
+      { name: "Khamis Mushait hotels", note: "The larger neighbouring city, roughly the same distance from the terminal as Abha itself." },
       { name: "Al Souda highland stays", note: "Higher-elevation accommodation for visitors prioritising the coolest possible climate." },
     ],
     practicalInfo: [
+      { title: "One terminal, one arrivals hall", note: "Abha has a single passenger terminal, so there is no terminal to confirm when you book — your driver meets you at the one arrivals exit." },
+      { title: "Check your flight before you travel", note: "Schedules at regional airports can change at short notice. Confirm your flight directly with your airline before setting out, and tell us if your arrival time moves so the pickup can follow it." },
       { title: "Peak summer season", note: "June–August draws a steady wave of domestic tourism escaping the heat elsewhere — book ahead, as demand for pickups rises too." },
       { title: "Winter mist", note: "Mountain roads to Al Souda and Habala can see fog in winter; our drivers are experienced with the conditions." },
     ],

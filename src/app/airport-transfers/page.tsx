@@ -101,7 +101,7 @@ export default function AirportTransfers() {
                     <h2 className="section-title">Hassle-Free Arrival, Anywhere in Saudi Arabia</h2>
                     <p className="section-subtitle">
                         Avoid the stress of airport crowds and unreliable transport. Our pre-arranged airport
-                        transfer service covers Jeddah (JED), Madinah (MED), Dammam (DMM), and Riyadh (RUH) —
+                        transfer service covers {AIRPORTS.map((a) => `${a.city} (${a.code})`).join(', ')} —
                         with a driver waiting for you the moment you land.
                     </p>
                 </div>
