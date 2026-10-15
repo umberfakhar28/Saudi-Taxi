@@ -11,6 +11,7 @@ import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
 import { TRUSTPILOT_REVIEW_URL, trustpilotBcc } from '@/lib/trustpilot';
 import { guardPublicRequest } from '@/lib/antiSpam';
+import { PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
 
 /**
  * Writes the row the Admin Portal's realtime subscription and notification
@@ -150,6 +151,28 @@ function noteBlock(label: string, text: string | null | undefined, tint: string,
     return `<div style="background:${tint};border-left:4px solid ${accent};border-radius:8px;padding:14px 16px;margin-top:16px;">
         <p style="color:${labelColor};margin:0 0 6px;font-size:0.72rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;">${escapeHtml(label)}</p>
         <p style="color:#0f172a;margin:0;font-size:0.95rem;font-weight:600;line-height:1.55;">${html}</p>
+    </div>`;
+}
+
+/**
+ * The WhatsApp route to a reply, for emails a customer receives.
+ *
+ * Email replies land in an inbox someone has to open; WhatsApp is where
+ * this business actually answers fastest, so the customer is given the
+ * link and the number in plain text — the number matters because some
+ * mail clients strip or warn on buttons, and it can be dialled or saved
+ * by hand.
+ *
+ * The message is pre-filled with the booking reference so the customer
+ * does not have to explain which trip they mean.
+ */
+function whatsappBlock(prefill: string): string {
+    const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(prefill)}`;
+    return `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px;margin-top:20px;text-align:center;">
+        <p style="color:#166534;font-weight:800;margin:0 0 6px;font-size:1rem;">Need a faster reply?</p>
+        <p style="color:#475569;margin:0 0 16px;font-size:0.9rem;">Message us on WhatsApp and we will answer you there.</p>
+        <a href="${href}" style="display:inline-block;background:#25c766;color:#ffffff;padding:12px 28px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.95rem;">💬 Chat with us on WhatsApp</a>
+        <p style="color:#64748b;margin:14px 0 0;font-size:0.85rem;">Or save our number: <strong style="color:#0f172a;">${escapeHtml(PHONE_DISPLAY)}</strong></p>
     </div>`;
 }
 
@@ -300,13 +323,15 @@ export async function POST(req: Request) {
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
             await createNotification(supabase, 'new_booking', b, `New Booking — ${b.customer_name}`);
 
-            const custSubject = `Booking Request Received – Gulf Trip Service`;
+            const bookingRef = (b.booking_number as string) || (b.id ? String(b.id).slice(0, 8).toUpperCase() : '');
+            const custSubject = `Booking Request Received – For a faster reply, message us on WhatsApp`;
             const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Booking Received!</p></div>
                 <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
                 <p style="color:#475569;">We received your booking request for <strong>${escapeHtml(displayDateTime(b.travel_date as string | null | undefined, b.travel_time as string | null | undefined))}</strong>. Our team will review the details and contact you within 30 minutes to confirm your final quote.</p>
                 ${buildBookingRows(b)}
-                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">For urgent queries, reply to this email or message us on WhatsApp.</p>
+                ${whatsappBlock(`Hi, I have just submitted a booking request${bookingRef ? ` (ref ${bookingRef})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
+                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
             </div></div>`;
             const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
