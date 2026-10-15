@@ -7,6 +7,7 @@ import {
 } from "@/components/Icons";
 import RelatedLinks from "@/components/RelatedLinks";
 import QuickBookForm from "@/components/QuickBookForm";
+import { ui, type Locale, type UIStrings } from "@/lib/i18n";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 // Value import (not just the RouteData type) so the reverse-route callout
 // below can confirm `reverseSlug` resolves to a real, live page before
@@ -193,25 +194,25 @@ export interface RouteData {
 
 /** Always-true service inclusions, not per-route — the border-crossing item
  * only appears for routes that actually cross one. */
-function includedItemsFor(data: RouteData): string[] {
+function includedItemsFor(data: RouteData, t: UIStrings): string[] {
   const items = [
-    "Private vehicle, exclusively for your group",
-    "Professional, licensed driver",
-    "Door-to-door pickup and drop-off",
-    "Route coordination and flight/schedule tracking",
-    "Luggage assistance",
+    t.includedPrivateVehicle,
+    t.includedLicensedDriver,
+    t.includedDoorToDoor,
+    t.includedCoordination,
+    t.includedLuggage,
   ];
-  if (data.isCrossBorder) items.push("Border-crossing support and document guidance");
+  if (data.isCrossBorder) items.push(t.includedBorderSupport);
   return items;
 }
 
 /** Same 5-step flow the booking widget and WhatsApp path already follow. */
-const HOW_IT_WORKS = [
-  { n: "1", label: "Request Your Route", text: "Share your pickup point, destination, date and passenger count." },
-  { n: "2", label: "Confirm Trip Details", text: "We confirm vehicle, driver and route before you travel." },
-  { n: "3", label: "Booking Confirmation", text: "You receive your driver and vehicle details ahead of pickup." },
-  { n: "4", label: "Driver Pickup", text: "Your driver meets you at the agreed location, on time." },
-  { n: "5", label: "Destination Drop-off", text: "A direct, private journey to your exact destination." },
+const howItWorksFor = (t: UIStrings) => [
+  { n: "1", label: t.step1Label, text: t.step1Text },
+  { n: "2", label: t.step2Label, text: t.step2Text },
+  { n: "3", label: t.step3Label, text: t.step3Text },
+  { n: "4", label: t.step4Label, text: t.step4Text },
+  { n: "5", label: t.step5Label, text: t.step5Text },
 ];
 
 /** Use-case chips computed from data already on every route (tags,
@@ -276,7 +277,8 @@ function relatedCitiesFor(data: RouteData): { slug: string; city: string }[] {
     .map((c) => ({ slug: c.slug, city: c.city }));
 }
 
-export default function RoutePage({ data }: { data: RouteData }) {
+export default function RoutePage({ data, locale = 'en' }: { data: RouteData; locale?: Locale }) {
+  const t = ui(locale);
   const schemas = [
     serviceSchema({
       name: `${data.origin} to ${data.destination} Taxi Service`,
@@ -293,18 +295,23 @@ export default function RoutePage({ data }: { data: RouteData }) {
   ];
 
   const reverseRoute = allRoutes.find((r) => r.slug === data.reverseSlug);
-  const originAirport = airportPageFor(data.origin);
-  const destinationAirport = airportPageFor(data.destination);
-  const relatedCities = relatedCitiesFor(data);
-  const routeDestination = destinationPageFor(data);
-  const routeGuide = ROUTE_GUIDE_MAP[data.slug];
-  const routeDistance = ROUTE_DISTANCE_MAP[data.slug];
+  const originAirport = locale === 'en' ? airportPageFor(data.origin) : null;
+  const destinationAirport = locale === 'en' ? airportPageFor(data.destination) : null;
+  // These blocks all point at English-only pages (city hubs, airport pages,
+  // hotels, destination pages, guides, distance guides). On an Arabic page
+  // they would be dead ends in the wrong language, so they are English-only
+  // until those page families have Arabic versions of their own.
+  const showEnglishOnlyLinks = locale === 'en';
+  const relatedCities = showEnglishOnlyLinks ? relatedCitiesFor(data) : [];
+  const routeDestination = showEnglishOnlyLinks ? destinationPageFor(data) : null;
+  const routeGuide = showEnglishOnlyLinks ? ROUTE_GUIDE_MAP[data.slug] : undefined;
+  const routeDistance = showEnglishOnlyLinks ? ROUTE_DISTANCE_MAP[data.slug] : undefined;
   // Data-driven — automatically picks up any hotel added for either endpoint
   // city later (Phase 19 internal-linking pass), no per-route hardcoding.
-  const routeHotels = [
+  const routeHotels = showEnglishOnlyLinks ? [
     ...(data.fromSlug ? hotelsForCity(data.fromSlug) : []),
     ...(data.toSlug ? hotelsForCity(data.toSlug) : []),
-  ];
+  ] : [];
 
   return (
     <>
@@ -319,11 +326,11 @@ export default function RoutePage({ data }: { data: RouteData }) {
                 brief §1) so the form is visible at first glance; the text
                 keeps its styling via .lead-intro. */}
             <div className="breadcrumb">
-              <Link href="/">Home</Link> /{" "}
+              <Link href="/">{t.home}</Link> /{" "}
               {data.isCrossBorder ? (
-                <Link href="/border-crossing">Border Crossing</Link>
+                <Link href="/border-crossing">{t.borderCrossing}</Link>
               ) : (
-                <Link href="/routes">Routes</Link>
+                <Link href="/routes">{t.routes}</Link>
               )}{" "}
               / <span>{data.breadcrumbLabel}</span>
             </div>
@@ -336,10 +343,11 @@ export default function RoutePage({ data }: { data: RouteData }) {
         <section style={{ padding: "var(--space-8) 0 0" }}>
           <div className="container">
             <QuickBookForm
+              locale={locale}
               defaultFrom={data.origin}
               defaultTo={data.destination}
-              heading={`Book Your ${data.origin} to ${data.destination} Transfer`}
-              subheading="Pickup and drop-off are already filled in — edit them if your trip is slightly different."
+              heading={t.bookYourTransfer(data.origin, data.destination)}
+              subheading={t.quickFormSubheading}
             />
           </div>
         </section>
@@ -449,10 +457,10 @@ export default function RoutePage({ data }: { data: RouteData }) {
                 style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "var(--space-4)", flexWrap: "wrap", padding: "var(--space-5) var(--space-8)" }}
               >
                 <span style={{ color: "var(--text-body)", fontSize: "var(--text-base)" }}>
-                  Traveling the other way? See our <strong style={{ color: "var(--accent)" }}>{reverseRoute.origin} to {reverseRoute.destination}</strong> taxi service.
+                  {t.reverseRoutePrefix} <strong style={{ color: "var(--accent)" }}>{locale === 'ar' ? `${reverseRoute.origin} إلى ${reverseRoute.destination}` : `${reverseRoute.origin} to ${reverseRoute.destination}`}</strong> {t.reverseRouteSuffix}
                 </span>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent)", fontWeight: 700, whiteSpace: "nowrap" }}>
-                  View route <ArrowRightIcon size={16} />
+                  {t.viewRoute} <ArrowRightIcon size={16} />
                 </span>
               </Link>
             </div>
@@ -464,7 +472,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
           <div className="container">
             <div className="grid-60-40">
               <div>
-                <span className="section-eyebrow">Travel Overview</span>
+                <span className="section-eyebrow">{t.travelOverview}</span>
                 <h2 className="section-title">{data.overviewTitle}</h2>
                 {data.overviewParagraphs.map((p, i) => (
                   <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{p}</p>
@@ -480,14 +488,14 @@ export default function RoutePage({ data }: { data: RouteData }) {
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
                 <div className="card">
                   <div className="card-icon"><CarIcon size={22} /></div>
-                  <h3>Journey Details</h3>
+                  <h3>{t.journeyDetails}</h3>
                   <p>Distance: <strong style={{ color: "var(--navy)" }}>{data.distance}</strong></p>
-                  <p>Travel time: <strong style={{ color: "var(--navy)" }}>{data.travelTime}</strong></p>
+                  <p>{`${t.travelTimeLabel}: `}<strong style={{ color: "var(--navy)" }}>{data.travelTime}</strong></p>
                   {data.borderCrossingName && <p>Crossing: <strong style={{ color: "var(--navy)" }}>{data.borderCrossingName}</strong></p>}
                 </div>
                 <div className="card">
                   <div className="card-icon"><MapPinIcon size={22} /></div>
-                  <h3>Pickup Points</h3>
+                  <h3>{t.pickupPoints}</h3>
                   <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", marginTop: "var(--space-3)" }}>
                     {data.pickupPoints.map((pt, i) => (
                       <li key={i} style={{ color: "var(--text-body)", fontSize: "var(--text-sm)", display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
@@ -507,8 +515,8 @@ export default function RoutePage({ data }: { data: RouteData }) {
           <section className="section" style={{ background: "var(--bg-subtle)" }}>
             <div className="container">
               <div className="section-header centered">
-                <span className="section-eyebrow">Airport</span>
-                <h2 className="section-title">Airport Information for This Route</h2>
+                <span className="section-eyebrow">{t.airport}</span>
+                <h2 className="section-title">{t.airportInfo}</h2>
               </div>
               <div className="grid-2">
                 {originAirport && (
@@ -543,8 +551,8 @@ export default function RoutePage({ data }: { data: RouteData }) {
           <section className="section">
             <div className="container">
               <div className="section-header centered">
-                <span className="section-eyebrow">Journey Breaks</span>
-                <h2 className="section-title">Stops Along the Way</h2>
+                <span className="section-eyebrow">{t.journeyBreaks}</span>
+                <h2 className="section-title">{t.stopsAlongTheWay}</h2>
               </div>
               <div className="grid-3">
                 {data.stops.map((s) => (
@@ -565,7 +573,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
             <div className="container">
               <div className="grid-2">
                 <div>
-                  <span className="section-eyebrow">Crossing Process</span>
+                  <span className="section-eyebrow">{t.crossingProcess}</span>
                   <h2 className="section-title">{data.borderProcessTitle}</h2>
                   {data.borderProcessParagraphs?.map((p, i) => (
                     <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-5)" }}>{p}</p>
@@ -574,7 +582,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
                 </div>
                 <div style={{ border: "1px solid var(--gray-200)", borderRadius: "var(--radius-xl)", overflow: "hidden" }}>
                   <div style={{ background: "var(--primary)", padding: "1.5rem", color: "var(--white)" }}>
-                    <h3 style={{ margin: 0, fontSize: "1.2rem" }}>Required Documents Checklist</h3>
+                    <h3 style={{ margin: 0, fontSize: "1.2rem" }}>{t.requiredDocuments}</h3>
                   </div>
                   <div style={{ padding: "2rem" }}>
                     <ul style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
@@ -589,7 +597,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
                 </div>
               </div>
               <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginTop: "var(--space-6)" }}>
-                Border and document requirements can change — always verify current entry requirements with the relevant embassy or border authority before you travel.
+                {t.borderDisclaimer}
                 {data.lastReviewed && <> Page last reviewed: {data.lastReviewed}.</>}
               </p>
             </div>
@@ -600,11 +608,11 @@ export default function RoutePage({ data }: { data: RouteData }) {
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
           <div className="container">
             <div className="section-header centered">
-              <span className="section-eyebrow">What&apos;s Included</span>
+              <span className="section-eyebrow">{t.whatsIncluded}</span>
               <h2 className="section-title">Every {data.origin} to {data.destination} Booking Includes</h2>
             </div>
             <div className="grid-3">
-              {includedItemsFor(data).map((item) => (
+              {includedItemsFor(data, t).map((item) => (
                 <div key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start" }}>
                   <CheckCircleIcon size={20} style={{ color: "var(--success)", flexShrink: 0, marginTop: 2 }} />
                   <span style={{ color: "var(--text-body)" }}>{item}</span>
@@ -618,8 +626,8 @@ export default function RoutePage({ data }: { data: RouteData }) {
         <section className="section">
           <div className="container">
             <div className="section-header centered">
-              <span className="section-eyebrow">Choose Your Ride</span>
-              <h2 className="section-title">Vehicle Options for {data.origin} to {data.destination}</h2>
+              <span className="section-eyebrow">{t.chooseYourRide}</span>
+              <h2 className="section-title">{t.vehicleOptionsFor(data.origin, data.destination)}</h2>
             </div>
             <div className="grid-3">
               {data.vehicleOptions.map((v, i) => (
@@ -651,11 +659,11 @@ export default function RoutePage({ data }: { data: RouteData }) {
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
           <div className="container">
             <div className="section-header centered">
-              <span className="section-eyebrow">How It Works</span>
+              <span className="section-eyebrow">{t.howItWorks}</span>
               <h2 className="section-title">Booking Your {data.origin} to {data.destination} Transfer</h2>
             </div>
             <div className="grid-4">
-              {HOW_IT_WORKS.map((step) => (
+              {howItWorksFor(t).map((step) => (
                 <div key={step.n} style={{ textAlign: "center" }}>
                   <div style={{
                     width: 56, height: 56, borderRadius: "50%", background: "var(--white)", color: "var(--navy)",
@@ -675,8 +683,8 @@ export default function RoutePage({ data }: { data: RouteData }) {
           <section className="section">
             <div className="container">
               <div className="section-header centered">
-                <span className="section-eyebrow">Good to Know</span>
-                <h2 className="section-title">Practical Information for This Route</h2>
+                <span className="section-eyebrow">{t.goodToKnow}</span>
+                <h2 className="section-title">{t.practicalInfo}</h2>
               </div>
               <div className="grid-3">
                 {data.practicalInfo.map((item) => (
@@ -696,8 +704,8 @@ export default function RoutePage({ data }: { data: RouteData }) {
           <section className="section" style={{ background: "var(--bg-subtle)" }}>
             <div className="container">
               <div className="section-header centered">
-                <span className="section-eyebrow">Customer Reviews</span>
-                <h2 className="section-title">What Travelers Say About This Route</h2>
+                <span className="section-eyebrow">{t.customerReviews}</span>
+                <h2 className="section-title">{t.whatTravellersSay}</h2>
               </div>
               <div className={styles.reviewGrid}>
                 {data.reviews.map((r, i) => (
@@ -718,7 +726,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
           <div className="container">
             <div className="section-header centered">
               <span className="section-eyebrow">FAQ</span>
-              <h2 className="section-title">{data.origin} to {data.destination} — Frequently Asked Questions</h2>
+              <h2 className="section-title">{locale === 'ar' ? `${data.origin} إلى ${data.destination} — ${t.faqHeading}` : `${data.origin} to ${data.destination} — ${t.faqHeading}`}</h2>
             </div>
             <div style={{ maxWidth: 780, margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
               {data.faqs.map((f, i) => (
@@ -732,7 +740,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
         </section>
 
         {/* Related routes */}
-        <RelatedLinks title="Related Routes You May Need" links={data.relatedRoutes} />
+        <RelatedLinks title={t.relatedRoutes} links={data.relatedRoutes} />
 
         {/* Related Cities, Airports, Hotels, Destination & Services */}
         <section className="section">
@@ -740,7 +748,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-10)" }}>
               {relatedCities.length > 0 && (
                 <div>
-                  <h3 style={{ marginBottom: "var(--space-4)" }}>Related Cities</h3>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>{t.relatedCities}</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     {relatedCities.map((c) => (
                       <Link key={c.slug} href={`/services/${c.slug}`} className="btn btn-outline-gold btn-sm">{c.city}</Link>
@@ -750,7 +758,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
               )}
               {(originAirport || destinationAirport) && (
                 <div>
-                  <h3 style={{ marginBottom: "var(--space-4)" }}>Related Airports</h3>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>{t.relatedAirports}</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     {originAirport && <Link href={originAirport.pageHref} className="btn btn-outline-gold btn-sm">{originAirport.name}</Link>}
                     {destinationAirport && destinationAirport.code !== originAirport?.code && (
@@ -761,7 +769,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
               )}
               {routeHotels.length > 0 && (
                 <div>
-                  <h3 style={{ marginBottom: "var(--space-4)" }}>Related Hotels</h3>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>{t.relatedHotels}</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     {routeHotels.map((h) => (
                       <Link key={h.slug} href={`/hotels/${h.citySlug}/${h.slug}`} className="btn btn-outline-gold btn-sm">{h.hotelName}</Link>
@@ -771,7 +779,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
               )}
               {routeDestination && (
                 <div>
-                  <h3 style={{ marginBottom: "var(--space-4)" }}>Related Destination</h3>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>{t.relatedDestination}</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     <Link href={routeDestination.href} className="btn btn-outline-gold btn-sm">{routeDestination.name}</Link>
                   </div>
@@ -779,7 +787,7 @@ export default function RoutePage({ data }: { data: RouteData }) {
               )}
               {routeGuide && (
                 <div>
-                  <h3 style={{ marginBottom: "var(--space-4)" }}>Travel Guide</h3>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>{t.travelGuide}</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     <Link href={routeGuide.href} className="btn btn-outline-gold btn-sm">{routeGuide.label}</Link>
                   </div>
@@ -787,16 +795,16 @@ export default function RoutePage({ data }: { data: RouteData }) {
               )}
               {routeDistance && (
                 <div>
-                  <h3 style={{ marginBottom: "var(--space-4)" }}>Distance & Travel Time</h3>
+                  <h3 style={{ marginBottom: "var(--space-4)" }}>{t.distanceAndTime}</h3>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
                     <Link href={routeDistance.href} className="btn btn-outline-gold btn-sm">{routeDistance.label}</Link>
                   </div>
                 </div>
               )}
               <div>
-                <h3 style={{ marginBottom: "var(--space-4)" }}>Related Services</h3>
+                <h3 style={{ marginBottom: "var(--space-4)" }}>{t.relatedServices}</h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
-                  {relatedServicesFor(data).map((l) => (
+                  {(showEnglishOnlyLinks ? relatedServicesFor(data) : []).map((l) => (
                     <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
                   ))}
                 </div>
@@ -818,9 +826,9 @@ export default function RoutePage({ data }: { data: RouteData }) {
                   follows as secondary — matching every other page family's
                   closing CTA. WhatsApp previously wore the primary navy
                   class here, with Book Online demoted to an outline button. */}
-              <Link href="/book-online" className="btn btn-primary btn-lg">Book Online</Link>
+              <Link href={locale === 'ar' ? "/ar/book-online" : "/book-online"} className="btn btn-primary btn-lg">{t.bookOnline}</Link>
               <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
-                <MessageIcon size={18} /> WhatsApp Quote
+                <MessageIcon size={18} /> {t.whatsappQuote}
               </a>
             </div>
           </div>

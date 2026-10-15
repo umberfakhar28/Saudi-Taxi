@@ -270,6 +270,11 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { slug: "/ar/dammam-airport-to-bahrain-taxi-service", enSlug: "/dammam-airport-to-bahrain-taxi-service", priority: 0.75 },
     { slug: "/ar/dammam-airport-to-qatar-taxi-service", enSlug: "/dammam-airport-to-qatar-taxi-service", priority: 0.75 },
     { slug: "/ar/contact-us", enSlug: "/contact-us", priority: 0.7 },
+    { slug: "/ar/book-online", enSlug: "/book-online", priority: 0.9 },
+    { slug: "/ar/bahrain-to-dammam-taxi-service", enSlug: "/bahrain-to-dammam-taxi-service", priority: 0.8 },
+    { slug: "/ar/riyadh-to-qatar-taxi-service", enSlug: "/riyadh-to-qatar-taxi-service", priority: 0.8 },
+    { slug: "/ar/riyadh-to-kuwait-taxi-service", enSlug: "/riyadh-to-kuwait-taxi-service", priority: 0.8 },
+    { slug: "/ar/riyadh-to-bahrain-taxi-service", enSlug: "/riyadh-to-bahrain-taxi-service", priority: 0.8 },
   ].map(({ slug, enSlug, priority }) => ({
     url: `${BASE_URL}${slug}`,
     lastModified: lastMod(slug),

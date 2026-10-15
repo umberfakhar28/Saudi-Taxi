@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CalendarIcon, ClockIcon, UserIcon, ArrowRightIcon, WhatsAppIcon } from "./Icons";
 import SearchAutocomplete from "./SearchAutocomplete";
 import { waLink } from "@/lib/contact";
+import { ui, type Locale } from "@/lib/i18n";
 import styles from "./QuickBookForm.module.css";
 
 interface QuickBookFormProps {
@@ -17,6 +18,9 @@ interface QuickBookFormProps {
     service?: string;
     heading?: string;
     subheading?: string;
+    /** Defaults to English; 'ar' renders the Arabic labels. The booking
+     * flow it hands off to is the same one in both languages. */
+    locale?: Locale;
 }
 
 /**
@@ -27,7 +31,9 @@ interface QuickBookFormProps {
  * for everything else (vehicle, contact details) — one booking system,
  * not a second parallel one that also has to write to Supabase.
  */
-export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading = "Get a Quick Quote", subheading }: QuickBookFormProps) {
+export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading, subheading, locale = 'en' }: QuickBookFormProps) {
+    const t = ui(locale);
+    const title = heading ?? t.quickQuoteHeading;
     const router = useRouter();
     const [from, setFrom] = useState(defaultFrom);
     const [to, setTo] = useState(defaultTo);
@@ -64,7 +70,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
     return (
         <div className={styles.card}>
             <div className={styles.header}>
-                <h3 className={styles.title}>{heading}</h3>
+                <h3 className={styles.title}>{title}</h3>
                 {subheading && <p className={styles.subtitle}>{subheading}</p>}
             </div>
 
@@ -72,8 +78,8 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                 <div className={styles.field}>
                     <SearchAutocomplete
                         variant="field"
-                        label="Pickup"
-                        placeholder="e.g. Jeddah Airport"
+                        label={t.pickup}
+                        placeholder={t.pickupPlaceholder}
                         value={from}
                         onChange={setFrom}
                         required
@@ -82,23 +88,23 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                 <div className={styles.field}>
                     <SearchAutocomplete
                         variant="field"
-                        label="Drop-off"
-                        placeholder="e.g. Makkah Hotel"
+                        label={t.dropoff}
+                        placeholder={t.dropoffPlaceholder}
                         value={to}
                         onChange={setTo}
                         required
                     />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}><CalendarIcon size={14} /> Date</label>
+                    <label className={styles.label}><CalendarIcon size={14} /> {t.date}</label>
                     <input type="date" className={styles.input} value={date} onChange={(e) => setDate(e.target.value)} />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}><ClockIcon size={14} /> Time</label>
+                    <label className={styles.label}><ClockIcon size={14} /> {t.time}</label>
                     <input type="time" className={styles.input} value={time} onChange={(e) => setTime(e.target.value)} />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}><UserIcon size={14} /> Passengers</label>
+                    <label className={styles.label}><UserIcon size={14} /> {t.passengers}</label>
                     <select className={styles.input} value={passengers} onChange={(e) => setPassengers(e.target.value)}>
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => <option key={n} value={n}>{n}</option>)}
                     </select>
@@ -106,7 +112,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
 
                 <div className={styles.actions}>
                     <button type="submit" className={`btn btn-primary ${styles.submitBtn}`}>
-                        Book Now <ArrowRightIcon size={16} />
+                        {t.bookNow} <ArrowRightIcon size={16} />
                     </button>
                     <a
                         href={waLink(whatsappMessage())}
@@ -114,7 +120,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                         rel="noopener noreferrer"
                         className={`btn btn-whatsapp ${styles.submitBtn}`}
                     >
-                        <WhatsAppIcon size={16} /> Book on WhatsApp
+                        <WhatsAppIcon size={16} /> {locale === 'ar' ? 'احجز عبر واتساب' : 'Book on WhatsApp'}
                     </a>
                 </div>
             </form>

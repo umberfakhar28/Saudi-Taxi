@@ -57,7 +57,7 @@ export default function ArabicHome() {
             سائقون محترفون، أسعار ثابتة، بدون رسوم خفية. متوفرون على مدار الساعة.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", flexWrap: "wrap", marginTop: "var(--space-6)" }}>
-            <Link href="/book-online" className="btn btn-primary btn-lg">احجز رحلتك</Link>
+            <Link href="/ar/book-online" className="btn btn-primary btn-lg">احجز رحلتك</Link>
             <a href={WHATSAPP_URL} className="btn btn-secondary btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
@@ -168,7 +168,7 @@ export default function ArabicHome() {
             احجز خدمة تاكسي مريحة وموثوقة اليوم. متوفرون على مدار الساعة في مكة وجدة والمدينة والمنطقة الشرقية.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
+            <Link href="/ar/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
             <Link href="/ar/contact-us" className="btn btn-outline btn-lg">اتصل بنا</Link>
           </div>
         </div>

@@ -239,7 +239,7 @@ export default function ArContactUsClient() {
                         تخطَّ النموذج — احجز مباشرة عبر صفحة الحجز السريع أو واتساب.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Link href="/book-online" className="btn btn-primary btn-lg">
+                        <Link href="/ar/book-online" className="btn btn-primary btn-lg">
                             احجز الآن
                         </Link>
                         <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">

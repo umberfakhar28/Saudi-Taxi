@@ -80,6 +80,9 @@ export default function Logo({
   return (
     <span
       className={className}
+      // The mark and the Latin wordmark keep their order inside an RTL
+      // page, where the browser would otherwise reverse them.
+      dir="ltr"
       style={{ display: "inline-flex", alignItems: "center", gap: size * 0.22 }}
     >
       <LogoMark size={size} variant={variant} />

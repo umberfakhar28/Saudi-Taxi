@@ -24,32 +24,44 @@ export default function MobileBottomNav({
     onToggleMenu: () => void;
 }) {
     const pathname = usePathname();
-    const isHome = pathname === '/';
+    // On the Arabic side of the site this bar must stay in Arabic and point
+    // at the Arabic pages; it is rendered by the shared layout, so it reads
+    // the path rather than taking a prop.
+    const isAr = pathname === '/ar' || pathname.startsWith('/ar/');
+    const isHome = pathname === '/' || pathname === '/ar';
+    const homeHref = isAr ? '/ar' : '/';
+    const bookHref = isAr ? '/ar/book-online' : '/book-online';
+    const label = {
+        home: isAr ? 'الرئيسية' : 'Home',
+        whatsapp: isAr ? 'واتساب' : 'WhatsApp',
+        book: isAr ? 'احجز الآن' : 'Book Now',
+        menu: isAr ? 'القائمة' : 'Menu',
+    };
 
     return (
         <nav className={styles.bar} aria-label="Mobile quick navigation">
             <Link
-                href="/"
+                href={homeHref}
                 className={`${styles.item} ${isHome ? styles.itemActive : ''}`}
                 aria-current={isHome ? 'page' : undefined}
             >
                 <HomeIcon size={22} />
-                <span>Home</span>
+                <span>{label.home}</span>
             </Link>
 
             <a
-                href={waLink("Hi, I'd like to know more about your services.")}
+                href={waLink(isAr ? 'مرحباً، أود معرفة المزيد عن خدماتكم.' : "Hi, I'd like to know more about your services.")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.item}
             >
                 <WhatsAppIcon size={22} />
-                <span>WhatsApp</span>
+                <span>{label.whatsapp}</span>
             </a>
 
-            <Link href="/book-online" className={`${styles.item} ${styles.itemPrimary}`}>
+            <Link href={bookHref} className={`${styles.item} ${styles.itemPrimary}`}>
                 <CarIcon size={22} />
-                <span>Book Now</span>
+                <span>{label.book}</span>
             </Link>
 
             <button
@@ -60,7 +72,7 @@ export default function MobileBottomNav({
                 aria-expanded={menuOpen}
             >
                 {menuOpen ? <XIcon size={22} /> : <MenuIcon size={22} />}
-                <span>Menu</span>
+                <span>{label.menu}</span>
             </button>
         </nav>
     );

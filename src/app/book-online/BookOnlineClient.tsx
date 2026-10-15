@@ -11,6 +11,7 @@ import { SEARCH_INDEX } from "@/lib/searchIndex";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
+import { ui, SERVICE_LABELS_AR, type Locale } from "@/lib/i18n";
 import styles from "./BookOnlineClient.module.css";
 
 const services = [
@@ -84,7 +85,13 @@ function isChunkLoadError(err: unknown): boolean {
     return /loading chunk .* failed|failed to load chunk|failed to fetch dynamically imported module|importing a module script failed/i.test(message);
 }
 
-export default function BookOnlineClient() {
+export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } = {}) {
+    const t = ui(locale);
+    const isAr = locale === 'ar';
+    /** Service names follow the page's language; the id written to the
+     * booking is the same in both, so the admin panel is unaffected. */
+    const serviceLabelFor = (svc: { id: string; label: string }) =>
+        isAr ? (SERVICE_LABELS_AR[svc.id] ?? svc.label) : svc.label;
     const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
@@ -258,7 +265,7 @@ export default function BookOnlineClient() {
             // all three calls below (a Turnstile token is single-use).
             const gate = await getSpamPass(spamToken, honeypot);
             if (!gate.ok) {
-                setSubmitError(gate.message ?? 'Verification failed. Please try again.');
+                setSubmitError(gate.message ?? t.verificationNeeded);
                 setIsSubmitting(false);
                 return;
             }
@@ -382,13 +389,13 @@ export default function BookOnlineClient() {
                     {submitted ? (
                         <div className="card" style={{ textAlign: 'center', padding: '4rem' }}>
                             <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✅</div>
-                            <h2 style={{ color: 'var(--navy)' }}>Booking Request Received!</h2>
+                            <h2 style={{ color: 'var(--navy)' }}>{t.bookingReceived}</h2>
                             <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2rem' }}>
-                                Thank you, <strong>{formData.name}</strong>! We&apos;ll confirm your booking within 30 minutes via WhatsApp or email.
+                                {t.bookingReceivedBody(formData.name)}
                             </p>
                             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                                <Link href="/" className="btn btn-primary">Back to Home</Link>
-                                <a href={waLink(whatsappText)} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">💬 Send Details on WhatsApp</a>
+                                <Link href={isAr ? "/ar" : "/"} className="btn btn-primary">{t.backToHome}</Link>
+                                <a href={waLink(whatsappText)} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">{t.sendDetailsWhatsApp}</a>
                             </div>
                         </div>
                     ) : (
@@ -400,8 +407,8 @@ export default function BookOnlineClient() {
                                 Step 1. */}
                             {step > 1 && selectedService && (
                                 <div className={styles.selectionChip}>
-                                    <span>{selectedService.icon} Service: <strong>{selectedService.label}</strong></span>
-                                    <button type="button" onClick={() => setStep(1)}>Change</button>
+                                    <span>{selectedService.icon} {t.serviceLabel}: <strong>{serviceLabelFor(selectedService)}</strong></span>
+                                    <button type="button" onClick={() => setStep(1)}>{t.changeLabel}</button>
                                 </div>
                             )}
 
@@ -414,10 +421,10 @@ export default function BookOnlineClient() {
                                     borderRadius: 'var(--radius-md)', padding: '0.85rem 1.25rem', marginBottom: '1.5rem',
                                 }}>
                                     <span style={{ fontSize: '0.9rem', color: 'var(--text-dark)', minWidth: 0, wordBreak: 'break-word' }}>
-                                        🚗 Booking for: <strong>{formData.vehicleName}</strong>
+                                        🚗 {t.bookingForLabel}: <strong>{formData.vehicleName}</strong>
                                     </span>
                                     <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--teal)', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', flexShrink: 0 }}>
-                                        Change vehicle
+                                        {t.changeVehicle}
                                     </button>
                                 </div>
                             )}
@@ -426,7 +433,7 @@ export default function BookOnlineClient() {
                                 connectors never exceed a narrow mobile viewport (audit §13:
                                 step navigation must not clip/overflow on small screens). */}
                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem', gap: '0' }}>
-                                {['Select Service', 'Trip Details', 'Your Info'].map((label, i) => (
+                                {[t.stepService, t.stepTrip, t.stepInfo].map((label, i) => (
                                     <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
                                         <div style={{ textAlign: 'center' }}>
                                             <div style={{
@@ -451,7 +458,7 @@ export default function BookOnlineClient() {
                                 {/* Step 1: Select Service */}
                                 {step === 1 && (
                                     <div className="card">
-                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>Select Your Service</h2>
+                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>{t.selectService}</h2>
                                         <div className="grid-2">
                                             {services.map((svc) => (
                                                 <label key={svc.id} style={{
@@ -466,14 +473,14 @@ export default function BookOnlineClient() {
                                                     <input type="radio" name="service" value={svc.id} checked={formData.service === svc.id} onChange={handleChange} style={{ display: 'none' }} />
                                                     <span style={{ fontSize: '1.8rem' }}>{svc.icon}</span>
                                                     <div>
-                                                        <div style={{ fontWeight: 600, color: 'var(--text-dark)', fontSize: '0.95rem' }}>{svc.label}</div>
+                                                        <div style={{ fontWeight: 600, color: 'var(--text-dark)', fontSize: '0.95rem' }}>{serviceLabelFor(svc)}</div>
                                                     </div>
                                                 </label>
                                             ))}
                                         </div>
                                         <div className={`${styles.actions} ${styles.actionsEnd}`} style={{ marginTop: '2rem' }}>
                                             <button type="button" className="btn btn-primary" disabled={!formData.service} onClick={() => setStep(2)} style={{ opacity: formData.service ? 1 : 0.5, cursor: formData.service ? 'pointer' : 'not-allowed' }}>
-                                                Next: Trip Details →
+                                                {t.nextTripDetails}
                                             </button>
                                         </div>
                                     </div>
@@ -482,18 +489,18 @@ export default function BookOnlineClient() {
                                 {/* Step 2: Trip Details */}
                                 {step === 2 && (
                                     <div className="card">
-                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>Trip Details</h2>
+                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>{t.tripDetails}</h2>
                                         {Object.keys(step2Errors).length > 0 && (
                                             <div style={{ background: 'rgba(179, 38, 30, 0.08)', border: '1px solid var(--error)', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: 'var(--error)', fontSize: '0.85rem' }}>
-                                                Please fill in all required fields before continuing.
+                                                {t.fillRequired}
                                             </div>
                                         )}
                                         <div className={styles.locationRow} style={{ marginBottom: 'var(--space-6)' }}>
                                             <div className="form-group" style={{ marginBottom: 0 }}>
                                                 <SearchAutocomplete
                                                     variant="field"
-                                                    label="Pickup Location *"
-                                                    placeholder="e.g. Jeddah Airport"
+                                                    label={t.pickupLocation}
+                                                    placeholder={t.pickupPlaceholder}
                                                     value={formData.from}
                                                     onChange={(v) => setFormData((f) => ({ ...f, from: v }))}
                                                     required
@@ -507,8 +514,8 @@ export default function BookOnlineClient() {
                                             <div className="form-group" style={{ marginBottom: 0 }}>
                                                 <SearchAutocomplete
                                                     variant="field"
-                                                    label="Drop-off Location *"
-                                                    placeholder="e.g. Makkah Hotel"
+                                                    label={t.dropoffLocation}
+                                                    placeholder={t.dropoffPlaceholder}
                                                     value={formData.to}
                                                     onChange={(v) => setFormData((f) => ({ ...f, to: v }))}
                                                     required
@@ -519,34 +526,34 @@ export default function BookOnlineClient() {
                                         </div>
                                         <div className="grid-2">
                                             <div className="form-group">
-                                                <label className="form-label">Travel Date *</label>
+                                                <label className="form-label">{t.travelDate}</label>
                                                 <input type="date" name="date" className="form-input" value={formData.date} onChange={handleChange} aria-invalid={!!step2Errors.date} style={step2Errors.date ? { borderColor: 'var(--error)' } : undefined} required />
                                                 {step2Errors.date && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.date}</p>}
                                             </div>
                                             <div className="form-group">
-                                                <label className="form-label">Pickup Time *</label>
+                                                <label className="form-label">{t.pickupTime}</label>
                                                 <input type="time" name="time" className="form-input" value={formData.time} onChange={handleChange} aria-invalid={!!step2Errors.time} style={step2Errors.time ? { borderColor: 'var(--error)' } : undefined} required />
                                                 {step2Errors.time && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.time}</p>}
                                             </div>
                                         </div>
                                         <div className="grid-2">
                                             <div className="form-group">
-                                                <label className="form-label">Number of Passengers *</label>
+                                                <label className="form-label">{t.numberOfPassengers}</label>
                                                 <select name="passengers" className="form-select" value={formData.passengers} onChange={handleChange}>
-                                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n} passenger{n > 1 ? 's' : ''}</option>)}
+                                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{isAr ? `${n} ${t.passenger}` : `${n} passenger${n > 1 ? 's' : ''}`}</option>)}
                                                 </select>
                                             </div>
                                             <div className="form-group">
-                                                <label className="form-label">Luggage</label>
+                                                <label className="form-label">{t.luggage}</label>
                                                 <select name="luggage" className="form-select" value={formData.luggage} onChange={handleChange}>
-                                                    <option value="">Not sure yet</option>
-                                                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={String(n)}>{n} bag{n === 1 ? '' : 's'}</option>)}
+                                                    <option value="">{t.luggageNotSure}</option>
+                                                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={String(n)}>{isAr ? `${n} ${t.bags}` : `${n} bag${n === 1 ? '' : 's'}`}</option>)}
                                                 </select>
                                             </div>
                                         </div>
                                         <div className="grid-2">
                                             <div className="form-group">
-                                                <label className="form-label">Vehicle {formData.vehicleName ? '' : '(optional)'}</label>
+                                                <label className="form-label">{t.vehicle} {formData.vehicleName ? '' : t.vehicleOptional}</label>
                                                 {formData.vehicleName ? (
                                                     <div className="form-input" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-dark)', fontWeight: 600 }}>
                                                         <span>🚗 {formData.vehicleName}</span>
@@ -554,15 +561,15 @@ export default function BookOnlineClient() {
                                                     </div>
                                                 ) : (
                                                     <select name="vehicleName" className="form-select" value={formData.vehicleName} onChange={handleChange}>
-                                                        <option value="">No preference</option>
+                                                        <option value="">{t.noPreference}</option>
                                                         {VEHICLE_OPTIONS.map((v) => <option key={v} value={v}>{v}</option>)}
                                                     </select>
                                                 )}
                                             </div>
                                         </div>
                                         <div className={styles.actions} style={{ marginTop: '1rem' }}>
-                                            <button type="button" className="btn btn-outline-gold" onClick={() => setStep(1)}>← Back</button>
-                                            <button type="button" className="btn btn-primary" onClick={goToStep3}>Next: Your Info →</button>
+                                            <button type="button" className="btn btn-outline-gold" onClick={() => setStep(1)}>{t.back}</button>
+                                            <button type="button" className="btn btn-primary" onClick={goToStep3}>{t.nextYourInfo}</button>
                                         </div>
                                     </div>
                                 )}
@@ -570,46 +577,46 @@ export default function BookOnlineClient() {
                                 {/* Step 3: Personal Info */}
                                 {step === 3 && (
                                     <div className="card">
-                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>Your Information</h2>
+                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>{t.yourInformation}</h2>
                                         <div className={styles.tripSummary}>
                                             <dl>
-                                                <div><dt>Route</dt><dd>{formData.from} → {formData.to}</dd></div>
-                                                <div><dt>When</dt><dd>{formatWhen(formData.date, formData.time)}</dd></div>
-                                                {formData.returnTrip && <div><dt>Return</dt><dd>{formData.returnTrip}</dd></div>}
-                                                <div><dt>Passengers</dt><dd>{formData.passengers}{formData.luggage !== '' ? ` · ${formData.luggage} bag${formData.luggage === '1' ? '' : 's'}` : ''}</dd></div>
+                                                <div><dt>{t.route}</dt><dd><bdi>{formData.from}</bdi> → <bdi>{formData.to}</bdi></dd></div>
+                                                <div><dt>{t.when}</dt><dd><bdi>{formatWhen(formData.date, formData.time)}</bdi></dd></div>
+                                                {formData.returnTrip && <div><dt>{t.returnLabel}</dt><dd><bdi>{formData.returnTrip}</bdi></dd></div>}
+                                                <div><dt>{t.passengers}</dt><dd>{formData.passengers}{formData.luggage !== '' ? ` · ${formData.luggage} ${isAr ? t.bags : `bag${formData.luggage === '1' ? '' : 's'}`}` : ''}</dd></div>
                                             </dl>
-                                            <button type="button" onClick={() => setStep(2)}>Edit trip</button>
+                                            <button type="button" onClick={() => setStep(2)}>{t.editTrip}</button>
                                         </div>
                                         {submitError && (
                                             <div style={{ background: 'rgba(179, 38, 30, 0.08)', border: '1px solid var(--error)', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: 'var(--error)', fontSize: '0.85rem' }}>
-                                                {submitError} Your entered details are still here — please try again.
+                                                {submitError} {t.errorRetry}
                                             </div>
                                         )}
                                         <div className="grid-2">
                                             <div className="form-group">
-                                                <label className="form-label">Full Name *</label>
+                                                <label className="form-label">{t.fullName}</label>
                                                 <input type="text" name="name" className="form-input" placeholder="Your full name" autoComplete="name" value={formData.name} onChange={handleChange} required />
                                             </div>
                                             <div className="form-group">
-                                                <label className="form-label">Email Address *</label>
+                                                <label className="form-label">{t.emailAddress}</label>
                                                 <input type="email" name="email" className="form-input" placeholder="your@email.com" autoComplete="email" value={formData.email} onChange={handleChange} required />
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label className="form-label">Phone / WhatsApp *</label>
+                                            <label className="form-label">{t.phoneWhatsApp}</label>
                                             <input type="tel" name="phone" className="form-input" placeholder="+966 50 123 4567" autoComplete="tel" value={formData.phone} onChange={handleChange} required />
                                         </div>
                                         <div className="form-group">
-                                            <label className="form-label">Special Requirements / Notes</label>
-                                            <textarea name="notes" className="form-textarea" placeholder="Any special requests, wheelchair access, extra luggage, etc." value={formData.notes} onChange={handleChange} rows={4} />
+                                            <label className="form-label">{t.specialRequirements}</label>
+                                            <textarea name="notes" className="form-textarea" placeholder={t.specialRequirementsPlaceholder} value={formData.notes} onChange={handleChange} rows={4} />
                                         </div>
                                         <input {...honeypotFieldProps} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
                                         <TurnstileWidget onToken={setSpamToken} />
 
                                         <div className={styles.actions} style={{ marginTop: '0.5rem' }}>
-                                            <button type="button" className="btn btn-outline-gold" onClick={() => setStep(2)}>← Back</button>
+                                            <button type="button" className="btn btn-outline-gold" onClick={() => setStep(2)}>{t.back}</button>
                                             <button type="submit" className={`btn btn-primary btn-lg ${styles.confirmBtn}`} disabled={isSubmitting}>
-                                                {isSubmitting ? 'Processing...' : 'Confirm Booking ✓'}
+                                                {isSubmitting ? t.processing : t.confirmBooking}
                                             </button>
                                         </div>
                                     </div>
@@ -620,9 +627,9 @@ export default function BookOnlineClient() {
 
                     {/* WhatsApp Alternative */}
                     <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
-                        <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>Prefer to book instantly via WhatsApp?</p>
+                        <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>{t.preferWhatsApp}</p>
                         <a href={waLink(whatsappText)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                            💬 Book via WhatsApp
+                            {t.bookViaWhatsApp}
                         </a>
                     </div>
                 </div>

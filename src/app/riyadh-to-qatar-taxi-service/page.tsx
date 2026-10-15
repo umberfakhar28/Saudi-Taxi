@@ -20,6 +20,7 @@ export const metadata = generatePageMetadata({
   title: "Riyadh to Qatar Taxi & Cross-Border Transfer | Gulf Trip",
   description: "Private door-to-door taxi from Riyadh to Doha, Qatar via the Salwa/Abu Samra border. One vehicle, no layovers. Book on WhatsApp.",
   path: "/riyadh-to-qatar-taxi-service",
+  hreflangPath: "/riyadh-to-qatar-taxi-service",
   keywords: ["Riyadh to Qatar taxi", "Riyadh to Doha transfer", "Salwa border taxi from Riyadh"],
   // A dedicated 1200x630 card, not the 3:2 hero: generatePageMetadata
   // declares og:image:width/height as 1200x630 for every page, so pointing

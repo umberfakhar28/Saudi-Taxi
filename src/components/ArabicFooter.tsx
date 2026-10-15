@@ -44,8 +44,8 @@ const ArabicFooter = () => {
                         <ul className={styles.list}>
                             <li className={styles.listItem}><Link href="/ar/dammam-airport-to-bahrain-taxi-service" className={styles.link}>مطار الدمام ← البحرين</Link></li>
                             <li className={styles.listItem}><Link href="/ar/dammam-airport-to-qatar-taxi-service" className={styles.link}>مطار الدمام ← قطر</Link></li>
-                            <li className={styles.listItem}><Link href="/bahrain-to-dammam-taxi-service" className={styles.link}>البحرين ← الدمام</Link></li>
-                            <li className={styles.listItem}><Link href="/qatar-to-riyadh-taxi-service" className={styles.link}>قطر ← الرياض</Link></li>
+                            <li className={styles.listItem}><Link href="/ar/bahrain-to-dammam-taxi-service" className={styles.link}>البحرين ← الدمام</Link></li>
+                            <li className={styles.listItem}><Link href="/ar/riyadh-to-qatar-taxi-service" className={styles.link}>قطر ← الرياض</Link></li>
                         </ul>
                     </div>
 
@@ -83,7 +83,7 @@ const ArabicFooter = () => {
                     <div className={styles.bottomLinks}>
                         <Link href="/ar/contact-us" className={styles.bottomLink}>اتصل بنا</Link>
                         <span className={styles.divider}>|</span>
-                        <Link href="/book-online" className={styles.bottomLink}>احجز الآن</Link>
+                        <Link href="/ar/book-online" className={styles.bottomLink}>احجز الآن</Link>
                     </div>
                 </div>
             </div>

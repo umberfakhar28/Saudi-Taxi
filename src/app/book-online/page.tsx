@@ -22,6 +22,7 @@ export const metadata = generatePageMetadata({
     title: "Book Online",
     description: "Book your Saudi Arabia taxi or transfer online — airport transfers, hotel transfers, private taxi, Umrah transport and day tours. Fixed rates, instant confirmation.",
     path: "/book-online",
+  hreflangPath: "/book-online",
 });
 
 const schemas = [

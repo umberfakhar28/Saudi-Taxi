@@ -183,7 +183,7 @@ export default function ArabicDammamToQatar() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-4)", justifyContent: "center" }}>
             <Link href="/ar/dammam-airport-to-bahrain-taxi-service" className="btn btn-outline-gold">مطار الدمام إلى البحرين</Link>
             <Link href="/ar/border-crossing" className="btn btn-outline-gold">جميع رحلات عبور الحدود</Link>
-            <Link href="/qatar-to-riyadh-taxi-service" className="btn btn-outline-gold">Qatar to Riyadh Taxi</Link>
+            <Link href="/ar/riyadh-to-qatar-taxi-service" className="btn btn-outline-gold">Qatar to Riyadh Taxi</Link>
           </div>
         </div>
       </section>
@@ -196,7 +196,7 @@ export default function ArabicDammamToQatar() {
             أسعار ثابتة، سائقون محترفون، وخدمة على مدار الساعة من مطار الدمام إلى قطر.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
+            <Link href="/ar/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
             <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
