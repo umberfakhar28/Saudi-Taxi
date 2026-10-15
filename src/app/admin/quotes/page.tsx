@@ -8,6 +8,7 @@ import { displayDate, displayTime, formatTime12h, toStorableTime, toTimeInputVal
 import { CURRENCY_CODES, formatMoney, toCurrencyCode } from '@/lib/currency';
 import { downloadInvoicePdf, downloadInvoicePng, type InvoicePngData } from '@/lib/invoicePng';
 import { canWhatsApp, waLinkTo } from '@/lib/whatsapp';
+import { quoteRef, quoteTotal, quoteSummary as buildQuoteSummary } from '@/lib/quotes';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
@@ -36,11 +37,6 @@ const QUOTE_STATUS_HELP: Record<QuoteStatus, string> = {
     converted: 'This quote became a real booking.',
 };
 
-/** Quotes have no number column of their own, so the id gives a stable ref. */
-function quoteRef(q: any): string {
-    return `Q-${String(q?.id ?? '').slice(0, 8).toUpperCase()}`;
-}
-
 /** "08 Sep 2026, 04:30 PM" — when a quote was created. */
 function createdAt(value?: string | null): string {
     if (!value) return '—';
@@ -49,14 +45,6 @@ function createdAt(value?: string | null): string {
     const hhmm = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
     const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     return `${displayDate(ymd)}, ${formatTime12h(hhmm)}`;
-}
-
-/**
- * The price being offered. New quotes store it in total_amount; quotes made
- * before the calculator was removed may carry an admin override, which wins.
- */
-function quoteTotal(q: any): number {
-    return Number(q?.admin_override_amount ?? q?.total_amount ?? 0);
 }
 
 export default function QuotesPage() {
@@ -247,20 +235,7 @@ export default function QuotesPage() {
     };
 
     /** The plain-text summary used by both Share actions. */
-    const quoteSummary = (q: any) => [
-        `Gulf Trip Service — Quotation ${quoteRef(q)}`,
-        '',
-        `Customer: ${q.customer_name}`,
-        `From: ${q.pickup_location}`,
-        q.dropoff_location ? `To: ${q.dropoff_location}` : '',
-        q.vehicle_type ? `Vehicle: ${q.vehicle_type}` : '',
-        q.travel_date ? `Date: ${displayDate(q.travel_date)}${q.travel_time ? ` at ${displayTime(q.travel_time)}` : ''}` : '',
-        `Price: ${formatMoney(quoteTotal(q), q.currency)}`,
-        q.admin_note ? `\n${q.admin_note}` : '',
-        q.notes ? `\nYour trip requirements: ${q.notes}` : '',
-        '',
-        'Reply to confirm and we will hold the vehicle for you.',
-    ].filter(Boolean).join('\n');
+    const quoteSummary = (q: any) => buildQuoteSummary(q);
 
     // §8.2 — Share. Copies the quote to the clipboard so it can be pasted
     // anywhere; WhatsApp is offered separately when the number is usable.

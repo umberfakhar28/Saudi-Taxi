@@ -11,6 +11,26 @@ import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
 import { bookingMessage, canWhatsApp, toWhatsAppNumber, waLinkTo } from '@/lib/whatsapp';
+import { quoteRef, quoteTotal, quoteSummary, latestQuote, bookingQuoteState, QUOTE_STATE_LABEL, QUOTE_STATE_STYLE, type QuoteRecord } from '@/lib/quotes';
+
+/** The fields the quote composer reads off a booking row. The rest of this
+ * page still works with the raw Supabase record, which assigns in freely. */
+interface BookingRow {
+    id: string;
+    customer_name?: string | null;
+    customer_email?: string | null;
+    customer_phone?: string | null;
+    pickup_location?: string | null;
+    dropoff_location?: string | null;
+    travel_date?: string | null;
+    travel_time?: string | null;
+    passengers_count?: number | string | null;
+    car_type?: string | null;
+    special_notes?: string | null;
+    quote_amount?: number | string | null;
+    currency?: string | null;
+    quotes?: QuoteRecord[] | null;
+}
 import { PHONE_DISPLAY } from '@/lib/contact';
 
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
@@ -61,7 +81,10 @@ function BookingsPageInner() {
     const fetchBookings = useCallback(async () => {
         setLoading(true);
         // We join with invoices to get payment status
-        const { data, error } = await supabase.from('bookings').select('*, booking_number, invoices(id, status, invoice_number, total_amount, paid_amount)').order('created_at', { ascending: false });
+        const { data, error } = await supabase
+            .from('bookings')
+            .select('*, booking_number, invoices(id, status, invoice_number, total_amount, paid_amount), quotes(id, status, total_amount, admin_override_amount, currency, admin_note, notes, shared_at, created_at)')
+            .order('created_at', { ascending: false });
         if (!error && data) {
             setBookings(data);
         }
@@ -203,6 +226,23 @@ function BookingsPageInner() {
         }).catch(() => { /* non-critical */ });
     }, []);
 
+    // Raising a quote used to jump to /admin/quotes/new, which lost the
+    // place in the booking list. It now happens in this modal and the
+    // result lands in the booking's own Quote column.
+    const [quoteModal, setQuoteModal] = useState<BookingRow | null>(null);
+    const [quoteForm, setQuoteForm] = useState({ price: '', currency: 'SAR', admin_note: '' });
+    const [quoteBusy, setQuoteBusy] = useState<'' | 'shared' | 'sent'>('');
+
+    useEffect(() => {
+        if (!quoteModal) return;
+        const existing = latestQuote(quoteModal.quotes);
+        setQuoteForm({
+            price: existing ? String(quoteTotal(existing)) : (quoteModal.quote_amount ? String(quoteModal.quote_amount) : ''),
+            currency: toCurrencyCode(existing?.currency ?? quoteModal.currency ?? 'SAR'),
+            admin_note: existing?.admin_note ?? '',
+        });
+    }, [quoteModal]);
+
     // Opening the WhatsApp composer seeds it with a factual summary of the
     // booking, which the admin can rewrite before anything is sent.
     useEffect(() => {
@@ -219,6 +259,98 @@ function BookingsPageInner() {
         window.open(link, '_blank', 'noopener,noreferrer');
         logActivity('booking', whatsAppModal.id, 'whatsapp_opened', `WhatsApp message drafted to ${whatsAppModal.customer_name}`);
         setWhatsAppModal(null);
+    };
+
+    /**
+     * Writes the quote for this booking and records how the customer got it.
+     *
+     *   'shared' — the price is handed over directly (WhatsApp opens with
+     *              the quote text). Status stays 'draft'; shared_at is
+     *              stamped, which is what the Quote column reads as "Shared".
+     *   'sent'   — the real quote_sent email goes out first, exactly as the
+     *              Quotes page does it, and the status only becomes 'sent'
+     *              once Resend has accepted it.
+     *
+     * An existing quote for the booking is updated rather than duplicated,
+     * so one booking keeps one quote unless it is raised from elsewhere.
+     */
+    const saveQuote = async (how: 'shared' | 'sent') => {
+        if (!quoteModal) return;
+        const price = parseFloat(quoteForm.price);
+        if (!Number.isFinite(price) || price <= 0) {
+            showToast('error', 'Enter the quote price first.');
+            return;
+        }
+
+        const b = quoteModal;
+        const existing = latestQuote(b.quotes);
+        setQuoteBusy(how);
+
+        const payload: QuoteRecord = {
+            customer_name: b.customer_name,
+            customer_email: b.customer_email,
+            customer_phone: b.customer_phone,
+            pickup_location: b.pickup_location,
+            dropoff_location: b.dropoff_location,
+            travel_date: b.travel_date || null,
+            travel_time: toStorableTime(b.travel_time),
+            passengers_count: Number(b.passengers_count) || 1,
+            vehicle_type: b.car_type || null,
+            total_amount: price,
+            admin_override_amount: null,
+            currency: toCurrencyCode(quoteForm.currency),
+            notes: b.special_notes || null,
+            admin_note: quoteForm.admin_note.trim() || null,
+            booking_id: b.id,
+            status: existing?.status === 'sent' && how === 'shared' ? 'sent' : 'draft',
+        };
+
+        try {
+            if (how === 'sent') {
+                if (!b.customer_email) throw new Error('This booking has no email address on file.');
+                // Email first: "Sent" must mean the customer received it.
+                const res = await fetch('/api/emails/send', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'quote_sent', quoteData: { ...payload, id: existing?.id } }),
+                });
+                if (!res.ok) {
+                    const e = await res.json().catch(() => ({}));
+                    throw new Error(e.error || 'Failed to send the quote email');
+                }
+                payload.status = 'sent';
+            } else {
+                payload.shared_at = new Date().toISOString();
+            }
+
+            const { data: saved, error } = existing
+                ? await supabase.from('quotes').update(payload).eq('id', existing.id).select().single()
+                : await supabase.from('quotes').insert(payload).select().single();
+            if (error) throw new Error(error.message);
+
+            // The booking's own fare follows the quote, so the Billing
+            // column and the quote can't disagree.
+            await supabase.from('bookings').update({ quote_amount: price, currency: payload.currency }).eq('id', b.id);
+
+            logActivity('booking', b.id, how === 'sent' ? 'quote_sent' : 'quote_shared',
+                `Quote ${quoteRef(saved)} ${how === 'sent' ? 'emailed to' : 'shared with'} ${b.customer_name}`);
+
+            if (how === 'shared') {
+                const link = waLinkTo(b.customer_phone, quoteSummary(saved));
+                if (link) window.open(link, '_blank', 'noopener,noreferrer');
+                showToast('success', link
+                    ? 'Quote saved and WhatsApp opened with the details.'
+                    : 'Quote saved. This customer has no usable phone number, so WhatsApp could not be opened.');
+            } else {
+                showToast('success', `Quote emailed to ${b.customer_email}.`);
+            }
+
+            setQuoteModal(null);
+            fetchBookings();
+        } catch (err) {
+            showToast('error', 'Could not save the quote: ' + (err instanceof Error ? err.message : String(err)));
+        } finally {
+            setQuoteBusy('');
+        }
     };
 
     const deleteBooking = async (b: any) => {
@@ -867,13 +999,14 @@ function BookingsPageInner() {
                             <th>Trip</th>
                             <th onClick={() => handleSort('date')} style={{ cursor: 'pointer' }}>Date & Time {sortConfig.key === 'date' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
                             <th>Billing & Tags</th>
+                            <th>Quote</th>
                             <th onClick={() => handleSort('status')} style={{ cursor: 'pointer' }}>Status {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
                             <th style={{ textAlign: 'right' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={8} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}><RefreshCw className="animate-spin" style={{ margin: '0 auto', display: 'block', marginBottom: '1rem' }} /> Loading records...</td></tr>
+                            <tr><td colSpan={9} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}><RefreshCw className="animate-spin" style={{ margin: '0 auto', display: 'block', marginBottom: '1rem' }} /> Loading records...</td></tr>
                         ) : paginatedBookings.length > 0 ? paginatedBookings.map(b => (
                             <tr key={b.id} style={{ background: selectedIds.has(b.id) ? '#eff6ff' : 'transparent', transition: 'background 0.2s' }}>
                                 <td style={{ textAlign: 'center' }}>
@@ -944,6 +1077,26 @@ function BookingsPageInner() {
                                     </div>
                                 </td>
                                 <td>
+                                    {(() => {
+                                        const q = latestQuote(b.quotes);
+                                        const state = bookingQuoteState(q);
+                                        const tone = QUOTE_STATE_STYLE[state];
+                                        return (
+                                            <>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: q ? '#0f172a' : '#cbd5e1' }}>
+                                                    {q ? formatMoney(quoteTotal(q), q.currency) : '—'}
+                                                </div>
+                                                <span style={{ display: 'inline-block', marginTop: 4, fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.03em', textTransform: 'uppercase', padding: '0.15rem 0.45rem', borderRadius: 999, background: tone.bg, color: tone.fg }}>
+                                                    {QUOTE_STATE_LABEL[state]}
+                                                </span>
+                                                {q?.shared_at && state === 'sent' && (
+                                                    <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: 3 }}>also shared</div>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
+                                </td>
+                                <td>
                                     <span className={statusClass(b.status)}>{b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>
                                 </td>
                                 <td style={{ textAlign: 'right' }}>
@@ -962,10 +1115,10 @@ function BookingsPageInner() {
                                             </Tooltip>
                                         )}
                                         {allowed('quotes.create') && (
-                                            <Tooltip label="Create quote" text="Opens a new quote with this booking's customer and trip details already filled in.">
+                                            <Tooltip label="Quote this booking" text="Set the price and share it, without leaving this page. The Quote column shows the result.">
                                                 <button
-                                                    onClick={() => router.push(`/admin/quotes/new?fromBooking=${b.id}`)}
-                                                    aria-label="Create quote for this booking"
+                                                    onClick={() => setQuoteModal(b)}
+                                                    aria-label="Quote for this booking"
                                                     style={{ background: '#fef3c7', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#b45309' }}
                                                 >
                                                     <FileText size={14} />
@@ -1008,7 +1161,7 @@ function BookingsPageInner() {
                                 </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={8} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>
+                            <tr><td colSpan={9} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>
                                 <Search size={32} style={{ opacity: 0.3, margin: '0 auto', marginBottom: '1rem', display: 'block' }} />
                                 No bookings match your current filters and search.
                             </td></tr>
@@ -1051,10 +1204,10 @@ function BookingsPageInner() {
                     )}
                     {allowed('quotes.create') && (
                         <button
-                            onClick={() => { setOpenDropdown(null); router.push(`/admin/quotes/new?fromBooking=${b.id}`); }}
+                            onClick={() => { setOpenDropdown(null); setQuoteModal(b); }}
                             className="dropdown-item"
                         >
-                            💱 Create Quote for Customer
+                            💱 Quote This Booking
                         </button>
                     )}
 
@@ -1113,6 +1266,106 @@ function BookingsPageInner() {
             {/* ── WhatsApp Composer ──
                  §7: the admin reviews and edits the message before it is sent,
                  rather than firing a canned string straight at wa.me. */}
+            {quoteModal && (() => {
+                const existing = latestQuote(quoteModal.quotes);
+                const state = bookingQuoteState(existing);
+                return (
+                    <div
+                        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+                        onClick={() => setQuoteModal(null)}
+                    >
+                        <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '1.75rem', width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '1rem' }}>
+                                <div>
+                                    <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
+                                        Quote for {quoteModal.customer_name}
+                                    </div>
+                                    <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 2 }}>
+                                        {quoteModal.pickup_location} → {quoteModal.dropoff_location}
+                                        {quoteModal.travel_date ? ` · ${displayDate(quoteModal.travel_date)}` : ''}
+                                    </div>
+                                    {existing && (
+                                        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 4 }}>
+                                            Updating {quoteRef(existing)} · currently {QUOTE_STATE_LABEL[state].toLowerCase()}
+                                        </div>
+                                    )}
+                                </div>
+                                <button onClick={() => setQuoteModal(null)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                <div style={{ flex: '1 1 200px', minWidth: 0 }}>
+                                    <label htmlFor="quote-price" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Quote price</label>
+                                    <input
+                                        id="quote-price"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={quoteForm.price}
+                                        onChange={e => setQuoteForm(f => ({ ...f, price: e.target.value }))}
+                                        className="admin-search-input"
+                                        style={{ width: '100%', boxSizing: 'border-box' }}
+                                        autoFocus
+                                    />
+                                </div>
+                                <div style={{ flex: '0 1 120px' }}>
+                                    <label htmlFor="quote-currency" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Currency</label>
+                                    <select
+                                        id="quote-currency"
+                                        value={quoteForm.currency}
+                                        onChange={e => setQuoteForm(f => ({ ...f, currency: e.target.value }))}
+                                        className="admin-filter-select"
+                                        style={{ width: '100%', boxSizing: 'border-box' }}
+                                    >
+                                        {['SAR', 'BHD', 'AED', 'QAR', 'KWD', 'USD'].map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <label htmlFor="quote-note" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', margin: '1rem 0 6px' }}>
+                                Message to customer <span style={{ fontWeight: 400 }}>(optional)</span>
+                            </label>
+                            <textarea
+                                id="quote-note"
+                                value={quoteForm.admin_note}
+                                onChange={e => setQuoteForm(f => ({ ...f, admin_note: e.target.value }))}
+                                rows={4}
+                                className="admin-search-input"
+                                placeholder="Anything the customer should know about this price — what it covers, waiting time, meeting point."
+                                style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }}
+                            />
+
+                            <p style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 10, lineHeight: 1.6 }}>
+                                <strong style={{ color: '#475569' }}>Share on WhatsApp</strong> saves the price and opens WhatsApp with the quote — the column shows <em>Shared</em>.<br />
+                                <strong style={{ color: '#475569' }}>Email the quote</strong> sends it from the system — the column shows <em>Sent</em> only once the email actually goes out.
+                            </p>
+
+                            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                                <button onClick={() => setQuoteModal(null)} className="admin-btn-secondary" disabled={!!quoteBusy}>Cancel</button>
+                                <button
+                                    onClick={() => saveQuote('shared')}
+                                    className="admin-btn-secondary"
+                                    disabled={!!quoteBusy || !canWhatsApp(quoteModal.customer_phone)}
+                                    title={canWhatsApp(quoteModal.customer_phone) ? undefined : 'No usable phone number on this booking'}
+                                >
+                                    <MessageCircle size={14} style={{ marginRight: 6 }} />
+                                    {quoteBusy === 'shared' ? 'Saving…' : 'Share on WhatsApp'}
+                                </button>
+                                <button
+                                    onClick={() => saveQuote('sent')}
+                                    className="admin-btn-primary"
+                                    disabled={!!quoteBusy || !quoteModal.customer_email}
+                                    title={quoteModal.customer_email ? undefined : 'No email address on this booking'}
+                                >
+                                    <Send size={14} style={{ marginRight: 6 }} />
+                                    {quoteBusy === 'sent' ? 'Sending…' : 'Email the quote'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })()}
+
             {whatsAppModal && (
                 <div
                     style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
