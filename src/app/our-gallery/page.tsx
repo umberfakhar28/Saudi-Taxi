@@ -34,7 +34,7 @@ const galleryItems: GalleryItem[] = [
     { emoji: "🌹", title: "Taif Rose Farm", category: "Taif", caption: "The famous rose gardens of Taif" },
     { emoji: "🕌", title: "Masjid Quba", category: "Madinah", caption: "The first mosque built in Islam" },
     { emoji: "🚗", title: "Toyota Camry", category: "Fleet", caption: "Our comfortable economy sedan", image: "/fleet/toyota-camry.avif", objectPosition: "center 62%" },
-    { emoji: "🚙", title: "GMC Yukon", category: "Fleet", caption: "Our spacious premium SUV for families", image: "/fleet/gmc-yukon.avif", objectPosition: "center 68%" },
+    { emoji: "🚙", title: "GMC Yukon", category: "Fleet", caption: "Our spacious premium SUV for families", image: "/fleet/gmc-yukon-at4.avif", objectPosition: "center 55%" },
     { emoji: "⛰️", title: "Mount Uhud", category: "Madinah", caption: "Historic site of the Battle of Uhud" },
     { emoji: "🌊", title: "Jeddah Floating Mosque", category: "Jeddah", caption: "Al-Rahma Mosque on the Red Sea" },
     { emoji: "🏰", title: "Al-Balad Old Town", category: "Jeddah", caption: "UNESCO World Heritage Old Town of Jeddah" },

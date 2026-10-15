@@ -32,8 +32,8 @@ const vehicles = [
     slug: "gmc-yukon",
     name: "GMC Yukon",
     category: "SUV",
-    image: "/fleet/gmc-yukon.avif",
-    objectPosition: "center 68%",
+    image: "/fleet/gmc-yukon-at4.avif",
+    objectPosition: "center 55%",
     desc1: "Commanding 7-seat SUV with generous cargo room — built for long journeys and rugged road conditions.",
     desc2:
       "Best suited for <strong>families &amp; groups</strong> exploring inter-city destinations.",
