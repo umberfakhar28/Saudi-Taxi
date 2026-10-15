@@ -350,6 +350,7 @@ export async function POST(req: Request) {
                 <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
                 <p style="color:#475569;">Great news! Your booking has been <strong>confirmed</strong>. Here are your trip details:</p>
                 ${buildBookingRows(b)}
+                ${whatsappBlock(`Hi, about my confirmed booking${b.booking_number ? ` (ref ${b.booking_number})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You'll receive a reminder 24 hours before your trip. Thank you for choosing Gulf Trip Service.</p>
             </div></div>`;
             const { data: r, error: e } = await sendMail(b.customer_email, subject, html);
@@ -435,12 +436,13 @@ export async function POST(req: Request) {
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
             await createNotification(supabase, 'new_enquiry', b, `New ${destLabel} Enquiry — ${b.customer_name}`);
 
-            const custSubject = `We've Received Your ${destLabel} Enquiry – Gulf Trip Service`;
+            const custSubject = `We've Received Your ${destLabel} Enquiry – For a faster reply, message us on WhatsApp`;
             const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Request Received!</p></div>
                 <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
                 <p style="color:#475569;">Thank you for your ${escapeHtml(destLabel)} travel enquiry. Our travel team will review your request and get back to you shortly.</p>
-                <p style="color:#94a3b8;font-size:0.85rem;">Need an instant reply? Message us on WhatsApp any time.</p>
+                ${whatsappBlock(`Hi, I have just sent a ${destLabel} travel enquiry.`)}
+                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
             </div></div>`;
             const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
             await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
