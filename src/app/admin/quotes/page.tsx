@@ -209,6 +209,9 @@ export default function QuotesPage() {
                 documentTitle: 'Quotation',
                 invoice_number: quoteRef(q),
                 status: q.status,
+                // Gives the quotation an "Issued" line. It carries no due date
+                // or payment, so the rest of the meta strip stays off.
+                created_at: q.created_at,
                 customer_name: q.customer_name,
                 customer_phone: q.customer_phone,
                 customer_email: q.customer_email,
@@ -383,7 +386,9 @@ export default function QuotesPage() {
                             <tr key={q.id}>
                                 <td>
                                     <div style={{ fontWeight: 600, color: '#1e293b' }}>{q.customer_name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 2 }}>{q.customer_email}</div>
+                                    {q.customer_email && (
+                                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 2 }}>{q.customer_email}</div>
+                                    )}
                                     <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{q.customer_phone}</div>
                                 </td>
                                 <td>

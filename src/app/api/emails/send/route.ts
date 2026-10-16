@@ -316,6 +316,24 @@ export async function POST(req: Request) {
         const sendMail = (to: string, subject: string, html: string, bcc?: string) =>
             resend.emails.send({ from, replyTo, to, subject, html, ...(bcc ? { bcc } : {}) });
 
+        /**
+         * A customer's address, or null when none was recorded.
+         *
+         * Email is optional for a customer (migration 006) — this business
+         * reaches people on WhatsApp, and plenty of bookings arrive by phone
+         * with no address at all. Every customer-facing send below asks for
+         * this first rather than handing Resend an empty recipient, which
+         * would fail the request and then fail again writing the email_logs
+         * row (recipient_email is NOT NULL there, and rightly so).
+         */
+        const recipient = (value: unknown): string | null => {
+            const addr = typeof value === 'string' ? value.trim() : '';
+            return addr || null;
+        };
+
+        /** What the admin is told when there is nowhere to send. */
+        const NO_EMAIL = 'This customer has no email address on file. Share it on WhatsApp instead.';
+
         const results: Array<Record<string, unknown>> = [];
 
         // ─── NEW BOOKING ───────────────────────────────────────────────
@@ -343,11 +361,18 @@ export async function POST(req: Request) {
                 ${whatsappBlock(`Hi, I have just submitted a booking request${bookingRef ? ` (ref ${bookingRef})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
             </div></div>`;
-            const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
-            if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
-
-            results.push({ admin: r1?.id, customer: r2?.id });
+            // The admin notification above has already gone out and the
+            // booking is saved; a customer with no address simply gets no
+            // copy. That is not an error — the request succeeded.
+            const bookingTo = recipient(b.customer_email);
+            if (!bookingTo) {
+                results.push({ admin: r1?.id, customer: null, customerSkipped: NO_EMAIL });
+            } else {
+                const { data: r2, error: e2 } = await sendMail(bookingTo, custSubject, custHtml);
+                await logEmail(supabase, b.id || bookingId, type, bookingTo, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
+                if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
+                results.push({ admin: r1?.id, customer: r2?.id });
+            }
         }
 
         // ─── BOOKING CONFIRMED ─────────────────────────────────────────
@@ -363,8 +388,10 @@ export async function POST(req: Request) {
                 ${whatsappBlock(`Hi, about my confirmed booking${b.booking_number ? ` (ref ${b.booking_number})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You'll receive a reminder 24 hours before your trip. Thank you for choosing Gulf Trip Service.</p>
             </div></div>`;
-            const { data: r, error: e } = await sendMail(b.customer_email, subject, html);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
+            const confirmTo = recipient(b.customer_email);
+            if (!confirmTo) return NextResponse.json({ error: NO_EMAIL }, { status: 422 });
+            const { data: r, error: e } = await sendMail(confirmTo, subject, html);
+            await logEmail(supabase, b.id || bookingId, type, confirmTo, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }
@@ -387,8 +414,10 @@ export async function POST(req: Request) {
             </div></div>`;
             // Blind-copied to the Trustpilot invite address so Trustpilot
             // sends its own invitation to this customer as well.
-            const { data: r, error: e } = await sendMail(b.customer_email, subject, html, trustpilotBcc() ?? undefined);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
+            const completedTo = recipient(b.customer_email);
+            if (!completedTo) return NextResponse.json({ error: NO_EMAIL }, { status: 422 });
+            const { data: r, error: e } = await sendMail(completedTo, subject, html, trustpilotBcc() ?? undefined);
+            await logEmail(supabase, b.id || bookingId, type, completedTo, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }
@@ -420,8 +449,10 @@ export async function POST(req: Request) {
                 ${noteBlock('Your trip requirements', q.notes as string | null | undefined, '#f8fafc', '#94a3b8', '#64748b')}
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">To accept this quote, reply to this email or message us on WhatsApp.</p>
             </div></div>`;
-            const { data: r, error: e } = await sendMail(q.customer_email, subject, html);
-            await logEmail(supabase, null, type, q.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
+            const quoteTo = recipient(q.customer_email);
+            if (!quoteTo) return NextResponse.json({ error: NO_EMAIL }, { status: 422 });
+            const { data: r, error: e } = await sendMail(quoteTo, subject, html);
+            await logEmail(supabase, null, type, quoteTo, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }
@@ -455,11 +486,15 @@ export async function POST(req: Request) {
                 ${whatsappBlock(`Hi, I have just sent a ${destLabel} travel enquiry.`)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
             </div></div>`;
-            const { data: r2, error: e2 } = await sendMail(b.customer_email, custSubject, custHtml);
-            await logEmail(supabase, b.id || bookingId, type, b.customer_email, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
-            if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
-
-            results.push({ admin: r1?.id, customer: r2?.id });
+            const enquiryTo = recipient(b.customer_email);
+            if (!enquiryTo) {
+                results.push({ admin: r1?.id, customer: null, customerSkipped: NO_EMAIL });
+            } else {
+                const { data: r2, error: e2 } = await sendMail(enquiryTo, custSubject, custHtml);
+                await logEmail(supabase, b.id || bookingId, type, enquiryTo, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
+                if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
+                results.push({ admin: r1?.id, customer: r2?.id });
+            }
         }
 
         // ─── INVOICE ───────────────────────────────────────────────────
@@ -470,6 +505,14 @@ export async function POST(req: Request) {
         if (type === 'invoice') {
             if (!invoiceData) return NextResponse.json({ error: 'invoiceData is required' }, { status: 400 });
             const inv = invoiceData;
+            // Same arithmetic as lib/invoicePng.ts and the invoice page, so the
+            // email, the screen and the downloaded document always agree about
+            // what is still owed.
+            const invTotal = Number(inv.total_amount ?? 0) || 0;
+            const invPaid = Number(inv.paid_amount ?? 0) || 0;
+            const invBalance = Math.max(invTotal - invPaid, 0);
+            const invSettled = (inv.status as string | null) === 'paid' || (invTotal > 0 && invPaid >= invTotal);
+            const invDue = displayDate(inv.due_date as string | null | undefined, '');
             const subject = `Invoice ${inv.invoice_number} – Gulf Trip Service`;
             const html = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">🧾 Invoice ${escapeHtml(String(inv.invoice_number))}</p></div>
@@ -485,16 +528,21 @@ export async function POST(req: Request) {
                     // row; the invoice email was the one format that did not.
                     row('Time', displayTime(inv.travel_time as string | null | undefined, '')),
                     row('Status', inv.status ? String(inv.status).replace('_', ' ').toUpperCase() : ''),
+                    // The due date was stored on every invoice and shown on none.
+                    row('Payment due', invSettled ? '' : invDue),
                 ].join(''))}
                 <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-top:16px;text-align:center;">
-                    <p style="color:#94a3b8;margin:0;font-size:0.8rem;">TOTAL AMOUNT</p>
-                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">${formatMoney(Number(inv.total_amount ?? 0), inv.currency as string | null | undefined)}</p>
+                    <p style="color:#94a3b8;margin:0;font-size:0.8rem;">${invSettled ? 'AMOUNT PAID' : invPaid > 0 ? 'BALANCE DUE' : 'TOTAL AMOUNT'}</p>
+                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">${formatMoney(invSettled ? invTotal : invBalance, inv.currency as string | null | undefined)}</p>
+                    ${invPaid > 0 && !invSettled ? `<p style="color:#64748b;margin:0;font-size:0.8rem;">${formatMoney(invTotal, inv.currency as string | null | undefined)} total · ${formatMoney(invPaid, inv.currency as string | null | undefined)} already paid</p>` : ''}
                 </div>
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/invoices/${inv.invoice_db_id || inv.id || ''}" style="${btnStyle}">View Invoice</a></p>
-                <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>
+                <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">${invSettled ? 'Paid in full — no further action needed.' : invDue ? `Please settle by ${escapeHtml(invDue)}.` : ''} For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
-            const { data: r, error: e } = await sendMail(inv.customer_email, subject, html);
-            await logEmail(supabase, inv.booking_id || bookingId || null, type, inv.customer_email, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
+            const invoiceTo = recipient(inv.customer_email);
+            if (!invoiceTo) return NextResponse.json({ error: NO_EMAIL }, { status: 422 });
+            const { data: r, error: e } = await sendMail(invoiceTo, subject, html);
+            await logEmail(supabase, inv.booking_id || bookingId || null, type, invoiceTo, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
         }

@@ -140,6 +140,15 @@
     flex-shrink: 0;
 }
 
+/* Marks a field the customer may leave blank. Deliberately quieter than the
+   label it follows — it should read as permission, not as another demand. */
+.optionalHint {
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.75;
+}
+
 .select {
     border: none;
     background: transparent;

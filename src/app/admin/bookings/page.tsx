@@ -15,6 +15,14 @@ import { quoteRef, quoteTotal, quoteSummary, latestQuote, bookingQuoteState, QUO
 
 /** The fields the quote composer reads off a booking row. The rest of this
  * page still works with the raw Supabase record, which assigns in freely. */
+/** '' from an empty form field means "no email on file", not an address.
+ *  Stored as null so every reader — the invoice, the send guards, the
+ *  exports — tests one thing rather than two (see migration 006). */
+const emailOrNull = (value: unknown): string | null => {
+    const addr = typeof value === 'string' ? value.trim() : '';
+    return addr || null;
+};
+
 interface BookingRow {
     id: string;
     customer_name?: string | null;
@@ -395,10 +403,16 @@ function BookingsPageInner() {
         showToast('success', `Booking marked ${newStatus}.`);
 
         if (newStatus === 'confirmed') {
-            const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_confirmed', bookingId: id }) });
-            if (!res.ok) {
-                const j = await res.json().catch(() => ({}));
-                showToast('error', 'Booking confirmed, but the confirmation email failed to send: ' + (j.error || 'unknown error'));
+            // Same shape as the 'completed' branch below: a customer with no
+            // address is a normal case, not a failure to report as one.
+            if (!target?.customer_email) {
+                showToast('info', 'Booking confirmed. No email on file, so no confirmation was emailed — you can still send it on WhatsApp.');
+            } else {
+                const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_confirmed', bookingId: id }) });
+                if (!res.ok) {
+                    const j = await res.json().catch(() => ({}));
+                    showToast('error', 'Booking confirmed, but the confirmation email failed to send: ' + (j.error || 'unknown error'));
+                }
             }
         }
         if (newStatus === 'completed') {
@@ -433,7 +447,7 @@ function BookingsPageInner() {
     };
 
     const duplicateTrip = async (b: any) => {
-        const { error } = await supabase.from('bookings').insert({ customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, customer_id: b.customer_id, service_type: b.service_type, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, pickup_location_type: b.pickup_location_type, dropoff_location_type: b.dropoff_location_type, travel_date: b.travel_date, travel_time: b.travel_time, passengers_count: b.passengers_count, special_notes: b.special_notes, status: 'pending', quote_amount: b.quote_amount, currency: toCurrencyCode(b.currency), car_type: b.car_type, vehicle_slug: b.vehicle_slug });
+        const { error } = await supabase.from('bookings').insert({ customer_name: b.customer_name, customer_email: emailOrNull(b.customer_email), customer_phone: b.customer_phone, customer_id: b.customer_id, service_type: b.service_type, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, pickup_location_type: b.pickup_location_type, dropoff_location_type: b.dropoff_location_type, travel_date: b.travel_date, travel_time: b.travel_time, passengers_count: b.passengers_count, special_notes: b.special_notes, status: 'pending', quote_amount: b.quote_amount, currency: toCurrencyCode(b.currency), car_type: b.car_type, vehicle_slug: b.vehicle_slug });
         if (error) { showToast('error', 'Failed to duplicate trip: ' + error.message); return; }
         logActivity('booking', null, 'duplicated', `Trip duplicated for ${b.customer_name}`);
         showToast('success', 'Trip duplicated.'); setOpenDropdown(null); fetchBookings();
@@ -452,10 +466,12 @@ function BookingsPageInner() {
         // If booking already has an invoice, just open it in modal
         if (b.invoice_id) {
             const { data: existing } = await supabase.from('invoices').select('*').eq('id', b.invoice_id).single();
-            if (existing) { setInvoiceModal({ ...b, invoice_number: existing.invoice_number, invoice_db_id: existing.id, total_amount: existing.total_amount }); return; }
+            // The invoice's own dates and payment state, not the booking's —
+            // the preview is of the invoice, so it shows what the invoice says.
+            if (existing) { setInvoiceModal({ ...b, invoice_number: existing.invoice_number, invoice_db_id: existing.id, total_amount: existing.total_amount, created_at: existing.created_at, due_date: existing.due_date, paid_amount: existing.paid_amount, status: existing.status }); return; }
         }
         const invNum = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const { data: invData, error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: b.customer_email, customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, travel_time: b.travel_time, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() }).select().single();
+        const { data: invData, error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: emailOrNull(b.customer_email), customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, travel_time: b.travel_time, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() }).select().single();
         // NOTE: travel_time requires supabase/sql/005_invoice_travel_time.sql
         // to have been run. It was dropped here before, which is why invoices
         // had no time to show in any format.
@@ -467,13 +483,18 @@ function BookingsPageInner() {
             await supabase.from('bookings').update({ invoice_id: invData.id }).eq('id', b.id);
             logActivity('invoice', invData.id, 'created', `Invoice ${invNum} generated for ${b.customer_name}`);
             await fetchBookings();
-            setInvoiceModal({ ...b, invoice_number: invNum, invoice_db_id: invData.id, total_amount: b.quote_amount || 0 });
+            setInvoiceModal({ ...b, invoice_number: invNum, invoice_db_id: invData.id, total_amount: b.quote_amount || 0, created_at: invData.created_at, due_date: invData.due_date, paid_amount: invData.paid_amount, status: invData.status });
         } else {
             showToast('error', 'Failed to create invoice: ' + (error?.message || 'unknown error'));
         }
     };
 
     const sendEmail = async (type: 'booking_confirmed' | 'invoice', payload: any) => {
+        if (!emailOrNull(payload?.customer_email)) {
+            showToast('error', 'This customer has no email address on file. Share it on WhatsApp instead.');
+            setOpenDropdown(null);
+            return;
+        }
         const body = type === 'invoice' ? { type, invoiceData: payload } : { type, bookingData: payload };
         try {
             const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -507,7 +528,6 @@ function BookingsPageInner() {
         const storableTime = toStorableTime(editModal.travel_time);
         const requiredNow: [unknown, string][] = [
             [String(editModal.customer_name ?? '').trim(), 'customer name'],
-            [String(editModal.customer_email ?? '').trim(), 'customer email'],
             [String(editModal.customer_phone ?? '').trim(), 'phone number'],
             [String(editModal.service_type ?? '').trim(), 'service type'],
             [String(editModal.pickup_location ?? '').trim(), 'pickup location'],
@@ -530,7 +550,7 @@ function BookingsPageInner() {
         const { error } = await supabase.from('bookings').update({
             customer_name: editModal.customer_name,
             customer_phone: editModal.customer_phone,
-            customer_email: editModal.customer_email,
+            customer_email: emailOrNull(editModal.customer_email),
             service_type: editModal.service_type,
             pickup_location: editModal.pickup_location,
             dropoff_location: editModal.dropoff_location,
@@ -560,7 +580,6 @@ function BookingsPageInner() {
         // Name the field that is actually missing instead.
         const REQUIRED: [string, string][] = [
             ['customer_name', 'customer name'],
-            ['customer_email', 'customer email'],
             ['customer_phone', 'phone number'],
             ['service_type', 'service type'],
             ['pickup_location', 'pickup location'],
@@ -585,6 +604,7 @@ function BookingsPageInner() {
 
         const { error } = await supabase.from('bookings').insert({
             ...newBooking,
+            customer_email: emailOrNull(newBooking.customer_email),
             customer_id: custJson.customerId,
             passengers_count: parseInt(newBooking.passengers_count) || 1,
             quote_amount: parseFloat(newBooking.quote_amount) || null,
@@ -1442,12 +1462,29 @@ function BookingsPageInner() {
                                         <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>Jeddah, Saudi Arabia<br/>{PHONE_DISPLAY}</div>
                                     </div>
                                 </div>
+                                {/* Issued / due / amount outstanding — the same strip the
+                                    invoice page, the PNG, the PDF and the invoice email now
+                                    carry, so the preview is not the odd one out. */}
+                                <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 10, marginBottom: '1.5rem', overflow: 'hidden' }}>
+                                    {[
+                                        displayDate(invoiceModal.created_at, '') ? { label: 'Issued', value: displayDate(invoiceModal.created_at, ''), strong: false } : null,
+                                        displayDate(invoiceModal.due_date, '') ? { label: 'Payment due', value: displayDate(invoiceModal.due_date, ''), strong: false } : null,
+                                        { label: 'Amount due', value: formatMoney(invoiceModal.quote_amount, invoiceModal.currency), strong: true },
+                                    ].filter(Boolean).map((cell: any, i) => (
+                                        <div key={cell.label} style={{ flex: 1, padding: '0.85rem 1.1rem', borderLeft: i > 0 ? '1px solid #e2e8f0' : 'none' }}>
+                                            <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{cell.label}</div>
+                                            <div style={{ fontSize: cell.strong ? '1rem' : '0.88rem', fontWeight: cell.strong ? 800 : 600, color: cell.strong ? '#b8945b' : '#0f172a', marginTop: 4 }}>{cell.value}</div>
+                                        </div>
+                                    ))}
+                                </div>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                                     <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
                                         <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Bill To</div>
                                         <div style={{ fontWeight: 700, color: '#1e293b' }}>{invoiceModal.customer_name}</div>
                                         <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 4 }}>{invoiceModal.customer_phone}</div>
-                                        <div style={{ fontSize: '0.82rem', color: '#64748b' }}>{invoiceModal.customer_email}</div>
+                                        {invoiceModal.customer_email && (
+                                            <div style={{ fontSize: '0.82rem', color: '#64748b' }}>{invoiceModal.customer_email}</div>
+                                        )}
                                     </div>
                                     <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
                                         <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
@@ -1501,7 +1538,7 @@ function BookingsPageInner() {
                                 {[
                                     { key: 'customer_name', label: 'Customer Name *', span: true },
                                     { key: 'customer_phone', label: 'Phone *' },
-                                    { key: 'customer_email', label: 'Email *' },
+                                    { key: 'customer_email', label: 'Email' },
                                     { key: 'service_type', label: 'Service Type *' },
                                     { key: 'pickup_location', label: 'Pickup Location *', span: true },
                                     { key: 'dropoff_location', label: 'Dropoff Location *', span: true },

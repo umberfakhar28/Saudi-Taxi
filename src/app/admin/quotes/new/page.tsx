@@ -107,10 +107,12 @@ function NewQuoteInner() {
     const hasPrice = Number.isFinite(price) && price > 0;
 
     const saveQuote = async (status: 'draft' | 'sent') => {
-        // These five are NOT NULL on the quotes table with no default.
+        // These four are NOT NULL on the quotes table with no default.
+        // customer_email is not among them since migration 006 — a quote can
+        // be raised for someone who only ever gave a phone number, and is
+        // then shared over WhatsApp rather than emailed.
         const REQUIRED: [string, string][] = [
             ['customer_name', 'customer name'],
-            ['customer_email', 'customer email'],
             ['customer_phone', 'phone number'],
             ['pickup_location', 'pickup location'],
             ['dropoff_location', 'drop-off location'],
@@ -120,11 +122,20 @@ function NewQuoteInner() {
             .map(([, label]) => label);
         // A quote can be drafted before the price is known, but never sent without one.
         if (status === 'sent' && !hasPrice) missing.push('quote price');
+        // "Send" means email, so that one action does need an address. Saving
+        // a draft and sharing it on WhatsApp does not.
+        if (status === 'sent' && !form.customer_email.trim()) {
+            showToast('error', 'This customer has no email address. Save the quote as a draft and share it on WhatsApp, or add an address to email it.');
+            return;
+        }
         if (missing.length) { showToast('error', `Still needed: ${missing.join(', ')}.`); return; }
 
         setSaving(true);
         const quotePayload = {
-            customer_name: form.customer_name, customer_email: form.customer_email,
+            customer_name: form.customer_name,
+            // Stored as null rather than '' so "no email" has one
+            // representation everywhere downstream (see migration 006).
+            customer_email: form.customer_email.trim() || null,
             customer_phone: form.customer_phone, pickup_location: form.pickup_location,
             dropoff_location: form.dropoff_location,
             distance_km: parseFloat(form.distance_km) || null,
@@ -228,7 +239,7 @@ function NewQuoteInner() {
                 <div style={CARD}>
                     <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: '#0f172a' }}>Customer Info</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.875rem' }}>
-                        {[['customer_name', 'Full Name *'], ['customer_email', 'Email *'], ['customer_phone', 'Phone *']].map(([k, label]) => (
+                        {[['customer_name', 'Full Name *'], ['customer_email', 'Email'], ['customer_phone', 'Phone *']].map(([k, label]) => (
                             <div key={k}>
                                 <label style={LABEL}>{label}</label>
                                 <input value={(form as any)[k]} onChange={e => set(k, e.target.value)} {...input} placeholder={label.replace(' *', '')} />

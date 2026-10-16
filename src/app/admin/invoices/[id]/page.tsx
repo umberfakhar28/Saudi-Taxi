@@ -8,7 +8,7 @@ import { createClient } from '@/utils/supabase/client';
 import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Printer, Trash2 } from 'lucide-react';
 import { LogoMark } from '@/components/Logo';
 import { formatMoney } from '@/lib/currency';
-import { displayDate } from '@/lib/datetime';
+import { displayDate, displayTime } from '@/lib/datetime';
 import { serviceLabel } from '@/lib/serviceLabels';
 import { EMAIL, PHONE_DISPLAY } from '@/lib/contact';
 import { downloadInvoicePdf, downloadInvoicePng } from '@/lib/invoicePng';
@@ -141,6 +141,15 @@ export default function InvoiceDetailPage() {
         return <div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading invoice...</div>;
     }
 
+    // Mirrors lib/invoicePng.ts so the page and the downloaded document can
+    // never disagree about what is still owed.
+    const totalDue = Number(invoice?.total_amount ?? 0) || 0;
+    const paidSoFar = Number(invoice?.paid_amount ?? 0) || 0;
+    const balance = Math.max(totalDue - paidSoFar, 0);
+    const settled = (invoice?.status || '') === 'paid' || (totalDue > 0 && paidSoFar >= totalDue);
+    const issuedOn = displayDate(invoice?.created_at, '');
+    const dueOn = displayDate(invoice?.due_date, '');
+
     if (notFound || !invoice) {
         return (
             <div style={{ padding: '4rem', textAlign: 'center' }}>
@@ -215,18 +224,46 @@ export default function InvoiceDetailPage() {
                         </div>
                     </div>
                 </div>
+                {/* Issued / due / outstanding. The due date was stored on every
+                    invoice from the day they were introduced but shown on none of
+                    them, and a part-paid invoice left the remainder to be worked
+                    out by hand. Each cell appears only when the fact exists. */}
+                <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 10, marginBottom: '1.5rem', overflow: 'hidden' }}>
+                    {[
+                        issuedOn ? { label: 'Issued', value: issuedOn, strong: false } : null,
+                        dueOn && !settled ? { label: 'Payment due', value: dueOn, strong: false } : null,
+                        (dueOn || paidSoFar > 0)
+                            ? (settled
+                                ? { label: 'Amount paid', value: formatMoney(totalDue, invoice.currency), strong: true }
+                                : { label: 'Amount due', value: formatMoney(balance, invoice.currency), strong: true })
+                            : null,
+                    ].filter(Boolean).map((cell: any, i) => (
+                        <div key={cell.label} style={{ flex: 1, padding: '0.85rem 1.1rem', borderLeft: i > 0 ? '1px solid #e2e8f0' : 'none' }}>
+                            <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{cell.label}</div>
+                            <div style={{ fontSize: cell.strong ? '1rem' : '0.88rem', fontWeight: cell.strong ? 800 : 600, color: cell.strong ? '#b8945b' : '#0f172a', marginTop: 4 }}>{cell.value}</div>
+                        </div>
+                    ))}
+                </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                     <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
                         <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Bill To</div>
                         <div style={{ fontWeight: 700, color: '#1e293b' }}>{invoice.customer_name}</div>
-                        <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 4 }}>{invoice.customer_phone}</div>
-                        <div style={{ fontSize: '0.82rem', color: '#64748b' }}>{invoice.customer_email}</div>
+                        {/* Email is optional for a customer, so the block closes up
+                            around a missing line instead of leaving a gap. */}
+                        {[invoice.customer_phone, invoice.customer_email].filter(Boolean).map((line: string, i: number) => (
+                            <div key={line} style={{ fontSize: '0.82rem', color: '#64748b', marginTop: i === 0 ? 4 : 0 }}>{line}</div>
+                        ))}
                     </div>
                     <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
                         <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
                         <div style={{ fontSize: '0.82rem', color: '#334155' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {invoice.pickup_location || '—'}</div>
                         <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {invoice.dropoff_location || '—'}</div>
-                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{displayDate(invoice.travel_date)} · {serviceLabel(invoice.service_type) || 'Transportation'}</div>
+                        {/* Date AND time, via the shared helpers, so this matches
+                            the PNG, the PDF and the invoice email. A booking with no
+                            time recorded shows the date alone, never a made-up one. */}
+                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>
+                            {[displayDate(invoice.travel_date, ''), displayTime(invoice.travel_time, '')].filter(Boolean).join(', ') || '—'} · {serviceLabel(invoice.service_type) || 'Transportation'}
+                        </div>
                     </div>
                 </div>
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1.5rem' }}>
@@ -252,8 +289,11 @@ export default function InvoiceDetailPage() {
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Discount</span><span>−{formatMoney(invoice.discount_amount, invoice.currency)}</span></div>
                         )}
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>{formatMoney(invoice.total_amount ?? 0, invoice.currency)}</span></div>
-                        {Number(invoice.paid_amount) > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: 8 }}><span>Paid</span><span>{formatMoney(invoice.paid_amount, invoice.currency)}</span></div>
+                        {paidSoFar > 0 && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: 8 }}><span>Paid</span><span>−{formatMoney(paidSoFar, invoice.currency)}</span></div>
+                        )}
+                        {paidSoFar > 0 && !settled && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', fontWeight: 700, color: '#fff', marginTop: 6 }}><span>Balance due</span><span>{formatMoney(balance, invoice.currency)}</span></div>
                         )}
                     </div>
                 </div>
@@ -270,6 +310,16 @@ export default function InvoiceDetailPage() {
                     <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }}>
                         Thank you for travelling with Gulf Trip Service
                     </div>
+                    {!settled && dueOn && (
+                        <div style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 600, marginTop: 8 }}>
+                            Please settle by {dueOn}.
+                        </div>
+                    )}
+                    {settled && (
+                        <div style={{ fontSize: '0.82rem', color: '#166534', fontWeight: 600, marginTop: 8 }}>
+                            Paid in full — no further action needed.
+                        </div>
+                    )}
                     <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 6, lineHeight: 1.6 }}>
                         Questions about this invoice? Call or message {PHONE_DISPLAY} — or email {EMAIL}.
                     </div>

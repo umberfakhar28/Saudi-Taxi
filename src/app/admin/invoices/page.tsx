@@ -93,7 +93,9 @@ export default function InvoicesPage() {
                                 </td>
                                 <td>
                                     <div style={{ fontWeight: 600, color: '#1e293b' }}>{inv.customer_name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{inv.customer_email}</div>
+                                    {/* Email is optional; the phone is what the row
+                                        is actually traced by, so it stands in. */}
+                                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{inv.customer_email || inv.customer_phone || '—'}</div>
                                 </td>
                                 <td>
                                     <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{formatSAR(inv.total_amount)}</div>

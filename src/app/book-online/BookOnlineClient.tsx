@@ -207,7 +207,11 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
         // Arriving from the homepage with the customer's details already
         // entered: the trip is complete, so open straight on the final step.
         const tripComplete = !!(from.trim() && to.trim() && date && time);
-        if (service && tripComplete && nameParam && emailParam) {
+        // Gated on the name alone, not the email: the homepage bar's details
+        // step no longer demands an address, and a customer who left it blank
+        // there would otherwise be dropped back onto Trip Details having
+        // already filled it in.
+        if (service && tripComplete && nameParam) {
             setStep(3);
         } else if (service) {
             setStep(2);
@@ -598,8 +602,12 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                                                 <input type="text" name="name" className="form-input" placeholder="Your full name" autoComplete="name" value={formData.name} onChange={handleChange} required />
                                             </div>
                                             <div className="form-group">
-                                                <label className="form-label">{t.emailAddress}</label>
-                                                <input type="email" name="email" className="form-input" placeholder="your@email.com" autoComplete="email" value={formData.email} onChange={handleChange} required />
+                                                <label className="form-label">{t.emailAddress} <span style={{ color: '#94a3b8', fontWeight: 400 }}>{t.vehicleOptional}</span></label>
+                                                {/* Optional: a customer who books by phone or WhatsApp
+                                                    often has no email, and the confirmation they care
+                                                    about reaches them on WhatsApp anyway. The field
+                                                    stays so an address is captured when one is given. */}
+                                                <input type="email" name="email" className="form-input" placeholder="your@email.com" autoComplete="email" value={formData.email} onChange={handleChange} />
                                             </div>
                                         </div>
                                         <div className="form-group">

@@ -27,8 +27,14 @@ export interface InvoicePngData {
     /** Shown under the title. For a quote this is its reference. */
     invoice_number?: string | null;
     status?: string | null;
+    /** When the document was raised. `created_at` from the row is fine. */
+    created_at?: string | null;
+    /** When payment is expected. Invoices carry one; quotes do not. */
+    due_date?: string | null;
     customer_name?: string | null;
     customer_phone?: string | null;
+    /** Optional — many customers only ever give a phone number. The Bill To
+     *  block closes up around a missing line rather than leaving a gap. */
     customer_email?: string | null;
     pickup_location?: string | null;
     dropoff_location?: string | null;
@@ -191,22 +197,58 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     }
     const notesHeight = noteBlocks.reduce((sum, b) => sum + noteHeight(b) + 16, 0);
 
+    // Bill To: the name, then whichever contact lines exist. A customer
+    // with no email gets a shorter box, not a blank line where one would be.
+    const contactLines = [inv.customer_phone, inv.customer_email]
+        .map((v) => (v ?? '').trim())
+        .filter(Boolean);
+
     const tripBoxHeight = 58 + (pickupLines.length + dropoffLines.length) * 19 + 22;
-    const billBoxHeight = 58 + 3 * 19 + 8;
+    const billBoxHeight = 58 + (1 + contactLines.length) * 19 + 8;
     const boxHeight = Math.max(tripBoxHeight, billBoxHeight);
 
     const tableRowHeight = 34 + serviceLines.length * 18;
 
+    // ── What is actually owed ─────────────────────────────────────────
+    // The document never showed a due date or an outstanding balance, so a
+    // part-paid invoice left the customer to work out the remainder and an
+    // unpaid one gave no date to pay by. Both are computed once here and
+    // used by the meta strip and the totals block, so they cannot disagree.
+    const totalDue = Number(inv.total_amount ?? 0) || 0;
+    const paidSoFar = Number(inv.paid_amount ?? 0) || 0;
+    const balance = Math.max(totalDue - paidSoFar, 0);
+    const settled = (inv.status || '') === 'paid' || (totalDue > 0 && paidSoFar >= totalDue);
+
     let totalsRows = 1; // subtotal
     if (Number(inv.tax_amount) > 0) totalsRows++;
     if (Number(inv.discount_amount) > 0) totalsRows++;
-    if (Number(inv.paid_amount) > 0) totalsRows++;
+    if (paidSoFar > 0) totalsRows++;
+    if (paidSoFar > 0 && !settled) totalsRows++; // balance due
     const totalsHeight = 24 + totalsRows * 24 + 44;
 
-    const HEADER_H = 132;
+    // ── Meta strip: issued / due / amount outstanding ─────────────────
+    // Each cell appears only when the document genuinely has that fact. A
+    // quotation carries no due date or payment, so it shows the issue date
+    // alone — or no strip at all when even that is unknown.
+    const metaCells: Array<{ label: string; value: string; strong?: boolean }> = [];
+    const issuedOn = displayDate(inv.created_at, '');
+    if (issuedOn) metaCells.push({ label: 'Issued', value: issuedOn });
+    const dueOn = displayDate(inv.due_date, '');
+    if (dueOn && !settled) metaCells.push({ label: 'Payment due', value: dueOn });
+    if (dueOn || paidSoFar > 0) {
+        metaCells.push(settled
+            ? { label: 'Amount paid', value: formatMoney(totalDue, currency), strong: true }
+            : { label: 'Amount due', value: formatMoney(balance, currency), strong: true });
+    }
+    const META_H = metaCells.length ? 58 + 24 : 0;
+
+    // Tall enough for the brand block on the right (logo 44 + name + phone +
+    // email ends at ~105) with a little air under it. It was 132, which left
+    // a conspicuous empty band between the status pill and what follows.
+    const HEADER_H = 112;
     const FOOTER_H = 118;
     const height =
-        PAD + HEADER_H + 28 + boxHeight + 28 + notesHeight + 44 + tableRowHeight + 24 +
+        PAD + HEADER_H + 28 + META_H + boxHeight + 28 + notesHeight + 44 + tableRowHeight + 24 +
         totalsHeight + FOOTER_H + PAD;
 
     // ── Drawing pass ──────────────────────────────────────────────────
@@ -260,6 +302,34 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
 
     y += HEADER_H + 28;
 
+    // ── Meta strip ────────────────────────────────────────────────────
+    if (metaCells.length) {
+        ctx.fillStyle = SURFACE;
+        roundRect(ctx, PAD, y, contentWidth, 58, 10);
+        ctx.fill();
+
+        const cellW = contentWidth / metaCells.length;
+        metaCells.forEach((cell, i) => {
+            const cx = PAD + i * cellW + 20;
+            ctx.fillStyle = FAINT;
+            ctx.font = font(700, 9.5);
+            ctx.fillText(cell.label.toUpperCase(), cx, y + 23);
+            ctx.fillStyle = cell.strong ? BRASS : INK;
+            ctx.font = font(cell.strong ? 800 : 600, cell.strong ? 15.5 : 13.5);
+            ctx.fillText(cell.value, cx, y + 44);
+            // Hairline between cells, never before the first.
+            if (i > 0) {
+                ctx.strokeStyle = LINE;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(PAD + i * cellW, y + 15);
+                ctx.lineTo(PAD + i * cellW, y + 43);
+                ctx.stroke();
+            }
+        });
+        y += 58 + 24;
+    }
+
     // ── Bill To / Trip Details ────────────────────────────────────────
     const drawBoxLabel = (label: string, bx: number, by: number) => {
         ctx.fillStyle = FAINT;
@@ -276,8 +346,7 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ctx.fillText(inv.customer_name || '—', PAD + 16, y + 48);
     ctx.fillStyle = MUTED;
     ctx.font = font(400, 12.5);
-    ctx.fillText(inv.customer_phone || '', PAD + 16, y + 68);
-    ctx.fillText(inv.customer_email || '', PAD + 16, y + 86);
+    contactLines.forEach((line, i) => ctx.fillText(line, PAD + 16, y + 68 + i * 19));
 
     const tx = PAD + colWidth + 20;
     ctx.fillStyle = SURFACE;
@@ -399,8 +468,11 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ctx.lineTo(totalsX + totalsWidth - 18, ry - 14);
     ctx.stroke();
     ry += 6;
-    totalRow('Total', formatMoney(inv.total_amount ?? 0, currency), true);
-    if (Number(inv.paid_amount) > 0) totalRow('Paid', formatMoney(inv.paid_amount, currency));
+    totalRow('Total', formatMoney(totalDue, currency), true);
+    if (paidSoFar > 0) totalRow('Paid', `−${formatMoney(paidSoFar, currency)}`);
+    // What is still owed, spelled out rather than left as a subtraction for
+    // the customer to do.
+    if (paidSoFar > 0 && !settled) totalRow('Balance due', formatMoney(balance, currency));
 
     y += totalsHeight;
 
@@ -418,7 +490,15 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ctx.fillText('Thank you for travelling with Gulf Trip Service', WIDTH / 2, y + 30);
     ctx.fillStyle = MUTED;
     ctx.font = font(400, 11.5);
-    ctx.fillText(`${PHONE_DISPLAY}  ·  ${EMAIL}`, WIDTH / 2, y + 50);
+    // Tells the customer what to do next, which a document asking for money
+    // ought to. Falls back to the contact line alone for a quotation or a
+    // settled invoice, where there is nothing to chase.
+    const footerNote = settled
+        ? `Paid in full — no further action needed.  ·  ${PHONE_DISPLAY}`
+        : dueOn
+            ? `Please settle by ${dueOn}. Questions? ${PHONE_DISPLAY}  ·  ${EMAIL}`
+            : `${PHONE_DISPLAY}  ·  ${EMAIL}`;
+    ctx.fillText(footerNote, WIDTH / 2, y + 50);
     ctx.textAlign = 'left';
 
     return canvas;
