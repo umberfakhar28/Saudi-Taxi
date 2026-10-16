@@ -15,16 +15,20 @@ export const EMAIL = "info@gulftripservice.com";
 export const COMPANY_NAME = "Gulf Trip Service";
 
 /**
- * The business locality, for invoices and other documents.
+ * The business location, for invoices and other customer documents.
  *
- * City-level on purpose. No verified street address exists anywhere in this
- * codebase, and lib/jsonld.ts already settled on "Makkah" as the public NAP
- * after a real bug where the structured data claimed a made-up Jeddah street
- * while the footer said Makkah. The invoice preview still carried that stale
- * "Jeddah, Saudi Arabia" line; it now reads from here, so the documents and
- * the structured data state the same place.
+ * Country-level by the owner's instruction: no verified street address
+ * exists anywhere in this codebase, and naming a city on a document that
+ * asks for money would be claiming more than we can stand behind. The
+ * invoice preview used to hardcode "Jeddah, Saudi Arabia" — the tail of a
+ * real NAP bug — and reads from here instead.
+ *
+ * Deliberately not the same value as lib/jsonld.ts's addressLocality, which
+ * stays "Makkah" to match the footer's public NAP for local SEO. A document
+ * handed to a customer and a schema.org LocalBusiness are answering
+ * different questions, so they are allowed to differ in precision.
  */
-export const COMPANY_LOCALITY = "Makkah, Saudi Arabia";
+export const COMPANY_LOCALITY = "Saudi Arabia";
 
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 export const TEL_URL = `tel:${PHONE_E164}`;
