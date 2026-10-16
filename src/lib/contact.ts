@@ -11,6 +11,21 @@ export const PHONE_E164 = "+923268869669"; // for tel: links
 export const PHONE_DISPLAY = "+92 326 8869669"; // for on-screen display
 export const EMAIL = "info@gulftripservice.com";
 
+/** The trading name, as it appears on anything the customer is given. */
+export const COMPANY_NAME = "Gulf Trip Service";
+
+/**
+ * The business locality, for invoices and other documents.
+ *
+ * City-level on purpose. No verified street address exists anywhere in this
+ * codebase, and lib/jsonld.ts already settled on "Makkah" as the public NAP
+ * after a real bug where the structured data claimed a made-up Jeddah street
+ * while the footer said Makkah. The invoice preview still carried that stale
+ * "Jeddah, Saudi Arabia" line; it now reads from here, so the documents and
+ * the structured data state the same place.
+ */
+export const COMPANY_LOCALITY = "Makkah, Saudi Arabia";
+
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 export const TEL_URL = `tel:${PHONE_E164}`;
 

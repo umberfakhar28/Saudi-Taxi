@@ -10,53 +10,27 @@
  * The PDF is the same rendering wrapped in a minimal hand-written PDF file,
  * so the image and the PDF can never disagree.
  *
+ * WHAT to draw is decided by lib/invoiceDocument.ts, which the invoice page,
+ * the preview modal and the invoice email read from too. This file only
+ * decides HOW to draw it, so a field added to the document model appears
+ * here without this file growing its own rules about money or dates.
+ *
  * The only external asset is the brand mark, which is inlined as a `data:`
  * URL SVG. Nothing is fetched cross-origin, so the canvas is never tainted
  * and exporting always succeeds.
  */
 
 import { brandMarkDataUrl } from './brandMark';
-import { formatMoney } from './currency';
-import { displayDate, displayTime } from './datetime';
-import { EMAIL, PHONE_DISPLAY } from './contact';
-import { serviceLabel } from './serviceLabels';
+import { COMPANY_LOCALITY, COMPANY_NAME, EMAIL, PHONE_DISPLAY } from './contact';
+import { buildInvoiceDocument, type InvoiceDocument, type InvoiceRecord } from './invoiceDocument';
 
-export interface InvoicePngData {
-    /** "INVOICE" by default; quotes pass "QUOTATION". */
-    documentTitle?: string;
-    /** Shown under the title. For a quote this is its reference. */
-    invoice_number?: string | null;
-    status?: string | null;
-    /** When the document was raised. `created_at` from the row is fine. */
-    created_at?: string | null;
-    /** When payment is expected. Invoices carry one; quotes do not. */
-    due_date?: string | null;
-    customer_name?: string | null;
-    customer_phone?: string | null;
-    /** Optional — many customers only ever give a phone number. The Bill To
-     *  block closes up around a missing line rather than leaving a gap. */
-    customer_email?: string | null;
-    pickup_location?: string | null;
-    dropoff_location?: string | null;
-    travel_date?: string | null;
-    /** Pickup time exactly as stored on the booking/quote (e.g. "04:00:00").
-     * Rendered beside the date; omitted cleanly when no time was recorded,
-     * rather than substituting a default. */
-    travel_time?: string | null;
-    service_type?: string | null;
-    subtotal?: number | string | null;
-    tax_amount?: number | string | null;
-    discount_amount?: number | string | null;
-    total_amount?: number | string | null;
-    paid_amount?: number | string | null;
-    currency?: string | null;
-    /** A message written by the team for the customer — shown most prominently. */
-    adminNote?: string | null;
-    notes?: string | null;
-    /** Heading for `notes`; invoices say "Notes", quotes say "Trip requirements". */
-    notesLabel?: string;
+/** The data an export takes: an `invoices` row, plus the two presentation
+ *  overrides the quote export uses. Unchanged for existing callers. */
+export type InvoicePngData = InvoiceRecord & {
+    /** Legacy alias kept for the quote export, which passes the booking ref
+     *  separately rather than on the record. */
     bookingNumber?: string | null;
-}
+};
 
 /** Logical layout units; the bitmap is rendered at SCALE times this. */
 const WIDTH = 820;
@@ -133,10 +107,6 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     });
 }
 
-function titleCase(value: string): string {
-    return value.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
 interface NoteBlock {
     label: string;
     lines: string[];
@@ -152,7 +122,12 @@ function noteHeight(block: NoteBlock) {
 
 /** Lays the document out and draws it. Shared by the PNG and PDF exports. */
 async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasElement> {
-    const currency = inv.currency;
+    // Everything the document says — money, dates, which rows exist — comes
+    // from the shared model, so this file never decides any of it.
+    const doc: InvoiceDocument = buildInvoiceDocument({
+        ...inv,
+        booking_number: inv.booking_number ?? inv.bookingNumber ?? null,
+    });
     const logo = await loadImage(brandMarkDataUrl(200, 'color'));
 
     // ── Measuring pass ────────────────────────────────────────────────
@@ -166,86 +141,55 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     const innerCol = colWidth - 32;
 
     measure.font = font(400, 13);
-    const pickupLines = wrap(measure, inv.pickup_location || '—', innerCol - 16);
-    const dropoffLines = wrap(measure, inv.dropoff_location || '—', innerCol - 16);
-    const serviceText = serviceLabel(inv.service_type) || 'Transportation Service';
-    const serviceLines = wrap(measure, serviceText, contentWidth - 200);
+    const pickupLines = wrap(measure, doc.pickup, innerCol - 16);
+    const dropoffLines = wrap(measure, doc.dropoff, innerCol - 16);
+
+    // Vehicle / passengers / luggage / trip type, as one wrapped strip under
+    // the itinerary rather than four stacked rows that would push the box
+    // taller than the one beside it.
+    measure.font = font(400, 11.5);
+    const detailText = doc.tripDetails.map((d) => `${d.label}: ${d.value}`).join('  ·  ');
+    const detailLines = detailText ? wrap(measure, detailText, innerCol) : [];
+    const whenLines = [doc.outboundWhen && `Pickup: ${doc.outboundWhen}`,
+        doc.returnWhen && `Return: ${doc.returnWhen}`].filter(Boolean) as string[];
+
+    measure.font = font(400, 13);
+    const serviceLines = wrap(measure, doc.lineDescription, contentWidth - 200);
 
     // Notes sit directly under the customer and trip boxes, full width and in
     // heavier type — they used to trail after the totals in small grey text,
     // where a customer could easily miss them.
     measure.font = font(NOTE_FONT.weight, NOTE_FONT.size);
     const noteTextWidth = contentWidth - 48;
-    const noteBlocks: NoteBlock[] = [];
-    if (inv.adminNote && inv.adminNote.trim()) {
-        noteBlocks.push({
-            label: 'A note from our team',
-            lines: wrapParagraphs(measure, inv.adminNote, noteTextWidth),
-            tint: '#fbf6ec',
-            accent: BRASS,
-            labelColor: '#8a6a35',
-        });
-    }
-    if (inv.notes && inv.notes.trim()) {
-        noteBlocks.push({
-            label: inv.notesLabel || 'Notes',
-            lines: wrapParagraphs(measure, inv.notes, noteTextWidth),
-            tint: SURFACE,
-            accent: '#94a3b8',
-            labelColor: MUTED,
-        });
-    }
+    const noteBlocks: NoteBlock[] = doc.notes.map((n) => ({
+        label: n.label,
+        lines: wrapParagraphs(measure, n.text, noteTextWidth),
+        tint: n.tone === 'accent' ? '#fbf6ec' : SURFACE,
+        accent: n.tone === 'accent' ? BRASS : '#94a3b8',
+        labelColor: n.tone === 'accent' ? '#8a6a35' : MUTED,
+    }));
     const notesHeight = noteBlocks.reduce((sum, b) => sum + noteHeight(b) + 16, 0);
 
-    // Bill To: the name, then whichever contact lines exist. A customer
-    // with no email gets a shorter box, not a blank line where one would be.
-    const contactLines = [inv.customer_phone, inv.customer_email]
-        .map((v) => (v ?? '').trim())
-        .filter(Boolean);
-
-    const tripBoxHeight = 58 + (pickupLines.length + dropoffLines.length) * 19 + 22;
-    const billBoxHeight = 58 + (1 + contactLines.length) * 19 + 8;
+    // Bill To: the name, then whichever contact lines exist. A customer with
+    // no email gets a shorter box, not a blank line where one would be.
+    const tripBoxHeight = 46 + (pickupLines.length + dropoffLines.length) * 19 + 10
+        + whenLines.length * 17 + (detailLines.length ? detailLines.length * 16 + 6 : 0) + 18;
+    const billBoxHeight = 58 + (1 + doc.billToLines.length) * 19 + 8;
     const boxHeight = Math.max(tripBoxHeight, billBoxHeight);
 
     const tableRowHeight = 34 + serviceLines.length * 18;
 
-    // ── What is actually owed ─────────────────────────────────────────
-    // The document never showed a due date or an outstanding balance, so a
-    // part-paid invoice left the customer to work out the remainder and an
-    // unpaid one gave no date to pay by. Both are computed once here and
-    // used by the meta strip and the totals block, so they cannot disagree.
-    const totalDue = Number(inv.total_amount ?? 0) || 0;
-    const paidSoFar = Number(inv.paid_amount ?? 0) || 0;
-    const balance = Math.max(totalDue - paidSoFar, 0);
-    const settled = (inv.status || '') === 'paid' || (totalDue > 0 && paidSoFar >= totalDue);
+    // Totals: one row per entry the model produced, with the emphasised
+    // Total row given more room.
+    const totalsHeight = 24
+        + doc.totalRows.reduce((h, r) => h + (r.kind === 'total' ? 30 : 24), 0)
+        + 20;
 
-    let totalsRows = 1; // subtotal
-    if (Number(inv.tax_amount) > 0) totalsRows++;
-    if (Number(inv.discount_amount) > 0) totalsRows++;
-    if (paidSoFar > 0) totalsRows++;
-    if (paidSoFar > 0 && !settled) totalsRows++; // balance due
-    const totalsHeight = 24 + totalsRows * 24 + 44;
+    const META_H = doc.metaCells.length ? 58 + 24 : 0;
 
-    // ── Meta strip: issued / due / amount outstanding ─────────────────
-    // Each cell appears only when the document genuinely has that fact. A
-    // quotation carries no due date or payment, so it shows the issue date
-    // alone — or no strip at all when even that is unknown.
-    const metaCells: Array<{ label: string; value: string; strong?: boolean }> = [];
-    const issuedOn = displayDate(inv.created_at, '');
-    if (issuedOn) metaCells.push({ label: 'Issued', value: issuedOn });
-    const dueOn = displayDate(inv.due_date, '');
-    if (dueOn && !settled) metaCells.push({ label: 'Payment due', value: dueOn });
-    if (dueOn || paidSoFar > 0) {
-        metaCells.push(settled
-            ? { label: 'Amount paid', value: formatMoney(totalDue, currency), strong: true }
-            : { label: 'Amount due', value: formatMoney(balance, currency), strong: true });
-    }
-    const META_H = metaCells.length ? 58 + 24 : 0;
-
-    // Tall enough for the brand block on the right (logo 44 + name + phone +
-    // email ends at ~105) with a little air under it. It was 132, which left
-    // a conspicuous empty band between the status pill and what follows.
-    const HEADER_H = 112;
+    // Tall enough for the brand block on the right (logo 44 + name + locality
+    // + phone + email) with a little air under it.
+    const HEADER_H = 128;
     const FOOTER_H = 118;
     const height =
         PAD + HEADER_H + 28 + META_H + boxHeight + 28 + notesHeight + 44 + tableRowHeight + 24 +
@@ -268,48 +212,48 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     // ── Header ────────────────────────────────────────────────────────
     ctx.fillStyle = INK;
     ctx.font = font(900, 34);
-    ctx.fillText((inv.documentTitle || 'INVOICE').toUpperCase(), PAD, y + 30);
+    ctx.fillText(doc.title, PAD, y + 30);
 
     ctx.fillStyle = FAINT;
     ctx.font = font(400, 13, MONO);
-    ctx.fillText(inv.invoice_number || '', PAD, y + 52);
+    ctx.fillText(doc.number, PAD, y + 52);
 
     // Status pill
-    const statusText = titleCase(inv.status || 'unpaid');
-    const isPaid = (inv.status || '') === 'paid';
+    const isPaid = doc.statusValue === 'paid';
     ctx.font = font(700, 11);
-    const pillW = ctx.measureText(statusText).width + 22;
-    ctx.fillStyle = isPaid ? '#dcfce7' : inv.status === 'partially_paid' ? '#e0e7ff' : '#fef3c7';
+    const pillW = ctx.measureText(doc.statusLabel).width + 22;
+    ctx.fillStyle = isPaid ? '#dcfce7' : doc.statusValue === 'partially_paid' ? '#e0e7ff' : '#fef3c7';
     roundRect(ctx, PAD, y + 62, pillW, 22, 11);
     ctx.fill();
-    ctx.fillStyle = isPaid ? '#166534' : inv.status === 'partially_paid' ? '#3730a3' : '#92400e';
-    ctx.fillText(statusText.toUpperCase(), PAD + 11, y + 77);
+    ctx.fillStyle = isPaid ? '#166534' : doc.statusValue === 'partially_paid' ? '#3730a3' : '#92400e';
+    ctx.fillText(doc.statusLabel.toUpperCase(), PAD + 11, y + 77);
 
-    // Brand block, right-aligned, led by the full-colour mark.
+    // Brand block, right-aligned, led by the full-colour mark. Every line
+    // comes from lib/contact.ts rather than being written out here.
     const logoSize = 44;
-    const logoX = WIDTH - PAD - logoSize;
-    ctx.drawImage(logo, logoX, y, logoSize, logoSize);
+    ctx.drawImage(logo, WIDTH - PAD - logoSize, y, logoSize, logoSize);
 
     ctx.textAlign = 'right';
     ctx.fillStyle = INK;
     ctx.font = font(800, 16);
-    ctx.fillText('Gulf Trip Service', WIDTH - PAD, y + logoSize + 22);
+    ctx.fillText(COMPANY_NAME, WIDTH - PAD, y + logoSize + 22);
     ctx.fillStyle = MUTED;
     ctx.font = font(400, 12);
-    ctx.fillText(PHONE_DISPLAY, WIDTH - PAD, y + logoSize + 40);
-    ctx.fillText(EMAIL, WIDTH - PAD, y + logoSize + 57);
+    ctx.fillText(COMPANY_LOCALITY, WIDTH - PAD, y + logoSize + 39);
+    ctx.fillText(PHONE_DISPLAY, WIDTH - PAD, y + logoSize + 55);
+    ctx.fillText(EMAIL, WIDTH - PAD, y + logoSize + 71);
     ctx.textAlign = 'left';
 
     y += HEADER_H + 28;
 
     // ── Meta strip ────────────────────────────────────────────────────
-    if (metaCells.length) {
+    if (doc.metaCells.length) {
         ctx.fillStyle = SURFACE;
         roundRect(ctx, PAD, y, contentWidth, 58, 10);
         ctx.fill();
 
-        const cellW = contentWidth / metaCells.length;
-        metaCells.forEach((cell, i) => {
+        const cellW = contentWidth / doc.metaCells.length;
+        doc.metaCells.forEach((cell, i) => {
             const cx = PAD + i * cellW + 20;
             ctx.fillStyle = FAINT;
             ctx.font = font(700, 9.5);
@@ -343,10 +287,15 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     drawBoxLabel('Bill To', PAD, y);
     ctx.fillStyle = INK;
     ctx.font = font(700, 14);
-    ctx.fillText(inv.customer_name || '—', PAD + 16, y + 48);
+    ctx.fillText(doc.billToName, PAD + 16, y + 48);
     ctx.fillStyle = MUTED;
     ctx.font = font(400, 12.5);
-    contactLines.forEach((line, i) => ctx.fillText(line, PAD + 16, y + 68 + i * 19));
+    doc.billToLines.forEach((line, i) => {
+        // A long billing address wraps rather than running past the box edge.
+        wrap(ctx, line, innerCol).slice(0, 2).forEach((part, j) => {
+            ctx.fillText(part, PAD + 16, y + 68 + (i + j) * 19);
+        });
+    });
 
     const tx = PAD + colWidth + 20;
     ctx.fillStyle = SURFACE;
@@ -365,20 +314,20 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ctx.fillText('↓', tx + 16, ty);
     ctx.fillStyle = '#334155';
     dropoffLines.forEach((line, i) => ctx.fillText(line, tx + 32, ty + i * 19));
-    ty += dropoffLines.length * 19 + 4;
-    ctx.fillStyle = FAINT;
+    ty += dropoffLines.length * 19 + 8;
+
+    // Pickup, and the return leg when there is one — each dropped entirely
+    // when not recorded, so nothing is ever invented or defaulted.
     ctx.font = font(400, 11.5);
-    // Each part is dropped when genuinely absent rather than printing "— ·",
-    // so a record with no time recorded shows the date alone and never an
-    // invented or default one.
-    const whenText = [displayDate(inv.travel_date, ''), displayTime(inv.travel_time, '')]
-        .filter(Boolean)
-        .join(', ');
-    ctx.fillText(
-        [whenText, serviceText].filter(Boolean).join(' · '),
-        tx + 16,
-        ty + 10
-    );
+    ctx.fillStyle = MUTED;
+    whenLines.forEach((line, i) => ctx.fillText(line, tx + 16, ty + i * 17));
+    ty += whenLines.length * 17;
+
+    if (detailLines.length) {
+        ty += 6;
+        ctx.fillStyle = FAINT;
+        detailLines.forEach((line, i) => ctx.fillText(line, tx + 16, ty + i * 16));
+    }
 
     y += boxHeight + 28;
 
@@ -418,15 +367,15 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ctx.fillStyle = '#334155';
     ctx.font = font(400, 13);
     serviceLines.forEach((line, i) => ctx.fillText(line, PAD + 16, y + 14 + i * 18));
-    if (inv.bookingNumber) {
+    if (doc.lineReference) {
         ctx.fillStyle = FAINT;
         ctx.font = font(400, 11.5);
-        ctx.fillText(`Booking Ref: ${inv.bookingNumber}`, PAD + 16, y + 16 + serviceLines.length * 18);
+        ctx.fillText(doc.lineReference, PAD + 16, y + 16 + serviceLines.length * 18);
     }
     ctx.fillStyle = INK;
     ctx.font = font(700, 13);
     ctx.textAlign = 'right';
-    ctx.fillText(formatMoney(inv.subtotal ?? inv.total_amount ?? 0, currency), WIDTH - PAD - 16, y + 14);
+    ctx.fillText(doc.lineAmount, WIDTH - PAD - 16, y + 14);
     ctx.textAlign = 'left';
 
     y += tableRowHeight;
@@ -439,6 +388,19 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
 
     y += 24;
 
+    // ── Payment method, in the space beside the totals ────────────────
+    // A transport invoice is settled in cash as often as not, and the
+    // customer's copy should say which. Sits opposite the totals box rather
+    // than in a band of its own, so the document gains a fact, not a row.
+    if (doc.paymentMethod) {
+        ctx.fillStyle = FAINT;
+        ctx.font = font(700, 9.5);
+        ctx.fillText('PAYMENT METHOD', PAD, y + 16);
+        ctx.fillStyle = INK;
+        ctx.font = font(700, 14);
+        ctx.fillText(doc.paymentMethod, PAD, y + 38);
+    }
+
     // ── Totals ────────────────────────────────────────────────────────
     const totalsWidth = 268;
     const totalsX = WIDTH - PAD - totalsWidth;
@@ -447,32 +409,31 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ctx.fill();
 
     let ry = y + 28;
-    const totalRow = (label: string, value: string, emphasise = false) => {
-        ctx.font = font(emphasise ? 800 : 400, emphasise ? 16 : 12.5);
-        ctx.fillStyle = emphasise ? GOLD : 'rgba(255,255,255,0.65)';
+    doc.totalRows.forEach((rowData) => {
+        const emphasise = rowData.kind === 'total';
+        // A rule above the Total separates what makes it up from the figure
+        // the customer actually owes.
+        if (emphasise) {
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(totalsX + 18, ry - 14);
+            ctx.lineTo(totalsX + totalsWidth - 18, ry - 14);
+            ctx.stroke();
+            ry += 6;
+        }
+        ctx.font = font(emphasise ? 800 : rowData.kind === 'balance' ? 700 : 400,
+            emphasise ? 16 : 12.5);
+        ctx.fillStyle = emphasise ? GOLD
+            : rowData.kind === 'balance' ? '#ffffff'
+                : 'rgba(255,255,255,0.65)';
         ctx.textAlign = 'left';
-        ctx.fillText(label, totalsX + 18, ry);
+        ctx.fillText(rowData.label, totalsX + 18, ry);
         ctx.textAlign = 'right';
-        ctx.fillText(value, totalsX + totalsWidth - 18, ry);
+        ctx.fillText(rowData.value, totalsX + totalsWidth - 18, ry);
         ctx.textAlign = 'left';
         ry += emphasise ? 30 : 24;
-    };
-
-    totalRow('Subtotal', formatMoney(inv.subtotal ?? inv.total_amount ?? 0, currency));
-    if (Number(inv.tax_amount) > 0) totalRow('Tax', formatMoney(inv.tax_amount, currency));
-    if (Number(inv.discount_amount) > 0) totalRow('Discount', `−${formatMoney(inv.discount_amount, currency)}`);
-
-    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-    ctx.beginPath();
-    ctx.moveTo(totalsX + 18, ry - 14);
-    ctx.lineTo(totalsX + totalsWidth - 18, ry - 14);
-    ctx.stroke();
-    ry += 6;
-    totalRow('Total', formatMoney(totalDue, currency), true);
-    if (paidSoFar > 0) totalRow('Paid', `−${formatMoney(paidSoFar, currency)}`);
-    // What is still owed, spelled out rather than left as a subtraction for
-    // the customer to do.
-    if (paidSoFar > 0 && !settled) totalRow('Balance due', formatMoney(balance, currency));
+    });
 
     y += totalsHeight;
 
@@ -487,18 +448,15 @@ async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasEleme
     ctx.textAlign = 'center';
     ctx.fillStyle = INK;
     ctx.font = font(700, 13.5);
-    ctx.fillText('Thank you for travelling with Gulf Trip Service', WIDTH / 2, y + 30);
+    ctx.fillText(`Thank you for travelling with ${COMPANY_NAME}`, WIDTH / 2, y + 30);
     ctx.fillStyle = MUTED;
     ctx.font = font(400, 11.5);
-    // Tells the customer what to do next, which a document asking for money
-    // ought to. Falls back to the contact line alone for a quotation or a
-    // settled invoice, where there is nothing to chase.
-    const footerNote = settled
-        ? `Paid in full — no further action needed.  ·  ${PHONE_DISPLAY}`
-        : dueOn
-            ? `Please settle by ${dueOn}. Questions? ${PHONE_DISPLAY}  ·  ${EMAIL}`
-            : `${PHONE_DISPLAY}  ·  ${EMAIL}`;
-    ctx.fillText(footerNote, WIDTH / 2, y + 50);
+    // What to do next, then how to reach us. A quotation and a settled
+    // invoice have nothing to chase, so they show the contact line alone.
+    ctx.fillText(
+        [doc.footerNote, `${PHONE_DISPLAY}  ·  ${EMAIL}`].filter(Boolean).join('   '),
+        WIDTH / 2, y + 50
+    );
     ctx.textAlign = 'left';
 
     return canvas;

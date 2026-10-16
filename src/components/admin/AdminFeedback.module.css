@@ -10,6 +10,15 @@
     pointer-events: none;
 }
 
+/* Transient screen feedback has no business on paper: printing an invoice
+   straight after a download was putting "Invoice PDF saved." on the page. */
+@media print {
+    .stack,
+    .backdrop {
+        display: none !important;
+    }
+}
+
 .toast {
     pointer-events: auto;
     display: flex;

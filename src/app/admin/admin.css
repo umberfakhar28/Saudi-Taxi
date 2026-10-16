@@ -380,13 +380,40 @@
 }
 .admin-btn-secondary:hover { background: #e2e8f0; color: #1e293b; }
 
-/* Invoice detail page: browser print-to-PDF is the real "Download PDF"
-   mechanism (window.print() on /admin/invoices/[id]) — this hides the
-   admin chrome so only the invoice card prints. */
+/* Invoice detail page: browser print-to-PDF is a second route to a paper
+   copy alongside the canvas-rendered PDF download (window.print() on
+   /admin/invoices/[id]) — this hides the admin chrome so only the invoice
+   itself prints, and makes what is left look like a document rather than a
+   screenshot of an admin panel. */
 @media print {
     .admin-sidebar, .admin-page-bar, .invoice-print-hide { display: none !important; }
     .admin-main, .admin-content { padding: 0 !important; margin: 0 !important; }
     body { background: #fff !important; }
+
+    @page { size: A4; margin: 14mm; }
+
+    /* On paper the card's shadow and rounded corners read as artefacts, and
+       the width cap wastes the sheet. */
+    .invoice-sheet {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+        width: 100% !important;
+    }
+
+    /* Printers default to dropping backgrounds, which would turn the navy
+       totals block and the status pill into unreadable dark text on white. */
+    .invoice-sheet, .invoice-sheet * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Nothing in the document should be split across a page break. */
+    .invoice-meta, .invoice-cols, .invoice-foot, .invoice-sheet table {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
 }
 
 /* ── Role badge (page bar) ─────────────────────────────────────────────

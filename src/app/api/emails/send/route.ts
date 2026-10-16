@@ -10,6 +10,7 @@ import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
 import { TRUSTPILOT_REVIEW_URL, trustpilotBcc } from '@/lib/trustpilot';
+import { buildInvoiceDocument, type InvoiceRecord } from '@/lib/invoiceDocument';
 import { guardPublicRequest } from '@/lib/antiSpam';
 import { PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
 
@@ -505,39 +506,41 @@ export async function POST(req: Request) {
         if (type === 'invoice') {
             if (!invoiceData) return NextResponse.json({ error: 'invoiceData is required' }, { status: 400 });
             const inv = invoiceData;
-            // Same arithmetic as lib/invoicePng.ts and the invoice page, so the
-            // email, the screen and the downloaded document always agree about
-            // what is still owed.
-            const invTotal = Number(inv.total_amount ?? 0) || 0;
-            const invPaid = Number(inv.paid_amount ?? 0) || 0;
-            const invBalance = Math.max(invTotal - invPaid, 0);
-            const invSettled = (inv.status as string | null) === 'paid' || (invTotal > 0 && invPaid >= invTotal);
-            const invDue = displayDate(inv.due_date as string | null | undefined, '');
+            // Built from the same model as the invoice page, the preview and
+            // the PNG/PDF, so the four cannot disagree about what is owed,
+            // what the trip was, or how it was paid.
+            const d = buildInvoiceDocument(inv as InvoiceRecord);
+            const headline = d.totalRows.find((r) => r.kind === 'balance')
+                ?? d.totalRows.find((r) => r.kind === 'total');
             const subject = `Invoice ${inv.invoice_number} – Gulf Trip Service`;
             const html = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">🧾 Invoice ${escapeHtml(String(inv.invoice_number))}</p></div>
-                <p style="color:#475569;">Dear <strong>${escapeHtml(inv.customer_name)}</strong>,</p>
+                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">🧾 Invoice ${escapeHtml(d.number)}</p></div>
+                <p style="color:#475569;">Dear <strong>${escapeHtml(d.billToName)}</strong>,</p>
                 <p style="color:#475569;">Please find your invoice details below.</p>
                 ${rowsTable([
-                    row('Invoice #', inv.invoice_number),
-                    row('From', inv.pickup_location),
-                    row('To', inv.dropoff_location),
+                    row('Invoice #', d.number),
+                    row('Booking Ref', inv.booking_number),
+                    row('From', d.pickup),
+                    row('To', d.dropoff),
+                    row('Pickup', d.outboundWhen),
+                    // Only present on a return booking; dropped entirely otherwise.
+                    row('Return', d.returnWhen),
                     row('Service', serviceLabel(inv.service_type)),
-                    row('Date', displayDate(inv.travel_date as string | null | undefined, '')),
-                    // The booking and quote emails above already showed a Time
-                    // row; the invoice email was the one format that did not.
-                    row('Time', displayTime(inv.travel_time as string | null | undefined, '')),
-                    row('Status', inv.status ? String(inv.status).replace('_', ' ').toUpperCase() : ''),
-                    // The due date was stored on every invoice and shown on none.
-                    row('Payment due', invSettled ? '' : invDue),
+                    ...d.tripDetails.map((t) => row(t.label, t.value)),
+                    row('Status', d.statusLabel),
+                    row('Payment method', d.paymentMethod),
+                    row('Payment due', d.settled ? '' : d.dueOn),
                 ].join(''))}
                 <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-top:16px;text-align:center;">
-                    <p style="color:#94a3b8;margin:0;font-size:0.8rem;">${invSettled ? 'AMOUNT PAID' : invPaid > 0 ? 'BALANCE DUE' : 'TOTAL AMOUNT'}</p>
-                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">${formatMoney(invSettled ? invTotal : invBalance, inv.currency as string | null | undefined)}</p>
-                    ${invPaid > 0 && !invSettled ? `<p style="color:#64748b;margin:0;font-size:0.8rem;">${formatMoney(invTotal, inv.currency as string | null | undefined)} total · ${formatMoney(invPaid, inv.currency as string | null | undefined)} already paid</p>` : ''}
+                    <p style="color:#94a3b8;margin:0;font-size:0.8rem;">${escapeHtml((d.settled ? 'Amount paid' : headline?.label ?? 'Total').toUpperCase())}</p>
+                    <p style="color:#0f172a;font-size:1.8rem;font-weight:800;margin:8px 0;">${escapeHtml(headline?.value ?? '')}</p>
                 </div>
+                ${d.totalRows.length > 2 ? `<table style="width:100%;border-collapse:collapse;margin-top:14px;">${d.totalRows.map((r) => `
+                    <tr><td style="padding:6px 4px;color:${r.kind === 'total' ? '#0f172a' : '#94a3b8'};font-size:13px;font-weight:${r.kind === 'total' ? 700 : 400};">${escapeHtml(r.label)}</td>
+                    <td style="padding:6px 4px;text-align:right;color:${r.kind === 'total' ? '#0f172a' : '#475569'};font-size:13px;font-weight:${r.kind === 'total' || r.kind === 'balance' ? 700 : 400};">${escapeHtml(r.value)}</td></tr>`).join('')}</table>` : ''}
+                ${d.notes.map((n) => noteBlock(n.label, n.text, n.tone === 'accent' ? '#fbf6ec' : '#f8fafc', n.tone === 'accent' ? '#b8945b' : '#94a3b8', n.tone === 'accent' ? '#8a6a35' : '#64748b')).join('')}
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/invoices/${inv.invoice_db_id || inv.id || ''}" style="${btnStyle}">View Invoice</a></p>
-                <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">${invSettled ? 'Paid in full — no further action needed.' : invDue ? `Please settle by ${escapeHtml(invDue)}.` : ''} For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>
+                <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">${escapeHtml(d.footerNote)} For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
             const invoiceTo = recipient(inv.customer_email);
             if (!invoiceTo) return NextResponse.json({ error: NO_EMAIL }, { status: 422 });

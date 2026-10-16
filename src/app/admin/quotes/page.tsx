@@ -220,6 +220,9 @@ export default function QuotesPage() {
                 travel_date: q.travel_date,
                 travel_time: q.travel_time,
                 service_type: q.vehicle_type ? `${q.vehicle_type} transfer` : 'Private transfer',
+                // The quotation can carry the same trip facts the invoice does.
+                vehicle_type: q.vehicle_type,
+                passengers_count: q.passengers_count,
                 subtotal: quoteTotal(q),
                 total_amount: quoteTotal(q),
                 currency: q.currency,

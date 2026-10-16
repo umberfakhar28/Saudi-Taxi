@@ -12,6 +12,9 @@ import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
 import { bookingMessage, canWhatsApp, toWhatsAppNumber, waLinkTo } from '@/lib/whatsapp';
 import { quoteRef, quoteTotal, quoteSummary, latestQuote, bookingQuoteState, QUOTE_STATE_LABEL, QUOTE_STATE_STYLE, type QuoteRecord } from '@/lib/quotes';
+import InvoiceForm, { invoiceFormFromBooking, invoiceFormToRow, type InvoiceFormValues } from '@/components/admin/InvoiceForm';
+import { buildInvoiceDocument } from '@/lib/invoiceDocument';
+import InvoiceDocumentView from '@/components/admin/InvoiceDocumentView';
 
 /** The fields the quote composer reads off a booking row. The rest of this
  * page still works with the raw Supabase record, which assigns in freely. */
@@ -39,7 +42,6 @@ interface BookingRow {
     currency?: string | null;
     quotes?: QuoteRecord[] | null;
 }
-import { PHONE_DISPLAY } from '@/lib/contact';
 
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
 const PAYMENT_OPTIONS = ['all', 'paid', 'unpaid', 'partially_paid'];
@@ -73,6 +75,12 @@ function BookingsPageInner() {
     const [notesModal, setNotesModal] = useState<any | null>(null);
     const [viewModal, setViewModal] = useState<any | null>(null);
     const [invoiceModal, setInvoiceModal] = useState<any | null>(null);
+    // The booking an invoice is being raised for, and the form's values.
+    // Raising an invoice used to be a single click with everything
+    // defaulted; the admin now fills this in first.
+    const [invoiceFormBooking, setInvoiceFormBooking] = useState<any | null>(null);
+    const [invoiceForm, setInvoiceForm] = useState<InvoiceFormValues | null>(null);
+    const [savingInvoice, setSavingInvoice] = useState(false);
     const [newBookingModal, setNewBookingModal] = useState(false);
     const [newBooking, setNewBooking] = useState<any>({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending', currency:'SAR' });
     const [notes, setNotes] = useState('');
@@ -461,32 +469,67 @@ function BookingsPageInner() {
         setOpenDropdown(null); fetchBookings();
     };
 
+    /**
+     * Opens the invoice an existing booking already has, or the form for
+     * raising a new one.
+     *
+     * This used to insert an invoice outright with every value defaulted:
+     * no payment method, no part payment, no surcharge or discount, no
+     * return leg and no note — columns that existed on the table with
+     * nothing able to set them. The admin now fills the details in first
+     * (see components/admin/InvoiceForm.tsx), prefilled from the booking so
+     * the common case is still a couple of clicks.
+     */
     const generateInvoice = async (b: any) => {
         setOpenDropdown(null);
-        // If booking already has an invoice, just open it in modal
+        // Already invoiced — show what was issued rather than offering to
+        // issue it twice.
         if (b.invoice_id) {
             const { data: existing } = await supabase.from('invoices').select('*').eq('id', b.invoice_id).single();
-            // The invoice's own dates and payment state, not the booking's —
-            // the preview is of the invoice, so it shows what the invoice says.
-            if (existing) { setInvoiceModal({ ...b, invoice_number: existing.invoice_number, invoice_db_id: existing.id, total_amount: existing.total_amount, created_at: existing.created_at, due_date: existing.due_date, paid_amount: existing.paid_amount, status: existing.status }); return; }
+            if (existing) { setInvoiceModal({ ...existing, invoice_db_id: existing.id }); return; }
         }
+        setInvoiceFormBooking(b);
+        setInvoiceForm(invoiceFormFromBooking(b));
+    };
+
+    /** Writes the invoice the form describes. */
+    const saveGeneratedInvoice = async () => {
+        if (!invoiceForm || !invoiceFormBooking) return;
+        const b = invoiceFormBooking;
+        if (!invoiceForm.customer_name.trim()) {
+            showToast('error', 'The invoice needs a customer name.');
+            return;
+        }
+        setSavingInvoice(true);
         const invNum = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const { data: invData, error } = await supabase.from('invoices').insert({ invoice_number: invNum, booking_id: b.id, customer_name: b.customer_name, customer_email: emailOrNull(b.customer_email), customer_phone: b.customer_phone, pickup_location: b.pickup_location, dropoff_location: b.dropoff_location, travel_date: b.travel_date, travel_time: b.travel_time, service_type: b.service_type, subtotal: b.quote_amount || 0, total_amount: b.quote_amount || 0, status: 'unpaid', due_date: new Date(Date.now() + 7 * 86400000).toISOString() }).select().single();
-        // NOTE: travel_time requires supabase/sql/005_invoice_travel_time.sql
-        // to have been run. It was dropped here before, which is why invoices
-        // had no time to show in any format.
-        if (!error && invData) {
-            // Keep the booking's own invoice_id pointer in sync so future
-            // lookups (and the "already has an invoice" branch above) find
-            // it without relying on the invoices.booking_id back-reference
-            // alone.
-            await supabase.from('bookings').update({ invoice_id: invData.id }).eq('id', b.id);
-            logActivity('invoice', invData.id, 'created', `Invoice ${invNum} generated for ${b.customer_name}`);
-            await fetchBookings();
-            setInvoiceModal({ ...b, invoice_number: invNum, invoice_db_id: invData.id, total_amount: b.quote_amount || 0, created_at: invData.created_at, due_date: invData.due_date, paid_amount: invData.paid_amount, status: invData.status });
-        } else {
+        const { data: invData, error } = await supabase
+            .from('invoices')
+            .insert({
+                ...invoiceFormToRow(invoiceForm),
+                invoice_number: invNum,
+                booking_id: b.id,
+                // Denormalised so the invoice can print its reference without
+                // a join, and keeps it if the booking is ever removed.
+                booking_number: b.booking_number ?? null,
+            })
+            .select()
+            .single();
+        setSavingInvoice(false);
+
+        if (error || !invData) {
             showToast('error', 'Failed to create invoice: ' + (error?.message || 'unknown error'));
+            return;
         }
+        // Keep the booking's own invoice_id pointer in sync so future
+        // lookups (and the "already invoiced" branch above) find it without
+        // relying on the invoices.booking_id back-reference alone.
+        await supabase.from('bookings').update({ invoice_id: invData.id }).eq('id', b.id);
+        logActivity('invoice', invData.id, 'created', `Invoice ${invNum} generated for ${invoiceForm.customer_name}`);
+        setInvoiceFormBooking(null);
+        setInvoiceForm(null);
+        await fetchBookings();
+        showToast('success', `Invoice ${invNum} created.`);
+        setInvoiceModal({ ...invData, invoice_db_id: invData.id });
     };
 
     const sendEmail = async (type: 'booking_confirmed' | 'invoice', payload: any) => {
@@ -1437,7 +1480,17 @@ function BookingsPageInner() {
                                 <button onClick={() => sendEmail('invoice', invoiceModal)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Mail size={14} /> Email</button>
                                 {canWhatsApp(invoiceModal.customer_phone) && (
                                     <button onClick={() => {
-                                        const msg = `Invoice ${invoiceModal.invoice_number} for ${invoiceModal.customer_name}. Amount: ${formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}. Booking: ${invoiceModal.booking_number}`;
+                                        // The invoice's own total and reference — the
+                                        // booking's quote is not what was invoiced once a
+                                        // surcharge, discount or VAT has been applied.
+                                        const d = buildInvoiceDocument(invoiceModal);
+                                        const due = d.totalRows.find((r) => r.kind === 'balance') ?? d.totalRows.find((r) => r.kind === 'total');
+                                        const msg = [
+                                            `Invoice ${d.number} for ${d.billToName}.`,
+                                            due ? `${due.label}: ${due.value}.` : '',
+                                            d.lineReference ? `${d.lineReference}.` : '',
+                                            d.dueOn && !d.settled ? `Payment due ${d.dueOn}.` : '',
+                                        ].filter(Boolean).join(' ');
                                         const link = waLinkTo(invoiceModal.customer_phone, msg);
                                         if (link) window.open(link, '_blank', 'noopener,noreferrer');
                                     }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#25D366', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Share2 size={14} /> WhatsApp</button>
@@ -1445,78 +1498,42 @@ function BookingsPageInner() {
                                 <button onClick={() => setInvoiceModal(null)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: '#fff', display: 'flex' }}><X size={18} /></button>
                             </div>
                         </div>
-                        {/* Invoice Preview */}
-                        <div style={{ flex: 1, overflow: 'auto', background: '#f8fafc', padding: '2rem' }}>
-                            <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '2.5rem', maxWidth: 700, margin: '0 auto' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
-                                    <div>
-                                        <div style={{ fontWeight: 900, fontSize: '1.8rem', color: '#0f172a', letterSpacing: '-0.5px' }}>INVOICE</div>
-                                        <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: 4, fontFamily: 'monospace' }}>{invoiceModal.invoice_number}</div>
-                                    </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#f59e0b' }}>Gulf Trip Service</div>
-                                        {/* Was a hardcoded "+966 XXX XXX XXXX" placeholder that shipped
-                                            to the invoice preview. Reads from lib/contact.ts, the single
-                                            source of truth the PNG/PDF renderer already uses, so preview
-                                            and exported document now agree. */}
-                                        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>Jeddah, Saudi Arabia<br/>{PHONE_DISPLAY}</div>
-                                    </div>
-                                </div>
-                                {/* Issued / due / amount outstanding — the same strip the
-                                    invoice page, the PNG, the PDF and the invoice email now
-                                    carry, so the preview is not the odd one out. */}
-                                <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 10, marginBottom: '1.5rem', overflow: 'hidden' }}>
-                                    {[
-                                        displayDate(invoiceModal.created_at, '') ? { label: 'Issued', value: displayDate(invoiceModal.created_at, ''), strong: false } : null,
-                                        displayDate(invoiceModal.due_date, '') ? { label: 'Payment due', value: displayDate(invoiceModal.due_date, ''), strong: false } : null,
-                                        { label: 'Amount due', value: formatMoney(invoiceModal.quote_amount, invoiceModal.currency), strong: true },
-                                    ].filter(Boolean).map((cell: any, i) => (
-                                        <div key={cell.label} style={{ flex: 1, padding: '0.85rem 1.1rem', borderLeft: i > 0 ? '1px solid #e2e8f0' : 'none' }}>
-                                            <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{cell.label}</div>
-                                            <div style={{ fontSize: cell.strong ? '1rem' : '0.88rem', fontWeight: cell.strong ? 800 : 600, color: cell.strong ? '#b8945b' : '#0f172a', marginTop: 4 }}>{cell.value}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                                    <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
-                                        <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Bill To</div>
-                                        <div style={{ fontWeight: 700, color: '#1e293b' }}>{invoiceModal.customer_name}</div>
-                                        <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 4 }}>{invoiceModal.customer_phone}</div>
-                                        {invoiceModal.customer_email && (
-                                            <div style={{ fontSize: '0.82rem', color: '#64748b' }}>{invoiceModal.customer_email}</div>
-                                        )}
-                                    </div>
-                                    <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
-                                        <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
-                                        <div style={{ fontSize: '0.82rem', color: '#334155' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {invoiceModal.pickup_location}</div>
-                                        <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {invoiceModal.dropoff_location}</div>
-                                        {/* Date AND time. Uses the shared datetime helpers rather than
-                                            date-fns directly, so the preview matches the PNG/PDF and the
-                                            emails; a booking with no time recorded shows the date alone
-                                            instead of a fabricated one. */}
-                                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>{[displayDate(invoiceModal.travel_date, ''), displayTime(invoiceModal.travel_time, '')].filter(Boolean).join(', ') || '—'} · {invoiceModal.service_type}</div>
-                                    </div>
-                                </div>
-                                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1.5rem' }}>
-                                    <thead><tr style={{ background: '#0f172a', color: '#fff' }}>
-                                        <th style={{ padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.78rem', fontWeight: 700, borderRadius: '8px 0 0 8px' }}>Description</th>
-                                        <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontSize: '0.78rem', fontWeight: 700, borderRadius: '0 8px 8px 0' }}>Amount</th>
-                                    </tr></thead>
-                                    <tbody><tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                        <td style={{ padding: '1rem', fontSize: '0.85rem', color: '#334155' }}>{serviceLabel(invoiceModal.service_type) || 'Transportation Service'}<br/><span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Booking Ref: {invoiceModal.booking_number}</span></td>
-                                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>{formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}</td>
-                                    </tr></tbody>
-                                </table>
-                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                    <div style={{ background: '#0f172a', color: '#fff', padding: '1rem 1.5rem', borderRadius: 10, minWidth: 200 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Subtotal</span><span>{formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}</span></div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>{formatMoney(invoiceModal.quote_amount, invoiceModal.currency)}</span></div>
-                                    </div>
-                                </div>
-                                <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1rem', borderTop: '1px solid #f1f5f9', fontSize: '0.78rem', color: '#94a3b8' }}>
-                                    Thank you for choosing Gulf Trip Service. Safe travels! 🚗
+                        {/* Invoice Preview — the same component the invoice page
+                            and the print view render, so the preview cannot drift
+                            from the document that is actually sent. */}
+                        <div style={{ flex: 1, overflow: 'auto', background: '#f8fafc', padding: 'clamp(1rem, 3vw, 2rem)' }}>
+                            <InvoiceDocumentView invoice={invoiceModal} />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Generate Invoice ──
+                Raising an invoice was a single click that defaulted every
+                value. The admin now sets the payment method, status, trip
+                type, charges and notes first — prefilled from the booking,
+                so the ordinary case is still just Review → Create. */}
+            {invoiceFormBooking && invoiceForm && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => { if (!savingInvoice) { setInvoiceFormBooking(null); setInvoiceForm(null); } }}>
+                    <div style={{ background: '#f1f5f9', borderRadius: 18, width: '100%', maxWidth: 760, maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+                        <div style={{ background: '#0f172a', padding: '1.25rem 1.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+                            <div>
+                                <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#fff' }}>Generate Invoice</div>
+                                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>
+                                    {invoiceFormBooking.booking_number ? `${invoiceFormBooking.booking_number} · ` : ''}{invoiceFormBooking.customer_name}
                                 </div>
                             </div>
+                            <button onClick={() => { setInvoiceFormBooking(null); setInvoiceForm(null); }} disabled={savingInvoice} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: '#fff', display: 'flex' }}><X size={18} /></button>
+                        </div>
+                        <div style={{ flex: 1, overflowY: 'auto', padding: 'clamp(1rem, 3vw, 1.5rem)' }}>
+                            <InvoiceForm value={invoiceForm} onChange={setInvoiceForm} />
+                        </div>
+                        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #e2e8f0', background: '#fff', display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                            <button onClick={() => { setInvoiceFormBooking(null); setInvoiceForm(null); }} disabled={savingInvoice} className="admin-btn-secondary">Cancel</button>
+                            <button onClick={saveGeneratedInvoice} disabled={savingInvoice} className="admin-btn-primary">
+                                <FilePlus size={15} style={{ marginRight: 6 }} />
+                                {savingInvoice ? 'Creating…' : 'Create Invoice'}
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -5,13 +5,14 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Printer, Trash2 } from 'lucide-react';
-import { LogoMark } from '@/components/Logo';
-import { formatMoney } from '@/lib/currency';
-import { displayDate, displayTime } from '@/lib/datetime';
-import { serviceLabel } from '@/lib/serviceLabels';
-import { EMAIL, PHONE_DISPLAY } from '@/lib/contact';
+import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Printer, Trash2, Pencil } from 'lucide-react';
 import { downloadInvoicePdf, downloadInvoicePng } from '@/lib/invoicePng';
+import InvoiceDocumentView from '@/components/admin/InvoiceDocumentView';
+import InvoiceForm, {
+    invoiceFormFromInvoice,
+    invoiceFormToRow,
+    type InvoiceFormValues,
+} from '@/components/admin/InvoiceForm';
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 
@@ -29,6 +30,10 @@ export default function InvoiceDetailPage() {
     // Which export is running, so each button shows its own progress.
     const [exporting, setExporting] = useState<'png' | 'pdf' | null>(null);
     const [deleting, setDeleting] = useState(false);
+    // Non-null while the invoice is being edited; the document view is
+    // replaced by the form for as long as it is.
+    const [form, setForm] = useState<InvoiceFormValues | null>(null);
+    const [savingEdits, setSavingEdits] = useState(false);
 
     const router = useRouter();
     const { allowed } = useAdminAuth();
@@ -106,7 +111,10 @@ export default function InvoiceDetailPage() {
     const exportDoc = async (kind: 'png' | 'pdf') => {
         setExporting(kind);
         try {
-            const doc = { ...invoice, bookingNumber };
+            // booking_number is stored on the invoice itself since migration
+             // 007; bookingNumber is the older lookup, kept as the fallback for
+             // invoices raised before that.
+            const doc = { ...invoice, bookingNumber: invoice.booking_number ?? bookingNumber };
             if (kind === 'pdf') await downloadInvoicePdf(doc);
             else await downloadInvoicePng(doc);
             showToast('success', kind === 'pdf' ? 'Invoice PDF saved.' : 'Invoice image saved.');
@@ -137,18 +145,31 @@ export default function InvoiceDetailPage() {
         }
     };
 
+    // Editing a saved invoice uses the same form as raising one, so a
+    // payment method or a part payment can be recorded after the fact
+    // without a second, divergent screen to maintain.
+    const startEditing = () => setForm(invoiceFormFromInvoice(invoice));
+
+    const saveEdits = async () => {
+        if (!form) return;
+        if (!form.customer_name.trim()) { showToast('error', 'The invoice needs a customer name.'); return; }
+        setSavingEdits(true);
+        const row = invoiceFormToRow(form);
+        const { error } = await supabase.from('invoices').update(row).eq('id', invoice.id);
+        setSavingEdits(false);
+        if (error) { showToast('error', 'Could not save the invoice: ' + error.message); return; }
+        setInvoice((prev: any) => ({ ...prev, ...row }));
+        setForm(null);
+        fetch('/api/admin/audit-log', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entityType: 'invoice', entityId: invoice.id, action: 'updated', description: `Invoice ${invoice.invoice_number} edited` }),
+        }).catch(() => {});
+        showToast('success', 'Invoice updated.');
+    };
+
     if (loading) {
         return <div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading invoice...</div>;
     }
-
-    // Mirrors lib/invoicePng.ts so the page and the downloaded document can
-    // never disagree about what is still owed.
-    const totalDue = Number(invoice?.total_amount ?? 0) || 0;
-    const paidSoFar = Number(invoice?.paid_amount ?? 0) || 0;
-    const balance = Math.max(totalDue - paidSoFar, 0);
-    const settled = (invoice?.status || '') === 'paid' || (totalDue > 0 && paidSoFar >= totalDue);
-    const issuedOn = displayDate(invoice?.created_at, '');
-    const dueOn = displayDate(invoice?.due_date, '');
 
     if (notFound || !invoice) {
         return (
@@ -166,6 +187,11 @@ export default function InvoiceDetailPage() {
                     <ArrowLeft size={16} /> Back to Invoices
                 </Link>
                 <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                    {allowed('invoices.edit') && !form && (
+                        <button onClick={startEditing} className="admin-btn-secondary">
+                            <Pencil size={15} /> Edit
+                        </button>
+                    )}
                     {invoice.status !== 'paid' && allowed('invoices.edit') && (
                         <button onClick={markPaid} disabled={marking} className="admin-btn-secondary">
                             <CheckCircle2 size={15} /> {marking ? 'Marking...' : 'Mark as Paid'}
@@ -198,140 +224,21 @@ export default function InvoiceDetailPage() {
                 </div>
             </div>
 
-            <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '2.5rem', maxWidth: 700, margin: '0 auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
-                    <div>
-                        <div style={{ fontWeight: 900, fontSize: '1.8rem', color: '#0f172a', letterSpacing: '-0.5px' }}>INVOICE</div>
-                        <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: 4, fontFamily: 'monospace' }}>{invoice.invoice_number}</div>
-                        <div style={{ marginTop: 8 }}>
-                            <span className={invoice.status === 'paid' ? 'badge-confirmed' : invoice.status === 'partially_paid' ? 'badge-completed' : 'badge-pending'}>
-                                {(invoice.status || 'unpaid').replace('_', ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())}
-                            </span>
-                        </div>
-                    </div>
-                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
-                        {/* The brand's own full-colour mark, from the same geometry the
-                            site header uses — not a flattened one-colour stand-in. */}
-                        <LogoMark size={46} variant="color" />
-                        <div>
-                            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>Gulf Trip Service</div>
-                            {/* Contact details come from src/lib/contact.ts, the single
-                                source of truth the rest of the site already uses, rather
-                                than being hardcoded here. */}
-                            <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>
-                                {PHONE_DISPLAY}<br />{EMAIL}
-                            </div>
-                        </div>
+            {/* Editing replaces the document with the same form the Bookings
+                page raises an invoice through — one form, two entry points. */}
+            {form ? (
+                <div className="invoice-print-hide" style={{ maxWidth: 760, margin: '0 auto' }}>
+                    <InvoiceForm value={form} onChange={setForm} />
+                    <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                        <button onClick={() => setForm(null)} disabled={savingEdits} className="admin-btn-secondary">Cancel</button>
+                        <button onClick={saveEdits} disabled={savingEdits} className="admin-btn-primary">
+                            {savingEdits ? 'Saving…' : 'Save changes'}
+                        </button>
                     </div>
                 </div>
-                {/* Issued / due / outstanding. The due date was stored on every
-                    invoice from the day they were introduced but shown on none of
-                    them, and a part-paid invoice left the remainder to be worked
-                    out by hand. Each cell appears only when the fact exists. */}
-                <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 10, marginBottom: '1.5rem', overflow: 'hidden' }}>
-                    {[
-                        issuedOn ? { label: 'Issued', value: issuedOn, strong: false } : null,
-                        dueOn && !settled ? { label: 'Payment due', value: dueOn, strong: false } : null,
-                        (dueOn || paidSoFar > 0)
-                            ? (settled
-                                ? { label: 'Amount paid', value: formatMoney(totalDue, invoice.currency), strong: true }
-                                : { label: 'Amount due', value: formatMoney(balance, invoice.currency), strong: true })
-                            : null,
-                    ].filter(Boolean).map((cell: any, i) => (
-                        <div key={cell.label} style={{ flex: 1, padding: '0.85rem 1.1rem', borderLeft: i > 0 ? '1px solid #e2e8f0' : 'none' }}>
-                            <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{cell.label}</div>
-                            <div style={{ fontSize: cell.strong ? '1rem' : '0.88rem', fontWeight: cell.strong ? 800 : 600, color: cell.strong ? '#b8945b' : '#0f172a', marginTop: 4 }}>{cell.value}</div>
-                        </div>
-                    ))}
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                    <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
-                        <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Bill To</div>
-                        <div style={{ fontWeight: 700, color: '#1e293b' }}>{invoice.customer_name}</div>
-                        {/* Email is optional for a customer, so the block closes up
-                            around a missing line instead of leaving a gap. */}
-                        {[invoice.customer_phone, invoice.customer_email].filter(Boolean).map((line: string, i: number) => (
-                            <div key={line} style={{ fontSize: '0.82rem', color: '#64748b', marginTop: i === 0 ? 4 : 0 }}>{line}</div>
-                        ))}
-                    </div>
-                    <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 10 }}>
-                        <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Trip Details</div>
-                        <div style={{ fontSize: '0.82rem', color: '#334155' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {invoice.pickup_location || '—'}</div>
-                        <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {invoice.dropoff_location || '—'}</div>
-                        {/* Date AND time, via the shared helpers, so this matches
-                            the PNG, the PDF and the invoice email. A booking with no
-                            time recorded shows the date alone, never a made-up one. */}
-                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>
-                            {[displayDate(invoice.travel_date, ''), displayTime(invoice.travel_time, '')].filter(Boolean).join(', ') || '—'} · {serviceLabel(invoice.service_type) || 'Transportation'}
-                        </div>
-                    </div>
-                </div>
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1.5rem' }}>
-                    <thead><tr style={{ background: '#0f172a', color: '#fff' }}>
-                        <th style={{ padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.78rem', fontWeight: 700, borderRadius: '8px 0 0 8px' }}>Description</th>
-                        <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontSize: '0.78rem', fontWeight: 700, borderRadius: '0 8px 8px 0' }}>Amount</th>
-                    </tr></thead>
-                    <tbody><tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                        <td style={{ padding: '1rem', fontSize: '0.85rem', color: '#334155' }}>
-                            {serviceLabel(invoice.service_type) || 'Transportation Service'}<br />
-                            <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{bookingNumber ? `Booking Ref: ${bookingNumber}` : ''}</span>
-                        </td>
-                        <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>{formatMoney(invoice.subtotal ?? invoice.total_amount ?? 0, invoice.currency)}</td>
-                    </tr></tbody>
-                </table>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <div style={{ background: '#0f172a', color: '#fff', padding: '1rem 1.5rem', borderRadius: 10, minWidth: 220 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Subtotal</span><span>{formatMoney(invoice.subtotal ?? invoice.total_amount ?? 0, invoice.currency)}</span></div>
-                        {Number(invoice.tax_amount) > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Tax</span><span>{formatMoney(invoice.tax_amount, invoice.currency)}</span></div>
-                        )}
-                        {Number(invoice.discount_amount) > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}><span>Discount</span><span>−{formatMoney(invoice.discount_amount, invoice.currency)}</span></div>
-                        )}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8 }}><span>Total</span><span>{formatMoney(invoice.total_amount ?? 0, invoice.currency)}</span></div>
-                        {paidSoFar > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: 8 }}><span>Paid</span><span>−{formatMoney(paidSoFar, invoice.currency)}</span></div>
-                        )}
-                        {paidSoFar > 0 && !settled && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', fontWeight: 700, color: '#fff', marginTop: 6 }}><span>Balance due</span><span>{formatMoney(balance, invoice.currency)}</span></div>
-                        )}
-                    </div>
-                </div>
-                {invoice.notes && (
-                    <div style={{ marginTop: '1.5rem', fontSize: '0.82rem', color: '#64748b' }}>
-                        <strong>Notes:</strong> {invoice.notes}
-                    </div>
-                )}
-                {/* Footer — given real hierarchy rather than a single grey line of
-                    text with an emoji: a hairline rule, a confident thank-you, and
-                    the contact details a customer needs if they have a question
-                    about this invoice. */}
-                <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }}>
-                        Thank you for travelling with Gulf Trip Service
-                    </div>
-                    {!settled && dueOn && (
-                        <div style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 600, marginTop: 8 }}>
-                            Please settle by {dueOn}.
-                        </div>
-                    )}
-                    {settled && (
-                        <div style={{ fontSize: '0.82rem', color: '#166534', fontWeight: 600, marginTop: 8 }}>
-                            Paid in full — no further action needed.
-                        </div>
-                    )}
-                    <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 6, lineHeight: 1.6 }}>
-                        Questions about this invoice? Call or message {PHONE_DISPLAY} — or email {EMAIL}.
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 14 }}>
-                        <span style={{ width: 28, height: 1, background: '#e2e8f0' }} />
-                        <span style={{ fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#b8945b', fontWeight: 700 }}>
-                            Gulf Trip Service
-                        </span>
-                        <span style={{ width: 28, height: 1, background: '#e2e8f0' }} />
-                    </div>
-                </div>
-            </div>
+            ) : (
+                <InvoiceDocumentView invoice={{ ...invoice, booking_number: invoice.booking_number ?? bookingNumber }} />
+            )}
         </div>
     );
 }
