@@ -1,4 +1,20 @@
 import type { RouteData } from "@/components/RoutePage";
+import {
+    CROSS_BORDER_EXCLUSIONS_AR,
+    CROSS_BORDER_INCLUSIONS_AR,
+    KSA_KUWAIT_CHECKLIST_AR,
+    KUWAIT_RIYADH_FARE,
+    type RoutePricing,
+} from "@/lib/routePricing";
+
+/** The English page's fare, with Arabic wording around it. The numbers
+ *  are the shared constant, so the two locales cannot disagree. */
+const KUWAIT_RIYADH_PRICING_AR: RoutePricing = {
+    ...KUWAIT_RIYADH_FARE,
+    includes: CROSS_BORDER_INCLUSIONS_AR,
+    excludes: CROSS_BORDER_EXCLUSIONS_AR,
+    confirmedOn: "18 أكتوبر 2026",
+};
 
 /**
  * Arabic content for the route pages that have an Arabic twin.
@@ -135,8 +151,12 @@ export const riyadhToKuwaitAr: RouteData = {
     h1: "سيارة خاصة من الرياض إلى الكويت",
     intro: "نقل خاص من باب إلى باب من الرياض إلى مدينة الكويت عبر الحدود البرية — سيارة واحدة وسائق مرخّص، بديل مريح عن الطيران للعائلات ومن لديه أمتعة.",
     breadcrumbLabel: "الرياض ← الكويت",
-    distance: "رحلة طويلة",
-    travelTime: "معظم اليوم (شاملة إجراءات الحدود)",
+    distance: "نحو 639 كم براً",
+    travelTime: "7 – 9 ساعات قيادة، زائد إجراءات الحدود",
+    durationHours: "7–9 ساعات قيادة",
+    pricing: KUWAIT_RIYADH_PRICING_AR,
+    vehicleSlugs: ["toyota-land-cruiser-prado", "gmc-yukon"],
+    checklist: KSA_KUWAIT_CHECKLIST_AR,
     heroImage: "/images/chauffeur.jpg",
     overviewTitle: "الطريق البري من الرياض إلى الكويت",
     overviewParagraphs: [

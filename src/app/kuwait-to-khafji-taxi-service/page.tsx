@@ -4,8 +4,8 @@ import { kuwaitToKhafji } from "@/lib/routeData";
 
 // W7 P1.5 reciprocal of /khafji-to-kuwait-taxi-service (docs/page-gap-analysis.md).
 export const metadata = generatePageMetadata({
-  title: "Kuwait to Khafji Taxi & Border Transfer | Gulf Trip",
-  description: "Private taxi from Kuwait City across the Al Nuwaiseeb border into Al Khafji, Saudi Arabia. 24/7 availability. Book on WhatsApp.",
+  title: "Kuwait to Khafji Taxi — Al Nuwaiseeb Border Crossing",
+  description: "Private taxi from Kuwait City to Khafji across the Al Nuwaiseeb border — about 180 km and 2.5–3 hours including the crossing. Licensed driver, door to door, quote on WhatsApp.",
   path: "/kuwait-to-khafji-taxi-service",
   keywords: ["Kuwait to Khafji taxi", "Al Nuwaiseeb border taxi", "Kuwait to Saudi Arabia border transfer"],
 });

@@ -373,7 +373,9 @@ export default function FleetPage() {
                                         </th>
                                         <td>{v.type}</td>
                                         <td>{v.passengers}</td>
-                                        <td>{v.luggage} bags</td>
+                                        {/* A vehicle whose bag capacity is not
+                                            confirmed shows a dash, not a guess. */}
+                                        <td>{v.luggage === undefined ? "\u2014" : `${v.luggage} bags`}</td>
                                         <td>{v.comfort}</td>
                                         <td>{v.bestFor}</td>
                                         <td>

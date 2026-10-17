@@ -72,7 +72,7 @@ const data: GuideData = {
           ["Makkah → Madinah", "~450 km", "4–5 hours"],
           ["Doha → Dammam", "~440 km", "5–6 hours incl. border"],
           ["Bahrain → Riyadh", "~470 km incl. causeway", "4.5–5.5 hours incl. border"],
-          ["Dammam → Kuwait", "~530 km", "5.5–6.5 hours incl. border"],
+          ["Dammam → Kuwait", "~410 km", "5–6 hours incl. border"],
           ["Doha → Riyadh", "~580 km", "6.5–7.5 hours incl. border"],
           ["Riyadh → Makkah", "~870 km", "9–10 hours"],
           ["Riyadh → Jeddah", "~950–1,000 km", "10–11 hours"],

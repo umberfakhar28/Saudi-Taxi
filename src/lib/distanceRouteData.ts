@@ -922,8 +922,8 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     intro: "How far Kuwait is from Dammam, how long the drive along the Gulf coast takes, and what to expect crossing the Al Nuwaiseeb border.",
     breadcrumbLabel: "Dammam to Kuwait",
 
-    roadDistance: "approximately 530 km by road",
-    driveTime: "approximately 5.5–6.5 hours, including border processing",
+    roadDistance: "approximately 410 km by road",
+    driveTime: "approximately 5–6 hours, including border processing",
     routeType: "Cross-border route between Saudi Arabia and Kuwait via the Al Khafji / Al Nuwaiseeb border",
 
     overviewParagraphs: [
@@ -978,7 +978,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     faqs: [
-      { q: "How far is Dammam from Kuwait?", a: "Approximately 530 km by road, following the Gulf coast highway through Jubail and Khafji to the Al Nuwaiseeb border." },
+      { q: "How far is Dammam from Kuwait?", a: "Approximately 410 km by road, following the Gulf coast highway through Jubail and Khafji to the Al Nuwaiseeb border. Allow 5–6 hours in total, since border processing adds to the driving time." },
       { q: "How long does it take to drive from Dammam to Kuwait?", a: "Around 5.5 to 6.5 hours including border processing at Al Nuwaiseeb." },
       { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "What is the best way to travel from Dammam to Kuwait?", a: "A private taxi or chauffeur transfer covers the full distance in one vehicle. A short flight is a realistic alternative for travelers on a tight schedule." },

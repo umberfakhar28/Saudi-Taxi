@@ -138,6 +138,42 @@ export interface UIStrings {
     vehicleOptionsFor: (from: string, to: string) => string;
     bookYourTransfer: (from: string, to: string) => string;
     whatsappQuote: string;
+
+    // --- Kuwait route brief: hero CTA, journey strip, vehicles, pricing,
+    // inclusions and checklist. ---
+    whatsappLeadTitle: (from: string, to: string) => string;
+    whatsappLeadPriced: (price: string, direction: string) => string;
+    whatsappLeadQuote: string;
+    glanceRoute: string;
+    glanceDistance: string;
+    glanceDuration: string;
+    glanceBorder: string;
+    glanceTransfer: string;
+    glanceTransferValue: string;
+    glanceNote: string;
+    glanceNoteBorder: string;
+    vehiclesHeading: (from: string, to: string) => string;
+    vehiclesSubheading: string;
+    passengersLabel: string;
+    luggageLabel: string;
+    luggageUnknown: string;
+    bestForLabel: string;
+    pricingHeading: (from: string, to: string) => string;
+    pricingSubheading: string;
+    pricingVehicleCol: string;
+    pricingCapacityCol: string;
+    pricingPriceCol: string;
+    pricingBookCol: string;
+    priceConfirmedOn: (date: string) => string;
+    includedHeading: string;
+    notIncludedHeading: string;
+    checklistHeading: string;
+    checklistSubheading: string;
+    bookThisVehicle: string;
+    photoComingSoon: string;
+    ctaBlurb: (from: string, to: string) => string;
+    ctaBlurbPriced: (price: string, direction: string, from: string, to: string) => string;
+    ctaReminder: string;
 }
 
 const en: UIStrings = {
@@ -253,6 +289,42 @@ const en: UIStrings = {
     vehicleOptionsFor: (from: string, to: string) => `Vehicle Options for ${from} to ${to}`,
     bookYourTransfer: (from: string, to: string) => `Book Your ${from} to ${to} Transfer`,
     whatsappQuote: 'WhatsApp Quote',
+
+    whatsappLeadTitle: (from, to) => `Get a ${from} to ${to} quote on WhatsApp`,
+    whatsappLeadPriced: (price, direction) =>
+        `${price} ${direction}. Message us with your date and passenger count and we will confirm the vehicle and the final fare.`,
+    whatsappLeadQuote: 'Message us with your travel date, passenger count and preferred vehicle, and we will confirm the fare before you book.',
+    glanceRoute: 'Route',
+    glanceDistance: 'Distance',
+    glanceDuration: 'Journey time',
+    glanceBorder: 'Border crossing',
+    glanceTransfer: 'Transfer type',
+    glanceTransferValue: 'Private, door to door',
+    glanceNote: 'Distance and journey time are estimates. The exact duration depends on your pickup and drop-off points and on traffic.',
+    glanceNoteBorder: 'Distance and journey time are estimates. The exact duration depends on your pickup and drop-off points, traffic, and how long border processing takes on the day.',
+    vehiclesHeading: (from, to) => `Vehicles on the ${from} to ${to} route`,
+    vehiclesSubheading: 'Both vehicles carry the same fare on this route. Choose on space and comfort.',
+    passengersLabel: 'Passengers',
+    luggageLabel: 'Luggage',
+    luggageUnknown: 'Confirmed when you book',
+    bestForLabel: 'Best for',
+    pricingHeading: (from, to) => `${from} to ${to} fares`,
+    pricingSubheading: 'One private vehicle, not a per-seat price.',
+    pricingVehicleCol: 'Vehicle',
+    pricingCapacityCol: 'Passengers',
+    pricingPriceCol: 'Starting price',
+    pricingBookCol: 'Book',
+    priceConfirmedOn: (date) => `Fare confirmed ${date}. Message us to confirm the current price for your travel date.`,
+    includedHeading: 'What your fare includes',
+    notIncludedHeading: 'Not included',
+    checklistHeading: 'Before you travel',
+    checklistSubheading: 'Entry requirements differ by nationality, residency and purpose of travel, and they change. Confirm yours with the relevant embassy before you book.',
+    bookThisVehicle: 'Book this vehicle',
+    photoComingSoon: 'Photo coming soon',
+    ctaBlurb: (from, to) => `Licensed drivers and a private vehicle for every ${from} to ${to} transfer, around the clock.`,
+    ctaBlurbPriced: (price, direction, from, to) =>
+        `${from} to ${to} ${direction} from ${price.replace(/^from /, '')}, in a private vehicle with a licensed driver.`,
+    ctaReminder: 'Send us your travel date, pickup and drop-off points, passenger count and preferred vehicle, and we will confirm the fare.',
 };
 
 const ar: UIStrings = {
@@ -368,6 +440,42 @@ const ar: UIStrings = {
     vehicleOptionsFor: (from: string, to: string) => `خيارات السيارات من ${from} إلى ${to}`,
     bookYourTransfer: (from: string, to: string) => `احجز رحلتك من ${from} إلى ${to}`,
     whatsappQuote: 'عرض سعر عبر واتساب',
+
+    whatsappLeadTitle: (from, to) => `احصل على عرض سعر من ${from} إلى ${to} عبر واتساب`,
+    whatsappLeadPriced: (price, direction) =>
+        `${price} ${direction}. أرسل لنا تاريخ السفر وعدد الركاب وسنؤكد السيارة والسعر النهائي.`,
+    whatsappLeadQuote: 'أرسل لنا تاريخ السفر وعدد الركاب والسيارة المفضلة، وسنؤكد السعر قبل الحجز.',
+    glanceRoute: 'المسار',
+    glanceDistance: 'المسافة',
+    glanceDuration: 'مدة الرحلة',
+    glanceBorder: 'المعبر الحدودي',
+    glanceTransfer: 'نوع التوصيل',
+    glanceTransferValue: 'خاص، من الباب إلى الباب',
+    glanceNote: 'المسافة ومدة الرحلة تقديرية. تعتمد المدة الفعلية على نقاط الانطلاق والوصول وعلى حركة المرور.',
+    glanceNoteBorder: 'المسافة ومدة الرحلة تقديرية. تعتمد المدة الفعلية على نقاط الانطلاق والوصول، وحركة المرور، ومدة إجراءات الحدود في يوم السفر.',
+    vehiclesHeading: (from, to) => `السيارات على مسار ${from} إلى ${to}`,
+    vehiclesSubheading: 'السيارتان بنفس السعر على هذا المسار. اختر حسب المساحة والراحة.',
+    passengersLabel: 'الركاب',
+    luggageLabel: 'الأمتعة',
+    luggageUnknown: 'يُؤكد عند الحجز',
+    bestForLabel: 'الأنسب لـ',
+    pricingHeading: (from, to) => `أسعار ${from} إلى ${to}`,
+    pricingSubheading: 'السعر للسيارة الخاصة كاملة، وليس لكل مقعد.',
+    pricingVehicleCol: 'السيارة',
+    pricingCapacityCol: 'الركاب',
+    pricingPriceCol: 'السعر يبدأ من',
+    pricingBookCol: 'الحجز',
+    priceConfirmedOn: (date) => `تم تأكيد السعر في ${date}. راسلنا لتأكيد السعر الحالي لتاريخ سفرك.`,
+    includedHeading: 'ما يشمله السعر',
+    notIncludedHeading: 'غير شامل',
+    checklistHeading: 'قبل السفر',
+    checklistSubheading: 'تختلف متطلبات الدخول حسب الجنسية والإقامة وغرض السفر، وهي عرضة للتغيير. تأكد من متطلباتك مع السفارة المعنية قبل الحجز.',
+    bookThisVehicle: 'احجز هذه السيارة',
+    photoComingSoon: 'الصورة قريباً',
+    ctaBlurb: (from, to) => `سائقون مرخصون وسيارة خاصة لكل رحلة من ${from} إلى ${to}، على مدار الساعة.`,
+    ctaBlurbPriced: (price, direction, from, to) =>
+        `من ${from} إلى ${to} ${direction} ابتداءً من ${price.replace(/^from /, '')}، في سيارة خاصة مع سائق مرخص.`,
+    ctaReminder: 'أرسل لنا تاريخ السفر ونقاط الانطلاق والوصول وعدد الركاب والسيارة المفضلة، وسنؤكد السعر.',
 };
 
 const STRINGS: Record<Locale, UIStrings> = { en, ar };

@@ -8,7 +8,14 @@ import {
 import RelatedLinks from "@/components/RelatedLinks";
 import QuickBookForm from "@/components/QuickBookForm";
 import { ui, type Locale, type UIStrings } from "@/lib/i18n";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { waLink } from "@/lib/contact";
+import {
+  directionLabel,
+  hasPublishedPrice,
+  priceLabel,
+  routeVehicles,
+  type RoutePricing,
+} from "@/lib/routePricing";
 // Value import (not just the RouteData type) so the reverse-route callout
 // below can confirm `reverseSlug` resolves to a real, live page before
 // linking to it — reverseSlug is allowed to forward-reference a route that
@@ -190,6 +197,55 @@ export interface RouteData {
    * set when this content has actually just been reviewed (see ground rule
    * against fake update dates). */
   lastReviewed?: string;
+
+  // --- Kuwait route brief additions. All optional, so the ~30 routes that
+  // do not set them render exactly as they did before. ---
+
+  /** This route's confirmed fare. Omitted entirely where the business has
+   * not confirmed one — the pricing section then does not render, rather
+   * than showing a guess or a placeholder. See lib/routePricing.ts. */
+  pricing?: RoutePricing;
+
+  /** FLEET_VEHICLES slugs actually available on this route, in display
+   * order. When set, these replace the generic `vehicleOptions` tiers with
+   * real named vehicles and their confirmed capacities. */
+  vehicleSlugs?: string[];
+
+  /** What a traveller needs ready before a cross-border journey. */
+  checklist?: { title: string; detail: string }[];
+
+  /** A concrete duration for the "at a glance" strip, e.g. "7–9 hours".
+   * `travelTime` is kept for the existing quick-facts bar; this exists
+   * because several routes phrase that field qualitatively. */
+  durationHours?: string;
+
+  /** Named pickup areas at the origin end, where the business has
+   * confirmed coverage. Distinct from `pickupPoints`, which mixes
+   * airports, hotels and districts across both ends. */
+  originAreas?: string[];
+  /** Named drop-off areas at the destination end. */
+  destinationAreas?: string[];
+}
+
+/**
+ * The WhatsApp message a route opens with.
+ *
+ * Until now every route page's WhatsApp button pointed at a bare wa.me link
+ * and opened an empty chat — `waLink` was imported into this file and
+ * never called. The customer then had to type out which journey they
+ * wanted, and our team had no idea which page the enquiry came from.
+ *
+ * The message names the route in the right direction, and the vehicle when
+ * the enquiry comes from a specific vehicle or pricing card.
+ */
+function routeWhatsAppLink(data: RouteData, vehicleName?: string): string {
+  const lines = [
+    `Hello Gulf Trip Service, I would like a quote for a private transfer from ${data.origin} to ${data.destination}.`,
+    vehicleName ? `Vehicle: ${vehicleName}.` : "",
+    "Travel date: ",
+    "Passengers: ",
+  ].filter(Boolean);
+  return waLink(lines.join("\n"));
 }
 
 /** Always-true service inclusions, not per-route — the border-crossing item
@@ -279,6 +335,10 @@ function relatedCitiesFor(data: RouteData): { slug: string; city: string }[] {
 
 export default function RoutePage({ data, locale = 'en' }: { data: RouteData; locale?: Locale }) {
   const t = ui(locale);
+  // Real fleet vehicles for this route, where it names any. Empty for the
+  // routes still using the generic tier cards, which is what switches the
+  // vehicle section between its two renderings.
+  const namedVehicles = routeVehicles(data.vehicleSlugs);
   const schemas = [
     serviceSchema({
       name: `${data.origin} to ${data.destination} Taxi Service`,
@@ -334,6 +394,92 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
               )}{" "}
               / <span>{data.breadcrumbLabel}</span>
             </div>
+          </div>
+        </section>
+
+        {/* Route-specific WhatsApp CTA — the first action on the page.
+            WhatsApp is where this business actually converts, and the
+            message arrives naming the journey, so the customer types
+            nothing and our team knows which route the enquiry came from. */}
+        <section style={{ padding: "var(--space-8) 0 0" }}>
+          <div className="container">
+            <div style={{
+              background: "var(--bg-subtle)",
+              border: "1px solid var(--line)",
+              borderRadius: "var(--radius-xl)",
+              padding: "var(--space-6)",
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "var(--space-4)",
+            }}>
+              <div style={{ flex: "1 1 280px" }}>
+                <p style={{ fontWeight: 800, fontSize: "var(--text-lg)", margin: 0 }}>
+                  {t.whatsappLeadTitle(data.origin, data.destination)}
+                </p>
+                <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", margin: "var(--space-2) 0 0" }}>
+                  {hasPublishedPrice(data.pricing)
+                    ? t.whatsappLeadPriced(priceLabel(data.pricing), directionLabel(data.pricing).toLowerCase())
+                    : t.whatsappLeadQuote}
+                </p>
+              </div>
+              <a
+                href={routeWhatsAppLink(data)}
+                className="btn btn-whatsapp btn-lg"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-route-cta="whatsapp-hero"
+              >
+                <MessageIcon size={18} /> {t.whatsappQuote}
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Journey at a glance — built from this route's own data, so a
+            domestic route simply shows one fewer card than a cross-border
+            one rather than an empty "Border: n/a". */}
+        <section style={{ padding: "var(--space-8) 0 0" }}>
+          <div className="container">
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gap: "var(--space-3)",
+            }}>
+              {[
+                { label: t.glanceRoute, value: `${data.origin} → ${data.destination}` },
+                { label: t.glanceDistance, value: data.distance },
+                { label: t.glanceDuration, value: data.durationHours ?? data.travelTime },
+                data.isCrossBorder && data.borderCrossingName
+                  ? { label: t.glanceBorder, value: data.borderCrossingName }
+                  : null,
+                { label: t.glanceTransfer, value: t.glanceTransferValue },
+              ].filter(Boolean).map((cell) => {
+                const c = cell as { label: string; value: string };
+                return (
+                  <div key={c.label} style={{
+                    background: "var(--bg-subtle)",
+                    border: "1px solid var(--line)",
+                    borderRadius: "var(--radius-lg)",
+                    padding: "var(--space-4)",
+                  }}>
+                    <div style={{
+                      fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.06em",
+                      textTransform: "uppercase", color: "var(--text-muted)",
+                    }}>{c.label}</div>
+                    <div style={{ fontWeight: 700, marginTop: "var(--space-2)", fontSize: "var(--text-sm)" }}>
+                      {c.value}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Distance and duration are estimates, and saying so once here
+                is better than hedging every figure individually. */}
+            <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginTop: "var(--space-3)" }}>
+              {data.isCrossBorder ? t.glanceNoteBorder : t.glanceNote}
+            </p>
           </div>
         </section>
 
@@ -622,38 +768,245 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
           </div>
         </section>
 
-        {/* Vehicle options */}
+        {/* Vehicle options.
+
+            Two renderings, one section. A route that names real fleet
+            vehicles (`vehicleSlugs`) gets a comparison built from
+            FLEET_VEHICLES — real models, confirmed capacities, a per-vehicle
+            WhatsApp CTA. Every other route keeps the generic tier cards it
+            has always had, unchanged. */}
         <section className="section">
           <div className="container">
             <div className="section-header centered">
               <span className="section-eyebrow">{t.chooseYourRide}</span>
-              <h2 className="section-title">{t.vehicleOptionsFor(data.origin, data.destination)}</h2>
+              <h2 className="section-title">
+                {namedVehicles.length > 0
+                  ? t.vehiclesHeading(data.origin, data.destination)
+                  : t.vehicleOptionsFor(data.origin, data.destination)}
+              </h2>
+              {namedVehicles.length > 0 && hasPublishedPrice(data.pricing) && (
+                <p className="section-subtitle">{t.vehiclesSubheading}</p>
+              )}
             </div>
-            <div className="grid-3">
-              {data.vehicleOptions.map((v, i) => (
-                <div key={i} className="card" style={{ textAlign: "center", padding: 0, overflow: "hidden" }}>
-                  <div style={{ position: "relative", width: "100%", height: 160 }}>
-                    <Image
-                      src={vehicleImageFor(v.name)}
-                      alt={`${v.name} vehicle for the ${data.origin} to ${data.destination} route`}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
+
+            {namedVehicles.length > 0 ? (
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(auto-fit, minmax(280px, 1fr))`,
+                gap: "var(--space-6)",
+                maxWidth: namedVehicles.length === 2 ? 820 : undefined,
+                margin: "0 auto",
+              }}>
+                {namedVehicles.map((v) => (
+                  <div key={v.slug} className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+                    <div style={{
+                      position: "relative", width: "100%", height: 190,
+                      background: "var(--bg-subtle)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      {v.image ? (
+                        <Image
+                          src={v.image}
+                          alt={`${v.name} — ${data.origin} to ${data.destination} private transfer`}
+                          fill
+                          style={{ objectFit: "cover" }}
+                          sizes="(max-width: 640px) 100vw, 420px"
+                        />
+                      ) : (
+                        /* No photo of this exact model yet. A labelled
+                           placeholder is honest; a stock photo of a
+                           different car passed off as ours is not. */
+                        <div style={{ textAlign: "center", color: "var(--text-muted)", padding: "var(--space-4)" }}>
+                          <CarIcon size={40} />
+                          <div style={{ fontSize: "var(--text-xs)", marginTop: "var(--space-2)" }}>
+                            {t.photoComingSoon}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ padding: "var(--space-6)", display: "flex", flexDirection: "column", flex: 1 }}>
+                      <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)", marginBottom: "var(--space-3)" }}>{v.name}</h3>
+                      <dl style={{ margin: 0, fontSize: "var(--text-sm)" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", padding: "var(--space-2) 0", borderBottom: "1px solid var(--line)" }}>
+                          <dt style={{ color: "var(--text-muted)" }}>{t.passengersLabel}</dt>
+                          <dd style={{ margin: 0, fontWeight: 700 }}>{v.passengers}</dd>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", padding: "var(--space-2) 0", borderBottom: "1px solid var(--line)" }}>
+                          <dt style={{ color: "var(--text-muted)" }}>{t.luggageLabel}</dt>
+                          {/* Unconfirmed capacity says so, rather than
+                              printing a number nobody has verified. */}
+                          <dd style={{ margin: 0, fontWeight: v.luggage === undefined ? 400 : 700, color: v.luggage === undefined ? "var(--text-muted)" : undefined }}>
+                            {v.luggage === undefined ? t.luggageUnknown : v.luggage}
+                          </dd>
+                        </div>
+                        {hasPublishedPrice(data.pricing) && data.pricing.vehicleSlugs.includes(v.slug) && (
+                          <div style={{ display: "flex", justifyContent: "space-between", padding: "var(--space-2) 0", borderBottom: "1px solid var(--line)" }}>
+                            <dt style={{ color: "var(--text-muted)" }}>{t.pricingPriceCol}</dt>
+                            <dd style={{ margin: 0, fontWeight: 800, color: "var(--navy)" }}>
+                              {priceLabel(data.pricing)}
+                            </dd>
+                          </div>
+                        )}
+                      </dl>
+                      <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", margin: "var(--space-3) 0 var(--space-5)" }}>
+                        {t.bestForLabel}: {v.bestFor}
+                      </p>
+                      <a
+                        href={routeWhatsAppLink(data, v.name)}
+                        className="btn btn-whatsapp"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-route-cta="whatsapp-vehicle"
+                        style={{ marginTop: "auto", width: "100%", justifyContent: "center" }}
+                      >
+                        <MessageIcon size={16} /> {t.bookThisVehicle}
+                      </a>
+                    </div>
                   </div>
-                  <div style={{ padding: "var(--space-6)" }}>
-                    <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{v.name}</h3>
-                    <p style={{ color: "var(--navy)", fontWeight: 700, margin: "var(--space-2) 0" }}>{v.capacity}</p>
-                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{v.note}</p>
+                ))}
+              </div>
+            ) : (
+              <div className="grid-3">
+                {data.vehicleOptions.map((v, i) => (
+                  <div key={i} className="card" style={{ textAlign: "center", padding: 0, overflow: "hidden" }}>
+                    <div style={{ position: "relative", width: "100%", height: 160 }}>
+                      <Image
+                        src={vehicleImageFor(v.name)}
+                        alt={`${v.name} vehicle for the ${data.origin} to ${data.destination} route`}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    </div>
+                    <div style={{ padding: "var(--space-6)" }}>
+                      <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{v.name}</h3>
+                      <p style={{ color: "var(--navy)", fontWeight: 700, margin: "var(--space-2) 0" }}>{v.capacity}</p>
+                      <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{v.note}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
+
             <div style={{ textAlign: "center", marginTop: "var(--space-10)" }}>
               <Link href={`/book-online?from=${encodeURIComponent(data.origin)}&to=${encodeURIComponent(data.destination)}&mode=transfers`} className="btn btn-primary btn-lg">Book Now</Link>
             </div>
           </div>
         </section>
+
+        {/* Fares — only where the business has confirmed one. A route
+            without a confirmed fare renders nothing here rather than a
+            placeholder or an estimate carried over from a similar route. */}
+        {hasPublishedPrice(data.pricing) && (
+          <section className="section" style={{ background: "var(--bg-subtle)" }}>
+            <div className="container">
+              <div className="section-header centered">
+                <h2 className="section-title">{t.pricingHeading(data.origin, data.destination)}</h2>
+                <p className="section-subtitle">{t.pricingSubheading}</p>
+              </div>
+
+              <div style={{ overflowX: "auto", maxWidth: 760, margin: "0 auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", background: "var(--bg-card)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+                  <thead>
+                    <tr style={{ background: "var(--bg-dark)", color: "var(--on-dark)" }}>
+                      <th style={{ padding: "var(--space-4)", textAlign: "start", fontSize: "var(--text-sm)" }}>{t.pricingVehicleCol}</th>
+                      <th style={{ padding: "var(--space-4)", textAlign: "start", fontSize: "var(--text-sm)" }}>{t.pricingCapacityCol}</th>
+                      <th style={{ padding: "var(--space-4)", textAlign: "start", fontSize: "var(--text-sm)" }}>{t.pricingPriceCol}</th>
+                      <th style={{ padding: "var(--space-4)", textAlign: "start", fontSize: "var(--text-sm)" }}>{t.pricingBookCol}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {namedVehicles.map((v) => {
+                      const covered = data.pricing!.vehicleSlugs.includes(v.slug);
+                      return (
+                        <tr key={v.slug} style={{ borderBottom: "1px solid var(--line)" }}>
+                          <td style={{ padding: "var(--space-4)", fontWeight: 700 }}>{v.name}</td>
+                          <td style={{ padding: "var(--space-4)" }}>{v.passengers}</td>
+                          <td style={{ padding: "var(--space-4)", fontWeight: 800, color: "var(--navy)", whiteSpace: "nowrap" }}>
+                            {covered ? priceLabel(data.pricing!) : t.requestQuote}
+                          </td>
+                          <td style={{ padding: "var(--space-4)" }}>
+                            <a
+                              href={routeWhatsAppLink(data, v.name)}
+                              className="btn btn-whatsapp btn-sm"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              data-route-cta="whatsapp-pricing"
+                            >
+                              <MessageIcon size={14} /> {t.whatsappQuote}
+                            </a>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "var(--text-sm)", marginTop: "var(--space-4)" }}>
+                {directionLabel(data.pricing)} · {t.priceConfirmedOn(data.pricing.confirmedOn)}
+              </p>
+
+              {/* What the fare does and does not cover, side by side, so
+                  "no hidden fees" is a statement the page can back up. */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: "var(--space-6)",
+                marginTop: "var(--space-10)",
+                maxWidth: 900,
+                marginInline: "auto",
+              }}>
+                <div className="card">
+                  <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "var(--space-4)" }}>{t.includedHeading}</h3>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "var(--space-3)" }}>
+                    {data.pricing.includes.map((item) => (
+                      <li key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start", fontSize: "var(--text-sm)" }}>
+                        <CheckCircleIcon size={16} style={{ color: "var(--success, #10b981)", flexShrink: 0, marginTop: 3 }} />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="card">
+                  <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "var(--space-4)" }}>{t.notIncludedHeading}</h3>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "var(--space-3)" }}>
+                    {data.pricing.excludes.map((item) => (
+                      <li key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start", fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>
+                        <span style={{ flexShrink: 0, marginTop: 1 }}>—</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Pre-travel checklist — cross-border routes only. */}
+        {data.checklist && data.checklist.length > 0 && (
+          <section className="section">
+            <div className="container">
+              <div className="section-header centered">
+                <h2 className="section-title">{t.checklistHeading}</h2>
+                <p className="section-subtitle">{t.checklistSubheading}</p>
+              </div>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: "var(--space-5)",
+              }}>
+                {data.checklist.map((item) => (
+                  <div key={item.title} className="card">
+                    <h3 style={{ fontSize: "var(--text-base)", marginBottom: "var(--space-2)" }}>{item.title}</h3>
+                    <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", margin: 0 }}>{item.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* How It Works */}
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
@@ -819,7 +1172,12 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
             <span className="section-eyebrow" style={{ background: "rgba(255,255,255,0.08)", borderColor: "var(--line-dark)", color: "var(--on-dark)" }}>Book Now</span>
             <h2 style={{ color: "var(--on-dark)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
             <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
-              Fixed rates, professional drivers, and 24/7 availability for {data.origin} to {data.destination}.
+              {hasPublishedPrice(data.pricing)
+                ? t.ctaBlurbPriced(priceLabel(data.pricing), directionLabel(data.pricing).toLowerCase(), data.origin, data.destination)
+                : t.ctaBlurb(data.origin, data.destination)}
+            </p>
+            <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-sm)", maxWidth: 560, margin: "0 auto var(--space-6)" }}>
+              {t.ctaReminder}
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
               {/* Primary (navy) leads, WhatsApp (green, functional channel)
@@ -827,7 +1185,13 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                   closing CTA. WhatsApp previously wore the primary navy
                   class here, with Book Online demoted to an outline button. */}
               <Link href={locale === 'ar' ? "/ar/book-online" : "/book-online"} className="btn btn-primary btn-lg">{t.bookOnline}</Link>
-              <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+              <a
+                href={routeWhatsAppLink(data)}
+                className="btn btn-whatsapp btn-lg"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-route-cta="whatsapp-closing"
+              >
                 <MessageIcon size={18} /> {t.whatsappQuote}
               </a>
             </div>

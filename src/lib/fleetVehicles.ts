@@ -25,7 +25,9 @@ export interface FleetVehicle {
   name: string;
   type: string;
   passengers: number;
-  luggage: number;
+  /** Optional: a vehicle whose bag capacity the business has not confirmed
+   *  carries no figure rather than an invented one. Renders as "—". */
+  luggage?: number;
   comfort: "Standard" | "Premium" | "Executive";
   bestFor: string;
   /** A photo of this exact model in public/fleet. Only set where one really
@@ -48,6 +50,11 @@ export const FLEET_VEHICLES: FleetVehicle[] = [
   { slug: "mercedes-s-class", name: "Mercedes-Benz S-Class", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "VIP travel & business-class comfort" },
   { slug: "bmw-7-series", name: "BMW 7 Series", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "Corporate travel & executive meetings" },
   { slug: "genesis-g90", name: "Genesis G90", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "VIP airport pickups & flagship comfort" },
+  // Confirmed by the business on 18 October 2026 as one of the two
+  // vehicles running the Kuwait cross-border routes. Passenger capacity is
+  // the figure they gave; luggage capacity and a photo are still to come,
+  // so neither is invented here — the card renders without them.
+  { slug: "toyota-land-cruiser-prado", name: "Toyota Land Cruiser Prado", type: "Premium SUV", passengers: 6, comfort: "Premium", bestFor: "Families & long cross-border journeys" },
   { slug: "gmc-yukon", name: "GMC Yukon", type: "Premium SUV", passengers: 6, luggage: 6, comfort: "Premium", bestFor: "Families & groups with extra luggage", image: "/fleet/gmc-yukon-at4.avif" },
   { slug: "chevrolet-suburban", name: "Chevrolet Suburban", type: "Premium SUV", passengers: 6, luggage: 7, comfort: "Premium", bestFor: "Families & long cross-border journeys with luggage", image: "/fleet/chevrolet-suburban.webp" },
   { slug: "cadillac-escalade-esv", name: "Cadillac Escalade ESV", type: "Premium SUV", passengers: 6, luggage: 7, comfort: "Executive", bestFor: "VIP groups wanting a commanding, spacious ride" },
@@ -80,7 +87,7 @@ export const FLEET_CATEGORY_GUIDE: FleetCategory[] = [
     title: "Premium SUVs for Families & Groups",
     tagline: "Extra seating and cargo room for families traveling with more luggage.",
     bestForList: ["Families", "Larger luggage requirements", "Airport transfers", "Long-distance travel"],
-    vehicleSlugs: ["gmc-yukon", "chevrolet-suburban", "cadillac-escalade-esv"],
+    vehicleSlugs: ["toyota-land-cruiser-prado", "gmc-yukon", "chevrolet-suburban", "cadillac-escalade-esv"],
   },
   {
     id: "premium-van",

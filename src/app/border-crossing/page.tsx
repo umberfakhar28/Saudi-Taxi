@@ -63,13 +63,15 @@ const borders = [
     // Haradh is an inland town south-west of Hofuf, far from Kuwait, and no
     // crossing is called "Wajir". Every Eastern Province route page on this
     // site (Khafji, Dammam and Kuwait-to-Dammam) correctly names Al
-    // Nuwaiseeb. The ~530 km figure was right but mislabelled "from Riyadh" —
-    // it is this site's own Dammam-to-Kuwait distance via the coastal Highway
-    // 95. Every fact below is taken from those pages.
+    // Nuwaiseeb. The distance was also wrong: ~530 km overstated the
+    // Dammam-to-Kuwait road distance by about a quarter and contradicted
+    // this site's own Khafji figures. Corrected to ~410 km against
+    // Rome2Rio (424.8 km), Cleartrip (409 km) and Air Miles (395 km),
+    // Oct 2026. Every other fact below is taken from the route pages.
     {
         name: "Al Khafji / Al Nuwaiseeb (Kuwait)",
         route: "Saudi Arabia ↔ Kuwait",
-        distance: "~15 km from Khafji / ~530 km from Dammam",
+        distance: "~15 km from Khafji / ~410 km from Dammam",
         note: "The primary land crossing between Saudi Arabia and Kuwait, on the coast just north of Khafji. Commonly used by GCC nationals and residents with a valid Kuwait entry status.",
         highlights: ["GCC ID often sufficient for GCC nationals", "Confirm work/residency visa requirements for others", "Open 24 hours — usually 30–90 min outside peak times", "Vehicle insurance is mandatory on the Kuwaiti side"],
     },
