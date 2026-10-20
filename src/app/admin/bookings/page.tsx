@@ -331,7 +331,17 @@ function BookingsPageInner() {
                 });
                 if (!res.ok) {
                     const e = await res.json().catch(() => ({}));
-                    throw new Error(e.error || 'Failed to send the quote email');
+                    // Say what actually failed. The catch below reports
+                    // "Could not save the quote", which is wrong and
+                    // misleading here: nothing has been written yet, the
+                    // send is what failed. 401 in particular means the admin
+                    // session has lapsed, which is fixed by signing in again
+                    // — not something to retry blindly.
+                    const detail = e.error
+                        || (res.status === 401
+                            ? 'your admin session has expired — sign out and back in, then try again'
+                            : `the email service returned HTTP ${res.status}`);
+                    throw new Error(`Email not sent — ${detail}. The quote has not been saved.`);
                 }
                 payload.status = 'sent';
             } else {
@@ -363,7 +373,12 @@ function BookingsPageInner() {
             setQuoteModal(null);
             fetchBookings();
         } catch (err) {
-            showToast('error', 'Could not save the quote: ' + (err instanceof Error ? err.message : String(err)));
+            // The send step already describes itself ("Email not sent — …"),
+            // so don't prefix it with a save failure that didn't happen.
+            const message = err instanceof Error ? err.message : String(err);
+            showToast('error', message.startsWith('Email not sent')
+                ? message
+                : 'Could not save the quote: ' + message);
         } finally {
             setQuoteBusy('');
         }
@@ -1402,6 +1417,27 @@ function BookingsPageInner() {
                                 <strong style={{ color: '#475569' }}>Share on WhatsApp</strong> saves the price and opens WhatsApp with the quote — the column shows <em>Shared</em>.<br />
                                 <strong style={{ color: '#475569' }}>Email the quote</strong> sends it from the system — the column shows <em>Sent</em> only once the email actually goes out.
                             </p>
+
+                            {/* Why a send button is unavailable, stated in the modal.
+                                Both buttons disable themselves when the booking has no
+                                address to send to, but the only explanation was a `title`
+                                tooltip: invisible on touch, and easy to miss on desktop.
+                                Email became optional for a booking in migration 006, so
+                                this is now a routine state — roughly a third of recent
+                                bookings arrive with a phone number and no email — and
+                                "the button does nothing" reads as the feature being
+                                broken rather than as a missing address. */}
+                            {(!quoteModal.customer_email || !canWhatsApp(quoteModal.customer_phone)) && (
+                                <div style={{ marginTop: 12, padding: '0.7rem 0.85rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, fontSize: '0.75rem', color: '#92400e', lineHeight: 1.6 }}>
+                                    {!quoteModal.customer_email && !canWhatsApp(quoteModal.customer_phone) ? (
+                                        <>This booking has <strong>no email address and no usable phone number</strong>, so the quote cannot be sent from here. Add a contact detail to the booking first — use <strong>Edit</strong> on the booking row.</>
+                                    ) : !quoteModal.customer_email ? (
+                                        <><strong>No email address on this booking</strong>, so <em>Email the quote</em> is unavailable. Save and send it with <em>Share on WhatsApp</em> instead, or add an email via <strong>Edit</strong> on the booking row.</>
+                                    ) : (
+                                        <><strong>No usable phone number on this booking</strong>, so <em>Share on WhatsApp</em> is unavailable. Use <em>Email the quote</em> instead.</>
+                                    )}
+                                </div>
+                            )}
 
                             <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                                 <button onClick={() => setQuoteModal(null)} className="admin-btn-secondary" disabled={!!quoteBusy}>Cancel</button>
