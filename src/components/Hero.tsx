@@ -63,6 +63,7 @@ const Hero = () => {
                                     </Link>
                                     <a
                                         href={waLink("Hi, I'd like to book a ride.")}
+                                        data-wa-cta="hero"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="btn btn-whatsapp btn-lg"

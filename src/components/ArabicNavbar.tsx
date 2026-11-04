@@ -54,7 +54,7 @@ const ArabicNavbar = () => {
                         English
                     </Link>
 
-                    <a href={WHATSAPP_URL} className={styles.cta} onClick={close}>
+                    <a data-wa-cta="navbar" href={WHATSAPP_URL} className={styles.cta} onClick={close}>
                         احجز الآن
                     </a>
                 </div>

@@ -176,7 +176,7 @@ export default function RiyadhAlternativeAirportsPage() {
 
             <div style={{ marginTop: "var(--space-8)", display: "flex", gap: "var(--space-4)", flexWrap: "wrap", justifyContent: "center" }}>
               <Link href="#quote" className="btn btn-primary btn-lg">Request a Transfer Quote</Link>
-              <a href={waLink("Hi, I'm looking for a transfer to an alternative airport from Riyadh.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+              <a data-wa-cta="hero" href={waLink("Hi, I'm looking for a transfer to an alternative airport from Riyadh.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> Discuss Your Travel Plans
               </a>
             </div>
@@ -410,7 +410,7 @@ export default function RiyadhAlternativeAirportsPage() {
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="#quote" className="btn btn-primary btn-lg">Request a Transfer Quote</Link>
-              <a href={waLink("Hi, I would like to arrange an airport transfer from Riyadh.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+              <a data-wa-cta="closing-cta" href={waLink("Hi, I would like to arrange an airport transfer from Riyadh.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> Discuss on WhatsApp
               </a>
             </div>

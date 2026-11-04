@@ -17,7 +17,7 @@ const ArabicFooter = () => {
                             شريكك الموثوق لخدمات النقل والتاكسي في جميع أنحاء المملكة العربية السعودية. نخدم معتمري العمرة والسياح والمسافرين براحة وأمان منذ عام 2014.
                         </p>
                         <div className={styles.socialLinks}>
-                            <a href={WHATSAPP_URL} className={styles.socialLink} aria-label="واتساب" target="_blank" rel="noopener noreferrer">
+                            <a data-wa-cta="footer-social" href={WHATSAPP_URL} className={styles.socialLink} aria-label="واتساب" target="_blank" rel="noopener noreferrer">
                                 <MessageIcon size={18} />
                             </a>
                             <a href={TEL_URL} className={styles.socialLink} aria-label="هاتف">
@@ -62,7 +62,7 @@ const ArabicFooter = () => {
                             </li>
                             <li className={styles.listItem}>
                                 <MessageIcon className={styles.contactIcon} size={18} />
-                                <a href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">تواصل عبر واتساب</a>
+                                <a data-wa-cta="footer-contact" href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">تواصل عبر واتساب</a>
                             </li>
                             <li className={styles.listItem}>
                                 <MailIcon className={styles.contactIcon} size={18} />

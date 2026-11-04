@@ -24,7 +24,7 @@ const Footer = () => {
                             Your trusted partner for reliable taxi and transportation services across Saudi Arabia. Serving Umrah pilgrims, tourists and travelers with comfort, safety and dedication since 2014.
                         </p>
                         <div className={styles.socialLinks}>
-                            <a href={WHATSAPP_URL} className={styles.socialLink} aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+                            <a data-wa-cta="footer-social" href={WHATSAPP_URL} className={styles.socialLink} aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
                                 <MessageIcon size={18} />
                             </a>
                             <a href={TEL_URL} className={styles.socialLink} aria-label="Phone">
@@ -103,7 +103,7 @@ const Footer = () => {
                             </li>
                             <li className={styles.listItem}>
                                 <MessageIcon className={styles.contactIcon} size={18} />
-                                <a href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">WhatsApp Us</a>
+                                <a data-wa-cta="footer-contact" href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">WhatsApp Us</a>
                             </li>
                             <li className={styles.listItem}>
                                 <MailIcon className={styles.contactIcon} size={18} />

@@ -158,7 +158,7 @@ export default function ArContactUsClient() {
                                 {info.details.map((detail, j) => (
                                     <p key={j} className={styles.contactDetail} dir="ltr">{detail}</p>
                                 ))}
-                                <a href={info.action} className={styles.contactLink} target={info.action.startsWith('http') ? '_blank' : undefined} rel={info.action.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                                <a href={info.action} className={styles.contactLink} data-wa-cta={info.action.startsWith('http') ? 'contact-info-card' : undefined} target={info.action.startsWith('http') ? '_blank' : undefined} rel={info.action.startsWith('http') ? 'noopener noreferrer' : undefined}>
                                     {info.linkText} <ChevronRightIcon size={16} style={{ transform: 'scaleX(-1)' }} />
                                 </a>
                             </div>
@@ -223,6 +223,7 @@ export default function ArContactUsClient() {
                             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                                 <a
                                     href={waLink(`مرحباً، لقد أرسلت للتو رسالة عبر موقعكم${submitted.reference ? ` (المرجع ${submitted.reference})` : ''}.`)}
+                                    data-wa-cta="contact-form-success"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn btn-whatsapp"
@@ -382,7 +383,7 @@ export default function ArContactUsClient() {
                         <Link href="/ar/book-online" className="btn btn-primary btn-lg">
                             احجز الآن
                         </Link>
-                        <a href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a data-wa-cta="closing-cta" href={WHATSAPP_URL} className="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
                             <MessageIcon size={20} style={{ marginInlineEnd: '8px' }} /> واتساب
                         </a>
                     </div>

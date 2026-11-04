@@ -237,7 +237,7 @@ export default function HotelTransfers() {
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book Now<span className="sr-only"> your hotel transfer</span></Link>
-                        <a href={waLink("Hello GulfTripService, I would like to get a quote for your hotel transfer service. Please share the available options, pricing, and booking details. Thank you.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a data-wa-cta="closing-cta" href={waLink("Hello GulfTripService, I would like to get a quote for your hotel transfer service. Please share the available options, pricing, and booking details. Thank you.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                             <WhatsAppIcon size={18} /> Get a Quote
                         </a>
                     </div>

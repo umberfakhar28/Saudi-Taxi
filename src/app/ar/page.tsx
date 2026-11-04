@@ -61,7 +61,7 @@ export default function ArabicHome() {
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", flexWrap: "wrap", marginTop: "var(--space-6)" }}>
             <Link href="/ar/book-online" className="btn btn-primary btn-lg">احجز رحلتك</Link>
-            <a href={WHATSAPP_URL} className="btn btn-secondary btn-lg" target="_blank" rel="noopener noreferrer">
+            <a data-wa-cta="hero" href={WHATSAPP_URL} className="btn btn-secondary btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
           </div>

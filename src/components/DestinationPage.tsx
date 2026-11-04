@@ -471,7 +471,7 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                     </p>
                     <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
-                        <a href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+                        <a data-wa-cta="closing-cta" href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
                             <WhatsAppIcon size={18} /> WhatsApp Us
                         </a>
                         <Link href="/destinations" className="btn btn-outline btn-lg">

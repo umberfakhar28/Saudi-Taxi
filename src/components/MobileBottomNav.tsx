@@ -51,6 +51,7 @@ export default function MobileBottomNav({
 
             <a
                 href={waLink(isAr ? 'مرحباً، أود معرفة المزيد عن خدماتكم.' : "Hi, I'd like to know more about your services.")}
+                data-wa-cta="mobile-bottom-nav"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.item}

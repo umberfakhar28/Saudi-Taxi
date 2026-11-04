@@ -106,7 +106,7 @@ export default function Testimonials() {
                                 went — the good and the bad.
                             </p>
                             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '2rem' }}>
-                                <a href={waLink('Hi, I would like to leave a review about my trip.')} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+                                <a data-wa-cta="review-request" href={waLink('Hi, I would like to leave a review about my trip.')} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
                                     Leave a Review on WhatsApp
                                 </a>
                                 <Link href="/contact-us" className="btn btn-outline btn-lg">

@@ -399,7 +399,7 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                             </p>
                             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <Link href={isAr ? "/ar" : "/"} className="btn btn-primary">{t.backToHome}</Link>
-                                <a href={waLink(whatsappText)} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">{t.sendDetailsWhatsApp}</a>
+                                <a data-wa-cta="booking-success" href={waLink(whatsappText)} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">{t.sendDetailsWhatsApp}</a>
                             </div>
                         </div>
                     ) : (
@@ -636,7 +636,7 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                     {/* WhatsApp Alternative */}
                     <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
                         <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>{t.preferWhatsApp}</p>
-                        <a href={waLink(whatsappText)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                        <a data-wa-cta="booking-form-alternative" href={waLink(whatsappText)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                             {t.bookViaWhatsApp}
                         </a>
                     </div>

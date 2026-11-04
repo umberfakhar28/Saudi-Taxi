@@ -165,7 +165,7 @@ export default function CheckoutClient() {
 
                             <div style={{ marginTop: '1rem', textAlign: 'center' }}>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Questions? Contact us:</p>
-                                <a href={WHATSAPP_URL} className="btn btn-outline-gold btn-sm" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+                                <a data-wa-cta="checkout-help" href={WHATSAPP_URL} className="btn btn-outline-gold btn-sm" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
                             </div>
                         </div>
                     </div>

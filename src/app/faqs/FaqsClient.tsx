@@ -171,7 +171,7 @@ export default function FaqsClient() {
                         <Link href="/contact-us" className="btn btn-primary">
                             Contact Us
                         </Link>
-                        <a href={WHATSAPP_URL} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">
+                        <a data-wa-cta="closing-cta" href={WHATSAPP_URL} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">
                             💬 WhatsApp Us
                         </a>
                     </div>

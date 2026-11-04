@@ -165,6 +165,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
                 </p>
                 <a
                     href={waLink(`Hi, I just submitted a travel enquiry for ${destinationName}. Could you help with an instant reply?`)}
+                    data-wa-cta="enquiry-form-success"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-whatsapp btn-lg"
@@ -243,7 +244,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
                 <button type="submit" className="btn btn-primary btn-lg" disabled={submitting}>
                     {submitting ? 'Sending…' : 'Submit Enquiry'}
                 </button>
-                <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+                <a data-wa-cta="enquiry-form" href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                     <WhatsAppIcon size={18} /> Ask on WhatsApp
                 </a>
             </div>

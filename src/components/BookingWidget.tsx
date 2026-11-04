@@ -211,6 +211,7 @@ export default function BookingWidget() {
                   )}
                   <a
                     href={waLink(buildMessage(vehicle))}
+                    data-wa-cta="booking-widget"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-primary"

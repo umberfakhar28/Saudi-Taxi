@@ -197,7 +197,7 @@ export default function ArabicDammamToQatar() {
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/ar/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
-            <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+            <a data-wa-cta="closing-cta" href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
           </div>

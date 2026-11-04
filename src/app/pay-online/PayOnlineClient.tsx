@@ -62,7 +62,7 @@ export default function PayOnlineClient() {
                             <strong style={{ color: 'var(--accent-primary)' }}>Online card payment isn&apos;t live yet.</strong>{' '}
                             Submitting this form sends a payment request to our team — it does not charge your card.
                             To pay right now, please use bank transfer, Saudi Pay, cash on arrival, or{' '}
-                            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>WhatsApp us</a>.
+                            <a data-wa-cta="payment-notice-inline" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>WhatsApp us</a>.
                         </p>
                     </div>
                     {submitted ? (
@@ -162,7 +162,7 @@ export default function PayOnlineClient() {
 
                     <div className="text-center mt-3">
                         <p style={{ color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Need help with payment? Contact us:</p>
-                        <a href={WHATSAPP_URL} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">💬 WhatsApp Support</a>
+                        <a data-wa-cta="payment-help" href={WHATSAPP_URL} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">💬 WhatsApp Support</a>
                     </div>
                 </div>
             </section>

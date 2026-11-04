@@ -657,7 +657,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
               ))}
             </div>
             <div style={{ textAlign: "center", marginTop: "var(--space-10)" }}>
-              <a href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+              <a data-wa-cta="routes-section" href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
                 <WhatsAppIcon size={18} /> Get a Quote on WhatsApp
               </a>
             </div>
@@ -837,7 +837,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
             <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>Professional chauffeurs, fixed rates, 24/7 availability across {data.city} and beyond.</p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href={bookingHref({ to: data.city })} className="btn btn-primary btn-lg">Book Your Ride</Link>
-              <a href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+              <a data-wa-cta="closing-cta" href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
                 <WhatsAppIcon size={18} /> Get a Quote
               </a>
             </div>

@@ -174,6 +174,7 @@ export default function FleetPage() {
                         </Link>
                         <a
                             href={waLink("Hi, I'd like to know more about your fleet.")}
+                            data-wa-cta="hero"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-whatsapp btn-lg"
@@ -452,6 +453,7 @@ export default function FleetPage() {
                         </Link>
                         <a
                             href={waLink("Hi, I'd like help choosing the right vehicle for my trip.")}
+                            data-wa-cta="closing-cta"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-whatsapp btn-lg"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import PublicLayout from "@/components/PublicLayout";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import WhatsAppTracking from "@/components/WhatsAppTracking";
 import { SITE_CONFIG } from "@/lib/seo";
 import { localBusinessSchema, jsonLd } from "@/lib/jsonld";
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
@@ -79,6 +80,7 @@ export default function RootLayout({
       </head>
       <body>
         <GoogleAnalytics />
+        <WhatsAppTracking />
         <PublicLayout>
           {children}
         </PublicLayout>

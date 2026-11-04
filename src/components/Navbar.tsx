@@ -170,7 +170,7 @@ const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: Na
                             <GlobeIcon size={14} />
                             العربية
                         </Link>
-                        <a href={WHATSAPP_URL} className={styles.ctaWhatsapp} target="_blank" rel="noopener noreferrer" onClick={close}>
+                        <a data-wa-cta="navbar" href={WHATSAPP_URL} className={styles.ctaWhatsapp} target="_blank" rel="noopener noreferrer" onClick={close}>
                             <WhatsAppIcon size={16} />
                             <span className={styles.ctaWhatsappLabel}>WhatsApp</span>
                         </a>

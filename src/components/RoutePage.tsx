@@ -429,7 +429,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 className="btn btn-whatsapp btn-lg"
                 target="_blank"
                 rel="noopener noreferrer"
-                data-route-cta="whatsapp-hero"
+                data-wa-cta="hero"
               >
                 <MessageIcon size={18} /> {t.whatsappQuote}
               </a>
@@ -856,7 +856,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                         className="btn btn-whatsapp"
                         target="_blank"
                         rel="noopener noreferrer"
-                        data-route-cta="whatsapp-vehicle"
+                        data-wa-cta="vehicle-card"
                         style={{ marginTop: "auto", width: "100%", justifyContent: "center" }}
                       >
                         <MessageIcon size={16} /> {t.bookThisVehicle}
@@ -931,7 +931,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                               className="btn btn-whatsapp btn-sm"
                               target="_blank"
                               rel="noopener noreferrer"
-                              data-route-cta="whatsapp-pricing"
+                              data-wa-cta="pricing-table"
                             >
                               <MessageIcon size={14} /> {t.whatsappQuote}
                             </a>
@@ -1190,7 +1190,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 className="btn btn-whatsapp btn-lg"
                 target="_blank"
                 rel="noopener noreferrer"
-                data-route-cta="whatsapp-closing"
+                data-wa-cta="closing-cta"
               >
                 <MessageIcon size={18} /> {t.whatsappQuote}
               </a>

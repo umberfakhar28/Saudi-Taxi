@@ -154,7 +154,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             <strong style={{ color: "var(--on-dark)" }}>24/7 availability</strong> and real-time flight tracking for delays.
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap", marginTop: "var(--space-8)" }}>
-            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+            <a data-wa-cta="hero" href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
               <WhatsAppIcon size={18} /> Book via WhatsApp <ChevronRightIcon size={16} />
             </a>
             <Link href={`/book-online?from=${encodeURIComponent(data.name)}&service=airport-transfer`} className="btn btn-outline btn-lg">
@@ -250,6 +250,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
                   )}
                   <a
                     href={waLink(`Hi, I'd like to book a ${a.name} (${a.code}) transfer.`)}
+                    data-wa-cta="airport-card"
                     target="_blank" rel="noopener noreferrer"
                     className="btn btn-whatsapp btn-sm"
                     style={{ marginTop: "auto", width: "100%" }}
@@ -327,7 +328,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
             <p style={{ marginTop: "var(--space-4)", fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>
               Times assume normal traffic. Allow extra during Ramadan evenings and the weeks around Hajj, when routes to Makkah and Madinah see the heaviest congestion.
             </p>
-            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp" style={{ marginTop: "var(--space-6)" }}>
+            <a data-wa-cta="travel-times" href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp" style={{ marginTop: "var(--space-6)" }}>
               <WhatsAppIcon size={16} /> Get an Exact Pickup Time
             </a>
           </div>
@@ -379,7 +380,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
           <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>
             {AIRPORT_WAIT_TIMES.airportFreeWaitMinutes} minutes of waiting time after your actual landing is included at no extra charge. If your flight is delayed well beyond that, message us and we&apos;ll adjust the pickup — no penalty for circumstances outside your control.
           </p>
-          <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp" style={{ marginTop: "var(--space-6)" }}>
+          <a data-wa-cta="flight-delay" href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp" style={{ marginTop: "var(--space-6)" }}>
             <WhatsAppIcon size={16} /> Message Us About a Delayed Flight
           </a>
         </div>
@@ -727,7 +728,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
                 follows as secondary — matching every other page family's
                 closing CTA. This page previously had no primary CTA at all. */}
             <Link href={`/book-online?from=${encodeURIComponent(data.name)}&service=airport-transfer`} className="btn btn-primary btn-lg">Book Now</Link>
-            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+            <a data-wa-cta="closing-cta" href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
               <WhatsAppIcon size={18} /> Book via WhatsApp
             </a>
           </div>

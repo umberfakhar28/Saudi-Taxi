@@ -105,7 +105,7 @@ export default function RoutesPage() {
             <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
               We cover corridors beyond this list — message us on WhatsApp with your origin and destination and we'll confirm it.
             </p>
-            <a href={waLink("Hi, I'd like to check taxi coverage for a route.")} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+            <a data-wa-cta="coverage-prompt" href={waLink("Hi, I'd like to check taxi coverage for a route.")} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
               <WhatsAppIcon size={18} /> Ask About Your Route
             </a>
           </div>

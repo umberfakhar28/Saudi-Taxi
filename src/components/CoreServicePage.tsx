@@ -514,7 +514,7 @@ export default function CoreServicePage({ data }: { data: ServiceData }) {
             </p>
             <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/book-online" className="btn btn-primary btn-lg">Book Your Ride</Link>
-              <a href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+              <a data-wa-cta="closing-cta" href={waLink(quoteMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
                 <WhatsAppIcon size={18} /> Get a Quote
               </a>
             </div>

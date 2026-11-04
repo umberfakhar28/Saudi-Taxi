@@ -108,7 +108,7 @@ export function SectionCta({ cta }: { cta: NonNullable<GuideSection["cta"]> }) {
     return (
       <div style={{ marginTop: "var(--space-6)", padding: "var(--space-6)", borderRadius: "var(--radius-md)", background: "var(--bg-subtle)", border: "1px solid var(--line)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "var(--space-4)" }}>
         <p style={{ margin: 0, color: "var(--text-main)", fontWeight: 600 }}>{cta.text}</p>
-        <a href={waLink(cta.text)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-sm">
+        <a data-wa-cta="in-article" href={waLink(cta.text)} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-sm">
           <WhatsAppIcon size={15} /> WhatsApp Us
         </a>
       </div>
@@ -265,7 +265,7 @@ export default function GuidePage({ data }: { data: GuideData }) {
           )}
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap", marginTop: data.ctaHelper ? 0 : "var(--space-6)" }}>
             <Link href={data.ctaLink} className="btn btn-primary btn-lg">{data.ctaText}</Link>
-            <a href={waLink("Hi, I'd like to book a ride.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+            <a data-wa-cta="closing-cta" href={waLink("Hi, I'd like to book a ride.")} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon size={18} /> Book on WhatsApp
             </a>
           </div>

@@ -81,7 +81,7 @@ export default function Prices() {
                         </p>
                         <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                             <Link href="/book-online" className="btn btn-primary btn-lg">Book Now</Link>
-                            <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg">
+                            <a data-wa-cta="closing-cta" href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg">
                                 <MessageIcon size={20} /> Get Quote on WhatsApp
                             </a>
                         </div>

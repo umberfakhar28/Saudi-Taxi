@@ -96,7 +96,7 @@ export default function OurGallery() {
                         <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
                             We share photos and videos of our fleet and tours on WhatsApp. Message us to get the full gallery! You can also browse our full <Link href="/fleet" style={{ color: 'var(--accent)', fontWeight: 600 }}>vehicle fleet</Link> or read destination stories on our <Link href="/blog" style={{ color: 'var(--accent)', fontWeight: 600 }}>travel blog</Link>.
                         </p>
-                        <a href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                        <a data-wa-cta="gallery-request" href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                             💬 Message Us on WhatsApp
                         </a>
                     </div>

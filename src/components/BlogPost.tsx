@@ -196,7 +196,7 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
               <p style={{ color: "var(--text-muted)", marginBottom: "var(--space-6)" }}>Professional, fixed-rate taxi service across Saudi Arabia — 24/7.</p>
               <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
                 <Link href="/book-online" className="btn btn-primary">Book Now</Link>
-                <a href={waLink("Hi, I'd like to book a ride.")} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                <a data-wa-cta="closing-cta" href={waLink("Hi, I'd like to book a ride.")} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                   <WhatsAppIcon size={16} /> Book on WhatsApp
                 </a>
               </div>

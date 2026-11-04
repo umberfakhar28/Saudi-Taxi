@@ -13,6 +13,7 @@ export default function StickyCTA() {
       </Link>
       <a
         href={waLink('Hi, I would like to arrange an airport transfer from Riyadh.')}
+        data-wa-cta="sticky-cta"
         className={styles.btnWhatsApp}
         target="_blank"
         rel="noopener noreferrer"

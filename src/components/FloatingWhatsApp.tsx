@@ -42,6 +42,7 @@ export default function FloatingWhatsApp() {
     return (
         <a
             href={waLink(message)}
+            data-wa-cta="floating-button"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.button}

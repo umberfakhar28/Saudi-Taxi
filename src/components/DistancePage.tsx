@@ -228,7 +228,7 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
                 </p>
                 <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
                   <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary">Book Your Private Transfer</Link>
-                  <a href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                  <a data-wa-cta="in-article" href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                     <MessageIcon size={16} /> Ask on WhatsApp
                   </a>
                 </div>
@@ -359,7 +359,7 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
             </p>
             <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary btn-lg">Get a Quote</Link>
-              <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+              <a data-wa-cta="closing-cta" href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> WhatsApp Quote
               </a>
             </div>

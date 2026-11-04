@@ -116,6 +116,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                     </button>
                     <a
                         href={waLink(whatsappMessage())}
+                        data-wa-cta="quick-book-form"
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`btn btn-whatsapp ${styles.submitBtn}`}

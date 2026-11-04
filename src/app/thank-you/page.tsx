@@ -79,7 +79,7 @@ export default function ThankYou() {
                     </div>
 
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+                        <a data-wa-cta="thank-you" href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                             💬 WhatsApp Us
                         </a>
                         <Link href="/" className="btn btn-outline btn-lg">

@@ -116,7 +116,7 @@ export default function ArabicBorderCrossing() {
                 ننسّق أوقات الاستلام، ونفهم إجراءات الحدود، ونضمن رحلة سلسة من الباب إلى الباب.
               </p>
               <div style={{ display: "flex", gap: "var(--space-4)", flexWrap: "wrap" }}>
-                <a href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                <a data-wa-cta="in-article" href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                   <MessageIcon size={18} /> اطلب عرض سعر
                 </a>
                 <Link href="/ar/contact-us" className="btn btn-secondary">اتصل بنا</Link>
@@ -228,7 +228,7 @@ export default function ArabicBorderCrossing() {
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/ar/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
-            <a href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+            <a data-wa-cta="closing-cta" href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
               <MessageIcon size={18} /> تواصل عبر واتساب
             </a>
           </div>

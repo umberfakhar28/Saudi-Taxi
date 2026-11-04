@@ -100,7 +100,7 @@ export default function LocationsPage() {
             <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
               We cover destinations across Saudi Arabia beyond this list — message us on WhatsApp and we'll confirm coverage for your route.
             </p>
-            <a href={waLink("Hi, I'd like to check taxi coverage for my city.")} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+            <a data-wa-cta="coverage-prompt" href={waLink("Hi, I'd like to check taxi coverage for my city.")} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
               <WhatsAppIcon size={18} /> Ask About Your City
             </a>
           </div>

@@ -624,6 +624,7 @@ function HeroSearchBarInner() {
                 </div>
                 <a
                     href={from ? waLink(whatsappText) : waLink("Hi, I'd like an instant quote.")}
+                    data-wa-cta="hero-search-bar"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.whatsappLink}
