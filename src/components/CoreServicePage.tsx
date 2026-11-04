@@ -128,7 +128,7 @@ export default function CoreServicePage({ data }: { data: ServiceData }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main>
+      <main data-page-template="service">
         {/* Hero — plain page-hero, matching this family's existing
             convention (unlike City/Route/Airport, none of these pages have
             ever used a photo hero, so adding one here would be a bigger

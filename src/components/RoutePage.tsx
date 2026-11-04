@@ -376,7 +376,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main>
+      <main data-page-template="route">
         {/* Hero */}
         <section className="page-hero">
           <div className="container" style={{ position: "relative", zIndex: 1 }}>

@@ -112,7 +112,7 @@ export default function BorderPage({ data }: { data: BorderData }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main>
+      <main data-page-template="border">
         <section className="page-hero">
           <h1>{data.h1}</h1>
           {/* data.intro moved below the quick-booking form (booking-flow

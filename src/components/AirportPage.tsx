@@ -119,7 +119,7 @@ export default function AirportPage({ data }: { data: AirportPageInfo }) {
   ];
 
   return (
-    <main>
+    <main data-page-template="airport">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
 
       {/* §1 — Hero */}

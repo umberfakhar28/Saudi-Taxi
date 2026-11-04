@@ -77,7 +77,7 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
     ];
 
     return (
-        <main>
+        <main data-page-template="destination">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
 
             {/* Hero — same photo + navy scrim + centered text pattern as

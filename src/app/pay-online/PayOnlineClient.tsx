@@ -61,7 +61,7 @@ export default function PayOnlineClient() {
                         <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
                             <strong style={{ color: 'var(--accent-primary)' }}>Online card payment isn&apos;t live yet.</strong>{' '}
                             Submitting this form sends a payment request to our team — it does not charge your card.
-                            To pay right now, please use bank transfer, Saudi Pay, cash on arrival, or{' '}
+                            To pay right now, please use bank transfer, cash on arrival, or{' '}
                             <a data-wa-cta="payment-notice-inline" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>WhatsApp us</a>.
                         </p>
                     </div>

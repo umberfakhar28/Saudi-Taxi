@@ -141,7 +141,7 @@ export default function GuidePage({ data }: { data: GuideData }) {
   ];
 
   return (
-    <main>
+    <main data-page-template="guide">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       <section className="page-hero">
         <div className="container" style={{ position: "relative", zIndex: 1 }}>

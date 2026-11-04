@@ -10,5 +10,5 @@ export const metadata = generatePageMetadata({
 
 export default function MakkahUmrahGuide() {
   const html = readContentFile("makkah-umrah-taxi-service.html");
-  return <div className="guide-content" dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div className="guide-content" data-page-template="content-guide" dangerouslySetInnerHTML={{ __html: html }} />;
 }

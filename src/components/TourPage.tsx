@@ -130,7 +130,7 @@ export default function TourPage({ data }: { data: TourPageData }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main>
+      <main data-page-template="tour">
         {/* Hero — plain page-hero, matching this family's existing convention
             (none of the 3 pages ever used a photo hero). */}
         <section className="page-hero">

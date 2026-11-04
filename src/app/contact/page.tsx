@@ -1,7 +1,7 @@
 
 import styles from './contact.module.css';
 import { generatePageMetadata } from "@/lib/seo";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { PHONE_DISPLAY } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Contact Us",

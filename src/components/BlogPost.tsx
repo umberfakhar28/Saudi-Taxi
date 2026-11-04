@@ -75,7 +75,7 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
   }
 
   return (
-    <main>
+    <main data-page-template="blog">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
       <section className="page-hero">
         <div className="container" style={{ position: "relative", zIndex: 1 }}>

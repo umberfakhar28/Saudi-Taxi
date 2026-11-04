@@ -63,7 +63,7 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main>
+      <main data-page-template="distance">
         {/* Hero — route, distance, time and the primary CTA are all above
             the fold, per the brief's above-the-fold requirement. */}
         <section className="page-hero">

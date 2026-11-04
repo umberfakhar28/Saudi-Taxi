@@ -2,53 +2,70 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { gaEvent, pageLanguage, pageTemplate } from '@/lib/analytics';
+import {
+  pageTemplateFromPath,
+  trackWhatsAppClick,
+  whatsAppDestination,
+} from '@/lib/analytics';
 
 /**
  * Records which WhatsApp button a visitor actually pressed.
  *
- * WhatsApp is the main way enquiries arrive, and until now every one of the
- * 57 WhatsApp buttons on this site was invisible: a customer could message
- * us from a route page, a pricing table, the floating bubble or the footer
- * and all four looked identical afterwards. There was no way to answer
- * "which pages produce enquiries?", which is the question most decisions
- * about this site depend on.
+ * WhatsApp is the main way enquiries arrive, and until now every WhatsApp
+ * button on this site was invisible: a customer could message us from a
+ * route page, a pricing table, the floating bubble or the footer and all
+ * four looked identical afterwards. There was no way to answer "which pages
+ * produce enquiries?", which is the question most decisions about this site
+ * depend on.
  *
- * ── Why one delegated listener, not 57 onClick handlers ──
- * Most of those buttons live in server components (RoutePage, DistancePage,
- * CityServicePage and the rest render 114 pages between them). An onClick
- * would force each of those files to become a client component, shipping a
- * large amount of currently server-only JSX to the browser and slowing down
- * the exact pages that earn the organic traffic.
+ * ── Why one delegated listener, not one handler per button ──
+ * Most of these buttons live in server components: RoutePage, DistancePage,
+ * CityServicePage and the rest render over a hundred pages between them. An
+ * onClick would force each of those files to become a client component,
+ * shipping a large amount of currently server-only JSX to the browser and
+ * slowing down the exact pages that earn the organic traffic.
  *
- * A single capture-phase listener on `document` avoids all of that. It also
- * cannot be forgotten: a WhatsApp link added to a new page next month is
- * tracked the day it ships, with no wiring step to remember.
+ * One capture-phase listener on `document` avoids all of that, and it cannot
+ * be forgotten: a WhatsApp link added to a new page next month is tracked
+ * the day it ships. It is also the reason there is exactly one handler per
+ * click — there is no second tracking layer anywhere that could double-count.
  *
- * ── Where the label comes from ──
- * `data-wa-cta` on the anchor (or any ancestor) names the button's position:
- * "hero", "pricing-table", "footer-contact", "floating-button". It is a
- * plain HTML attribute, so server components can carry it freely.
+ * ── Where the two labels come from ──
+ * `data-wa-cta` on the anchor names the button's position ("hero",
+ * "pricing-table", "footer-contact", "floating-button"). `data-page-template`
+ * on the page's root element names the page family ("route", "distance",
+ * "city"). Both are plain HTML attributes, so server components carry them
+ * freely, and the template is declared by the component that renders the
+ * page rather than guessed from the URL.
  *
- * An unlabelled link reports its nearest landmark and, failing that,
+ * Anything unlabelled reports its nearest landmark and, failing that,
  * "unlabelled" — deliberately not a guess. A visible "unlabelled" count in
  * GA is a reminder that a button needs an attribute; a plausible-looking
  * wrong label would quietly corrupt the numbers it is supposed to produce.
+ *
+ * ── What is never sent ──
+ * No name, phone number, booking detail or message text. The pre-filled
+ * WhatsApp message is stripped from the URL before anything is reported —
+ * see whatsAppDestination in lib/analytics.
  */
 
-/** wa.me and the long-form API host are the only two shapes used on the site. */
+/** wa.me and the long-form API host are the only two shapes WhatsApp uses. */
 const WHATSAPP_LINK_SELECTOR = 'a[href*="wa.me"], a[href*="api.whatsapp.com"]';
 
 /**
+ * The admin portal is excluded, and not as a matter of taste.
+ *
  * Admin WhatsApp links point the other way — our team messaging a customer
- * about an existing booking. Counting those as enquiries would inflate the
- * lead numbers with our own outbound replies.
+ * about an existing booking — so the number in the URL is the customer's own
+ * phone number, sitting in the path where stripping the query cannot remove
+ * it. Reporting those links would put customer phone numbers into Google
+ * Analytics. They are also outbound staff replies, so counting them would
+ * inflate the enquiry numbers with our own activity.
  */
 const EXCLUDED_PATH = /^\/admin(\/|$)/;
 
-function inferSource(anchor: Element): string {
-  const labelled = anchor.closest('[data-wa-cta]');
-  const explicit = labelled?.getAttribute('data-wa-cta')?.trim();
+function ctaSourceFor(anchor: Element): string {
+  const explicit = anchor.closest('[data-wa-cta]')?.getAttribute('data-wa-cta')?.trim();
   if (explicit) return explicit;
 
   // No attribute: name the landmark it sits in, which is at least true,
@@ -57,6 +74,28 @@ function inferSource(anchor: Element): string {
   if (anchor.closest('header, nav')) return 'unlabelled-nav';
   if (anchor.closest('form')) return 'unlabelled-form';
   return 'unlabelled';
+}
+
+/**
+ * The page family, read from whichever element on the page declares it.
+ *
+ * Deliberately a document-level lookup rather than `closest()` on the
+ * anchor. The template is a property of the page, not of the button's
+ * ancestry, and the navbar, footer and mobile bottom bar all sit outside the
+ * <main> that carries the attribute — three quarters of every click. Walking
+ * up from the anchor would have reported "other" for all of them and thrown
+ * away the one thing worth knowing about a footer click: which page the
+ * visitor was reading when they pressed it.
+ *
+ * Falls back to the path for the one-off pages that no shared template
+ * renders.
+ */
+function pageTemplateFor(path: string): string {
+  const declared = document
+    .querySelector('[data-page-template]')
+    ?.getAttribute('data-page-template')
+    ?.trim();
+  return declared || pageTemplateFromPath(path);
 }
 
 export default function WhatsAppTracking() {
@@ -79,16 +118,17 @@ export default function WhatsAppTracking() {
       const path = pathRef.current || window.location.pathname;
       if (EXCLUDED_PATH.test(path)) return;
 
-      gaEvent('whatsapp_click', {
-        cta_source: inferSource(anchor),
-        page_template: pageTemplate(path),
-        page_path: path,
-        site_language: pageLanguage(path),
+      trackWhatsAppClick(ctaSourceFor(anchor), pageTemplateFor(path), {
+        pagePath: path,
+        pageLocation: `${window.location.origin}${window.location.pathname}`,
+        linkUrl: whatsAppDestination(anchor.getAttribute('href') || ''),
       });
     };
 
-    // Capture phase: the event is seen on the way down, so a handler that
-    // stops propagation further in cannot silently drop the measurement.
+    // Capture phase: the event is seen on the way down, so a handler further
+    // in that stops propagation cannot silently drop the measurement. The
+    // link is never intercepted — no preventDefault, nothing awaited — so
+    // WhatsApp opens exactly as it did before, blocked analytics or not.
     document.addEventListener('click', onClick, true);
     return () => document.removeEventListener('click', onClick, true);
   }, []);

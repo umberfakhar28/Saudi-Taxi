@@ -244,7 +244,7 @@ export default function CityServicePage({ data }: { data: CityData }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main>
+      <main data-page-template="city">
         {/* Hero — city photo background with a navy scrim for text contrast,
             same photo+scrim language as /destinations pages. */}
         <section className={styles.hero}>

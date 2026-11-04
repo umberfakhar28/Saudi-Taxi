@@ -127,7 +127,7 @@ export default function HotelPage({ data }: { data: HotelData }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main>
+      <main data-page-template="hotel">
         {/* Hero — photo hero when a real image is supplied (matching City/
             Route/Airport), plain page-hero otherwise. Never a fabricated
             "generic hotel" stock photo. */}
