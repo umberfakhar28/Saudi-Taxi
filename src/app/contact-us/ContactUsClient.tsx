@@ -6,6 +6,8 @@ import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, Cal
 import styles from "./contact.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
+import { normalizeContactInput, validateContact, contactMessageText, type ContactErrors } from "@/lib/contactMessage";
 
 const schemas = [
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact-us" }]),
@@ -52,15 +54,93 @@ export default function ContactUsClient() {
         message: '',
     });
 
+    // Submission state. `submitted` carries the reference the customer can
+    // quote on WhatsApp, so the success screen says something useful rather
+    // than just "thanks".
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState<{ reference: string } | null>(null);
+    const [formError, setFormError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<ContactErrors>({});
+    const [honeypot, setHoneypot] = useState('');
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        // Clear only the field being corrected, so the rest of the summary
+        // stays on screen while the customer works through it.
+        if (fieldErrors[e.target.name as keyof ContactErrors]) {
+            setFieldErrors((prev) => ({ ...prev, [e.target.name]: undefined }));
+        }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    /**
+     * Submits the enquiry to /api/contact/create.
+     *
+     * This used to be `alert()` + reset state — no request, no storage, no
+     * email, nobody notified, while telling the customer to expect a reply
+     * within 24 hours. Every message through this page was lost.
+     *
+     * Two rules the old version got wrong and this one keeps:
+     *  · The success message appears only after the server confirms the
+     *    enquiry was SAVED. Email is best-effort and never gates it.
+     *  · On failure nothing is cleared. The customer's typed message is the
+     *    most valuable thing on the page and reproducing it is the thing
+     *    they are least willing to do.
+     */
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Form submission logic
-        alert('Thank you for your message! We will get back to you within 24 hours.');
-        setFormData({ name: '', email: '', phone: '', subject: '', service: '', message: '' });
+        if (submitting) return; // double-click guard
+
+        setFormError(null);
+
+        const input = normalizeContactInput({ ...formData, locale: 'en' });
+        const errors = validateContact(input);
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            setFormError(contactMessageText('en', 'fix_fields_below'));
+            return;
+        }
+        setFieldErrors({});
+        setSubmitting(true);
+
+        try {
+            const gate = await getSpamPass('', honeypot);
+            if (!gate.ok) {
+                setFormError(gate.message ?? 'Verification failed. Please try again.');
+                setSubmitting(false);
+                return;
+            }
+
+            const res = await fetch('/api/contact/create', {
+                method: 'POST',
+                headers: submissionHeaders(gate.pass),
+                body: JSON.stringify({ ...input, website: honeypot }),
+            });
+            const json = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                // Field-level problems the server found come back keyed, so
+                // they land next to the right input in the right language.
+                if (json.error === 'validation_failed' && json.fieldErrors) {
+                    const resolved: ContactErrors = {};
+                    for (const [field, key] of Object.entries(json.fieldErrors as Record<string, string>)) {
+                        resolved[field as keyof ContactErrors] = contactMessageText('en', key);
+                    }
+                    setFieldErrors(resolved);
+                    setFormError('Please check the highlighted fields.');
+                } else {
+                    setFormError(json.error || 'Your message could not be sent. Please try again, or message us on WhatsApp.');
+                }
+                return; // values deliberately preserved
+            }
+
+            // Saved. Only now is it safe to say so and clear the form.
+            setSubmitted({ reference: json.reference ?? '' });
+            setFormData({ name: '', email: '', phone: '', subject: '', service: '', message: '' });
+        } catch {
+            setFormError('We could not reach the server. Please check your connection and try again, or message us on WhatsApp.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -132,7 +212,53 @@ export default function ContactUsClient() {
                             </div>
                         </div>
 
-                        <form className={styles.form} onSubmit={handleSubmit}>
+                        {submitted ? (
+                        <div className={styles.form} role="status" aria-live="polite" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
+                            <div style={{ fontSize: '2.5rem', lineHeight: 1, marginBottom: '1rem' }} aria-hidden="true">✅</div>
+                            <h3 style={{ marginBottom: '0.75rem' }}>Message received</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+                                Thank you — your message has reached our team and we will get back to you.
+                                For a faster reply, message us on WhatsApp.
+                            </p>
+                            {submitted.reference && (
+                                <p style={{ marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                                    Your reference:{' '}
+                                    <strong style={{ fontFamily: 'monospace', letterSpacing: '0.5px' }}>{submitted.reference}</strong>
+                                </p>
+                            )}
+                            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                <a
+                                    href={waLink(`Hi, I have just sent a message through your website${submitted.reference ? ` (ref ${submitted.reference})` : ''}.`)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-whatsapp"
+                                >
+                                    Continue on WhatsApp
+                                </a>
+                                <button type="button" className="btn btn-secondary" onClick={() => setSubmitted(null)}>
+                                    Send another message
+                                </button>
+                            </div>
+                        </div>
+                        ) : (
+                        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+                            {formError && (
+                                <div
+                                    role="alert"
+                                    style={{
+                                        background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b',
+                                        borderRadius: 8, padding: '0.85rem 1rem', marginBottom: '1.25rem', fontSize: '0.9rem',
+                                    }}
+                                >
+                                    {formError}
+                                </div>
+                            )}
+                            {/* Hidden from people, irresistible to bots. */}
+                            <input
+                                {...honeypotFieldProps}
+                                value={honeypot}
+                                onChange={(e) => setHoneypot(e.target.value)}
+                            />
                             <div className="grid-2">
                                 <div className="form-group">
                                     <label htmlFor="name" className="form-label">Full Name *</label>
@@ -144,8 +270,10 @@ export default function ContactUsClient() {
                                         placeholder="Your full name"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.name}
                                         required
                                     />
+                                    {fieldErrors.name && <p className={styles.fieldError}>{fieldErrors.name}</p>}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="email" className="form-label">Email Address *</label>
@@ -157,8 +285,10 @@ export default function ContactUsClient() {
                                         placeholder="your@email.com"
                                         value={formData.email}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.email}
                                         required
                                     />
+                                    {fieldErrors.email && <p className={styles.fieldError}>{fieldErrors.email}</p>}
                                 </div>
                             </div>
                             <div className="grid-2">
@@ -172,8 +302,10 @@ export default function ContactUsClient() {
                                         placeholder="+966 ..."
                                         value={formData.phone}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.phone}
                                         required
                                     />
+                                    {fieldErrors.phone && <p className={styles.fieldError}>{fieldErrors.phone}</p>}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="service" className="form-label">Service Required</label>
@@ -204,8 +336,10 @@ export default function ContactUsClient() {
                                     placeholder="How can we help?"
                                     value={formData.subject}
                                     onChange={handleChange}
+                                    aria-invalid={!!fieldErrors.subject}
                                     required
                                 />
+                                {fieldErrors.subject && <p className={styles.fieldError}>{fieldErrors.subject}</p>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="message" className="form-label">Message *</label>
@@ -217,13 +351,22 @@ export default function ContactUsClient() {
                                     rows={6}
                                     value={formData.message}
                                     onChange={handleChange}
+                                    aria-invalid={!!fieldErrors.message}
                                     required
                                 />
+                                {fieldErrors.message && <p className={styles.fieldError}>{fieldErrors.message}</p>}
                             </div>
-                            <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-                                Send Message
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-lg"
+                                style={{ width: '100%' }}
+                                disabled={submitting}
+                                aria-busy={submitting}
+                            >
+                                {submitting ? 'Sending…' : 'Send Message'}
                             </button>
                         </form>
+                        )}
                     </div>
                 </div>
             </section>

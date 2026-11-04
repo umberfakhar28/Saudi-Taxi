@@ -6,6 +6,8 @@ import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, Cal
 import styles from "@/app/contact-us/contact.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
+import { normalizeContactInput, validateContact, contactMessageText, type ContactErrors } from "@/lib/contactMessage";
 
 const schemas = [
     breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "اتصل بنا", path: "/ar/contact-us" }]),
@@ -52,14 +54,82 @@ export default function ArContactUsClient() {
         message: '',
     });
 
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState<{ reference: string } | null>(null);
+    const [formError, setFormError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<ContactErrors>({});
+    const [honeypot, setHoneypot] = useState('');
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (fieldErrors[e.target.name as keyof ContactErrors]) {
+            setFieldErrors((prev) => ({ ...prev, [e.target.name]: undefined }));
+        }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    /**
+     * Arabic twin of the English handler in
+     * src/app/contact-us/ContactUsClient.tsx — same endpoint, same guards,
+     * same "only say it was received once it is saved" rule.
+     *
+     * The one difference that matters: `locale: 'ar'` is sent with the
+     * payload. It is stored on the row and shown in the admin email, so
+     * whoever replies knows to reply in Arabic. Validation messages are
+     * resolved through contactMessageText('ar', …), so an Arabic visitor
+     * never sees an English error.
+     */
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert('شكراً لرسالتك! سنتواصل معك خلال 24 ساعة.');
-        setFormData({ name: '', email: '', phone: '', subject: '', service: '', message: '' });
+        if (submitting) return; // double-click guard
+
+        setFormError(null);
+
+        const input = normalizeContactInput({ ...formData, locale: 'ar' });
+        const errors = validateContact(input);
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            setFormError(contactMessageText('ar', 'fix_fields_below'));
+            return;
+        }
+        setFieldErrors({});
+        setSubmitting(true);
+
+        try {
+            const gate = await getSpamPass('', honeypot);
+            if (!gate.ok) {
+                setFormError(gate.message ?? 'تعذّر التحقق. يرجى المحاولة مرة أخرى.');
+                setSubmitting(false);
+                return;
+            }
+
+            const res = await fetch('/api/contact/create', {
+                method: 'POST',
+                headers: submissionHeaders(gate.pass),
+                body: JSON.stringify({ ...input, website: honeypot }),
+            });
+            const json = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                if (json.error === 'validation_failed' && json.fieldErrors) {
+                    const resolved: ContactErrors = {};
+                    for (const [field, key] of Object.entries(json.fieldErrors as Record<string, string>)) {
+                        resolved[field as keyof ContactErrors] = contactMessageText('ar', key);
+                    }
+                    setFieldErrors(resolved);
+                    setFormError(contactMessageText('ar', 'fix_fields_below'));
+                } else {
+                    setFormError('تعذّر إرسال رسالتك. يرجى المحاولة مرة أخرى أو مراسلتنا عبر واتساب.');
+                }
+                return; // values deliberately preserved
+            }
+
+            setSubmitted({ reference: json.reference ?? '' });
+            setFormData({ name: '', email: '', phone: '', subject: '', service: '', message: '' });
+        } catch {
+            setFormError('تعذّر الوصول إلى الخادم. يرجى التحقق من اتصالك والمحاولة مرة أخرى، أو مراسلتنا عبر واتساب.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -131,7 +201,55 @@ export default function ArContactUsClient() {
                             </div>
                         </div>
 
-                        <form className={styles.form} onSubmit={handleSubmit}>
+                        {submitted ? (
+                        <div className={styles.form} role="status" aria-live="polite" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
+                            <div style={{ fontSize: '2.5rem', lineHeight: 1, marginBottom: '1rem' }} aria-hidden="true">✅</div>
+                            <h3 style={{ marginBottom: '0.75rem' }}>تم استلام رسالتك</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+                                شكراً لك — وصلت رسالتك إلى فريقنا وسنعاود التواصل معك.
+                                للحصول على رد أسرع، راسلنا عبر واتساب.
+                            </p>
+                            {submitted.reference && (
+                                <p style={{ marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                                    رقم المرجع:{' '}
+                                    <strong dir="ltr" style={{ fontFamily: 'monospace', letterSpacing: '0.5px', display: 'inline-block' }}>
+                                        {submitted.reference}
+                                    </strong>
+                                </p>
+                            )}
+                            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                <a
+                                    href={waLink(`مرحباً، لقد أرسلت للتو رسالة عبر موقعكم${submitted.reference ? ` (المرجع ${submitted.reference})` : ''}.`)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-whatsapp"
+                                >
+                                    المتابعة عبر واتساب
+                                </a>
+                                <button type="button" className="btn btn-secondary" onClick={() => setSubmitted(null)}>
+                                    إرسال رسالة أخرى
+                                </button>
+                            </div>
+                        </div>
+                        ) : (
+                        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+                            {formError && (
+                                <div
+                                    role="alert"
+                                    style={{
+                                        background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b',
+                                        borderRadius: 8, padding: '0.85rem 1rem', marginBottom: '1.25rem', fontSize: '0.9rem',
+                                    }}
+                                >
+                                    {formError}
+                                </div>
+                            )}
+                            {/* مخفي عن المستخدم — لاصطياد الروبوتات */}
+                            <input
+                                {...honeypotFieldProps}
+                                value={honeypot}
+                                onChange={(e) => setHoneypot(e.target.value)}
+                            />
                             <div className="grid-2">
                                 <div className="form-group">
                                     <label htmlFor="name" className="form-label">الاسم الكامل *</label>
@@ -143,8 +261,10 @@ export default function ArContactUsClient() {
                                         placeholder="اسمك الكامل"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.name}
                                         required
                                     />
+                                    {fieldErrors.name && <p className={styles.fieldError}>{fieldErrors.name}</p>}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="email" className="form-label">البريد الإلكتروني *</label>
@@ -154,10 +274,13 @@ export default function ArContactUsClient() {
                                         name="email"
                                         className="form-input"
                                         placeholder="your@email.com"
+                                        dir="ltr"
                                         value={formData.email}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.email}
                                         required
                                     />
+                                    {fieldErrors.email && <p className={styles.fieldError}>{fieldErrors.email}</p>}
                                 </div>
                             </div>
                             <div className="grid-2">
@@ -169,10 +292,13 @@ export default function ArContactUsClient() {
                                         name="phone"
                                         className="form-input"
                                         placeholder="+966 ..."
+                                        dir="ltr"
                                         value={formData.phone}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.phone}
                                         required
                                     />
+                                    {fieldErrors.phone && <p className={styles.fieldError}>{fieldErrors.phone}</p>}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="service" className="form-label">الخدمة المطلوبة</label>
@@ -203,8 +329,10 @@ export default function ArContactUsClient() {
                                     placeholder="كيف يمكننا مساعدتك؟"
                                     value={formData.subject}
                                     onChange={handleChange}
+                                    aria-invalid={!!fieldErrors.subject}
                                     required
                                 />
+                                {fieldErrors.subject && <p className={styles.fieldError}>{fieldErrors.subject}</p>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="message" className="form-label">الرسالة *</label>
@@ -216,13 +344,22 @@ export default function ArContactUsClient() {
                                     rows={6}
                                     value={formData.message}
                                     onChange={handleChange}
+                                    aria-invalid={!!fieldErrors.message}
                                     required
                                 />
+                                {fieldErrors.message && <p className={styles.fieldError}>{fieldErrors.message}</p>}
                             </div>
-                            <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-                                إرسال الرسالة
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-lg"
+                                style={{ width: '100%' }}
+                                disabled={submitting}
+                                aria-busy={submitting}
+                            >
+                                {submitting ? 'جارٍ الإرسال…' : 'إرسال الرسالة'}
                             </button>
                         </form>
+                        )}
                     </div>
                 </div>
             </section>

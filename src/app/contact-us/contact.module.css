@@ -124,3 +124,14 @@
         gap: 2rem;
     }
 }
+/* Validation message under a field.
+   Shared by /contact-us and /ar/contact-us — the Arabic page imports this
+   same stylesheet. `text-align: start` rather than `left` so the message
+   sits under the start of the field in both LTR and RTL. */
+.fieldError {
+    color: #b91c1c;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    margin: 0.4rem 0 0;
+    text-align: start;
+}
