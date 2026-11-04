@@ -94,10 +94,7 @@ export const saudiToBahrain: BorderData = {
     { q: "How long does the crossing usually take?", a: "Typically 1–2 hours depending on traffic and processing time at the crossing itself — Thursday and Friday evenings tend to be busiest." },
   ],
 
-  reviews: [
-    { name: "Yousef T.", origin: "Business Traveler, Khobar–Manama", text: "Regular trips across the causeway for work — the driver knows the crossing well and gets us through it without fuss." },
-    { name: "Reem A.", origin: "Family Weekend Trip, Riyadh", text: "Long drive from Riyadh but comfortable, and the driver had everything ready for the causeway crossing." },
-  ],
+  reviews: [],
 
   relatedServices: [
     { href: "/private-taxi", label: "Private Taxi" },
@@ -186,10 +183,7 @@ export const saudiToQatar: BorderData = {
     { q: "How long does the trip to Doha usually take?", a: "From the Eastern Province, typically 2.5–3 hours to the border plus crossing time; from Riyadh, allow for a considerably longer drive." },
   ],
 
-  reviews: [
-    { name: "Abdulrahman S.", origin: "Business Traveler, Riyadh–Doha", text: "Long drive but the car was comfortable and the driver kept us on schedule for our Salwa crossing." },
-    { name: "Noura F.", origin: "Event Trip, Dammam–Doha", text: "Booked for a conference in Doha — same car the whole way, through the border, and on time for our meeting." },
-  ],
+  reviews: [],
 
   relatedServices: [
     { href: "/private-taxi", label: "Private Taxi" },
@@ -275,10 +269,7 @@ export const saudiToUae: BorderData = {
     { q: "How far in advance should I book?", a: "We recommend at least 72 hours given the length of the journey and the vehicle preparation involved." },
   ],
 
-  reviews: [
-    { name: "Khalid M.", origin: "Business Traveler, Riyadh–Dubai", text: "Long drive but the driver paced it well with rest stops, and the border crossing was straightforward." },
-    { name: "Aisha R.", origin: "Family Trip, Dammam–Abu Dhabi", text: "Comfortable SUV for the whole family on a long journey — driver was well prepared for the crossing." },
-  ],
+  reviews: [],
 
   relatedServices: [
     { href: "/private-taxi", label: "Private Taxi" },
@@ -435,9 +426,7 @@ export const saudiToJordan: BorderData = {
     { q: "Is a private transfer better than flying?", a: "Flying is faster between the capitals. A private road journey suits families and groups, travellers with a lot of luggage, and anyone combining stops — such as Tabuk, AlUla or Petra — that no single flight connects." },
   ],
 
-  reviews: [
-    { name: "Yasmin H.", origin: "Family Trip, Tabuk–Jordan", text: "Long drive north but the van was comfortable and the driver knew the desert route well." },
-  ],
+  reviews: [],
 
   relatedServices: [
     { href: "/private-taxi", label: "Private Taxi" },

@@ -22,7 +22,7 @@ export const homeFaqs = [
   {
     question: "Can I pay in cash or by card?",
     answer:
-      "We accept cash (SAR), card payments, and online bank transfer. Payment method can be selected when booking.",
+      "Yes. Cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments, on top of the quoted fare — cash and bank transfer are charged at the quoted price. No advance payment is required.",
   },
   {
     question: "How far in advance should I book?",
@@ -55,7 +55,7 @@ export const homeFaqsAr = [
   {
     question: "هل يمكنني الدفع نقداً أو بالبطاقة؟",
     answer:
-      "نقبل الدفع النقدي بالريال السعودي، وكذلك الدفع بالبطاقة والتحويل البنكي الإلكتروني. يمكن اختيار طريقة الدفع عند الحجز.",
+      "نعم. نقداً للسائق بعد الوصول، أو تحويل بنكي بعد الانطلاق، أو بالبطاقة أو رابط دفع. تُضاف ضريبة قيمة مضافة ١٥٪ على مدفوعات البطاقة ورابط الدفع فوق السعر المتفق عليه، أما النقد والتحويل البنكي فيُحتسبان بالسعر المتفق عليه. لا يُطلب أي دفع مقدم.",
   },
   {
     question: "قبل كم من الوقت يجب أن أحجز؟",

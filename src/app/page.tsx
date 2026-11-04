@@ -27,11 +27,15 @@ export const metadata = generatePageMetadata({
    DATA
    ======================================================================= */
 
+/* "15,000+ Happy Travelers" and a "100% Satisfaction Rate" were removed: the
+   first is unverifiable, and the second is a rating claim with no reviews
+   behind it. Years of experience, round-the-clock availability and the
+   languages we answer in are all confirmed. */
 const stats = [
-  { number: "15,000+", label: "Happy Travelers" },
   { number: "10+",     label: "Years Experience" },
   { number: "24/7",    label: "Availability" },
-  { number: "100%",    label: "Satisfaction Rate" },
+  { number: "365",     label: "Days a Year" },
+  { number: "4",       label: "Languages Spoken" },
 ];
 
 

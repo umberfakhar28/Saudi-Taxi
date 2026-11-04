@@ -211,10 +211,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Hajj Terminal seasonality", note: "The Hajj Terminal only operates during Dhul-Hijjah — outside that window, pilgrim flights typically use Terminal 1." },
       { title: "Ramadan and Hajj congestion", note: "Roads toward Makkah get noticeably heavier during Ramadan evenings and the weeks before Hajj — build in extra time." },
     ],
-    reviews: [
-      { name: "Fatima B.", origin: "Umrah Pilgrim, Pakistan", text: "Arrived at 2am and our driver was already waiting at the right terminal. Transferred straight to Makkah without any confusion." },
-      { name: "James O.", origin: "Business Traveler, USA", text: "Landed at the South Terminal for a domestic connection and the driver was exactly where he said he'd be." },
-    ],
+    reviews: [],
   },
   {
     code: "MED",
@@ -253,10 +250,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Shortest holy-site transfer", note: "At 15km from the Haram, this is one of the shortest airport-to-holy-site transfers of any Saudi city — typically 20–30 minutes." },
       { title: "Restricted-zone pickup", note: "Vehicles can't enter the area immediately around the Prophet's Mosque — your driver waits at the nearest designated point." },
     ],
-    reviews: [
-      { name: "Usman A.", origin: "Pilgrim, Nigeria", text: "Smooth transfer from MED straight to our hotel despite road closures near the Haram — driver knew an alternate route." },
-      { name: "Siti R.", origin: "Pilgrim, Indonesia", text: "Shortest airport transfer I've experienced anywhere — we were checking into our hotel within half an hour of landing." },
-    ],
+    reviews: [],
   },
   {
     code: "DMM",
@@ -300,10 +294,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Large airport footprint", note: "KFIA is unusually large by land area — allow extra time to reach the terminal building itself once inside the airport boundary." },
       { title: "Gateway to GCC routes", note: "This is our starting point for cross-border transfers to Bahrain, Qatar, and Khafji — mention your onward destination when booking." },
     ],
-    reviews: [
-      { name: "Robert S.", origin: "Oil Industry Executive, USA", text: "Used Gulf Trip for all my Aramco-area transfers from DMM. Punctual every single time, even for early morning flights." },
-      { name: "Nadia K.", origin: "Business Traveler, UK", text: "Airport to Khobar was seamless, and the driver already knew our office building's visitor entrance." },
-    ],
+    reviews: [],
   },
   {
     code: "RUH",
@@ -400,10 +391,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Confirm your terminal", note: "RUH has five passenger terminals and the airline-to-terminal allocation can change — tell us your flight number so your driver meets you at the right one." },
       { title: "Riyadh Season traffic", note: "Evenings near Boulevard City and major venues get significantly busier roughly October–March — build in extra time on event nights." },
     ],
-    reviews: [
-      { name: "Ahmed Al-Rashid", origin: "Business Traveler, Riyadh", text: "Impeccable service for my KAFD meetings straight from RUH. Driver was punctual and knew exactly which terminal I'd land at." },
-      { name: "Mohammed T.", origin: "Corporate Client", text: "We use Gulf Trip for all executive Riyadh airport transfers. Reliable every single time, regardless of terminal." },
-    ],
+    reviews: [],
   },
   {
     code: "AHB",
@@ -440,10 +428,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Peak summer season", note: "June–August draws a steady wave of domestic tourism escaping the heat elsewhere — book ahead, as demand for pickups rises too." },
       { title: "Winter mist", note: "Mountain roads to Al Souda and Habala can see fog in winter; our drivers are experienced with the conditions." },
     ],
-    reviews: [
-      { name: "Sara M.", origin: "Tourist, Jordan", text: "The mountain views on the drive from the airport were breathtaking, and the driver knew every scenic stop." },
-      { name: "Abdullah K.", origin: "Family Traveler, Riyadh", text: "Easy pickup at Abha's single arrivals hall — no confusion about where to find the driver." },
-    ],
+    reviews: [],
   },
   {
     code: "TIF",
@@ -478,10 +463,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Mountain road transfer", note: "The drive down toward Makkah is a scenic switchback route — allow a little extra time versus a flat-highway equivalent distance." },
       { title: "Rose season demand", note: "Roughly March into early April, Taif sees a real visitor surge for the rose harvest — book ahead if traveling then." },
     ],
-    reviews: [
-      { name: "Nora Al-Zahrani", origin: "Tourist, Riyadh", text: "Landed at Taif and our driver took us straight into the mountain air — a lovely first impression of the city." },
-      { name: "Michael T.", origin: "Traveler, UK", text: "Small, easy airport with a driver waiting right at the exit — no hunting around for a name board." },
-    ],
+    reviews: [],
   },
   {
     code: "TUU",
@@ -519,10 +501,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "NEOM-driven demand", note: "Airport traffic patterns tend to track NEOM project activity more than tourist seasons — confirm your onward site before booking." },
       { title: "Long onward distances", note: "Routes to Wadi Disah, AlUla or NEOM sites can mean several hours on the road after landing — plan accordingly." },
     ],
-    reviews: [
-      { name: "Andrew B.", origin: "Project Consultant, UK", text: "Six-month NEOM contract — every Tabuk Airport pickup was handled without a single issue." },
-      { name: "Sophie H.", origin: "Traveler, Canada", text: "Small, quick airport and the driver was waiting right at the exit — straight to our guesthouse." },
-    ],
+    reviews: [],
   },
   {
     code: "YNB",
@@ -562,10 +541,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Short airport transfer", note: "At 10km from the city, this is one of the shorter airport transfers on this list — typically 15–20 minutes." },
       { title: "Dive season", note: "Roughly October through April is when Red Sea diving conditions are calmest and demand for dive-site drop-offs peaks." },
     ],
-    reviews: [
-      { name: "Carlos R.", origin: "Contractor, Spain", text: "Six months of Yanbu Airport transfers — always on time, never a wait at the exit." },
-      { name: "Hana M.", origin: "Diver, Saudi Arabia", text: "Transferred straight from the airport to my dive site at dawn without any fuss." },
-    ],
+    reviews: [],
   },
   {
     code: "ULH",
@@ -598,9 +574,6 @@ export const AIRPORTS: AirportPageInfo[] = [
       { title: "Event season demand", note: "Roughly October through March, hotels, drivers, and tour slots all get busiest — book your transfer ahead during this window." },
       { title: "Guide required at Hegra", note: "Your transfer gets you to the site, but Hegra itself requires a separately booked licensed guide through Saudi Tourism." },
     ],
-    reviews: [
-      { name: "Isabella F.", origin: "Tourist, Italy", text: "Landed at AlUla's small, easy airport and our driver had us at the resort within half an hour." },
-      { name: "Jens K.", origin: "Photographer, Germany", text: "Four days of AlUla transfers starting right from the airport — drivers knew every golden-hour shooting location." },
-    ],
+    reviews: [],
   },
 ];

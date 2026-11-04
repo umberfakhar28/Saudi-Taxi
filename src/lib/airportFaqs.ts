@@ -83,7 +83,7 @@ export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED
   },
   {
     q: "What payment methods do you accept?",
-    a: "Cash (SAR), card, and online bank transfer. Payment is made directly to your driver after the ride — no advance payment is required to confirm your booking.",
+    a: "Cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments, on top of the quoted fare. No advance payment is required to confirm your booking.",
   },
   {
     q: "How far in advance should I book my airport transfer?",

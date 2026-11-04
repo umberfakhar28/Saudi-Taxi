@@ -55,7 +55,10 @@ export function localBusinessSchema() {
     },
     priceRange: "$$",
     currenciesAccepted: "SAR",
-    paymentAccepted: "Cash, Credit Card, Apple Pay, STC Pay",
+    // Only what the business actually takes. Apple Pay and STC Pay were listed
+    // here and are not offered; no specific card network is named, because the
+    // card/payment-link option is not a gateway integration that commits to one.
+    paymentAccepted: "Cash, Bank Transfer, Card, Payment Link",
     areaServed: [
       { "@type": "City", name: "Makkah" },
       { "@type": "City", name: "Madinah" },

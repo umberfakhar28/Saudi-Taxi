@@ -39,11 +39,7 @@ export const yanbu: CityData = {
     { q: "Is Yanbu's Industrial City strictly a business destination?", a: "Mostly, yes — most Industrial City visitors are contractors, though the old town, Corniche and dive sites are genuine leisure draws for residents and tourists alike." },
     { q: "How far is Yanbu from Madinah?", a: "About 2.5 hours by road — a popular route for both business travelers and residents making a quick Umrah trip." },
   ],
-  reviews: [
-    { name: "Carlos R.", origin: "Contractor, Spain", text: "Six months of Yanbu transfers — always on time. Best option in the region." },
-    { name: "Hana M.", origin: "Diver, Saudi Arabia", text: "Transferred to my dive site at dawn without any fuss. Excellent service." },
-    { name: "Ibrahim Y.", origin: "Resident, Yanbu", text: "Regular Yanbu–Madinah trips for Umrah. Always reliable, always comfortable." },
-  ],
+  reviews: [],
   heroImage: "/destinations/jeddah-corniche-skyline.webp",
   heroImageAlt: "Red Sea coastline near Yanbu, Saudi Arabia — private taxi and airport transfer service",
   serviceAreas: [
@@ -112,11 +108,7 @@ export const alula: CityData = {
     { q: "Can you arrange a driver for a full AlUla itinerary, not just single trips?", a: "Yes — most guests book us for their entire stay rather than separate one-way trips, since sites are far apart and timing sunrise/sunset visits matters." },
     { q: "How far is AlUla from the airport?", a: "AlUla Regional Airport is about 18km from Old Town, roughly a 20–25 minute transfer." },
   ],
-  reviews: [
-    { name: "Isabella F.", origin: "Tourist, Italy", text: "Watching sunrise at Hegra from our private car was life-changing. Gulf Trip made it effortless." },
-    { name: "Jens K.", origin: "Photographer, Germany", text: "Four days of AlUla transfers. Drivers knew every golden-hour shooting location." },
-    { name: "Reem Al-Otaibi", origin: "Traveler, Saudi Arabia", text: "Best way to experience AlUla. Professional, punctual, and deeply knowledgeable." },
-  ],
+  reviews: [],
   heroImage: "/hero-slider/gulf-cross-border-chauffeur-service.webp",
   heroImageAlt: "Private chauffeur vehicle for AlUla desert and heritage site transfers in Saudi Arabia",
   serviceAreas: [
@@ -175,11 +167,7 @@ export const neom: CityData = {
     { q: "Do you handle recurring contractor shuttle bookings?", a: "Yes — many of our NEOM clients book recurring transfers for project teams rather than one-off trips; contact us to set up a regular arrangement." },
     { q: "Can you also transfer media or short-term visitors, not just contractors?", a: "Yes — provided your site clearance is confirmed in advance, we handle transfers for consultants, media and other short-term visitors as well as long-term contractors." },
   ],
-  reviews: [
-    { name: "Andrew B.", origin: "Project Consultant, UK", text: "Six-month NEOM contract — Gulf Trip handled all airport transfers without a single issue." },
-    { name: "Yuki T.", origin: "Architect, Japan", text: "Sharma Airport to site in an executive SUV. Professional and efficient." },
-    { name: "Marcus D.", origin: "Engineer, Australia", text: "Reliable partner for all our NEOM team transfers. Highly recommend for contractors." },
-  ],
+  reviews: [],
   heroImage: "/hero-slider/gulf-cross-border-chauffeur-service.webp",
   heroImageAlt: "Private executive transfer vehicle for NEOM contractor and business travel, Saudi Arabia",
   serviceAreas: [
@@ -245,11 +233,7 @@ export const tabuk: CityData = {
     { q: "Is a 4WD required for Wadi Disah?", a: "Yes — the canyon's sandstone terrain requires a 4WD-capable vehicle, which we provide for the round trip." },
     { q: "Do you offer a luxury chauffeur service in Tabuk, or only standard taxis?", a: "Both — alongside standard airport and city transfers, we offer a premium chauffeur-driven option with an executive vehicle and a professionally presented driver, suited to business travel, NEOM executive visits, and guests who want a more comfortable long-distance ride to Wadi Disah or the Aqaba border." },
   ],
-  reviews: [
-    { name: "Lucas V.", origin: "Adventure Traveler, France", text: "Wadi Disah from Tabuk in a proper 4WD. Spectacular. Driver was fantastic." },
-    { name: "Sophie H.", origin: "Traveler, Canada", text: "Tabuk Airport to our guesthouse and back. Reliable and affordable." },
-    { name: "Omar Al-Harbi", origin: "Local Guide, Tabuk", text: "We partner with Gulf Trip for all our guests' airport transfers. Never a complaint." },
-  ],
+  reviews: [],
   heroImage: "/hero-slider/saudi-airport-transfer-service.webp",
   heroImageAlt: "Private airport transfer vehicle in Saudi Arabia — chauffeur service in Tabuk Province",
   serviceAreas: [
@@ -335,10 +319,7 @@ export const alAhsa: CityData = {
     { q: "Do you serve Al-Ahsa for business travel, not just sightseeing?", a: "Yes — Al-Ahsa sits on the same corridors used for Eastern Province business travel toward Dammam, Riyadh and the Qatar/Bahrain borders, and we serve it as a regular stop or waypoint." },
     { q: "Is Jawatha Mosque open to visitors?", a: "Yes — it's one of the oldest mosque sites in the Eastern Province and a common addition to an Al-Ahsa itinerary alongside the oasis and souq." },
   ],
-  reviews: [
-    { name: "Fatima Al-Otaibi", origin: "Traveler, Saudi Arabia", text: "Finally visited the oasis properly instead of just driving through on the way to Dammam. Driver knew all the best palm-grove paths." },
-    { name: "Robert K.", origin: "Business Traveler, USA", text: "Added a half-day Al-Ahsa stop to our Riyadh–Dammam trip. Well worth it — the Qaisariah Souq was a highlight." },
-  ],
+  reviews: [],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Eastern Province skyline near Al-Ahsa oasis — private taxi and transfer service",
   serviceAreas: [
@@ -401,10 +382,7 @@ export const dhahran: CityData = {
     { q: "Where do most Dhahran visitors stay?", a: "Dhahran itself has limited hotel stock — most conference and Aramco-related visitors stay in neighbouring Khobar or Dammam and transfer in, which we run as a standard local connection." },
     { q: "Can you handle group bookings for KFUPM events?", a: "Yes — we regularly coordinate multi-vehicle group transfers for conferences and academic events at KFUPM." },
   ],
-  reviews: [
-    { name: "James O.", origin: "Aramco Contractor, UK", text: "Regular transfers between our Dhahran compound and the airport — always on time, always professional." },
-    { name: "Layla H.", origin: "Visitor, Saudi Arabia", text: "Booked a driver just for an Ithra visit. Smooth pickup and drop-off, no hassle at all." },
-  ],
+  reviews: [],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Eastern Province skyline near Dhahran — private corporate taxi and transfer service",
   serviceAreas: [
@@ -463,10 +441,7 @@ export const khamisMushait: CityData = {
     { q: "Is Khamis Mushait a good base instead of Abha?", a: "Yes — many visitors base themselves here and day-trip into Abha and Al Souda, especially when Abha's hotels are fuller during peak summer season." },
     { q: "What is Al Mahfar Al-Turki?", a: "A restored Ottoman-era military fort on the edge of the city, one of the more visible historic sites in the Asir region and a common half-day stop." },
   ],
-  reviews: [
-    { name: "Nasser Al-Qahtani", origin: "Traveler, Saudi Arabia", text: "Easy airport pickup from Abha straight to our hotel in Khamis Mushait. Driver knew the area well." },
-    { name: "Emily T.", origin: "Tourist, UK", text: "Based ourselves in Khamis Mushait for a few days and day-tripped to Abha and Al Souda — transfers were smooth every time." },
-  ],
+  reviews: [],
   heroImage: "/destinations/abha-asir-mountains-view.webp",
   heroImageAlt: "Asir highlands near Khamis Mushait — private taxi and airport transfer service",
   serviceAreas: [

@@ -620,7 +620,7 @@ function HeroSearchBarInner() {
             <div className={styles.trustRow}>
                 <div className={styles.trustItems}>
                     <span className={styles.trustItem}><ShieldIcon size={15} /> Licensed Drivers</span>
-                    <span className={styles.trustItem}><UserIcon size={15} /> 15,000+ Travelers</span>
+                    <span className={styles.trustItem}><UserIcon size={15} /> Fixed Prices</span>
                 </div>
                 <a
                     href={from ? waLink(whatsappText) : waLink("Hi, I'd like an instant quote.")}

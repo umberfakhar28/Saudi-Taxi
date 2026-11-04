@@ -39,15 +39,10 @@ export const metadata = generatePageMetadata({
 // data (src/components/TestimonialsSection.tsx) — not fabricated. Only one entry
 // in that source is explicitly tagged "Airport Transfer"; shown as-is rather
 // than padded out with unrelated reviews.
-const airportReviews: ReviewItem[] = [
-    {
-        name: "Omar Sheikh",
-        location: "Karachi, Pakistan",
-        rating: 5,
-        service: "Airport Transfer",
-        text: "Arrived at Jeddah airport at 2 AM and the driver was already waiting with a smile. Helped with all our bags, drove smoothly, and the AC was perfect. Made our first Umrah stress-free from the moment we landed.",
-    },
-];
+/* "Omar Sheikh, Karachi" and his five-star review were invented. ReviewsStrip
+   renders nothing for an empty list, so the section disappears until there is
+   a real review to put here. */
+const airportReviews: ReviewItem[] = [];
 
 const schemas = [
     serviceSchema({

@@ -4,11 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
+/* Named card networks and wallets (Visa, Mastercard, American Express, STC Pay,
+   Mada) were listed here. There is no payment gateway integration behind this
+   page, so none of those could be promised — card payment is arranged as a
+   payment link. The 15% VAT that applies to that route is stated, because a
+   customer should not meet it for the first time on the link itself. */
 const paymentMethods = [
-    { icon: "💳", name: "Credit / Debit Card", description: "Visa, Mastercard, American Express" },
-    { icon: "🏦", name: "Bank Transfer", description: "Direct bank transfer to our Saudi account" },
-    { icon: "📱", name: "Saudi Pay", description: "Pay via STC Pay, Mada or similar" },
-    { icon: "💵", name: "Cash on Arrival", description: "Pay the driver in Saudi Riyals" },
+    { icon: "💵", name: "Cash After Drop-Off", description: "Pay the driver in Saudi Riyals once you arrive" },
+    { icon: "🏦", name: "Bank Transfer", description: "Transfer after pickup — no advance payment needed" },
+    { icon: "💳", name: "Card / Payment Link", description: "We send a payment link. An additional 15% VAT applies to this method" },
 ];
 
 export default function PayOnlineClient() {

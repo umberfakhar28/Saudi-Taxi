@@ -36,11 +36,7 @@ export const khobar: CityData = {
     { q: "Is Khobar's Corniche walkable from most hotels?", a: "Many business hotels along Prince Turki Street are within a short drive of the Corniche — your driver can confirm the exact distance for your specific hotel." },
     { q: "Do you serve Half Moon Bay for weekend trips?", a: "Yes — Half Moon Bay Road hotels and the beach area are within our standard Khobar coverage, no extra surcharge." },
   ],
-  reviews: [
-    { name: "Patricia M.", origin: "Expat, USA", text: "Reliable, clean, and professional. My go-to service for Khobar–Airport transfers." },
-    { name: "Yousef A.", origin: "Business Client, Khobar", text: "Booked for our corporate guests every visit. Never a complaint." },
-    { name: "Emma L.", origin: "Tourist, Australia", text: "Khobar Corniche to the airport was smooth and stress-free." },
-  ],
+  reviews: [],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Eastern Province waterfront near Al Khobar — private chauffeur service in the Dammam metropolitan area",
   serviceAreas: [
@@ -110,11 +106,7 @@ export const jubail: CityData = {
     { q: "Can I book a private transfer from Bahrain to Jubail?", a: "Yes — this is a regular route for us. One vehicle and a licensed driver take you from your Bahrain address across the King Fahd Causeway and on to Jubail, roughly 1–1.5 hours past Dammam. See our dedicated Bahrain to Jubail transfer page for the full journey details." },
     { q: "Is Bahrain to Jubail a common trip for contractors?", a: "Yes — a meaningful share of our Bahrain pickups are contractors and technical staff continuing on to Jubail Industrial City rather than stopping in Dammam or Khobar." },
   ],
-  reviews: [
-    { name: "David H.", origin: "Contractor, Netherlands", text: "Used Gulf Trip for 3 months of Jubail–Airport transfers. Faultless every time." },
-    { name: "Chen W.", origin: "Project Manager, Singapore", text: "Arranged transfers for our entire site team. Professional and cost-effective." },
-    { name: "Khalid S.", origin: "Saudi Aramco, Jubail", text: "Best corporate taxi option in Jubail. Highly recommend." },
-  ],
+  reviews: [],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Eastern Province skyline near Jubail Industrial City — private chauffeur and corporate transfer service",
   distanceGuides: [
@@ -191,11 +183,7 @@ export const taif: CityData = {
     { q: "Is Al-Hada cable car included in a tour, or booked separately?", a: "The cable car ticket itself is booked on-site; we handle the transfer to and from the entrance and can time your visit around quieter hours." },
     { q: "Can I do Taif as a day trip from Jeddah?", a: "Yes — it's about 2 hours from Jeddah, and many visitors combine it with a stop in Makkah on the same day." },
   ],
-  reviews: [
-    { name: "Nora Al-Zahrani", origin: "Tourist, Riyadh", text: "The rose farm tour was magical. Our driver took us to hidden spots only locals know." },
-    { name: "Omar F.", origin: "Family Traveler, Jeddah", text: "Taif in summer with kids — the cable car, the honey market, all covered in one day. Perfect service." },
-    { name: "Michael T.", origin: "Traveler, UK", text: "Driver was a Taif native and gave us an authentic experience. Highly recommend." },
-  ],
+  reviews: [],
   heroImage: "/destinations/taif-mountain-city-view.webp",
   heroImageAlt: "Taif mountain city view in the Sarawat range — private transfer service to Saudi Arabia's rose-growing highlands",
   serviceAreas: [
@@ -256,11 +244,7 @@ export const abha: CityData = {
     { q: "Is Abha good for family trips?", a: "Yes — Abha Lake Park and the Al-Souda cable car are both straightforward with children, and the cooler climate is easier on families than the coastal cities in summer." },
     { q: "Can you connect Abha with Khamis Mushait in the same booking?", a: "Yes — the two cities are about 20–25 minutes apart and are commonly combined in one Asir Province itinerary." },
   ],
-  reviews: [
-    { name: "Sara M.", origin: "Tourist, Jordan", text: "The mountain views from our car were breathtaking. Driver knew every scenic stop." },
-    { name: "Abdullah K.", origin: "Family Traveler, Riyadh", text: "Abha with children was unforgettable. Reliable transfers made it stress-free." },
-    { name: "Lena P.", origin: "Traveler, Germany", text: "Habala village tour from Abha — extraordinary. Gulf Trip made it seamless." },
-  ],
+  reviews: [],
   heroImage: "/destinations/abha-asir-mountains-view.webp",
   heroImageAlt: "Abha and the Asir mountains — private taxi service in Saudi Arabia's highland tourism region",
   distanceGuides: [

@@ -106,10 +106,7 @@ export const taifZiyarat: TourPageData = {
     { season: "October – February", highlight: "Cool Winter 🍃", description: "Good hiking and outdoor weather, with cooler mountain air and clearer skies." },
   ],
 
-  reviews: [
-    { name: "Abdullah R.", origin: "Umrah Visitor, Makkah", text: "A relaxed day out of the heat. Our driver knew the mountain road well and didn't rush us at any stop." },
-    { name: "Sara M.", origin: "Family Trip, Jeddah", text: "The kids loved the chairlift and the zoo, and the drive up into the mountains was an experience on its own." },
-  ],
+  reviews: [],
 
   faqs: [
     { q: "How far is Taif from Makkah and Jeddah?", a: "Taif is around 90 km (roughly 1.5–2 hours by road) from Makkah, and around 170 km (about 2.5–3 hours) from Jeddah, depending on traffic on the mountain road." },
@@ -213,10 +210,7 @@ export const jeddahCityTour: TourPageData = {
     { season: "June – September", highlight: "Hot & Humid ☀️", description: "Outdoor walking is best done in the early morning or evening; midday heat and humidity are significant." },
   ],
 
-  reviews: [
-    { name: "Omar T.", origin: "Business Traveler, Jeddah", text: "Had a half-day layover and the driver planned the route well — saw Al-Balad and the Corniche without feeling rushed." },
-    { name: "Huda A.", origin: "Family Visitor", text: "Comfortable van, and the driver was happy to stop extra at the Corniche for photos with the kids." },
-  ],
+  reviews: [],
 
   faqs: [
     { q: "How much of Jeddah can I see in a half-day tour?", a: "A half-day (around 5 hours) typically covers Al-Balad, the Corniche, the Floating Mosque and King Fahd Fountain — the most central and easily reached sites." },
@@ -324,10 +318,7 @@ export const aluTour: TourPageData = {
     { season: "June – August", highlight: "Very Hot ☀️", description: "Daytime temperatures are high; outdoor sightseeing is best limited to early morning or late afternoon." },
   ],
 
-  reviews: [
-    { name: "Khalid S.", origin: "Heritage Traveler, Jeddah", text: "Two-day trip was well paced — plenty of time at Hegra without feeling rushed to the next stop." },
-    { name: "Noor F.", origin: "Family Trip, Madinah", text: "Driver was flexible when we wanted extra time at Elephant Rock for photos. Comfortable SUV for the whole family." },
-  ],
+  reviews: [],
 
   faqs: [
     { q: "How far is AlUla from Jeddah or Madinah?", a: "AlUla is roughly 1,000 km from Jeddah by road (around 10 hours) or about an hour by flight — flying is recommended for day trips. From Madinah, it's a shorter drive of around 4–5 hours. We handle all ground transportation once you're in AlUla." },

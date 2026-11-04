@@ -4,43 +4,29 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { StarIcon } from "./Icons";
 import styles from "./TestimonialsSection.module.css";
 
-// Reused verbatim from the existing /testimonials page — same customers,
-// same wording, same dates already published on the site. Picked for
-// variety of service type and origin rather than invented for this slider.
-const testimonials = [
-  {
-    name: "Ahmad Al-Farsi",
-    location: "London, UK",
-    rating: 5,
-    service: "Airport Transfer",
-    date: "January 2026",
-    text: "Excellent service from start to finish. The driver was waiting at the airport with my name on a board. Very professional, clean car, and the price was exactly as quoted. Highly recommended for anyone traveling for Umrah!",
-  },
-  {
-    name: "Fatima Binti Hassan",
-    location: "Kuala Lumpur, Malaysia",
-    rating: 5,
-    service: "Umrah Taxi Package",
-    date: "December 2025",
-    text: "We used Gulf Trip Service for our entire Umrah trip — airport pickup, hotel transfers, and Ziyarat tours. The driver was knowledgeable, patient, and treated our family like his own. Will definitely use again, InshaAllah.",
-  },
-  {
-    name: "Sarah Johnson",
-    location: "Toronto, Canada",
-    rating: 5,
-    service: "Airport Transfer",
-    date: "October 2025",
-    text: "As a solo female traveler, safety was my top concern. The driver was very respectful and professional. The car was spotless and comfortable. I felt completely safe throughout the journey. Thank you for a wonderful experience!",
-  },
-  {
-    name: "Khadija Osman",
-    location: "Istanbul, Turkey",
-    rating: 5,
-    service: "Jeddah to Makkah",
-    date: "June 2025",
-    text: "We traveled with elderly parents who needed extra care. The driver was incredibly patient and helpful, assisting with wheelchairs and luggage. The vehicle was very comfortable. Allah reward you for your kindness!",
-  },
-];
+export interface Testimonial {
+  name: string;
+  location: string;
+  rating: number;
+  service: string;
+  date: string;
+  text: string;
+}
+
+/**
+ * Deliberately empty.
+ *
+ * Four testimonials used to sit here — Ahmad Al-Farsi, Fatima Binti Hassan,
+ * Sarah Johnson, Khadija Osman — carried over from /testimonials, where they
+ * had also been invented. No such customers left that feedback, and the
+ * five-star ratings attached to them were not measurements of anything.
+ *
+ * The slider below is kept intact and renders nothing while this array is
+ * empty, so the day there are genuine reviews they go in here and the
+ * section comes back on its own. Do not seed it with samples: anything in
+ * this array is published to customers as a real person's words.
+ */
+const testimonials: Testimonial[] = [];
 
 const AUTOPLAY_MS = 2600;
 
@@ -72,7 +58,7 @@ export default function TestimonialsSection() {
   // countdown instead of the next auto-tick landing moments later — same
   // rhythm as the homepage hero's image slider.
   useEffect(() => {
-    if (paused || reducedMotionRef.current) return undefined;
+    if (paused || reducedMotionRef.current || count === 0) return undefined;
     const id = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % count);
     }, AUTOPLAY_MS);
@@ -104,6 +90,10 @@ export default function TestimonialsSection() {
     Array.from({ length: 5 }, (_, i) => (
       <span key={i} className={i < rating ? styles.starFilled : styles.starEmpty}>★</span>
     ));
+
+  // No reviews, no section. Placed after every hook so the hook order stays
+  // identical whether or not there is anything to show.
+  if (count === 0) return null;
 
   return (
     <section className={styles.section}>

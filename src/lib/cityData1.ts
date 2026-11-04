@@ -41,11 +41,7 @@ export const riyadh: CityData = {
     { q: "Can I book a chauffeur by the hour or for a full day?", a: "Yes — an hourly or full-day charter suits multi-stop days across KAFD, Olaya, the Diplomatic Quarter and Riyadh Season venues, with the same driver waiting between meetings." },
     { q: "Do you offer a chauffeur service in Riyadh, or only standard taxis?", a: "Both — alongside standard airport and city transfers, we offer an executive chauffeur option with a professionally presented driver, suited to government visits, KAFD and Olaya business meetings, and multi-stop delegation schedules." },
   ],
-  reviews: [
-    { name: "Ahmed Al-Rashid", origin: "Business Traveler, Riyadh", text: "Impeccable service for my KAFD meetings. Driver was punctual and the vehicle was spotless." },
-    { name: "Sarah K.", origin: "Tourist, UK", text: "Exploring Diriyah was so easy with Gulf Trip Service. Fixed price, no stress." },
-    { name: "Mohammed T.", origin: "Corporate Client", text: "We use Gulf Trip for all executive airport transfers. Reliable every single time." },
-  ],
+  reviews: [],
   heroImage: "/images/images-gulf/riyadh-taxi-service.webp.png",
   heroImageAlt: "Private chauffeur vehicle on a Riyadh highway with the Kingdom Centre Tower skyline at sunset — taxi and chauffeur service in Saudi Arabia's capital",
   distanceGuides: [
@@ -141,11 +137,7 @@ export const jeddah: CityData = {
     { q: "Which KAIA terminal will my driver meet me at?", a: "We confirm your exact terminal — including the seasonal Hajj Terminal — before your driver is dispatched, so there's no mix-up on arrival." },
     { q: "Can I go straight from Jeddah airport to Makkah without stopping in the city?", a: "Yes — this is one of our most common bookings, typically 60–90 minutes direct from KAIA to Makkah hotels." },
   ],
-  reviews: [
-    { name: "Fatima B.", origin: "Umrah Pilgrim, Pakistan", text: "Arrived at 2am and our driver was already waiting. Transferred straight to Makkah. Perfect service." },
-    { name: "James O.", origin: "Tourist, USA", text: "Booked a Jeddah city tour. Driver was knowledgeable and the car was luxurious." },
-    { name: "Tariq M.", origin: "Business Traveler, UAE", text: "Regular Jeddah–Makkah transfers for my clients. Always on time, always professional." },
-  ],
+  reviews: [],
   heroImage: "/images/images-gulf/jeddah-taxi-service.webp.png",
   heroImageAlt: "Private chauffeur vehicle along the Jeddah Corniche waterfront at sunset — taxi and airport transfer service on Saudi Arabia's Red Sea coast",
   distanceGuides: [
@@ -220,11 +212,7 @@ export const makkah: CityData = {
     { q: "Do you provide transport for both Umrah and Hajj?", a: "Yes — daily Umrah transfers year-round, plus dedicated Hajj-season transport. Advance booking is strongly recommended given how limited availability gets during 8th–12th Dhul-Hijjah." },
     { q: "Can non-Muslim companions travel with a Makkah booking?", a: "Makkah itself is restricted to Muslims under Saudi law — we can transport mixed groups as far as the city boundary, but only Muslim passengers continue into Makkah." },
   ],
-  reviews: [
-    { name: "Bilal H.", origin: "Umrah Pilgrim, UK", text: "Our driver waited patiently during our Tawaf. Truly understood the spiritual nature of our trip." },
-    { name: "Amna S.", origin: "Pilgrim, Canada", text: "The Ziyarat tour was exceptional. Driver explained every site with genuine knowledge." },
-    { name: "Dr. Khalid F.", origin: "Pilgrim, Malaysia", text: "Transferred from KAIA at midnight — flawless. Will book again for Hajj season." },
-  ],
+  reviews: [],
   heroImage: "/images/images-gulf/makkah-taxi-service.webp.png",
   heroImageAlt: "Private chauffeur vehicle on the mountain road into Makkah with the Abraj Al-Bait Clock Tower and Masjid al-Haram at dusk — taxi service for Umrah pilgrims",
   distanceGuides: [
@@ -311,11 +299,7 @@ export const madinah: CityData = {
     { q: "Can you help coordinate pickup around my Rawdah slot?", a: "Yes — tell us your Nusuk app time slot and we plan pickup around it, with early-morning (post-Fajr) slots recommended since they're the least crowded." },
     { q: "Is Madinah's airport close to the Haram?", a: "Yes — Prince Mohammad Bin Abdulaziz Airport is about 15km away, one of the shortest airport-to-holy-site transfers of any Saudi city, typically 20–30 minutes." },
   ],
-  reviews: [
-    { name: "Usman A.", origin: "Pilgrim, Nigeria", text: "Transfer from MED airport was smooth. Driver helped us to our hotel despite road closures." },
-    { name: "Siti R.", origin: "Pilgrim, Indonesia", text: "Beautiful Ziyarat tour around Madinah. Driver was respectful and knowledgeable." },
-    { name: "Hassan M.", origin: "Pilgrim, Egypt", text: "Booked the Makkah–Madinah transfer for our family of 6. Spacious van, excellent service." },
-  ],
+  reviews: [],
   heroImage: "/hero-slider/saudi-airport-transfer-service.webp",
   heroImageAlt: "Private airport transfer vehicle in Saudi Arabia — premium chauffeur service for Madinah visitors and pilgrims",
   attractionsImage: "/images/images-gulf/madinah-attractions.webp",
@@ -392,11 +376,7 @@ export const dammam: CityData = {
     { q: "Do you handle recurring Aramco visitor pickups?", a: "Yes — this is one of our most regular Dammam bookings, with drivers familiar with compound visitor procedures at Dhahran." },
     { q: "How busy does the King Fahd Causeway get?", a: "Thursday and Friday evenings see a real surge as residents head to Bahrain for the weekend — booking outside that window avoids the queue." },
   ],
-  reviews: [
-    { name: "Robert S.", origin: "Oil Industry Executive, USA", text: "Used Gulf Trip for all my Aramco-area transfers. Punctual, professional, and the car is always clean." },
-    { name: "Nadia K.", origin: "Business Traveler, UK", text: "Airport to Khobar was seamless. Highly recommend for Eastern Province travel." },
-    { name: "Ali Al-Dosari", origin: "Local Client, Dammam", text: "Best corporate taxi service in the Eastern Province. Our whole team uses them." },
-  ],
+  reviews: [],
   heroImage: "/destinations/dammam-eastern-province-skyline.webp",
   heroImageAlt: "Dammam Eastern Province skyline — private taxi and airport transfer service near King Fahd International Airport",
   distanceGuides: [

@@ -71,10 +71,7 @@ export const ritzCarltonRiyadh: HotelData = {
     { title: "Business & Official Travel", note: "For delegations or corporate groups, share passenger numbers and luggage requirements in advance so the right vehicle can be arranged." },
   ],
 
-  reviews: [
-    { name: "Faisal N.", origin: "Business Traveler, Riyadh", text: "Driver was well prepared for the Diplomatic Quarter checkpoint and got us to the hotel without any delay." },
-    { name: "Claire D.", origin: "International Visitor", text: "Smooth pickup from King Khalid Airport straight to the hotel — driver tracked our flight and was waiting when we landed." },
-  ],
+  reviews: [],
 
   faqs: [
     { q: "Can I book a private transfer from King Khalid International Airport to The Ritz-Carlton, Riyadh?", a: "Yes — we track your flight and meet you at arrivals for a direct, private transfer to the hotel in the Diplomatic Quarter." },

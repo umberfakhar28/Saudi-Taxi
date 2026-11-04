@@ -185,14 +185,20 @@ export default function ContactUsClient() {
                         <div className={styles.formInfo}>
                             <h2>Send Us a Message</h2>
                             <p>
-                                Fill out the form and our team will get back to you within 24 hours. For urgent inquiries, please call or WhatsApp us directly.
+                                Fill out the form and our team will get back to you as soon as possible. For urgent inquiries, please call or WhatsApp us directly.
                             </p>
                             <div className={styles.infoList}>
                                 <div className={styles.infoItem}>
                                     <div className={styles.infoIconWrapper}><ClockIcon size={20} /></div>
                                     <div>
+                                        {/* Two different promises used to sit on this one
+                                            screen — "within 24 hours" above and "within 30
+                                            minutes" here. Neither was a commitment anyone
+                                            had made, so both were replaced with what is
+                                            actually true. 24/7 availability below is about
+                                            the service, not a guaranteed reply time. */}
                                         <strong>Response Time</strong>
-                                        <p>Within 30 minutes (business hours)</p>
+                                        <p>As soon as possible</p>
                                     </div>
                                 </div>
                                 <div className={styles.infoItem}>

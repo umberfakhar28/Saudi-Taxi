@@ -446,28 +446,9 @@ export default function BorderCrossing() {
             </section>
 
             {/* Reviews */}
-            <section className="section-lg">
-                <div className="container">
-                    <div className="section-header centered">
-                        <span className="section-eyebrow">Customer Reviews</span>
-                        <h2 className="section-title">What Travelers Say</h2>
-                    </div>
-                    <div className="grid-3">
-                        {[
-                            { name: "Faisal M.", origin: "Business Traveler, Dammam–Bahrain", text: "Driver was waiting right at pickup and handled the causeway paperwork like clockwork." },
-                            { name: "Abdulrahman S.", origin: "Riyadh–Doha", text: "Long drive but the car was comfortable and the driver kept us on schedule for the Salwa crossing." },
-                            { name: "Khalid M.", origin: "Riyadh–Dubai", text: "Long journey but well paced with rest stops, and the border crossing was straightforward." },
-                        ].map((r, i) => (
-                            <div key={i} className="card">
-                                <div style={{ display: 'flex', gap: 'var(--space-1)', marginBottom: 'var(--space-3)', color: 'var(--accent)' }}>★★★★★</div>
-                                <p style={{ color: 'var(--text-body)', fontStyle: 'italic', lineHeight: 1.75, marginBottom: 'var(--space-4)' }}>&ldquo;{r.text}&rdquo;</p>
-                                <p style={{ color: 'var(--text-main)', fontWeight: 600 }}>{r.name}</p>
-                                <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>{r.origin}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            {/* A "What Travelers Say" section stood here with three five-star
+                reviews from Faisal M., Abdulrahman S. and Khalid M. All three were
+                invented, so the section was removed rather than refilled. */}
 
             {/* FAQ */}
             <section className="section-lg" style={{ background: 'var(--bg-subtle)' }}>

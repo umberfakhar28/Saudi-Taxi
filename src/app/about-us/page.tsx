@@ -24,20 +24,22 @@ const values = [
     { icon: <AwardIcon size={28} />, title: "Excellence", description: "We continuously strive to exceed expectations. From vehicle cleanliness to driver professionalism, every detail matters to us." },
 ];
 
+/* "15,000+ Happy Customers", "50+ Fleet Vehicles" and "50+ Countries Served"
+   were removed: none is verifiable. Years of experience and round-the-clock
+   availability are confirmed, so they stay. Nothing was invented to fill the
+   gap — a shorter row of true numbers beats a full row of invented ones. */
 const stats = [
-    { number: "15,000+", label: "Happy Customers" },
     { number: "10+", label: "Years Experience" },
-    { number: "50+", label: "Fleet Vehicles" },
-    { number: "50+", label: "Countries Served" },
+    { number: "24/7", label: "Availability" },
 ];
 
 const milestones = [
     { year: "2014", event: "Founded in Makkah with a small fleet of vehicles dedicated to Umrah service" },
     { year: "2016", event: "Expanded operations to Madinah, Jeddah and surrounding regions" },
-    { year: "2018", event: "Fleet grew to 25+ vehicles, including luxury sedan options" },
+    { year: "2018", event: "Fleet expanded to include luxury sedan options" },
     { year: "2019", event: "Launched dedicated airport transfer service from King Abdulaziz International Airport" },
     { year: "2021", event: "Partnered with major Umrah travel agencies across Pakistan, India and UK" },
-    { year: "2023", event: "Proudly served over 10,000 customers from 50+ countries" },
+    { year: "2023", event: "Extended cross-border service to the UAE, Qatar, Bahrain, Oman and Kuwait" },
     { year: "2025", event: "Expanded to AlUla, Taif and Jeddah city tour services" },
 ];
 
@@ -45,7 +47,7 @@ const credentials = [
     { icon: <LandmarkIcon size={28} />, title: "Ministry Licensed", desc: "All vehicles registered with the Saudi Ministry of Transport" },
     { icon: <ShieldIcon size={28} />, title: "Fully Insured", desc: "Comprehensive third-party insurance on every vehicle in our fleet" },
     { icon: <CheckCircleIcon size={28} />, title: "Driver Certified", desc: "Every driver holds a valid Saudi professional driving licence" },
-    { icon: <GlobeIcon size={28} />, title: "50+ Countries Served", desc: "Trusted by international travelers from over 50 countries" },
+    { icon: <GlobeIcon size={28} />, title: "Multilingual Team", desc: "We communicate with customers in Arabic, English, Urdu and Hindi" },
 ];
 
 export default function AboutUs() {
@@ -75,7 +77,7 @@ export default function AboutUs() {
                                 None of that scale matters without getting the basics right on every single trip: a driver who shows up on time, a vehicle that&apos;s clean and well maintained, a price agreed before you travel, and a team that speaks your language when it matters most. Those fundamentals — not scripted slogans — are what our drivers are trained on and held to.
                             </p>
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.8' }}>
-                                Today, we operate a fleet of 50+ vehicles and have proudly served more than 15,000 customers from over 50 countries. For travel tips and destination guides drawn from that experience, visit our <Link href="/blog" style={{ color: 'var(--accent)', fontWeight: 600 }}>travel blog</Link>.
+                                Our fleet ranges from sedans to minibuses, so the vehicle is matched to the group rather than the other way round. For travel tips and destination guides drawn from that experience, visit our <Link href="/blog" style={{ color: 'var(--accent)', fontWeight: 600 }}>travel blog</Link>.
                             </p>
                             <Link href="/book-online" className="btn btn-primary">Book Your Ride</Link>
                         </div>
@@ -140,7 +142,9 @@ export default function AboutUs() {
             {/* Stats */}
             <section style={{ background: 'var(--navy)', padding: '5rem 0' }}>
                 <div className="container">
-                    <div className="grid-4" style={{ textAlign: 'center' }}>
+                    {/* grid-2, not grid-4: two unverifiable stats were removed, and
+                        four columns holding two items leaves a visibly broken row. */}
+                    <div className="grid-2" style={{ textAlign: 'center' }}>
                         {stats.map((stat, i) => (
                             <div key={i}>
                                 <div style={{
@@ -262,12 +266,10 @@ export default function AboutUs() {
                             </div>
                         ))}
                     </div>
-                    {/* Aggregate Rating Display */}
-                    <div style={{ maxWidth: 600, margin: '0 auto', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-8)', textAlign: 'center', border: '1px solid var(--border-subtle)' }}>
-                        <div style={{ fontSize: 'var(--text-5xl)', fontWeight: 700, color: 'var(--accent)', lineHeight: 1 }}>4.9</div>
-                        <div style={{ color: 'var(--accent)', fontSize: '1.5rem', margin: 'var(--space-2) 0' }}>★★★★★</div>
-                        <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginBottom: 0 }}>Based on 847+ verified customer reviews across Google, TripAdvisor, and direct bookings</p>
-                    </div>
+                    {/* A 4.9 rating "based on 847+ verified reviews across Google,
+                        TripAdvisor and direct bookings" stood here. There were no
+                        such reviews. Removed rather than restated with a smaller
+                        number, because no number is verifiable today. */}
                 </div>
             </section>
 
@@ -276,7 +278,7 @@ export default function AboutUs() {
                 <div className="container">
                     <h2 style={{ color: 'var(--on-dark)', marginBottom: '1rem' }}>Book a Ride</h2>
                     <p style={{ color: 'var(--on-dark-muted)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-                        Join the 15,000+ satisfied customers who trust Gulf Trip Service for premium transportation across Saudi Arabia and the Gulf.
+                        Private transportation across Saudi Arabia and the Gulf, with a price agreed before you travel.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Link href="/book-online" className="btn btn-primary btn-lg">Book a Ride</Link>

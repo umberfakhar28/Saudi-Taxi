@@ -21,11 +21,14 @@ const services = [
   { icon: <GlobeIcon size={26} />, title: "عبور الحدود", desc: "رحلات مباشرة إلى البحرين وقطر عبر الجسر والحدود البرية." },
 ];
 
+/* Matches the English homepage: the unverifiable "+15,000 happy travellers"
+   and "100% satisfaction" were removed, and the same four confirmed facts
+   stand in their place. */
 const stats = [
-  { number: "+15,000", label: "مسافر سعيد" },
   { number: "+10", label: "سنوات خبرة" },
   { number: "24/7", label: "متوفرون دائماً" },
-  { number: "100%", label: "رضا العملاء" },
+  { number: "365", label: "يوماً في السنة" },
+  { number: "4", label: "لغات نتحدثها" },
 ];
 
 const whyUs = [
@@ -34,7 +37,7 @@ const whyUs = [
   "سائقون يتحدثون العربية والإنجليزية والأردية",
   "تحديثات فورية عبر واتساب لكل حجز",
   "سيارات سيدان ودفع رباعي وحافلات صغيرة حديثة",
-  "الدفع نقداً أو بالبطاقة أو إلكترونياً",
+  "الدفع نقداً بعد الوصول أو تحويلاً بنكياً أو بالبطاقة (تُضاف ١٥٪ ضريبة على البطاقة)",
 ];
 
 const homeSchemas = [

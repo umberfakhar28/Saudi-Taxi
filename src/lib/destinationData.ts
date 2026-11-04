@@ -364,10 +364,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Which Dubai airport do you cover?", a: "Both — Dubai International (DXB) and Al Maktoum International (DWC). Let us know your arrival airport when booking so pickup is arranged at the right terminal." },
       { q: "Can I book an hourly chauffeur instead of a one-way transfer?", a: "Yes, hourly and full-day chauffeur booking is available for business meetings or multi-stop sightseeing across Dubai's districts." },
     ],
-    reviews: [
-      { name: "Yousef A.", origin: "Business Traveler, Riyadh–Dubai", text: "Booked the Riyadh-to-Dubai road transfer for a work trip — driver was on time at both ends and the car was comfortable for the long drive." },
-      { name: "Fatima Z.", origin: "Family Visitor, Dubai", text: "Used the hourly chauffeur for a Downtown-to-Marina day with the kids. Much easier than juggling taxis between stops." },
-    ],
+    reviews: [],
   },
   "abu-dhabi": {
     slug: "abu-dhabi", name: "Abu Dhabi", country: "uae",
@@ -411,10 +408,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I visit the Grand Mosque, Louvre and Yas Island in one day?", a: "Yes, an hourly chauffeur is the practical way to combine all three without losing time between stops — they're each a real drive apart." },
       { q: "Do you run transfers between Abu Dhabi and Dammam?", a: "Yes, we operate direct road transfers connecting Abu Dhabi to Dammam and onward Saudi destinations." },
     ],
-    reviews: [
-      { name: "Khalid M.", origin: "Business Traveler, Dammam–Abu Dhabi", text: "Long road transfer but the driver kept us updated and the car was comfortable the whole way." },
-      { name: "Aisha R.", origin: "Leisure Visitor", text: "Driver planned the Grand Mosque and Louvre visit well so we weren't rushing between the two." },
-    ],
+    reviews: [],
   },
   sharjah: {
     slug: "sharjah", name: "Sharjah", country: "uae",
@@ -456,10 +450,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Is the Heritage Area walkable once we arrive?", a: "Yes — your driver will park nearby and wait while you explore the old town on foot at your own pace." },
       { q: "Can I combine a Sharjah and Dubai day trip?", a: "Yes, this is a common request — an hourly chauffeur suits a half-day museum circuit in Sharjah followed by an afternoon in Dubai." },
     ],
-    reviews: [
-      { name: "Hassan T.", origin: "Budget-Carrier Arrival, SHJ", text: "Landed at Sharjah on a budget flight and the driver was waiting right at arrivals — easy transfer to our Dubai hotel." },
-      { name: "Mona K.", origin: "Heritage Tour, Sharjah", text: "Quiet, well-paced visit to the Heritage Area — driver waited while we walked through without any rush." },
-    ],
+    reviews: [],
   },
   "ras-al-khaimah": {
     slug: "ras-al-khaimah", name: "Ras Al Khaimah", country: "uae",
@@ -500,10 +491,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I fly into Dubai and still visit RAK?", a: "Yes, we run transfers from Dubai International (DXB) directly to RAK's resorts and attractions, around an hour's drive." },
       { q: "Is a private transfer necessary to reach the beach resorts?", a: "It's the practical option — RAK's resorts and Jebel Jais sit apart from each other, roughly 45 minutes, so combining both in a day works best with a private vehicle." },
     ],
-    reviews: [
-      { name: "Salem A.", origin: "Adventure Traveler", text: "Driver knew the mountain road to Jebel Jais well and waited while we did the zipline." },
-      { name: "Layla H.", origin: "Resort Stay, Al Marjan Island", text: "Easy transfer straight from Dubai airport to our RAK resort, no changes needed." },
-    ],
+    reviews: [],
   },
 
   // ----------------------------------------------------------- Qatar -----
@@ -549,10 +537,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Do you meet arrivals at Hamad International Airport?", a: "Yes, with flight tracking and a name-board pickup, useful both for Doha stays and onward road travel toward Saudi Arabia." },
       { q: "Can I combine the Museum of Islamic Art and Souq Waqif in one trip?", a: "Yes, an hourly chauffeur suits a Museum–Souq Waqif–Katara day without booking separate one-way trips." },
     ],
-    reviews: [
-      { name: "Abdulrahman S.", origin: "Business Traveler, Riyadh–Doha", text: "Crossed via Salwa on a work trip — driver handled the border smoothly and we made our meeting on time." },
-      { name: "Noura F.", origin: "Museum Day, Doha", text: "Driver waited outside the Museum of Islamic Art and Souq Waqif so we could take our time at each stop." },
-    ],
+    reviews: [],
   },
   "the-pearl-qatar": {
     slug: "the-pearl-qatar", name: "The Pearl", country: "qatar",
@@ -592,10 +577,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I combine The Pearl with West Bay or Katara in one evening?", a: "Yes, an hourly chauffeur suits an evening moving between The Pearl's marina dining and other Doha districts." },
       { q: "Is it easy to get a taxi from The Pearl on the spot?", a: "Because it's reached by a single causeway road, a pre-arranged private transfer is more reliable than hailing a taxi from the island." },
     ],
-    reviews: [
-      { name: "Rania D.", origin: "Marina Dinner, The Pearl", text: "Driver waited outside our restaurant at Porto Arabia and got us back to our West Bay hotel without any hassle." },
-      { name: "Tariq B.", origin: "Airport Arrival", text: "Straightforward transfer from Hamad straight to our Pearl apartment, no issues finding the address." },
-    ],
+    reviews: [],
   },
   lusail: {
     slug: "lusail", name: "Lusail", country: "qatar",
@@ -635,10 +617,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "How far is Lusail from the airport?", a: "Roughly 30–35 minutes from Hamad International Airport (DOH), though this can extend on major event days." },
       { q: "Can I combine Lusail with central Doha?", a: "Yes, we run transfers connecting Lusail's Marina District with central Doha and The Pearl." },
     ],
-    reviews: [
-      { name: "Omar K.", origin: "Stadium Event, Lusail", text: "Driver planned around the event traffic and got us there with time to spare." },
-      { name: "Dana M.", origin: "Marina District Visit", text: "Comfortable ride from the airport straight to the Marina District, driver knew the new roads well." },
-    ],
+    reviews: [],
   },
   "al-wakrah": {
     slug: "al-wakrah", name: "Al Wakrah", country: "qatar",
@@ -678,10 +657,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I combine Al Wakrah with a trip into central Doha?", a: "Yes, a private transfer connects Al Wakrah directly to Doha's Corniche and West Bay districts." },
       { q: "What's there to see in Al Wakrah?", a: "The restored Souq Al Wakra heritage market, a quiet corniche, and Al Janoub Stadium — see the Attractions section above for details." },
     ],
-    reviews: [
-      { name: "Huda S.", origin: "Late Arrival, DOH", text: "Landed late and the driver was still waiting — short hop to our Al Wakrah hotel." },
-      { name: "Ibrahim N.", origin: "Souq Al Wakra Visit", text: "Quieter than central Doha, and the driver waited while we walked through the souq." },
-    ],
+    reviews: [],
   },
 
   // ---------------------------------------------------------- Bahrain ----
@@ -727,10 +703,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Do you meet arrivals at Bahrain International Airport?", a: "Yes, with flight tracking and a name-board pickup at BAH arrivals." },
       { q: "Can I combine Manama with Bahrain Fort in one day?", a: "Yes, an hourly chauffeur works well for a Manama-plus-Bahrain-Fort day trip." },
     ],
-    reviews: [
-      { name: "Faisal M.", origin: "Causeway Traveler, Dammam–Manama", text: "Smooth causeway crossing and the driver knew exactly where to go on the Bahrain side." },
-      { name: "Layla H.", origin: "City Break, Manama", text: "Compact city, easy to see the souq and World Trade Center towers in one afternoon with our driver." },
-    ],
+    reviews: [],
   },
   muharraq: {
     slug: "muharraq", name: "Muharraq", country: "bahrain",
@@ -771,10 +744,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I combine Muharraq with Manama in one trip?", a: "Yes, they sit directly across a short bridge from each other — the Pearling Trail on one side, the World Trade Center and souq on the other." },
       { q: "Do you offer transfers to Muharraq from Saudi Arabia?", a: "Yes, via the King Fahd Causeway, alongside standard airport transfers." },
     ],
-    reviews: [
-      { name: "Sara A.", origin: "Airport Arrival, BAH", text: "Barely any drive at all from the airport to our Muharraq hotel — very convenient." },
-      { name: "Yusuf T.", origin: "Pearling Trail Walk", text: "Driver waited patiently while we walked the whole Pearling Trail, then took us straight to Manama after." },
-    ],
+    reviews: [],
   },
   "amwaj-islands": {
     slug: "amwaj-islands", name: "Amwaj Islands", country: "bahrain",
@@ -814,10 +784,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I split my stay between Amwaj and Manama?", a: "Yes, a private transfer connects Amwaj directly into Manama for those splitting time between beach and city sightseeing." },
       { q: "Are the beach clubs open to visitors staying elsewhere?", a: "Several of Amwaj's beach clubs welcome day visitors — check with your chosen club directly, and we can arrange the transfer there." },
     ],
-    reviews: [
-      { name: "Nadia F.", origin: "Beach Stay, Amwaj", text: "Quick transfer from the airport straight to our resort — nice change of pace from Manama." },
-      { name: "Ahmed J.", origin: "Amwaj–Manama Day", text: "Driver took us from the beach club to dinner in Manama without any trouble." },
-    ],
+    reviews: [],
   },
   zallaq: {
     slug: "zallaq", name: "Zallaq", country: "bahrain",
@@ -857,10 +824,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "How far is Zallaq from the airport?", a: "Roughly 30–35 minutes from Bahrain International Airport, further out than Manama or Muharraq." },
       { q: "Are Zallaq's beaches open to day visitors?", a: "Al Jazayer Beach is a public beach, and several resort hotels along the coast offer day access — ask when booking." },
     ],
-    reviews: [
-      { name: "Mariam Q.", origin: "Grand Prix Weekend", text: "Traffic around the circuit was heavy but our driver adjusted the route and got us there on time." },
-      { name: "Bader S.", origin: "Beach Resort Stay", text: "Quiet stretch of coast, and the transfer from the airport was straightforward despite the distance." },
-    ],
+    reviews: [],
   },
 
   // ------------------------------------------------------------ Oman -----
@@ -903,10 +867,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I see the Grand Mosque, Old Muscat and Mutrah in one day?", a: "Yes, an hourly chauffeur suits a full-day circuit through all three, given how spread out Muscat's districts are." },
       { q: "What time can I visit the Sultan Qaboos Grand Mosque?", a: "Non-Muslim visitors are generally welcome in the mornings — check current visiting hours before your trip, as they can change." },
     ],
-    reviews: [
-      { name: "Zainab R.", origin: "Heritage Day, Muscat", text: "Driver planned the Grand Mosque visit for the morning window and then took us on to Mutrah Souq." },
-      { name: "Talal O.", origin: "Business Traveler", text: "Muscat's districts are more spread out than I expected — having a driver on call all day made the meetings much easier." },
-    ],
+    reviews: [],
   },
   salalah: {
     slug: "salalah", name: "Salalah", country: "oman",
@@ -946,10 +907,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Do you run day trips to Wadi Darbat?", a: "Yes, an hourly chauffeur is especially useful during Khareef season for a Wadi Darbat and coastal waterfalls day trip." },
       { q: "Do you meet arrivals at Salalah Airport?", a: "Yes, we track flights into Salalah Airport (SLL) and meet arrivals directly." },
     ],
-    reviews: [
-      { name: "Amina S.", origin: "Khareef Season Visitor", text: "Glad we booked ahead — the driver mentioned taxis get scarce during Khareef and ours was waiting right on time." },
-      { name: "Rashid B.", origin: "Wadi Darbat Day Trip", text: "Driver adjusted the route slightly for the wet season roads and got us to the waterfalls safely." },
-    ],
+    reviews: [],
   },
   nizwa: {
     slug: "nizwa", name: "Nizwa", country: "oman",
@@ -989,10 +947,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I visit Jabal Akhdar from Nizwa?", a: "Yes, with a private driver or 4x4 where the terrain requires it — an hourly or full-day charter suits a Muscat–Nizwa–Jabal Akhdar loop." },
       { q: "Is the Nizwa Souq open every day?", a: "The souq operates daily, with its well-known livestock auction specifically on Friday mornings." },
     ],
-    reviews: [
-      { name: "Waleed H.", origin: "Muscat–Nizwa Day Trip", text: "Ninety-minute drive from Muscat went smoothly, and the driver knew the mountain roads up toward Jabal Akhdar." },
-      { name: "Salma K.", origin: "Friday Souq Visit", text: "Timed our trip for the Friday livestock souq and the driver got us there right as it opened." },
-    ],
+    reviews: [],
   },
   sur: {
     slug: "sur", name: "Sur", country: "oman",
@@ -1032,10 +987,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I stop at the Bimmah Sinkhole on the way?", a: "Yes, it's a popular stop roughly halfway between Muscat and Sur and easy to build into your itinerary." },
       { q: "Can you arrange the trip to Ras Al Jinz Turtle Reserve?", a: "Yes, it's about 40 minutes from Sur — we can include it as part of your Sur day trip or overnight stop." },
     ],
-    reviews: [
-      { name: "Fahad M.", origin: "Muscat–Sur Day Trip", text: "Long drive but the driver planned stops at the Bimmah Sinkhole so it never felt like just a transfer." },
-      { name: "Reem A.", origin: "Turtle Reserve Visit", text: "Comfortable full-day charter — dhow shipyard in the morning, turtle reserve at Ras Al Jinz in the afternoon." },
-    ],
+    reviews: [],
   },
 
   // ----------------------------------------------------------- Kuwait ----
@@ -1084,10 +1036,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Do you meet arrivals at Kuwait International Airport?", a: "Yes, with real-time flight tracking and a name-board pickup straight to a private vehicle." },
       { q: "Can I book a chauffeur for a business day across the city?", a: "Yes, an hourly chauffeur suits business travel between Kuwait City's commercial towers, or a sightseeing day combining the Towers, souq and museum." },
     ],
-    reviews: [
-      { name: "Meshal A.", origin: "Business Traveler, Dammam–Kuwait", text: "Crossed via Khafji for a work trip — driver handled the paperwork stop smoothly and we were on schedule." },
-      { name: "Farah I.", origin: "City Sightseeing, Kuwait City", text: "Driver combined the Kuwait Towers, souq and museum into one easy afternoon." },
-    ],
+    reviews: [],
   },
   salmiya: {
     slug: "salmiya", name: "Salmiya", country: "kuwait",
@@ -1127,10 +1076,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I combine Salmiya dining with a downtown Kuwait City visit?", a: "Yes, an hourly chauffeur suits an evening moving between Salmiya's corniche dining and downtown sights." },
       { q: "Is Salmiya walkable along the corniche?", a: "Yes, the corniche itself is a popular walk — your driver can drop you at one end and meet you further along if you'd like to explore on foot." },
     ],
-    reviews: [
-      { name: "Dalal Y.", origin: "Dining Evening, Salmiya", text: "Driver dropped us at the corniche and picked us back up after dinner without any wait." },
-      { name: "Nasser Q.", origin: "Airport Arrival", text: "Quick, comfortable transfer from the airport straight to our Salmiya hotel." },
-    ],
+    reviews: [],
   },
   "al-shaheed-park": {
     slug: "al-shaheed-park", name: "Al Shaheed Park", country: "kuwait",
@@ -1170,10 +1116,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can I combine Al Shaheed Park with other downtown sights?", a: "Yes, it sits close to Kuwait City's downtown core, easily combined with the Kuwait Towers and Souq Al-Mubarakiya in the same trip." },
       { q: "Is there parking near the park for a driver to wait?", a: "Yes, your driver can wait nearby or arrange a set return time while you explore the gardens and museums." },
     ],
-    reviews: [
-      { name: "Bashar E.", origin: "Downtown Circuit, Kuwait City", text: "Driver combined Al Shaheed Park with the Kuwait Towers and old souq in one well-paced afternoon." },
-      { name: "Wafa L.", origin: "Museum Visit", text: "Easy to reach from our hotel and the driver waited while we went through the museum." },
-    ],
+    reviews: [],
   },
   "failaka-island": {
     slug: "failaka-island", name: "Failaka Island", country: "kuwait",
@@ -1213,10 +1156,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { q: "Can you help me catch the ferry on time?", a: "Yes, a pre-arranged transfer to the terminal is particularly useful for making a specific sailing time." },
       { q: "Can I combine Failaka with other Kuwait City sightseeing?", a: "Yes, many visitors combine a Failaka day trip with Kuwait City sights on the same day — let us know when booking." },
     ],
-    reviews: [
-      { name: "Adel R.", origin: "Ferry Day Trip", text: "Driver got us to the ferry terminal with plenty of time before our sailing to Failaka." },
-      { name: "Shaikha M.", origin: "History Day Trip", text: "Interesting to see the old ruins and abandoned village — transfer to and from the terminal was smooth both ways." },
-    ],
+    reviews: [],
   },
 };
 

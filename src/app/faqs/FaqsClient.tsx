@@ -42,7 +42,7 @@ const faqCategories = [
             },
             {
                 question: "What payment methods do you accept?",
-                answer: "We accept Cash (SAR), credit and debit cards (Visa, Mastercard), bank transfers, and mobile payments (Apple Pay, STC Pay, mada). You can pay in advance online or pay the driver directly in cash — your choice!",
+                answer: "Three ways: cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments, on top of the quoted fare — cash and bank transfer are charged at the quoted price. No advance payment is required to confirm a booking.",
             },
             {
                 question: "Do I need to pay a deposit?",

@@ -86,10 +86,7 @@ export const dammamAirportToBahrain: RouteData = {
   ],
   ctaText: "Ready to Cross to Bahrain?",
   lastReviewed: "August 2026",
-  reviews: [
-    { name: "Faisal M.", origin: "Business Traveler, Dammam", text: "Driver was waiting right at arrivals and handled the causeway paperwork like clockwork." },
-    { name: "Layla H.", origin: "Weekend Visitor, Khobar", text: "Straight from the airport to our hotel in Manama — the causeway crossing was handled for us and we stayed in the same car." },
-  ],
+  reviews: [],
 };
 
 /* ── 2. Dammam Airport → Khafji ─────────────────────────────── */
@@ -146,10 +143,7 @@ export const dammamAirportToKhafji: RouteData = {
     { title: "No border on this leg", note: "Khafji is inside Saudi Arabia, so this is a domestic transfer only — the border formalities begin on the separate Khafji to Kuwait leg." },
     { title: "KJO shift patterns", note: "If you're a KJO contractor, let us know your shift schedule — pickup times outside standard hours are routine on this corridor." },
   ],
-  reviews: [
-    { name: "Yusuf T.", origin: "KJO Contractor, Netherlands", text: "Regular airport-to-Khafji run for me — always on time, always the same reliable driver network." },
-    { name: "Nadia S.", origin: "Traveler, Dammam", text: "Comfortable coastal drive, and the driver knew exactly where to find our compound." },
-  ],
+  reviews: [],
 };
 
 /* ── 3. Dammam Airport → Qatar ──────────────────────────────── */
@@ -216,10 +210,7 @@ export const dammamAirportToQatar: RouteData = {
   stops: [
     { name: "Al-Ahsa / Hofuf", note: "A scheduled midway rest stop on longer journeys — fuel, food, and prayer facilities along the route." },
   ],
-  reviews: [
-    { name: "Omar K.", origin: "Business Traveler, Dammam", text: "One driver the entire way to Doha — no layovers, no airport transfers to arrange on either end." },
-    { name: "Reem A.", origin: "Event Attendee, Al Khobar", text: "Booked for a conference weekend — smooth border crossing and the driver knew exactly where our hotel was in West Bay." },
-  ],
+  reviews: [],
 };
 
 /* ── 4. Dammam Airport → Riyadh ─────────────────────────────── */
@@ -280,10 +271,7 @@ export const dammamAirportToRiyadh: RouteData = {
     { title: "Luggage-heavy arrivals", note: "This route is popular with travelers carrying more luggage than a domestic flight allows — the trunk space is factored in when we assign your vehicle." },
     { title: "Overnight flights", note: "We run this transfer 24/7 — a late-night DMM arrival means lighter Highway 40 traffic into Riyadh." },
   ],
-  reviews: [
-    { name: "Khalid B.", origin: "Executive, Riyadh", text: "Landed late and still had a smooth, quiet drive into the city — driver had water and phone chargers ready." },
-    { name: "Priya N.", origin: "Family Traveler, UK", text: "Four of us plus luggage fit comfortably in the SUV — much easier than a connecting flight would have been." },
-  ],
+  reviews: [],
 };
 
 /* ── 5. Bahrain → Dammam ────────────────────────────────────── */
@@ -359,10 +347,7 @@ export const bahrainToDammam: RouteData = {
   ],
   ctaText: "Book Your Crossing to Dammam",
   lastReviewed: "August 2026",
-  reviews: [
-    { name: "Ahmed S.", origin: "Shopper, Manama", text: "Picked up at our building in Manama and dropped at the mall in Khobar — the causeway paperwork was handled and we barely stopped." },
-    { name: "Grace L.", origin: "Expat, Bahrain", text: "Booked for a family visit to Khobar — punctual on both sides of the border." },
-  ],
+  reviews: [],
 };
 
 /* ── 5b. Bahrain → Jubail ───────────────────────────────────────
@@ -500,10 +485,7 @@ export const qatarToRiyadh: RouteData = {
   stops: [
     { name: "Al-Ahsa area", note: "Scheduled rest stop roughly midway through Saudi Arabia, after clearing the Salwa border." },
   ],
-  reviews: [
-    { name: "Hassan D.", origin: "Diplomatic Staff, Doha", text: "Arranged a two-vehicle convoy for our delegation — both drivers stayed in contact and arrived within minutes of each other." },
-    { name: "Aisha F.", origin: "Business Traveler, Riyadh", text: "Long drive but genuinely comfortable — reclining seats made a real difference over 7 hours." },
-  ],
+  reviews: [],
 };
 
 /* ── 7. Khafji → Kuwait ─────────────────────────────────────── */
@@ -637,10 +619,7 @@ export const riyadhToBahrain: RouteData = {
   stops: [
     { name: "Al-Ahsa / Dammam corridor", note: "Scheduled rest stop on the long drive east, before the causeway crossing into Bahrain." },
   ],
-  reviews: [
-    { name: "Sultan M.", origin: "Race Weekend Visitor, Riyadh", text: "Booked around the Grand Prix — driver planned around the extra causeway traffic and we still arrived on schedule." },
-    { name: "Noura K.", origin: "Family Traveler, Riyadh", text: "Executive sedan made the 5-hour drive genuinely restful, and the causeway crossing was straightforward." },
-  ],
+  reviews: [],
 };
 
 /* ── 9. Dammam → Kuwait ─────────────────────────────────────── */
@@ -914,10 +893,7 @@ export const qatarToDammam: RouteData = {
   ],
   ctaText: "Book Your Dammam Transfer",
   lastReviewed: "August 2026",
-  reviews: [
-    { name: "Fahad Q.", origin: "Business Traveler, Doha", text: "One driver door-to-door — no changing vehicles at the border made this far less hassle than I expected." },
-    { name: "Mona Z.", origin: "Family Visit, Dammam", text: "Comfortable ride and the driver kept us informed about the border wait before we even got there." },
-  ],
+  reviews: [],
 };
 
 /* ── 13. Dammam → Abu Dhabi ─────────────────────────────────── */
@@ -988,10 +964,7 @@ export const dammamToAbuDhabi: RouteData = {
     { title: "This is a genuine long-haul drive", note: "Nearly 950 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
     { title: "Overnight departure option", note: "Leaving in the evening avoids daytime heat and traffic on the long coastal stretch." },
   ],
-  reviews: [
-    { name: "Yousef R.", origin: "Delegation Member, Dammam", text: "A genuinely long drive, but the luxury SUV and scheduled breaks made it manageable for our whole group." },
-    { name: "Claire B.", origin: "Family Traveler, UK", text: "We had too much luggage for a connecting flight — this was exactly what we needed." },
-  ],
+  reviews: [],
 };
 
 /* ── 14. Dammam → Dubai ─────────────────────────────────────── */
@@ -1062,10 +1035,7 @@ export const dammamToDubai: RouteData = {
     { title: "This is a genuine long-haul drive", note: "Over 1,100 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
     { title: "Plan for a full day", note: "11.5–13 hours means this is realistically a full-day journey — we build the schedule around your preferred arrival time." },
   ],
-  reviews: [
-    { name: "Abdullah N.", origin: "Corporate Group, Dammam", text: "Long journey but the executive vehicles were genuinely comfortable, and the border crossing was handled smoothly." },
-    { name: "Elena V.", origin: "Family Traveler, Dubai", text: "We specifically wanted to avoid flying with young kids and multiple bags — this made it stress-free." },
-  ],
+  reviews: [],
 };
 
 /* ── 15. Dubai → Dammam ─────────────────────────────────────── */
@@ -1131,10 +1101,7 @@ export const dubaiToDammam: RouteData = {
   stops: [
     { name: "Scheduled rest stop", note: "One or more breaks are built into this ~1,100 km drive via Abu Dhabi and the Ghuwaifat border." },
   ],
-  reviews: [
-    { name: "Marcus P.", origin: "Business Traveler, Dubai", text: "Long drive, but I got a full day of work done thanks to the WiFi and reclining seats." },
-    { name: "Aaliyah K.", origin: "Family Traveler, Abu Dhabi", text: "The rest stops were well timed — kids and adults both arrived in Dammam in good shape." },
-  ],
+  reviews: [],
 };
 
 /* ── 16. Bahrain → Riyadh ───────────────────────────────────── */
@@ -1197,10 +1164,7 @@ export const bahrainToRiyadh: RouteData = {
   ],
   ctaText: "Book Your Riyadh Transfer",
   lastReviewed: "August 2026",
-  reviews: [
-    { name: "Rashid A.", origin: "Government Official, Manama", text: "Crossing the causeway was seamless, and the long drive on to Riyadh ran exactly as promised." },
-    { name: "Zainab O.", origin: "Family Visit, Riyadh", text: "Long drive but the executive sedan was genuinely comfortable — worth it for the door-to-door convenience." },
-  ],
+  reviews: [],
 };
 
 /* ── 17. Riyadh → Dubai ─────────────────────────────────────── */
@@ -1271,10 +1235,7 @@ export const riyadhToDubai: RouteData = {
   practicalInfo: [
     { title: "This is a genuine long-haul drive", note: "Over 1,100 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
   ],
-  reviews: [
-    { name: "Sami L.", origin: "Corporate Delegation, Riyadh", text: "Booked a multi-vehicle convoy for our team — every car stayed coordinated the entire way to Dubai." },
-    { name: "Farah I.", origin: "Family Traveler, Riyadh", text: "The luxury SUV made the long haul genuinely pleasant, and the driver planned stops around prayer times without us asking." },
-  ],
+  reviews: [],
 };
 
 /* ── 18. Dubai → Riyadh ─────────────────────────────────────── */
@@ -1338,10 +1299,7 @@ export const dubaiToRiyadh: RouteData = {
   ],
   ctaText: "Book Your Riyadh Transfer",
   lastReviewed: "August 2026",
-  reviews: [
-    { name: "Hamdan Y.", origin: "Business Traveler, Dubai", text: "Comfortable executive vehicle for the long drive, and the Ghuwaifat crossing was handled without any confusion." },
-    { name: "Sara W.", origin: "Family Traveler, Dubai", text: "We preferred one car the whole way rather than flying with the kids — this delivered exactly that." },
-  ],
+  reviews: [],
 };
 
 /* ── 19. Jeddah → Makkah ────────────────────────────────────── */
@@ -1406,10 +1364,7 @@ export const jeddahToMakkah: RouteData = {
     { title: "Ihram timing", note: "If you're beginning Ihram at the Jeddah airport Miqat, let your driver know before you land so pickup is planned around it rather than after." },
     { title: "Ramadan and Hajj season", note: "This is the busiest corridor in the Kingdom during Ramadan evenings and the weeks around Hajj — build in extra time on those dates." },
   ],
-  reviews: [
-    { name: "Yasin B.", origin: "Umrah Pilgrim, Turkey", text: "Landed exhausted after a long flight and the driver had everything sorted — straight to our Makkah hotel." },
-    { name: "Amira D.", origin: "Family Pilgrim, Jeddah", text: "Ihram-friendly vehicle and a driver who understood exactly what our trip needed." },
-  ],
+  reviews: [],
 };
 
 /* ── 20. Makkah → Madinah ───────────────────────────────────── */
@@ -1468,10 +1423,7 @@ export const makkahToMadinah: RouteData = {
   stops: [
     { name: "Badr Battlefield (optional)", note: "A popular optional stop at the historic site of the Battle of Badr, mentioned when booking so we can plan the extra time in." },
   ],
-  reviews: [
-    { name: "Idris K.", origin: "Umrah Pilgrim, Nigeria", text: "The Badr stop was a genuine highlight — not something a fixed-schedule bus tour would have offered." },
-    { name: "Mei L.", origin: "Family Pilgrim, Malaysia", text: "Spacious van for our group of six, and the driver timed the drive around our prayer schedule." },
-  ],
+  reviews: [],
 };
 
 /* ── 21. Riyadh → Dammam ────────────────────────────────────── */
@@ -1540,10 +1492,7 @@ export const riyadhToDammam: RouteData = {
     { title: "Best departure window", note: "Weekday mornings (6:00–7:00 AM) arrive fresh for meetings; Thursday evenings see the heaviest weekend traffic." },
     { title: "Onboard connectivity", note: "Executive Sedan, Business SUV and Luxury Van bookings include WiFi — standard vehicles work fine with phone tethering." },
   ],
-  reviews: [
-    { name: "Turki A.", origin: "Executive, Riyadh", text: "Got two calls and an email review done during the drive — the WiFi genuinely worked the whole way." },
-    { name: "Lindsey C.", origin: "Consultant, USA", text: "Booked this weekly for a project — always the same standard of vehicle and punctuality." },
-  ],
+  reviews: [],
 };
 
 /* ── 22. Makkah → Jeddah (W7 P1 reciprocal) ─────────────────── */
@@ -1602,10 +1551,7 @@ export const makkahToJeddah: RouteData = {
     { title: "Departure buffer", note: "Leave Makkah at least 3.5 hours before an international KAIA departure to cover the drive plus check-in and security." },
     { title: "Tawaf al-Wada timing", note: "Tell us if you need the driver to wait while you complete your farewell Tawaf — we build reasonable waiting time into the plan." },
   ],
-  reviews: [
-    { name: "Junaid R.", origin: "Umrah Pilgrim, Pakistan", text: "Driver waited patiently while we finished our farewell Tawaf, then got us to KAIA with time to spare." },
-    { name: "Chloe P.", origin: "Traveler, France", text: "Used this for a Jeddah stopover before flying out the next day — smooth, no rush." },
-  ],
+  reviews: [],
 };
 
 /* ── 23. Madinah → Makkah (W7 P1 reciprocal) ────────────────── */
@@ -1663,10 +1609,7 @@ export const madinahToMakkah: RouteData = {
   stops: [
     { name: "Dhul Hulaifah / Abyar Ali (Miqat)", note: "The mandatory Miqat for pilgrims departing Madinah — built into every booking, with time to change into Ihram and pray before continuing." },
   ],
-  reviews: [
-    { name: "Zakaria E.", origin: "Umrah Pilgrim, Morocco", text: "The Miqat stop was handled with real care — no rushing, the driver waited until we were ready." },
-    { name: "Ingrid S.", origin: "Family Pilgrim, Sweden", text: "Everyone in Ihram, plenty of room in the van, and a driver who clearly understood the etiquette involved." },
-  ],
+  reviews: [],
 };
 
 /* ── 24. Dammam → Riyadh (W7 P1 reciprocal, general city-to-city) ── */
@@ -1726,10 +1669,7 @@ export const dammamToRiyadh: RouteData = {
     { title: "Sunday traffic", note: "Sunday mornings see the heaviest traffic out of Dammam as the work week starts — an earlier departure or Saturday travel avoids most of it." },
     { title: "Onboard connectivity", note: "Executive Sedan, Business SUV and Luxury Van bookings include WiFi and charging points for the 4-hour drive." },
   ],
-  reviews: [
-    { name: "Rania G.", origin: "Aramco Staff, Dhahran", text: "Regular trip for head-office meetings — the WiFi and charging ports make the drive productive rather than dead time." },
-    { name: "Mark T.", origin: "Industrial Sector, UK", text: "Booked a corporate account for our team's Riyadh trips — consolidated billing made expense reports much simpler." },
-  ],
+  reviews: [],
 };
 
 /* ── 25. Riyadh → Dammam Airport (W7 P1 reciprocal) ─────────── */
@@ -1786,10 +1726,7 @@ export const riyadhToDammamAirport: RouteData = {
   stops: [
     { name: "Al-Ahsa / Hofuf", note: "Optional midway rest stop if requested, or continue non-stop if your flight timing is tight." },
   ],
-  reviews: [
-    { name: "Ziad H.", origin: "Business Traveler, Riyadh", text: "Left with plenty of buffer time and the driver kept an eye on the clock the whole way — made my flight comfortably." },
-    { name: "Naomi F.", origin: "Consultant, USA", text: "Regular route for me — always the same reliable timing whether I'm heading to a domestic or international flight." },
-  ],
+  reviews: [],
 };
 
 /* ── 26. Jeddah Airport → Madinah (W7 P1, new — Madinah-first Umrah itinerary) ── */
@@ -1849,10 +1786,7 @@ export const jeddahAirportToMadinah: RouteData = {
     { title: "No Ihram needed yet", note: "Your Miqat comes later on the Madinah-to-Makkah leg — this transfer is an ordinary highway drive, no special preparation required." },
     { title: "Ramadan and Hajj season", note: "The coastal route gets busier during Ramadan and the weeks around Hajj — build in extra time on those dates." },
   ],
-  reviews: [
-    { name: "Bilal R.", origin: "Umrah Pilgrim, UK", text: "Chose the Madinah-first route and this transfer made the logistics genuinely simple — straight from arrivals to our hotel." },
-    { name: "Sumaya A.", origin: "Family Pilgrim, Egypt", text: "Comfortable drive after a long flight, and the driver already had our onward Madinah-to-Makkah leg noted." },
-  ],
+  reviews: [],
 };
 
 /* ── 27. Riyadh → Makkah (W7 P1, new — long-distance Umrah) ── */
@@ -1913,10 +1847,7 @@ export const riyadhToMakkah: RouteData = {
   practicalInfo: [
     { title: "Consider flying for a quick trip", note: "At ~870 km, solo travelers in a hurry are usually better served flying into Jeddah or Madinah and taking a shorter connecting transfer." },
   ],
-  reviews: [
-    { name: "Anas M.", origin: "Umrah Pilgrim, Riyadh", text: "Correct Miqat, no confusion, and the SUV was comfortable for the long desert crossing." },
-    { name: "Grace O.", origin: "Family Pilgrim, Riyadh", text: "Our whole family made the trip together in the van — the driver planned rest breaks around prayer times." },
-  ],
+  reviews: [],
 };
 
 /* ── 28. Riyadh → Qatar (W7 P1 reciprocal — the "Riyadh↔Doha" gap) ── */
@@ -1988,10 +1919,7 @@ export const riyadhToQatar: RouteData = {
   stops: [
     { name: "Al-Ahsa area", note: "A scheduled rest stop roughly midway through Saudi Arabia, before the Salwa border crossing." },
   ],
-  reviews: [
-    { name: "Nawaf I.", origin: "Business Traveler, Riyadh", text: "Attended a Doha event and this was far more convenient than flying — one driver, one vehicle, no layovers." },
-    { name: "Heba S.", origin: "Family Traveler, Riyadh", text: "Long drive, but the rest stop and executive seating made it manageable with young kids." },
-  ],
+  reviews: [],
 };
 
 /* ── 29. Khafji → Dammam Airport (W7 P1.5 reciprocal) ───────── */
@@ -2044,10 +1972,7 @@ export const khafjiToDammamAirport: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Dammam Airport Transfer",
-  reviews: [
-    { name: "Adel W.", origin: "KJO Staff, Khafji", text: "Regular flight-out trip for me — driver always tracks my flight and times the pickup perfectly." },
-    { name: "Petra M.", origin: "Contractor, Netherlands", text: "Straightforward coastal drive with no border stops to worry about, and we made check-in comfortably." },
-  ],
+  reviews: [],
 };
 
 /* ── 30. Kuwait → Khafji (W7 P1.5 reciprocal) ───────────────── */
@@ -2255,10 +2180,7 @@ export const abuDhabiToDammam: RouteData = {
   stops: [
     { name: "Scheduled rest stop", note: "One or more breaks are built into this ~950 km drive along the Gulf coastal highway toward the Eastern Province." },
   ],
-  reviews: [
-    { name: "Khalifa S.", origin: "Corporate Group, Abu Dhabi", text: "Executive vehicles made the long drive genuinely comfortable, and the border crossing into Saudi Arabia was straightforward." },
-    { name: "Meera J.", origin: "Family Traveler, Abu Dhabi", text: "We wanted one private journey rather than flights and transfers on both ends — this delivered exactly that." },
-  ],
+  reviews: [],
 };
 
 /* ── 33. Madinah → Jeddah Airport (closes the Jeddah Airport↔Madinah pair) ── */
@@ -2314,10 +2236,7 @@ export const madinahToJeddahAirport: RouteData = {
   practicalInfo: [
     { title: "Departure buffer", note: "Leave Madinah at least 8 hours before an international KAIA departure to cover the 4.5-hour drive plus check-in and security." },
   ],
-  reviews: [
-    { name: "Tariq F.", origin: "Umrah Pilgrim, Jordan", text: "Ended our trip in Madinah and this got us to KAIA with plenty of time — no last-minute stress before a long flight." },
-    { name: "Nour H.", origin: "Family Pilgrim, Lebanon", text: "Driver planned the pickup around our exact flight time rather than a generic slot — appreciated the attention to detail." },
-  ],
+  reviews: [],
 };
 
 /* ── 34. Makkah → Riyadh (closes the Riyadh↔Makkah pair) ────── */
@@ -2375,10 +2294,7 @@ export const makkahToRiyadh: RouteData = {
   practicalInfo: [
     { title: "Consider flying for a quick trip", note: "At ~870 km, solo travelers in a hurry are usually better served flying out of Jeddah or Madinah." },
   ],
-  reviews: [
-    { name: "Osama K.", origin: "Umrah Pilgrim, Riyadh", text: "Comfortable return leg after completing Umrah — no Ihram fuss on the way home, just a smooth long drive." },
-    { name: "Wafa D.", origin: "Family Pilgrim, Riyadh", text: "Same driver we had on the outbound trip requested for the return — made the whole experience feel personal." },
-  ],
+  reviews: [],
 };
 
 export const allRoutes: RouteData[] = [

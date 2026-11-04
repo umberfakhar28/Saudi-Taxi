@@ -4,12 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
-const bookingSummary = {
-    service: "Airport Transfer — Jeddah Airport → Makkah",
-    date: "To be selected during booking",
-    passengers: "1-4",
-    price: "150 SAR",
-};
+/* A hardcoded sample booking lived here — a fixed route, a fixed passenger
+   count and a fixed 150 SAR fare, shown identically to everyone. It is gone
+   rather than left unused: a stray sample price in the source is exactly the
+   kind of thing that gets wired back into a real summary by accident. */
 
 export default function CheckoutClient() {
     const [formData, setFormData] = useState({
@@ -125,23 +123,37 @@ export default function CheckoutClient() {
                             <div className="card">
                                 <h3 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Order Summary</h3>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {/* Was "Airport Transfer — Jeddah Airport → Makkah,
+                                        Passengers: 1-4" for every visitor, whatever they
+                                        had actually asked for. Nothing here receives the
+                                        real request, so it no longer pretends to. */}
                                     <div style={{ padding: '1rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
-                                        <p style={{ fontWeight: 600, color: 'var(--text-dark)', marginBottom: '0.25rem', fontSize: '0.95rem' }}>{bookingSummary.service}</p>
-                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Passengers: {bookingSummary.passengers}</p>
+                                        <p style={{ fontWeight: 600, color: 'var(--text-dark)', marginBottom: '0.25rem', fontSize: '0.95rem' }}>Your requested trip</p>
+                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>As entered in the form, and confirmed with you before travel.</p>
                                     </div>
+                                    {/* This block used to show "Service Fee 150 SAR",
+                                        "VAT (15%) 22.5 SAR" and "Total 172.5 SAR" as
+                                        hardcoded literals — the same three numbers for
+                                        every visitor, regardless of route, vehicle or
+                                        dates, and nothing computed them. It also charged
+                                        VAT on every payment method, when VAT applies only
+                                        to card and payment-link payments.
+
+                                        No calculation was changed, because there was no
+                                        calculation: invented totals were replaced with
+                                        what is actually true at this point in the flow. */}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <span style={{ color: 'var(--text-muted)' }}>Service Fee</span>
-                                        <span style={{ fontWeight: 600 }}>{bookingSummary.price}</span>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <span style={{ color: 'var(--text-muted)' }}>VAT (15%)</span>
-                                        <span style={{ fontWeight: 600 }}>22.5 SAR</span>
+                                        <span style={{ color: 'var(--text-muted)' }}>Your fare</span>
+                                        <span style={{ fontWeight: 600 }}>Confirmed by our team</span>
                                     </div>
                                     <div style={{ height: '1px', background: 'var(--gray-200)' }} />
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Total</span>
-                                        <span style={{ fontWeight: 700, color: 'var(--secondary)', fontSize: '1.2rem', fontFamily: 'var(--font-heading)' }}>172.5 SAR</span>
-                                    </div>
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0, lineHeight: 1.7 }}>
+                                        We confirm the price with you before you travel. Pay cash to
+                                        your driver after drop-off, or by bank transfer after pickup,
+                                        at the agreed price. If you prefer to pay by card or payment
+                                        link, an additional 15% VAT applies. No advance payment is
+                                        required.
+                                    </p>
                                 </div>
                             </div>
 

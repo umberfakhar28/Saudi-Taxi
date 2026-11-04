@@ -174,14 +174,17 @@ export default function ArContactUsClient() {
                         <div className={styles.formInfo}>
                             <h2>أرسل لنا رسالة</h2>
                             <p>
-                                املأ النموذج وسيتواصل معك فريقنا خلال 24 ساعة. للاستفسارات العاجلة، يرجى الاتصال بنا أو التواصل عبر واتساب مباشرة.
+                                املأ النموذج وسيتواصل معك فريقنا في أقرب وقت ممكن. للاستفسارات العاجلة، يرجى الاتصال بنا أو التواصل عبر واتساب مباشرة.
                             </p>
                             <div className={styles.infoList}>
                                 <div className={styles.infoItem}>
                                     <div className={styles.infoIconWrapper}><ClockIcon size={20} /></div>
                                     <div>
+                                        {/* Mirrors the English page: both the "24 hours"
+                                            and "30 minutes" promises were removed, since
+                                            neither was confirmed. */}
                                         <strong>وقت الاستجابة</strong>
-                                        <p>خلال 30 دقيقة (ساعات العمل)</p>
+                                        <p>في أقرب وقت ممكن</p>
                                     </div>
                                 </div>
                                 <div className={styles.infoItem}>

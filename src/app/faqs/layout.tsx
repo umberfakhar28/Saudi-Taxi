@@ -14,7 +14,9 @@ const SCHEMA_FAQS = [
     { question: "Are your drivers licensed and professional?", answer: "All our drivers are licensed by the Saudi Transport Authority, fully background-checked, and trained in customer service. Many speak Arabic, English, and Urdu." },
     { question: "Do you operate 24/7?", answer: "Yes, we operate round the clock, 365 days a year. Our customer support team is also available 24/7 via phone and WhatsApp." },
     { question: "How do I book a taxi?", answer: "You can book through our online booking form, WhatsApp, phone, or email. We respond within 30 minutes during business hours." },
-    { question: "What payment methods do you accept?", answer: "We accept Cash (SAR), Visa, Mastercard, bank transfers, Apple Pay, STC Pay, and mada." },
+    // Must stay word-for-word identical to the same answer in FaqsClient.tsx:
+    // FAQ structured data has to match the text a visitor actually sees.
+    { question: "What payment methods do you accept?", answer: "Three ways: cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments, on top of the quoted fare — cash and bank transfer are charged at the quoted price. No advance payment is required to confirm a booking." },
     { question: "What if my flight is delayed?", answer: "We track all incoming flights in real-time. If your flight is delayed, your driver adjusts automatically at no extra charge." },
     { question: "Do you offer special packages for Umrah pilgrims?", answer: "Yes, we offer comprehensive Umrah packages including airport pickup, Makkah–Madinah transfers, hotel-to-Haram transfers, and Ziyarat tours." },
     { question: "Are your prices fixed or metered?", answer: "All prices are fixed and agreed at booking. There are no meters, no surge pricing, and no hidden charges." },

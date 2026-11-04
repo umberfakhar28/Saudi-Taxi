@@ -77,9 +77,7 @@ export const privateTaxi: ServiceData = {
     { href: "/taif-ziyarat-taxi-service", label: "Taif Ziyarat Tour" },
     { href: "/reliable-alula-tour-taxi-service-in-saudi-arabia", label: "AlUla Tour" },
   ],
-  reviews: [
-    { name: "Layla H.", origin: "Shopper, Riyadh", text: "Booked a half-day for shopping across three malls — driver waited at each stop without any fuss." },
-  ],
+  reviews: [],
   faqs: [
     { q: "What's the difference between private taxi and a standard transfer?", a: "A standard transfer is one pickup and one drop-off. Private taxi hire keeps the same vehicle and driver with you for a set number of hours, so you can make multiple stops on your own schedule." },
     { q: "Can I book by the hour for a short trip?", a: "Yes — hourly, half-day and full-day hire are all available. Tell us your rough itinerary and we'll recommend the right duration." },
@@ -155,9 +153,7 @@ export const corporateTransportation: ServiceData = {
     { title: "Corporate accounts", note: "Consolidated monthly billing and priority booking are available for companies with regular transport needs — contact us to set one up." },
     { title: "Event-day coordination", note: "For conferences or trade shows, share attendee numbers and schedule in advance so we can plan vehicle allocation properly." },
   ],
-  reviews: [
-    { name: "Mohammed T.", origin: "Corporate Client", text: "We use Gulf Trip for all executive airport transfers. Reliable every single time." },
-  ],
+  reviews: [],
   faqs: [
     { q: "Do you offer corporate accounts with invoiced billing?", a: "Yes — consolidated monthly billing and a dedicated account contact are available for businesses with regular transport needs." },
     { q: "Can you handle transport for a large conference or trade show?", a: "Yes — we coordinate multi-vehicle transport for events, provided attendee numbers and schedules are shared in advance." },
@@ -240,15 +236,13 @@ export const umrahTransportPackage: ServiceData = {
   tourLinks: [
     { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
   ],
-  reviews: [
-    { name: "Hassan M.", origin: "Pilgrim, Egypt", text: "Booked the full package for our family of 6 — one driver the entire trip, spacious van, excellent service." },
-  ],
+  reviews: [],
   faqs: [
     { q: "Can the package be customized?", a: "Yes — we tailor coverage to your specific travel dates, group size and preferences." },
     { q: "How many people does the package cover?", a: "Standard bookings cover 1–4 passengers; for larger groups we offer minivans and multiple vehicle options." },
     { q: "What if my flight is delayed?", a: "We monitor all arriving flights and adjust your pickup time accordingly at no extra charge." },
     { q: "Do you provide child seats?", a: "Yes, child seats are available upon request — mention this when booking." },
-    { q: "What payment methods do you accept?", a: "Cash (local currency), bank transfer and major credit cards, payable on arrival or in advance." },
+    { q: "What payment methods do you accept?", a: "Cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments. No advance payment is required." },
   ],
   relatedServices: [
     { href: "/airport-transfer-for-umrah", label: "Airport Transfer for Umrah" },
@@ -327,16 +321,14 @@ export const umrahTaxiServices: ServiceData = {
     { title: "Hajj season booking", note: "Advance booking is essential during Hajj (Dhul-Hijjah) — at least 2–4 weeks ahead, since availability during 8th–12th Dhul-Hijjah is extremely limited." },
     { title: "Solo female travelers", note: "All drivers are background-checked and GPS-tracked; a female driver or family-style vehicle can be requested subject to availability." },
   ],
-  reviews: [
-    { name: "Bilal H.", origin: "Umrah Pilgrim, UK", text: "Our driver waited patiently during our Tawaf and understood the spiritual nature of the trip." },
-  ],
+  reviews: [],
   faqs: [
     { q: "Can I book a taxi during Hajj season?", a: "Yes, but advance booking is essential — at least 2–4 weeks ahead, since availability during peak Hajj days is extremely limited." },
     { q: "Do you provide separate transportation for men and women?", a: "We offer family vehicles with privacy partitions, or separate vehicles on request. Female travelers can also request a female driver, subject to availability." },
     { q: "Can your taxis accommodate wheelchair users?", a: "Yes — wheelchair-accessible vans with hydraulic ramps and secure anchoring. Mention this when booking." },
     { q: "Are your vehicles genuinely Ihram-friendly?", a: "Yes — no music or entertainment systems, clean and modest interiors, and secure Zamzam water storage separate from your luggage." },
     { q: "Is it safe for solo female travelers?", a: "Yes — drivers are background-checked and GPS-tracked, and a female driver or family-style vehicle can be requested." },
-    { q: "What payment methods do you accept?", a: "Cash (SAR), credit/debit card, Apple Pay, and Google Pay. Corporate accounts with invoiced billing are available for travel agencies and groups." },
+    { q: "What payment methods do you accept?", a: "Cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments. No advance payment is required. Corporate accounts with invoiced billing are available for travel agencies and groups." },
     { q: "Can I add a Jeddah city tour before or after my Umrah?", a: "Yes — many pilgrims add a half or full day in Jeddah on the way through KAIA. See our Jeddah City Tour page for what's covered, and mention it when booking your transport." },
   ],
   relatedServices: [
@@ -418,9 +410,7 @@ export const ziyaratServices: ServiceData = {
       ],
     },
   ],
-  reviews: [
-    { name: "Amna S.", origin: "Pilgrim, Canada", text: "The Ziyarat tour was exceptional — driver explained every site with genuine knowledge." },
-  ],
+  reviews: [],
   faqs: [
     { q: "Can I customize the Ziyarat itinerary?", a: "Yes — choose a set route or request a custom order of sites within Makkah or Madinah." },
     { q: "Can I combine Makkah and Madinah Ziyarat in one trip?", a: "Yes — many pilgrims book both, along with the Makkah to Madinah transfer between them." },
@@ -493,9 +483,7 @@ export const airportTransferForUmrah: ServiceData = {
     { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah" },
   ],
   hotelLink: { href: "/hotel-transfers", label: "Hotel Transfers" },
-  reviews: [
-    { name: "Fatima B.", origin: "Umrah Pilgrim, Pakistan", text: "Arrived at 2am and our driver was already waiting. Transferred straight to Makkah — perfect service." },
-  ],
+  reviews: [],
   faqs: [
     { q: "Which airports do you cover for Umrah arrivals?", a: "Jeddah King Abdulaziz International Airport (KAIA) and Madinah Prince Mohammad Bin Abdulaziz Airport." },
     { q: "What happens if my flight is delayed?", a: "We track your flight and adjust the pickup time automatically — no extra charge, no need to contact us." },
@@ -561,9 +549,7 @@ export const weddingTransportation: ServiceData = {
     { title: "Bespoke packages", note: "Packages are tailored to your specific schedule, guest count, and venue requirements — share these details for an accurate plan." },
     { title: "Book ahead for peak wedding season", note: "Popular wedding dates and venues get booked up — reach out as early as possible once your date is confirmed." },
   ],
-  reviews: [
-    { name: "Nadia K.", origin: "Bride, Jeddah", text: "The bridal car was immaculate and the driver coordinated perfectly with our guest shuttle schedule." },
-  ],
+  reviews: [],
   faqs: [
     { q: "How far in advance should I book wedding transportation?", a: "As early as possible once your date and venue are confirmed — popular dates fill up." },
     { q: "Can you manage guest shuttles for a large wedding?", a: "Yes — we coordinate multi-vehicle shuttle schedules between hotels and the venue based on your guest count." },
@@ -627,9 +613,7 @@ export const schoolBusesServices: ServiceData = {
   practicalInfo: [
     { title: "Institutional contracts", note: "Route planning and specialized fleet options are set up directly with your institution — contact us to discuss requirements." },
   ],
-  reviews: [
-    { name: "Yousef A.", origin: "School Administrator, Khobar", text: "Booked for our institution's daily routes — drivers are consistent and communicative with school staff." },
-  ],
+  reviews: [],
   faqs: [
     { q: "How are routes planned for a school contract?", a: "Our logistics team works with your institution to plan efficient routes and pickup schedules across the relevant locations." },
     { q: "Are drivers specifically vetted for student transport?", a: "Yes — background-checked and specifically briefed for student safety and care, not just general driving." },
@@ -694,9 +678,7 @@ export const educationalToursTransport: ServiceData = {
   practicalInfo: [
     { title: "Tour coordination", note: "Our logistics team works with educational coordinators to plan efficient routes and schedule pickups across multiple locations if required." },
   ],
-  reviews: [
-    { name: "Sara M.", origin: "Tour Coordinator, Riyadh", text: "Coordinated a multi-site history tour for our students — the convoy stayed organized across every stop." },
-  ],
+  reviews: [],
   faqs: [
     { q: "Can you handle multi-location tours in one trip?", a: "Yes — our logistics team plans routes and pickup scheduling across multiple sites as needed." },
     { q: "What vehicles are used for large student groups?", a: "Large-capacity buses and vans, with multi-vehicle convoys coordinated for bigger groups." },

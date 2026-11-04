@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
-import AnimatedCounter from "@/components/AnimatedCounter";
 import styles from "./testimonials.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-    title: "Testimonials | What Our Customers Say | Gulf Trip Service",
-    description: "Read testimonials from satisfied customers who used our taxi services in Makkah, Jeddah & Madinah. Real reviews from real pilgrims.",
+    title: "Customer Reviews | Gulf Trip Service",
+    description: "Share your experience of Gulf Trip Service, or read reviews from customers who have travelled with us across Saudi Arabia and the Gulf.",
     path: "/testimonials",
     keywords: ["taxi testimonials", "customer reviews Saudi Arabia", "Umrah taxi reviews", "Saudi taxi reviews"],
 });
@@ -15,87 +15,29 @@ const schemas = [
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Testimonials", path: "/testimonials" }]),
 ];
 
-const testimonials = [
-    {
-        name: "Ahmad Al-Farsi",
-        location: "London, UK",
-        rating: 5,
-        service: "Airport Transfer",
-        text: "Excellent service from start to finish. The driver was waiting at the airport with my name on a board. Very professional, clean car, and the price was exactly as quoted. Highly recommended for anyone traveling for Umrah!",
-        date: "January 2026",
-    },
-    {
-        name: "Fatima Binti Hassan",
-        location: "Kuala Lumpur, Malaysia",
-        rating: 5,
-        service: "Umrah Taxi Package",
-        text: "We used Gulf Trip Service for our entire Umrah trip — airport pickup, hotel transfers, and Ziyarat tours. The driver was knowledgeable, patient, and treated our family like his own. Will definitely use again, InshaAllah.",
-        date: "December 2025",
-    },
-    {
-        name: "Muhammad Yusuf",
-        location: "Islamabad, Pakistan",
-        rating: 5,
-        service: "Jeddah to Makkah",
-        text: "I was worried about transportation as it was my first Umrah. But the booking process was so simple via WhatsApp, and the driver arrived exactly on time. The journey from Jeddah to Makkah was very comfortable. JazakAllah Khair!",
-        date: "November 2025",
-    },
-    {
-        name: "Sarah Johnson",
-        location: "Toronto, Canada",
-        rating: 5,
-        service: "Airport Transfer",
-        text: "As a solo female traveler, safety was my top concern. The driver was very respectful and professional. The car was spotless and comfortable. I felt completely safe throughout the journey. Thank you for a wonderful experience!",
-        date: "October 2025",
-    },
-    {
-        name: "Abdullah bin Rashid",
-        location: "Dubai, UAE",
-        rating: 4,
-        service: "Makkah to Madinah",
-        text: "Very good service for our family trip from Makkah to Madinah. The SUV was spacious enough for our family of 5 with all luggage. Driver was excellent. Only minor issue was a slight delay at pickup, but overall very satisfied.",
-        date: "September 2025",
-    },
-    {
-        name: "Aisha Ahmed",
-        location: "Cairo, Egypt",
-        rating: 5,
-        service: "Umrah Taxi Package",
-        text: "Alhamdulillah, the best taxi service in Makkah! We booked a multi-day package and the driver was available whenever we needed. He even helped us find a good restaurant near our hotel. Five stars without hesitation!",
-        date: "August 2025",
-    },
-    {
-        name: "Ibrahim Dembélé",
-        location: "Paris, France",
-        rating: 5,
-        service: "Airport Transfer",
-        text: "Ponctuel et professionnel! The driver spoke both Arabic and English which was very helpful. Flight was delayed by 2 hours but they tracked it and were still there waiting. Exceptional service!",
-        date: "July 2025",
-    },
-    {
-        name: "Khadija Osman",
-        location: "Istanbul, Turkey",
-        rating: 5,
-        service: "Jeddah to Makkah",
-        text: "We traveled with elderly parents who needed extra care. The driver was incredibly patient and helpful, assisting with wheelchairs and luggage. The vehicle was very comfortable. Allah reward you for your kindness!",
-        date: "June 2025",
-    },
-    {
-        name: "Bilal Memmon",
-        location: "Mumbai, India",
-        rating: 4,
-        service: "Ziyarat Tour",
-        text: "Booked a Ziyarat tour in Madinah. The driver was very knowledgeable about all the historical sites and gave us useful information. Good value for money. Would recommend to friends and family.",
-        date: "May 2025",
-    },
-];
+export interface Testimonial {
+    name: string;
+    location: string;
+    rating: number;
+    service: string;
+    text: string;
+    date: string;
+}
 
-const stats = [
-    { number: "4.9/5", label: "Average Rating" },
-    { number: "15,000+", label: "Happy Customers" },
-    { number: "98%", label: "Would Recommend" },
-    { number: "10+", label: "Years of Service" },
-];
+/**
+ * Deliberately empty.
+ *
+ * Ten testimonials used to sit here, each with a name, a city, a five-star
+ * rating and a date. All ten were invented. A stats band above them claimed
+ * a 4.9/5 average rating, 15,000+ happy customers and 98% would recommend --
+ * none of which was a measurement of anything.
+ *
+ * The page, its URL and its card markup are kept so genuine reviews can be
+ * dropped straight in. While this array is empty the page says so honestly
+ * and asks for a review instead of showing an empty grid. Do not seed it
+ * with samples: anything in this array is published as a real customer's words.
+ */
+const testimonials: Testimonial[] = [];
 
 export default function Testimonials() {
     return (
@@ -104,82 +46,75 @@ export default function Testimonials() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>Customer Testimonials</h1>
+                <h1>Customer Reviews</h1>
                 <p>
-                    Don&apos;t just take our word for it — hear from the thousands of pilgrims and travelers who trust our service.
+                    Travelled with us? Tell us how it went — your feedback is read by the people who run the service.
                 </p>
                 <div className="breadcrumb">
                     <Link href="/">Home</Link> / <span>Testimonials</span>
                 </div>
             </section>
 
-            {/* Stats */}
-            <section style={{
-                background: 'linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%)',
-                padding: '4rem 0',
-                borderBottom: '1px solid var(--gray-200)',
-            }}>
-                <div className="container">
-                    <div className="grid-4" style={{ textAlign: 'center' }}>
-                        {stats.map((stat, i) => (
-                            <div key={i}>
-                                <div style={{
-                                    fontSize: '2.8rem',
-                                    fontWeight: 700,
-                                    color: 'var(--secondary)',
-                                    fontFamily: 'var(--font-heading)',
-                                    lineHeight: 1,
-                                    marginBottom: '0.75rem',
-                                }}>
-                                    <AnimatedCounter end={stat.number} />
-                                </div>
-                                <div style={{
-                                    color: 'rgba(255,255,255,0.7)',
-                                    fontSize: '0.9rem',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '2px',
-                                    fontWeight: 600,
-                                }}>
-                                    {stat.label}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            {/* A stats band stood here showing "4.9/5 Average Rating", "15,000+
+                Happy Customers", "98% Would Recommend" and "10+ Years of
+                Service". The first three were invented, so the whole band was
+                removed rather than left standing on one true number. */}
 
-            {/* Testimonials Grid */}
+            {/* Reviews, when there are real ones. While the testimonials array
+                is empty this renders the invitation below, never an empty grid. */}
             <section className="section-lg">
                 <div className="container">
-                    <h2 className="section-title">What Our Customers Say</h2>
-                    <p className="section-subtitle">
-                        Real reviews from real customers. Every testimonial represents a genuine experience with our service.
-                    </p>
-                    <div className={styles.testimonialGrid}>
-                        {testimonials.map((testimonial, i) => (
-                            <div key={i} className={styles.testimonialCard}>
-                                <div className={styles.cardHeader}>
-                                    <div className={styles.avatar}>
-                                        {testimonial.name.charAt(0)}
+                    {testimonials.length > 0 ? (
+                        <>
+                            <h2 className="section-title">What Our Customers Say</h2>
+                            <p className="section-subtitle">
+                                Reviews left by customers who have travelled with us.
+                            </p>
+                            <div className={styles.testimonialGrid}>
+                                {testimonials.map((testimonial, i) => (
+                                    <div key={i} className={styles.testimonialCard}>
+                                        <div className={styles.cardHeader}>
+                                            <div className={styles.avatar}>
+                                                {testimonial.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <h4 className={styles.name}>{testimonial.name}</h4>
+                                                <p className={styles.location}>{testimonial.location}</p>
+                                            </div>
+                                        </div>
+                                        <div className={styles.rating}>
+                                            {Array.from({ length: 5 }, (_, j) => (
+                                                <span key={j} className={j < testimonial.rating ? styles.starFilled : styles.starEmpty}>
+                                                    ★
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <span className={styles.serviceBadge}>{testimonial.service}</span>
+                                        <p className={styles.text}>&quot;{testimonial.text}&quot;</p>
+                                        <p className={styles.date}>{testimonial.date}</p>
                                     </div>
-                                    <div>
-                                        <h4 className={styles.name}>{testimonial.name}</h4>
-                                        <p className={styles.location}>{testimonial.location}</p>
-                                    </div>
-                                </div>
-                                <div className={styles.rating}>
-                                    {Array.from({ length: 5 }, (_, j) => (
-                                        <span key={j} className={j < testimonial.rating ? styles.starFilled : styles.starEmpty}>
-                                            ★
-                                        </span>
-                                    ))}
-                                </div>
-                                <span className={styles.serviceBadge}>{testimonial.service}</span>
-                                <p className={styles.text}>&quot;{testimonial.text}&quot;</p>
-                                <p className={styles.date}>{testimonial.date}</p>
+                                ))}
                             </div>
-                        ))}
-                    </div>
+                        </>
+                    ) : (
+                        <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
+                            <h2 className="section-title">Share Your Experience</h2>
+                            <p className="section-subtitle">
+                                We are collecting reviews from customers who have travelled with us,
+                                and we only publish feedback people have actually given us. If you
+                                have used Gulf Trip Service, we would genuinely like to hear how it
+                                went — the good and the bad.
+                            </p>
+                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '2rem' }}>
+                                <a href={waLink('Hi, I would like to leave a review about my trip.')} className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+                                    Leave a Review on WhatsApp
+                                </a>
+                                <Link href="/contact-us" className="btn btn-outline btn-lg">
+                                    Send Us a Message
+                                </Link>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -190,9 +125,9 @@ export default function Testimonials() {
                 textAlign: 'center',
             }}>
                 <div className="container">
-                    <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Join Our Satisfied Customers</h2>
+                    <h2 style={{ color: 'var(--white)', marginBottom: '1rem' }}>Book Your Next Trip</h2>
                     <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-                        Experience the service that thousands of pilgrims trust. Book your ride today. Not sure which vehicle fits your group? Check our <Link href="/fleet" style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}>fleet</Link> or our <Link href="/faqs" style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}>FAQs</Link> first.
+                        A price agreed before you travel, and a driver who tracks your flight. Not sure which vehicle fits your group? Check our <Link href="/fleet" style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}>fleet</Link> or our <Link href="/faqs" style={{ color: 'white', textDecoration: 'underline', fontWeight: 600 }}>FAQs</Link> first.
                     </p>
                     <Link href="/book-online" className="btn btn-primary btn-lg">
                         Book Your Ride
