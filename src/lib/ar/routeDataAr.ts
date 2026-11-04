@@ -141,6 +141,88 @@ export const riyadhToQatarAr: RouteData = {
     lastReviewed: "أكتوبر 2026",
 };
 
+/**
+ * الدوحة ← الرياض — the reciprocal of riyadhToQatarAr above.
+ *
+ * Built because Google was already serving a 404 here: Search Console shows
+ * /ar/qatar-to-riyadh-taxi-service indexed at position 1 with impressions,
+ * while the URL returned 404. Nothing on this site ever linked to it — the
+ * reverse-route callout on the Arabic page points at the English reciprocal
+ * — so Google appears to have derived the URL from the hreflang pair on the
+ * opposite direction. The English twin is the site's second-best page
+ * (910 impressions, 83 clicks, 9.1% CTR over the 28 days to 2026-11-01),
+ * which is the evidence that the corridor is worth an Arabic page.
+ *
+ * The Arabic prose is the reviewed wording from riyadhToQatarAr with the
+ * direction reversed, not a fresh translation: same corridor, same border,
+ * same vehicles, same documents. Only what genuinely differs by direction
+ * changes — the exit and entry order at the border, the pickup and drop-off
+ * ends, and the midway rest stop, all carried from the English qatarToRiyadh
+ * entry so the two languages cannot disagree on a fact.
+ *
+ * No `pricing`: neither the English entry nor its Arabic sibling publishes a
+ * fare for this corridor, and inventing one here is not an option.
+ */
+export const qatarToRiyadhAr: RouteData = {
+    slug: "qatar-to-riyadh-taxi-service",
+    origin: "الدوحة",
+    destination: "الرياض",
+    isCrossBorder: true,
+    borderCrossingName: "منفذ أبو سمرة / سلوى",
+    eyebrow: "رحلة طويلة عبر الحدود",
+    h1: "سيارة خاصة من الدوحة إلى الرياض",
+    intro: "نقل خاص من باب إلى باب من الدوحة إلى الرياض عبر منفذ أبو سمرة — سيارة واحدة وسائق مرخّص طوال الطريق، دون تغيير مركبة ودون ترانزيت.",
+    breadcrumbLabel: "الدوحة ← الرياض",
+    distance: "نحو 580 كم",
+    travelTime: "6.5 إلى 7.5 ساعات (شاملة إجراءات الحدود)",
+    heroImage: "/images/chauffeur.jpg",
+    overviewTitle: "الطريق البري من الدوحة إلى الرياض",
+    overviewParagraphs: [
+        "يفضّل كثير من المسافرين بين الدوحة والرياض الطريق البري على الرحلات الجوية القصيرة، خاصة العائلات والمجموعات ومن لديه أمتعة كثيرة — فالرحلة تبدأ من باب المنزل أو الفندق وتنتهي عند العنوان المطلوب في الرياض، دون مطارات ولا انتظار.",
+        "تنطلق الرحلة من الدوحة غرباً إلى منفذ أبو سمرة، ثم تدخل السعودية عند سلوى، وتكمل شمالاً غرباً عبر المنطقة الشرقية حتى الرياض. سيارة واحدة وسائق واحد يغطيان الطريق كاملاً، بما في ذلك العبور نفسه.",
+        "نخطط للرحلة كيوم سفر كامل: وقت الانطلاق، استراحة مجدولة في منطقة الأحساء بعد العبور، ووقت إضافي لإجراءات الحدود التي تختلف حسب الازدحام ويوم الأسبوع.",
+    ],
+    borderProcessTitle: "إجراءات منفذ أبو سمرة",
+    borderProcessParagraphs: [
+        "من وسط الدوحة إلى منفذ أبو سمرة نحو ساعة واحدة، حيث تتم إجراءات الخروج القطرية ومراجعة أوراق المركبة.",
+        "عند الدخول السعودي في سلوى يعبر مواطنو دول الخليج بالهوية الوطنية، ويحتاج غيرهم إلى تأشيرة دخول سعودية سارية. يستغرق العبور عادةً من 30 إلى 60 دقيقة على الجانبين في الأوقات غير المزدحمة.",
+        "بعد إتمام الدخول تستكمل الرحلة عبر الأحساء وشبكة الطرق الشرقية إلى الرياض — نحو خمس ساعات من المنفذ حتى العاصمة.",
+    ],
+    documents: [
+        "جواز سفر ساري لمدة ستة أشهر على الأقل",
+        "تأشيرة دخول سعودية، أو الهوية الوطنية لمواطني دول مجلس التعاون",
+        "إتمام إجراءات الخروج من قطر",
+        "عنوان التوصيل في الرياض أو تأكيد حجز الفندق",
+    ],
+    pickupPoints: ["فنادق الدوحة (الخليج الغربي واللؤلؤة)", "مطار حمد الدولي", "لوسيل", "الوكرة", "مقار العمل في الدوحة"],
+    dropoffInfo: "التوصيل إلى أي عنوان في الرياض — مركز الملك عبدالله المالي، العليا، الدرعية، الجهات الحكومية، أو مطار الملك خالد الدولي إذا كانت لديك رحلة مغادرة.",
+    vehicleOptions: [
+        { name: "سيدان تنفيذية", capacity: "1–3 ركاب", note: "مريحة للرحلات الطويلة ورجال الأعمال." },
+        { name: "دفع رباعي", capacity: "1–5 ركاب", note: "مساحة أوسع للعائلات على طريق طويل." },
+        { name: "فان", capacity: "6–10 ركاب", note: "للمجموعات والوفود مع أمتعتها." },
+    ],
+    stops: [
+        { name: "منطقة الأحساء", note: "استراحة مجدولة في منتصف الطريق داخل السعودية، بعد إتمام العبور في سلوى." },
+    ],
+    faqs: [
+        { q: "هل تغطي السيارة نفسها الطريق كاملاً؟", a: "نعم — سيارة واحدة وسائق واحد من مكان انطلاقك في الدوحة، عبر منفذ أبو سمرة، حتى عنوانك في الرياض." },
+        { q: "كم تستغرق الرحلة؟", a: "عادةً 6.5 إلى 7.5 ساعات شاملة إجراءات الحدود والاستراحة المجدولة. الازدحام عند المنفذ هو أكثر ما يغيّر هذا الوقت." },
+        { q: "هل أحتاج تأشيرة لدخول السعودية من قطر براً؟", a: "غير مواطني دول الخليج يحتاجون إلى تأشيرة دخول سعودية سارية، أما مواطنو دول مجلس التعاون فيعبرون بالهوية الوطنية. تختلف المتطلبات حسب الجنسية وتتغير، لذا تأكد من المصادر الرسمية قبل السفر." },
+        { q: "هل يمكن حجز الرحلة لمجموعة أو وفد؟", a: "نعم — نرتّب عدة سيارات للوفود والمجموعات والعائلات الكبيرة المسافرة بين الدوحة والرياض." },
+        { q: "هل الرحلة مناسبة للعائلات؟", a: "نعم، وهي من أكثر أسباب اختيار الطريق البري: العائلة كلها في سيارة واحدة، مع أمتعتها، واستراحات حسب الحاجة." },
+    ],
+    relatedRoutes: [
+        { href: "/ar/riyadh-to-qatar-taxi-service", label: "الرياض إلى الدوحة" },
+        { href: "/ar/dammam-airport-to-qatar-taxi-service", label: "مطار الدمام إلى قطر" },
+        { href: "/ar/border-crossing", label: "جميع رحلات عبور الحدود" },
+    ],
+    ctaText: "احجز رحلتك إلى الرياض",
+    tags: ["gcc", "business"],
+    priority: 1,
+    reverseSlug: "riyadh-to-qatar-taxi-service",
+    lastReviewed: "نوفمبر 2026",
+};
+
 export const riyadhToKuwaitAr: RouteData = {
     slug: "riyadh-to-kuwait-taxi-service",
     origin: "الرياض",
@@ -254,3 +336,21 @@ export const riyadhToBahrainAr: RouteData = {
     reverseSlug: "bahrain-to-riyadh-taxi-service",
     lastReviewed: "أكتوبر 2026",
 };
+
+/**
+ * The route slugs that have an Arabic page.
+ *
+ * Declared last so every entry above it exists at module-evaluation time.
+ * RoutePage uses it to send an Arabic visitor to the Arabic reciprocal:
+ * without it, the reverse-route callout on an Arabic page links to /<slug>,
+ * which is the English page wearing an Arabic label. Any route not listed
+ * here keeps the English link, which is correct — it is the only version
+ * that exists.
+ */
+export const AR_ROUTE_SLUGS: ReadonlySet<string> = new Set([
+    bahrainToDammamAr.slug,
+    riyadhToQatarAr.slug,
+    qatarToRiyadhAr.slug,
+    riyadhToKuwaitAr.slug,
+    riyadhToBahrainAr.slug,
+]);

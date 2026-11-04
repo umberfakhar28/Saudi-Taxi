@@ -22,6 +22,7 @@ import {
 // doesn't exist yet (see the field's doc comment), so this check is what
 // keeps that safe instead of shipping a broken link.
 import { allRoutes } from "@/lib/routeData";
+import { AR_ROUTE_SLUGS } from "@/lib/ar/routeDataAr";
 import { allCities } from "@/lib/cityData3";
 import { AIRPORTS } from "@/lib/airportRoutesData";
 import { getDestination } from "@/lib/destinationData";
@@ -355,6 +356,20 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
   ];
 
   const reverseRoute = allRoutes.find((r) => r.slug === data.reverseSlug);
+  /**
+   * Where the reverse-route callout points.
+   *
+   * On an Arabic page this used to link to `/<slug>` — the English page,
+   * introduced by an Arabic label. Now an Arabic visitor is sent to the
+   * Arabic reciprocal when one exists, and only falls back to English when
+   * it genuinely does not, which is still the honest destination because it
+   * is the only version of that page there is.
+   */
+  const reverseHref = reverseRoute
+    ? locale === 'ar' && AR_ROUTE_SLUGS.has(reverseRoute.slug)
+      ? `/ar/${reverseRoute.slug}`
+      : `/${reverseRoute.slug}`
+    : '';
   const originAirport = locale === 'en' ? airportPageFor(data.origin) : null;
   const destinationAirport = locale === 'en' ? airportPageFor(data.destination) : null;
   // These blocks all point at English-only pages (city hubs, airport pages,
@@ -598,7 +613,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
           <section style={{ padding: "var(--space-6) 0 0" }}>
             <div className="container">
               <Link
-                href={`/${reverseRoute.slug}`}
+                href={reverseHref}
                 className="card"
                 style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "var(--space-4)", flexWrap: "wrap", padding: "var(--space-5) var(--space-8)" }}
               >

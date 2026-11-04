@@ -273,6 +273,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { slug: "/ar/book-online", enSlug: "/book-online", priority: 0.9 },
     { slug: "/ar/bahrain-to-dammam-taxi-service", enSlug: "/bahrain-to-dammam-taxi-service", priority: 0.8 },
     { slug: "/ar/riyadh-to-qatar-taxi-service", enSlug: "/riyadh-to-qatar-taxi-service", priority: 0.8 },
+    { slug: "/ar/qatar-to-riyadh-taxi-service", enSlug: "/qatar-to-riyadh-taxi-service", priority: 0.8 },
     { slug: "/ar/riyadh-to-kuwait-taxi-service", enSlug: "/riyadh-to-kuwait-taxi-service", priority: 0.8 },
     { slug: "/ar/riyadh-to-bahrain-taxi-service", enSlug: "/riyadh-to-bahrain-taxi-service", priority: 0.8 },
   ].map(({ slug, enSlug, priority }) => ({
