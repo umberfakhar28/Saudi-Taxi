@@ -145,9 +145,19 @@
   --teal-dark:      var(--accent-hover);
   --ivory:          #F5F2EA;
 
-  /* ===== TYPOGRAPHY - INTER/PLUS JAKARTA SANS ===== */
-  --font-heading: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
-  --font-body:    "Inter", system-ui, -apple-system, sans-serif;
+  /* ===== TYPOGRAPHY - INTER/PLUS JAKARTA SANS =====
+     --font-heading and --font-body are not declared here any more. They
+     come from the two next/font/local calls in src/app/layout.tsx, which
+     set them on <html> together with the @font-face rules they belong to,
+     and they carry the same fallback tails this block used to list.
+
+     They used to be declared in both places, with this one winning because
+     globals.css loads last. That was survivable while next/font/google
+     emitted the real family names, and became a trap the moment the fonts
+     were self-hosted: next/font/local names the family after the JS
+     variable, so "Plus Jakarta Sans" here would have matched no @font-face
+     at all and every heading would have fallen back to Inter. One source,
+     next to the @font-face rules, cannot drift like that. */
 
   /* ===== TYPE SCALE ===== */
   --text-xs:   0.75rem;   /* 12px */
@@ -233,6 +243,18 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  /* Pin Inter to its default optical size (opsz 14).
+
+     The self-hosted InterVariable has two axes, opsz 14-32 and wght
+     100-900, while the file Google served exposed wght only, with opsz
+     pinned at its default. `font-optical-sizing` defaults to `auto`, so
+     without this the browser would drive opsz from the font size and
+     Inter would render with progressively more display-like shapes as
+     text got larger — a change Google's build could not make. Setting
+     `none` holds opsz at 14 and keeps rendering as it was.
+
+     Plus Jakarta Sans has no opsz axis, so this does not affect it. */
+  font-optical-sizing: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* html, not just body, is this document's scrolling element (body sets

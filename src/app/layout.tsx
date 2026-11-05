@@ -5,20 +5,68 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import WhatsAppTracking from "@/components/WhatsAppTracking";
 import { SITE_CONFIG } from "@/lib/seo";
 import { localBusinessSchema, jsonLd } from "@/lib/jsonld";
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import localFont from 'next/font/local';
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ['latin'],
+/**
+ * Fonts are self-hosted from src/app/fonts/, not fetched from Google at
+ * build time.
+ *
+ * Why: `next/font/google` made every production build depend on a live
+ * fetch from fonts.gstatic.com, and Google intermittently answers the CSS
+ * API with its dynamic slice URLs (`/l/font?kit=...`) instead of static
+ * paths. Those carry their own query string, which Turbopack cannot parse —
+ * it embeds the font URL inside its own query and then asserts there is
+ * exactly one. Deploys failed with 16 `Module not found` errors on
+ * `@vercel/turbopack-next/internal/font/google/font` and the message
+ * `next/font/google queries have exactly one entry`. It took down the
+ * deploys for 87e2b75 and ccffc1a on 2026-11-05. A retry is a coin flip on
+ * which URL shape Google returns, not a fix; self-hosting removes the
+ * dependency outright.
+ *
+ * Both files are the official upstream variable fonts, and both match the
+ * version Google was serving (Inter 4.001, Plus Jakarta Sans 2.071) on
+ * unitsPerEm, hhea/OS/2 typo ascent, descent, line gap, cap height and
+ * x-height — see docs/self-hosted-fonts.md for the measurements and
+ * provenance.
+ *
+ * The CSS variable names are unchanged, but note what next/font/local does
+ * with family names: it derives them from the JS variable, so these emit
+ * `font-family: inter` and `font-family: plusJakartaSans`, not the real
+ * names next/font/google used. globals.css used to re-declare both
+ * variables at :root with literal "Plus Jakarta Sans" / "Inter" names, and
+ * it loads after this, so it won the cascade. "Inter" would still have
+ * matched (CSS family matching is case-insensitive) but "Plus Jakarta
+ * Sans" would have matched nothing and every heading would have quietly
+ * dropped to Inter.
+ *
+ * So the fallback tails that used to live in those :root declarations are
+ * passed here instead, and the duplicate declarations are gone: these two
+ * calls are now the single source of both variables.
+ */
+const inter = localFont({
+  src: './fonts/InterVariable.woff2',
+  // Inter's full wght axis, as Google also served it (100 900).
+  weight: '100 900',
+  style: 'normal',
   variable: '--font-body',
   display: 'swap',
+  // The tail of the old globals.css --font-body declaration.
+  fallback: ['system-ui', '-apple-system', 'sans-serif'],
 })
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
+const plusJakartaSans = localFont({
+  src: './fonts/PlusJakartaSans-Variable.woff2',
+  // The font's real axis range. Google's build was asked for four discrete
+  // weights (400/500/600/700) that all resolved to this same variable file,
+  // which is what made this the font that tripped the Turbopack bug.
+  weight: '200 800',
+  style: 'normal',
   variable: '--font-heading',
-  weight: ['400', '500', '600', '700'],
   display: 'swap',
+  // The tail of the old globals.css --font-heading declaration. 'Inter'
+  // resolves to the face above: CSS family names are case-insensitive.
+  fallback: ['Inter', 'system-ui', 'sans-serif'],
 })
 
 export const metadata: Metadata = {
