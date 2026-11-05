@@ -45,7 +45,13 @@ const ArabicFooter = () => {
                             <li className={styles.listItem}><Link href="/ar/dammam-airport-to-bahrain-taxi-service" className={styles.link}>مطار الدمام ← البحرين</Link></li>
                             <li className={styles.listItem}><Link href="/ar/dammam-airport-to-qatar-taxi-service" className={styles.link}>مطار الدمام ← قطر</Link></li>
                             <li className={styles.listItem}><Link href="/ar/bahrain-to-dammam-taxi-service" className={styles.link}>البحرين ← الدمام</Link></li>
-                            <li className={styles.listItem}><Link href="/ar/riyadh-to-qatar-taxi-service" className={styles.link}>قطر ← الرياض</Link></li>
+                            {/* Label corrected: it read "قطر ← الرياض" (Qatar →
+                                Riyadh) while linking to the Riyadh → Qatar page.
+                                The three entries above it all put the origin
+                                first, so this one contradicted both its own
+                                href and its neighbours. Only the text changed —
+                                the link target is untouched. */}
+                            <li className={styles.listItem}><Link href="/ar/riyadh-to-qatar-taxi-service" className={styles.link}>الرياض ← قطر</Link></li>
                         </ul>
                     </div>
 

@@ -22,7 +22,7 @@ import {
 // doesn't exist yet (see the field's doc comment), so this check is what
 // keeps that safe instead of shipping a broken link.
 import { allRoutes } from "@/lib/routeData";
-import { AR_ROUTE_SLUGS } from "@/lib/ar/routeDataAr";
+import { AR_ROUTES, AR_PAGE_SLUGS, arEndpointName } from "@/lib/ar/routeDataAr";
 import { allCities } from "@/lib/cityData3";
 import { AIRPORTS } from "@/lib/airportRoutesData";
 import { getDestination } from "@/lib/destinationData";
@@ -360,15 +360,48 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
    * Where the reverse-route callout points.
    *
    * On an Arabic page this used to link to `/<slug>` — the English page,
-   * introduced by an Arabic label. Now an Arabic visitor is sent to the
-   * Arabic reciprocal when one exists, and only falls back to English when
-   * it genuinely does not, which is still the honest destination because it
-   * is the only version of that page there is.
+   * introduced by an Arabic label. An Arabic visitor now goes to the Arabic
+   * reciprocal wherever one exists, and falls back to English only where it
+   * genuinely does not, which is still the honest destination because it is
+   * the only version of that page there is.
+   *
+   * Existence is asked of AR_PAGE_SLUGS, not AR_ROUTES: two Arabic route
+   * pages are hand-written rather than RouteData-driven, so AR_ROUTES does
+   * not know them. AR_ROUTES is still what supplies Arabic endpoint names
+   * when it has them.
    */
+  const reverseArabicPage = reverseRoute !== undefined
+    && locale === 'ar'
+    && AR_PAGE_SLUGS.has(reverseRoute.slug);
+  const reverseArabic = reverseRoute && locale === 'ar'
+    ? AR_ROUTES.get(reverseRoute.slug)
+    : undefined;
   const reverseHref = reverseRoute
-    ? locale === 'ar' && AR_ROUTE_SLUGS.has(reverseRoute.slug)
+    ? reverseArabicPage
       ? `/ar/${reverseRoute.slug}`
       : `/${reverseRoute.slug}`
+    : '';
+  /**
+   * The endpoint names in the callout's own sentence.
+   *
+   * `reverseRoute` comes from allRoutes, which is the English data, so an
+   * Arabic page was rendering its city names in English inside an Arabic
+   * sentence — "اطّلع على خدمة Riyadh إلى Qatar". Where an Arabic twin
+   * exists its own origin and destination are used. Where none does the
+   * link goes to the English page, but the names in this Arabic sentence
+   * still should not: arEndpointName supplies the Arabic form the site's
+   * own reviewed copy already uses, and leaves anything it has no reviewed
+   * name for in English rather than translating on the fly.
+   *
+   * Both branches read the direction off the route the href points at, so
+   * the label cannot state a direction the target does not serve.
+   */
+  const reverseLabel = reverseRoute
+    ? locale === 'ar'
+      ? reverseArabic
+        ? `${reverseArabic.origin} إلى ${reverseArabic.destination}`
+        : `${arEndpointName(reverseRoute.origin)} إلى ${arEndpointName(reverseRoute.destination)}`
+      : `${reverseRoute.origin} to ${reverseRoute.destination}`
     : '';
   const originAirport = locale === 'en' ? airportPageFor(data.origin) : null;
   const destinationAirport = locale === 'en' ? airportPageFor(data.destination) : null;
@@ -618,7 +651,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "var(--space-4)", flexWrap: "wrap", padding: "var(--space-5) var(--space-8)" }}
               >
                 <span style={{ color: "var(--text-body)", fontSize: "var(--text-base)" }}>
-                  {t.reverseRoutePrefix} <strong style={{ color: "var(--accent)" }}>{locale === 'ar' ? `${reverseRoute.origin} إلى ${reverseRoute.destination}` : `${reverseRoute.origin} to ${reverseRoute.destination}`}</strong> {t.reverseRouteSuffix}
+                  {t.reverseRoutePrefix} <strong style={{ color: "var(--accent)" }}>{reverseLabel}</strong>{t.reverseRouteSuffix}
                 </span>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent)", fontWeight: 700, whiteSpace: "nowrap" }}>
                   {t.viewRoute} <ArrowRightIcon size={16} />

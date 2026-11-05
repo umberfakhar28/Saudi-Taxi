@@ -211,10 +211,14 @@ export const qatarToRiyadhAr: RouteData = {
         { q: "هل يمكن حجز الرحلة لمجموعة أو وفد؟", a: "نعم — نرتّب عدة سيارات للوفود والمجموعات والعائلات الكبيرة المسافرة بين الدوحة والرياض." },
         { q: "هل الرحلة مناسبة للعائلات؟", a: "نعم، وهي من أكثر أسباب اختيار الطريق البري: العائلة كلها في سيارة واحدة، مع أمتعتها، واستراحات حسب الحاجة." },
     ],
+    // The reverse direction is deliberately NOT listed here: RoutePage's
+    // reverse-route callout already links /ar/riyadh-to-qatar-taxi-service
+    // near the top of this page, and repeating it lower down would give one
+    // page two links to the same destination with two different labels.
     relatedRoutes: [
-        { href: "/ar/riyadh-to-qatar-taxi-service", label: "الرياض إلى الدوحة" },
         { href: "/ar/dammam-airport-to-qatar-taxi-service", label: "مطار الدمام إلى قطر" },
         { href: "/ar/border-crossing", label: "جميع رحلات عبور الحدود" },
+        { href: "/ar/book-online", label: "احجز رحلتك" },
     ],
     ctaText: "احجز رحلتك إلى الرياض",
     tags: ["gcc", "business"],
@@ -338,19 +342,84 @@ export const riyadhToBahrainAr: RouteData = {
 };
 
 /**
- * The route slugs that have an Arabic page.
+ * Every route that has an Arabic page, keyed by slug.
  *
- * Declared last so every entry above it exists at module-evaluation time.
- * RoutePage uses it to send an Arabic visitor to the Arabic reciprocal:
- * without it, the reverse-route callout on an Arabic page links to /<slug>,
- * which is the English page wearing an Arabic label. Any route not listed
- * here keeps the English link, which is correct — it is the only version
- * that exists.
+ * Declared last so each entry above it exists at module-evaluation time.
+ *
+ * RoutePage uses this for the reverse-route callout, which needs two things
+ * from it. First the href: without this map the callout on an Arabic page
+ * linked to /<slug>, the English page wearing an Arabic label. Second the
+ * names — the callout reads them off `allRoutes`, which is the English data,
+ * so an Arabic page was rendering "اطّلع على خدمة Riyadh إلى Qatar" with the
+ * cities in English in the middle of an Arabic sentence. Looking the route
+ * up here gives the Arabic names that the Arabic page should have been using
+ * all along.
+ *
+ * A route absent from this map keeps the English link and the English names,
+ * which is correct: that is the only version of the page that exists.
  */
-export const AR_ROUTE_SLUGS: ReadonlySet<string> = new Set([
-    bahrainToDammamAr.slug,
-    riyadhToQatarAr.slug,
-    qatarToRiyadhAr.slug,
-    riyadhToKuwaitAr.slug,
-    riyadhToBahrainAr.slug,
+export const AR_ROUTES: ReadonlyMap<string, RouteData> = new Map([
+    bahrainToDammamAr,
+    riyadhToQatarAr,
+    qatarToRiyadhAr,
+    riyadhToKuwaitAr,
+    riyadhToBahrainAr,
+].map((r) => [r.slug, r]));
+
+/**
+ * Arabic names for the route endpoints that appear in English route data.
+ *
+ * Three Arabic pages point their reverse-route callout at an English route
+ * page, because no Arabic version of that page exists. The callout used to
+ * print that page's English endpoint names inside its Arabic sentence
+ * ("اطّلع على خدمة Riyadh إلى Bahrain"). The link target is correct and must
+ * stay — it is the only version of that page there is — so only the visible
+ * names are translated here.
+ *
+ * Every value below is a name the site's own reviewed Arabic copy already
+ * uses (src/lib/ar/*, src/app/ar/*, ArabicFooter). Endpoints with no
+ * attested Arabic name on the site are deliberately absent rather than
+ * translated here on the fly: an unknown key falls back to the English
+ * name, i.e. to the behaviour before this map existed.
+ *
+ * Keys must match RouteData.origin / RouteData.destination exactly.
+ */
+export const AR_ENDPOINT_NAMES: ReadonlyMap<string, string> = new Map([
+    ["Riyadh", "الرياض"],
+    ["Dammam", "الدمام"],
+    ["Dammam Airport", "مطار الدمام"],
+    ["Bahrain", "البحرين"],
+    ["Kuwait", "الكويت"],
+    ["Khafji", "الخفجي"],
+    ["Qatar", "قطر"],
+    ["Doha", "الدوحة"],
+]);
+
+/** The Arabic name for a route endpoint, or the English name unchanged when
+ * the site has no reviewed Arabic form for it. */
+export function arEndpointName(name: string): string {
+    return AR_ENDPOINT_NAMES.get(name) ?? name;
+}
+
+/**
+ * Every route slug that has an Arabic page under /ar/, whether or not that
+ * page is driven by RouteData.
+ *
+ * AR_ROUTES alone is not the answer to "does an Arabic version exist?".
+ * Two Arabic route pages — /ar/dammam-airport-to-bahrain-taxi-service and
+ * /ar/dammam-airport-to-qatar-taxi-service — are hand-written pages with
+ * their own copy and schema rather than RoutePage + RouteData, so they can
+ * never appear in AR_ROUTES. Asking AR_ROUTES about them said "no Arabic
+ * page" and sent Arabic readers of /ar/bahrain-to-dammam-taxi-service to
+ * the English reverse page, past an Arabic one that was already live and
+ * already linked from the Arabic footer.
+ *
+ * Add a slug here when an Arabic page for it ships. Keep it in step with
+ * the directories under src/app/ar/ — a slug listed here with no page is a
+ * broken link.
+ */
+export const AR_PAGE_SLUGS: ReadonlySet<string> = new Set([
+    ...AR_ROUTES.keys(),
+    "dammam-airport-to-bahrain-taxi-service",
+    "dammam-airport-to-qatar-taxi-service",
 ]);

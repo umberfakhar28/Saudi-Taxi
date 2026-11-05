@@ -283,7 +283,10 @@ const en: UIStrings = {
     quickFormSubheading: 'Pickup and drop-off are already filled in — edit them if your trip is slightly different.',
     travelTimeLabel: 'Travel time',
     reverseRoutePrefix: 'Traveling the other way? See our',
-    reverseRouteSuffix: 'taxi service.',
+    // Leading space is part of the string: RoutePage no longer puts one
+    // between the city names and this suffix, because in Arabic the suffix
+    // is bare punctuation and the space left a floating period.
+    reverseRouteSuffix: ' taxi service.',
     viewRoute: 'View route',
     borderDisclaimer: 'Border and document requirements can change — always verify current entry requirements with the relevant embassy or border authority before you travel.',
     vehicleOptionsFor: (from: string, to: string) => `Vehicle Options for ${from} to ${to}`,
@@ -433,7 +436,12 @@ const ar: UIStrings = {
     step5Label: 'التوصيل إلى الوجهة', step5Text: 'رحلة خاصة ومباشرة حتى عنوانك بالضبط.',
     quickFormSubheading: 'مكان الانطلاق والوجهة مُعبّأان مسبقاً — يمكنك تعديلهما إذا اختلفت رحلتك قليلاً.',
     travelTimeLabel: 'مدة الرحلة',
-    reverseRoutePrefix: 'تسافر في الاتجاه المعاكس؟ اطّلع على خدمة',
+    // The label that follows is "<origin> إلى <destination>", so the prefix
+    // needs "من" to read as Arabic rather than as a bare noun phrase:
+    // "اطّلع على خدمة النقل الخاص من البحرين إلى الرياض." Matches the
+    // "من X إلى Y" pattern used by vehicleOptionsFor and bookYourTransfer
+    // below. Pending native review.
+    reverseRoutePrefix: 'تسافر في الاتجاه المعاكس؟ اطّلع على خدمة النقل الخاص من',
     reverseRouteSuffix: '.',
     viewRoute: 'عرض المسار',
     borderDisclaimer: 'قد تتغير متطلبات العبور والمستندات — تأكد دائماً من متطلبات الدخول الحالية لدى السفارة المعنية أو الجهة الحدودية قبل السفر.',
