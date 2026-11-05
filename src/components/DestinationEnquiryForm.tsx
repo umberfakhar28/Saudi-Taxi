@@ -8,6 +8,7 @@ import { SEARCH_INDEX } from '@/lib/searchIndex';
 import styles from './DestinationEnquiryForm.module.css';
 import TurnstileWidget from './TurnstileWidget';
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from '@/lib/antiSpamClient';
+import { trackFormSubmit, FORM_EVENTS } from '@/lib/analytics';
 
 const SUGGESTED_VALUES = new Set(SEARCH_INDEX.map((e) => e.value));
 
@@ -126,6 +127,17 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             const bookingJson = await bookingRes.json();
             if (!bookingRes.ok) throw new Error(bookingJson.error || 'Could not save your booking.');
             const insertedBooking = bookingJson.booking;
+
+            // Counted the moment the enquiry row exists, before the email
+            // attempt below, for the same reason as /book-online: the email
+            // is allowed to fail without the enquiry being lost, so it must
+            // not be allowed to make a saved enquiry go uncounted.
+            // destinationName comes from site data, not from the customer.
+            trackFormSubmit(FORM_EVENTS.destinationEnquiry, {
+                formType: 'destination_enquiry',
+                pagePath: window.location.pathname,
+                detail: destinationName,
+            });
 
             // The enquiry is already saved at this point — an email hiccup
             // shouldn't make the customer think their request wasn't

@@ -8,6 +8,7 @@ import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
 import { normalizeContactInput, validateContact, contactMessageText, type ContactErrors } from "@/lib/contactMessage";
+import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
 
 const schemas = [
     breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "اتصل بنا", path: "/ar/contact-us" }]),
@@ -123,6 +124,15 @@ export default function ArContactUsClient() {
                 return; // values deliberately preserved
             }
 
+            // Counted at the same point as the English form, and with the
+            // same event name — page_language separates the two, so an
+            // Arabic enquiry is comparable to an English one rather than
+            // living in a metric of its own.
+            trackFormSubmit(FORM_EVENTS.contact, {
+                formType: 'contact',
+                pagePath: window.location.pathname,
+                detail: input.service || undefined,
+            });
             setSubmitted({ reference: json.reference ?? '' });
             setFormData({ name: '', email: '', phone: '', subject: '', service: '', message: '' });
         } catch {

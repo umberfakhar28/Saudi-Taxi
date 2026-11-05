@@ -192,3 +192,68 @@ export function trackWhatsAppClick(
     transport_type: "beacon",
   });
 }
+
+/* ─────────────────────── Form submissions ─────────────────────── */
+
+/**
+ * A submitted enquiry, as distinct from a WhatsApp click.
+ *
+ * `whatsapp_click` says a page created enough interest to open a chat. These
+ * events say something stronger and rarer: somebody filled in a form and the
+ * record reached the database. That is the first signal on this site that
+ * connects a search query to actual business rather than to a button press.
+ *
+ * Each event fires at exactly one point — immediately after the API call
+ * that persists the record returns ok — and never on a click, a validation
+ * failure, a failed request or an intermediate step such as the customer
+ * upsert that precedes a booking insert.
+ *
+ * Email is deliberately not part of the condition. Both booking flows save
+ * the record first and then try to send notifications, treating an email
+ * failure as something to log rather than a failed booking. Waiting for the
+ * email would under-report real enquiries every time Resend has a bad
+ * minute, so these events follow the database, which is the thing that
+ * matters.
+ */
+export const FORM_EVENTS = {
+  contact: "contact_form_submit",
+  booking: "booking_form_submit",
+  destinationEnquiry: "destination_enquiry_submit",
+} as const;
+
+export type FormEventName = (typeof FORM_EVENTS)[keyof typeof FORM_EVENTS];
+
+export interface FormSubmitOptions {
+  /** Which form, in a form the GA UI can group: "contact", "booking", … */
+  formType: string;
+  /** Pathname the form was submitted from. */
+  pagePath: string;
+  /**
+   * Optional non-identifying detail about the request: the service type
+   * chosen from a fixed dropdown, or the destination page a form sits on.
+   * Never free text a customer typed.
+   */
+  detail?: string;
+}
+
+/**
+ * Record a successful form submission.
+ *
+ * No name, email, phone number, message text, trip detail, date, address or
+ * reference id is ever passed here. The parameters are the form's identity
+ * and the page it sat on, which is everything needed to answer "which pages
+ * produce enquiries?" and nothing that could identify who sent one.
+ */
+export function trackFormSubmit(
+  event: FormEventName,
+  { formType, pagePath, detail }: FormSubmitOptions,
+): void {
+  gaEvent(event, {
+    form_type: formType,
+    page_path: pagePath,
+    page_language: pageLanguage(pagePath),
+    page_template: pageTemplateFromPath(pagePath),
+    form_detail: detail,
+    transport_type: "beacon",
+  });
+}

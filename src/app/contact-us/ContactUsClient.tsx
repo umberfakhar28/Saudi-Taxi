@@ -8,6 +8,7 @@ import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
 import { normalizeContactInput, validateContact, contactMessageText, type ContactErrors } from "@/lib/contactMessage";
+import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
 
 const schemas = [
     breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact-us" }]),
@@ -134,6 +135,15 @@ export default function ContactUsClient() {
             }
 
             // Saved. Only now is it safe to say so and clear the form.
+            // The same point is where the enquiry is counted: res.ok on this
+            // endpoint means the row reached contact_messages, since the
+            // route returns 500 before producing a reference if the insert
+            // fails. `service` is a fixed dropdown value, never free text.
+            trackFormSubmit(FORM_EVENTS.contact, {
+                formType: 'contact',
+                pagePath: window.location.pathname,
+                detail: input.service || undefined,
+            });
             setSubmitted({ reference: json.reference ?? '' });
             setFormData({ name: '', email: '', phone: '', subject: '', service: '', message: '' });
         } catch {

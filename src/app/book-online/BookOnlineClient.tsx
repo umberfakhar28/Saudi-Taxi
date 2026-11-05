@@ -11,6 +11,7 @@ import { SEARCH_INDEX } from "@/lib/searchIndex";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
+import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
 import { ui, SERVICE_LABELS_AR, type Locale } from "@/lib/i18n";
 import styles from "./BookOnlineClient.module.css";
 
@@ -333,6 +334,18 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
             const bookingJson = await bookingRes.json();
             if (!bookingRes.ok) throw new Error(bookingJson.error || 'Could not save your booking.');
             const insertedBooking = bookingJson.booking;
+
+            // Counted here, the moment the booking row exists — not after
+            // the emails below, and not at setSubmitted. The customer
+            // upsert in step 1 is an intermediate step and is deliberately
+            // not counted: only this insert means a real enquiry was saved.
+            // `service` is a radio value from a fixed list; nothing the
+            // customer typed is sent.
+            trackFormSubmit(FORM_EVENTS.booking, {
+                formType: 'booking',
+                pagePath: window.location.pathname,
+                detail: formData.service || undefined,
+            });
 
             // 3. Send notification emails. The booking is already safely
             // persisted at this point, so an email hiccup is logged, not
