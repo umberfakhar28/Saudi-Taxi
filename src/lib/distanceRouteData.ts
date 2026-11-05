@@ -69,6 +69,40 @@ export interface DistanceRouteData {
    * planned/future page. */
   relatedServiceLinks: { href: string; label: string }[];
 
+  /**
+   * The commercial route page for this exact corridor, in this direction.
+   *
+   * Why this exists: over the 28 days to 2026-11-01 this page family drew
+   * 7,878 Search Console impressions — 35.5% of the whole site — and
+   * converted 0.34% of them, against 7.10% on the route pages. The queries
+   * behind it are informational ("bahrain to riyadh distance"), which Google
+   * answers on the results page, so most of that volume was never going to
+   * click. The visitors who do land, though, had nowhere commercial to go:
+   * this template linked to city pages, airport pages, the fleet and the
+   * booking form, but never to the route page for the corridor they were
+   * reading about.
+   *
+   * Set ONLY where a route page covers the same two endpoints in the same
+   * direction, verified against routeData's own origin/destination fields.
+   *
+   * Match on those fields, never on the slug. This page family was first
+   * mapped by slug shape ({origin}-to-{destination}-taxi-service), which
+   * missed /riyadh-to-dammam-guide — a real RoutePage, origin Riyadh,
+   * destination Dammam — purely because its slug ends "-guide". The
+   * corridor was written off as reverse-direction-only as a result.
+   *
+   * Deliberately unset where the only candidate is an airport-origin page:
+   * /distance/jeddah-to-madinah has only jeddah-airport-to-madinah, and
+   * sending a Jeddah-city reader to a Jeddah-Airport page offers them a
+   * different product. Owner decision, 2026-11-05.
+   *
+   * Left unset for the four corridors with no route page at all (the Abha
+   * three and riyadh-to-jeddah); the template renders nothing rather than
+   * inventing a destination.
+   */
+  routeHref?: string;
+
+
   ctaText: string;
   heroImage?: string;
   heroImageAlt?: string;
@@ -192,6 +226,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "jeddah-to-makkah": {
     slug: "jeddah-to-makkah",
+    routeHref: "/jeddah-to-makkah-taxi-service",
     origin: "Jeddah",
     destination: "Makkah",
     originCitySlug: "jeddah",
@@ -281,6 +316,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "makkah-to-madinah": {
     slug: "makkah-to-madinah",
+    routeHref: "/makkah-to-madinah-taxi-service",
     origin: "Makkah",
     destination: "Madinah",
     originCitySlug: "makkah",
@@ -460,6 +496,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "riyadh-to-dammam": {
     slug: "riyadh-to-dammam",
+    routeHref: "/riyadh-to-dammam-guide",
     origin: "Riyadh",
     destination: "Dammam",
     originCitySlug: "riyadh",
@@ -550,6 +587,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "riyadh-to-makkah": {
     slug: "riyadh-to-makkah",
+    routeHref: "/riyadh-to-makkah-taxi-service",
     origin: "Riyadh",
     destination: "Makkah",
     originCitySlug: "riyadh",
@@ -639,6 +677,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "bahrain-to-dammam": {
     slug: "bahrain-to-dammam",
+    routeHref: "/bahrain-to-dammam-taxi-service",
     origin: "Bahrain",
     destination: "Dammam",
     destinationCitySlug: "dammam",
@@ -726,6 +765,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "bahrain-to-riyadh": {
     slug: "bahrain-to-riyadh",
+    routeHref: "/bahrain-to-riyadh-taxi-service",
     origin: "Bahrain",
     destination: "Riyadh",
     destinationCitySlug: "riyadh",
@@ -817,6 +857,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "bahrain-to-jubail": {
     slug: "bahrain-to-jubail",
+    routeHref: "/bahrain-to-jubail-taxi-service",
     origin: "Bahrain",
     destination: "Jubail",
     destinationCitySlug: "jubail",
@@ -912,6 +953,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "dammam-to-kuwait": {
     slug: "dammam-to-kuwait",
+    routeHref: "/dammam-to-kuwait-taxi-service",
     origin: "Dammam",
     destination: "Kuwait",
     originCitySlug: "dammam",
@@ -1000,6 +1042,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "riyadh-to-kuwait": {
     slug: "riyadh-to-kuwait",
+    routeHref: "/riyadh-to-kuwait-taxi-service",
     origin: "Riyadh",
     destination: "Kuwait",
     originCitySlug: "riyadh",
@@ -1094,6 +1137,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "khafji-to-kuwait": {
     slug: "khafji-to-kuwait",
+    routeHref: "/khafji-to-kuwait-taxi-service",
     origin: "Khafji",
     destination: "Kuwait",
 
@@ -1175,6 +1219,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "dammam-to-abu-dhabi": {
     slug: "dammam-to-abu-dhabi",
+    routeHref: "/dammam-to-abu-dhabi-taxi-service",
     origin: "Dammam",
     destination: "Abu Dhabi",
     originCitySlug: "dammam",
@@ -1263,6 +1308,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "dammam-to-dubai": {
     slug: "dammam-to-dubai",
+    routeHref: "/dammam-to-dubai-taxi-service",
     origin: "Dammam",
     destination: "Dubai",
     originCitySlug: "dammam",
@@ -1351,6 +1397,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "riyadh-to-dubai": {
     slug: "riyadh-to-dubai",
+    routeHref: "/riyadh-to-dubai-taxi-service",
     origin: "Riyadh",
     destination: "Dubai",
     originCitySlug: "riyadh",
@@ -1440,6 +1487,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "doha-to-riyadh": {
     slug: "doha-to-riyadh",
+    routeHref: "/qatar-to-riyadh-taxi-service",
     origin: "Doha",
     destination: "Riyadh",
     destinationCitySlug: "riyadh",
@@ -1528,6 +1576,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
 
   "doha-to-dammam": {
     slug: "doha-to-dammam",
+    routeHref: "/qatar-to-dammam-taxi-service",
     origin: "Doha",
     destination: "Dammam",
     destinationCitySlug: "dammam",

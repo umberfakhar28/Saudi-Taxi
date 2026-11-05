@@ -99,6 +99,40 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
           </div>
         </section>
 
+        {/* Next step toward the commercial route page for this corridor.
+            Placed immediately under the facts strip because the facts are
+            what the visitor came for: once they have the distance and the
+            drive time, this is the moment they either act or leave, and
+            until now the page gave them nothing to act on.
+
+            Always the same direction the page is about — see routeHref's
+            note in distanceRouteData. A page with no same-direction route
+            page renders nothing here rather than offering the return leg,
+            which is a different journey.
+
+            Styling follows RoutePage's reverse-route callout, the site's
+            established "next step" pattern, so it needs no new CSS and
+            wraps onto two lines on a phone rather than overflowing. */}
+        {data.routeHref && (
+          <section style={{ padding: 'var(--space-8) 0 0' }}>
+            <div className="container">
+              <Link
+                href={data.routeHref}
+                className="card"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)', flexWrap: 'wrap', padding: 'var(--space-5) var(--space-8)' }}
+              >
+                <span style={{ color: 'var(--text-body)', fontSize: 'var(--text-base)' }}>
+                  Travelling this route? Explore private transfer options and fares for{' '}
+                  <strong style={{ color: 'var(--accent)' }}>{data.origin} to {data.destination}</strong>.
+                </span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--accent)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                  View transfer options <ArrowRightIcon size={16} />
+                </span>
+              </Link>
+            </div>
+          </section>
+        )}
+
         {data.heroImage && (
           <section style={{ padding: 'var(--space-8) 0 0' }}>
             <div className="container">
