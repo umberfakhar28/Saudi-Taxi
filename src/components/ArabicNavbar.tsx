@@ -54,9 +54,17 @@ const ArabicNavbar = () => {
                         English
                     </Link>
 
-                    <a data-wa-cta="navbar" href={WHATSAPP_URL} className={styles.cta} target="_blank" rel="noopener noreferrer" onClick={close}>
-                        احجز الآن
+                    {/* This said "احجز الآن" ("Book Now") and opened WhatsApp, so the
+                        Arabic navbar had no route to the booking form at all, while
+                        the English one has both. WhatsApp keeps its own button
+                        beside this, matching the English navbar, and is also still
+                        on the floating action and the mobile bottom nav. */}
+                    <a data-wa-cta="navbar" href={WHATSAPP_URL} className={styles.ctaWhatsapp} target="_blank" rel="noopener noreferrer" onClick={close}>
+                        واتساب
                     </a>
+                    <Link href="/ar/book-online" className={styles.cta} onClick={close}>
+                        احجز الآن
+                    </Link>
                 </div>
             </div>
         </nav>

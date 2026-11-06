@@ -5,6 +5,7 @@ import { createAdminClient } from '@/utils/supabase/admin';
 import { displayDate, displayDateTime, displayTime } from '@/lib/datetime';
 import { formatMoney } from '@/lib/currency';
 import { serviceLabel } from '@/lib/serviceLabels';
+import { bookingRef } from '@/lib/bookingRef';
 import { resolveSender } from '@/lib/emailSender';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { sendPushToAdmins } from '@/lib/webpush';
@@ -341,9 +342,10 @@ export async function POST(req: Request) {
         if (type === 'new_booking') {
             if (!b) return NextResponse.json({ error: 'bookingData or a resolvable bookingId is required' }, { status: 400 });
 
+            const adminReference = (b.booking_number as string) || bookingRef(b.id);
             const subject = `New Booking Request — ${b.customer_name}`;
             const adminHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📩 New Booking Request</p></div>
+                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📩 New Booking Request</p>${adminReference ? `<p style="color:#e2e8f0;margin:6px 0 0;font-size:0.85rem;">Ref ${escapeHtml(adminReference)}</p>` : ''}</div>
                 ${buildBookingRows(b)}
                 <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
@@ -352,14 +354,15 @@ export async function POST(req: Request) {
             if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
             await createNotification(supabase, 'new_booking', b, `New Booking — ${b.customer_name}`);
 
-            const bookingRef = (b.booking_number as string) || (b.id ? String(b.id).slice(0, 8).toUpperCase() : '');
+            const bookingReference = (b.booking_number as string) || bookingRef(b.id);
             const custSubject = `Booking Request Received – For a faster reply, message us on WhatsApp`;
             const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Booking Received!</p></div>
                 <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
-                <p style="color:#475569;">We received your booking request for <strong>${escapeHtml(displayDateTime(b.travel_date as string | null | undefined, b.travel_time as string | null | undefined))}</strong>. Our team will review the details and contact you within 30 minutes to confirm your final quote.</p>
+                <p style="color:#475569;">We received your booking request for <strong>${escapeHtml(displayDateTime(b.travel_date as string | null | undefined, b.travel_time as string | null | undefined))}</strong>. Our team will get back to you as soon as possible to confirm your final quote.</p>
+                ${bookingReference ? `<p style="color:#475569;">Your booking reference is <strong>${escapeHtml(bookingReference)}</strong> — please quote it when you contact us.</p>` : ''}
                 ${buildBookingRows(b)}
-                ${whatsappBlock(`Hi, I have just submitted a booking request${bookingRef ? ` (ref ${bookingRef})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
+                ${whatsappBlock(`Hi, I have just submitted a booking request${bookingReference ? ` (ref ${bookingReference})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
                 <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
             </div></div>`;
             // The admin notification above has already gone out and the

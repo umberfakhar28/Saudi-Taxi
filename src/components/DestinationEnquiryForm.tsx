@@ -9,6 +9,9 @@ import styles from './DestinationEnquiryForm.module.css';
 import TurnstileWidget from './TurnstileWidget';
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from '@/lib/antiSpamClient';
 import { trackFormSubmit, FORM_EVENTS } from '@/lib/analytics';
+// This form is English-only (it renders on the English destination pages),
+// so it maps the booking API's error codes through the English strings.
+import { ui, bookingErrorMessage } from '@/lib/i18n';
 
 const SUGGESTED_VALUES = new Set(SEARCH_INDEX.map((e) => e.value));
 
@@ -122,10 +125,10 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             const bookingRes = await fetch('/api/bookings/create', {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ ...dbPayload, customer_id: custJson.customerId }),
+                body: JSON.stringify(dbPayload),
             });
-            const bookingJson = await bookingRes.json();
-            if (!bookingRes.ok) throw new Error(bookingJson.error || 'Could not save your booking.');
+            const bookingJson = await bookingRes.json().catch(() => ({}));
+            if (!bookingRes.ok) throw new Error(bookingErrorMessage(bookingJson.code, ui('en')));
             const insertedBooking = bookingJson.booking;
 
             // Counted the moment the enquiry row exists, before the email

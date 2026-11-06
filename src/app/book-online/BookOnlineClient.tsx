@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { waLink } from "@/lib/contact";
@@ -12,20 +12,25 @@ import SearchAutocomplete from "@/components/SearchAutocomplete";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
 import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
-import { ui, SERVICE_LABELS_AR, type Locale } from "@/lib/i18n";
+import { ui, SERVICE_LABELS_AR, bookingErrorMessage, type Locale } from "@/lib/i18n";
+import { BOOKING_SERVICES } from "@/lib/bookingServices";
+import { bookingRef } from "@/lib/bookingRef";
+import { riyadhToday, isPastDate, isValidPhone, PASSENGERS_MAX } from "@/lib/bookingValidation";
 import styles from "./BookOnlineClient.module.css";
 
-const services = [
-    { id: "airport-transfer", label: "Airport Transfer", icon: "✈️" },
-    { id: "hotel-transfer", label: "Hotel Transfer", icon: "🏨" },
-    { id: "private-taxi", label: "Private Taxi", icon: "🚗" },
-    { id: "umrah-package", label: "Umrah Transport Package", icon: "🕌" },
-    { id: "hourly-driver", label: "Hourly Chauffeur", icon: "🕐" },
-    { id: "corporate-transport", label: "Corporate Transportation", icon: "💼" },
-    { id: "ziyarat", label: "Ziyarat Tour", icon: "🌙" },
-    { id: "jeddah-tour", label: "Jeddah City Tour", icon: "🌆" },
-    { id: "alula-tour", label: "AlUla Tour", icon: "🏜️" },
-];
+/**
+ * Two steps, not three.
+ *
+ * "Select service" and "trip details" were separate steps, which meant two
+ * screens and two Next clicks before a customer had described a journey the
+ * business could actually quote. They are now one step: a compact service
+ * grid above the trip fields. Contact details and submission are step two.
+ *
+ * The service list moved to src/lib/bookingServices.ts so the booking API
+ * can validate `service_type` against the same nine ids — it previously
+ * accepted any string at all.
+ */
+const services = BOOKING_SERVICES;
 
 // Maps the homepage search bar's Day Trips mode (src/lib/tourData.ts slugs)
 // onto this page's own service radio-button ids — the two lists evolved
@@ -96,13 +101,22 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
     const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
-    const [step2Errors, setStep2Errors] = useState<Record<string, string>>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [submitted, setSubmitted] = useState(false);
+    const [reference, setReference] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     // Spam protection: the Turnstile token, and a honeypot only a bot fills.
     const [spamToken, setSpamToken] = useState('');
     const [honeypot, setHoneypot] = useState('');
+    /** Guards against a double submit that slips past the disabled button
+     *  (a double-tap firing before React has re-rendered). */
+    const submitLock = useRef(false);
+
+    /** Earliest selectable travel date, in Riyadh's civil date rather than
+     *  the visitor's: a customer in Los Angeles must still be able to pick
+     *  today in Saudi Arabia. Computed once per mount. */
+    const minDate = useMemo(() => riyadhToday(), []);
 
     // Rehydrate form state after a chunk-error-triggered reload (Fix 6) —
     // only runs when the reload guard is actually set, so a normal visit
@@ -117,7 +131,9 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
         try {
             const { formData: savedFormData, step: savedStep } = JSON.parse(saved) as { formData: FormData; step: number };
             setFormData({ ...EMPTY_FORM, ...savedFormData });
-            setStep(savedStep);
+            // Clamp: saved state may predate the two-step flow, where 3 was
+            // the contact step. Anything past step 2 is step 2 now.
+            setStep(savedStep >= 2 ? 2 : 1);
         } catch {
             // Malformed saved state — nothing to restore, fail silently rather
             // than blocking the page.
@@ -171,8 +187,8 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
             service = 'private-taxi';
         }
         // Arrived with only a `vehicle` param (no mode/from) — service is
-        // left blank on purpose so the customer confirms it on Step 1
-        // themselves; the vehicle choice is retained regardless (below).
+        // left blank on purpose so the customer confirms it themselves on
+        // Step 1; the vehicle choice is retained regardless (below).
 
         // Name, email, vehicle and note come from the homepage request's
         // details step (HeroSearchBar). Luggage and the return leg get their
@@ -200,28 +216,41 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
             notes: notesParam || prev.notes,
         }));
 
-        // Only skip ahead to Trip Details once a concrete service is
-        // actually known — landing on Step 2 with an empty service was
-        // exactly how a booking used to reach the database with no service
-        // recorded at all. A vehicle-only arrival (no mode) stays on Step 1
-        // so the customer picks a service, with the vehicle already retained.
-        // Arriving from the homepage with the customer's details already
-        // entered: the trip is complete, so open straight on the final step.
+        /**
+         * Skipping ahead, adapted to the two-step flow.
+         *
+         * The old flow had three steps and could land on 2 (trip) or 3
+         * (contact). Service and trip are now the same step, so there is
+         * only one thing left to skip to: a customer who arrived with a
+         * complete trip *and* their name already goes straight to Step 2.
+         * Everything that previously jumped to Step 2 now simply stays on
+         * Step 1 with the fields prefilled — which is where those fields
+         * live. No query parameter changed meaning, and no existing link
+         * needs updating.
+         *
+         * Still gated on a concrete service: landing on the contact step
+         * with an empty service was how a booking once reached the database
+         * with no service recorded. Gated on the name alone, not the email —
+         * the homepage bar does not demand an address.
+         */
         const tripComplete = !!(from.trim() && to.trim() && date && time);
-        // Gated on the name alone, not the email: the homepage bar's details
-        // step no longer demands an address, and a customer who left it blank
-        // there would otherwise be dropped back onto Trip Details having
-        // already filled it in.
         if (service && tripComplete && nameParam) {
-            setStep(3);
-        } else if (service) {
             setStep(2);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((f) => ({ ...f, [name]: value }));
+        // Clear this field's error as soon as it is touched, rather than
+        // leaving a stale message under a field the customer has just fixed.
+        setErrors((prev) => (prev[name] ? { ...prev, [name]: '' } : prev));
+    };
+
+    const setField = (name: keyof FormData, value: string) => {
+        setFormData((f) => ({ ...f, [name]: value }));
+        setErrors((prev) => (prev[name] ? { ...prev, [name]: '' } : prev));
     };
 
     const clearVehicle = () => setFormData((f) => ({ ...f, vehicleSlug: '', vehicleName: '' }));
@@ -246,22 +275,49 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
         notes: formData.notes,
     });
 
-    const validateStep2 = (): boolean => {
+    /** Step 1 — service plus the trip itself. */
+    const validateStep1 = (): boolean => {
         const e: Record<string, string> = {};
-        if (!formData.from.trim()) e.from = 'Pickup location is required.';
-        if (!formData.to.trim()) e.to = 'Drop-off location is required.';
-        if (!formData.date) e.date = 'Travel date is required.';
-        if (!formData.time) e.time = 'Pickup time is required.';
-        setStep2Errors(e);
+        if (!formData.service) e.service = t.errServiceRequired;
+        if (!formData.from.trim()) e.from = t.errPickupRequired;
+        if (!formData.to.trim()) e.to = t.errDropoffRequired;
+        if (!formData.date) e.date = t.errDateRequired;
+        else if (isPastDate(formData.date)) e.date = t.errDatePast;
+        if (!formData.time) e.time = t.errTimeRequired;
+        setErrors(e);
         return Object.keys(e).length === 0;
     };
 
-    const goToStep3 = () => {
-        if (validateStep2()) setStep(3);
+    /** Step 2 — who to call back. Mirrors the server's rules so a customer
+     *  is told what is wrong before a round trip, not after one. */
+    const validateStep2 = (): boolean => {
+        const e: Record<string, string> = {};
+        if (!formData.name.trim()) e.name = t.errNameRequired;
+        if (!formData.phone.trim()) e.phone = t.errPhoneRequired;
+        else if (!isValidPhone(formData.phone)) e.phone = t.errPhoneInvalid;
+        setErrors(e);
+        return Object.keys(e).length === 0;
+    };
+
+    const goToStep2 = () => {
+        if (validateStep1()) {
+            setStep(2);
+            setErrors({});
+        }
+    };
+
+    const backToStep1 = () => {
+        // Nothing is cleared: formData is the single source for both steps,
+        // so Edit Trip always returns to a fully populated Step 1.
+        setStep(1);
+        setErrors({});
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (submitLock.current) return;
+        if (!validateStep2()) return;
+        submitLock.current = true;
         setIsSubmitting(true);
         setSubmitError(null);
 
@@ -272,21 +328,26 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
             if (!gate.ok) {
                 setSubmitError(gate.message ?? t.verificationNeeded);
                 setIsSubmitting(false);
+                submitLock.current = false;
                 return;
             }
             const headers = submissionHeaders(gate.pass);
 
             // 1. Create/update the customer record (Admin Portal audit §10 —
             // the `customers` table existed but nothing ever wrote to it).
-            // Done before the booking insert so the booking can carry a real
-            // foreign key rather than being matched up later by guesswork.
+            // Done before the booking insert so the booking can be linked to
+            // a real row. The id it returns is no longer passed through to
+            // the booking: /api/bookings/create resolves the association
+            // itself from the phone number, because a client-supplied
+            // customer id could have attached this booking to someone
+            // else's customer record.
             const custRes = await fetch('/api/customers/upsert', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({ name: formData.name, email: formData.email, phone: formData.phone }),
             });
-            const custJson = await custRes.json();
-            if (!custRes.ok) throw new Error(custJson.error || 'Could not save your contact details.');
+            const custJson = await custRes.json().catch(() => ({}));
+            if (!custRes.ok) throw new Error(bookingErrorMessage(custJson.code, t) || t.errSaveContact);
 
             // Luggage and the return leg have no columns of their own, so the
             // stored notes carry them ahead of the customer's own note — the
@@ -298,7 +359,6 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
             ].filter(Boolean).join(' | ');
 
             const bookingData = {
-                customer_id: custJson.customerId,
                 customer_name: formData.name,
                 customer_email: formData.email,
                 customer_phone: formData.phone,
@@ -331,8 +391,8 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                 headers,
                 body: JSON.stringify(bookingData),
             });
-            const bookingJson = await bookingRes.json();
-            if (!bookingRes.ok) throw new Error(bookingJson.error || 'Could not save your booking.');
+            const bookingJson = await bookingRes.json().catch(() => ({}));
+            if (!bookingRes.ok) throw new Error(bookingErrorMessage(bookingJson.code, t) || t.errSaveBooking);
             const insertedBooking = bookingJson.booking;
 
             // Counted here, the moment the booking row exists — not after
@@ -346,6 +406,12 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                 pagePath: window.location.pathname,
                 detail: formData.service || undefined,
             });
+
+            // The customer-facing reference, derived from the row that now
+            // exists rather than generated alongside it. Shown below even
+            // when no email address was given, which is the case this used
+            // to leave with nothing to quote.
+            setReference(bookingRef(insertedBooking?.id ?? bookingJson.id));
 
             // 3. Send notification emails. The booking is already safely
             // persisted at this point, so an email hiccup is logged, not
@@ -392,268 +458,366 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                 window.location.reload();
                 return;
             }
-            const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
-            setSubmitError(message);
+            setSubmitError(error instanceof Error ? error.message : t.errGeneric);
+            submitLock.current = false;
         } finally {
             setIsSubmitting(false);
         }
     };
 
+    const steps = [t.stepYourTrip, t.stepInfo];
+
     return (
         <section className="section-lg">
-                <div className="container" style={{ maxWidth: '800px' }}>
+            <div className="container" style={{ maxWidth: '860px' }}>
 
-                    {submitted ? (
-                        <div className="card" style={{ textAlign: 'center', padding: '4rem' }}>
-                            <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✅</div>
-                            <h2 style={{ color: 'var(--navy)' }}>{t.bookingReceived}</h2>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2rem' }}>
-                                {t.bookingReceivedBody(formData.name)}
-                            </p>
-                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                                <Link href={isAr ? "/ar" : "/"} className="btn btn-primary">{t.backToHome}</Link>
-                                <a data-wa-cta="booking-success" href={waLink(whatsappText)} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">{t.sendDetailsWhatsApp}</a>
+                {submitted ? (
+                    /* role=status so the outcome is announced, not only shown. */
+                    <div className="card" role="status" aria-live="polite" style={{ textAlign: 'center', padding: 'var(--space-10) var(--space-6)' }}>
+                        <div style={{ fontSize: '3.5rem', marginBottom: 'var(--space-5)' }} aria-hidden="true">✅</div>
+                        <h2 style={{ color: 'var(--navy)' }}>{t.bookingReceived}</h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', marginBottom: 'var(--space-6)' }}>
+                            {t.bookingReceivedBody(formData.name)}
+                        </p>
+                        {reference && (
+                            <div className={styles.refBox}>
+                                <span className={styles.refLabel}>{t.bookingRefLabel}</span>
+                                <strong className={styles.refValue} dir="ltr">{reference}</strong>
+                                <span className={styles.refHint}>{t.bookingRefHint}</span>
                             </div>
+                        )}
+                        <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <Link href={isAr ? "/ar" : "/"} className="btn btn-primary">{t.backToHome}</Link>
+                            <a data-wa-cta="booking-success" href={waLink(whatsappText)} className="btn btn-outline-gold" target="_blank" rel="noopener noreferrer">{t.sendDetailsWhatsApp}</a>
                         </div>
-                    ) : (
-                        <>
-                            {/* Selected service — visible confirmation that the Step 1 choice
-                                carried forward, mirroring the vehicle chip below. Fixes the
-                                "did my selection disappear?" perception: the data was always
-                                retained in formData.service, it just wasn't shown again after
-                                Step 1. */}
-                            {step > 1 && selectedService && (
-                                <div className={styles.selectionChip}>
-                                    <span>{selectedService.icon} {t.serviceLabel}: <strong>{serviceLabelFor(selectedService)}</strong></span>
-                                    <button type="button" onClick={() => setStep(1)}>{t.changeLabel}</button>
-                                </div>
-                            )}
-
-                            {/* Selected vehicle — persists across all 3 steps once set from a
-                                vehicle's "Book Now" button; never needs reselecting. */}
-                            {formData.vehicleName && (
-                                <div style={{
-                                    display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem 1rem',
-                                    background: 'rgba(8, 24, 39, 0.04)', border: '1px solid var(--line)',
-                                    borderRadius: 'var(--radius-md)', padding: '0.85rem 1.25rem', marginBottom: '1.5rem',
-                                }}>
-                                    <span style={{ fontSize: '0.9rem', color: 'var(--text-dark)', minWidth: 0, wordBreak: 'break-word' }}>
-                                        🚗 {t.bookingForLabel}: <strong>{formData.vehicleName}</strong>
-                                    </span>
-                                    <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--teal)', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', flexShrink: 0 }}>
-                                        {t.changeVehicle}
-                                    </button>
-                                </div>
-                            )}
-
-                            {/* Progress Steps — connector width uses clamp() so 3 steps + 2
-                                connectors never exceed a narrow mobile viewport (audit §13:
-                                step navigation must not clip/overflow on small screens). */}
-                            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem', gap: '0' }}>
-                                {[t.stepService, t.stepTrip, t.stepInfo].map((label, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
-                                        <div style={{ textAlign: 'center' }}>
-                                            <div style={{
-                                                width: '40px', height: '40px', borderRadius: '50%',
-                                                /* Flat gold for the current step (an active-state indicator, one of
-                                                   gold's allowed roles) — no gradient. Green for completed steps. */
-                                                background: step > i + 1 ? 'var(--success)' : step === i + 1 ? 'var(--gold)' : 'var(--gray-300)',
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.5rem',
-                                                color: step > i + 1 ? 'var(--on-dark)' : step === i + 1 ? 'var(--navy)' : 'var(--gray-500)', fontWeight: 700,
-                                                fontSize: '0.9rem',
-                                            }}>
-                                                {step > i + 1 ? '✓' : i + 1}
-                                            </div>
-                                            <div style={{ fontSize: '0.75rem', color: step === i + 1 ? 'var(--navy)' : 'var(--text-muted)', fontWeight: step === i + 1 ? 600 : 400, whiteSpace: 'nowrap' }}>{label}</div>
-                                        </div>
-                                        {i < 2 && <div style={{ width: 'clamp(30px, 8vw, 80px)', height: '2px', background: step > i + 1 ? 'var(--success)' : 'var(--gray-300)', margin: '0 0.5rem 1.5rem' }} />}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <form onSubmit={handleSubmit}>
-                                {/* Step 1: Select Service */}
-                                {step === 1 && (
-                                    <div className="card">
-                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>{t.selectService}</h2>
-                                        <div className="grid-2">
-                                            {services.map((svc) => (
-                                                <label key={svc.id} style={{
-                                                    display: 'flex', alignItems: 'center', gap: '1rem',
-                                                    padding: '1.2rem 1.5rem', borderRadius: 'var(--radius-md)',
-                                                    /* Gold border marks the selected card — an active-state indicator,
-                                                       and only one radio option is ever selected at a time. */
-                                                    border: `2px solid ${formData.service === svc.id ? 'var(--gold)' : 'var(--gray-300)'}`,
-                                                    cursor: 'pointer', transition: 'all 0.2s',
-                                                    background: 'var(--white)',
-                                                }}>
-                                                    <input type="radio" name="service" value={svc.id} checked={formData.service === svc.id} onChange={handleChange} style={{ display: 'none' }} />
-                                                    <span style={{ fontSize: '1.8rem' }}>{svc.icon}</span>
-                                                    <div>
-                                                        <div style={{ fontWeight: 600, color: 'var(--text-dark)', fontSize: '0.95rem' }}>{serviceLabelFor(svc)}</div>
-                                                    </div>
-                                                </label>
-                                            ))}
-                                        </div>
-                                        <div className={`${styles.actions} ${styles.actionsEnd}`} style={{ marginTop: '2rem' }}>
-                                            <button type="button" className="btn btn-primary" disabled={!formData.service} onClick={() => setStep(2)} style={{ opacity: formData.service ? 1 : 0.5, cursor: formData.service ? 'pointer' : 'not-allowed' }}>
-                                                {t.nextTripDetails}
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Step 2: Trip Details */}
-                                {step === 2 && (
-                                    <div className="card">
-                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>{t.tripDetails}</h2>
-                                        {Object.keys(step2Errors).length > 0 && (
-                                            <div style={{ background: 'rgba(179, 38, 30, 0.08)', border: '1px solid var(--error)', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: 'var(--error)', fontSize: '0.85rem' }}>
-                                                {t.fillRequired}
-                                            </div>
-                                        )}
-                                        <div className={styles.locationRow} style={{ marginBottom: 'var(--space-6)' }}>
-                                            <div className="form-group" style={{ marginBottom: 0 }}>
-                                                <SearchAutocomplete
-                                                    variant="field"
-                                                    label={t.pickupLocation}
-                                                    placeholder={t.pickupPlaceholder}
-                                                    value={formData.from}
-                                                    onChange={(v) => setFormData((f) => ({ ...f, from: v }))}
-                                                    required
-                                                    invalid={!!step2Errors.from}
-                                                />
-                                                {step2Errors.from && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.from}</p>}
-                                            </div>
-                                            <button type="button" className={styles.swapBtn} onClick={swapLocations} aria-label="Swap pickup and drop-off locations" title="Swap pickup and drop-off">
-                                                ⇄
-                                            </button>
-                                            <div className="form-group" style={{ marginBottom: 0 }}>
-                                                <SearchAutocomplete
-                                                    variant="field"
-                                                    label={t.dropoffLocation}
-                                                    placeholder={t.dropoffPlaceholder}
-                                                    value={formData.to}
-                                                    onChange={(v) => setFormData((f) => ({ ...f, to: v }))}
-                                                    required
-                                                    invalid={!!step2Errors.to}
-                                                />
-                                                {step2Errors.to && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.to}</p>}
-                                            </div>
-                                        </div>
-                                        <div className="grid-2">
-                                            <div className="form-group">
-                                                <label className="form-label">{t.travelDate}</label>
-                                                <input type="date" name="date" className="form-input" value={formData.date} onChange={handleChange} aria-invalid={!!step2Errors.date} style={step2Errors.date ? { borderColor: 'var(--error)' } : undefined} required />
-                                                {step2Errors.date && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.date}</p>}
-                                            </div>
-                                            <div className="form-group">
-                                                <label className="form-label">{t.pickupTime}</label>
-                                                <input type="time" name="time" className="form-input" value={formData.time} onChange={handleChange} aria-invalid={!!step2Errors.time} style={step2Errors.time ? { borderColor: 'var(--error)' } : undefined} required />
-                                                {step2Errors.time && <p style={{ color: 'var(--error)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{step2Errors.time}</p>}
-                                            </div>
-                                        </div>
-                                        <div className="grid-2">
-                                            <div className="form-group">
-                                                <label className="form-label">{t.numberOfPassengers}</label>
-                                                <select name="passengers" className="form-select" value={formData.passengers} onChange={handleChange}>
-                                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{isAr ? `${n} ${t.passenger}` : `${n} passenger${n > 1 ? 's' : ''}`}</option>)}
-                                                </select>
-                                            </div>
-                                            <div className="form-group">
-                                                <label className="form-label">{t.luggage}</label>
-                                                <select name="luggage" className="form-select" value={formData.luggage} onChange={handleChange}>
-                                                    <option value="">{t.luggageNotSure}</option>
-                                                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={String(n)}>{isAr ? `${n} ${t.bags}` : `${n} bag${n === 1 ? '' : 's'}`}</option>)}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="grid-2">
-                                            <div className="form-group">
-                                                <label className="form-label">{t.vehicle} {formData.vehicleName ? '' : t.vehicleOptional}</label>
-                                                {formData.vehicleName ? (
-                                                    <div className="form-input" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-dark)', fontWeight: 600 }}>
-                                                        <span>🚗 {formData.vehicleName}</span>
-                                                        <button type="button" onClick={clearVehicle} style={{ background: 'none', border: 'none', color: 'var(--teal)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Change</button>
-                                                    </div>
-                                                ) : (
-                                                    <select name="vehicleName" className="form-select" value={formData.vehicleName} onChange={handleChange}>
-                                                        <option value="">{t.noPreference}</option>
-                                                        {VEHICLE_OPTIONS.map((v) => <option key={v} value={v}>{v}</option>)}
-                                                    </select>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className={styles.actions} style={{ marginTop: '1rem' }}>
-                                            <button type="button" className="btn btn-outline-gold" onClick={() => setStep(1)}>{t.back}</button>
-                                            <button type="button" className="btn btn-primary" onClick={goToStep3}>{t.nextYourInfo}</button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Step 3: Personal Info */}
-                                {step === 3 && (
-                                    <div className="card">
-                                        <h2 style={{ color: 'var(--navy)', marginBottom: '1.5rem' }}>{t.yourInformation}</h2>
-                                        <div className={styles.tripSummary}>
-                                            <dl>
-                                                <div><dt>{t.route}</dt><dd><bdi>{formData.from}</bdi> → <bdi>{formData.to}</bdi></dd></div>
-                                                <div><dt>{t.when}</dt><dd><bdi>{formatWhen(formData.date, formData.time)}</bdi></dd></div>
-                                                {formData.returnTrip && <div><dt>{t.returnLabel}</dt><dd><bdi>{formData.returnTrip}</bdi></dd></div>}
-                                                <div><dt>{t.passengers}</dt><dd>{formData.passengers}{formData.luggage !== '' ? ` · ${formData.luggage} ${isAr ? t.bags : `bag${formData.luggage === '1' ? '' : 's'}`}` : ''}</dd></div>
-                                            </dl>
-                                            <button type="button" onClick={() => setStep(2)}>{t.editTrip}</button>
-                                        </div>
-                                        {submitError && (
-                                            <div style={{ background: 'rgba(179, 38, 30, 0.08)', border: '1px solid var(--error)', borderRadius: 'var(--radius-sm)', padding: '0.85rem 1rem', marginBottom: '1.25rem', color: 'var(--error)', fontSize: '0.85rem' }}>
-                                                {submitError} {t.errorRetry}
-                                            </div>
-                                        )}
-                                        <div className="grid-2">
-                                            <div className="form-group">
-                                                <label className="form-label">{t.fullName}</label>
-                                                <input type="text" name="name" className="form-input" placeholder="Your full name" autoComplete="name" value={formData.name} onChange={handleChange} required />
-                                            </div>
-                                            <div className="form-group">
-                                                <label className="form-label">{t.emailAddress} <span style={{ color: '#94a3b8', fontWeight: 400 }}>{t.vehicleOptional}</span></label>
-                                                {/* Optional: a customer who books by phone or WhatsApp
-                                                    often has no email, and the confirmation they care
-                                                    about reaches them on WhatsApp anyway. The field
-                                                    stays so an address is captured when one is given. */}
-                                                <input type="email" name="email" className="form-input" placeholder="your@email.com" autoComplete="email" value={formData.email} onChange={handleChange} />
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">{t.phoneWhatsApp}</label>
-                                            <input type="tel" name="phone" className="form-input" placeholder="+966 50 123 4567" autoComplete="tel" value={formData.phone} onChange={handleChange} required />
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">{t.specialRequirements}</label>
-                                            <textarea name="notes" className="form-textarea" placeholder={t.specialRequirementsPlaceholder} value={formData.notes} onChange={handleChange} rows={4} />
-                                        </div>
-                                        <input {...honeypotFieldProps} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
-                                        <TurnstileWidget onToken={setSpamToken} />
-
-                                        <div className={styles.actions} style={{ marginTop: '0.5rem' }}>
-                                            <button type="button" className="btn btn-outline-gold" onClick={() => setStep(2)}>{t.back}</button>
-                                            <button type="submit" className={`btn btn-primary btn-lg ${styles.confirmBtn}`} disabled={isSubmitting}>
-                                                {isSubmitting ? t.processing : t.confirmBooking}
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </form>
-                        </>
-                    )}
-
-                    {/* WhatsApp Alternative */}
-                    <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius-md)' }}>
-                        <p style={{ color: 'var(--text-muted)', margin: '0 0 1rem' }}>{t.preferWhatsApp}</p>
-                        <a data-wa-cta="booking-form-alternative" href={waLink(whatsappText)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                            {t.bookViaWhatsApp}
-                        </a>
                     </div>
+                ) : (
+                    <>
+                        {/* Progress — an ordered list with aria-current, so the
+                            position in the flow is conveyed, not just drawn. */}
+                        <ol className={styles.progress} aria-label={t.stepYourTrip + ' / ' + t.stepInfo}>
+                            {steps.map((label, i) => {
+                                const n = i + 1;
+                                const state = step > n ? 'done' : step === n ? 'current' : 'todo';
+                                return (
+                                    <li
+                                        key={label}
+                                        /* 'todo' has no class of its own — the base
+                                           .progressStep/.progressDot styling *is* the
+                                           not-yet-reached look, and emitting
+                                           styles.todo would print "undefined". */
+                                        className={`${styles.progressStep}${state === 'todo' ? '' : ` ${styles[state]}`}`}
+                                        aria-current={step === n ? 'step' : undefined}
+                                    >
+                                        <span className={styles.progressDot} aria-hidden="true">{step > n ? '✓' : n}</span>
+                                        <span className={styles.progressLabel}>{label}</span>
+                                    </li>
+                                );
+                            })}
+                        </ol>
+
+                        <form onSubmit={handleSubmit} noValidate>
+                            {/* ───────── Step 1 — Your Trip ───────── */}
+                            {step === 1 && (
+                                <div className="card">
+                                    <h2 className={styles.stepHeading} id="svc-heading">{t.selectService}</h2>
+
+                                    {/*
+                                        A real radiogroup. The old markup hid each
+                                        radio with `display: none`, which took the
+                                        whole service step out of the tab order and
+                                        out of the accessibility tree — it could not
+                                        be completed by keyboard at all. The inputs
+                                        are now visually hidden but focusable, so
+                                        arrow keys move between options and the
+                                        focus ring lands on the card.
+                                    */}
+                                    <div
+                                        className={styles.serviceGrid}
+                                        role="radiogroup"
+                                        aria-labelledby="svc-heading"
+                                        aria-describedby={errors.service ? 'svc-error' : undefined}
+                                    >
+                                        {services.map((svc) => (
+                                            <label
+                                                key={svc.id}
+                                                className={`${styles.serviceCard} ${formData.service === svc.id ? styles.serviceCardActive : ''}`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="service"
+                                                    value={svc.id}
+                                                    checked={formData.service === svc.id}
+                                                    onChange={handleChange}
+                                                    className={styles.srOnlyInput}
+                                                />
+                                                <span className={styles.serviceIcon} aria-hidden="true">{svc.icon}</span>
+                                                <span className={styles.serviceLabel}>{serviceLabelFor(svc)}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                    {errors.service && <p id="svc-error" className={styles.fieldError} role="alert">{errors.service}</p>}
+
+                                    <h2 className={styles.stepHeading} style={{ marginTop: 'var(--space-8)' }}>{t.stepTrip}</h2>
+                                    <p className={styles.requiredNote}>{t.requiredFieldsNote}</p>
+
+                                    <div className={styles.locationRow} style={{ marginBottom: 'var(--space-6)' }}>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <SearchAutocomplete
+                                                variant="field"
+                                                label={`${t.pickupLocation} *`}
+                                                placeholder={t.pickupPlaceholder}
+                                                value={formData.from}
+                                                onChange={(v) => setField('from', v)}
+                                                required
+                                                invalid={!!errors.from}
+                                            />
+                                            {errors.from && <p className={styles.fieldError} role="alert">{errors.from}</p>}
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className={styles.swapBtn}
+                                            onClick={swapLocations}
+                                            aria-label={t.swapLocationsLabel}
+                                            title={t.swapLocationsLabel}
+                                        >
+                                            ⇄
+                                        </button>
+                                        <div className="form-group" style={{ marginBottom: 0 }}>
+                                            <SearchAutocomplete
+                                                variant="field"
+                                                label={`${t.dropoffLocation} *`}
+                                                placeholder={t.dropoffPlaceholder}
+                                                value={formData.to}
+                                                onChange={(v) => setField('to', v)}
+                                                required
+                                                invalid={!!errors.to}
+                                            />
+                                            {errors.to && <p className={styles.fieldError} role="alert">{errors.to}</p>}
+                                        </div>
+                                    </div>
+
+                                    <div className="grid-2">
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="bk-date">{t.travelDate} *</label>
+                                            <input
+                                                id="bk-date"
+                                                type="date"
+                                                name="date"
+                                                className="form-input"
+                                                value={formData.date}
+                                                onChange={handleChange}
+                                                /* Riyadh's civil date, not the browser's — and the
+                                                   server re-checks it, because `min` is a hint. */
+                                                min={minDate}
+                                                aria-invalid={!!errors.date}
+                                                aria-describedby={errors.date ? 'bk-date-error' : undefined}
+                                                style={errors.date ? { borderColor: 'var(--error)' } : undefined}
+                                            />
+                                            {errors.date && <p id="bk-date-error" className={styles.fieldError} role="alert">{errors.date}</p>}
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="bk-time">{t.pickupTime} *</label>
+                                            <input
+                                                id="bk-time"
+                                                type="time"
+                                                name="time"
+                                                className="form-input"
+                                                value={formData.time}
+                                                onChange={handleChange}
+                                                aria-invalid={!!errors.time}
+                                                aria-describedby={errors.time ? 'bk-time-error' : undefined}
+                                                style={errors.time ? { borderColor: 'var(--error)' } : undefined}
+                                            />
+                                            {errors.time && <p id="bk-time-error" className={styles.fieldError} role="alert">{errors.time}</p>}
+                                        </div>
+                                    </div>
+
+                                    <div className="grid-2">
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="bk-passengers">{t.numberOfPassengers}</label>
+                                            <select id="bk-passengers" name="passengers" className="form-select" value={formData.passengers} onChange={handleChange}>
+                                                {Array.from({ length: PASSENGERS_MAX }, (_, i) => i + 1).map((n) => (
+                                                    <option key={n} value={n}>{isAr ? `${n} ${t.passenger}` : `${n} passenger${n > 1 ? 's' : ''}`}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="bk-luggage">{t.luggage}</label>
+                                            <select id="bk-luggage" name="luggage" className="form-select" value={formData.luggage} onChange={handleChange}>
+                                                <option value="">{t.luggageNotSure}</option>
+                                                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                                                    <option key={n} value={String(n)}>{isAr ? `${n} ${t.bags}` : `${n} bag${n === 1 ? '' : 's'}`}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="bk-vehicle">
+                                            {t.vehicle} <span className={styles.optionalTag}>{t.vehicleOptional}</span>
+                                        </label>
+                                        {formData.vehicleName ? (
+                                            <div className={styles.vehicleChosen}>
+                                                <span>🚗 {formData.vehicleName}</span>
+                                                <button type="button" onClick={clearVehicle}>{t.changeVehicle}</button>
+                                            </div>
+                                        ) : (
+                                            <select id="bk-vehicle" name="vehicleName" className="form-select" value={formData.vehicleName} onChange={handleChange}>
+                                                <option value="">{t.noPreference}</option>
+                                                {VEHICLE_OPTIONS.map((v) => <option key={v} value={v}>{v}</option>)}
+                                            </select>
+                                        )}
+                                    </div>
+
+                                    <div className={`${styles.actions} ${styles.actionsEnd}`} style={{ marginTop: 'var(--space-6)' }}>
+                                        <button type="button" className={`btn btn-primary btn-lg ${styles.confirmBtn}`} onClick={goToStep2}>
+                                            {t.continueToInfo}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* ───────── Step 2 — Your Information ───────── */}
+                            {step === 2 && (
+                                <div className="card">
+                                    <h2 className={styles.stepHeading}>{t.yourInformation}</h2>
+
+                                    {/* Editable recap of everything from Step 1. */}
+                                    <div className={styles.tripSummary}>
+                                        <dl>
+                                            {selectedService && (
+                                                <div><dt>{t.serviceLabel}</dt><dd>{selectedService.icon} {serviceLabelFor(selectedService)}</dd></div>
+                                            )}
+                                            <div><dt>{t.route}</dt><dd><bdi>{formData.from}</bdi> → <bdi>{formData.to}</bdi></dd></div>
+                                            <div><dt>{t.when}</dt><dd><bdi>{formatWhen(formData.date, formData.time)}</bdi></dd></div>
+                                            {formData.returnTrip && <div><dt>{t.returnLabel}</dt><dd><bdi>{formData.returnTrip}</bdi></dd></div>}
+                                            <div><dt>{t.passengers}</dt><dd>{formData.passengers}{formData.luggage !== '' ? ` · ${formData.luggage} ${isAr ? t.bags : `bag${formData.luggage === '1' ? '' : 's'}`}` : ''}</dd></div>
+                                            {formData.vehicleName && <div><dt>{t.vehicle}</dt><dd>{formData.vehicleName}</dd></div>}
+                                        </dl>
+                                        <button type="button" onClick={backToStep1}>{t.editTrip}</button>
+                                    </div>
+
+                                    {submitError && (
+                                        <div className={styles.submitError} role="alert">
+                                            {submitError} {t.errorRetry}
+                                        </div>
+                                    )}
+
+                                    <p className={styles.requiredNote}>{t.requiredFieldsNote}</p>
+
+                                    <div className="grid-2">
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="bk-name">{t.fullName} *</label>
+                                            <input
+                                                id="bk-name"
+                                                type="text"
+                                                name="name"
+                                                className="form-input"
+                                                placeholder={t.fullNamePlaceholder}
+                                                autoComplete="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                aria-invalid={!!errors.name}
+                                                aria-describedby={errors.name ? 'bk-name-error' : undefined}
+                                                style={errors.name ? { borderColor: 'var(--error)' } : undefined}
+                                            />
+                                            {errors.name && <p id="bk-name-error" className={styles.fieldError} role="alert">{errors.name}</p>}
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="bk-phone">{t.phoneWhatsApp} *</label>
+                                            {/* inputMode=tel keeps the phone keypad on mobile while
+                                                still accepting "+", spaces and dashes; the country
+                                                code is invited rather than assumed. */}
+                                            <input
+                                                id="bk-phone"
+                                                type="tel"
+                                                inputMode="tel"
+                                                name="phone"
+                                                className="form-input"
+                                                placeholder="+966 50 123 4567"
+                                                autoComplete="tel"
+                                                dir="ltr"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                aria-invalid={!!errors.phone}
+                                                aria-describedby={errors.phone ? 'bk-phone-error' : undefined}
+                                                style={errors.phone ? { borderColor: 'var(--error)' } : undefined}
+                                            />
+                                            {errors.phone && <p id="bk-phone-error" className={styles.fieldError} role="alert">{errors.phone}</p>}
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="bk-email">
+                                            {t.emailAddress} <span className={styles.optionalTag}>{t.vehicleOptional}</span>
+                                        </label>
+                                        {/* Optional: a customer who books by phone or WhatsApp
+                                            often has no email, and the confirmation they care
+                                            about reaches them on WhatsApp anyway. The field
+                                            stays so an address is captured when one is given. */}
+                                        <input
+                                            id="bk-email"
+                                            type="email"
+                                            name="email"
+                                            className="form-input"
+                                            placeholder="your@email.com"
+                                            autoComplete="email"
+                                            dir="ltr"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="bk-notes">
+                                            {t.specialRequirements} <span className={styles.optionalTag}>{t.vehicleOptional}</span>
+                                        </label>
+                                        <textarea
+                                            id="bk-notes"
+                                            name="notes"
+                                            className="form-textarea"
+                                            placeholder={t.specialRequirementsPlaceholder}
+                                            value={formData.notes}
+                                            onChange={handleChange}
+                                            rows={4}
+                                        />
+                                    </div>
+
+                                    <input {...honeypotFieldProps} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                                    <TurnstileWidget onToken={setSpamToken} />
+
+                                    {/* Payment, immediately before the CTA — the wording is the
+                                        approved FAQ copy (see i18n paymentBody). The page
+                                        previously said nothing about payment at all, so the
+                                        strongest fact here, that no advance payment is required,
+                                        never reached the point of decision. Information only:
+                                        no method is selected, nothing is stored. */}
+                                    <div className={styles.paymentBox}>
+                                        <p className={styles.paymentTitle}>{t.paymentTitle}</p>
+                                        <p className={styles.paymentBody}>{t.paymentBody}</p>
+                                    </div>
+
+                                    <div className={styles.actions} style={{ marginTop: 'var(--space-5)' }}>
+                                        <button type="button" className="btn btn-outline-gold" onClick={backToStep1}>{t.back}</button>
+                                        <button type="submit" className={`btn btn-primary btn-lg ${styles.confirmBtn}`} disabled={isSubmitting}>
+                                            {isSubmitting ? t.processing : t.submitBookingRequest}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </form>
+                    </>
+                )}
+
+                {/* WhatsApp Alternative */}
+                <div className={styles.whatsappAlt}>
+                    <p>{t.preferWhatsApp}</p>
+                    <a data-wa-cta="booking-form-alternative" href={waLink(whatsappText)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                        {t.bookViaWhatsApp}
+                    </a>
                 </div>
-            </section>
+            </div>
+        </section>
     );
 }

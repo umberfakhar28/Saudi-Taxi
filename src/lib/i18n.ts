@@ -71,7 +71,6 @@ export interface UIStrings {
     orWhatsApp: string;
 
     // ── Book Online ──
-    stepService: string;
     stepTrip: string;
     stepInfo: string;
     selectService: string;
@@ -94,11 +93,7 @@ export interface UIStrings {
     specialRequirements: string;
     specialRequirementsPlaceholder: string;
     back: string;
-    nextTripDetails: string;
-    nextYourInfo: string;
-    confirmBooking: string;
     processing: string;
-    fillRequired: string;
     bookingReceived: string;
     bookingReceivedBody: (name: string) => string;
     backToHome: string;
@@ -115,6 +110,32 @@ export interface UIStrings {
     returnLabel: string;
     verificationNeeded: string;
     errorRetry: string;
+
+    // -- Two-step booking form --
+    stepYourTrip: string;
+    continueToInfo: string;
+    submitBookingRequest: string;
+    getBackSoon: string;
+    bookingRefLabel: string;
+    bookingRefHint: string;
+    fullNamePlaceholder: string;
+    swapLocationsLabel: string;
+    requiredFieldsNote: string;
+    paymentTitle: string;
+    paymentBody: string;
+    errServiceRequired: string;
+    errPickupRequired: string;
+    errDropoffRequired: string;
+    errDateRequired: string;
+    errDatePast: string;
+    errTimeRequired: string;
+    errNameRequired: string;
+    errPhoneRequired: string;
+    errPhoneInvalid: string;
+    errEmailInvalid: string;
+    errSaveContact: string;
+    errSaveBooking: string;
+    errGeneric: string;
 
     // ── Route page body copy ──
     whatsIncluded: string;
@@ -223,7 +244,6 @@ const en: UIStrings = {
     continueToBooking: 'Continue',
     orWhatsApp: 'WhatsApp',
 
-    stepService: 'Select Service',
     stepTrip: 'Trip Details',
     stepInfo: 'Your Info',
     selectService: 'Select Your Service',
@@ -244,15 +264,11 @@ const en: UIStrings = {
     emailAddress: 'Email Address',
     phoneWhatsApp: 'Phone / WhatsApp *',
     specialRequirements: 'Special Requirements / Notes',
-    specialRequirementsPlaceholder: 'Any special requests, wheelchair access, extra luggage, etc.',
+    specialRequirementsPlaceholder: 'Flight number, child seat, extra stop, wheelchair access, meet-and-greet sign name, etc.',
     back: '← Back',
-    nextTripDetails: 'Next: Trip Details →',
-    nextYourInfo: 'Next: Your Info →',
-    confirmBooking: 'Confirm Booking ✓',
     processing: 'Processing...',
-    fillRequired: 'Please fill in all required fields before continuing.',
     bookingReceived: 'Booking Request Received!',
-    bookingReceivedBody: (name: string) => `Thank you, ${name}! We'll confirm your booking within 30 minutes via WhatsApp or email.`,
+    bookingReceivedBody: (name: string) => `Thank you${name ? `, ${name}` : ''}! Our team will get back to you as soon as possible.`,
     backToHome: 'Back to Home',
     sendDetailsWhatsApp: '💬 Send Details on WhatsApp',
     preferWhatsApp: 'Prefer to book instantly via WhatsApp?',
@@ -266,6 +282,36 @@ const en: UIStrings = {
     when: 'When',
     returnLabel: 'Return',
     verificationNeeded: 'Please complete the verification check and try again.',
+
+    // -- Two-step booking form --
+    stepYourTrip: 'Your Trip',
+    continueToInfo: 'Continue to Your Information →',
+    submitBookingRequest: 'Submit Booking Request',
+    getBackSoon: 'Our team will get back to you as soon as possible.',
+    bookingRefLabel: 'Booking reference',
+    bookingRefHint: 'Quote this reference when you contact us.',
+    fullNamePlaceholder: 'Your full name',
+    swapLocationsLabel: 'Swap pickup and drop-off locations',
+    requiredFieldsNote: 'Fields marked * are required.',
+    paymentTitle: 'Payment',
+    // Wording carried verbatim from homeFaqs.ts / FaqsClient.tsx, the
+    // approved source for how payment is described. Only the FAQ answer’s
+    // leading "Yes." is dropped, since this is not answering a question.
+    // No term is added, removed or reworded.
+    paymentBody: 'Cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments, on top of the quoted fare — cash and bank transfer are charged at the quoted price. No advance payment is required.',
+    errServiceRequired: 'Please choose a service.',
+    errPickupRequired: 'Pickup location is required.',
+    errDropoffRequired: 'Drop-off location is required.',
+    errDateRequired: 'Travel date is required.',
+    errDatePast: 'Please choose today or a later date.',
+    errTimeRequired: 'Pickup time is required.',
+    errNameRequired: 'Your name is required.',
+    errPhoneRequired: 'A phone or WhatsApp number is required.',
+    errPhoneInvalid: 'Please enter a valid phone number, including the country code.',
+    errEmailInvalid: 'Please check your email address.',
+    errSaveContact: 'Could not save your contact details.',
+    errSaveBooking: 'Could not save your booking.',
+    errGeneric: 'Something went wrong. Please try again.',
     errorRetry: 'Your entered details are still here — please try again.',
 
     whatsIncluded: "What's Included",
@@ -377,7 +423,6 @@ const ar: UIStrings = {
     continueToBooking: 'متابعة',
     orWhatsApp: 'واتساب',
 
-    stepService: 'اختيار الخدمة',
     stepTrip: 'تفاصيل الرحلة',
     stepInfo: 'بياناتك',
     selectService: 'اختر الخدمة',
@@ -398,15 +443,11 @@ const ar: UIStrings = {
     emailAddress: 'البريد الإلكتروني',
     phoneWhatsApp: 'الهاتف / واتساب *',
     specialRequirements: 'طلبات خاصة أو ملاحظات',
-    specialRequirementsPlaceholder: 'أي طلبات خاصة، مقعد أطفال، كرسي متحرك، أمتعة إضافية…',
+    specialRequirementsPlaceholder: 'رقم الرحلة، مقعد أطفال، محطة إضافية، كرسي متحرك، الاسم على لوحة الاستقبال…',
     back: '→ رجوع',
-    nextTripDetails: 'التالي: تفاصيل الرحلة ←',
-    nextYourInfo: 'التالي: بياناتك ←',
-    confirmBooking: 'تأكيد الحجز ✓',
     processing: 'جارٍ المعالجة...',
-    fillRequired: 'يرجى تعبئة جميع الحقول المطلوبة قبل المتابعة.',
     bookingReceived: 'تم استلام طلب الحجز!',
-    bookingReceivedBody: (name: string) => `شكراً لك${name ? ` يا ${name}` : ''}! سنؤكد حجزك خلال 30 دقيقة عبر واتساب أو البريد الإلكتروني.`,
+    bookingReceivedBody: (name: string) => `شكراً لك${name ? ` يا ${name}` : ''}! سيتواصل معك فريقنا في أقرب وقت ممكن.`,
     backToHome: 'العودة للرئيسية',
     sendDetailsWhatsApp: '💬 إرسال التفاصيل عبر واتساب',
     preferWhatsApp: 'تفضل الحجز مباشرة عبر واتساب؟',
@@ -420,6 +461,35 @@ const ar: UIStrings = {
     when: 'الموعد',
     returnLabel: 'العودة',
     verificationNeeded: 'يرجى إكمال خطوة التحقق ثم المحاولة مرة أخرى.',
+
+    // -- Two-step booking form -- (pending native Arabic review)
+    stepYourTrip: 'رحلتك',
+    continueToInfo: 'متابعة إلى بياناتك →',
+    submitBookingRequest: 'إرسال طلب الحجز',
+    getBackSoon: 'سيتواصل معك فريقنا في أقرب وقت ممكن.',
+    bookingRefLabel: 'رقم الطلب',
+    bookingRefHint: 'يرجى ذكر هذا الرقم عند التواصل معنا.',
+    fullNamePlaceholder: 'الاسم الكامل',
+    swapLocationsLabel: 'تبديل مكان الانطلاق والوجهة',
+    requiredFieldsNote: 'الحقول المعلَّمة بـ * مطلوبة.',
+    paymentTitle: 'الدفع',
+    // The approved English wording, translated without changing a term:
+    // the three methods, 15% VAT on card and payment link only, and no
+    // advance payment.
+    paymentBody: 'نقداً للسائق بعد الوصول، أو حوالة بنكية بعد الانطلاق، أو بالبطاقة عبر رابط دفع. تُضاف ضريبة قيمة مضافة 15% على الدفع بالبطاقة ورابط الدفع، فوق السعر المتفق عليه — أما النقد والحوالة البنكية فيكونان بالسعر المتفق عليه. لا يلزم أي دفع مُقدَّم.',
+    errServiceRequired: 'يرجى اختيار الخدمة.',
+    errPickupRequired: 'مكان الانطلاق مطلوب.',
+    errDropoffRequired: 'مكان الوصول مطلوب.',
+    errDateRequired: 'تاريخ السفر مطلوب.',
+    errDatePast: 'يرجى اختيار تاريخ اليوم أو تاريخ لاحق.',
+    errTimeRequired: 'وقت الانطلاق مطلوب.',
+    errNameRequired: 'الاسم مطلوب.',
+    errPhoneRequired: 'رقم الجوال أو واتساب مطلوب.',
+    errPhoneInvalid: 'يرجى إدخال رقم جوال صحيح مع رمز الدولة.',
+    errEmailInvalid: 'يرجى التأكد من البريد الإلكتروني.',
+    errSaveContact: 'لم نتمكن من حفظ بيانات التواصل.',
+    errSaveBooking: 'لم نتمكن من حفظ الحجز.',
+    errGeneric: 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
     errorRetry: 'بياناتك ما زالت محفوظة — يرجى المحاولة مرة أخرى.',
 
     whatsIncluded: 'ما الذي تشمله الخدمة',
@@ -506,3 +576,35 @@ export const SERVICE_LABELS_AR: Record<string, string> = {
     'jeddah-tour': 'جولة مدينة جدة',
     'alula-tour': 'جولة العلا',
 };
+
+/**
+ * Turns an error code from /api/bookings/create or /api/customers/upsert
+ * into a sentence the customer should read.
+ *
+ * Those endpoints used to return English sentences, which the Arabic
+ * booking page then displayed verbatim. They now return stable codes and
+ * the wording lives here, so both languages get their own message from the
+ * same API response. An unrecognised code falls back to the generic
+ * message rather than leaking a raw code into the page.
+ */
+export function bookingErrorMessage(code: unknown, t: UIStrings): string {
+    switch (typeof code === 'string' ? code : '') {
+        case 'invalid_service': return t.errServiceRequired;
+        case 'name_required':
+        case 'name_too_long': return t.errNameRequired;
+        case 'phone_required': return t.errPhoneRequired;
+        case 'phone_invalid': return t.errPhoneInvalid;
+        case 'email_invalid': return t.errEmailInvalid;
+        case 'pickup_required':
+        case 'pickup_too_long': return t.errPickupRequired;
+        case 'dropoff_required':
+        case 'dropoff_too_long': return t.errDropoffRequired;
+        case 'date_required':
+        case 'date_invalid': return t.errDateRequired;
+        case 'date_past': return t.errDatePast;
+        case 'time_required':
+        case 'time_invalid': return t.errTimeRequired;
+        case 'save_failed': return t.errSaveBooking;
+        default: return t.errGeneric;
+    }
+}

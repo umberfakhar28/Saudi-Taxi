@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         const phone = (body?.phone ?? '').trim();
 
         if (!name || !phone) {
-            return NextResponse.json({ error: 'name and phone are required' }, { status: 400 });
+            return NextResponse.json({ error: 'name_phone_required', code: !name ? 'name_required' : 'phone_required' }, { status: 400 });
         }
 
         const supabase = createAdminClient();
@@ -46,7 +46,8 @@ export async function POST(req: Request) {
             .maybeSingle();
 
         if (findError) {
-            return NextResponse.json({ error: findError.message }, { status: 500 });
+            console.error('[CUSTOMER_UPSERT_ERROR]', findError);
+            return NextResponse.json({ error: 'save_failed', code: 'save_failed' }, { status: 500 });
         }
 
         if (existing) {
@@ -65,7 +66,8 @@ export async function POST(req: Request) {
                 .eq('id', existing.id);
 
             if (updateError) {
-                return NextResponse.json({ error: updateError.message }, { status: 500 });
+                console.error('[CUSTOMER_UPSERT_ERROR]', updateError);
+                return NextResponse.json({ error: 'save_failed', code: 'save_failed' }, { status: 500 });
             }
             return NextResponse.json({ customerId: existing.id, created: false });
         }
@@ -77,12 +79,16 @@ export async function POST(req: Request) {
             .single();
 
         if (insertError) {
-            return NextResponse.json({ error: insertError.message }, { status: 500 });
+            console.error('[CUSTOMER_UPSERT_ERROR]', insertError);
+            return NextResponse.json({ error: 'save_failed', code: 'save_failed' }, { status: 500 });
         }
 
         return NextResponse.json({ customerId: created.id, created: true });
     } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return NextResponse.json({ error: message }, { status: 500 });
+        // Full detail to the server log; the browser gets a code, so an
+        // unexpected internal failure cannot leak database or
+        // implementation detail to a customer.
+        console.error('[CUSTOMER_UPSERT_ERROR]', error);
+        return NextResponse.json({ error: 'save_failed', code: 'save_failed' }, { status: 500 });
     }
 }

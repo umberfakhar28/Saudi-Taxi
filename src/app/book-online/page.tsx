@@ -20,7 +20,7 @@ import BookOnlineClient from "./BookOnlineClient";
  */
 export const metadata = generatePageMetadata({
     title: "Book Online",
-    description: "Book your Saudi Arabia taxi or transfer online — airport transfers, hotel transfers, private taxi, Umrah transport and day tours. Fixed rates, instant confirmation.",
+    description: "Book your Saudi Arabia taxi or transfer online — airport transfers, hotel transfers, private taxi, Umrah transport and day tours. Agreed fares, no advance payment required.",
     path: "/book-online",
   hreflangPath: "/book-online",
 });
@@ -33,11 +33,20 @@ export default function BookOnlinePage() {
     return (
         <main>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
+            {/* .container supplies the horizontal gutter: .page-hero sets only
+                vertical padding, so without it this heading and breadcrumb ran
+                edge-to-edge with no side margin on a phone. The Arabic page
+                already had it. */}
             <section className="page-hero">
-                <h1>Book Online</h1>
-                <p>Reserve your taxi or transport service in Saudi Arabia quickly and easily. Instant confirmation.</p>
-                <div className="breadcrumb">
-                    <Link href="/">Home</Link> / <span>Book Online</span>
+                <div className="container">
+                    <h1>Book Online</h1>
+                    {/* "Instant confirmation" contradicted the success screen,
+                        which promised 30 minutes. Both are replaced by the one
+                        approved line, used here and on submission. */}
+                    <p>Reserve your taxi or transport service in Saudi Arabia in two quick steps. Our team will get back to you as soon as possible.</p>
+                    <div className="breadcrumb">
+                        <Link href="/">Home</Link> / <span>Book Online</span>
+                    </div>
                 </div>
             </section>
             <Suspense fallback={null}>
