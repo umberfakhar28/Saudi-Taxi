@@ -52,9 +52,10 @@ export const FLEET_VEHICLES: FleetVehicle[] = [
   { slug: "genesis-g90", name: "Genesis G90", type: "Executive Sedan", passengers: 3, luggage: 3, comfort: "Executive", bestFor: "VIP airport pickups & flagship comfort" },
   // Confirmed by the business on 18 October 2026 as one of the two
   // vehicles running the Kuwait cross-border routes. Passenger capacity is
-  // the figure they gave; luggage capacity and a photo are still to come,
-  // so neither is invented here — the card renders without them.
-  { slug: "toyota-land-cruiser-prado", name: "Toyota Land Cruiser Prado", type: "Premium SUV", passengers: 6, comfort: "Premium", bestFor: "Families & long cross-border journeys" },
+  // the figure they gave. The photo they supplied arrived on 5 November 2026
+  // and is wired in below; luggage capacity is still unconfirmed, so it stays
+  // absent rather than guessed and the comparison table renders a dash.
+  { slug: "toyota-land-cruiser-prado", name: "Toyota Land Cruiser Prado", type: "Premium SUV", passengers: 6, comfort: "Premium", bestFor: "Families & long cross-border journeys", image: "/fleet/toyota-land-cruiser-prado.jpeg" },
   { slug: "gmc-yukon", name: "GMC Yukon", type: "Premium SUV", passengers: 6, luggage: 6, comfort: "Premium", bestFor: "Families & groups with extra luggage", image: "/fleet/gmc-yukon-at4.avif" },
   { slug: "chevrolet-suburban", name: "Chevrolet Suburban", type: "Premium SUV", passengers: 6, luggage: 7, comfort: "Premium", bestFor: "Families & long cross-border journeys with luggage", image: "/fleet/chevrolet-suburban.webp" },
   { slug: "cadillac-escalade-esv", name: "Cadillac Escalade ESV", type: "Premium SUV", passengers: 6, luggage: 7, comfort: "Executive", bestFor: "VIP groups wanting a commanding, spacious ride" },
