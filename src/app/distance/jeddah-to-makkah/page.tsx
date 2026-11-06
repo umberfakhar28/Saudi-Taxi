@@ -3,8 +3,8 @@ import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
 
 export const metadata = generatePageMetadata({
-  title: "Jeddah to Makkah Distance & Travel Time",
-  description: "Jeddah to Makkah distance from King Abdulaziz Airport, driving time, and private transfer options for Umrah pilgrims. Plan your trip or book a taxi.",
+  title: "Jeddah to Makkah Distance: 80 km by Road",
+  description: "Jeddah to Makkah is about 80 km by road — 60 to 90 minutes outside peak season, 90 to 120 minutes during Umrah season. Transfer options for pilgrims from KAIA.",
   path: "/distance/jeddah-to-makkah",
 });
 

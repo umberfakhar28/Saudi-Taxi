@@ -8,8 +8,8 @@ export const metadata = generatePageMetadata({
   // in the snippet. The border-crossing angle — the part a SERP distance
   // panel can't answer — moves into the description, since the title has no
   // room for it once generatePageMetadata appends the 20-char brand suffix.
-  title: "Riyadh to Kuwait by Road — Distance & Time",
-  description: "How far Kuwait is from Riyadh by road, which of the two border crossings the route uses, and what sets the journey time. Private door-to-door transfers available.",
+  title: "Riyadh to Kuwait by Road: 639 km",
+  description: "Riyadh to Kuwait is roughly 639 km via the inland crossing — plan most of a day once border processing and rest stops are counted.",
   path: "/distance/riyadh-to-kuwait",
 });
 

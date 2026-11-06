@@ -30,7 +30,7 @@ export const metadata = generatePageMetadata({
   // Year dropped from the title — "2025" is now stale and dates a page that
   // is otherwise evergreen.
   title: "Best Family Destinations in Saudi Arabia",
-  description: "The best family-friendly destinations in Saudi Arabia — AlUla, Abha, Taif, Jeddah and Riyadh — what suits which ages, when to visit, and how families get between them.",
+  description: "Which Saudi destinations suit a first family trip: AlUla, Abha, Taif, Jeddah and Riyadh — what fits which ages, when to go, and how families travel between them.",
   path: "/blog/family-saudi-destinations",
   keywords: ["family destinations Saudi Arabia", "Saudi Arabia family trip", "family friendly Saudi Arabia", "Abha family travel", "AlUla family visit"],
 });

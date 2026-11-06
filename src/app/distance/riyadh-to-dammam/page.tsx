@@ -3,8 +3,8 @@ import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
 
 export const metadata = generatePageMetadata({
-  title: "Riyadh to Dammam Distance & Travel Time",
-  description: "Riyadh to Dammam distance by road, driving time, and private transfer options for business and leisure travelers. Plan your trip or book a taxi.",
+  title: "Riyadh to Dammam Distance: 400 km, 4 Hours",
+  description: "Riyadh to Dammam is about 400 km by road and roughly 4 hours of driving across open highway — no border crossing. Journey planning and private transfer options.",
   path: "/distance/riyadh-to-dammam",
 });
 

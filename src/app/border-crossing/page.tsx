@@ -9,8 +9,8 @@ import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 
 export const metadata = generatePageMetadata({
-    title: "Saudi Arabia Border Crossing Taxi — Bahrain, UAE, Qatar & Kuwait",
-    description: "Private cross-border transfers from Saudi Arabia to Bahrain, UAE, Qatar, Kuwait and Oman. Licensed drivers, document support, executive vehicles. Book on WhatsApp 24/7.",
+    title: "Saudi Arabia Border Crossing Taxi Service",
+    description: "Private cross-border transfers from Saudi Arabia to Bahrain, the UAE, Qatar, Kuwait and Oman — one car and one licensed driver the whole way, 24/7.",
     path: "/border-crossing",
     keywords: ["border crossing taxi Saudi Arabia", "Saudi border transfer", "cross border taxi", "Saudi Arabia to GCC taxi", "private cross-border transfer"],
     hreflangPath: "/border-crossing",

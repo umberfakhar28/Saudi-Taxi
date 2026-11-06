@@ -3,8 +3,8 @@ import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
 
 export const metadata = generatePageMetadata({
-  title: "Doha to Riyadh Distance & Travel Time",
-  description: "Doha to Riyadh distance via the Salwa/Abu Samra border, driving time, and private transfer options. Plan your trip or book a taxi.",
+  title: "Doha to Riyadh Distance: 580 km by Road",
+  description: "Doha to Riyadh is about 580 km by road via the Salwa / Abu Samra border, typically 6.5 to 7.5 hours including crossing time.",
   path: "/distance/doha-to-riyadh",
 });
 

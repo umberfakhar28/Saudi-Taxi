@@ -3,8 +3,8 @@ import { readContentFile } from "@/lib/readContent";
 import RelatedLinks from "@/components/RelatedLinks";
 
 export const metadata = generatePageMetadata({
-  title: "Taxi Jeddah to Makkah | Cross-Border Car Service 24/7",
-  description: "Reliable Jeddah to Makkah taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
+  title: "Jeddah to Makkah Taxi & Umrah Transfer Guide",
+  description: "Jeddah to Makkah by private taxi — roughly 80 km and 1 to 1.5 hours from King Abdulaziz Airport, with licensed drivers and 24/7 pickups for Umrah travellers.",
   path: "/jeddah-to-makkah-guide",
   keywords: ["jeddah to makkah taxi", "jeddah makkah transfer", "umrah taxi jeddah", "taxi from jeddah airport to makkah"],
 });

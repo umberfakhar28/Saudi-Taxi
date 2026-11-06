@@ -3,8 +3,8 @@ import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
 
 export const metadata = generatePageMetadata({
-  title: "Abha to Jeddah Distance & Travel Time",
-  description: "Abha to Jeddah distance by road via Taif, driving time, and private transfer options for combining mountains and coast.",
+  title: "Abha to Jeddah Distance: 620–680 km",
+  description: "Abha to Jeddah is around 620 to 680 km by road via Taif, about 7 to 7.5 hours between the Asir mountains and the Red Sea coast.",
   path: "/distance/abha-to-jeddah",
   ogImage: distanceRoutes["abha-to-jeddah"].heroImage,
   ogImageAlt: distanceRoutes["abha-to-jeddah"].heroImageAlt,

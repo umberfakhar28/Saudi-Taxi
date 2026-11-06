@@ -8,8 +8,8 @@ import { CheckCircleIcon, MapPinIcon, ClockIcon, MessageIcon, ArrowRightIcon, Pl
 import { waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
-  title: "Riyadh Alternative Airports | Private Airport Transfers",
-  description: "Exploring alternative airports from Riyadh? Compare road routes, estimated driving times and border considerations, then request a private transfer quote from Gulf Trip Service.",
+  title: "Alternative Airports Near Riyadh | Transfers",
+  description: "Flying into Dammam, Bahrain, Doha or Dubai instead of Riyadh? Road distances, driving times and border notes for each, plus private transfers either way.",
   path: "/riyadh-alternative-airports",
 });
 

@@ -52,6 +52,24 @@ const ArabicFooter = () => {
                                 href and its neighbours. Only the text changed —
                                 the link target is untouched. */}
                             <li className={styles.listItem}><Link href="/ar/riyadh-to-qatar-taxi-service" className={styles.link}>الرياض ← قطر</Link></li>
+                            {/* The three below were missing, and they were the
+                                three least-visible Arabic pages in Search
+                                Console for Oct 1 – Nov 3 2026: 114 impressions
+                                for الرياض ← البحرين, 1 for الدوحة ← الرياض and 0
+                                for الرياض ← الكويت, against 523 for the
+                                footer-linked الرياض ← قطر and 162 for البحرين ←
+                                الدمام. /ar/qatar-to-riyadh-taxi-service had no
+                                inbound internal link at all — see the note in
+                                routeDataAr.ts, where Google derived the URL
+                                from the hreflang pair rather than from a link.
+                                Reaching an Arabic route page only through the
+                                language switcher on its English twin leaves the
+                                Arabic section with no path between its own
+                                pages. Labels are the reviewed breadcrumbLabel
+                                strings from routeDataAr.ts, not new wording. */}
+                            <li className={styles.listItem}><Link href="/ar/qatar-to-riyadh-taxi-service" className={styles.link}>الدوحة ← الرياض</Link></li>
+                            <li className={styles.listItem}><Link href="/ar/riyadh-to-bahrain-taxi-service" className={styles.link}>الرياض ← البحرين</Link></li>
+                            <li className={styles.listItem}><Link href="/ar/riyadh-to-kuwait-taxi-service" className={styles.link}>الرياض ← الكويت</Link></li>
                         </ul>
                     </div>
 
