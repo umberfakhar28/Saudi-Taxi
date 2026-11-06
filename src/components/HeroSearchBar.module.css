@@ -672,3 +672,65 @@
         display: none;
     }
 }
+/* ---- Narrow phones: the mode tabs must fit the screen ----
+   `.tablist` is an `inline-flex` pill sized by its own content (~422px for
+   Transfers / Hourly Drive / Day Trips at full padding) and centred, so on a
+   320px viewport it measured x=-51 to 371 — hanging off *both* edges, hidden
+   by the global overflow-x. This is the hero's primary conversion control,
+   so it needs to fit rather than be clipped.
+
+   Same approach the mobile sheet already uses for the same component
+   (`.sheetHeader .tablist` above): let the pill take the available width and
+   let each tab flex inside it. `.tabIndicator` is width: calc((100% - 8px)/3)
+   so it tracks automatically. */
+@media (max-width: 520px) {
+    .tablist {
+        display: flex;
+        align-self: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .tab {
+        flex: 1 1 0;
+        min-width: 0;
+        justify-content: center;
+        padding: 10px 6px;
+        font-size: var(--text-xs);
+        white-space: nowrap;
+    }
+}
+
+/* Below ~380px even the compact labels need the icon's 16px + gap back. The
+   icons are decorative — each tab keeps its text label. */
+@media (max-width: 380px) {
+    .tab svg {
+        display: none;
+    }
+
+    .tab {
+        gap: 0;
+        padding: 10px 4px;
+    }
+}
+
+/* ---- "Add return trip" toggle ----
+   The native checkbox renders at 13x13, which is a small target on a touch
+   screen. The surrounding <label> is the real hit area (clicking it toggles
+   the box), so the row gets a comfortable minimum height and the box itself
+   is sized up a little. Nothing about the control's behaviour changes. */
+.returnToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    cursor: pointer;
+}
+
+.returnToggle input[type="checkbox"] {
+    inline-size: 18px;
+    block-size: 18px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: var(--gold);
+}

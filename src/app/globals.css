@@ -1680,6 +1680,19 @@ ul { list-style: none; }
   }
 }
 
+/* Tablet stage for the 3-up grid.
+   .grid-3 went from three columns straight to one at 768px, so between
+   769px and 1100px it held three narrow columns and below that a single
+   file — no two-column step anywhere. It is the most reused grid on the
+   site (142 of 203 pages), which is exactly why the missing stage shows.
+   .grid-4 already steps 4 -> 2 -> 1; this gives .grid-3 the same
+   courtesy. */
+@media (max-width: 1024px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   h1 { font-size: var(--text-4xl); }
   h2 { font-size: var(--text-3xl); }
@@ -1748,10 +1761,44 @@ ul { list-style: none; }
   h1 { font-size: var(--text-3xl); }
   h2 { font-size: var(--text-2xl); }
 
+  /* `.page-hero h1` is set in the 768px block below-and-above this one,
+     and `.page-hero h1` (0,1,1) outranks a bare `h1` (0,0,1), so the
+     line above could never reach a hero heading: every hero stayed at
+     36px down to 320px. Measured at 320/375/480px before this: 36px. */
+  .page-hero h1 { font-size: var(--text-3xl); }
+
   .container { padding: 0 var(--space-4); }
+
+  /* Buttons are `white-space: nowrap` sitewide, which is right for short
+     labels and wrong for the long ones: "View All Popular Destinations"
+     measured 383px and "Message Us About a Delayed Flight" 396px inside
+     a 320px viewport, both clipped by the global overflow-x. Long labels
+     now wrap instead of running off the screen; `nowrap` stays the
+     default above this width. */
+  .btn,
+  .btn-lg {
+    white-space: normal;
+    max-width: 100%;
+    text-align: center;
+  }
 
   .btn    { padding: 12px 24px; }
   .btn-lg { padding: 14px 32px; }
 
   .card   { padding: var(--space-8) var(--space-6); }
+}
+/* ---- About Us: story + CEO profile ----
+   The page set `grid-template-columns: 1fr 1fr` inline with no collapse, so
+   the CEO card sat at x=268-464 inside a 320px viewport and was clipped by
+   the global overflow-x. A real two-column-when-it-fits rule lives here
+   rather than as another inline style, so it can carry a media query. */
+.about-story-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 4rem;
+}
+
+@media (max-width: 768px) {
+  .about-story-grid {
+    gap: var(--space-8);
+  }
 }

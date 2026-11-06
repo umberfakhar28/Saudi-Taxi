@@ -76,11 +76,20 @@ export default function SearchAutocomplete({ label, placeholder, value, onChange
             // search sheet closes on Escape), meaning a user could never
             // close the sheet itself by pressing Escape while this field
             // happened to be focused but already empty/closed.
-            if (value) {
-                onChange('');
-                e.stopPropagation();
-            } else if (open) {
+            //
+            // Close before clear, which is the order the ARIA combobox
+            // pattern specifies and the order a user expects. These two
+            // branches used to be the other way round, so Escape pressed to
+            // dismiss the suggestion list also wiped what had just been
+            // typed: filling "Riyadh" and pressing Escape left the field
+            // empty, and the booking form then refused to continue with
+            // "Pickup location is required." Clearing is still what a second
+            // press does, once the list is closed.
+            if (open) {
                 setOpen(false);
+                e.stopPropagation();
+            } else if (value) {
+                onChange('');
                 e.stopPropagation();
             }
             setActiveId(null);

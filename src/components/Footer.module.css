@@ -124,6 +124,12 @@
     display: flex;
     gap: 0.75rem;
     align-items: center;
+    /* Measured 389px wide inside a 320px viewport (x=-35), because the
+       row of Privacy / Terms / Contact / About / Book Now / Sitemap had
+       nowhere to break. Wrapping and centring keeps every link reachable
+       on a small phone; on wide screens it still sits on one line. */
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .bottomLink {

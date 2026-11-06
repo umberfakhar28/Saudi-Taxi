@@ -145,3 +145,13 @@
     letter-spacing: 0.5px;
     cursor: pointer;
 }
+
+/* The trigger is a borderless, padding-less button sitting inside the search
+   bar's ~61px field cell, so its own box was only 17px tall: the top and
+   bottom of the cell looked tappable but were not the button. Filling the
+   cell makes the whole visual field the control, which is what it looks
+   like. Purely a hit-area change — the visible styling is unchanged. */
+.trigger {
+    width: 100%;
+    min-height: 44px;
+}

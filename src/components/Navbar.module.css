@@ -343,7 +343,7 @@
     display: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
     .backdrop {
         display: block;
         position: fixed;
@@ -369,7 +369,16 @@
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 1100px) {
+/* Compact desktop navbar.
+   Measured, not guessed: at full size the row (logo 216 + links 548 +
+   actions 383 + gaps) needs a 1280px viewport, and these compact rules
+   bring it down to needing 1100px. The bound used to be 1100px, which left
+   two bands where the row simply did not fit and the clipped edge was
+   hidden by the global overflow-x — "Book Now", the right-most item, was
+   cut off at every width from 901px to 1279px, 1024px tablet landscape
+   included. The bound now runs to 1279px so the compact row covers the
+   whole span between the drawer and the width where the full row fits. */
+@media (max-width: 1279px) {
     .navLinks {
         gap: 0;
     }
@@ -387,9 +396,40 @@
         padding: 7px 12px;
         font-size: 0.68rem;
     }
+    .container {
+        gap: var(--space-4);
+    }
 }
 
-@media (max-width: 900px) {
+/* Below 1100px the compact row above still needs ~1100px, so this tier
+   reclaims the remaining width for 901-1099 — the band between the
+   drawer's breakpoint and where the compact row fits. Nothing is removed:
+   WhatsApp becomes its icon (the same treatment already used at <=480px)
+   and the wordmark steps down a size. */
+@media (max-width: 1100px) {
+    .ctaWhatsappLabel {
+        display: none;
+    }
+    .ctaWhatsapp {
+        padding: 9px 12px;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+    .container {
+        gap: var(--space-3);
+    }
+}
+
+/* Drawer breakpoint: 960px, not 900px.
+   Even with the compact rules below, the desktop row needs a 955px
+   viewport — measured. At 900px the drawer took over but 901-954px fell
+   through to a desktop row that did not fit, clipping "Book Now". The
+   drawer now covers the whole span below where that row fits, and the
+   language switcher moves into it as it already did. WhatsApp stays
+   reachable there via the floating button, which is visible above
+   900px. */
+@media (max-width: 960px) {
     .hamburger {
         display: flex;
         z-index: 1001;
@@ -543,6 +583,46 @@
     }
 }
 
+/* Narrow phones: make the hamburger reachable again.
+   The top row's minimum content was ~392px (logo 156 + gap 32 +
+   "Book Now" 98 + gap 16 + hamburger 42 + padding 48), so on anything
+   narrower the row overflowed and pushed the hamburger off the edge —
+   where the global overflow-x hid it. Measured at 320px: the hamburger sat
+   at x=326-368 in a 320px viewport and `elementFromPoint` at its centre
+   returned nothing, so the menu could not be opened at all.
+
+   Trimming the row's own padding and gaps and stepping the wordmark down
+   brings the minimum under 320px. Every item stays. */
+@media (max-width: 420px) {
+    .container {
+        padding-inline: var(--space-3);
+        gap: var(--space-2);
+    }
+}
+
+/* 320px measured 1px over with the tier above; the row's own gutter is
+   the cheapest pixel left to give, and the page content keeps its own. */
+@media (max-width: 360px) {
+    .container {
+        padding-inline: var(--space-2);
+    }
+
+    .logo {
+        font-size: 1.05rem;
+        /* Last resort if a future wordmark grows: let it give way rather
+           than shove the hamburger off-screen again. */
+        min-width: 0;
+    }
+
+    .rightGroup {
+        gap: var(--space-2);
+    }
+
+    .cta {
+        padding: 8px 12px;
+    }
+}
+
 /* ===== RTL (Arabic) overrides — additive only, zero effect under dir="ltr" =====
    The mobile drawer and hover-indent effects below use physical left/right
    properties that don't auto-mirror under dir="rtl". These overrides flip
@@ -553,7 +633,7 @@
     padding-right: calc(var(--space-5) + 6px);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
     [dir="rtl"] .navLinks {
         right: auto;
         left: 0;

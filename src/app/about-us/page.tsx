@@ -64,7 +64,14 @@ export default function AboutUs() {
             {/* Story + CEO Profile */}
             <section className="section-lg">
                 <div className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
+                    {/* Was `gridTemplateColumns: '1fr 1fr'` with no collapse, so on a
+                        phone the two columns stayed side by side: the CEO card
+                        measured x=268 to 464 inside a 320px viewport and was clipped
+                        by the global overflow-x. `auto-fit` with a 260px floor keeps
+                        the two columns wherever they fit and drops to one below that,
+                        with no new breakpoint. The 4rem gap would also be most of a
+                        small screen's width once stacked, so it tightens there. */}
+                    <div className="about-story-grid" style={{ display: 'grid', alignItems: 'start' }}>
                         <div>
                             <h2>Our Story</h2>
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.8' }}>
