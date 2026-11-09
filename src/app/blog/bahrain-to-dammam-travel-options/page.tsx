@@ -45,6 +45,9 @@ const data: BlogPostData = {
     {
       heading: "The Short Answer",
       text: "Bahrain and Dammam are only about 65 km apart, and the whole trip usually takes around an hour to an hour and a half including border processing. What decides how you travel isn’t the distance — it’s whether your ride is set up to cross at all. Nobody can walk the causeway, and a car needs the right permits and insurance to take paying passengers over it. So the options that genuinely get you from one side to the other are a pre-booked private transfer, a scheduled coach, or your own GCC-registered car. An app ride will take you to the border, but not across it.",
+      // The booking page was first linked about 79% of the way down. A reader
+      // who has decided after the short answer should not have to scroll for it.
+      cta: { text: "Already decided? Book a Bahrain to Dammam taxi, door to door across the causeway.", link: "/bahrain-to-dammam-taxi-service" },
     },
     {
       heading: "Why an App Ride Stops at the Border",

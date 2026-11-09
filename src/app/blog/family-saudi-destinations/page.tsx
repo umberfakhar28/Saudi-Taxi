@@ -20,6 +20,18 @@ import BlogPost from "@/components/BlogPost";
  * duplicating it. The per-destination links point at the commercial city
  * pages that own each location's transactional intent.
  *
+ * November 2026: three H2s added or renamed to answer, in their own
+ * words, the question-style searches this page ranks 5-11 for with no
+ * clicks (GSC, 11 Oct - 7 Nov): "plan a saudi vacation for parents,
+ * children and grandparents" (27 impr), "which saudi places are best for a
+ * family religious trip?" (16) and "how should families travel between
+ * riyadh, jeddah and red sea destinations?" (6). Every fact in them is
+ * already stated elsewhere on the site: /guides/family-travel (van sizing,
+ * elderly travellers), /guides/red-sea-coast-travel (airports, Yanbu,
+ * Umluj), and the Jeddah-Makkah and Makkah-Madinah distance pages.
+ * "Where should families stay" is deliberately not answered: the site has
+ * no verified accommodation recommendations to answer it from.
+ *
  * FAQs are visible content only — no FAQPage schema. Google restricted FAQ
  * rich results to authoritative gov/health domains, and the BlogPost
  * template doesn't implement faqSchema, so adding it would be unsupported
@@ -56,8 +68,16 @@ export default function Post() {
         text: "Younger children (under 8) tend to do best in Taif and Jeddah, where the attractions are compact, low-effort and easy to leave early if the day goes sideways. Abha suits all ages — the cable cars and open highland spaces work for a wide range. AlUla rewards children of around 8 and up, who can appreciate the archaeology and manage longer days across the site. Riyadh's Boulevard and Diriyah are strongest for teenagers, with more to hold their attention in a single area.",
       },
       {
-        heading: "Getting Between These Destinations",
-        text: "These five are spread right across the country, so most families fly between regions and arrange ground transport at each end rather than driving the whole way. Abha, AlUla and Taif each have their own airport; Jeddah and Riyadh are the two major international gateways. The one exception is Taif, which is genuinely a road trip — it's a comfortable day trip from either Makkah or Jeddah. For vehicle sizing, child seats and travelling with elderly family members, our family travel guide covers the transport side in detail.",
+        heading: "How do you plan a Saudi trip for parents, children and grandparents?",
+        text: "Choose destinations where a day can be kept short. Taif and Jeddah suit this best, because their attractions are compact and easy to leave early, and Abha works across all ages. Outside October to March, keep to the highlands: Abha and Taif are noticeably cooler than the coast or the interior. For transport, three generations usually means a van. Groups of 6 to 9 need one, and going up a size early avoids a cramped, luggage-heavy trip. Drivers are used to travelling with older passengers, and vehicles with lower entry steps can be arranged for anyone with limited mobility, if you mention it at booking.",
+      },
+      {
+        heading: "Which Saudi destinations are best for a family religious trip?",
+        text: "For Umrah, the destinations are Makkah and Madinah. Families usually arrive through Jeddah's King Abdulaziz International Airport, about 80 km from Makkah, or through Madinah's own airport. The two holy cities are about 450 km apart, roughly 4 to 5 hours by road via the Haramain Expressway. Many families making this trip travel with elderly relatives, so a private vehicle for each leg saves repeated transfers with luggage. Taif makes a cool day trip from Makkah once the Umrah itself is done.",
+      },
+      {
+        heading: "How should families travel between Riyadh, Jeddah and the Red Sea coast?",
+        text: "These destinations are spread right across the country, so most families fly between regions and arrange ground transport at each end rather than driving the whole way. Abha, AlUla and Taif each have their own airport; Jeddah and Riyadh are the two major international gateways. The one exception is Taif, which is genuinely a road trip — it's a comfortable day trip from either Makkah or Jeddah. The Red Sea coast runs north from Jeddah through Yanbu and Umluj, and four airports serve it: Jeddah (JED), Madinah (MED), Yanbu (YNB) and Red Sea International (RSI) for the Red Sea Project. Yanbu is the most practical base on the central coast, and Umluj is roughly two hours further north by road. For vehicle sizing, child seats and travelling with elderly family members, our family travel guide covers the transport side in detail.",
       },
       {
         heading: "Planning a Family Trip Around Saudi Arabia?",
@@ -87,6 +107,8 @@ export default function Post() {
       { href: "/services/jeddah", label: "Jeddah Transfers", reason: "Corniche, Al-Balad and half-day city bookings with the family." },
       { href: "/services/riyadh", label: "Riyadh Transfers", reason: "One driver for a multi-stop day across Boulevard and Diriyah." },
       { href: "/guides/family-travel", label: "Family Travel Guide", reason: "Vehicle sizing, child seats and travelling with elderly family members." },
+      { href: "/umrah-taxi-services", label: "Umrah Transfers", reason: "Airport, hotel and Makkah–Madinah transfers for families making Umrah." },
+      { href: "/guides/red-sea-coast-travel", label: "Red Sea Coast Guide", reason: "Which airport to fly into for Yanbu, Umluj and the Red Sea Project." },
     ],
   }} />;
 }

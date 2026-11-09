@@ -105,6 +105,11 @@ const data: GuideData = {
     { q: "Which terminal will I arrive at?", a: "It depends on your airline and whether your flight is domestic or international. Check your booking or your airline's app — and share your flight number when you book a transfer so the terminal is confirmed from it." },
     { q: "Where exactly does my driver wait at King Khalid Airport?", a: "At the arrivals exit of your terminal, holding a name board. The pickup works the same way at Terminals 1, 2, 3, 4 and 5." },
     { q: "How do I get to RUH airport from central Riyadh?", a: "By private transfer, Metro (the Yellow Line serves the airport), taxi or ride-hailing. Allow at least 35–50 minutes by road, and more during weekday rush hours." },
+    // Answers "are taxis 24/7 at riyadh airport, including late-night
+    // arrivals?" (GSC, Nov 2026). Deliberately names no percentage: the
+    // night charge is a configurable pricing rule (utils/pricing.ts), so
+    // the honest promise is that it is inside the quote, not what it is.
+    { q: "Can I get a pickup at RUH late at night?", a: "Yes. Pre-booked pickups run 24 hours a day at all five terminals, including arrivals after midnight. Late-night pickups can carry a night charge, which is already included in the price you are quoted before you book, so there is nothing extra to pay on arrival." },
     { q: "What if my flight is significantly delayed?", a: "Flights are tracked in real time, so your pickup time moves with the delay — you don't need to rebook." },
     { q: "Is there a meet-and-greet service at RUH?", a: "Yes — the standard pickup includes a name-board meet-and-greet at the arrivals exit. Assistance from the baggage hall can be requested for elderly travellers or those with mobility needs." },
     { q: "Can I travel straight from RUH to another city?", a: "Yes — door-to-door transfers run from the arrivals hall to Makkah, the Eastern Province, Bahrain and other long-distance destinations." },
