@@ -193,6 +193,33 @@ export function trackWhatsAppClick(
   });
 }
 
+/**
+ * A tap on a call button. Like a WhatsApp click, this is interest, not a
+ * confirmed enquiry: the call may never connect.
+ *
+ * Until this existed, calls were the one enquiry channel that left no trace,
+ * so a page that produced phone enquiries looked identical to one that
+ * produced nothing. Same parameters as whatsapp_click, minus link_url: the
+ * only number on these buttons is the business's own.
+ */
+export const PHONE_CLICK_EVENT = "phone_click";
+
+export function trackPhoneClick(
+  source: string,
+  pageTemplate: string,
+  context: Omit<WhatsAppClickContext, "linkUrl">,
+): void {
+  gaEvent(PHONE_CLICK_EVENT, {
+    cta_source: source,
+    cta_location: ctaLocationFor(source),
+    page_template: pageTemplate,
+    page_path: context.pagePath,
+    page_location: context.pageLocation,
+    site_language: pageLanguage(context.pagePath),
+    transport_type: "beacon",
+  });
+}
+
 /* ─────────────────────── Form submissions ─────────────────────── */
 
 /**

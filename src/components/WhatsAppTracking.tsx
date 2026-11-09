@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   pageTemplateFromPath,
+  trackPhoneClick,
   trackWhatsAppClick,
   whatsAppDestination,
 } from '@/lib/analytics';
@@ -51,6 +52,15 @@ import {
 
 /** wa.me and the long-form API host are the only two shapes WhatsApp uses. */
 const WHATSAPP_LINK_SELECTOR = 'a[href*="wa.me"], a[href*="api.whatsapp.com"]';
+
+/**
+ * Call buttons ride on the same listener, for the same reasons: they sit in
+ * the same server-rendered pages, and one listener means one count per tap.
+ * They report as phone_click, never as whatsapp_click. The admin exclusion
+ * below matters even more here, since an admin tel: link is a customer's
+ * own number.
+ */
+const PHONE_LINK_SELECTOR = 'a[href^="tel:"]';
 
 /**
  * The admin portal is excluded, and not as a matter of taste.
@@ -113,14 +123,22 @@ export default function WhatsAppTracking() {
       if (!(target instanceof Element)) return;
 
       const anchor = target.closest(WHATSAPP_LINK_SELECTOR);
-      if (!anchor) return;
+      const callAnchor = anchor ? null : target.closest(PHONE_LINK_SELECTOR);
+      if (!anchor && !callAnchor) return;
 
       const path = pathRef.current || window.location.pathname;
       if (EXCLUDED_PATH.test(path)) return;
 
+      const pageLocation = `${window.location.origin}${window.location.pathname}`;
+      if (callAnchor) {
+        trackPhoneClick(ctaSourceFor(callAnchor), pageTemplateFor(path), { pagePath: path, pageLocation });
+        return;
+      }
+      if (!anchor) return;
+
       trackWhatsAppClick(ctaSourceFor(anchor), pageTemplateFor(path), {
         pagePath: path,
-        pageLocation: `${window.location.origin}${window.location.pathname}`,
+        pageLocation,
         linkUrl: whatsAppDestination(anchor.getAttribute('href') || ''),
       });
     };
