@@ -27,7 +27,7 @@ const Footer = () => {
                             <a data-wa-cta="footer-social" href={WHATSAPP_URL} className={styles.socialLink} aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
                                 <MessageIcon size={18} />
                             </a>
-                            <a href={TEL_URL} className={styles.socialLink} aria-label="Phone">
+                            <a data-wa-cta="footer-social" href={TEL_URL} className={styles.socialLink} aria-label="Phone">
                                 <PhoneIcon size={18} />
                             </a>
                             <a href="mailto:info@gulftripservice.com" className={styles.socialLink} aria-label="Email">
@@ -99,7 +99,7 @@ const Footer = () => {
                             </li>
                             <li className={styles.listItem}>
                                 <PhoneIcon className={styles.contactIcon} size={18} />
-                                <a href={TEL_URL} className={styles.link}>{PHONE_DISPLAY}</a>
+                                <a data-wa-cta="footer-contact" href={TEL_URL} className={styles.link}>{PHONE_DISPLAY}</a>
                             </li>
                             <li className={styles.listItem}>
                                 <MessageIcon className={styles.contactIcon} size={18} />

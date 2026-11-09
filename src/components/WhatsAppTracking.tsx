@@ -56,7 +56,10 @@ const WHATSAPP_LINK_SELECTOR = 'a[href*="wa.me"], a[href*="api.whatsapp.com"]';
 /**
  * Call buttons ride on the same listener, for the same reasons: they sit in
  * the same server-rendered pages, and one listener means one count per tap.
- * They report as phone_click, never as whatsapp_click. The admin exclusion
+ * They report as phone_click, never as whatsapp_click. Their position label
+ * comes from the same data-wa-cta attribute (the name predates calls being
+ * tracked), so "sticky-mobile-bar" or "footer-contact" means the same
+ * place for either channel. The admin exclusion
  * below matters even more here, since an admin tel: link is a customer's
  * own number.
  */

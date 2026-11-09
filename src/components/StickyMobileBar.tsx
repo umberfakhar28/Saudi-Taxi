@@ -13,7 +13,7 @@ export default function StickyMobileBar({ ratesHref = '#booking-widget' }: { rat
         <a data-wa-cta="sticky-mobile-bar" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={`btn btn-whatsapp ${styles.action}`}>
           <MessageIcon size={16} /> WhatsApp
         </a>
-        <a href={TEL_URL} className={`btn btn-secondary ${styles.action}`}>
+        <a data-wa-cta="sticky-mobile-bar" href={TEL_URL} className={`btn btn-secondary ${styles.action}`}>
           <PhoneIcon size={16} /> Call
         </a>
         <a href={ratesHref} className={`btn btn-outline-gold ${styles.action}`}>

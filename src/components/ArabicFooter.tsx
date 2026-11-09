@@ -20,7 +20,7 @@ const ArabicFooter = () => {
                             <a data-wa-cta="footer-social" href={WHATSAPP_URL} className={styles.socialLink} aria-label="واتساب" target="_blank" rel="noopener noreferrer">
                                 <MessageIcon size={18} />
                             </a>
-                            <a href={TEL_URL} className={styles.socialLink} aria-label="هاتف">
+                            <a data-wa-cta="footer-social" href={TEL_URL} className={styles.socialLink} aria-label="هاتف">
                                 <PhoneIcon size={18} />
                             </a>
                             <a href="mailto:info@gulftripservice.com" className={styles.socialLink} aria-label="بريد إلكتروني">
@@ -82,7 +82,7 @@ const ArabicFooter = () => {
                             </li>
                             <li className={styles.listItem}>
                                 <PhoneIcon className={styles.contactIcon} size={18} />
-                                <a href={TEL_URL} className={styles.link} dir="ltr">{PHONE_DISPLAY}</a>
+                                <a data-wa-cta="footer-contact" href={TEL_URL} className={styles.link} dir="ltr">{PHONE_DISPLAY}</a>
                             </li>
                             <li className={styles.listItem}>
                                 <MessageIcon className={styles.contactIcon} size={18} />
