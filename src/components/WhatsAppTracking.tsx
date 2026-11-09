@@ -114,8 +114,12 @@ export default function WhatsAppTracking() {
   // The listener is attached once; the path it reports has to stay current
   // across client-side navigations, so it reads a ref rather than closing
   // over the first value it ever saw.
+  // Updated in an effect, not during render (react-hooks/refs). A click can
+  // only happen after the commit, by which time the effect has run.
   const pathRef = useRef(pathname);
-  pathRef.current = pathname;
+  useEffect(() => {
+    pathRef.current = pathname;
+  }, [pathname]);
 
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
