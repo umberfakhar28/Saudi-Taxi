@@ -39,6 +39,40 @@ export function waLink(message: string): string {
 }
 
 /**
+ * The transfer-quote WhatsApp message, named route first.
+ *
+ * Shared by the route pages and the distance pages so a customer who opens
+ * WhatsApp from either sends the same message, and the team sees which
+ * journey they want without having to ask. The blank "Travel date" and
+ * "Passengers" lines are prompts for the customer to fill in.
+ *
+ * Arabic pages get the message in Arabic. Before this they sent an English
+ * sentence with Arabic city names dropped into it, which reads as broken to
+ * the customer who is about to send it under their own name.
+ */
+export function transferQuoteWhatsAppLink(
+  origin: string,
+  destination: string,
+  vehicleName?: string,
+  locale: "en" | "ar" = "en",
+): string {
+  const lines = locale === "ar"
+    ? [
+        `السلام عليكم، أرغب في عرض سعر لتوصيلة خاصة من ${origin} إلى ${destination}.`,
+        vehicleName ? `السيارة: ${vehicleName}` : "",
+        "تاريخ السفر: ",
+        "عدد الركاب: ",
+      ]
+    : [
+        `Hello Gulf Trip Service, I would like a quote for a private transfer from ${origin} to ${destination}.`,
+        vehicleName ? `Vehicle: ${vehicleName}.` : "",
+        "Travel date: ",
+        "Passengers: ",
+      ];
+  return waLink(lines.filter(Boolean).join("\n"));
+}
+
+/**
  * Default "Note for Customer" pre-filled when an admin raises a quote from
  * an existing booking (/admin/quotes/new?fromBooking=…).
  *

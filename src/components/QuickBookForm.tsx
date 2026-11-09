@@ -55,14 +55,18 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
         router.push(`/book-online?${buildParams().toString()}`);
     };
 
+    // Arabic pages build the message in Arabic: the customer sends this text
+    // under their own name, and an English sentence with Arabic place names
+    // dropped into it reads as broken.
     const whatsappMessage = () => {
+        const ar = locale === 'ar';
         const parts = [
-            "Assalamu Alaikum, I'd like to book a ride.",
-            from ? `From: ${from}` : null,
-            to ? `To: ${to}` : null,
-            date ? `Date: ${date}` : null,
-            time ? `Time: ${time}` : null,
-            `Passengers: ${passengers}`,
+            ar ? "السلام عليكم، أرغب في حجز رحلة." : "Assalamu Alaikum, I'd like to book a ride.",
+            from ? `${ar ? 'من' : 'From'}: ${from}` : null,
+            to ? `${ar ? 'إلى' : 'To'}: ${to}` : null,
+            date ? `${ar ? 'التاريخ' : 'Date'}: ${date}` : null,
+            time ? `${ar ? 'الوقت' : 'Time'}: ${time}` : null,
+            `${ar ? 'عدد الركاب' : 'Passengers'}: ${passengers}`,
         ].filter(Boolean);
         return parts.join("\n");
     };

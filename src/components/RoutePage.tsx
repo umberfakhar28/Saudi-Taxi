@@ -8,7 +8,7 @@ import {
 import RelatedLinks from "@/components/RelatedLinks";
 import QuickBookForm from "@/components/QuickBookForm";
 import { ui, type Locale, type UIStrings } from "@/lib/i18n";
-import { waLink } from "@/lib/contact";
+import { transferQuoteWhatsAppLink } from "@/lib/contact";
 import {
   directionLabel,
   hasPublishedPrice,
@@ -237,16 +237,12 @@ export interface RouteData {
  * wanted, and our team had no idea which page the enquiry came from.
  *
  * The message names the route in the right direction, and the vehicle when
- * the enquiry comes from a specific vehicle or pricing card.
+ * the enquiry comes from a specific vehicle or pricing card. The wording
+ * lives in contact.ts so the distance pages send the identical message, and
+ * Arabic pages send it in Arabic.
  */
-function routeWhatsAppLink(data: RouteData, vehicleName?: string): string {
-  const lines = [
-    `Hello Gulf Trip Service, I would like a quote for a private transfer from ${data.origin} to ${data.destination}.`,
-    vehicleName ? `Vehicle: ${vehicleName}.` : "",
-    "Travel date: ",
-    "Passengers: ",
-  ].filter(Boolean);
-  return waLink(lines.join("\n"));
+function routeWhatsAppLink(data: RouteData, locale: Locale, vehicleName?: string): string {
+  return transferQuoteWhatsAppLink(data.origin, data.destination, vehicleName, locale);
 }
 
 /** Always-true service inclusions, not per-route — the border-crossing item
@@ -473,7 +469,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 </p>
               </div>
               <a
-                href={routeWhatsAppLink(data)}
+                href={routeWhatsAppLink(data, locale)}
                 className="btn btn-whatsapp btn-lg"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -900,7 +896,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                         {t.bestForLabel}: {v.bestFor}
                       </p>
                       <a
-                        href={routeWhatsAppLink(data, v.name)}
+                        href={routeWhatsAppLink(data, locale, v.name)}
                         className="btn btn-whatsapp"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -975,7 +971,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                           </td>
                           <td style={{ padding: "var(--space-4)" }}>
                             <a
-                              href={routeWhatsAppLink(data, v.name)}
+                              href={routeWhatsAppLink(data, locale, v.name)}
                               className="btn btn-whatsapp btn-sm"
                               target="_blank"
                               rel="noopener noreferrer"
@@ -1234,7 +1230,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                   class here, with Book Online demoted to an outline button. */}
               <Link href={locale === 'ar' ? "/ar/book-online" : "/book-online"} className="btn btn-primary btn-lg">{t.bookOnline}</Link>
               <a
-                href={routeWhatsAppLink(data)}
+                href={routeWhatsAppLink(data, locale)}
                 className="btn btn-whatsapp btn-lg"
                 target="_blank"
                 rel="noopener noreferrer"

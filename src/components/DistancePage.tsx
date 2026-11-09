@@ -8,7 +8,7 @@ import {
   MapPinIcon, ClockIcon, GlobeIcon, ArrowRightIcon, MountainIcon,
   CheckCircleIcon, MessageIcon, ChevronDownIcon, CalendarIcon, CarIcon,
 } from '@/components/Icons';
-import { WHATSAPP_URL } from '@/lib/contact';
+import { transferQuoteWhatsAppLink } from '@/lib/contact';
 import type { DistanceRouteData } from '@/lib/distanceRouteData';
 import { distanceRoutes } from '@/lib/distanceRouteData';
 import routeStyles from './RoutePage.module.css';
@@ -56,6 +56,10 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
     ]),
   ];
 
+  // Same message as the route page for this corridor, naming the journey, so
+  // the team knows which trip the customer means without asking.
+  const whatsApp = transferQuoteWhatsAppLink(data.origin, data.destination);
+
   const relatedDistance = data.relatedDistanceSlugs
     .map((slug) => distanceRoutes[slug])
     .filter((r): r is DistanceRouteData => Boolean(r));
@@ -70,14 +74,25 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
           <div className="container" style={{ position: 'relative', zIndex: 1 }}>
             <span className="section-eyebrow">{data.eyebrow}</span>
             <h1>{data.h1}</h1>
+            {/* The answer, first. The intro below describes what the page
+                covers; someone who searched "bahrain to riyadh distance"
+                should not have to read past that to get the number. Built
+                only from roadDistance and driveTime, the same fields the
+                facts strip shows, so it can never disagree with them. */}
+            <p data-distance-answer style={{ fontWeight: 600 }}>
+              {data.origin} to {data.destination} is {data.roadDistance}, and the trip takes {data.driveTime}.
+            </p>
             <p>{data.intro}</p>
             <div className="breadcrumb">
               <Link href="/">Home</Link> / <Link href="/distance">Distance Guides</Link> / <span>{data.breadcrumbLabel}</span>
             </div>
-            <div style={{ marginTop: 'var(--space-6)' }}>
+            <div style={{ marginTop: 'var(--space-6)', display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
               <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary btn-lg">
                 Get a Private Transfer Quote
               </Link>
+              <a data-wa-cta="hero" href={whatsApp} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+                <MessageIcon size={18} /> Ask on WhatsApp
+              </a>
             </div>
           </div>
         </section>
@@ -262,7 +277,7 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
                 </p>
                 <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
                   <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary">Book Your Private Transfer</Link>
-                  <a data-wa-cta="in-article" href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                  <a data-wa-cta="in-article" href={whatsApp} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                     <MessageIcon size={16} /> Ask on WhatsApp
                   </a>
                 </div>
@@ -393,7 +408,7 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
             </p>
             <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary btn-lg">Get a Quote</Link>
-              <a data-wa-cta="closing-cta" href={WHATSAPP_URL} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
+              <a data-wa-cta="closing-cta" href={whatsApp} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageIcon size={18} /> WhatsApp Quote
               </a>
             </div>
