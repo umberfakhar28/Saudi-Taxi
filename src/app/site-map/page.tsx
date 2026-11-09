@@ -6,6 +6,9 @@ export const metadata = generatePageMetadata({
     title: "Site Map",
     description: "Every page on Gulf Trip Service, grouped by category — city taxi services, GCC cross-border routes, tours, guides and more.",
     path: "/site-map",
+    // A list of links, not a page anyone should land on from search. It
+    // still passes link equity to every page it lists, hence follow.
+    noindex: true,
 });
 
 const schemas = [

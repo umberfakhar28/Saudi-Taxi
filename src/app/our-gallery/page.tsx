@@ -12,6 +12,9 @@ export const metadata = generatePageMetadata({
     title: "Our Gallery",
     description: "Browse our gallery featuring our fleet of vehicles, the Holy sites of Makkah and Madinah, and our satisfied customers from around the world.",
     path: "/our-gallery",
+    // Photos with captions: nothing to answer a search with, and 9
+    // impressions in 28 days. Kept out of the index; links still followed.
+    noindex: true,
     keywords: ["taxi fleet gallery", "Makkah gallery", "Madinah gallery Saudi Arabia", "Saudi taxi photos"],
 });
 

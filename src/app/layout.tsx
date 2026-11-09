@@ -4,7 +4,7 @@ import PublicLayout from "@/components/PublicLayout";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import WhatsAppTracking from "@/components/WhatsAppTracking";
 import { SITE_CONFIG } from "@/lib/seo";
-import { localBusinessSchema, jsonLd } from "@/lib/jsonld";
+import { localBusinessSchema, websiteSchema, jsonLd } from "@/lib/jsonld";
 import localFont from 'next/font/local';
 import "./globals.css";
 
@@ -123,7 +123,7 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLd(localBusinessSchema()) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd([localBusinessSchema(), websiteSchema()]) }}
         />
       </head>
       <body>

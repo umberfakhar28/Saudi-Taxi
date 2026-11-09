@@ -99,12 +99,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    {
-      url: `${BASE_URL}/our-gallery`,
-      lastModified: lastMod("/our-gallery"),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
+    // /our-gallery and /site-map are noindex (see their page.tsx), so they
+    // are left out here: a sitemap should list only pages meant for the index.
     {
       url: `${BASE_URL}/prices`,
       lastModified: lastMod("/prices"),
@@ -128,12 +124,6 @@ export function buildSitemapEntries(): SitemapEntry[] {
       lastModified: lastMod("/book-online"),
       changeFrequency: "weekly",
       priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/site-map`,
-      lastModified: lastMod("/site-map"),
-      changeFrequency: "monthly",
-      priority: 0.4,
     },
     {
       url: `${BASE_URL}/locations`,

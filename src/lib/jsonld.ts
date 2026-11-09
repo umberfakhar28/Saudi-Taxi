@@ -69,11 +69,42 @@ export function localBusinessSchema() {
       { "@type": "Country", name: "Saudi Arabia" },
       { "@type": "Country", name: "Bahrain" },
       { "@type": "Country", name: "Qatar" },
+      // Each of these has live pages selling transfers there: the Kuwait
+      // and Khafji routes, Riyadh/Dammam to Dubai and Abu Dhabi, and the
+      // Muscat destination page. They were missing, so the markup said the
+      // business served less than the site does.
+      { "@type": "Country", name: "Kuwait" },
+      { "@type": "Country", name: "United Arab Emirates" },
+      { "@type": "Country", name: "Oman" },
     ],
     sameAs: [
       "https://www.facebook.com/gulftripservice",
       "https://www.instagram.com/gulftripservice",
     ],
+  };
+}
+
+/* ─────────────────────────────────────────────────────────────
+   1b. WebSite (site-wide, injected in layout)
+   ───────────────────────────────────────────────────────────── */
+/**
+ * Tells search engines the site's name, which Google uses for the site-name
+ * line above each result. Points at the LocalBusiness above as publisher
+ * rather than declaring a second Organization: LocalBusiness already is
+ * one, and two would just be two descriptions of the same business.
+ *
+ * No SearchAction: the site has no search results page, and Google retired
+ * the sitelinks search box it was for.
+ */
+export function websiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${BASE_URL}/#website`,
+    name: BRAND,
+    url: BASE_URL,
+    inLanguage: ["en", "ar"],
+    publisher: { "@id": `${BASE_URL}/#organization` },
   };
 }
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { PHONE_DISPLAY } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
@@ -46,6 +47,10 @@ const sections = [
 export default function TermsConditionsPage() {
     return (
         <main>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Terms & Conditions", path: "/terms-conditions" }])) }}
+            />
             <section className="page-hero">
                 <h1>Terms &amp; Conditions</h1>
                 <p>Please read these terms carefully before booking a ride with Gulf Trip Service.</p>

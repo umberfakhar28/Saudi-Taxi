@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { PHONE_DISPLAY } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
@@ -12,6 +13,10 @@ export const metadata = generatePageMetadata({
 export default function PrivacyPolicy() {
     return (
         <main>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Privacy Policy", path: "/privacy-policy" }])) }}
+            />
             <section className="page-hero">
                 <h1>Privacy Policy</h1>
                 <p>Your privacy matters to us. This policy explains how we handle your personal data.</p>
