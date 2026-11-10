@@ -116,13 +116,27 @@ export function serviceSchema({
   description,
   url,
   areaServed,
+  offers,
 }: {
   name: string;
   description: string;
   url: string;
   areaServed: string[];
+  /** One Offer per vehicle with a confirmed fare. Must be the same figures
+   * the page shows; unpriced vehicles are left out, not given a guess. */
+  offers?: { name: string; price: number; priceCurrency: string }[];
 }) {
   return {
+    ...(offers && offers.length > 0 && {
+      offers: offers.map((o) => ({
+        "@type": "Offer",
+        name: o.name,
+        price: String(o.price),
+        priceCurrency: o.priceCurrency,
+        url: `${BASE_URL}${url}`,
+        availability: "https://schema.org/InStock",
+      })),
+    }),
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "TaxiService",

@@ -514,7 +514,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     cityTransferInfo: "Doha's main sights sit along or near the Corniche, but the city itself sprawls well beyond it — we run fixed-rate transfers between hotels, West Bay business districts, and the Corniche attractions.",
     chauffeurInfo: "An hourly chauffeur suits a Museum of Islamic Art–Souq Waqif–Katara day, or a full day of business meetings across West Bay's towers without losing time to parking and traffic.",
     internalLinks: [
-      { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Qatar taxi service" },
+      { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Doha taxi" },
       { href: "/qatar-to-riyadh-taxi-service", label: "Qatar to Riyadh taxi service" },
       { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport to Qatar taxi service" },
       { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar cross-border transfer" },

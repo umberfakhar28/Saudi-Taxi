@@ -27,6 +27,7 @@ export const riyadh: CityData = {
     { from: "Riyadh", to: "Makkah", time: "~9–10 hrs drive", href: "/riyadh-to-makkah-taxi-service" },
     { from: "Riyadh", to: "Bahrain", time: "~4.5–5.5 hrs incl. border", href: "/riyadh-to-bahrain-taxi-service" },
     { from: "Riyadh", to: "Dubai", time: "~11–12.5 hrs incl. border", href: "/riyadh-to-dubai-taxi-service" },
+    { from: "Riyadh", to: "Doha", time: "~6.5–7.5 hrs incl. border", href: "/riyadh-to-qatar-taxi-service" },
   ],
   pickupPoints: ["King Khalid International Airport", "Kingdom Centre Tower", "Diriyah Gate", "KAFD Financial District", "Riyadh Season venues", "Five-star hotels"],
   faqs: [

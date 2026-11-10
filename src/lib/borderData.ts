@@ -161,7 +161,7 @@ export const saudiToQatar: BorderData = {
   ],
   routeLinks: [
     { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport → Qatar" },
-    { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh → Qatar" },
+    { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Doha taxi" },
     { href: "/qatar-to-riyadh-taxi-service", label: "Qatar → Riyadh" },
     { href: "/qatar-to-dammam-taxi-service", label: "Qatar → Dammam" },
   ],

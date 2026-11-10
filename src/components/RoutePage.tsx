@@ -11,9 +11,11 @@ import { ui, type Locale, type UIStrings } from "@/lib/i18n";
 import { transferQuoteWhatsAppLink } from "@/lib/contact";
 import {
   directionLabel,
+  formatRoutePrice,
   hasPublishedPrice,
   priceLabel,
   routeVehicles,
+  type RouteCurrency,
   type RoutePricing,
 } from "@/lib/routePricing";
 // Value import (not just the RouteData type) so the reverse-route callout
@@ -140,7 +142,8 @@ export interface RouteData {
   documents: string[];
   pickupPoints: string[];
   dropoffInfo: string;
-  vehicleOptions: { name: string; capacity: string; note: string }[];
+  /** `image` overrides the photo chosen from the name (vehicleImageFor). */
+  vehicleOptions: { name: string; capacity: string; note: string; image?: string }[];
   faqs: { q: string; a: string }[];
   relatedRoutes: { href: string; label: string }[];
   ctaText: string;
@@ -226,6 +229,101 @@ export interface RouteData {
   originAreas?: string[];
   /** Named drop-off areas at the destination end. */
   destinationAreas?: string[];
+
+  // --- Riyadh to Doha brief additions (Nov 2026). All optional; a route
+  // that sets none of them renders exactly as before. Text fields below,
+  // and overviewParagraphs, borderProcessParagraphs, dropoffInfo and FAQ
+  // answers, may carry inline links written as [anchor](/path) — see
+  // renderInline. Schema always receives the plain text. ---
+
+  /** Per-vehicle fares, for a route where each vehicle has its own price
+   * (RoutePricing holds one figure for the whole route). A row with
+   * `amount: null` is shown as "price on request" with a WhatsApp button,
+   * never estimated. When set, it replaces the generic "Every booking
+   * includes" section with the fare's own includes and excludes. */
+  fareTable?: {
+    heading: string;
+    intro?: string;
+    currency: RouteCurrency;
+    direction: "one-way" | "return";
+    confirmedOn: string;
+    rows: { vehicle: string; passengers: string; luggage: string; amount: number | null }[];
+    notes: string[];
+    includedHeading: string;
+    includes: string[];
+    excludes: string[];
+  };
+
+  /** Free-standing H2 sections, placed at fixed points in the template. */
+  contentSections?: {
+    id: string;
+    placement: "afterOverview" | "afterBorder" | "afterVehicles";
+    eyebrow?: string;
+    heading: string;
+    paragraphs?: string[];
+    table?: { head: string[]; rows: string[][] };
+    /** Rendered as H3 + paragraph, numbered when `numbered` is set. */
+    items?: { title: string; body: string }[];
+    numbered?: boolean;
+    outro?: string[];
+    subtle?: boolean;
+  }[];
+
+  /** Heading for the documents box in the border section. */
+  documentsHeading?: string;
+  /** Who does what at the border, as two H3 lists in the border section. */
+  borderRoles?: {
+    driverHeading: string;
+    driver: string[];
+    passengerHeading: string;
+    passenger: string[];
+  };
+}
+
+/* ── Inline links in route copy ──────────────────────────────────── */
+
+const INLINE_LINK = /\[([^\]]+)\]\((\/[^)\s]*)\)/g;
+
+/** "[anchor](/path)" → <Link>. Internal paths only, by construction of the
+ * pattern; text without the pattern comes back unchanged, so every route
+ * that never uses it renders exactly as before. */
+function renderInline(text: string): React.ReactNode {
+  if (!text.includes("](/")) return text;
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(INLINE_LINK)) {
+    const at = m.index ?? 0;
+    if (at > last) out.push(text.slice(last, at));
+    out.push(
+      <Link key={at} href={m[2]} style={{ color: "var(--accent)", fontWeight: 600 }}>
+        {m[1]}
+      </Link>
+    );
+    last = at + m[0].length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+
+/** The same text with link markup removed — for JSON-LD and anywhere else
+ * that needs plain words. */
+function plainText(text: string): string {
+  return text.replace(INLINE_LINK, "$1");
+}
+
+/** The headline fare for the hero and closing CTA, from whichever pricing
+ * shape the route uses. Null when the route has no confirmed figure. */
+function headlineFare(data: RouteData): { label: string; direction: string } | null {
+  if (hasPublishedPrice(data.pricing)) {
+    return { label: priceLabel(data.pricing), direction: directionLabel(data.pricing).toLowerCase() };
+  }
+  const priced = data.fareTable?.rows.filter((r) => r.amount !== null) ?? [];
+  if (!data.fareTable || priced.length === 0) return null;
+  const min = Math.min(...priced.map((r) => r.amount as number));
+  return {
+    label: `from ${formatRoutePrice(min, data.fareTable.currency)}`,
+    direction: data.fareTable.direction === "one-way" ? "one way" : "return",
+  };
 }
 
 /**
@@ -330,20 +428,91 @@ function relatedCitiesFor(data: RouteData): { slug: string; city: string }[] {
     .map((c) => ({ slug: c.slug, city: c.city }));
 }
 
+const cellStyle = { padding: "var(--space-3) var(--space-4)", textAlign: "start" as const, fontSize: "var(--text-sm)", verticalAlign: "top" as const };
+
+/** One `contentSections` entry: an H2 with optional paragraphs, a table,
+ * H3 items and closing paragraphs, in that order. */
+function ContentSection({ s }: { s: NonNullable<RouteData["contentSections"]>[number] }) {
+  return (
+    <section id={s.id} className="section" style={s.subtle ? { background: "var(--bg-subtle)" } : undefined}>
+      <div className="container" style={{ maxWidth: 900 }}>
+        <div className="section-header">
+          {s.eyebrow && <span className="section-eyebrow">{s.eyebrow}</span>}
+          <h2 className="section-title">{s.heading}</h2>
+        </div>
+        {s.paragraphs?.map((p, i) => (
+          <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-5)" }}>{renderInline(p)}</p>
+        ))}
+        {s.table && (
+          <div style={{ overflowX: "auto", margin: "var(--space-6) 0" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", background: "var(--bg-card)", borderRadius: "var(--radius-lg)", overflow: "hidden", border: "1px solid var(--line)" }}>
+              <thead>
+                <tr style={{ background: "var(--bg-dark)", color: "var(--on-dark)" }}>
+                  {s.table.head.map((h) => <th key={h} scope="col" style={cellStyle}>{h}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {s.table.rows.map((row, i) => (
+                  <tr key={i} style={{ borderTop: "1px solid var(--line)" }}>
+                    {row.map((cell, j) =>
+                      j === 0
+                        ? <th key={j} scope="row" style={{ ...cellStyle, fontWeight: 700 }}>{renderInline(cell)}</th>
+                        : <td key={j} style={cellStyle}>{renderInline(cell)}</td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {s.items && (
+          <div style={{ display: "grid", gap: "var(--space-5)", margin: "var(--space-6) 0" }}>
+            {s.items.map((item, i) => (
+              <div key={item.title} style={{ display: "flex", gap: "var(--space-4)", alignItems: "flex-start" }}>
+                {s.numbered && (
+                  <span aria-hidden="true" style={{
+                    flexShrink: 0, width: 36, height: 36, borderRadius: "50%", border: "1px solid var(--line)",
+                    background: "var(--white)", color: "var(--navy)", fontWeight: 800,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>{i + 1}</span>
+                )}
+                <div>
+                  <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "var(--space-2)" }}>{item.title}</h3>
+                  <p style={{ color: "var(--text-body)", lineHeight: 1.75, margin: 0 }}>{renderInline(item.body)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {s.outro?.map((p, i) => (
+          <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-5)" }}>{renderInline(p)}</p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function RoutePage({ data, locale = 'en' }: { data: RouteData; locale?: Locale }) {
   const t = ui(locale);
   // Real fleet vehicles for this route, where it names any. Empty for the
   // routes still using the generic tier cards, which is what switches the
   // vehicle section between its two renderings.
   const namedVehicles = routeVehicles(data.vehicleSlugs);
+  const fare = headlineFare(data);
+  const fareTable = data.fareTable;
+  const sectionsAt = (placement: NonNullable<RouteData["contentSections"]>[number]["placement"]) =>
+    (data.contentSections ?? []).filter((s) => s.placement === placement);
   const schemas = [
     serviceSchema({
       name: `${data.origin} to ${data.destination} Taxi Service`,
-      description: data.intro,
+      description: plainText(data.intro),
       url: `/${data.slug}`,
       areaServed: [data.origin, data.destination],
+      offers: fareTable?.rows
+        .filter((r) => r.amount !== null)
+        .map((r) => ({ name: `${r.vehicle}, ${data.origin} to ${data.destination}, ${fareTable.direction}`, price: r.amount as number, priceCurrency: fareTable.currency })),
     }),
-    faqSchema(data.faqs.map((f) => ({ question: f.q, answer: f.a }))),
+    faqSchema(data.faqs.map((f) => ({ question: f.q, answer: plainText(f.a) }))),
     breadcrumbSchema([
       { name: "Home", path: "/" },
       data.isCrossBorder ? { name: "Border Crossing", path: "/border-crossing" } : { name: "Routes", path: "/routes" },
@@ -463,8 +632,8 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                   {t.whatsappLeadTitle(data.origin, data.destination)}
                 </p>
                 <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", margin: "var(--space-2) 0 0" }}>
-                  {hasPublishedPrice(data.pricing)
-                    ? t.whatsappLeadPriced(priceLabel(data.pricing), directionLabel(data.pricing).toLowerCase())
+                  {fare
+                    ? t.whatsappLeadPriced(fare.label, fare.direction)
                     : t.whatsappLeadQuote}
                 </p>
               </div>
@@ -657,6 +826,99 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
           </section>
         )}
 
+        {/* Per-vehicle fares — routes with `fareTable` only. Sits high on
+            the page because price is the first thing this route's searchers
+            ask. Unpriced rows say so and offer WhatsApp; nothing is guessed. */}
+        {fareTable && (
+          <>
+            <section id="price" className="section" style={{ background: "var(--bg-subtle)" }}>
+              <div className="container" style={{ maxWidth: 900 }}>
+                <div className="section-header">
+                  <span className="section-eyebrow">Fares</span>
+                  <h2 className="section-title">{fareTable.heading}</h2>
+                  {fareTable.intro && <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>{renderInline(fareTable.intro)}</p>}
+                </div>
+                <div style={{ overflowX: "auto" }}>
+                  <table className={styles.fareTable} style={{ width: "100%", borderCollapse: "collapse", background: "var(--bg-card)", borderRadius: "var(--radius-lg)", overflow: "hidden", border: "1px solid var(--line)" }}>
+                    <thead>
+                      <tr style={{ background: "var(--bg-dark)", color: "var(--on-dark)" }}>
+                        <th scope="col" style={cellStyle}>Vehicle</th>
+                        <th scope="col" style={cellStyle}>Passengers</th>
+                        <th scope="col" style={cellStyle}>Large bags</th>
+                        <th scope="col" style={cellStyle}>{fareTable.direction === "one-way" ? "One-way fare" : "Return fare"}</th>
+                        <th scope="col" style={cellStyle}><span className="sr-only">Book</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {fareTable.rows.map((r) => (
+                        <tr key={r.vehicle} style={{ borderTop: "1px solid var(--line)" }}>
+                          <th scope="row" style={{ ...cellStyle, fontWeight: 700 }}>{r.vehicle}</th>
+                          <td data-label="Passengers" style={cellStyle}>{r.passengers}</td>
+                          <td data-label="Large bags" style={cellStyle}>{r.luggage}</td>
+                          <td data-label={fareTable.direction === "one-way" ? "One-way fare" : "Return fare"} style={{ ...cellStyle, fontWeight: 800, color: "var(--navy)", whiteSpace: "nowrap" }}>
+                            {r.amount !== null ? formatRoutePrice(r.amount, fareTable.currency) : "On request"}
+                          </td>
+                          <td style={cellStyle}>
+                            <a
+                              href={routeWhatsAppLink(data, locale, r.vehicle)}
+                              className="btn btn-whatsapp btn-sm"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              data-wa-cta="pricing-table"
+                              style={{ whiteSpace: "nowrap" }}
+                            >
+                              <MessageIcon size={14} /> {r.amount !== null ? "Book on WhatsApp" : "Get a price on WhatsApp"}
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <ul style={{ margin: "var(--space-5) 0 0", paddingInlineStart: "1.2em", display: "grid", gap: "var(--space-2)", color: "var(--text-body)", fontSize: "var(--text-sm)", lineHeight: 1.7 }}>
+                  {fareTable.notes.map((n) => <li key={n}>{renderInline(n)}</li>)}
+                </ul>
+                <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginTop: "var(--space-3)" }}>
+                  {t.priceConfirmedOn(fareTable.confirmedOn)}
+                </p>
+              </div>
+            </section>
+
+            <section id="included" className="section">
+              <div className="container" style={{ maxWidth: 900 }}>
+                <div className="section-header">
+                  <span className="section-eyebrow">{t.whatsIncluded}</span>
+                  <h2 className="section-title">{fareTable.includedHeading}</h2>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--space-6)" }}>
+                  <div className="card">
+                    <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "var(--space-4)" }}>{t.includedHeading}</h3>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "var(--space-3)" }}>
+                      {fareTable.includes.map((item) => (
+                        <li key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start", fontSize: "var(--text-sm)" }}>
+                          <CheckCircleIcon size={16} style={{ color: "var(--success, #10b981)", flexShrink: 0, marginTop: 3 }} />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="card">
+                    <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "var(--space-4)" }}>{t.notIncludedHeading}</h3>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "var(--space-3)" }}>
+                      {fareTable.excludes.map((item) => (
+                        <li key={item} style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start", fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>
+                          <span style={{ flexShrink: 0, marginTop: 1 }}>—</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
+
         {/* Overview */}
         <section className="section-lg">
           <div className="container">
@@ -665,7 +927,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 <span className="section-eyebrow">{t.travelOverview}</span>
                 <h2 className="section-title">{data.overviewTitle}</h2>
                 {data.overviewParagraphs.map((p, i) => (
-                  <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{p}</p>
+                  <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{renderInline(p)}</p>
                 ))}
                 <div className={styles.useCaseRow}>
                   {useCasesFor(data).map((label) => (
@@ -698,6 +960,8 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
             </div>
           </div>
         </section>
+
+        {sectionsAt("afterOverview").map((s) => <ContentSection key={s.id} s={s} />)}
 
         {/* Airport Route Information — overview only; the dedicated airport
             page (linked below) owns the full terminal/meet-and-greet detail. */}
@@ -766,13 +1030,25 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                   <span className="section-eyebrow">{t.crossingProcess}</span>
                   <h2 className="section-title">{data.borderProcessTitle}</h2>
                   {data.borderProcessParagraphs?.map((p, i) => (
-                    <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-5)" }}>{p}</p>
+                    <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-5)" }}>{renderInline(p)}</p>
                   ))}
-                  <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>{data.dropoffInfo}</p>
+                  <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>{renderInline(data.dropoffInfo)}</p>
+                  {data.borderRoles && (
+                    <>
+                      <h3 style={{ fontSize: "var(--text-lg)", margin: "var(--space-6) 0 var(--space-3)" }}>{data.borderRoles.driverHeading}</h3>
+                      <ul style={{ paddingInlineStart: "1.2em", display: "grid", gap: "var(--space-2)", color: "var(--text-body)", lineHeight: 1.7 }}>
+                        {data.borderRoles.driver.map((x) => <li key={x}>{renderInline(x)}</li>)}
+                      </ul>
+                      <h3 style={{ fontSize: "var(--text-lg)", margin: "var(--space-6) 0 var(--space-3)" }}>{data.borderRoles.passengerHeading}</h3>
+                      <ul style={{ paddingInlineStart: "1.2em", display: "grid", gap: "var(--space-2)", color: "var(--text-body)", lineHeight: 1.7 }}>
+                        {data.borderRoles.passenger.map((x) => <li key={x}>{renderInline(x)}</li>)}
+                      </ul>
+                    </>
+                  )}
                 </div>
-                <div style={{ border: "1px solid var(--gray-200)", borderRadius: "var(--radius-xl)", overflow: "hidden" }}>
+                <div style={{ border: "1px solid var(--gray-200)", borderRadius: "var(--radius-xl)", overflow: "hidden", ...(data.borderRoles && { alignSelf: "start" }) }}>
                   <div style={{ background: "var(--primary)", padding: "1.5rem", color: "var(--white)" }}>
-                    <h3 style={{ margin: 0, fontSize: "1.2rem" }}>{t.requiredDocuments}</h3>
+                    <h3 style={{ margin: 0, fontSize: "1.2rem" }}>{data.documentsHeading ?? t.requiredDocuments}</h3>
                   </div>
                   <div style={{ padding: "2rem" }}>
                     <ul style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
@@ -794,7 +1070,11 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
           </section>
         )}
 
-        {/* What's Included */}
+        {sectionsAt("afterBorder").map((s) => <ContentSection key={s.id} s={s} />)}
+
+        {/* What's Included — replaced by the fare's own includes/excludes
+            on routes with a fareTable, which say the same thing precisely. */}
+        {!fareTable && (
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
           <div className="container">
             <div className="section-header centered">
@@ -811,6 +1091,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
             </div>
           </div>
         </section>
+        )}
 
         {/* Vehicle options.
 
@@ -910,22 +1191,37 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 ))}
               </div>
             ) : (
-              <div className="grid-3">
+              <div
+                className={fareTable ? undefined : "grid-3"}
+                style={fareTable ? { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "var(--space-6)" } : undefined}
+              >
                 {data.vehicleOptions.map((v, i) => (
-                  <div key={i} className="card" style={{ textAlign: "center", padding: 0, overflow: "hidden" }}>
+                  <div key={i} className="card" style={{ textAlign: "center", padding: 0, overflow: "hidden", ...(fareTable && { display: "flex", flexDirection: "column" }) }}>
                     <div style={{ position: "relative", width: "100%", height: 160 }}>
                       <Image
-                        src={vehicleImageFor(v.name)}
+                        src={v.image ?? vehicleImageFor(v.name)}
                         alt={`${v.name} vehicle for the ${data.origin} to ${data.destination} route`}
                         fill
                         style={{ objectFit: "cover" }}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     </div>
-                    <div style={{ padding: "var(--space-6)" }}>
+                    <div style={{ padding: "var(--space-6)", ...(fareTable && { display: "flex", flexDirection: "column", flex: 1 }) }}>
                       <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)" }}>{v.name}</h3>
                       <p style={{ color: "var(--navy)", fontWeight: 700, margin: "var(--space-2) 0" }}>{v.capacity}</p>
                       <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)" }}>{v.note}</p>
+                      {fareTable && (
+                        <a
+                          href={routeWhatsAppLink(data, locale, v.name)}
+                          className="btn btn-whatsapp"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-wa-cta="vehicle-card"
+                          style={{ marginTop: "auto", width: "100%", justifyContent: "center" }}
+                        >
+                          <MessageIcon size={16} /> {t.bookThisVehicle}
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -1028,6 +1324,8 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
           </section>
         )}
 
+        {sectionsAt("afterVehicles").map((s) => <ContentSection key={s.id} s={s} />)}
+
         {/* Pre-travel checklist — cross-border routes only. */}
         {data.checklist && data.checklist.length > 0 && (
           <section className="section">
@@ -1129,7 +1427,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
               {data.faqs.map((f, i) => (
                 <div key={i} className="card" style={{ padding: "var(--space-6) var(--space-8)" }}>
                   <h3 style={{ color: "var(--navy)", fontSize: "var(--text-base)", marginBottom: "var(--space-3)" }}>{f.q}</h3>
-                  <p style={{ color: "var(--text-body)", marginBottom: 0 }}>{f.a}</p>
+                  <p style={{ color: "var(--text-body)", marginBottom: 0 }}>{renderInline(f.a)}</p>
                 </div>
               ))}
             </div>
@@ -1216,8 +1514,8 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
             <span className="section-eyebrow" style={{ background: "rgba(255,255,255,0.08)", borderColor: "var(--line-dark)", color: "var(--on-dark)" }}>Book Now</span>
             <h2 style={{ color: "var(--on-dark)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
             <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
-              {hasPublishedPrice(data.pricing)
-                ? t.ctaBlurbPriced(priceLabel(data.pricing), directionLabel(data.pricing).toLowerCase(), data.origin, data.destination)
+              {fare
+                ? t.ctaBlurbPriced(fare.label, fare.direction, data.origin, data.destination)
                 : t.ctaBlurb(data.origin, data.destination)}
             </p>
             <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-sm)", maxWidth: 560, margin: "0 auto var(--space-6)" }}>

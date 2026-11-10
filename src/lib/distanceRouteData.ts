@@ -1566,7 +1566,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     relatedDistanceSlugs: ["doha-to-dammam"],
     relatedServiceLinks: [
       { href: "/qatar-to-riyadh-taxi-service", label: "Qatar to Riyadh taxi service" },
-      { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Qatar taxi service" },
+      { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Doha taxi" },
       { href: "/corporate-transportation-services", label: "Corporate transportation" },
     ],
 

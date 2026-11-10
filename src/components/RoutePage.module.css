@@ -89,3 +89,56 @@
   gap: var(--space-8);
   justify-content: center;
 }
+
+/* Per-vehicle fare table (RouteData.fareTable). On a phone a five-column
+   table pushes the fare itself off-screen, which defeats the point of
+   showing it, so at tablet width and below each row becomes a small card: vehicle name,
+   then label/value pairs, then a full-width WhatsApp button. The labels come
+   from data-label on each cell (768px: the table needs ~730px with its
+   buttons). !important only because the cells carry
+   inline padding shared with the desktop layout. */
+@media (max-width: 768px) {
+  .fareTable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .fareTable,
+  .fareTable tbody,
+  .fareTable tr,
+  .fareTable th,
+  .fareTable td {
+    display: block;
+    width: 100%;
+  }
+  .fareTable tr {
+    padding: var(--space-4) var(--space-5);
+  }
+  .fareTable th[scope="row"] {
+    padding: 0 0 var(--space-2) !important;
+    font-size: var(--text-base) !important;
+  }
+  .fareTable td {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-1) 0 !important;
+  }
+  .fareTable td::before {
+    content: attr(data-label);
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .fareTable td:last-child {
+    padding-top: var(--space-3) !important;
+  }
+  .fareTable td:last-child::before {
+    content: none;
+  }
+  .fareTable td:last-child a {
+    width: 100%;
+    justify-content: center;
+  }
+}
