@@ -1,41 +1,28 @@
-import Script from "next/script";
+'use client';
+
+import { useEffect } from 'react';
+import { analyticsAllowed, loadGoogleAnalytics } from '@/lib/consent';
 
 /**
- * GA4 for the whole site.
+ * GA4 for the whole site (property G-TQZY85DG7H, see lib/consent).
  *
- * This component has existed for a long time and never once fired: it read
- * NEXT_PUBLIC_GA_MEASUREMENT_ID, the variable was never set in any
- * environment, so it returned null and production shipped no gtag script at
- * all. Every visit since launch went unmeasured.
+ * Loads once per visit, after hydration — the same timing the previous
+ * next/script afterInteractive version had — but only when the visitor's
+ * consent position allows it:
  *
- * The property's Measurement ID is therefore the default here rather than
- * env-only. It is not a secret — gtag publishes it in the page source of
- * every request, so there is nothing to protect — and hardcoding the default
- * means tracking survives a deployment where nobody remembered to add an
- * environment variable, which is exactly how it came to be dead in the first
- * place. The env var still wins when it is set, so a staging property can
- * override it without touching code.
+ *  - not in the EU/EEA, UK or Switzerland, and no Reject stored: loads at
+ *    once, exactly as before;
+ *  - in those regions: nothing loads until Accept in the cookie banner,
+ *    which then calls the same loader itself.
+ *
+ * gaEvent() in lib/analytics already does nothing while gtag is absent, so
+ * WhatsApp and call tracking need no changes: for a visitor who has not
+ * accepted, those events are simply never sent.
  */
-const DEFAULT_GA_ID = "G-TQZY85DG7H";
-
 export default function GoogleAnalytics() {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || DEFAULT_GA_ID;
-  if (!measurementId) return null;
+  useEffect(() => {
+    if (analyticsAllowed()) loadGoogleAnalytics();
+  }, []);
 
-  return (
-    <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-        strategy="afterInteractive"
-      />
-      <Script id="ga4-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${measurementId}');
-        `}
-      </Script>
-    </>
-  );
+  return null;
 }

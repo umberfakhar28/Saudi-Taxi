@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons';
 import Logo from './Logo';
 import styles from './Footer.module.css';
+import CookieSettingsLink from './CookieSettingsLink';
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from '@/lib/contact';
 
 const ArabicFooter = () => {
@@ -108,6 +109,8 @@ const ArabicFooter = () => {
                         <Link href="/ar/contact-us" className={styles.bottomLink}>اتصل بنا</Link>
                         <span className={styles.divider}>|</span>
                         <Link href="/ar/book-online" className={styles.bottomLink}>احجز الآن</Link>
+                        <span className={styles.divider}>|</span>
+                        <CookieSettingsLink className={styles.bottomLink} label="إعدادات ملفات تعريف الارتباط" />
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons
 import Logo from './Logo';
 import HomeLogoLink from './HomeLogoLink';
 import styles from './Footer.module.css';
+import CookieSettingsLink from './CookieSettingsLink';
 import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from '@/lib/contact';
 import { locationLinks } from '@/config/navigation';
 
@@ -133,6 +134,8 @@ const Footer = () => {
                         <Link href="/book-online" className={styles.bottomLink}>Book Now</Link>
                         <span className={styles.divider}>|</span>
                         <Link href="/site-map" className={styles.bottomLink}>Site Map</Link>
+                        <span className={styles.divider}>|</span>
+                        <CookieSettingsLink className={styles.bottomLink} />
                     </div>
                 </div>
             </div>

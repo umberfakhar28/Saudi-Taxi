@@ -1,5 +1,26 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { CONSENT_MAX_AGE, REGION_COOKIE, regionForCountry } from "@/lib/consent";
+
+/**
+ * Tells the browser whether this visitor must be asked before analytics
+ * (lib/consent). Set here, not in a layout, so the pages themselves stay
+ * static. Only written when missing or changed, so a normal page view sends
+ * no Set-Cookie at all. Off Vercel (local runs) there is no country header
+ * and the visitor counts as "other", i.e. GA loads as it always has.
+ */
+function withRegionCookie(request: NextRequest, response: NextResponse): NextResponse {
+  const region = regionForCountry(request.headers.get("x-vercel-ip-country"));
+  if (request.cookies.get(REGION_COOKIE)?.value !== region) {
+    response.cookies.set(REGION_COOKIE, region, {
+      path: "/",
+      maxAge: CONSENT_MAX_AGE,
+      sameSite: "lax",
+      secure: request.nextUrl.protocol === "https:",
+    });
+  }
+  return response;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────
    Lightweight HTML → Markdown converter for content negotiation.
@@ -88,7 +109,7 @@ export async function proxy(request: NextRequest) {
     ) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-    return response;
+    return withRegionCookie(request, response);
   }
 
   // Protect admin routes
@@ -195,7 +216,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  return response;
+  return withRegionCookie(request, response);
 }
 
 export const config = {

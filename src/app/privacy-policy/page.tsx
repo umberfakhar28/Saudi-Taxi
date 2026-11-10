@@ -30,7 +30,7 @@ export default function PrivacyPolicy() {
                     <div style={{ background: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: '3rem' }}>
 
                         <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-                            <strong>Last Updated:</strong> January 7, 2024
+                            <strong>Last Updated:</strong> November 10, 2026
                         </p>
 
                         {[
@@ -51,8 +51,9 @@ export default function PrivacyPolicy() {
                                 content: "We do not sell, trade, or otherwise transfer your personally identifiable information to outside parties. We may share your information with trusted third parties who assist us in operating our services — such as payment processors and booking platforms — provided those parties agree to keep this information confidential. We may also disclose your information when required by law or to protect our rights."
                             },
                             {
+                                id: "cookies",
                                 title: "5. Cookies",
-                                content: "Our website uses cookies to enhance your browsing experience. Cookies are small text files stored on your device. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, some features of our website may not function properly without cookies."
+                                content: "We use Google Analytics 4 to understand which pages are useful to travellers and which buttons people use to contact us. It sets the cookies _ga and _ga_<ID>, which Google keeps for up to 2 years by default; it does not receive your name, phone number or booking details. We also set two small cookies of our own, each kept for 12 months: gts_region, which records only whether your country requires us to ask before using analytics, and gts_consent, which remembers your answer. If you visit from the EU/EEA, the United Kingdom or Switzerland, Google Analytics does not load until you press Accept in the cookie banner. You can change your choice at any time with the Cookie Settings link at the bottom of every page; choosing Reject stops Google Analytics and deletes its cookies from your browser. You can also block or delete cookies in your browser settings."
                             },
                             {
                                 title: "6. Data Security",
@@ -79,7 +80,7 @@ export default function PrivacyPolicy() {
                                 content: `If you have any questions or concerns about this Privacy Policy, please contact us at: Email: info@gulftripservice.com | Phone: ${PHONE_DISPLAY} | Address: Saudi Arabia`
                             },
                         ].map((section, i) => (
-                            <div key={i} style={{ marginBottom: '2.5rem' }}>
+                            <div key={i} id={section.id} style={{ marginBottom: '2.5rem', scrollMarginTop: '120px' }}>
                                 <h2 style={{ fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '0.75rem', fontFamily: 'var(--font-heading)' }}>
                                     {section.title}
                                 </h2>

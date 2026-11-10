@@ -3,6 +3,7 @@ import Script from "next/script";
 import PublicLayout from "@/components/PublicLayout";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import WhatsAppTracking from "@/components/WhatsAppTracking";
+import CookieBanner from "@/components/CookieBanner";
 import { SITE_CONFIG } from "@/lib/seo";
 import { localBusinessSchema, websiteSchema, jsonLd } from "@/lib/jsonld";
 import localFont from 'next/font/local';
@@ -129,6 +130,7 @@ export default function RootLayout({
       <body>
         <GoogleAnalytics />
         <WhatsAppTracking />
+        <CookieBanner />
         <PublicLayout>
           {children}
         </PublicLayout>
