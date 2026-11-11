@@ -844,7 +844,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     relatedDistanceSlugs: ["bahrain-to-dammam", "bahrain-to-jubail"],
     relatedServiceLinks: [
       { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh taxi service" },
-      { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi service" },
+      { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi" },
       { href: "/corporate-transportation-services", label: "Corporate transportation" },
       { href: "/guides/long-distance-private-transfers", label: "How long-distance private transfers work" },
     ],

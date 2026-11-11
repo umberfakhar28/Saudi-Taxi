@@ -680,7 +680,7 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     cityTransferInfo: "Manama's compact grid is easy to cover with a private transfer between the souq, World Trade Center district, and waterfront hotels — most visitors combine several sights in a single half-day loop.",
     chauffeurInfo: "An hourly chauffeur works well for a Manama-plus-Bahrain-Fort day, or for causeway travelers who want the same driver for both the border crossing and city sightseeing.",
     internalLinks: [
-      { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi service" },
+      { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi" },
       { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh taxi service" },
       { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi service" },
       { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },

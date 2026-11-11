@@ -1,15 +1,20 @@
 import { generatePageMetadata } from "@/lib/seo";
-import RoutePage from "@/components/RoutePage";
+import RouteLanding from "@/components/RouteLanding";
 import { riyadhToBahrain } from "@/lib/routeData";
 
+// Title leads with the price: the page sits around position 7 (GSC, Nov
+// 2026), so the aim is click-through. The brand suffix is appended by
+// generatePageMetadata; the brief's second segment ("Private Transfer")
+// was dropped to keep the full title under 60 characters.
 export const metadata = generatePageMetadata({
-  title: "Taxi Riyadh to Bahrain | Cross-Border Car Service 24/7",
-  description: "Reliable Riyadh to Bahrain taxi & private transfer. Cross-border paperwork handled, licensed drivers, 24/7 service. Book your ride on WhatsApp.",
+  title: "Riyadh to Bahrain Taxi from 1,000 SAR",
+  description: "Private Riyadh to Bahrain taxi via King Fahd Causeway. Sedan 1,000 SAR, SUV 1,500 SAR, door to door, 24/7. Book instantly on WhatsApp.",
   path: "/riyadh-to-bahrain-taxi-service",
   hreflangPath: "/riyadh-to-bahrain-taxi-service",
-  keywords: ["Riyadh to Bahrain taxi", "Riyadh to Manama transfer", "King Fahd Causeway taxi from Riyadh"],
+  ogImage: "/images/routes/luxury-riyadh-to-bahrain-transfer-og.jpg",
+  ogImageAlt: "Luxury private car transfer from Riyadh to Bahrain via King Fahd Causeway",
 });
 
 export default function Page() {
-  return <RoutePage data={riyadhToBahrain} />;
+  return <RouteLanding data={riyadhToBahrain} />;
 }

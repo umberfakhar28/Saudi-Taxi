@@ -117,6 +117,7 @@ export function serviceSchema({
   url,
   areaServed,
   offers,
+  image,
 }: {
   name: string;
   description: string;
@@ -125,6 +126,8 @@ export function serviceSchema({
   /** One Offer per vehicle with a confirmed fare. Must be the same figures
    * the page shows; unpriced vehicles are left out, not given a guess. */
   offers?: { name: string; price: number; priceCurrency: string }[];
+  /** Root-relative path of the page's main image. */
+  image?: string;
 }) {
   return {
     ...(offers && offers.length > 0 && {
@@ -147,6 +150,7 @@ export function serviceSchema({
     },
     name,
     description,
+    ...(image && { image: `${BASE_URL}${image}` }),
     url: `${BASE_URL}${url}`,
     areaServed: areaServed.map((city) => ({ "@type": "City", name: city })),
     availableChannel: {

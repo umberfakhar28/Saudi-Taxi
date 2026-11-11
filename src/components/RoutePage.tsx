@@ -29,6 +29,7 @@ import { allCities } from "@/lib/cityData3";
 import { AIRPORTS } from "@/lib/airportRoutesData";
 import { getDestination } from "@/lib/destinationData";
 import { hotelsForCity } from "@/lib/hotelData";
+import type { RouteLanding } from "@/lib/routeLanding";
 import styles from "./RoutePage.module.css";
 
 /** Maps a route's non-Saudi endpoint name (as written in RouteData's
@@ -278,6 +279,10 @@ export interface RouteData {
     passengerHeading: string;
     passenger: string[];
   };
+
+  /** Designed, section-by-section layout. A route that sets this renders
+   * with RouteLanding instead of this template (see its page.tsx). */
+  landing?: RouteLanding;
 }
 
 /* ── Inline links in route copy ──────────────────────────────────── */
@@ -287,7 +292,7 @@ const INLINE_LINK = /\[([^\]]+)\]\((\/[^)\s]*)\)/g;
 /** "[anchor](/path)" → <Link>. Internal paths only, by construction of the
  * pattern; text without the pattern comes back unchanged, so every route
  * that never uses it renders exactly as before. */
-function renderInline(text: string): React.ReactNode {
+export function renderInline(text: string): React.ReactNode {
   if (!text.includes("](/")) return text;
   const out: React.ReactNode[] = [];
   let last = 0;
@@ -307,7 +312,7 @@ function renderInline(text: string): React.ReactNode {
 
 /** The same text with link markup removed — for JSON-LD and anywhere else
  * that needs plain words. */
-function plainText(text: string): string {
+export function plainText(text: string): string {
   return text.replace(INLINE_LINK, "$1");
 }
 

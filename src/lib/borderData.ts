@@ -71,7 +71,7 @@ export const saudiToBahrain: BorderData = {
   ],
   routeLinks: [
     { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport → Bahrain" },
-    { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh → Bahrain" },
+    { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi" },
     { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain → Riyadh" },
     { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain → Dammam" },
     { href: "/bahrain-to-jubail-taxi-service", label: "Bahrain → Jubail" },

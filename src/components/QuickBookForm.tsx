@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarIcon, ClockIcon, UserIcon, ArrowRightIcon, WhatsAppIcon } from "./Icons";
+import { CalendarIcon, ClockIcon, UserIcon, ArrowRightIcon, WhatsAppIcon, CarIcon, ShieldCheckIcon } from "./Icons";
 import SearchAutocomplete from "./SearchAutocomplete";
 import { waLink } from "@/lib/contact";
 import { ui, type Locale } from "@/lib/i18n";
@@ -21,6 +21,15 @@ interface QuickBookFormProps {
     /** Defaults to English; 'ar' renders the Arabic labels. The booking
      * flow it hands off to is the same one in both languages. */
     locale?: Locale;
+    /** Optional vehicle choice, e.g. with the route's fare in the label.
+     *  The value is passed to Book Online as `vehicleName`. */
+    vehicles?: { value: string; label: string }[];
+    /** Highest passenger count offered. Defaults to 8. */
+    maxPassengers?: number;
+    /** A short reassurance strip shown at the bottom of the card. */
+    footerNote?: string;
+    /** Heading level for the card title. Defaults to h3. */
+    headingAs?: "h2" | "h3";
 }
 
 /**
@@ -31,7 +40,7 @@ interface QuickBookFormProps {
  * for everything else (vehicle, contact details) — one booking system,
  * not a second parallel one that also has to write to Supabase.
  */
-export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading, subheading, locale = 'en' }: QuickBookFormProps) {
+export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading, subheading, locale = 'en', vehicles, maxPassengers = 8, footerNote, headingAs: Heading = 'h3' }: QuickBookFormProps) {
     const t = ui(locale);
     const title = heading ?? t.quickQuoteHeading;
     const router = useRouter();
@@ -40,11 +49,15 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
     const [passengers, setPassengers] = useState("1");
+    const [vehicle, setVehicle] = useState("");
+    // Labels point at their fields, so screen readers announce each one.
+    const uid = useId();
 
     const buildParams = () => {
         const qs = new URLSearchParams({ from, to, passengers });
         if (date) qs.set("date", date);
         if (time) qs.set("time", time);
+        if (vehicle) qs.set("vehicleName", vehicle);
         if (service) qs.set("service", service);
         else qs.set("mode", "transfers");
         return qs;
@@ -67,6 +80,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
             date ? `${ar ? 'التاريخ' : 'Date'}: ${date}` : null,
             time ? `${ar ? 'الوقت' : 'Time'}: ${time}` : null,
             `${ar ? 'عدد الركاب' : 'Passengers'}: ${passengers}`,
+            vehicle ? `${ar ? 'السيارة' : 'Vehicle'}: ${vehicle}` : null,
         ].filter(Boolean);
         return parts.join("\n");
     };
@@ -74,11 +88,11 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
     return (
         <div className={styles.card}>
             <div className={styles.header}>
-                <h3 className={styles.title}>{title}</h3>
+                <Heading className={styles.title}>{title}</Heading>
                 {subheading && <p className={styles.subtitle}>{subheading}</p>}
             </div>
 
-            <form onSubmit={handleSubmit} className={styles.grid}>
+            <form onSubmit={handleSubmit} className={vehicles ? `${styles.grid} ${styles.gridWithVehicle}` : styles.grid}>
                 <div className={styles.field}>
                     <SearchAutocomplete
                         variant="field"
@@ -100,19 +114,28 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                     />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}><CalendarIcon size={14} /> {t.date}</label>
-                    <input type="date" className={styles.input} value={date} onChange={(e) => setDate(e.target.value)} />
+                    <label className={styles.label} htmlFor={`${uid}-date`}><CalendarIcon size={14} /> {t.date}</label>
+                    <input id={`${uid}-date`} type="date" className={styles.input} value={date} onChange={(e) => setDate(e.target.value)} />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}><ClockIcon size={14} /> {t.time}</label>
-                    <input type="time" className={styles.input} value={time} onChange={(e) => setTime(e.target.value)} />
+                    <label className={styles.label} htmlFor={`${uid}-time`}><ClockIcon size={14} /> {t.time}</label>
+                    <input id={`${uid}-time`} type="time" className={styles.input} value={time} onChange={(e) => setTime(e.target.value)} />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}><UserIcon size={14} /> {t.passengers}</label>
-                    <select className={styles.input} value={passengers} onChange={(e) => setPassengers(e.target.value)}>
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => <option key={n} value={n}>{n}</option>)}
+                    <label className={styles.label} htmlFor={`${uid}-passengers`}><UserIcon size={14} /> {t.passengers}</label>
+                    <select id={`${uid}-passengers`} className={styles.input} value={passengers} onChange={(e) => setPassengers(e.target.value)}>
+                        {Array.from({ length: maxPassengers }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n}</option>)}
                     </select>
                 </div>
+                {vehicles && (
+                    <div className={styles.field}>
+                        <label className={styles.label} htmlFor={`${uid}-vehicle`}><CarIcon size={14} /> {locale === 'ar' ? 'السيارة' : 'Vehicle'}</label>
+                        <select id={`${uid}-vehicle`} className={styles.input} value={vehicle} onChange={(e) => setVehicle(e.target.value)}>
+                            <option value="">{locale === 'ar' ? 'بدون تفضيل' : 'No preference'}</option>
+                            {vehicles.map((v) => <option key={v.value} value={v.value}>{v.label}</option>)}
+                        </select>
+                    </div>
+                )}
 
                 <div className={styles.actions}>
                     <button type="submit" className={`btn btn-primary ${styles.submitBtn}`}>
@@ -129,6 +152,11 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                     </a>
                 </div>
             </form>
+            {footerNote && (
+                <p className={styles.footerNote}>
+                    <span aria-hidden="true" style={{ display: "inline-flex" }}><ShieldCheckIcon size={16} /></span> {footerNote}
+                </p>
+            )}
         </div>
     );
 }
