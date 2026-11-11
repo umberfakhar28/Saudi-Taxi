@@ -15,7 +15,7 @@ import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
 import { ui, SERVICE_LABELS_AR, bookingErrorMessage, type Locale } from "@/lib/i18n";
 import { BOOKING_SERVICES } from "@/lib/bookingServices";
 import { bookingRef } from "@/lib/bookingRef";
-import { riyadhToday, isPastDate, isValidPhone, PASSENGERS_MAX } from "@/lib/bookingValidation";
+import { riyadhToday, isPastDate, isValidPhone, isValidEmail, PASSENGERS_MAX } from "@/lib/bookingValidation";
 import styles from "./BookOnlineClient.module.css";
 
 /**
@@ -230,8 +230,8 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
          *
          * Still gated on a concrete service: landing on the contact step
          * with an empty service was how a booking once reached the database
-         * with no service recorded. Gated on the name alone, not the email —
-         * the homepage bar does not demand an address.
+         * with no service recorded. Gated on the name alone; the email is
+         * required too, but Step 2 checks it like any other field.
          */
         const tripComplete = !!(from.trim() && to.trim() && date && time);
         if (service && tripComplete && nameParam) {
@@ -295,6 +295,8 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
         if (!formData.name.trim()) e.name = t.errNameRequired;
         if (!formData.phone.trim()) e.phone = t.errPhoneRequired;
         else if (!isValidPhone(formData.phone)) e.phone = t.errPhoneInvalid;
+        if (!formData.email.trim()) e.email = t.errEmailRequired;
+        else if (!isValidEmail(formData.email)) e.email = t.errEmailInvalid;
         setErrors(e);
         return Object.keys(e).length === 0;
     };
@@ -750,12 +752,11 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
 
                                     <div className="form-group">
                                         <label className="form-label" htmlFor="bk-email">
-                                            {t.emailAddress} <span className={styles.optionalTag}>{t.vehicleOptional}</span>
+                                            {t.emailAddress} *
                                         </label>
-                                        {/* Optional: a customer who books by phone or WhatsApp
-                                            often has no email, and the confirmation they care
-                                            about reaches them on WhatsApp anyway. The field
-                                            stays so an address is captured when one is given. */}
+                                        {/* Required: quotes and invoices are sent from the
+                                            admin by email, so a request without one cannot
+                                            be quoted. */}
                                         <input
                                             id="bk-email"
                                             type="email"
@@ -766,7 +767,11 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                                             dir="ltr"
                                             value={formData.email}
                                             onChange={handleChange}
+                                            aria-invalid={!!errors.email}
+                                            aria-describedby={errors.email ? 'bk-email-error' : undefined}
+                                            style={errors.email ? { borderColor: 'var(--error)' } : undefined}
                                         />
+                                        {errors.email && <p id="bk-email-error" className={styles.fieldError} role="alert">{errors.email}</p>}
                                     </div>
 
                                     <div className="form-group">

@@ -169,8 +169,11 @@ export function validateBookingPayload(body: BookingValidationInput, now: Date =
     if (!phone) return 'phone_required';
     if (phone.length > MAX_LENGTHS.phone || !isValidPhone(phone)) return 'phone_invalid';
 
+    // Required: the admin sends the quote and invoice by email, so a
+    // booking without an address is one nobody can quote.
     const email = str(body.customer_email);
-    if (email && (email.length > MAX_LENGTHS.email || !isValidEmail(email))) return 'email_invalid';
+    if (!email) return 'email_required';
+    if (email.length > MAX_LENGTHS.email || !isValidEmail(email)) return 'email_invalid';
 
     const pickup = str(body.pickup_location);
     if (!pickup) return 'pickup_required';

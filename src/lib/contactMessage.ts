@@ -48,6 +48,7 @@ const MESSAGES: Record<ContactLocale, Record<string, string>> = {
         name_too_long: `Please keep your name under ${LIMITS.name} characters.`,
         phone_required: 'Please enter a phone or WhatsApp number.',
         phone_invalid: 'Please enter a valid phone number, including the country code.',
+        email_required: 'Please enter your email address.',
         email_invalid: 'Please enter a valid email address.',
         email_too_long: 'That email address is too long.',
         subject_required: 'Please enter a subject.',
@@ -68,6 +69,7 @@ const MESSAGES: Record<ContactLocale, Record<string, string>> = {
         name_too_long: 'الاسم طويل جداً.',
         phone_required: 'يرجى إدخال رقم هاتف أو واتساب.',
         phone_invalid: 'يرجى إدخال رقم هاتف صحيح مع رمز الدولة.',
+        email_required: 'يرجى إدخال بريدك الإلكتروني.',
         email_invalid: 'يرجى إدخال بريد إلكتروني صحيح.',
         email_too_long: 'البريد الإلكتروني طويل جداً.',
         subject_required: 'يرجى إدخال الموضوع.',
@@ -141,9 +143,9 @@ export function validateContactKeys(input: ContactMessageInput): Partial<Record<
     if (!input.phone) e.phone = 'phone_required';
     else if (!isPlausiblePhone(input.phone)) e.phone = 'phone_invalid';
 
-    // Optional. Only validated when something was typed — an empty email is
-    // a normal, accepted enquiry.
-    if (input.email) {
+    // Required, as the form's label has always said.
+    if (!input.email) e.email = 'email_required';
+    else {
         if (input.email.length > LIMITS.email) e.email = 'email_too_long';
         else if (!isPlausibleEmail(input.email)) e.email = 'email_invalid';
     }

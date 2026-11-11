@@ -171,10 +171,11 @@ function HeroSearchBarInner() {
     function validateDetails(): boolean {
         const e: Record<string, string> = {};
         if (!name.trim()) e.name = 'Enter your name';
-        // Email is optional — customers are reached on WhatsApp. An address
-        // that *was* typed still has to be a real one, so a typo is caught
-        // rather than quietly producing a booking nobody can email.
-        if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        // Required: the quote is sent from the admin by email, so a
+        // request without an address cannot be quoted.
+        if (!email.trim()) {
+            e.email = 'Enter your email address';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
             e.email = 'Enter a valid email address';
         }
         setErrors(e);
@@ -389,7 +390,7 @@ function HeroSearchBarInner() {
             </div>
 
             <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor={`${idPrefix}-email`}>Email <span className={styles.optionalHint}>(optional)</span></label>
+                <label className={styles.fieldLabel} htmlFor={`${idPrefix}-email`}>Email</label>
                 <input
                     id={`${idPrefix}-email`}
                     type="email"
@@ -399,6 +400,7 @@ function HeroSearchBarInner() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     aria-invalid={!!errors.email || undefined}
+                    required
                 />
             </div>
 

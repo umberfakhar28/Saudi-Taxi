@@ -132,6 +132,7 @@ export interface UIStrings {
     errNameRequired: string;
     errPhoneRequired: string;
     errPhoneInvalid: string;
+    errEmailRequired: string;
     errEmailInvalid: string;
     errSaveContact: string;
     errSaveBooking: string;
@@ -308,6 +309,7 @@ const en: UIStrings = {
     errNameRequired: 'Your name is required.',
     errPhoneRequired: 'A phone or WhatsApp number is required.',
     errPhoneInvalid: 'Please enter a valid phone number, including the country code.',
+    errEmailRequired: 'Your email address is required. We send your quote there.',
     errEmailInvalid: 'Please check your email address.',
     errSaveContact: 'Could not save your contact details.',
     errSaveBooking: 'Could not save your booking.',
@@ -486,6 +488,7 @@ const ar: UIStrings = {
     errNameRequired: 'الاسم مطلوب.',
     errPhoneRequired: 'رقم الجوال أو واتساب مطلوب.',
     errPhoneInvalid: 'يرجى إدخال رقم جوال صحيح مع رمز الدولة.',
+    errEmailRequired: 'البريد الإلكتروني مطلوب لنرسل إليك عرض السعر.',
     errEmailInvalid: 'يرجى التأكد من البريد الإلكتروني.',
     errSaveContact: 'لم نتمكن من حفظ بيانات التواصل.',
     errSaveBooking: 'لم نتمكن من حفظ الحجز.',
@@ -594,6 +597,7 @@ export function bookingErrorMessage(code: unknown, t: UIStrings): string {
         case 'name_too_long': return t.errNameRequired;
         case 'phone_required': return t.errPhoneRequired;
         case 'phone_invalid': return t.errPhoneInvalid;
+        case 'email_required': return t.errEmailRequired;
         case 'email_invalid': return t.errEmailInvalid;
         case 'pickup_required':
         case 'pickup_too_long': return t.errPickupRequired;

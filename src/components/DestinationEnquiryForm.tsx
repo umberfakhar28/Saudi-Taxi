@@ -237,7 +237,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" htmlFor="deq-email">Email</label>
-                    <input id="deq-email" name="email" type="email" className="form-input" placeholder="you@example.com" value={form.email} onChange={handleChange} />
+                    <input id="deq-email" name="email" type="email" className="form-input" placeholder="you@example.com" value={form.email} onChange={handleChange} required />
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" htmlFor="deq-phone">Phone / WhatsApp</label>
