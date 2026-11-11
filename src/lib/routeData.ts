@@ -626,16 +626,15 @@ export const riyadhToBahrain: RouteData = {
   // Short, direct answers (Nov 2026 briefs: 25 words or fewer, key fact in
   // bold). RouteLanding renders the bold; FAQPage schema gets plain text.
   // Search-intent pass (12 Nov): distance, driving across, airport, bus,
-  // ride-hailing and Bahrain taxi cost added; per-car, journey time and
-  // same-vehicle answers merged into them to keep the list at 11.
+  // and Bahrain taxi cost added; per-car, journey time and same-vehicle
+  // answers merged into them. No competitor questions (owner, 12 Nov).
   faqs: [
     { q: "How much is a taxi from Riyadh to Bahrain?", a: "**1,000 SAR** in a sedan, **1,500 SAR** in an SUV or premium sedan, one way per car. Vans are priced on request." },
     { q: "How far is Riyadh from Bahrain by road?", a: "About **470 km** via Highway 40 and the King Fahd Causeway, usually **4.5–5.5 hours** door to door." },
     { q: "Can you drive from Saudi Arabia to Bahrain?", a: "**Yes**, over the **King Fahd Causeway**. Our car and driver cross with you, so you never change vehicles." },
     { q: "What documents do I need to cross into Bahrain by road?", a: "A **passport valid for 6+ months** plus a Bahrain visa, or a GCC ID. Saudi residents also need an Iqama and exit and re-entry visa." },
-    { q: "Do you pick up from Riyadh airport?", a: "**Yes**, from every King Khalid Airport terminal, with **flight tracking** so a delay doesn't cost you the pickup." },
+    { q: "Do you pick up from Riyadh airport?", a: "**Yes**, from every King Khalid Airport terminal, with **flight tracking** and the **first hour of waiting free**." },
     { q: "Is there a bus from Riyadh to Bahrain?", a: "**Yes**, intercity buses run station to station on a fixed timetable. A **private taxi goes door to door** and leaves when you're ready." },
-    { q: "Is there Uber in Bahrain?", a: "**Yes**, ride-hailing apps work **inside Bahrain**. For the trip **from Riyadh**, book a private car that crosses the causeway with you." },
     { q: "Is a taxi in Bahrain expensive?", a: "From Riyadh it's a **fixed fare**, with no meter running. Four people sharing a 1,000 SAR sedan pay **250 SAR each**." },
     { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "**Yes, very busy.** Book early and expect longer causeway queues on race weekend." },
     { q: "Can you arrange a return trip as well?", a: "**Yes.** Book both legs together and we confirm the return price on WhatsApp before you travel." },
@@ -748,14 +747,14 @@ export const riyadhToBahrain: RouteData = {
         title: "Private car or a shared seat?",
         body: "Shared seat services charge per person and wait until the car is full. A private car leaves when you are ready and goes door to door, and a family of three or four in a 1,000 SAR sedan pays 250 to 333 SAR each.",
       },
-      // Owner to confirm figures (free waiting window, extra-stop charge)
-      // before any number is added here.
+      // Airport waiting confirmed by the owner 12 Nov: first hour free,
+      // extra time charged. The extra-stop charge has no figure yet.
       fareFactors: {
         heading: "What affects the fare",
         items: [
           { icon: "car", label: "Vehicle type" },
           { icon: "mapPin", label: "Pickup outside Riyadh city, or extra stops" },
-          { icon: "clock", label: "Waiting beyond the agreed time" },
+          { icon: "clock", label: "Airport waiting after the first free hour" },
         ],
       },
       note: "These rates are one way. Visas, personal entry fees and extra waiting time are not included, and round trips are quoted on WhatsApp. These are our own cars, photographed by our team; compare every model in [our fleet](/fleet).",
@@ -816,6 +815,7 @@ export const riyadhToBahrain: RouteData = {
             "Meet and greet at the arrivals exit of every terminal, 1 to 5",
             "Your driver waits with a name board",
             "Flight tracking, so a delayed landing doesn't cost you the pickup",
+            "First hour of waiting free; extra waiting time is charged",
           ],
         },
         dropoff: {
