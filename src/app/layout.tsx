@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import PublicLayout from "@/components/PublicLayout";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
@@ -93,11 +93,16 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [`${SITE_CONFIG.baseUrl}${SITE_CONFIG.defaultOgImage}`],
   },
+  // Navy tile, gold waves, ivory pin: the site palette (globals.css). The
+  // PNGs are for browsers without SVG favicons; iOS ignores an SVG touch
+  // icon, so it gets a 180px PNG. favicon.ico (16/32/48) is src/app's.
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icons/icon-16.png", type: "image/png", sizes: "16x16" },
     ],
-    apple: [{ url: "/favicon.svg" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     other: [
       { rel: "logo", url: "/logo.svg" },
     ],
@@ -112,6 +117,11 @@ export const metadata: Metadata = {
       "msvalidate.01": ["995aadf700384f5c8ef4ad71bc79ab65"],
     },
   },
+};
+
+/** Browser chrome (Android address bar, PWA title bar) in the header navy. */
+export const viewport: Viewport = {
+  themeColor: "#081827",
 };
 
 export default function RootLayout({
