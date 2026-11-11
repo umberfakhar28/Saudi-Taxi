@@ -1,4 +1,5 @@
 import type { RouteData } from "@/components/RoutePage";
+import type { LandingVehicle } from "./routeLanding";
 import {
   CROSS_BORDER_EXCLUSIONS,
   CROSS_BORDER_INCLUSIONS,
@@ -557,6 +558,26 @@ export const khafjiToKuwait: RouteData = {
 };
 
 /* ── 8. Riyadh → Bahrain ────────────────────────────────────── */
+/**
+ * One priced vehicle on the Riyadh to Bahrain page. Photos come from the
+ * owner's fleet folder (Nov 2026): cropped to 5:4, number plates covered
+ * with a Gulf Trip Service badge, served as 800w and 400w WebP.
+ */
+const R2B_IMAGES = "/images/routes/riyadh-to-bahrain";
+function r2bVehicle(slug: string, name: string, category: string, passengers: string, luggage: string | undefined, amount: number | null): LandingVehicle {
+  const base = `${R2B_IMAGES}/${slug}-riyadh-to-bahrain`;
+  return {
+    name, category, passengers, luggage, amount,
+    image: {
+      src: `${base}.webp`,
+      srcSet: [{ src: `${base}-400.webp`, width: 400 }, { src: `${base}.webp`, width: 800 }],
+      width: 800,
+      height: 640,
+      alt: `${name} for private Riyadh to Bahrain taxi`,
+    },
+  };
+}
+
 export const riyadhToBahrain: RouteData = {
   slug: "riyadh-to-bahrain-taxi-service",
   tags: ["gcc"],
@@ -570,7 +591,7 @@ export const riyadhToBahrain: RouteData = {
   eyebrow: "Long-Distance Border Transfer",
   // No dash in the H1 (Nov 2026 brief). Rendered by RouteLanding.
   h1: "Riyadh to Bahrain Taxi and Executive Car Transfer",
-  intro: "A private Riyadh to Bahrain taxi takes you from any Riyadh address across the King Fahd Causeway to Manama, Seef, Bahrain International Circuit or Bahrain International Airport, in one vehicle with one licensed driver. The drive is about 470 km and usually takes 4.5 to 5.5 hours including the causeway. Fixed fares are 1,000 SAR one way in an Executive Sedan and 1,500 SAR in an SUV.",
+  intro: "A private Riyadh to Bahrain taxi takes you from any Riyadh address across the King Fahd Causeway to Manama, Seef, Bahrain International Circuit or Bahrain International Airport, in one vehicle with one licensed driver. The drive is about 470 km and usually takes 4.5 to 5.5 hours including the causeway. Fixed fares are 1,000 SAR one way in an executive sedan and 1,500 SAR in an SUV or premium sedan.",
   breadcrumbLabel: "Riyadh to Bahrain Taxi",
   distance: "~470 km",
   travelTime: "4.5 – 5.5 hours (incl. causeway)",
@@ -598,20 +619,22 @@ export const riyadhToBahrain: RouteData = {
   pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Diriyah", "Riyadh corporate offices"],
   dropoffInfo: "Coordinated onward drop-off anywhere in Bahrain — Manama, Seef District, Bahrain International Circuit, or Bahrain International Airport.",
   vehicleOptions: [
-    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats for the long Riyadh-to-causeway leg." },
-    { name: "SUV", capacity: "1–5 passengers", note: "Extra comfort and luggage space for the journey." },
+    { name: "Executive Sedan", capacity: "1–4 passengers", note: "Toyota Camry or Lexus ES, 1,000 SAR one way." },
+    { name: "SUV or Premium Sedan", capacity: "1–6 passengers", note: "GMC Yukon, Chevrolet Tahoe, Toyota Sequoia and more, 1,500 SAR one way." },
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together to Bahrain." },
   ],
+  // Short, direct answers (Nov 2026 brief: 25 words or fewer, key fact in
+  // bold). RouteLanding renders the bold; FAQPage schema gets plain text.
   faqs: [
-    { q: "How much is a taxi from Riyadh to Bahrain?", a: "A private taxi from Riyadh to Bahrain costs 1,000 SAR one way in an Executive Sedan for up to 3 passengers, or 1,500 SAR in an SUV for up to 5. The fare is fixed for the whole vehicle and covers fuel, road tolls, the driver and the vehicle's causeway fees. For a van carrying 6 to 10 people, ask us on WhatsApp for a price." },
-    { q: "Is the price per person or per car?", a: "The price is per car, not per person. One fixed fare covers the whole vehicle for a one-way trip, so three people sharing an Executive Sedan pay 1,000 SAR in total, the same as one traveller would. The only extras are things you agree with us before you travel, such as an extra stop or extra waiting time." },
-    { q: "How long is the full trip from Riyadh to Bahrain?", a: "The full trip usually takes 4.5 to 5.5 hours. Most of that is the drive of about 470 km east from Riyadh to the King Fahd Causeway, with one rest stop on the way. The rest is the border crossing and the short drive to your address in Bahrain. Causeway queues are often longer at weekends and on public holidays." },
-    { q: "Do I stay in the same vehicle across the causeway?", a: "Yes. One vehicle and one driver take you from your pickup in Riyadh, through the Saudi exit and Bahrain entry posts on the King Fahd Causeway, to your address in Bahrain. You never change cars or walk across the border, and your luggage stays in the vehicle for the whole journey." },
-    { q: "What documents do I need to cross into Bahrain by road?", a: "You need a passport valid for at least six months, plus a Bahrain eVisa or a visa on arrival if your nationality is eligible. GCC citizens can usually cross with their national ID. Saudi residents also need their Iqama and a valid exit and re-entry visa. Entry rules change, so please check them with the official authorities before you travel." },
-    { q: "Can I book a pickup from Riyadh airport to Bahrain?", a: "Yes. Your driver can meet you at arrivals at King Khalid International Airport (RUH) and drive you straight to Bahrain. Send your flight number when you book so the pickup follows your actual landing time, and the first hour of waiting at the airport is free. For journeys within the city, see our [Riyadh airport taxi service](/riyadh-airport-taxi-service)." },
-    { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "Yes. Demand for cars and traffic on the King Fahd Causeway both rise sharply around the Bahrain Grand Prix, when many fans drive in from Saudi Arabia. Book as early as you can for race weekend, allow extra time at the border, and tell us if you are going straight to Bahrain International Circuit in Sakhir." },
-    { q: "Can you arrange a return trip as well?", a: "Yes. You can book the return journey from Bahrain to Riyadh at the same time, which suits short business trips and weekend visits. Tell us your return date, time and pickup address in Bahrain when you book, and we will confirm the price for both legs on WhatsApp before you travel." },
-    { q: "Do you offer executive vehicles for this route?", a: "Yes. The Executive Sedan is our standard car for this route, with reclining seats and a quiet cabin for the long highway drive, at 1,000 SAR one way. If you need more legroom or luggage space, the SUV costs 1,500 SAR, and groups of six to ten people can travel together in a van." },
+    { q: "How much is a taxi from Riyadh to Bahrain?", a: "**1,000 SAR** in an executive sedan, **1,500 SAR** in an SUV or premium sedan, one way per vehicle. Vans are priced on request." },
+    { q: "Is the price per person or per car?", a: "**Per car.** One fixed fare covers the whole vehicle, however many seats you fill." },
+    { q: "How long is the full trip from Riyadh to Bahrain?", a: "About **4.5–5.5 hours**, including the causeway. Weekend and holiday queues can add time." },
+    { q: "Do I stay in the same vehicle across the causeway?", a: "**Yes.** The same car and driver take you all the way, with your luggage on board." },
+    { q: "What documents do I need to cross into Bahrain by road?", a: "A **passport valid for 6+ months** plus a Bahrain visa, or a GCC ID. Saudi residents also need an Iqama and exit and re-entry visa." },
+    { q: "Can I book a pickup from Riyadh airport to Bahrain?", a: "**Yes**, from King Khalid Airport arrivals, with the **first hour of waiting free**. See our [Riyadh airport taxi](/riyadh-airport-taxi-service)." },
+    { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "**Yes, very busy.** Book early and expect longer causeway queues on race weekend." },
+    { q: "Can you arrange a return trip as well?", a: "**Yes.** Book both legs together and we confirm the return price on WhatsApp before you travel." },
+    { q: "Do you offer executive vehicles for this route?", a: "**Yes.** Toyota Camry and Lexus ES sedans from **1,000 SAR**, or a GMC Yukon, Chevrolet Tahoe and other SUVs for **1,500 SAR**." },
   ],
   relatedRoutes: [
     { href: "/distance/bahrain-to-riyadh", label: "Bahrain–Riyadh Distance & Travel Time Guide" },
@@ -627,19 +650,19 @@ export const riyadhToBahrain: RouteData = {
     { name: "Highway 40 rest stop", note: "Scheduled rest stop on the long drive east, before Dammam and the causeway crossing into Bahrain." },
   ],
   reviews: [],
-  // Fares confirmed by the owner in the November 2026 brief: per vehicle,
-  // one way. The van has no confirmed fare and is quoted on WhatsApp.
+  // Fares confirmed by the owner in the November 2026 briefs: per vehicle,
+  // one way. 1,000 SAR for executive sedans; 1,500 SAR for the Tahoe,
+  // Yukon, Sequoia and Ford Taurus. Vans have no confirmed fare.
   landing: {
     hero: {
-      subheading: "Door-to-door private car from any Riyadh address to Manama, Seef, BIC or Bahrain Airport, one vehicle all the way.",
+      subheading: "One private car and one licensed driver from your door in Riyadh to your address in Bahrain, at a fixed fare agreed before you travel.",
       chips: [
-        { icon: "shield", label: "Licensed drivers" },
+        { icon: "shieldCheck", label: "Licensed drivers" },
         { icon: "clock", label: "24/7" },
         { icon: "car", label: "Same car across the causeway" },
-        { icon: "message", label: "WhatsApp booking" },
+        { icon: "messageCircle", label: "WhatsApp booking" },
       ],
       priceBadge: "From 1,000 SAR",
-      whatsappMessage: "Hi, I want to book Riyadh to Bahrain on [date] for [x] passengers",
       bookOnlineHref: "/book-online?from=Riyadh&to=Bahrain&mode=transfers",
       image: {
         src: "/images/routes/luxury-riyadh-to-bahrain-transfer.webp",
@@ -657,50 +680,113 @@ export const riyadhToBahrain: RouteData = {
     form: {
       heading: "Book Your Riyadh to Bahrain Transfer",
       subheading: "Pick a date and a car. You confirm everything on the next step.",
-      vehicles: [
-        { value: "Executive Sedan", label: "Executive Sedan – 1,000 SAR" },
-        { value: "SUV", label: "SUV – 1,500 SAR" },
-        { value: "Van", label: "Van – price on request" },
-      ],
       maxPassengers: 10,
       footerNote: "100% Private Transfers · Never Shared · Pickup from Any City in Saudi Arabia",
     },
     highlights: {
       heading: "Riyadh to Bahrain Route at a Glance",
+      intro: "Private, door-to-door transfer from any Riyadh address to Manama, Seef, BIC or Bahrain Airport. One car, one driver across the King Fahd Causeway, in **4.5–5.5 hours**, from **1,000 SAR**.",
       items: [
         { icon: "mapPin", label: "Distance", value: "~470 km" },
-        { icon: "clock", label: "Journey", value: "4.5–5.5 hrs incl. causeway" },
-        { icon: "globe", label: "Border", value: "King Fahd Causeway" },
-        { icon: "navigation", label: "Route", value: "Highway 40 via Dammam and Al Khobar" },
-        { icon: "timer", label: "Rest stop", value: "1 rest stop included" },
-        { icon: "tag", label: "Fare", value: "Fixed fare from 1,000 SAR" },
+        { icon: "clock", label: "Journey time", value: "4.5–5.5 hrs incl. causeway", emphasis: true },
+        { icon: "landmark", label: "Border", value: "King Fahd Causeway" },
+        { icon: "route", label: "Route", value: "Highway 40 via Dammam and Al Khobar" },
+        { icon: "coffee", label: "Rest stop", value: "1 rest stop included" },
+        { icon: "tag", label: "Fixed fare", value: "From 1,000 SAR", emphasis: true },
       ],
       note: "Times are estimates and vary with traffic and causeway queues.",
-      link: { href: "/distance/bahrain-to-riyadh", label: "See the full Riyadh–Bahrain distance guide" },
+      link: { href: "/distance/bahrain-to-riyadh", label: "Riyadh to Bahrain distance & travel time guide" },
     },
     prices: {
       heading: "Riyadh to Bahrain Taxi Price",
-      intro: "Every fare is fixed, one way and for the whole car, so the price stays the same however many seats you fill. Choose the vehicle that fits your group and luggage, or compare them all in [our fleet](/fleet).",
+      intro: "Every fare is fixed, one way and for the whole car, so the price stays the same however many seats you fill. These are our own cars, photographed by our team; compare every model in [our fleet](/fleet).",
       currency: "SAR",
       confirmedOn: "11 November 2026",
-      vehicles: [
-        { name: "Executive Sedan", passengers: "1–3", luggage: "2–3", amount: 1000, note: "Reclining seats and a quiet cabin for the long drive east.", image: { src: "/images/fleet-sedan2.jpg", alt: "Executive Sedan for the Riyadh to Bahrain taxi", width: 1600, height: 1068 } },
-        { name: "SUV", passengers: "1–5", luggage: "4", amount: 1500, note: "More legroom and boot space for families and business travellers.", image: { src: "/images/fleet-suv.jpg", alt: "SUV for the Riyadh to Bahrain taxi", width: 1600, height: 898 } },
-        { name: "Van", passengers: "6–10", luggage: "8+", amount: null, note: "One vehicle for families and groups travelling together.", image: { src: "/images/fleet-van.jpg", alt: "Passenger van for group transfers from Riyadh to Bahrain", width: 1600, height: 972 } },
+      // Capacities come from the fleet roster (fleetVehicles.ts) where the
+      // owner has confirmed them. Models not in the roster use the page's
+      // conservative SUV figure (5 passengers, 4 bags) or no bag figure,
+      // and are listed for the owner to confirm.
+      groups: [
+        {
+          heading: "Sedan · from 1,000 SAR",
+          vehicles: [
+            r2bVehicle("toyota-camry", "Toyota Camry", "Executive Sedan", "1–4", "3", 1000),
+            r2bVehicle("lexus-es", "Lexus ES", "Executive Sedan", "1–4", "3", 1000),
+          ],
+        },
+        {
+          heading: "SUV & Premium · 1,500 SAR",
+          vehicles: [
+            r2bVehicle("gmc-yukon", "GMC Yukon", "SUV", "1–6", "6", 1500),
+            r2bVehicle("chevrolet-tahoe", "Chevrolet Tahoe", "SUV", "1–5", "4", 1500),
+            r2bVehicle("toyota-sequoia", "Toyota Sequoia", "SUV", "1–5", "4", 1500),
+            r2bVehicle("ford-expedition", "Ford Expedition", "SUV", "1–5", "4", 1500),
+            r2bVehicle("toyota-land-cruiser", "Toyota Land Cruiser", "SUV", "1–5", "4", 1500),
+            r2bVehicle("toyota-land-cruiser-prado", "Toyota Land Cruiser Prado", "SUV", "1–6", undefined, 1500),
+            // A sedan, not an SUV: priced at 1,500 SAR on the owner's instruction.
+            r2bVehicle("ford-taurus", "Ford Taurus", "Premium Sedan", "1–3", "2", 1500),
+          ],
+        },
+        {
+          heading: "Van · on request",
+          vehicles: [
+            r2bVehicle("toyota-hiace", "Toyota Hiace", "Van", "6–10", "8+", null),
+            r2bVehicle("honda-odyssey", "Honda Odyssey", "Family Van", "1–6", undefined, null),
+            r2bVehicle("toyota-innova", "Toyota Innova", "Family Van", "1–6", undefined, null),
+            r2bVehicle("gac-mpv", "GAC MPV", "Family Van", "1–6", undefined, null),
+          ],
+        },
       ],
       note: "Price is per vehicle, one way, not per person. Includes fuel, driver, tolls and vehicle causeway fees. Visas, personal entry fees and extra waiting time are not included. Round trips are quoted on WhatsApp.",
+    },
+    videos: {
+      heading: "See Our Cars Before You Book",
+      intro: "Short walkarounds filmed by our team. Number plates are covered for privacy.",
+      items: [
+        {
+          src: "/videos/riyadh-to-bahrain/mitsubishi-outlander-walkaround.mp4",
+          poster: "/videos/riyadh-to-bahrain/mitsubishi-outlander-walkaround-poster.webp",
+          captions: "/videos/riyadh-to-bahrain/no-audio.vtt",
+          width: 476,
+          height: 848,
+          title: "Mitsubishi Outlander exterior walkaround",
+          description: "A walk around one of our Mitsubishi Outlander SUVs, front to back.",
+          duration: "PT46S",
+          uploadDate: "2026-11-11",
+        },
+        {
+          src: "/videos/riyadh-to-bahrain/suv-cabin-walkaround.mp4",
+          poster: "/videos/riyadh-to-bahrain/suv-cabin-walkaround-poster.webp",
+          captions: "/videos/riyadh-to-bahrain/no-audio.vtt",
+          width: 464,
+          height: 832,
+          title: "Ford SUV cabin walkaround",
+          description: "Inside one of our Ford SUVs: the front cabin, the second-row seats and the rear space.",
+          duration: "PT43S",
+          uploadDate: "2026-11-11",
+        },
+      ],
     },
     timeline: {
       heading: "Your Journey from Riyadh to Bahrain",
       intro: "One car and one driver for the whole trip. This is how the day runs.",
       steps: [
         { icon: "home", title: "Pickup in Riyadh", body: "Your driver collects you from your home, hotel or office in Olaya, KAFD or Diriyah, or from arrivals at King Khalid International Airport." },
-        { icon: "navigation", title: "Highway 40 east", body: "The longest stretch of the day: east across the Najd plateau towards the Eastern Province." },
-        { icon: "timer", title: "Rest stop", body: "One planned break on the highway before Dammam, for prayer, coffee or a stretch. Tell us when you book if you need more." },
-        { icon: "globe", title: "King Fahd Causeway", body: "Through Dammam and Al Khobar to the causeway. You pass the Saudi exit and the Bahrain entry posts without changing vehicles." },
+        { icon: "route", title: "Highway 40 east", body: "The longest stretch of the day: east across the Najd plateau towards the Eastern Province." },
+        { icon: "coffee", title: "Rest stop", body: "One planned break on the highway before Dammam, for prayer, coffee or a stretch. Tell us when you book if you need more." },
+        { icon: "landmark", title: "King Fahd Causeway", body: "Through Dammam and Al Khobar to the causeway. You pass the Saudi exit and the Bahrain entry posts without changing vehicles." },
         { icon: "mapPin", title: "Drop-off in Bahrain", body: "Straight to your address in Manama, Seef, Bahrain International Circuit or Bahrain International Airport." },
       ],
-      image: { src: "/images/king-fahd-causeway-saudi-bahrain-border-crossing.webp", alt: "Aerial view of the King Fahd Causeway border island between Saudi Arabia and Bahrain", width: 1000, height: 713 },
+      image: {
+        src: `${R2B_IMAGES}/sunset-suv-desert-causeway.webp`,
+        srcSet: [
+          { src: `${R2B_IMAGES}/sunset-suv-desert-causeway-768.webp`, width: 768 },
+          { src: `${R2B_IMAGES}/sunset-suv-desert-causeway.webp`, width: 1280 },
+        ],
+        alt: "SUV driving across the desert at sunset on the Riyadh to Bahrain route",
+        width: 1280,
+        height: 720,
+      },
     },
     crossing: {
       heading: "Crossing the King Fahd Causeway",
@@ -726,21 +812,21 @@ export const riyadhToBahrain: RouteData = {
       heading: "Included in Every Riyadh to Bahrain Taxi",
       items: [
         { icon: "car", title: "Private vehicle", body: "Reserved for your party alone, never shared." },
-        { icon: "shield", title: "Licensed driver", body: "One driver for the whole journey, causeway included." },
+        { icon: "shieldCheck", title: "Licensed driver", body: "One driver for the whole journey, causeway included." },
         { icon: "home", title: "Door to door", body: "Pickup and drop-off at the addresses you give us." },
-        { icon: "package", title: "Help with luggage", body: "Your driver loads and unloads your bags." },
-        { icon: "globe", title: "Same car across the causeway", body: "No changing vehicles and no walking across the border." },
-        { icon: "tag", title: "Fuel, tolls and causeway fees", body: "Part of the fixed fare, with nothing to pay at the border." },
-        { icon: "timer", title: "Planned rest stop", body: "A break on the long drive east." },
-        { icon: "message", title: "24/7 WhatsApp support", body: "Our team is on WhatsApp before and during your trip." },
+        { icon: "luggage", title: "Help with luggage", body: "Your driver loads and unloads your bags." },
+        { icon: "landmark", title: "Same car across the causeway", body: "No changing vehicles and no walking across the border." },
+        { icon: "fuel", title: "Fuel, tolls and causeway fees", body: "Part of the fixed fare, with nothing to pay at the border." },
+        { icon: "coffee", title: "Planned rest stop", body: "A break on the long drive east." },
+        { icon: "messageCircle", title: "24/7 WhatsApp support", body: "Our team is on WhatsApp before and during your trip." },
       ],
     },
     howToBook: {
       heading: "How to Book Your Riyadh to Bahrain Taxi",
       steps: [
-        { icon: "message", title: "Send your route", body: "Share your pickup, drop-off, date and passenger count on WhatsApp or in the form." },
+        { icon: "messageCircle", title: "Send your route", body: "Share your pickup, drop-off, date and passenger count on WhatsApp or in the form." },
         { icon: "tag", title: "Confirm details and price", body: "We confirm the vehicle, the driver and your fixed fare." },
-        { icon: "check", title: "Get confirmation", body: "You receive your driver and vehicle details ahead of pickup." },
+        { icon: "badgeCheck", title: "Get confirmation", body: "You receive your driver and vehicle details ahead of pickup." },
         { icon: "car", title: "Driver pickup", body: "Your driver meets you at the agreed address, on time." },
         { icon: "mapPin", title: "Drop-off in Bahrain", body: "A direct, private journey to your exact address." },
       ],
@@ -751,8 +837,8 @@ export const riyadhToBahrain: RouteData = {
       items: [
         { href: "/services/riyadh", name: "Riyadh", blurb: "Airport, hotel and city transfers across the capital.", image: { src: "/destinations/riyadh-skyline-kingdom-centre.webp", alt: "Riyadh skyline with the Kingdom Centre tower", width: 1672, height: 941 } },
         { href: "/services/dammam", name: "Dammam", blurb: "Taxis and airport transfers in the Eastern Province.", image: { src: "/destinations/dammam-eastern-province-skyline.webp", alt: "Dammam skyline in the Eastern Province of Saudi Arabia", width: 1672, height: 941 } },
-        { href: "/services/khobar", name: "Al Khobar", blurb: "The last Saudi city before the King Fahd Causeway.", image: { todo: "Al Khobar Corniche photo, 1200x800 webp", alt: "Al Khobar Corniche waterfront in the Eastern Province of Saudi Arabia", width: 1200, height: 800 } },
-        { href: "/services/al-ahsa", name: "Al-Ahsa", blurb: "Date-palm oasis and UNESCO World Heritage site.", image: { todo: "Al-Ahsa oasis photo, 1200x800 webp", alt: "Palm groves of the Al-Ahsa oasis in eastern Saudi Arabia", width: 1200, height: 800 } },
+        { href: "/services/khobar", name: "Al Khobar", blurb: "The last Saudi city before the King Fahd Causeway.", image: { src: `${R2B_IMAGES}/al-khobar-waterfront.webp`, alt: "Executive sedan on the Al Khobar waterfront in the Eastern Province of Saudi Arabia", width: 1200, height: 800 } },
+        { href: "/services/al-ahsa", name: "Al-Ahsa", blurb: "Date-palm oasis and UNESCO World Heritage site.", image: { src: `${R2B_IMAGES}/al-ahsa-date-palm-oasis.webp`, alt: "GMC Yukon among the palm groves of the Al-Ahsa oasis in eastern Saudi Arabia", width: 1200, height: 800 } },
         { href: "/destinations/manama", name: "Manama", blurb: "Bahrain's capital, from the souq to the Seef malls.", image: { src: "/destinations/manama-skyline-world-trade-center.webp", alt: "Manama skyline with the Bahrain World Trade Center", width: 1600, height: 900 } },
         { href: "/destinations/doha", name: "Doha", blurb: "Qatar's capital, by road from Riyadh via Salwa.", image: { src: "/destinations/doha-corniche-skyline.webp", alt: "Doha Corniche skyline in Qatar", width: 1600, height: 900 } },
         { href: "/destinations/dubai", name: "Dubai", blurb: "Long-distance transfers from Saudi Arabia to the UAE.", image: { src: "/destinations/dubai-skyline-burj-khalifa.webp", alt: "Dubai skyline with the Burj Khalifa", width: 1600, height: 900 } },
@@ -778,7 +864,7 @@ export const riyadhToBahrain: RouteData = {
     finalCta: {
       heading: "Book Your Riyadh to Bahrain Taxi",
       blurb: "One private car from your door in Riyadh to your address in Bahrain, at a fixed fare agreed before you travel.",
-      image: { src: "/images/chauffeur.jpg", alt: "Chauffeur opening the door of a black executive car for a passenger", width: 1600, height: 1068 },
+      image: { src: `${R2B_IMAGES}/chauffeur-executive-car.webp`, alt: "Chauffeur opening the door of a black executive car for a passenger", width: 1200, height: 801 },
     },
   },
 };

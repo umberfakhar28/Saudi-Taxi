@@ -137,3 +137,14 @@
     text-transform: uppercase;
     text-align: center;
 }
+
+.footerIcon {
+    flex-shrink: 0;
+    color: var(--gold-dark);
+}
+
+/* Lucide icons in the field labels: gold, like the rest of the page's icons. */
+.label svg {
+    flex-shrink: 0;
+    color: var(--gold-dark);
+}

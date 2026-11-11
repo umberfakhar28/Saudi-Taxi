@@ -39,6 +39,20 @@ export function waLink(message: string): string {
 }
 
 /**
+ * Pages whose generic WhatsApp buttons (header, floating button, mobile
+ * bar, and the page's own hero and closing buttons) send one fixed
+ * message, so the team sees the route at a glance. Every other page keeps
+ * its existing message. Keyed by pathname.
+ */
+const PAGE_WHATSAPP_MESSAGES: Record<string, string> = {
+  "/riyadh-to-bahrain-taxi-service": "Hi, I want to book Riyadh to Bahrain",
+};
+
+export function pageWhatsAppMessage(pathname: string | null | undefined): string | undefined {
+  return pathname ? PAGE_WHATSAPP_MESSAGES[pathname] : undefined;
+}
+
+/**
  * The transfer-quote WhatsApp message, named route first.
  *
  * Shared by the route pages and the distance pages so a customer who opens

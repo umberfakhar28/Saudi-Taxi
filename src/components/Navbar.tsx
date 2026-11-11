@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { MenuIcon, XIcon, ChevronDownIcon, GlobeIcon, WhatsAppIcon } from './Icons';
 import Logo from './Logo';
 import { arabicPathFor } from '@/lib/bilingualPages';
-import { WHATSAPP_URL } from '@/lib/contact';
+import { WHATSAPP_URL, waLink, pageWhatsAppMessage } from '@/lib/contact';
 import { scrollToTopIfOn } from '@/lib/scrollToTop';
 import { serviceGroups, locationGroups, crossBorderGroups, companyGroups, type NavGroup } from '@/config/navigation';
 import styles from './Navbar.module.css';
@@ -170,7 +170,7 @@ const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: Na
                             <GlobeIcon size={14} />
                             العربية
                         </Link>
-                        <a data-wa-cta="navbar" href={WHATSAPP_URL} className={styles.ctaWhatsapp} target="_blank" rel="noopener noreferrer" onClick={close}>
+                        <a data-wa-cta="navbar" href={pageWhatsAppMessage(pathname) ? waLink(pageWhatsAppMessage(pathname)!) : WHATSAPP_URL} className={styles.ctaWhatsapp} target="_blank" rel="noopener noreferrer" onClick={close}>
                             <WhatsAppIcon size={16} />
                             <span className={styles.ctaWhatsappLabel}>WhatsApp</span>
                         </a>

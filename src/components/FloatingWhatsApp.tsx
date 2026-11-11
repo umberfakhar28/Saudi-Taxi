@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { WhatsAppIcon } from './Icons';
-import { waLink } from '@/lib/contact';
+import { waLink, pageWhatsAppMessage } from '@/lib/contact';
 import styles from './FloatingWhatsApp.module.css';
 
 /**
@@ -24,6 +25,9 @@ import styles from './FloatingWhatsApp.module.css';
 export default function FloatingWhatsApp() {
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState("Hi, I'd like some help with my booking.");
+    // A page with its own fixed message (lib/contact.ts) uses it instead
+    // of the title-based one.
+    const pageMessage = pageWhatsAppMessage(usePathname());
 
     useEffect(() => {
         const onScroll = () => setVisible(window.scrollY > 300);
@@ -41,7 +45,7 @@ export default function FloatingWhatsApp() {
 
     return (
         <a
-            href={waLink(message)}
+            href={waLink(pageMessage ?? message)}
             data-wa-cta="floating-button"
             target="_blank"
             rel="noopener noreferrer"

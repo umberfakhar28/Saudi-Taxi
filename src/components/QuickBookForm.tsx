@@ -2,7 +2,8 @@
 
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarIcon, ClockIcon, UserIcon, ArrowRightIcon, WhatsAppIcon, CarIcon, ShieldCheckIcon } from "./Icons";
+import { Calendar, Clock, Users, ArrowRight, Car, ShieldCheck } from "lucide-react";
+import { WhatsAppIcon } from "./Icons";
 import SearchAutocomplete from "./SearchAutocomplete";
 import { waLink } from "@/lib/contact";
 import { ui, type Locale } from "@/lib/i18n";
@@ -30,6 +31,11 @@ interface QuickBookFormProps {
     footerNote?: string;
     /** Heading level for the card title. Defaults to h3. */
     headingAs?: "h2" | "h3";
+    /** First line of the WhatsApp message, e.g. "Hi, I want to book
+     *  Riyadh to Bahrain". When set, the message lists the chosen vehicle
+     *  with its price (the option label), then date, time and passengers,
+     *  then pickup and drop-off, skipping anything left empty. */
+    whatsappIntro?: string;
 }
 
 /**
@@ -40,7 +46,7 @@ interface QuickBookFormProps {
  * for everything else (vehicle, contact details) — one booking system,
  * not a second parallel one that also has to write to Supabase.
  */
-export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading, subheading, locale = 'en', vehicles, maxPassengers = 8, footerNote, headingAs: Heading = 'h3' }: QuickBookFormProps) {
+export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading, subheading, locale = 'en', vehicles, maxPassengers = 8, footerNote, headingAs: Heading = 'h3', whatsappIntro }: QuickBookFormProps) {
     const t = ui(locale);
     const title = heading ?? t.quickQuoteHeading;
     const router = useRouter();
@@ -72,6 +78,16 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
     // under their own name, and an English sentence with Arabic place names
     // dropped into it reads as broken.
     const whatsappMessage = () => {
+        if (whatsappIntro) {
+            const vehicleLabel = vehicles?.find((v) => v.value === vehicle)?.label;
+            const join = (xs: (string | null)[]) => xs.filter(Boolean).join(" | ");
+            return [
+                whatsappIntro,
+                vehicleLabel ? `Vehicle: ${vehicleLabel}` : null,
+                join([date ? `Date: ${date}` : null, time ? `Time: ${time}` : null, `Passengers: ${passengers}`]),
+                join([from ? `Pickup: ${from}` : null, to ? `Drop-off: ${to}` : null]) || null,
+            ].filter(Boolean).join("\n");
+        }
         const ar = locale === 'ar';
         const parts = [
             ar ? "السلام عليكم، أرغب في حجز رحلة." : "Assalamu Alaikum, I'd like to book a ride.",
@@ -114,22 +130,22 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                     />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor={`${uid}-date`}><CalendarIcon size={14} /> {t.date}</label>
+                    <label className={styles.label} htmlFor={`${uid}-date`}><Calendar size={14} aria-hidden="true" /> {t.date}</label>
                     <input id={`${uid}-date`} type="date" className={styles.input} value={date} onChange={(e) => setDate(e.target.value)} />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor={`${uid}-time`}><ClockIcon size={14} /> {t.time}</label>
+                    <label className={styles.label} htmlFor={`${uid}-time`}><Clock size={14} aria-hidden="true" /> {t.time}</label>
                     <input id={`${uid}-time`} type="time" className={styles.input} value={time} onChange={(e) => setTime(e.target.value)} />
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label} htmlFor={`${uid}-passengers`}><UserIcon size={14} /> {t.passengers}</label>
+                    <label className={styles.label} htmlFor={`${uid}-passengers`}><Users size={14} aria-hidden="true" /> {t.passengers}</label>
                     <select id={`${uid}-passengers`} className={styles.input} value={passengers} onChange={(e) => setPassengers(e.target.value)}>
                         {Array.from({ length: maxPassengers }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n}</option>)}
                     </select>
                 </div>
                 {vehicles && (
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor={`${uid}-vehicle`}><CarIcon size={14} /> {locale === 'ar' ? 'السيارة' : 'Vehicle'}</label>
+                        <label className={styles.label} htmlFor={`${uid}-vehicle`}><Car size={14} aria-hidden="true" /> {locale === 'ar' ? 'السيارة' : 'Vehicle'}</label>
                         <select id={`${uid}-vehicle`} className={styles.input} value={vehicle} onChange={(e) => setVehicle(e.target.value)}>
                             <option value="">{locale === 'ar' ? 'بدون تفضيل' : 'No preference'}</option>
                             {vehicles.map((v) => <option key={v.value} value={v.value}>{v.label}</option>)}
@@ -139,7 +155,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
 
                 <div className={styles.actions}>
                     <button type="submit" className={`btn btn-primary ${styles.submitBtn}`}>
-                        {t.bookNow} <ArrowRightIcon size={16} />
+                        {t.bookNow} <ArrowRight size={16} aria-hidden="true" />
                     </button>
                     <a
                         href={waLink(whatsappMessage())}
@@ -154,7 +170,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
             </form>
             {footerNote && (
                 <p className={styles.footerNote}>
-                    <span aria-hidden="true" style={{ display: "inline-flex" }}><ShieldCheckIcon size={16} /></span> {footerNote}
+                    <ShieldCheck size={16} aria-hidden="true" className={styles.footerIcon} /> {footerNote}
                 </p>
             )}
         </div>

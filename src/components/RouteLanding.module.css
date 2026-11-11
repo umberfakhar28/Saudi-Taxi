@@ -1,14 +1,53 @@
 /*
   ROUTE LANDING — the designed, section-by-section route layout.
-  Built only from the site's tokens: navy bands, ivory alternating
-  sections, gold for price and decoration, teal only for inline links.
-  No gradients, matching the sitewide colour rules in globals.css.
+
+  Theme tokens. Every colour in this file comes from this block, which in
+  turn only points at the site palette in globals.css:
+    primary   navy  — hero, cards' headings, icon strokes
+    accent    gold  — fills, borders and icons; on navy it is also text
+    accentInk dark gold for TEXT on light backgrounds (5.8:1 on white,
+              5.2:1 on ivory; the site gold is only 2.8:1 on white)
+    tint      ivory — every other section, and icon chips
+    surface   white — the sections in between, and cards
+    text / muted / border
+    link      teal — inline text links only (site rule)
+  Sections alternate surface / tint. No gradients (site rule).
 */
+.page {
+    --rl-primary: var(--navy);
+    --rl-accent: var(--gold);
+    --rl-accent-ink: #7E6131;
+    --rl-accent-veil: var(--brass-veil);
+    --rl-tint: var(--bg-subtle);
+    --rl-surface: var(--white);
+    --rl-text: var(--text-body);
+    --rl-muted: var(--text-muted);
+    --rl-border: var(--line);
+    --rl-border-strong: var(--line-strong);
+    --rl-link: var(--accent);
+    --rl-on-dark: var(--on-dark);
+    --rl-on-dark-muted: var(--on-dark-muted);
+    --rl-line-dark: var(--line-dark);
+}
 
 /* ── Shared ─────────────────────────────────────────────────────── */
 
-.subtle {
-    background: var(--bg-subtle);
+/* Sections below the fold skip style, layout and paint until they near
+   the viewport, which roughly halves the page's start-up rendering work
+   (Lighthouse, Nov 2026). The content stays in the HTML and the
+   accessibility tree; `auto` remembers each section's real height once
+   rendered, so the scrollbar does not jump. */
+.page > section:nth-of-type(n + 4) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1000px;
+}
+
+.tint {
+    background: var(--rl-tint);
+}
+
+.surface {
+    background: var(--rl-surface);
 }
 
 .icon {
@@ -16,9 +55,17 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    color: var(--rl-accent);
 }
 
-.iconBadge {
+/* Inside a button the icon takes the button's own text colour (white on
+   WhatsApp green), not the accent. */
+:global(.btn) .icon {
+    color: inherit;
+}
+
+/* Icon chip: tint background, navy icon; never browser-default black/blue. */
+.chip {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -26,25 +73,45 @@
     width: 44px;
     height: 44px;
     border-radius: var(--radius-md);
-    background: var(--brass-veil);
-    color: var(--navy);
+    background: var(--rl-accent-veil);
+    color: var(--rl-primary);
+    transition: background-color var(--ease-base), color var(--ease-base);
+}
+
+.tint .chip {
+    background: var(--rl-surface);
+    box-shadow: inset 0 0 0 1px var(--rl-border);
+}
+
+/* Bold data in copy (prices, times): accent ink. */
+.em {
+    color: var(--rl-accent-ink);
+    font-weight: 800;
 }
 
 .inlineLink a,
 a.inlineLink {
-    color: var(--accent);
-    font-weight: 600;
+    color: var(--rl-link);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
 }
 
 .media {
     position: relative;
     width: 100%;
     overflow: hidden;
-    background: var(--bg-subtle);
+    background: var(--rl-tint);
 }
 
-/* Image slot waiting for a photo: same box as the photo will have, so
-   adding it later shifts nothing. */
+.media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .placeholder {
     position: relative;
     width: 100%;
@@ -53,9 +120,8 @@ a.inlineLink {
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    background: var(--bg-subtle);
-    border: 1.5px dashed var(--gold);
-    color: var(--gold);
+    background: var(--rl-tint);
+    border: 1.5px dashed var(--rl-accent);
 }
 
 .placeholderLabel {
@@ -63,11 +129,11 @@ a.inlineLink {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--rl-muted);
 }
 
 .sectionNote {
-    color: var(--text-muted);
+    color: var(--rl-muted);
     font-size: var(--text-sm);
     margin-top: var(--space-5);
 }
@@ -78,29 +144,104 @@ a.inlineLink {
     gap: var(--space-3);
 }
 
+/* Tighter side padding so two CTAs sit side by side in the hero column. */
+.ctaRow > :global(.btn) {
+    padding-inline: var(--space-6);
+    min-height: 48px;
+}
+
 .btnOnDark {
     background: transparent;
-    color: var(--on-dark);
-    border: 1.5px solid var(--line-dark);
+    color: var(--rl-on-dark);
+    border: 1.5px solid var(--rl-line-dark);
 }
 
 .btnOnDark:hover {
-    border-color: var(--gold);
-    color: var(--white);
+    border-color: var(--rl-accent);
+    color: var(--rl-on-dark);
+}
+
+/* Section headers: eyebrow, H2 with a gold rule, optional intro. */
+.head {
+    max-width: 680px;
+    margin-bottom: var(--space-10);
+}
+
+.headCenter {
+    margin-inline: auto;
+    text-align: center;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-xs);
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rl-accent-ink);
+}
+
+.eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--rl-accent);
+}
+
+.title {
+    margin: 0;
+    font-size: var(--text-4xl);
+    line-height: 1.15;
+    color: var(--rl-primary);
+    /* No orphaned last word ("Taxi") on its own line. */
+    text-wrap: balance;
+}
+
+.title::after {
+    content: '';
+    display: block;
+    width: 56px;
+    height: 3px;
+    margin-top: var(--space-4);
+    border-radius: var(--radius-full);
+    background: var(--rl-accent);
+}
+
+.headCenter .title::after {
+    margin-inline: auto;
+}
+
+.sub {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-lg);
+    line-height: 1.7;
+    color: var(--rl-muted);
+    text-wrap: pretty;
+}
+
+.reviewed {
+    color: var(--rl-muted);
+    font-size: var(--text-xs);
+    text-align: center;
+    margin-top: var(--space-6);
 }
 
 /* ── Hero ───────────────────────────────────────────────────────── */
 
 .hero {
-    background: var(--bg-dark);
-    color: var(--on-dark);
+    background: var(--rl-primary);
+    color: var(--rl-on-dark);
     padding: 9rem 0 var(--space-16);
 }
 
 .breadcrumb {
     margin: 0 0 var(--space-8);
     font-size: var(--text-sm);
-    color: var(--on-dark-muted);
+    color: var(--rl-on-dark-muted);
 }
 
 .breadcrumb ol {
@@ -115,11 +256,11 @@ a.inlineLink {
 .breadcrumb li:not(:last-child)::after {
     content: '›';
     margin-inline-start: var(--space-2);
-    color: var(--on-dark-muted);
+    color: var(--rl-on-dark-muted);
 }
 
 .breadcrumb a {
-    color: var(--on-dark);
+    color: var(--rl-on-dark);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
@@ -137,26 +278,27 @@ a.inlineLink {
     font-weight: 700;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--rl-accent);
     margin-bottom: var(--space-4);
 }
 
 .heroTitle {
-    color: var(--on-dark);
+    color: var(--rl-on-dark);
     font-size: var(--text-5xl);
     line-height: 1.1;
     margin: 0 0 var(--space-5);
+    text-wrap: balance;
 }
 
 .heroLead {
-    color: var(--on-dark-muted);
+    color: var(--rl-on-dark-muted);
     font-size: var(--text-lg);
     line-height: 1.7;
     margin: 0 0 var(--space-6);
     max-width: 560px;
 }
 
-.chips {
+.heroChips {
     list-style: none;
     margin: 0 0 var(--space-6);
     padding: 0;
@@ -165,25 +307,21 @@ a.inlineLink {
     gap: var(--space-2);
 }
 
-.chip {
+.heroChip {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     padding: 8px 14px;
-    border: 1px solid var(--line-dark);
+    border: 1px solid var(--rl-line-dark);
     border-radius: var(--radius-full);
     font-size: var(--text-sm);
     font-weight: 600;
-    color: var(--on-dark);
-}
-
-.chip .icon {
-    color: var(--gold);
+    color: var(--rl-on-dark);
 }
 
 .priceRow {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-bottom: var(--space-6);
@@ -194,15 +332,20 @@ a.inlineLink {
     align-items: center;
     padding: 8px 16px;
     border-radius: var(--radius-full);
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--rl-accent);
+    color: var(--rl-primary);
     font-weight: 800;
     font-size: var(--text-lg);
 }
 
 .priceNote {
-    color: var(--on-dark-muted);
+    color: var(--rl-on-dark-muted);
     font-size: var(--text-sm);
+}
+
+.priceNote strong {
+    color: var(--rl-accent);
+    font-weight: 800;
 }
 
 .heroFigure {
@@ -210,7 +353,7 @@ a.inlineLink {
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-xl);
-    border: 1px solid var(--line-dark);
+    border: 1px solid var(--rl-line-dark);
 }
 
 .heroFigure img {
@@ -222,14 +365,68 @@ a.inlineLink {
 /* ── Booking form ───────────────────────────────────────────────── */
 
 .formSection {
-    padding: var(--space-10) 0 0;
+    padding: var(--space-10) 0;
+    background: var(--rl-surface);
 }
 
-/* ── Route highlights ───────────────────────────────────────────── */
+/* ── Route highlights: text left, stat cards right ──────────────── */
+
+.highlights {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: var(--space-12);
+    align-items: center;
+}
+
+.highlightsText .title {
+    font-size: var(--text-4xl);
+}
+
+.lead {
+    margin: var(--space-5) 0 var(--space-5);
+    font-size: var(--text-lg);
+    line-height: 1.7;
+    color: var(--rl-text);
+}
+
+/* The distance guide: a real link, not a footnote. */
+.guideLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    color: var(--rl-link);
+    font-weight: 800;
+    font-size: var(--text-base);
+    text-decoration: none;
+}
+
+.guideLink:hover,
+.guideLink:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.guideLink svg {
+    transition: transform var(--ease-base);
+}
+
+.guideLink:hover svg {
+    transform: translateX(3px);
+}
+
+.smallNote {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-xs);
+    color: var(--rl-muted);
+}
 
 .statGrid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-4);
 }
 
@@ -238,8 +435,8 @@ a.inlineLink {
     gap: var(--space-4);
     align-items: flex-start;
     padding: var(--space-5);
-    background: var(--white);
-    border: 1px solid var(--line);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
 }
@@ -250,123 +447,213 @@ a.inlineLink {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--rl-muted);
 }
 
 .statValue {
     display: block;
     margin-top: var(--space-1);
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--rl-primary);
     line-height: 1.4;
+}
+
+/* Travel time and fare: the two figures people scan for. */
+.statEmphasis {
+    border-color: var(--rl-accent);
+    box-shadow: inset 0 0 0 1px var(--rl-accent), var(--shadow-sm);
+}
+
+.statEmphasis .chip {
+    background: var(--rl-accent);
+    box-shadow: none;
+}
+
+.statEmphasis .statValue {
+    color: var(--rl-accent-ink);
+    font-size: var(--text-xl);
+    font-weight: 800;
 }
 
 /* ── Vehicle cards ──────────────────────────────────────────────── */
 
-.vehicleGrid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-6);
+.carGroup + .carGroup {
+    margin-top: var(--space-12);
 }
 
-.vehicleCard {
+.carGroupTitle {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--rl-border);
+    font-size: var(--text-2xl);
+    color: var(--rl-primary);
+}
+
+.carGroupFare {
+    color: var(--rl-accent-ink);
+    font-weight: 800;
+}
+
+.carGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+}
+
+@media (max-width: 1180px) {
+    .carGrid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.car {
     display: flex;
     flex-direction: column;
-    background: var(--white);
-    border: 1px solid var(--line);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
+    transition: box-shadow var(--ease-base), border-color var(--ease-base);
 }
 
-.vehicleBody {
+.car:hover {
+    border-color: var(--rl-accent);
+    box-shadow: var(--shadow-md);
+}
+
+.carMedia {
+    position: relative;
+    aspect-ratio: 5 / 4;
+    background: var(--rl-tint);
+}
+
+.carMedia img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carBadge {
+    position: absolute;
+    top: var(--space-3);
+    inset-inline-start: var(--space-3);
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background: var(--rl-primary);
+    color: var(--rl-on-dark);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.carBody {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: var(--space-6);
+    padding: var(--space-5);
 }
 
-.vehicleHead {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--space-3);
-    margin-bottom: var(--space-3);
-}
-
-.vehicleName {
+.carName {
+    margin: 0 0 var(--space-3);
     font-size: var(--text-xl);
-    margin: 0;
+    color: var(--rl-primary);
 }
 
-.fare {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: end;
-    white-space: nowrap;
-}
-
-.fareAmount {
-    font-weight: 800;
-    font-size: var(--text-xl);
-    color: var(--navy);
-}
-
-.fareOnRequest {
-    font-weight: 700;
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-}
-
-.fareBasis {
-    font-size: var(--text-xs);
-    color: var(--text-muted);
-}
-
-.capacity {
+.carSpecs {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-4);
-    margin: 0 0 var(--space-3);
+    gap: var(--space-2) var(--space-4);
+    margin: 0 0 var(--space-4);
     padding: 0;
     list-style: none;
     font-size: var(--text-sm);
     font-weight: 600;
-    color: var(--text-body);
+    color: var(--rl-text);
 }
 
-.capacity li {
+.carSpecs li {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
 }
 
-.capacity .icon {
-    color: var(--navy);
+.carPrice {
+    display: inline-flex;
+    align-items: baseline;
+    align-self: flex-start;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    background: var(--rl-accent-veil);
+    color: var(--rl-accent-ink);
 }
 
-.vehicleNote {
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-    margin: 0 0 var(--space-5);
+.carPrice strong {
+    font-size: var(--text-lg);
+    font-weight: 800;
 }
 
-.vehicleCta {
+.carPrice span {
+    font-size: var(--text-xs);
+    font-weight: 600;
+}
+
+.carCta {
     margin-top: auto;
     width: 100%;
+    min-height: 44px;
 }
 
 .priceFootnote {
-    margin-top: var(--space-8);
+    margin-top: var(--space-10);
     padding: var(--space-5) var(--space-6);
-    background: var(--white);
-    border: 1px solid var(--line);
-    border-inline-start: 3px solid var(--gold);
+    background: var(--rl-tint);
+    border-inline-start: 3px solid var(--rl-accent);
     border-radius: var(--radius-md);
-    color: var(--text-body);
+    color: var(--rl-text);
     font-size: var(--text-sm);
     line-height: 1.7;
+}
+
+/* ── Videos ─────────────────────────────────────────────────────── */
+
+.videoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 300px));
+    justify-content: center;
+    gap: var(--space-6);
+}
+
+.videoCard {
+    margin: 0;
+}
+
+.videoCard video {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Both clips are ~9:16 but a few pixels apart; one frame for both
+       keeps the captions level. */
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    background: var(--rl-primary);
+    box-shadow: var(--shadow-lg);
+}
+
+.videoCard figcaption {
+    margin-top: var(--space-3);
+    text-align: center;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--rl-primary);
 }
 
 /* ── Timeline ───────────────────────────────────────────────────── */
@@ -403,22 +690,23 @@ a.inlineLink {
     top: 48px;
     bottom: 4px;
     width: 2px;
-    background: var(--line-strong);
+    background: var(--rl-border-strong);
 }
 
-.timelineStep .iconBadge {
-    background: var(--navy);
-    color: var(--gold);
+.timelineStep .chip {
+    background: var(--rl-primary);
+    color: var(--rl-accent);
     border-radius: var(--radius-full);
 }
 
 .timelineTitle {
     font-size: var(--text-lg);
     margin: var(--space-2) 0 var(--space-1);
+    color: var(--rl-primary);
 }
 
 .timelineBody {
-    color: var(--text-body);
+    color: var(--rl-text);
     margin: 0;
     line-height: 1.7;
 }
@@ -440,24 +728,25 @@ a.inlineLink {
     gap: var(--space-6);
 }
 
-.crossingCard {
-    background: var(--white);
-    border: 1px solid var(--line);
+.card {
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-sm);
     padding: var(--space-8);
 }
 
-.crossingCardHead {
+.cardHead {
     display: flex;
     align-items: center;
     gap: var(--space-3);
     margin-bottom: var(--space-5);
 }
 
-.crossingCardHead h3 {
+.cardHead h3 {
     margin: 0;
     font-size: var(--text-xl);
+    color: var(--rl-primary);
 }
 
 .checkList {
@@ -472,12 +761,11 @@ a.inlineLink {
     display: flex;
     gap: var(--space-3);
     align-items: flex-start;
-    color: var(--text-body);
+    color: var(--rl-text);
     line-height: 1.6;
 }
 
 .checkList .icon {
-    color: var(--success);
     margin-top: 3px;
 }
 
@@ -487,19 +775,19 @@ a.inlineLink {
     align-items: flex-start;
     margin-top: var(--space-6);
     padding: var(--space-4) var(--space-5);
-    background: var(--brass-veil);
-    border-inline-start: 3px solid var(--gold);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
+    border-inline-start: 3px solid var(--rl-accent);
     border-radius: var(--radius-md);
-    color: var(--text-main);
+    color: var(--rl-primary);
     font-weight: 600;
 }
 
 .callout .icon {
-    color: var(--navy);
     margin-top: 2px;
 }
 
-/* ── Included ───────────────────────────────────────────────────── */
+/* ── Included: staggered fade-up, hover lift ────────────────────── */
 
 .includedGrid {
     display: grid;
@@ -507,24 +795,56 @@ a.inlineLink {
     gap: var(--space-4);
 }
 
+/* Starting state only once Reveal has mounted (data-reveal="pending"),
+   so without JS, or with reduced motion, the cards are simply there. */
+.includedGrid[data-reveal="pending"] > .revealItem {
+    opacity: 0;
+    transform: translateY(18px);
+}
+
+.includedGrid[data-reveal="in"] > .revealItem {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+.revealItem {
+    display: flex;
+}
+
 .includedItem {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    width: 100%;
     padding: var(--space-5);
-    background: var(--white);
-    border: 1px solid var(--line);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.includedItem:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--rl-accent);
+}
+
+.includedItem:hover .chip {
+    background: var(--rl-accent);
+    color: var(--rl-primary);
 }
 
 .includedItem h3 {
     margin: 0;
     font-size: var(--text-base);
+    color: var(--rl-primary);
 }
 
 .includedItem p {
     margin: 0;
-    color: var(--text-muted);
+    color: var(--rl-muted);
     font-size: var(--text-sm);
     line-height: 1.6;
 }
@@ -538,16 +858,20 @@ a.inlineLink {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: var(--space-4);
-    counter-reset: step;
 }
 
 .step {
     position: relative;
     padding: var(--space-6) var(--space-5);
-    background: var(--white);
-    border: 1px solid var(--line);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
+}
+
+.step .chip {
+    background: var(--rl-accent-veil);
+    box-shadow: none;
 }
 
 .stepNumber {
@@ -557,18 +881,19 @@ a.inlineLink {
     font-family: var(--font-heading);
     font-weight: 800;
     font-size: var(--text-2xl);
-    color: var(--gold);
+    color: var(--rl-accent-ink);
     line-height: 1;
 }
 
 .step h3 {
     margin: var(--space-4) 0 var(--space-2);
     font-size: var(--text-base);
+    color: var(--rl-primary);
 }
 
 .step p {
     margin: 0;
-    color: var(--text-muted);
+    color: var(--rl-muted);
     font-size: var(--text-sm);
     line-height: 1.6;
 }
@@ -589,21 +914,23 @@ a.inlineLink {
 .destCard {
     display: flex;
     flex-direction: column;
-    background: var(--white);
-    border: 1px solid var(--line);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
     color: inherit;
-    transition: box-shadow var(--ease-base), transform var(--ease-base);
+    transition: box-shadow var(--ease-base), transform var(--ease-base), border-color var(--ease-base);
 }
 
 .destCard:hover {
     box-shadow: var(--shadow-lg);
+    border-color: var(--rl-accent);
     transform: translateY(-2px);
 }
 
-.destCard:focus-visible {
-    outline: 3px solid var(--accent);
+.destCard:focus-visible,
+.routeCard:focus-visible {
+    outline: 3px solid var(--rl-link);
     outline-offset: 2px;
 }
 
@@ -617,11 +944,12 @@ a.inlineLink {
 .destBody h3 {
     margin: 0 0 var(--space-1);
     font-size: var(--text-lg);
+    color: var(--rl-primary);
 }
 
 .destBody p {
     margin: 0 0 var(--space-3);
-    color: var(--text-muted);
+    color: var(--rl-muted);
     font-size: var(--text-sm);
     line-height: 1.6;
 }
@@ -631,8 +959,8 @@ a.inlineLink {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    color: var(--accent);
-    font-weight: 700;
+    color: var(--rl-accent-ink);
+    font-weight: 800;
     font-size: var(--text-sm);
 }
 
@@ -646,9 +974,13 @@ a.inlineLink {
 }
 
 .faq {
-    background: var(--white);
-    border: 1px solid var(--line);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-lg);
+}
+
+.faq[open] {
+    border-color: var(--rl-accent);
 }
 
 .faq summary {
@@ -667,7 +999,7 @@ a.inlineLink {
 }
 
 .faq summary:focus-visible {
-    outline: 3px solid var(--accent);
+    outline: 3px solid var(--rl-link);
     outline-offset: 2px;
     border-radius: var(--radius-lg);
 }
@@ -675,11 +1007,10 @@ a.inlineLink {
 .faq summary h3 {
     margin: 0;
     font-size: var(--text-base);
-    color: var(--navy);
+    color: var(--rl-primary);
 }
 
 .faqChevron {
-    color: var(--navy);
     transition: transform var(--ease-base);
 }
 
@@ -689,12 +1020,13 @@ a.inlineLink {
 
 .faq p {
     margin: 0;
-    padding: 0 var(--space-6) var(--space-6);
-    color: var(--text-body);
-    line-height: 1.75;
+    padding: 0 var(--space-6) var(--space-5);
+    color: var(--rl-text);
+    font-size: var(--text-lg);
+    line-height: 1.6;
 }
 
-/* ── Return strip ───────────────────────────────────────────────── */
+/* ── Return strip and popular routes ────────────────────────────── */
 
 .returnStrip {
     display: flex;
@@ -702,9 +1034,9 @@ a.inlineLink {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--space-4);
+    margin-bottom: var(--space-16);
     padding: var(--space-5) var(--space-8);
-    background: var(--navy);
-    color: var(--on-dark);
+    background: var(--rl-primary);
     border-radius: var(--radius-xl);
 }
 
@@ -712,10 +1044,8 @@ a.inlineLink {
     margin: 0;
     font-size: var(--text-lg);
     font-weight: 700;
-    color: var(--on-dark);
+    color: var(--rl-on-dark);
 }
-
-/* ── Popular routes ─────────────────────────────────────────────── */
 
 .routeGrid {
     display: grid;
@@ -728,8 +1058,8 @@ a.inlineLink {
     flex-direction: column;
     gap: var(--space-3);
     padding: var(--space-5) var(--space-6);
-    background: var(--white);
-    border: 1px solid var(--line);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
     border-radius: var(--radius-lg);
     color: inherit;
     transition: box-shadow var(--ease-base), border-color var(--ease-base);
@@ -737,20 +1067,15 @@ a.inlineLink {
 
 .routeCard:hover {
     box-shadow: var(--shadow-md);
-    border-color: var(--gold);
-}
-
-.routeCard:focus-visible {
-    outline: 3px solid var(--accent);
-    outline-offset: 2px;
+    border-color: var(--rl-accent);
 }
 
 .routeTag {
     align-self: flex-start;
     padding: 2px 10px;
     border-radius: var(--radius-full);
-    background: var(--brass-veil);
-    color: var(--navy);
+    background: var(--rl-accent-veil);
+    color: var(--rl-primary);
     font-size: var(--text-xs);
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -764,10 +1089,11 @@ a.inlineLink {
     gap: var(--space-2);
     margin: 0;
     font-size: var(--text-lg);
+    color: var(--rl-primary);
 }
 
-.routeName .icon {
-    color: var(--gold);
+.routeArrow {
+    color: var(--rl-accent);
 }
 
 .servicesRow {
@@ -782,34 +1108,38 @@ a.inlineLink {
     margin: 0;
     font-size: var(--text-sm);
     font-weight: 700;
-    color: var(--text-muted);
+    color: var(--rl-muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
 
-/* ── Final CTA ──────────────────────────────────────────────────── */
+/* ── Final CTA: navy card on an ivory band ──────────────────────── */
 
-.finalCta {
-    background: var(--bg-dark);
-    color: var(--on-dark);
-    padding: var(--space-20) 0;
+.finalSection {
+    padding: var(--space-16) 0;
 }
 
-.finalGrid {
+.finalCard {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: var(--space-12);
+    gap: var(--space-10);
     align-items: center;
+    padding: var(--space-12);
+    background: var(--rl-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    color: var(--rl-on-dark);
 }
 
-.finalCta h2 {
-    color: var(--on-dark);
+.finalCard h2 {
+    color: var(--rl-on-dark);
     font-size: var(--text-4xl);
-    margin: var(--space-4) 0;
+    margin: 0 0 var(--space-4);
+    text-wrap: balance;
 }
 
-.finalCta p {
-    color: var(--on-dark-muted);
+.finalCard p {
+    color: var(--rl-on-dark-muted);
     font-size: var(--text-lg);
     line-height: 1.7;
     margin: 0 0 var(--space-6);
@@ -817,16 +1147,22 @@ a.inlineLink {
 
 .finalFigure {
     margin: 0;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    border: 1px solid var(--line-dark);
+    border: 1px solid var(--rl-line-dark);
 }
 
-.reviewed {
-    color: var(--text-muted);
-    font-size: var(--text-xs);
-    text-align: center;
-    margin-top: var(--space-6);
+/* ── Motion preferences ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+    .includedItem,
+    .includedItem:hover,
+    .destCard,
+    .destCard:hover,
+    .guideLink svg {
+        transition: none;
+        transform: none;
+    }
 }
 
 /* ── Responsive ─────────────────────────────────────────────────── */
@@ -834,7 +1170,8 @@ a.inlineLink {
 @media (max-width: 1024px) {
     .heroGrid,
     .timelineGrid,
-    .finalGrid {
+    .finalCard,
+    .highlights {
         grid-template-columns: 1fr;
         gap: var(--space-8);
     }
@@ -843,17 +1180,14 @@ a.inlineLink {
         position: static;
     }
 
-    .vehicleGrid,
-    .routeGrid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .includedGrid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
+    .routeGrid,
+    .includedGrid,
     .steps {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .finalCard {
+        padding: var(--space-8);
     }
 }
 
@@ -866,12 +1200,20 @@ a.inlineLink {
         font-size: var(--text-4xl);
     }
 
-    .heroLead {
+    .heroLead,
+    .lead,
+    .sub {
         font-size: var(--text-base);
     }
 
-    .statGrid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .title,
+    .highlightsText .title,
+    .finalCard h2 {
+        font-size: var(--text-3xl);
+    }
+
+    .head {
+        margin-bottom: var(--space-8);
     }
 
     .stat {
@@ -880,24 +1222,112 @@ a.inlineLink {
         padding: var(--space-4);
     }
 
+    .carGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .crossingGrid {
         grid-template-columns: 1fr;
     }
 
-    .crossingCard {
+    .card {
         padding: var(--space-6);
     }
 
-    .finalCta h2 {
-        font-size: var(--text-3xl);
+    .faq p {
+        font-size: var(--text-base);
+    }
+
+    .returnStrip {
+        margin-bottom: var(--space-12);
     }
 }
 
 @media (max-width: 640px) {
-    .vehicleGrid,
     .routeGrid,
     .steps {
         grid-template-columns: 1fr;
+    }
+
+    /* Vehicle cards turn into compact rows: photo left, details right,
+       button full width underneath. */
+    .carGrid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+
+    .car {
+        display: grid;
+        grid-template-columns: 132px minmax(0, 1fr);
+    }
+
+    .carMedia {
+        align-self: start;
+        margin: var(--space-3) 0 0 var(--space-3);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+    }
+
+    .carBadge {
+        display: none;
+    }
+
+    .carBody {
+        padding: var(--space-3) var(--space-4) var(--space-4);
+        display: contents;
+    }
+
+    .carName,
+    .carSpecs,
+    .carPrice {
+        grid-column: 2;
+        margin-inline: var(--space-4);
+    }
+
+    .carName {
+        grid-row: 1;
+        margin-top: var(--space-3);
+        margin-bottom: var(--space-1);
+        font-size: var(--text-lg);
+    }
+
+    .carMedia {
+        grid-row: 1 / span 3;
+    }
+
+    .carSpecs {
+        grid-row: 2;
+        gap: var(--space-1) var(--space-3);
+        margin-bottom: var(--space-2);
+        font-size: var(--text-xs);
+    }
+
+    .carPrice {
+        grid-row: 3;
+        align-self: start;
+        justify-self: start;
+        margin-bottom: var(--space-3);
+        padding: 4px 12px;
+    }
+
+    .carPrice strong {
+        font-size: var(--text-base);
+    }
+
+    .carCta {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        width: auto;
+        margin: 0 var(--space-3) var(--space-3);
+    }
+
+    .carGroupTitle {
+        font-size: var(--text-xl);
+    }
+
+    .videoGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-3);
     }
 
     .returnStrip {
@@ -907,15 +1337,30 @@ a.inlineLink {
     .ctaRow > :global(.btn) {
         flex: 1 1 100%;
     }
+
+    .finalCard {
+        padding: var(--space-6) var(--space-5);
+    }
+
+    .finalSection {
+        padding: var(--space-10) 0;
+    }
 }
 
 @media (max-width: 480px) {
     .heroTitle {
         font-size: var(--text-3xl);
     }
-}
 
-/* Tighter side padding so two CTAs sit side by side in the hero column. */
-.ctaRow > :global(.btn) {
-    padding-inline: var(--space-6);
+    .includedGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat {
+        padding: var(--space-3);
+    }
+
+    .statEmphasis .statValue {
+        font-size: var(--text-lg);
+    }
 }

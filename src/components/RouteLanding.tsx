@@ -1,43 +1,86 @@
 import Link from "next/link";
 import Image from "next/image";
 import { preload } from "react-dom";
-import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import {
-  ShieldIcon, ClockIcon, CarIcon, MessageIcon, MapPinIcon, GlobeIcon, NavigationIcon,
-  TimerIcon, TagIcon, UserIcon, HomeIcon, PlaneIcon, PackageIcon, PhoneIcon,
-  CheckCircleIcon, FileCheckIcon, CalendarIcon, BriefcaseIcon, LandmarkIcon,
-  ArrowRightIcon, ChevronDownIcon, HelpCircleIcon, ShieldCheckIcon, WhatsAppIcon,
-} from "@/components/Icons";
+  MapPin, Clock, Landmark, Route, Coffee, Tag, Car, ShieldCheck, House, Luggage, Fuel,
+  MessageCircle, Users, Briefcase, Plane, FileCheck, BadgeCheck, CalendarCheck, Navigation,
+  Headset, ArrowRight, ChevronDown, Info, Phone, CircleCheck, type LucideIcon,
+} from "lucide-react";
+// Lucide ships no brand logos, so WhatsApp buttons keep the WhatsApp mark.
+import { WhatsAppIcon } from "@/components/Icons";
 import QuickBookForm from "@/components/QuickBookForm";
-import { renderInline, plainText, type RouteData } from "@/components/RoutePage";
-import { waLink, TEL_URL, PHONE_DISPLAY } from "@/lib/contact";
+import Reveal from "@/components/Reveal";
+import type { RouteData } from "@/components/RoutePage";
+import { serviceSchema, faqSchema, breadcrumbSchema, videoSchema, jsonLd } from "@/lib/jsonld";
+import { waLink, pageWhatsAppMessage, TEL_URL, PHONE_DISPLAY } from "@/lib/contact";
 import { formatRoutePrice } from "@/lib/routePricing";
-import type { LandingIcon, LandingImage } from "@/lib/routeLanding";
+import type { LandingIcon, LandingImage, LandingVehicle } from "@/lib/routeLanding";
 import s from "./RouteLanding.module.css";
 
-const ICONS: Record<LandingIcon, (p: { size?: number }) => React.ReactElement> = {
-  shield: ShieldIcon, clock: ClockIcon, car: CarIcon, message: MessageIcon, mapPin: MapPinIcon,
-  globe: GlobeIcon, navigation: NavigationIcon, timer: TimerIcon, tag: TagIcon, user: UserIcon,
-  home: HomeIcon, plane: PlaneIcon, package: PackageIcon, phone: PhoneIcon, check: CheckCircleIcon,
-  fileCheck: FileCheckIcon, calendar: CalendarIcon, briefcase: BriefcaseIcon, landmark: LandmarkIcon,
+/** The only icons this page bundles: imported by name, so Lucide's other
+ *  icons are tree-shaken out. */
+const ICONS: Record<LandingIcon, LucideIcon> = {
+  mapPin: MapPin, clock: Clock, landmark: Landmark, route: Route, coffee: Coffee, tag: Tag,
+  car: Car, shieldCheck: ShieldCheck, home: House, luggage: Luggage, fuel: Fuel,
+  messageCircle: MessageCircle, users: Users, briefcase: Briefcase, plane: Plane,
+  fileCheck: FileCheck, badgeCheck: BadgeCheck, calendarCheck: CalendarCheck,
+  navigation: Navigation, headset: Headset,
 };
 
-/** Decorative icon: hidden from screen readers, which read the text beside it. */
-function Icon({ name, size = 18, badge }: { name: LandingIcon; size?: number; badge?: boolean }) {
+/** Decorative icon in a tinted chip (or bare). Hidden from screen readers,
+ *  which read the text beside it. */
+function Icon({ name, size = 20, chip }: { name: LandingIcon; size?: number; chip?: boolean }) {
   const Svg = ICONS[name];
   return (
-    <span className={badge ? s.iconBadge : s.icon} aria-hidden="true">
-      <Svg size={size} />
+    <span className={chip ? s.chip : s.icon} aria-hidden="true">
+      <Svg size={size} strokeWidth={2} aria-hidden="true" focusable="false" />
     </span>
   );
 }
 
+/** [anchor](/path) links and **bold** figures. Bold renders in the accent
+ *  ink, which is how the page highlights its key data. */
+const INLINE = /\*\*(.+?)\*\*|\[([^\]]+)\]\((\/[^)\s]*)\)/g;
+function rich(text: string): React.ReactNode {
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(INLINE)) {
+    const at = m.index ?? 0;
+    if (at > last) out.push(text.slice(last, at));
+    out.push(m[1] !== undefined
+      ? <strong key={at} className={s.em}>{m[1]}</strong>
+      : <Link key={at} href={m[3]}>{m[2]}</Link>);
+    last = at + m[0].length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+/** The same text without markup, for JSON-LD. */
+const plain = (text: string) => text.replace(INLINE, (_, bold, anchor) => bold ?? anchor);
+
 /**
- * A photo, or the slot for one. Both sit in a box of fixed aspect ratio,
- * so swapping a slot for its photo later causes no layout shift. A slot's
- * brief (size and alt text) is kept in `data-image-todo` and `aria-label`.
+ * A photo, or the slot for one, in a box of fixed aspect ratio so swapping
+ * a slot for its photo later shifts nothing. Photos with their own srcSet
+ * are served as-is (already sized WebP); others go through next/image.
  */
 function Media({ image, ratio, sizes, className }: { image: LandingImage; ratio: string; sizes: string; className?: string }) {
+  if ("src" in image && image.srcSet) {
+    return (
+      <div className={`${s.media} ${className ?? ""}`} style={{ aspectRatio: ratio }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={image.src}
+          srcSet={image.srcSet.map((x) => `${x.src} ${x.width}w`).join(", ")}
+          sizes={sizes}
+          width={image.width}
+          height={image.height}
+          alt={image.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    );
+  }
   if ("src" in image) {
     return (
       <div className={`${s.media} ${className ?? ""}`} style={{ aspectRatio: ratio }}>
@@ -54,35 +97,59 @@ function Media({ image, ratio, sizes, className }: { image: LandingImage; ratio:
       aria-label={image.alt}
       data-image-todo={`${image.todo} | alt="${image.alt}"`}
     >
-      <span className={s.icon} aria-hidden="true"><MapPinIcon size={28} /></span>
+      <Icon name="mapPin" size={28} />
       <span className={s.placeholderLabel} aria-hidden="true">Photo coming soon</span>
     </div>
   );
 }
 
-function SectionHeader({ eyebrow, title, intro, centered = true }: { eyebrow: string; title: string; intro?: string; centered?: boolean }) {
+function SectionHeader({ eyebrow, title, intro, align = "center" }: { eyebrow: string; title: string; intro?: string; align?: "center" | "start" }) {
   return (
-    <div className={`section-header${centered ? " centered" : ""}`}>
-      <span className="section-eyebrow">{eyebrow}</span>
-      <h2 className="section-title">{title}</h2>
-      {intro && <p className={`section-subtitle ${s.inlineLink}`}>{renderInline(intro)}</p>}
+    <div className={`${s.head} ${align === "center" ? s.headCenter : ""}`}>
+      <span className={s.eyebrow}>{eyebrow}</span>
+      <h2 className={s.title}>{title}</h2>
+      {intro && <p className={`${s.sub} ${s.inlineLink}`}>{rich(intro)}</p>}
     </div>
+  );
+}
+
+const article = (word: string) => (/^[aeiou]/i.test(word) ? "an" : "a");
+
+/** A generic "Book on WhatsApp" button with the page's fixed message. */
+function WhatsAppButton({ message, cta }: { message: string; cta: string }) {
+  return (
+    <a href={waLink(message)} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer" data-wa-cta={cta}>
+      <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={18} /></span> Book on WhatsApp
+    </a>
   );
 }
 
 /**
  * The designed route layout: hero, booking form, highlights, prices,
- * journey, border, inclusions, booking steps, destinations, FAQ and
- * closing CTA, each its own section. Used by routes that set
+ * videos, journey, border, inclusions, booking steps, destinations, FAQ
+ * and closing CTA, each its own section. Used by routes that set
  * `RouteData.landing`; every other route keeps RoutePage.
+ *
+ * Colours come only from the page tokens at the top of
+ * RouteLanding.module.css (primary navy, gold accent, ivory tint, white
+ * surface, muted text, border); sections alternate white and ivory.
  */
 export default function RouteLanding({ data }: { data: RouteData }) {
   const L = data.landing!;
   const { hero, prices } = L;
   const route = `${data.origin} to ${data.destination}`;
-  const priced = prices.vehicles.filter((v) => v.amount !== null);
-  const vehicleWhatsApp = (vehicle: string) =>
-    waLink(`Hi, I want to book ${route} in the ${vehicle} on [date] for [x] passengers`);
+  const vehicles = prices.groups.flatMap((g) => g.vehicles);
+  const priceText = (v: LandingVehicle) => (v.amount !== null ? formatRoutePrice(v.amount, prices.currency) : null);
+
+  // Generic buttons send the page's one fixed message (lib/contact.ts), the
+  // same one the header, floating button and mobile bar send.
+  const genericMessage = pageWhatsAppMessage(`/${data.slug}`) ?? `Hi, I want to book ${route}`;
+  const vehicleWhatsApp = (v: LandingVehicle) => {
+    const price = priceText(v);
+    return waLink(price
+      ? `Hi, I want to book ${route} in ${article(v.name)} ${v.name} (${price})`
+      : `Hi, I want to book ${route} in ${article(v.name)} ${v.name}. Please send me the price.`);
+  };
 
   // The hero photo is the largest thing above the fold on desktop: fetch it
   // first, at the size the browser will actually use.
@@ -93,28 +160,33 @@ export default function RouteLanding({ data }: { data: RouteData }) {
   const schemas = [
     serviceSchema({
       name: `${route} Taxi Service`,
-      description: plainText(data.intro),
+      description: plain(data.intro),
       url: `/${data.slug}`,
       areaServed: [data.origin, data.destination],
       image: hero.image.src,
-      offers: priced.map((v) => ({
+      // One Offer per vehicle with a confirmed fare, as shown on the page.
+      offers: vehicles.filter((v) => v.amount !== null).map((v) => ({
         name: `${v.name}, ${route}, one-way`,
         price: v.amount as number,
         priceCurrency: prices.currency,
       })),
     }),
-    faqSchema(data.faqs.map((f) => ({ question: f.q, answer: plainText(f.a) }))),
+    faqSchema(data.faqs.map((f) => ({ question: f.q, answer: plain(f.a) }))),
     breadcrumbSchema([
       { name: "Home", path: "/" },
       { name: "Border Crossing", path: "/border-crossing" },
       { name: data.breadcrumbLabel, path: `/${data.slug}` },
     ]),
+    ...(L.videos?.items.map((v) => videoSchema({
+      name: v.title, description: v.description, contentUrl: v.src, thumbnailUrl: v.poster,
+      uploadDate: v.uploadDate, duration: v.duration,
+    })) ?? []),
   ];
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main data-page-template="route-landing">
+      <main data-page-template="route-landing" className={s.page}>
 
         {/* 1. Hero. The cover image carries its own headline and icons, so it
             sits beside the H1 rather than behind it: text over text would be
@@ -133,19 +205,17 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                 <span className={s.heroEyebrow}>{data.eyebrow}</span>
                 <h1 className={s.heroTitle}>{data.h1}</h1>
                 <p className={s.heroLead}>{hero.subheading}</p>
-                <ul className={s.chips}>
+                <ul className={s.heroChips}>
                   {hero.chips.map((c) => (
-                    <li key={c.label} className={s.chip}><Icon name={c.icon} size={16} /> {c.label}</li>
+                    <li key={c.label} className={s.heroChip}><Icon name={c.icon} size={16} /> {c.label}</li>
                   ))}
                 </ul>
                 <div className={s.priceRow}>
                   <span className={s.priceBadge}>{hero.priceBadge}</span>
-                  <span className={s.priceNote}>one way, per vehicle</span>
+                  <span className={s.priceNote}>one way, per vehicle · <strong>{data.travelTime.replace(" (incl. causeway)", "").replace(/ – /, "–")}</strong> · {data.distance}</span>
                 </div>
                 <div className={s.ctaRow}>
-                  <a href={waLink(hero.whatsappMessage)} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer" data-wa-cta="hero">
-                    <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={18} /></span> Book on WhatsApp
-                  </a>
+                  <WhatsAppButton message={genericMessage} cta="hero" />
                   <Link href={hero.bookOnlineHref} className={`btn btn-lg ${s.btnOnDark}`}>Book Online</Link>
                 </div>
               </div>
@@ -180,84 +250,135 @@ export default function RouteLanding({ data }: { data: RouteData }) {
               heading={L.form.heading}
               headingAs="h2"
               subheading={L.form.subheading}
-              vehicles={L.form.vehicles}
+              vehicles={vehicles.map((v) => ({ value: v.name, label: `${v.name} – ${priceText(v) ?? "price on request"}` }))}
               maxPassengers={L.form.maxPassengers}
               footerNote={L.form.footerNote}
+              whatsappIntro={genericMessage}
             />
           </div>
         </section>
 
-        {/* 3. Route highlights */}
-        <section className="section">
+        {/* 3. Route highlights: text left, stat cards right. */}
+        <section className={`section ${s.tint}`}>
           <div className="container">
-            <SectionHeader eyebrow="Route highlights" title={L.highlights.heading} intro={data.intro} />
-            <div className={s.statGrid}>
-              {L.highlights.items.map((it) => (
-                <div key={it.label} className={s.stat}>
-                  <Icon name={it.icon} size={20} badge />
-                  <div>
-                    <span className={s.statLabel}>{it.label}</span>
-                    <span className={s.statValue}>{it.value}</span>
-                  </div>
-                </div>
-              ))}
+            <div className={s.highlights}>
+              <div className={s.highlightsText}>
+                <span className={s.eyebrow}>Route highlights</span>
+                <h2 className={s.title}>{L.highlights.heading}</h2>
+                <p className={s.lead}>{rich(L.highlights.intro)}</p>
+                <Link href={L.highlights.link.href} className={s.guideLink}>
+                  {L.highlights.link.label} <ArrowRight size={18} strokeWidth={2.25} aria-hidden="true" />
+                </Link>
+                <p className={s.smallNote}>{L.highlights.note}</p>
+              </div>
+              <ul className={s.statGrid}>
+                {L.highlights.items.map((it) => (
+                  <li key={it.label} className={`${s.stat} ${it.emphasis ? s.statEmphasis : ""}`}>
+                    <Icon name={it.icon} chip />
+                    <div>
+                      <span className={s.statLabel}>{it.label}</span>
+                      <span className={s.statValue}>{it.value}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <p className={s.sectionNote}>
-              {L.highlights.note}{" "}
-              <Link href={L.highlights.link.href} className={s.inlineLink}>{L.highlights.link.label}</Link>
-            </p>
           </div>
         </section>
 
-        {/* 4. Prices and vehicles */}
-        <section id="price" className={`section ${s.subtle}`}>
+        {/* 4. Prices and vehicles, grouped by fare. */}
+        <section id="price" className={`section ${s.surface}`}>
           <div className="container">
             <SectionHeader eyebrow="Prices" title={prices.heading} intro={prices.intro} />
-            <div className={s.vehicleGrid}>
-              {prices.vehicles.map((v) => (
-                <article key={v.name} className={s.vehicleCard}>
-                  <Media image={v.image} ratio="16 / 10" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px" />
-                  <div className={s.vehicleBody}>
-                    <div className={s.vehicleHead}>
-                      <h3 className={s.vehicleName}>{v.name}</h3>
-                      <span className={s.fare}>
-                        {v.amount !== null ? (
-                          <>
-                            <span className={s.fareAmount}>{formatRoutePrice(v.amount, prices.currency)}</span>
-                            <span className={s.fareBasis}>one way</span>
-                          </>
-                        ) : (
-                          <span className={s.fareOnRequest}>Price on request</span>
-                        )}
-                      </span>
-                    </div>
-                    <ul className={s.capacity}>
-                      <li><Icon name="user" size={16} /> {v.passengers} passengers</li>
-                      <li><Icon name="package" size={16} /> {v.luggage} bags</li>
-                    </ul>
-                    <p className={s.vehicleNote}>{v.note}</p>
-                    <a href={vehicleWhatsApp(v.name)} className={`btn btn-whatsapp ${s.vehicleCta}`} target="_blank" rel="noopener noreferrer" data-wa-cta="vehicle-card">
-                      <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={16} /></span>
-                      {v.amount !== null ? "Book this car" : "Get a price on WhatsApp"}
-                    </a>
+            {prices.groups.map((g) => {
+              const [kind, fare] = g.heading.split(" · ");
+              return (
+                <div key={g.heading} className={s.carGroup}>
+                  <h3 className={s.carGroupTitle}>
+                    {kind} {fare && <span className={s.carGroupFare}>· {fare}</span>}
+                  </h3>
+                  <div className={s.carGrid}>
+                    {g.vehicles.map((v) => {
+                      const price = priceText(v);
+                      return (
+                        <article key={v.name} className={s.car}>
+                          <div className={s.carMedia}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={v.image.src}
+                              srcSet={v.image.srcSet.map((x) => `${x.src} ${x.width}w`).join(", ")}
+                              sizes="(max-width: 640px) 140px, (max-width: 1024px) 50vw, 380px"
+                              width={v.image.width}
+                              height={v.image.height}
+                              alt={v.image.alt}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                            <span className={s.carBadge}>{v.category}</span>
+                          </div>
+                          <div className={s.carBody}>
+                            <h4 className={s.carName}>{v.name}</h4>
+                            <ul className={s.carSpecs}>
+                              <li><Icon name="users" size={16} /> {v.passengers} passengers</li>
+                              <li><Icon name="luggage" size={16} /> {v.luggage ? `${v.luggage} bags` : "Bags: ask us"}</li>
+                            </ul>
+                            <p className={s.carPrice}>
+                              {price ? <><strong>{price}</strong> <span>one way</span></> : <strong>Price on request</strong>}
+                            </p>
+                            <a href={vehicleWhatsApp(v)} className={`btn btn-whatsapp ${s.carCta}`} target="_blank" rel="noopener noreferrer" data-wa-cta="vehicle-card">
+                              <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={16} /></span>
+                              {price ? "Book this car" : "Get a price"}<span className="sr-only">: {v.name}</span>
+                            </a>
+                          </div>
+                        </article>
+                      );
+                    })}
                   </div>
-                </article>
-              ))}
-            </div>
+                </div>
+              );
+            })}
             <p className={s.priceFootnote}>{prices.note}</p>
             <p className={s.reviewed}>Prices confirmed {prices.confirmedOn}.</p>
           </div>
         </section>
 
-        {/* 5. Journey timeline */}
-        <section className="section">
+        {/* 5. Videos: real cars, plates covered. Nothing downloads until play. */}
+        {L.videos && (
+          <section className={`section ${s.tint}`}>
+            <div className="container">
+              <SectionHeader eyebrow="Real cars" title={L.videos.heading} intro={L.videos.intro} />
+              <div className={s.videoGrid}>
+                {L.videos.items.map((v) => (
+                  <figure key={v.src} className={s.videoCard}>
+                    <video
+                      controls
+                      playsInline
+                      preload="none"
+                      poster={v.poster}
+                      width={v.width}
+                      height={v.height}
+                      aria-label={v.title}
+                    >
+                      <source src={v.src} type="video/mp4" />
+                      <track kind="captions" src={v.captions} srcLang="en" label="English" />
+                    </video>
+                    <figcaption>{v.title}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 6. Journey timeline */}
+        <section className={`section ${s.surface}`}>
           <div className="container">
-            <SectionHeader eyebrow="Journey" title={L.timeline.heading} intro={L.timeline.intro} centered={false} />
+            <SectionHeader eyebrow="Journey" title={L.timeline.heading} intro={L.timeline.intro} align="start" />
             <div className={s.timelineGrid}>
               <ol className={s.timeline}>
                 {L.timeline.steps.map((st) => (
                   <li key={st.title} className={s.timelineStep}>
-                    <Icon name={st.icon} size={20} badge />
+                    <Icon name={st.icon} chip />
                     <div>
                       <h3 className={s.timelineTitle}>{st.title}</h3>
                       <p className={s.timelineBody}>{st.body}</p>
@@ -266,99 +387,99 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                 ))}
               </ol>
               <figure className={s.timelineFigure}>
-                <Media image={L.timeline.image} ratio="4 / 3" sizes="(max-width: 1024px) 100vw, 560px" />
+                <Media image={L.timeline.image} ratio="16 / 9" sizes="(max-width: 1024px) calc(100vw - 32px), 560px" />
               </figure>
             </div>
           </div>
         </section>
 
-        {/* 6. King Fahd Causeway crossing */}
-        <section className={`section ${s.subtle}`}>
+        {/* 7. King Fahd Causeway crossing */}
+        <section className={`section ${s.tint}`}>
           <div className="container">
             <SectionHeader eyebrow="Border crossing" title={L.crossing.heading} intro={L.crossing.intro} />
             <div className={s.crossingGrid}>
-              <div className={s.crossingCard}>
-                <div className={s.crossingCardHead}>
-                  <Icon name="car" size={20} badge />
+              <div className={s.card}>
+                <div className={s.cardHead}>
+                  <Icon name="car" chip />
                   <h3>{L.crossing.driverHeading}</h3>
                 </div>
                 <ul className={s.checkList}>
                   {L.crossing.driver.map((x) => (
-                    <li key={x}><span className={s.icon} aria-hidden="true"><ShieldCheckIcon size={18} /></span> {x}</li>
+                    <li key={x}><span className={s.icon} aria-hidden="true"><ShieldCheck size={18} aria-hidden="true" /></span> {x}</li>
                   ))}
                 </ul>
               </div>
-              <div className={s.crossingCard}>
-                <div className={s.crossingCardHead}>
-                  <Icon name="fileCheck" size={20} badge />
+              <div className={s.card}>
+                <div className={s.cardHead}>
+                  <Icon name="fileCheck" chip />
                   <h3>{L.crossing.passengerHeading}</h3>
                 </div>
                 <ul className={s.checkList}>
                   {L.crossing.passenger.map((x) => (
-                    <li key={x}><span className={s.icon} aria-hidden="true"><CheckCircleIcon size={18} /></span> {x}</li>
+                    <li key={x}><span className={s.icon} aria-hidden="true"><CircleCheck size={18} aria-hidden="true" /></span> {x}</li>
                   ))}
                 </ul>
               </div>
             </div>
             <p className={s.callout} role="note">
-              <span className={s.icon} aria-hidden="true"><HelpCircleIcon size={20} /></span>
+              <span className={s.icon} aria-hidden="true"><Info size={20} aria-hidden="true" /></span>
               {L.crossing.callout}
             </p>
-            <p className={`${s.sectionNote} ${s.inlineLink}`}>{renderInline(L.crossing.outro)}</p>
+            <p className={`${s.sectionNote} ${s.inlineLink}`}>{rich(L.crossing.outro)}</p>
           </div>
         </section>
 
-        {/* 7. What's included */}
-        <section className="section">
+        {/* 8. What's included: staggered fade-up as it scrolls in. */}
+        <section className={`section ${s.surface}`}>
           <div className="container">
             <SectionHeader eyebrow="What's included" title={L.included.heading} />
-            <div className={s.includedGrid}>
-              {L.included.items.map((it) => (
-                <div key={it.title} className={s.includedItem}>
-                  <Icon name={it.icon} size={20} badge />
-                  <h3>{it.title}</h3>
-                  <p>{it.body}</p>
+            <Reveal className={s.includedGrid}>
+              {L.included.items.map((it, i) => (
+                <div key={it.title} className={s.revealItem} style={{ "--i": i } as React.CSSProperties}>
+                  <div className={s.includedItem}>
+                    <Icon name={it.icon} chip />
+                    <h3>{it.title}</h3>
+                    <p>{it.body}</p>
+                  </div>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
-        {/* 8. How to book */}
-        <section className={`section ${s.subtle}`}>
+        {/* 9. How to book */}
+        <section className={`section ${s.tint}`}>
           <div className="container">
             <SectionHeader eyebrow="How it works" title={L.howToBook.heading} />
             <ol className={s.steps}>
               {L.howToBook.steps.map((st, i) => (
                 <li key={st.title} className={s.step}>
                   <span className={s.stepNumber} aria-hidden="true">{i + 1}</span>
-                  <Icon name={st.icon} size={20} badge />
+                  <Icon name={st.icon} chip />
                   <h3>{st.title}</h3>
                   <p>{st.body}</p>
                 </li>
               ))}
             </ol>
             <div className={`${s.ctaRow} ${s.stepsCta}`}>
-              <a href={waLink(hero.whatsappMessage)} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer" data-wa-cta="how-to-book">
-                <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={18} /></span> Book on WhatsApp
-              </a>
+              <WhatsAppButton message={genericMessage} cta="how-to-book" />
               <Link href={hero.bookOnlineHref} className="btn btn-primary btn-lg">Book Online</Link>
             </div>
           </div>
         </section>
 
-        {/* 9. Nearby destinations */}
-        <section className="section">
+        {/* 10. Nearby destinations */}
+        <section className={`section ${s.surface}`}>
           <div className="container">
             <SectionHeader eyebrow="Explore" title={L.nearby.heading} intro={L.nearby.intro} />
             <div className={s.destGrid}>
               {L.nearby.items.map((d) => (
                 <Link key={d.href} href={d.href} className={s.destCard}>
-                  <Media image={d.image} ratio="4 / 3" sizes="(max-width: 640px) 100vw, 280px" />
+                  <Media image={d.image} ratio="3 / 2" sizes="(max-width: 640px) calc(100vw - 32px), 280px" />
                   <div className={s.destBody}>
                     <h3>{d.name}</h3>
                     <p>{d.blurb}</p>
-                    <span className={s.viewLink}>View {d.name} <span className={s.icon} aria-hidden="true"><ArrowRightIcon size={14} /></span></span>
+                    <span className={s.viewLink}>View {d.name} <ArrowRight size={14} aria-hidden="true" /></span>
                   </div>
                 </Link>
               ))}
@@ -366,8 +487,8 @@ export default function RouteLanding({ data }: { data: RouteData }) {
           </div>
         </section>
 
-        {/* 10. FAQ. Answers are in the HTML whether or not a question is open. */}
-        <section className={`section ${s.subtle}`}>
+        {/* 11. FAQ. Answers are in the HTML whether or not a question is open. */}
+        <section className={`section ${s.tint}`}>
           <div className="container">
             <SectionHeader eyebrow="FAQ" title={`${route} Taxi: Your Questions Answered`} />
             <div className={s.faqList}>
@@ -375,9 +496,9 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                 <details key={f.q} className={s.faq} open={i === 0}>
                   <summary>
                     <h3>{f.q}</h3>
-                    <span className={`${s.icon} ${s.faqChevron}`} aria-hidden="true"><ChevronDownIcon size={18} /></span>
+                    <span className={`${s.icon} ${s.faqChevron}`} aria-hidden="true"><ChevronDown size={18} aria-hidden="true" /></span>
                   </summary>
-                  <p className={s.inlineLink}>{renderInline(f.a)}</p>
+                  <p className={s.inlineLink}>{rich(f.a)}</p>
                 </details>
               ))}
             </div>
@@ -385,31 +506,25 @@ export default function RouteLanding({ data }: { data: RouteData }) {
           </div>
         </section>
 
-        {/* 11. Return trip */}
-        <section style={{ padding: "var(--space-12) 0 0" }}>
+        {/* 12. Return trip and other popular routes */}
+        <section className={`section ${s.surface}`}>
           <div className="container">
             <div className={s.returnStrip}>
               <p>{L.returnTrip.text}</p>
               <Link href={L.returnTrip.href} className="btn btn-primary">
-                {L.returnTrip.label} <span className={s.icon} aria-hidden="true"><ArrowRightIcon size={16} /></span>
+                {L.returnTrip.label} <ArrowRight size={16} aria-hidden="true" />
               </Link>
             </div>
-          </div>
-        </section>
-
-        {/* 12. Other popular routes */}
-        <section className="section">
-          <div className="container">
             <SectionHeader eyebrow="More routes" title={L.popularRoutes.heading} />
             <div className={s.routeGrid}>
               {L.popularRoutes.items.map((r) => (
                 <Link key={r.href} href={r.href} className={s.routeCard}>
                   <span className={s.routeTag}>{r.tag}</span>
                   <h3 className={s.routeName}>
-                    {r.from} <span className={s.icon} aria-hidden="true"><ArrowRightIcon size={16} /></span>
+                    {r.from} <ArrowRight size={16} aria-hidden="true" className={s.routeArrow} />
                     <span className="sr-only">to</span> {r.to}
                   </h3>
-                  <span className={s.viewLink}>View route <span className={s.icon} aria-hidden="true"><ArrowRightIcon size={14} /></span></span>
+                  <span className={s.viewLink}>View route <ArrowRight size={14} aria-hidden="true" /></span>
                 </Link>
               ))}
             </div>
@@ -422,10 +537,11 @@ export default function RouteLanding({ data }: { data: RouteData }) {
           </div>
         </section>
 
-        {/* 13. Final CTA */}
-        <section className={s.finalCta}>
+        {/* 13. Final CTA: a navy card on an ivory band, so the page ends
+            clearly above the (also navy) footer instead of running into it. */}
+        <section className={`${s.tint} ${s.finalSection}`}>
           <div className="container">
-            <div className={s.finalGrid}>
+            <div className={s.finalCard}>
               <div>
                 <span className={s.heroEyebrow}>Book now</span>
                 <h2>{L.finalCta.heading}</h2>
@@ -435,17 +551,15 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                 </div>
                 <p>{L.finalCta.blurb}</p>
                 <div className={s.ctaRow}>
-                  <a href={waLink(hero.whatsappMessage)} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer" data-wa-cta="closing-cta">
-                    <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={18} /></span> Book on WhatsApp
-                  </a>
+                  <WhatsAppButton message={genericMessage} cta="closing-cta" />
                   <Link href={hero.bookOnlineHref} className="btn btn-primary btn-lg">Book Online</Link>
                   <a href={TEL_URL} className={`btn btn-lg ${s.btnOnDark}`}>
-                    <span className={s.icon} aria-hidden="true"><PhoneIcon size={18} /></span> {PHONE_DISPLAY}
+                    <Phone size={18} aria-hidden="true" /> {PHONE_DISPLAY}
                   </a>
                 </div>
               </div>
               <figure className={s.finalFigure}>
-                <Media image={L.finalCta.image} ratio="3 / 2" sizes="(max-width: 1024px) 100vw, 560px" />
+                <Media image={L.finalCta.image} ratio="3 / 2" sizes="(max-width: 1024px) calc(100vw - 64px), 520px" />
               </figure>
             </div>
           </div>

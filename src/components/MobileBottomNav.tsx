@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { WhatsAppIcon, MenuIcon, XIcon, HomeIcon, CarIcon } from './Icons';
-import { waLink } from '@/lib/contact';
+import { waLink, pageWhatsAppMessage } from '@/lib/contact';
 import styles from './MobileBottomNav.module.css';
 
 /**
@@ -50,7 +50,7 @@ export default function MobileBottomNav({
             </Link>
 
             <a
-                href={waLink(isAr ? 'مرحباً، أود معرفة المزيد عن خدماتكم.' : "Hi, I'd like to know more about your services.")}
+                href={waLink(isAr ? 'مرحباً، أود معرفة المزيد عن خدماتكم.' : pageWhatsAppMessage(pathname) ?? "Hi, I'd like to know more about your services.")}
                 data-wa-cta="mobile-bottom-nav"
                 target="_blank"
                 rel="noopener noreferrer"

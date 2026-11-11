@@ -222,6 +222,29 @@ export function blogPostingSchema({
 /* ─────────────────────────────────────────────────────────────
    5. BreadcrumbList schema
    ───────────────────────────────────────────────────────────── */
+/** VideoObject for a clip hosted on this site. Paths are root-relative. */
+export function videoSchema(v: {
+  name: string;
+  description: string;
+  contentUrl: string;
+  thumbnailUrl: string;
+  /** ISO 8601 date, e.g. 2026-11-11. */
+  uploadDate: string;
+  /** ISO 8601 duration, e.g. PT46S. */
+  duration: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: v.name,
+    description: v.description,
+    contentUrl: `${BASE_URL}${v.contentUrl}`,
+    thumbnailUrl: `${BASE_URL}${v.thumbnailUrl}`,
+    uploadDate: v.uploadDate,
+    duration: v.duration,
+  };
+}
+
 export function breadcrumbSchema(
   crumbs: { name: string; path: string }[]
 ) {
