@@ -54,6 +54,16 @@ export interface UIStrings {
 
     // ── Calls to action ──
     bookNow: string;
+    /** Route template (RoutePage) labels and headings. */
+    routeUseCases: { business: string; family: string; umrah: string; tourism: string; crossBorder: string; airport: string };
+    availability247: string;
+    labelDistance: string;
+    labelCrossing: string;
+    pageLastReviewed: (date: string) => string;
+    bookingIncludesHeading: (origin: string, destination: string) => string;
+    bookingStepsHeading: (origin: string, destination: string) => string;
+    faqEyebrow: string;
+    exploreMore: string;
     requestQuote: string;
     whatsapp: string;
 
@@ -230,6 +240,22 @@ const en: UIStrings = {
     faqHeading: 'Frequently Asked Questions',
 
     bookNow: 'Book Now',
+    routeUseCases: {
+        business: 'Business & corporate travel',
+        family: 'Family & group travel',
+        umrah: 'Umrah & religious travel',
+        tourism: 'Tourism & sightseeing',
+        crossBorder: 'Cross-border GCC travel',
+        airport: 'Airport transfer',
+    },
+    availability247: '24/7 Availability',
+    labelDistance: 'Distance',
+    labelCrossing: 'Crossing',
+    pageLastReviewed: (date) => `Page last reviewed: ${date}.`,
+    bookingIncludesHeading: (o, d) => `Every ${o} to ${d} Booking Includes`,
+    bookingStepsHeading: (o, d) => `Booking Your ${o} to ${d} Transfer`,
+    faqEyebrow: 'FAQ',
+    exploreMore: 'Explore More',
     requestQuote: 'Request a Quote',
     whatsapp: 'WhatsApp',
 
@@ -410,6 +436,22 @@ const ar: UIStrings = {
     faqHeading: 'الأسئلة الشائعة',
 
     bookNow: 'احجز الآن',
+    routeUseCases: {
+        business: 'رحلات العمل والشركات',
+        family: 'رحلات العائلات والمجموعات',
+        umrah: 'العمرة والرحلات الدينية',
+        tourism: 'السياحة والجولات',
+        crossBorder: 'السفر بين دول الخليج',
+        airport: 'التوصيل من المطار وإليه',
+    },
+    availability247: 'متاح على مدار الساعة',
+    labelDistance: 'المسافة',
+    labelCrossing: 'المنفذ',
+    pageLastReviewed: (date) => `آخر مراجعة للصفحة: ${date}.`,
+    bookingIncludesHeading: (o, d) => `ما يشمله كل حجز من ${o} إلى ${d}`,
+    bookingStepsHeading: (o, d) => `خطوات حجز رحلتك من ${o} إلى ${d}`,
+    faqEyebrow: 'الأسئلة الشائعة',
+    exploreMore: 'اكتشف المزيد',
     requestQuote: 'اطلب عرض سعر',
     whatsapp: 'واتساب',
 

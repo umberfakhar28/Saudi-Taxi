@@ -373,15 +373,15 @@ const howItWorksFor = (t: UIStrings) => [
 
 /** Use-case chips computed from data already on every route (tags,
  * isCrossBorder) rather than hand-written near-duplicate lists. */
-function useCasesFor(data: RouteData): string[] {
+function useCasesFor(data: RouteData, u: UIStrings["routeUseCases"]): string[] {
   const cases: string[] = [];
-  if (data.tags.includes("business")) cases.push("Business & corporate travel");
-  cases.push("Family & group travel");
-  if (data.tags.includes("umrah")) cases.push("Umrah & religious travel");
-  if (data.tags.includes("tourism")) cases.push("Tourism & sightseeing");
-  if (data.isCrossBorder || data.tags.includes("gcc")) cases.push("Cross-border GCC travel");
+  if (data.tags.includes("business")) cases.push(u.business);
+  cases.push(u.family);
+  if (data.tags.includes("umrah")) cases.push(u.umrah);
+  if (data.tags.includes("tourism")) cases.push(u.tourism);
+  if (data.isCrossBorder || data.tags.includes("gcc")) cases.push(u.crossBorder);
   if (data.origin.toLowerCase().includes("airport") || data.destination.toLowerCase().includes("airport")) {
-    cases.push("Airport transfer");
+    cases.push(u.airport);
   }
   return cases;
 }
@@ -771,7 +771,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 </div>
               )}
               <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--on-dark)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
-                <ShieldIcon size={16} /> 24/7 Availability
+                <ShieldIcon size={16} /> {t.availability247}
               </div>
             </div>
           </div>
@@ -935,7 +935,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                   <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-6)" }}>{renderInline(p)}</p>
                 ))}
                 <div className={styles.useCaseRow}>
-                  {useCasesFor(data).map((label) => (
+                  {useCasesFor(data, t.routeUseCases).map((label) => (
                     <span key={label} className={styles.useCaseChip}>
                       <CheckCircleIcon size={14} /> {label}
                     </span>
@@ -946,9 +946,9 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                 <div className="card">
                   <div className="card-icon"><CarIcon size={22} /></div>
                   <h3>{t.journeyDetails}</h3>
-                  <p>Distance: <strong style={{ color: "var(--navy)" }}>{data.distance}</strong></p>
+                  <p>{t.labelDistance}: <strong style={{ color: "var(--navy)" }}>{data.distance}</strong></p>
                   <p>{`${t.travelTimeLabel}: `}<strong style={{ color: "var(--navy)" }}>{data.travelTime}</strong></p>
-                  {data.borderCrossingName && <p>Crossing: <strong style={{ color: "var(--navy)" }}>{data.borderCrossingName}</strong></p>}
+                  {data.borderCrossingName && <p>{t.labelCrossing}: <strong style={{ color: "var(--navy)" }}>{data.borderCrossingName}</strong></p>}
                 </div>
                 <div className="card">
                   <div className="card-icon"><MapPinIcon size={22} /></div>
@@ -1069,7 +1069,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
               </div>
               <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginTop: "var(--space-6)" }}>
                 {t.borderDisclaimer}
-                {data.lastReviewed && <> Page last reviewed: {data.lastReviewed}.</>}
+                {data.lastReviewed && <> {t.pageLastReviewed(data.lastReviewed)}</>}
               </p>
             </div>
           </section>
@@ -1084,7 +1084,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
           <div className="container">
             <div className="section-header centered">
               <span className="section-eyebrow">{t.whatsIncluded}</span>
-              <h2 className="section-title">Every {data.origin} to {data.destination} Booking Includes</h2>
+              <h2 className="section-title">{t.bookingIncludesHeading(data.origin, data.destination)}</h2>
             </div>
             <div className="grid-3">
               {includedItemsFor(data, t).map((item) => (
@@ -1234,7 +1234,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
             )}
 
             <div style={{ textAlign: "center", marginTop: "var(--space-10)" }}>
-              <Link href={`/book-online?from=${encodeURIComponent(data.origin)}&to=${encodeURIComponent(data.destination)}&mode=transfers`} className="btn btn-primary btn-lg">Book Now</Link>
+              <Link href={`/book-online?from=${encodeURIComponent(data.origin)}&to=${encodeURIComponent(data.destination)}&mode=transfers`} className="btn btn-primary btn-lg">{t.bookNow}</Link>
             </div>
           </div>
         </section>
@@ -1360,7 +1360,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
           <div className="container">
             <div className="section-header centered">
               <span className="section-eyebrow">{t.howItWorks}</span>
-              <h2 className="section-title">Booking Your {data.origin} to {data.destination} Transfer</h2>
+              <h2 className="section-title">{t.bookingStepsHeading(data.origin, data.destination)}</h2>
             </div>
             <div className="grid-4">
               {howItWorksFor(t).map((step) => (
@@ -1425,7 +1425,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
         <section className="section" style={{ background: "var(--bg-subtle)" }}>
           <div className="container">
             <div className="section-header centered">
-              <span className="section-eyebrow">FAQ</span>
+              <span className="section-eyebrow">{t.faqEyebrow}</span>
               <h2 className="section-title">{locale === 'ar' ? `${data.origin} إلى ${data.destination} — ${t.faqHeading}` : `${data.origin} to ${data.destination} — ${t.faqHeading}`}</h2>
             </div>
             <div style={{ maxWidth: 780, margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
@@ -1440,7 +1440,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
         </section>
 
         {/* Related routes */}
-        <RelatedLinks title={t.relatedRoutes} links={data.relatedRoutes} />
+        <RelatedLinks title={t.relatedRoutes} links={data.relatedRoutes} eyebrow={t.exploreMore} />
 
         {/* Related Cities, Airports, Hotels, Destination & Services */}
         <section className="section">
@@ -1516,7 +1516,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
         {/* CTA */}
         <section style={{ background: "var(--bg-dark)", padding: "var(--space-20) 0", textAlign: "center" }}>
           <div className="container">
-            <span className="section-eyebrow" style={{ background: "rgba(255,255,255,0.08)", borderColor: "var(--line-dark)", color: "var(--on-dark)" }}>Book Now</span>
+            <span className="section-eyebrow" style={{ background: "rgba(255,255,255,0.08)", borderColor: "var(--line-dark)", color: "var(--on-dark)" }}>{t.bookNow}</span>
             <h2 style={{ color: "var(--on-dark)", fontSize: "var(--text-4xl)", margin: "var(--space-4) 0" }}>{data.ctaText}</h2>
             <p style={{ color: "var(--on-dark-muted)", fontSize: "var(--text-lg)", maxWidth: 560, margin: "0 auto var(--space-8)" }}>
               {fare
