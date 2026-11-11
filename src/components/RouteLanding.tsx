@@ -4,7 +4,7 @@ import { preload } from "react-dom";
 import {
   MapPin, Clock, Landmark, Route, Coffee, Tag, Car, ShieldCheck, House, Luggage, Fuel,
   MessageCircle, Users, Briefcase, Plane, FileCheck, BadgeCheck, CalendarCheck, Navigation,
-  Headset, ArrowRight, ChevronDown, Info, Phone, CircleCheck, type LucideIcon,
+  Headset, ArrowRight, ChevronDown, Info, CircleCheck, type LucideIcon,
 } from "lucide-react";
 // Lucide ships no brand logos, so WhatsApp buttons keep the WhatsApp mark.
 import { WhatsAppIcon } from "@/components/Icons";
@@ -12,7 +12,7 @@ import QuickBookForm from "@/components/QuickBookForm";
 import Reveal from "@/components/Reveal";
 import type { RouteData } from "@/components/RoutePage";
 import { serviceSchema, faqSchema, breadcrumbSchema, videoSchema, jsonLd } from "@/lib/jsonld";
-import { waLink, pageWhatsAppMessage, TEL_URL, PHONE_DISPLAY } from "@/lib/contact";
+import { waLink, pageWhatsAppMessage } from "@/lib/contact";
 import { formatRoutePrice } from "@/lib/routePricing";
 import type { LandingIcon, LandingImage, LandingVehicle } from "@/lib/routeLanding";
 import s from "./RouteLanding.module.css";
@@ -126,8 +126,8 @@ function WhatsAppButton({ message, cta }: { message: string; cta: string }) {
 
 /**
  * The designed route layout: hero, booking form, highlights, prices,
- * videos, journey, border, inclusions, booking steps, destinations, FAQ
- * and closing CTA, each its own section. Used by routes that set
+ * videos, journey, border, inclusions, booking steps, destinations, FAQ,
+ * return trip and other routes, each its own section. Used by routes that set
  * `RouteData.landing`; every other route keeps RoutePage.
  *
  * Colours come only from the page tokens at the top of
@@ -536,34 +536,8 @@ export default function RouteLanding({ data }: { data: RouteData }) {
             </div>
           </div>
         </section>
-
-        {/* 13. Final CTA: a navy card on an ivory band, so the page ends
-            clearly above the (also navy) footer instead of running into it. */}
-        <section className={`${s.tint} ${s.finalSection}`}>
-          <div className="container">
-            <div className={s.finalCard}>
-              <div>
-                <span className={s.heroEyebrow}>Book now</span>
-                <h2>{L.finalCta.heading}</h2>
-                <div className={s.priceRow}>
-                  <span className={s.priceBadge}>{hero.priceBadge}</span>
-                  <span className={s.priceNote}>one way, per vehicle</span>
-                </div>
-                <p>{L.finalCta.blurb}</p>
-                <div className={s.ctaRow}>
-                  <WhatsAppButton message={genericMessage} cta="closing-cta" />
-                  <Link href={hero.bookOnlineHref} className="btn btn-primary btn-lg">Book Online</Link>
-                  <a href={TEL_URL} className={`btn btn-lg ${s.btnOnDark}`}>
-                    <Phone size={18} aria-hidden="true" /> {PHONE_DISPLAY}
-                  </a>
-                </div>
-              </div>
-              <figure className={s.finalFigure}>
-                <Media image={L.finalCta.image} ratio="3 / 2" sizes="(max-width: 1024px) calc(100vw - 64px), 520px" />
-              </figure>
-            </div>
-          </div>
-        </section>
+        {/* No closing CTA band: the owner removed it (12 Nov). The page ends
+            with the routes section, then the footer. */}
       </main>
     </>
   );

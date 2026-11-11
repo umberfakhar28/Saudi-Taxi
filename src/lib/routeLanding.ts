@@ -125,5 +125,4 @@ export interface RouteLanding {
         servicesHeading: string;
         services: { href: string; label: string }[];
     };
-    finalCta: { heading: string; blurb: string; image: LandingImage };
 }

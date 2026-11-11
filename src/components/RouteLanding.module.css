@@ -32,15 +32,6 @@
 
 /* ── Shared ─────────────────────────────────────────────────────── */
 
-/* Sections below the fold skip style, layout and paint until they near
-   the viewport, which roughly halves the page's start-up rendering work
-   (Lighthouse, Nov 2026). The content stays in the HTML and the
-   accessibility tree; `auto` remembers each section's real height once
-   rendered, so the scrollbar does not jump. */
-.page > section:nth-of-type(n + 4) {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 1000px;
-}
 
 .tint {
     background: var(--rl-tint);
@@ -1113,45 +1104,6 @@ a.inlineLink {
     letter-spacing: 0.08em;
 }
 
-/* ── Final CTA: navy card on an ivory band ──────────────────────── */
-
-.finalSection {
-    padding: var(--space-16) 0;
-}
-
-.finalCard {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: var(--space-10);
-    align-items: center;
-    padding: var(--space-12);
-    background: var(--rl-primary);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
-    color: var(--rl-on-dark);
-}
-
-.finalCard h2 {
-    color: var(--rl-on-dark);
-    font-size: var(--text-4xl);
-    margin: 0 0 var(--space-4);
-    text-wrap: balance;
-}
-
-.finalCard p {
-    color: var(--rl-on-dark-muted);
-    font-size: var(--text-lg);
-    line-height: 1.7;
-    margin: 0 0 var(--space-6);
-}
-
-.finalFigure {
-    margin: 0;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--rl-line-dark);
-}
-
 /* ── Motion preferences ─────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1170,7 +1122,6 @@ a.inlineLink {
 @media (max-width: 1024px) {
     .heroGrid,
     .timelineGrid,
-    .finalCard,
     .highlights {
         grid-template-columns: 1fr;
         gap: var(--space-8);
@@ -1184,10 +1135,6 @@ a.inlineLink {
     .includedGrid,
     .steps {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .finalCard {
-        padding: var(--space-8);
     }
 }
 
@@ -1207,8 +1154,7 @@ a.inlineLink {
     }
 
     .title,
-    .highlightsText .title,
-    .finalCard h2 {
+    .highlightsText .title {
         font-size: var(--text-3xl);
     }
 
@@ -1336,14 +1282,6 @@ a.inlineLink {
 
     .ctaRow > :global(.btn) {
         flex: 1 1 100%;
-    }
-
-    .finalCard {
-        padding: var(--space-6) var(--space-5);
-    }
-
-    .finalSection {
-        padding: var(--space-10) 0;
     }
 }
 

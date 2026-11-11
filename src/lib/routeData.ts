@@ -619,8 +619,8 @@ export const riyadhToBahrain: RouteData = {
   pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Diriyah", "Riyadh corporate offices"],
   dropoffInfo: "Coordinated onward drop-off anywhere in Bahrain — Manama, Seef District, Bahrain International Circuit, or Bahrain International Airport.",
   vehicleOptions: [
-    { name: "Executive Sedan", capacity: "1–4 passengers", note: "Toyota Camry or Lexus ES, 1,000 SAR one way." },
-    { name: "SUV or Premium Sedan", capacity: "1–6 passengers", note: "GMC Yukon, Chevrolet Tahoe, Toyota Sequoia and more, 1,500 SAR one way." },
+    { name: "Executive Sedan", capacity: "1–4 passengers", note: "Toyota Camry, 1,000 SAR one way." },
+    { name: "SUV or Premium Sedan", capacity: "1–6 passengers", note: "GMC Yukon, Chevrolet Tahoe, Lexus ES, Ford Taurus and more, 1,500 SAR one way." },
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together to Bahrain." },
   ],
   // Short, direct answers (Nov 2026 brief: 25 words or fewer, key fact in
@@ -634,7 +634,7 @@ export const riyadhToBahrain: RouteData = {
     { q: "Can I book a pickup from Riyadh airport to Bahrain?", a: "**Yes**, from King Khalid Airport arrivals, with the **first hour of waiting free**. See our [Riyadh airport taxi](/riyadh-airport-taxi-service)." },
     { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "**Yes, very busy.** Book early and expect longer causeway queues on race weekend." },
     { q: "Can you arrange a return trip as well?", a: "**Yes.** Book both legs together and we confirm the return price on WhatsApp before you travel." },
-    { q: "Do you offer executive vehicles for this route?", a: "**Yes.** Toyota Camry and Lexus ES sedans from **1,000 SAR**, or a GMC Yukon, Chevrolet Tahoe and other SUVs for **1,500 SAR**." },
+    { q: "Do you offer executive vehicles for this route?", a: "**Yes.** A Toyota Camry for **1,000 SAR**, or a Lexus ES, GMC Yukon or Chevrolet Tahoe for **1,500 SAR**." },
   ],
   relatedRoutes: [
     { href: "/distance/bahrain-to-riyadh", label: "Bahrain–Riyadh Distance & Travel Time Guide" },
@@ -651,8 +651,9 @@ export const riyadhToBahrain: RouteData = {
   ],
   reviews: [],
   // Fares confirmed by the owner in the November 2026 briefs: per vehicle,
-  // one way. 1,000 SAR for executive sedans; 1,500 SAR for the Tahoe,
-  // Yukon, Sequoia and Ford Taurus. Vans have no confirmed fare.
+  // one way. 1,000 SAR for the Camry; 1,500 SAR for the Tahoe, Yukon,
+  // Sequoia, Ford Taurus and Lexus ES (Lexus confirmed 12 Nov). Vans have
+  // no confirmed fare.
   landing: {
     hero: {
       subheading: "One private car and one licensed driver from your door in Riyadh to your address in Bahrain, at a fixed fare agreed before you travel.",
@@ -708,10 +709,9 @@ export const riyadhToBahrain: RouteData = {
       // and are listed for the owner to confirm.
       groups: [
         {
-          heading: "Sedan · from 1,000 SAR",
+          heading: "Sedan · 1,000 SAR",
           vehicles: [
             r2bVehicle("toyota-camry", "Toyota Camry", "Executive Sedan", "1–4", "3", 1000),
-            r2bVehicle("lexus-es", "Lexus ES", "Executive Sedan", "1–4", "3", 1000),
           ],
         },
         {
@@ -723,8 +723,9 @@ export const riyadhToBahrain: RouteData = {
             r2bVehicle("ford-expedition", "Ford Expedition", "SUV", "1–5", "4", 1500),
             r2bVehicle("toyota-land-cruiser", "Toyota Land Cruiser", "SUV", "1–5", "4", 1500),
             r2bVehicle("toyota-land-cruiser-prado", "Toyota Land Cruiser Prado", "SUV", "1–6", undefined, 1500),
-            // A sedan, not an SUV: priced at 1,500 SAR on the owner's instruction.
+            // Sedans, not SUVs: priced at 1,500 SAR on the owner's instruction.
             r2bVehicle("ford-taurus", "Ford Taurus", "Premium Sedan", "1–3", "2", 1500),
+            r2bVehicle("lexus-es", "Lexus ES", "Premium Sedan", "1–4", "3", 1500),
           ],
         },
         {
@@ -860,11 +861,6 @@ export const riyadhToBahrain: RouteData = {
         { href: "/hotels/riyadh/the-ritz-carlton-riyadh", label: "The Ritz-Carlton Riyadh transfers" },
         { href: "/private-taxi", label: "Private taxi service" },
       ],
-    },
-    finalCta: {
-      heading: "Book Your Riyadh to Bahrain Taxi",
-      blurb: "One private car from your door in Riyadh to your address in Bahrain, at a fixed fare agreed before you travel.",
-      image: { src: `${R2B_IMAGES}/chauffeur-executive-car.webp`, alt: "Chauffeur opening the door of a black executive car for a passenger", width: 1200, height: 801 },
     },
   },
 };

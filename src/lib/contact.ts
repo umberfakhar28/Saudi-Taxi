@@ -40,7 +40,7 @@ export function waLink(message: string): string {
 
 /**
  * Pages whose generic WhatsApp buttons (header, floating button, mobile
- * bar, and the page's own hero and closing buttons) send one fixed
+ * bar, and the page's own hero and how-to-book buttons) send one fixed
  * message, so the team sees the route at a glance. Every other page keeps
  * its existing message. Keyed by pathname.
  */
