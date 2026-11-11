@@ -163,6 +163,7 @@ export default function RouteLanding({ data }: { data: RouteData }) {
       description: plain(data.intro),
       url: `/${data.slug}`,
       areaServed: [data.origin, data.destination],
+      airportsServed: L.airportsServed,
       image: hero.image.src,
       // One Offer per vehicle with a confirmed fare, as shown on the page.
       offers: vehicles.filter((v) => v.amount !== null).map((v) => ({
@@ -337,7 +338,30 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                 </div>
               );
             })}
-            <p className={s.priceFootnote}>{prices.note}</p>
+            {(prices.privateVsShared || prices.fareFactors) && (
+              <div className={s.fareExtras}>
+                {prices.privateVsShared && (
+                  <div className={s.noteCard} role="note">
+                    <span className={s.icon} aria-hidden="true"><Info size={20} aria-hidden="true" /></span>
+                    <div>
+                      <h3>{prices.privateVsShared.title}</h3>
+                      <p>{prices.privateVsShared.body}</p>
+                    </div>
+                  </div>
+                )}
+                {prices.fareFactors && (
+                  <div className={s.factorCard}>
+                    <h3>{prices.fareFactors.heading}</h3>
+                    <ul>
+                      {prices.fareFactors.items.map((it) => (
+                        <li key={it.label}><Icon name={it.icon} size={18} chip /> {it.label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+            <p className={`${s.priceFootnote} ${s.inlineLink}`}>{rich(prices.note)}</p>
             <p className={s.reviewed}>Prices confirmed {prices.confirmedOn}.</p>
           </div>
         </section>
@@ -390,6 +414,35 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                 <Media image={L.timeline.image} ratio="16 / 9" sizes="(max-width: 1024px) calc(100vw - 32px), 560px" />
               </figure>
             </div>
+
+            {/* Airport sub-block: part of the journey, not its own section. */}
+            {L.timeline.airport && (
+              <div className={s.airport}>
+                <h3 className={s.airportTitle}>
+                  <Icon name="plane" chip /> {L.timeline.airport.heading}
+                </h3>
+                <div className={s.airportGrid}>
+                  <div className={s.card}>
+                    <h4>{L.timeline.airport.pickup.title}</h4>
+                    <ul className={s.checkList}>
+                      {L.timeline.airport.pickup.points.map((x) => (
+                        <li key={x}><span className={s.icon} aria-hidden="true"><CircleCheck size={18} aria-hidden="true" /></span> {x}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className={s.card}>
+                    <h4>{L.timeline.airport.dropoff.title}</h4>
+                    <p>{L.timeline.airport.dropoff.body}</p>
+                  </div>
+                </div>
+                <div className={s.airportFoot}>
+                  <p className={s.inlineLink}>{rich(L.timeline.airport.links)}</p>
+                  <a href={waLink(L.timeline.airport.whatsappMessage)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer" data-wa-cta="airport-block">
+                    <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={16} /></span> {L.timeline.airport.ctaLabel}
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -421,6 +474,7 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                 </ul>
               </div>
             </div>
+            {L.crossing.selfDrive && <p className={s.selfDrive}>{L.crossing.selfDrive}</p>}
             <p className={s.callout} role="note">
               <span className={s.icon} aria-hidden="true"><Info size={20} aria-hidden="true" /></span>
               {L.crossing.callout}
@@ -429,8 +483,45 @@ export default function RouteLanding({ data }: { data: RouteData }) {
           </div>
         </section>
 
+        {/* 7b. Ways to travel: a real table on wide screens, stacked cards
+            on phones (CSS). Our row carries the accent and a badge. */}
+        {L.waysToTravel && (
+          <section className={`section ${s.surface}`}>
+            <div className="container">
+              <SectionHeader eyebrow={L.waysToTravel.eyebrow} title={L.waysToTravel.heading} intro={L.waysToTravel.intro} />
+              <table className={s.compare}>
+                <thead>
+                  <tr>{L.waysToTravel.head.map((h) => <th key={h} scope="col">{h}</th>)}</tr>
+                </thead>
+                <tbody>
+                  {L.waysToTravel.rows.map((r) => (
+                    <tr key={r.option} className={r.recommended ? s.compareOurs : undefined}>
+                      <th scope="row">
+                        {r.option}
+                        {r.recommended && <span className={s.recommended}>Recommended</span>}
+                      </th>
+                      <td data-label={L.waysToTravel!.head[1]}>
+                        <span className={r.doorToDoor ? s.yes : s.no} aria-hidden="true">{r.doorToDoor ? "✔" : "✖"}</span>
+                        <span className="sr-only">{r.doorToDoor ? "Yes" : "No"}</span>
+                      </td>
+                      <td data-label={L.waysToTravel!.head[2]}>{r.connections}</td>
+                      <td data-label={L.waysToTravel!.head[3]}>{r.time}</td>
+                      <td data-label={L.waysToTravel!.head[4]}>{r.bestFor}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className={s.takeaway}>{L.waysToTravel.takeaway}</p>
+              <div className={`${s.ctaRow} ${s.stepsCta}`}>
+                <WhatsAppButton message={genericMessage} cta="ways-to-travel" />
+                <Link href={hero.bookOnlineHref} className="btn btn-primary btn-lg">Book Online</Link>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* 8. What's included: staggered fade-up as it scrolls in. */}
-        <section className={`section ${s.surface}`}>
+        <section className={`section ${s.tint}`}>
           <div className="container">
             <SectionHeader eyebrow="What's included" title={L.included.heading} />
             <Reveal className={s.includedGrid}>
@@ -448,7 +539,7 @@ export default function RouteLanding({ data }: { data: RouteData }) {
         </section>
 
         {/* 9. How to book */}
-        <section className={`section ${s.tint}`}>
+        <section className={`section ${s.surface}`}>
           <div className="container">
             <SectionHeader eyebrow="How it works" title={L.howToBook.heading} />
             <ol className={s.steps}>
@@ -469,7 +560,7 @@ export default function RouteLanding({ data }: { data: RouteData }) {
         </section>
 
         {/* 10. Nearby destinations */}
-        <section className={`section ${s.surface}`}>
+        <section className={`section ${s.tint}`}>
           <div className="container">
             <SectionHeader eyebrow="Explore" title={L.nearby.heading} intro={L.nearby.intro} />
             <div className={s.destGrid}>
@@ -488,7 +579,7 @@ export default function RouteLanding({ data }: { data: RouteData }) {
         </section>
 
         {/* 11. FAQ. Answers are in the HTML whether or not a question is open. */}
-        <section className={`section ${s.tint}`}>
+        <section className={`section ${s.surface}`}>
           <div className="container">
             <SectionHeader eyebrow="FAQ" title={`${route} Taxi: Your Questions Answered`} />
             <div className={s.faqList}>
@@ -507,7 +598,7 @@ export default function RouteLanding({ data }: { data: RouteData }) {
         </section>
 
         {/* 12. Return trip and other popular routes */}
-        <section className={`section ${s.surface}`}>
+        <section className={`section ${s.tint}`}>
           <div className="container">
             <div className={s.returnStrip}>
               <p>{L.returnTrip.text}</p>

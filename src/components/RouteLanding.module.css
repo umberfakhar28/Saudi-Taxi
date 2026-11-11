@@ -1104,6 +1104,225 @@ a.inlineLink {
     letter-spacing: 0.08em;
 }
 
+/* ── Fare note and fare factors (prices section) ────────────────── */
+
+.fareExtras {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--space-5);
+    margin-top: var(--space-10);
+}
+
+.noteCard,
+.factorCard {
+    padding: var(--space-5) var(--space-6);
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
+    border-radius: var(--radius-lg);
+}
+
+.noteCard {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    border-inline-start: 3px solid var(--rl-accent);
+}
+
+.noteCard .icon {
+    margin-top: 2px;
+}
+
+.noteCard h3,
+.factorCard h3 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-base);
+    color: var(--rl-primary);
+}
+
+.noteCard p {
+    margin: 0;
+    color: var(--rl-text);
+    font-size: var(--text-sm);
+    line-height: 1.7;
+}
+
+.factorCard ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+}
+
+.factorCard li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--rl-text);
+}
+
+.factorCard .chip {
+    width: 36px;
+    height: 36px;
+}
+
+/* ── Airport sub-block (journey section) ────────────────────────── */
+
+.airport {
+    margin-top: var(--space-12);
+    padding-top: var(--space-10);
+    border-top: 1px solid var(--rl-border);
+}
+
+.airportTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-5);
+    font-size: var(--text-2xl);
+    color: var(--rl-primary);
+}
+
+.airportGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+}
+
+.airportGrid .card {
+    padding: var(--space-6);
+}
+
+.airportGrid h4 {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-lg);
+    color: var(--rl-primary);
+}
+
+.airportGrid p {
+    margin: 0;
+    color: var(--rl-text);
+    line-height: 1.7;
+}
+
+.airportFoot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+}
+
+.airportFoot p {
+    margin: 0;
+    color: var(--rl-muted);
+    font-size: var(--text-sm);
+}
+
+.airportFoot :global(.btn) {
+    min-height: 44px;
+}
+
+/* ── Causeway: driving across yourself ──────────────────────────── */
+
+.selfDrive {
+    margin: var(--space-6) 0 0;
+    color: var(--rl-text);
+    line-height: 1.7;
+    max-width: 820px;
+}
+
+/* ── Ways to travel: comparison table ───────────────────────────── */
+
+.compare {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--rl-surface);
+    border: 1px solid var(--rl-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    font-size: var(--text-sm);
+}
+
+.compare th,
+.compare td {
+    padding: var(--space-4) var(--space-5);
+    text-align: start;
+    vertical-align: top;
+    border-bottom: 1px solid var(--rl-border);
+    color: var(--rl-text);
+}
+
+.compare thead th {
+    background: var(--rl-primary);
+    color: var(--rl-on-dark);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 0;
+}
+
+.compare tbody tr:last-child th,
+.compare tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.compare tbody th {
+    font-weight: 700;
+    color: var(--rl-primary);
+}
+
+/* Our row: accent tint, accent rule, badge. */
+.compareOurs th,
+.compareOurs td {
+    background: var(--rl-accent-veil);
+}
+
+.compareOurs th {
+    box-shadow: inset 4px 0 0 var(--rl-accent);
+}
+
+.recommended {
+    display: inline-block;
+    margin-inline-start: var(--space-2);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background: var(--rl-accent);
+    color: var(--rl-primary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+}
+
+.yes,
+.no {
+    font-weight: 800;
+    font-size: var(--text-base);
+}
+
+.yes {
+    color: var(--success);
+}
+
+.no {
+    color: var(--rl-muted);
+}
+
+.takeaway {
+    max-width: 820px;
+    margin: var(--space-6) auto 0;
+    text-align: center;
+    color: var(--rl-text);
+    line-height: 1.7;
+}
+
 /* ── Motion preferences ─────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1170,6 +1389,86 @@ a.inlineLink {
 
     .carGrid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fareExtras,
+    .airportGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .airportTitle {
+        font-size: var(--text-xl);
+    }
+
+    /* Comparison table becomes one card per option, each cell labelled. */
+    .compare,
+    .compare tbody,
+    .compare tr,
+    .compare th,
+    .compare td {
+        display: block;
+    }
+
+    .compare {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        overflow: visible;
+    }
+
+    .compare thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .compare tbody {
+        display: grid;
+        gap: var(--space-3);
+    }
+
+    .compare tbody tr {
+        background: var(--rl-surface);
+        border: 1px solid var(--rl-border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .compare tbody tr.compareOurs {
+        border-color: var(--rl-accent);
+        box-shadow: inset 0 0 0 1px var(--rl-accent);
+    }
+
+    .compare tbody th {
+        padding: var(--space-4) var(--space-4) var(--space-2);
+        border-bottom: 0;
+        font-size: var(--text-base);
+        box-shadow: none;
+    }
+
+    .compare td {
+        display: grid;
+        grid-template-columns: 9.5em minmax(0, 1fr);
+        gap: var(--space-3);
+        padding: var(--space-2) var(--space-4);
+        border-bottom: 0;
+    }
+
+    .compare td:last-child {
+        padding-bottom: var(--space-4);
+    }
+
+    .compare td::before {
+        content: attr(data-label);
+        font-size: var(--text-xs);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--rl-muted);
+        padding-top: 2px;
     }
 
     .crossingGrid {
@@ -1280,7 +1579,8 @@ a.inlineLink {
         padding: var(--space-5);
     }
 
-    .ctaRow > :global(.btn) {
+    .ctaRow > :global(.btn),
+    .airportFoot :global(.btn) {
         flex: 1 1 100%;
     }
 }

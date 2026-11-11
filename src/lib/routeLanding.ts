@@ -36,6 +36,9 @@ export interface LandingVehicle {
 }
 
 export interface RouteLanding {
+    /** Airports served besides the origin and destination cities, added to
+     *  the Service schema's areaServed. */
+    airportsServed?: { name: string; iataCode: string }[];
     hero: {
         subheading: string;
         chips: { icon: LandingIcon; label: string }[];
@@ -71,6 +74,11 @@ export interface RouteLanding {
         currency: "SAR";
         confirmedOn: string;
         groups: { heading: string; vehicles: LandingVehicle[] }[];
+        /** Short note card: private car vs a shared seat. */
+        privateVsShared?: { title: string; body: string };
+        /** What moves the fare, as a short icon list. No figures until the
+         *  owner confirms them. */
+        fareFactors?: { heading: string; items: { icon: LandingIcon; label: string }[] };
         note: string;
     };
     videos?: {
@@ -94,6 +102,26 @@ export interface RouteLanding {
         intro: string;
         steps: { icon: LandingIcon; title: string; body: string }[];
         image: LandingImage;
+        /** Airport sub-block inside the journey section (an H3, not a
+         *  section of its own). */
+        airport?: {
+            heading: string;
+            pickup: { title: string; points: string[] };
+            dropoff: { title: string; body: string };
+            /** May carry [anchor](/path) links. */
+            links: string;
+            whatsappMessage: string;
+            ctaLabel: string;
+        };
+    };
+    /** Comparison of the ways to make the trip; our row is `recommended`. */
+    waysToTravel?: {
+        eyebrow: string;
+        heading: string;
+        intro?: string;
+        head: [string, string, string, string, string];
+        rows: { option: string; doorToDoor: boolean; connections: string; time: string; bestFor: string; recommended?: boolean }[];
+        takeaway: string;
     };
     crossing: {
         heading: string;
@@ -102,6 +130,8 @@ export interface RouteLanding {
         driver: string[];
         passengerHeading: string;
         passenger: string[];
+        /** Driving across yourself: one short paragraph. */
+        selfDrive?: string;
         callout: string;
         outro: string;
     };

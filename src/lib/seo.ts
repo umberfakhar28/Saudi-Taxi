@@ -25,6 +25,7 @@ export function generatePageMetadata({
   ogImage,
   ogImageAlt,
   hreflangPath,
+  brandSuffix = true,
 }: {
   title: string;
   description: string;
@@ -37,9 +38,13 @@ export function generatePageMetadata({
   ogImageAlt?: string;
   /** Path (without locale prefix) used to build hreflang alternates when an Arabic version exists at /ar<hreflangPath>. */
   hreflangPath?: string;
+  /** false drops " | Gulf Trip Service" for a title that already uses its
+   *  ~60 characters on keywords. Google shows the site name separately. */
+  brandSuffix?: boolean;
 }): Metadata {
   const url = `${SITE_CONFIG.baseUrl}${path}`;
-  const brandSuffix = ` | ${SITE_CONFIG.siteName}`;
+  const includeBrand = brandSuffix;
+  const brandSuffixText = ` | ${SITE_CONFIG.siteName}`;
   // The old check was `title.endsWith(brandSuffix)`, an exact match on
   // " | Gulf Trip Service". 22 titles ended with the shorter " | Gulf Trip"
   // instead, so they failed that test and had a second brand appended —
@@ -57,7 +62,7 @@ export function generatePageMetadata({
   const base = title.replace(/\s*\|\s*Gulf Trip(?:\s+Service)?\s*$/i, "").trim();
   // Guard against a title that is nothing but the brand collapsing to "".
   const titleBase = base.length > 0 ? base : title.trim();
-  const fullTitle = `${titleBase}${brandSuffix}`;
+  const fullTitle = includeBrand ? `${titleBase}${brandSuffixText}` : titleBase;
   const image = `${SITE_CONFIG.baseUrl}${ogImage ?? SITE_CONFIG.defaultOgImage}`;
   const imageAlt = ogImageAlt ?? `${SITE_CONFIG.siteName} — ${titleBase}`;
 

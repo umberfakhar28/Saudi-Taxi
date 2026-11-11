@@ -118,11 +118,14 @@ export function serviceSchema({
   areaServed,
   offers,
   image,
+  airportsServed,
 }: {
   name: string;
   description: string;
   url: string;
   areaServed: string[];
+  /** Airports served as well as the cities, as schema.org Airport (a Place). */
+  airportsServed?: { name: string; iataCode: string }[];
   /** One Offer per vehicle with a confirmed fare. Must be the same figures
    * the page shows; unpriced vehicles are left out, not given a guess. */
   offers?: { name: string; price: number; priceCurrency: string }[];
@@ -152,7 +155,10 @@ export function serviceSchema({
     description,
     ...(image && { image: `${BASE_URL}${image}` }),
     url: `${BASE_URL}${url}`,
-    areaServed: areaServed.map((city) => ({ "@type": "City", name: city })),
+    areaServed: [
+      ...areaServed.map((city) => ({ "@type": "City", name: city })),
+      ...(airportsServed ?? []).map((a) => ({ "@type": "Airport", name: a.name, iataCode: a.iataCode })),
+    ],
     availableChannel: {
       "@type": "ServiceChannel",
       serviceUrl: `${BASE_URL}/book-online`,
