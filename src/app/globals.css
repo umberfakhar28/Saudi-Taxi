@@ -506,6 +506,26 @@ ul { list-style: none; }
   .lead-intro { font-size: var(--text-base); }
 }
 
+/* Breadcrumbs sit at the reading start on every page: left in English,
+   right in Arabic, because text-align: start follows the page direction.
+   The hero around them stays centred. */
+.breadcrumb {
+  text-align: start;
+}
+
+/* Some heroes place the breadcrumb straight inside .page-hero, without a
+   .container. Give it the container's width and gutter so a start-aligned
+   breadcrumb never touches the screen edge. */
+.page-hero > .breadcrumb {
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+@media (max-width: 480px) {
+  .page-hero > .breadcrumb { padding-inline: var(--space-4); }
+}
+
 .page-hero .breadcrumb {
   margin-top: var(--space-6);
   font-size: var(--text-sm);
@@ -1090,7 +1110,7 @@ ul { list-style: none; }
   padding: 0;
   margin: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
