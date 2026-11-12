@@ -63,20 +63,56 @@ const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: Na
     // actually fit in the top bar below 900px (see the overflow root-cause
     // note in Navbar.module.css).
     const [logoSize, setLogoSize] = useState(44);
+    // Below 960px the links live in the slide-in drawer (Navbar.module.css),
+    // where sections open on tap only, never on hover.
+    const [isDrawer, setIsDrawer] = useState(false);
     useEffect(() => {
-        const mq = window.matchMedia('(max-width: 900px)');
-        const apply = () => setLogoSize(mq.matches ? 32 : 44);
+        const logoMq = window.matchMedia('(max-width: 900px)');
+        const drawerMq = window.matchMedia('(max-width: 960px)');
+        const apply = () => {
+            setLogoSize(logoMq.matches ? 32 : 44);
+            setIsDrawer(drawerMq.matches);
+        };
         apply();
-        mq.addEventListener('change', apply);
-        return () => mq.removeEventListener('change', apply);
+        logoMq.addEventListener('change', apply);
+        drawerMq.addEventListener('change', apply);
+        return () => {
+            logoMq.removeEventListener('change', apply);
+            drawerMq.removeEventListener('change', apply);
+        };
     }, []);
+
+    // However the drawer was closed (hamburger, bottom-nav Menu, a link,
+    // the backdrop, Escape), it reopens showing only the main headings.
+    // Adjusted during render rather than in an effect (React's "storing
+    // information from previous renders" pattern).
+    const [prevMenuOpen, setPrevMenuOpen] = useState(menuOpen);
+    if (menuOpen !== prevMenuOpen) {
+        setPrevMenuOpen(menuOpen);
+        if (!menuOpen) setOpenDropdown(null);
+    }
 
     const close = () => {
         onCloseMenu();
         setOpenDropdown(null);
     };
 
-    const toggle = (key: DropdownKey) => setOpenDropdown((cur) => (cur === key ? null : key));
+    const toggle = (key: DropdownKey, button?: HTMLElement) => {
+        setOpenDropdown((cur) => (cur === key ? null : key));
+        // In the drawer, opening one section collapses the one above it,
+        // which can leave the tapped heading scrolled out of view above the
+        // drawer's top. Bring it back once the new layout has rendered.
+        // The drawer is scrolled directly (not scrollIntoView) so the
+        // scroll-locked page behind it never moves.
+        if (!isDrawer || !button) return;
+        requestAnimationFrame(() => {
+            const drawer = button.closest('nav')?.querySelector<HTMLElement>(`.${styles.navLinks}`);
+            if (!drawer) return;
+            const offset = button.getBoundingClientRect().top - drawer.getBoundingClientRect().top
+                - parseFloat(getComputedStyle(drawer).paddingTop);
+            if (offset < 0) drawer.scrollTop += offset;
+        });
+    };
 
     // Mobile drawer: lock body scroll while open, close on Escape, and
     // restore scroll on unmount so navigating away never leaves the page
@@ -133,12 +169,21 @@ const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: Na
                         <div
                             key={key}
                             className={styles.dropdown}
-                            onMouseEnter={() => setOpenDropdown(key)}
-                            onMouseLeave={() => setOpenDropdown((cur) => (cur === key ? null : cur))}
+                            // Hover opens a dropdown only for a real mouse on the
+                            // desktop row. On a phone a tap fires mouseenter and
+                            // then click, so the hover opened the section and the
+                            // click's toggle shut it again: the "blink", and the
+                            // second tap that was needed.
+                            onPointerEnter={(e) => {
+                                if (e.pointerType === 'mouse' && !isDrawer) setOpenDropdown(key);
+                            }}
+                            onPointerLeave={(e) => {
+                                if (e.pointerType === 'mouse' && !isDrawer) setOpenDropdown((cur) => (cur === key ? null : cur));
+                            }}
                         >
                             <button
                                 className={styles.link}
-                                onClick={() => toggle(key)}
+                                onClick={(e) => toggle(key, e.currentTarget)}
                                 aria-expanded={openDropdown === key}
                             >
                                 {label}

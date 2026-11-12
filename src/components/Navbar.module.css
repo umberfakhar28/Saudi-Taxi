@@ -508,7 +508,15 @@
         width: 100%;
     }
 
+    /* Closed sections are removed from the flow, not just made invisible:
+       the desktop hide (opacity + visibility) kept each closed list's full
+       height, so only "Services" fitted on screen and the other headings
+       sat 1,000+ px further down the drawer. */
     .dropdownMenu {
+        display: none;
+        opacity: 1;
+        visibility: visible;
+        transition: none;
         position: static;
         transform: none;
         box-shadow: none;
@@ -527,6 +535,7 @@
     }
 
     .dropdownMenuOpen {
+        display: flex;
         transform: none;
     }
 
