@@ -9,9 +9,9 @@ import { riyadhToBahrain } from "@/lib/routeData";
 // than pushing the title past what Google displays; Google shows the site
 // name above the title anyway.
 export const metadata = generatePageMetadata({
-  title: "Riyadh to Bahrain Taxi Fare from 1,000 SAR | Private Car",
+  title: "Riyadh to Bahrain Taxi Fare from 1,250 SAR | Private Car",
   brandSuffix: false,
-  description: "Private Riyadh to Bahrain taxi & airport transfer via King Fahd Causeway. ~470 km, 4.5–5.5 hrs. Sedan 1,000 SAR, SUV 1,500 SAR. Book on WhatsApp.",
+  description: "Private Riyadh to Bahrain taxi & airport transfer via King Fahd Causeway. ~470 km, 4.5–5.5 hrs. Sedan 1,250 SAR, SUV 1,500 SAR. Book on WhatsApp.",
   path: "/riyadh-to-bahrain-taxi-service",
   hreflangPath: "/riyadh-to-bahrain-taxi-service",
   ogImage: "/images/routes/luxury-riyadh-to-bahrain-transfer-og.jpg",

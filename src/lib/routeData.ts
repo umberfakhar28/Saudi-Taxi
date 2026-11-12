@@ -591,7 +591,7 @@ export const riyadhToBahrain: RouteData = {
   eyebrow: "Long-Distance Border Transfer",
   // No dash in the H1 (Nov 2026 brief). Rendered by RouteLanding.
   h1: "Riyadh to Bahrain Taxi and Executive Car Transfer",
-  intro: "A private Riyadh to Bahrain taxi takes you from any Riyadh address across the King Fahd Causeway to Manama, Seef, Bahrain International Circuit or Bahrain International Airport, in one vehicle with one licensed driver. The drive is about 470 km and usually takes 4.5 to 5.5 hours including the causeway. Fixed fares are 1,000 SAR one way in an executive sedan and 1,500 SAR in an SUV or premium sedan.",
+  intro: "A private Riyadh to Bahrain taxi takes you from any Riyadh address across the King Fahd Causeway to Manama, Seef, Bahrain International Circuit or Bahrain International Airport, in one vehicle with one licensed driver. The drive is about 470 km and usually takes 4.5 to 5.5 hours including the causeway. Fixed fares are 1,250 SAR one way in an executive sedan and 1,500 SAR in an SUV or premium sedan.",
   breadcrumbLabel: "Riyadh to Bahrain Taxi",
   distance: "~470 km",
   travelTime: "4.5 – 5.5 hours (incl. causeway)",
@@ -619,7 +619,7 @@ export const riyadhToBahrain: RouteData = {
   pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Diriyah", "Riyadh corporate offices"],
   dropoffInfo: "Coordinated onward drop-off anywhere in Bahrain — Manama, Seef District, Bahrain International Circuit, or Bahrain International Airport.",
   vehicleOptions: [
-    { name: "Executive Sedan", capacity: "1–4 passengers", note: "Toyota Camry, 1,000 SAR one way." },
+    { name: "Executive Sedan", capacity: "1–4 passengers", note: "Toyota Camry, 1,250 SAR one way." },
     { name: "SUV or Premium Sedan", capacity: "1–6 passengers", note: "GMC Yukon, Chevrolet Tahoe, Lexus ES, Ford Taurus and more, 1,500 SAR one way." },
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together to Bahrain." },
   ],
@@ -629,16 +629,16 @@ export const riyadhToBahrain: RouteData = {
   // and Bahrain taxi cost added; per-car, journey time and same-vehicle
   // answers merged into them. No competitor questions (owner, 12 Nov).
   faqs: [
-    { q: "How much is a taxi from Riyadh to Bahrain?", a: "**1,000 SAR** in a sedan, **1,500 SAR** in an SUV or premium sedan, one way per car. Vans are priced on request." },
+    { q: "How much is a taxi from Riyadh to Bahrain?", a: "**1,250 SAR** in a sedan, **1,500 SAR** in an SUV or premium sedan, one way per car. Vans are priced on request." },
     { q: "How far is Riyadh from Bahrain by road?", a: "About **470 km** via Highway 40 and the King Fahd Causeway, usually **4.5–5.5 hours** door to door." },
     { q: "Can you drive from Saudi Arabia to Bahrain?", a: "**Yes**, over the **King Fahd Causeway**. Our car and driver cross with you, so you never change vehicles." },
     { q: "What documents do I need to cross into Bahrain by road?", a: "A **passport valid for 6+ months** plus a Bahrain visa, or a GCC ID. Saudi residents also need an Iqama and exit and re-entry visa." },
     { q: "Do you pick up from Riyadh airport?", a: "**Yes**, from every King Khalid Airport terminal, with **flight tracking** and the **first hour of waiting free**." },
     { q: "Is there a bus from Riyadh to Bahrain?", a: "**Yes**, intercity buses run station to station on a fixed timetable. A **private taxi goes door to door** and leaves when you're ready." },
-    { q: "Is a taxi in Bahrain expensive?", a: "From Riyadh it's a **fixed fare**, with no meter running. Four people sharing a 1,000 SAR sedan pay **250 SAR each**." },
+    { q: "Is a taxi in Bahrain expensive?", a: "From Riyadh it's a **fixed fare**, with no meter running. Four people sharing a 1,250 SAR sedan pay **about 313 SAR each**." },
     { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "**Yes, very busy.** Book early and expect longer causeway queues on race weekend." },
     { q: "Can you arrange a return trip as well?", a: "**Yes.** Book both legs together and we confirm the return price on WhatsApp before you travel." },
-    { q: "Do you offer executive vehicles for this route?", a: "**Yes.** A Toyota Camry for **1,000 SAR**, or a Lexus ES, GMC Yukon or Chevrolet Tahoe for **1,500 SAR**." },
+    { q: "Do you offer executive vehicles for this route?", a: "**Yes.** A Toyota Camry for **1,250 SAR**, or a Lexus ES, GMC Yukon or Chevrolet Tahoe for **1,500 SAR**." },
   ],
   relatedRoutes: [
     { href: "/distance/bahrain-to-riyadh", label: "Bahrain–Riyadh Distance & Travel Time Guide" },
@@ -655,7 +655,7 @@ export const riyadhToBahrain: RouteData = {
   ],
   reviews: [],
   // Fares confirmed by the owner in the November 2026 briefs: per vehicle,
-  // one way. 1,000 SAR for the Camry; 1,500 SAR for the Tahoe, Yukon,
+  // one way. 1,250 SAR for the Camry (was 1,000 until 12 Nov); 1,500 SAR for the Tahoe, Yukon,
   // Sequoia, Ford Taurus and Lexus ES (Lexus confirmed 12 Nov). Vans have
   // no confirmed fare.
   landing: {
@@ -668,7 +668,7 @@ export const riyadhToBahrain: RouteData = {
         { icon: "car", label: "Same car across the causeway" },
         { icon: "messageCircle", label: "WhatsApp booking" },
       ],
-      priceBadge: "From 1,000 SAR",
+      priceBadge: "Starting from 1,250 SAR",
       bookOnlineHref: "/book-online?from=Riyadh&to=Bahrain&mode=transfers",
       image: {
         src: "/images/routes/luxury-riyadh-to-bahrain-transfer.webp",
@@ -691,14 +691,14 @@ export const riyadhToBahrain: RouteData = {
     },
     highlights: {
       heading: "Riyadh to Bahrain Route at a Glance",
-      intro: "Private, door-to-door transfer from any Riyadh address to Manama, Seef, BIC or Bahrain Airport. One car, one driver, about **470 km by road** across the King Fahd Causeway, in **4.5–5.5 hours**, from **1,000 SAR**.",
+      intro: "Private, door-to-door transfer from any Riyadh address to Manama, Seef, BIC or Bahrain Airport. One car, one driver, about **470 km by road** across the King Fahd Causeway, in **4.5–5.5 hours**, from **1,250 SAR**.",
       items: [
         { icon: "mapPin", label: "Distance", value: "~470 km" },
         { icon: "clock", label: "Journey time", value: "4.5–5.5 hrs incl. causeway", emphasis: true },
         { icon: "landmark", label: "Border", value: "King Fahd Causeway" },
         { icon: "route", label: "Route", value: "Highway 40 via Dammam and Al Khobar" },
         { icon: "coffee", label: "Rest stop", value: "1 rest stop included" },
-        { icon: "tag", label: "Fixed fare", value: "From 1,000 SAR", emphasis: true },
+        { icon: "tag", label: "Fixed fare", value: "Starting from 1,250 SAR", emphasis: true },
       ],
       note: "Times are estimates and vary with traffic and causeway queues.",
       link: { href: "/distance/bahrain-to-riyadh", label: "Riyadh to Bahrain distance & travel time guide" },
@@ -714,9 +714,9 @@ export const riyadhToBahrain: RouteData = {
       // and are listed for the owner to confirm.
       groups: [
         {
-          heading: "Sedan · 1,000 SAR",
+          heading: "Sedan · 1,250 SAR",
           vehicles: [
-            r2bVehicle("toyota-camry", "Toyota Camry", "Executive Sedan", "1–4", "3", 1000, "Toyota Camry, a Riyadh to Bahrain cab for up to four"),
+            r2bVehicle("toyota-camry", "Toyota Camry", "Executive Sedan", "1–4", "3", 1250, "Toyota Camry, a Riyadh to Bahrain cab for up to four"),
           ],
         },
         {
@@ -745,7 +745,7 @@ export const riyadhToBahrain: RouteData = {
       ],
       privateVsShared: {
         title: "Private car or a shared seat?",
-        body: "Shared seat services charge per person and wait until the car is full. A private car leaves when you are ready and goes door to door, and a family of three or four in a 1,000 SAR sedan pays 250 to 333 SAR each.",
+        body: "Shared seat services charge per person and wait until the car is full. A private car leaves when you are ready and goes door to door, and a family of three or four in a 1,250 SAR sedan pays about 313 to 417 SAR each.",
       },
       // Airport waiting confirmed by the owner 12 Nov: first hour free,
       // extra time charged. The extra-stop charge has no figure yet.
