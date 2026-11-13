@@ -1,3 +1,5 @@
+import { toAsciiDigits } from './digits';
+
 /**
  * Validation and shape for a Contact Us enquiry.
  *
@@ -100,7 +102,7 @@ export function contactMessageText(locale: ContactLocale, key: string): string {
  * outcome than accepting an odd-looking one.
  */
 export function isPlausiblePhone(raw: string): boolean {
-    const digits = raw.replace(/\D/g, '');
+    const digits = toAsciiDigits(raw).replace(/\D/g, '');
     return digits.length >= 8 && digits.length <= 15;
 }
 
@@ -119,7 +121,8 @@ export function normalizeContactInput(raw: Partial<Record<keyof ContactMessageIn
     return {
         name: s(raw.name, LIMITS.name),
         email: s(raw.email, LIMITS.email),
-        phone: s(raw.phone, LIMITS.phone),
+        // Stored in ASCII digits whatever keyboard typed it.
+        phone: toAsciiDigits(s(raw.phone, LIMITS.phone)),
         subject: s(raw.subject, LIMITS.subject),
         service: s(raw.service, LIMITS.service),
         message: s(raw.message, LIMITS.message),

@@ -71,7 +71,8 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.push(`/book-online?${buildParams().toString()}`);
+        // Arabic pages continue in the Arabic booking form, not the English one.
+        router.push(`${locale === 'ar' ? '/ar' : ''}/book-online?${buildParams().toString()}`);
     };
 
     // Arabic pages build the message in Arabic: the customer sends this text

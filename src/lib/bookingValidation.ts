@@ -14,6 +14,7 @@
  */
 
 import { SERVICE_IDS } from './bookingServices';
+import { toAsciiDigits } from './digits';
 
 /**
  * Saudi Arabia is UTC+3 year-round and observes no daylight saving, so the
@@ -74,17 +75,19 @@ export function isValidTimeShape(time: string): boolean {
 export const PHONE_MIN_DIGITS = 7;
 export const PHONE_MAX_DIGITS = 15;
 
-/** Digits only, with any leading international prefix left intact. */
+/** Digits only, with any leading international prefix left intact.
+ *  Arabic-Indic digits count: they are converted first. */
 export function phoneDigits(phone: string): string {
-    return phone.replace(/\D/g, '');
+    return toAsciiDigits(phone).replace(/\D/g, '');
 }
 
 export function isValidPhone(phone: string): boolean {
-    const raw = phone.trim();
+    const raw = toAsciiDigits(phone).trim();
     if (!raw) return false;
-    // Reject letters outright: a number with words in it is a typo or a bot,
-    // never a dialable value. Punctuation used for grouping stays allowed.
-    if (/[A-Za-z]/.test(raw)) return false;
+    // Reject letters outright, Latin or Arabic: a number with words in it is
+    // a typo or a bot, never a dialable value. Punctuation used for grouping
+    // stays allowed, and Arabic-Indic digits were converted above.
+    if (/[A-Za-z\u0621-\u064A]/.test(raw)) return false;
     const digits = phoneDigits(raw);
     return digits.length >= PHONE_MIN_DIGITS && digits.length <= PHONE_MAX_DIGITS;
 }

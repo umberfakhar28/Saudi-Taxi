@@ -15,7 +15,7 @@ import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
 import { ui, SERVICE_LABELS_AR, bookingErrorMessage, type Locale } from "@/lib/i18n";
 import { BOOKING_SERVICES } from "@/lib/bookingServices";
 import { bookingRef } from "@/lib/bookingRef";
-import { riyadhToday, isPastDate, isValidPhone, isValidEmail, PASSENGERS_MAX } from "@/lib/bookingValidation";
+import { riyadhToday, isPastDate, isValidPhone, isValidEmail, PASSENGERS_MAX, MAX_LENGTHS } from "@/lib/bookingValidation";
 import styles from "./BookOnlineClient.module.css";
 
 /**
@@ -288,11 +288,24 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
         return Object.keys(e).length === 0;
     };
 
+    /** Luggage and the return leg are stored ahead of the customer's note in
+     *  one column capped at MAX_LENGTHS.notes (see storedNotes below), so the
+     *  room left for the note itself is whatever they do not use. Over the
+     *  cap the server refuses the whole booking, which is why the field is
+     *  limited here rather than left to fail on submit. */
+    const notesPrefix = [
+        formData.luggage !== '' ? `Luggage: ${formData.luggage} bag(s)` : '',
+        formData.returnTrip ? `Return: ${formData.returnTrip}` : '',
+    ].filter(Boolean).join(' | ');
+    const notesMax = MAX_LENGTHS.notes - (notesPrefix ? notesPrefix.length + 3 : 0);
+
     /** Step 2 — who to call back. Mirrors the server's rules so a customer
      *  is told what is wrong before a round trip, not after one. */
     const validateStep2 = (): boolean => {
         const e: Record<string, string> = {};
         if (!formData.name.trim()) e.name = t.errNameRequired;
+        else if (formData.name.trim().length > MAX_LENGTHS.name) e.name = t.errNameTooLong;
+        if (formData.notes.trim().length > notesMax) e.notes = t.errNotesTooLong;
         if (!formData.phone.trim()) e.phone = t.errPhoneRequired;
         else if (!isValidPhone(formData.phone)) e.phone = t.errPhoneInvalid;
         if (!formData.email.trim()) e.email = t.errEmailRequired;
@@ -423,18 +436,9 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                 const emailRes = await fetch('/api/emails/send', {
                     method: 'POST',
                     headers,
-                    // The email shows luggage and the return leg as rows of
-                    // their own, so its Notes row is just the customer's note.
-                    body: JSON.stringify({
-                        type: 'new_booking',
-                        bookingData: {
-                            ...bookingData,
-                            id: insertedBooking?.id,
-                            luggage_count: formData.luggage,
-                            return_trip: formData.returnTrip,
-                            special_notes: formData.notes.trim(),
-                        },
-                    }),
+                    // Only the id: the server reads every detail, the recipient
+                    // included, from the row it has just saved.
+                    body: JSON.stringify({ type: 'new_booking', bookingId: insertedBooking?.id ?? bookingJson.id }),
                 });
                 if (!emailRes.ok) {
                     const j = await emailRes.json().catch(() => ({}));
@@ -718,6 +722,7 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                                                 className="form-input"
                                                 placeholder={t.fullNamePlaceholder}
                                                 autoComplete="name"
+                                                maxLength={MAX_LENGTHS.name}
                                                 value={formData.name}
                                                 onChange={handleChange}
                                                 aria-invalid={!!errors.name}
@@ -739,6 +744,7 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                                                 className="form-input"
                                                 placeholder="+966 50 123 4567"
                                                 autoComplete="tel"
+                                                maxLength={MAX_LENGTHS.phone}
                                                 dir="ltr"
                                                 value={formData.phone}
                                                 onChange={handleChange}
@@ -764,6 +770,7 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                                             className="form-input"
                                             placeholder="your@email.com"
                                             autoComplete="email"
+                                            maxLength={MAX_LENGTHS.email}
                                             dir="ltr"
                                             value={formData.email}
                                             onChange={handleChange}
@@ -786,7 +793,18 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                                             value={formData.notes}
                                             onChange={handleChange}
                                             rows={4}
+                                            maxLength={notesMax}
+                                            aria-invalid={!!errors.notes}
+                                            aria-describedby={errors.notes ? 'bk-notes-error' : 'bk-notes-count'}
+                                            style={errors.notes ? { borderColor: 'var(--error)' } : undefined}
                                         />
+                                        {/* Shown only near the limit, so it never clutters a normal note. */}
+                                        {formData.notes.length > notesMax - 200 && (
+                                            <p id="bk-notes-count" className={styles.requiredNote} style={{ textAlign: 'end', marginTop: 4 }} dir="ltr">
+                                                {formData.notes.length} / {notesMax}
+                                            </p>
+                                        )}
+                                        {errors.notes && <p id="bk-notes-error" className={styles.fieldError} role="alert">{errors.notes}</p>}
                                     </div>
 
                                     <input {...honeypotFieldProps} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />

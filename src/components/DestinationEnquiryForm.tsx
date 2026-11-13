@@ -12,6 +12,7 @@ import { trackFormSubmit, FORM_EVENTS } from '@/lib/analytics';
 // This form is English-only (it renders on the English destination pages),
 // so it maps the booking API's error codes through the English strings.
 import { ui, bookingErrorMessage } from '@/lib/i18n';
+import { MAX_LENGTHS } from '@/lib/bookingValidation';
 
 const SUGGESTED_VALUES = new Set(SEARCH_INDEX.map((e) => e.value));
 
@@ -51,6 +52,13 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
 
+    /** The stored note wraps the customer's text in the destination, luggage
+     *  and source page (see notesLines), and the whole string is capped at
+     *  MAX_LENGTHS.notes by the server, so the textarea gets what is left.
+     *  Luggage is budgeted at two digits, the field's maximum. */
+    const notesBudget = MAX_LENGTHS.notes
+        - `Destination: ${destinationName}, ${countryName} | Luggage: 50 bag(s) | Additional requirements:  | Source page: ${sourcePage}`.length;
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
@@ -69,6 +77,12 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             form.notes ? `Additional requirements: ${form.notes}` : null,
             `Source page: ${sourcePage}`,
         ].filter(Boolean).join(' | ');
+
+        if (notesLines.length > MAX_LENGTHS.notes) {
+            setError(ui('en').errNotesTooLong);
+            setSubmitting(false);
+            return;
+        }
 
         const pickup = form.pickup || `${destinationLabel} (pickup TBD)`;
         const dropoff = form.dropoff || destinationLabel;
@@ -151,7 +165,8 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
                     headers,
                     body: JSON.stringify({
                         type: 'destination_enquiry',
-                        bookingData: { ...dbPayload, destination_name: destinationLabel, id: insertedBooking?.id },
+                        // Only the id: the server reads the enquiry it just saved.
+                        bookingId: insertedBooking?.id,
                     }),
                 });
                 if (!emailRes.ok) {
@@ -233,21 +248,21 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" htmlFor="deq-name">Full name</label>
-                    <input id="deq-name" name="name" className="form-input" placeholder="Your name" value={form.name} onChange={handleChange} required />
+                    <input id="deq-name" name="name" className="form-input" placeholder="Your name" maxLength={MAX_LENGTHS.name} value={form.name} onChange={handleChange} required />
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" htmlFor="deq-email">Email</label>
-                    <input id="deq-email" name="email" type="email" className="form-input" placeholder="you@example.com" value={form.email} onChange={handleChange} required />
+                    <input id="deq-email" name="email" type="email" className="form-input" placeholder="you@example.com" maxLength={MAX_LENGTHS.email} value={form.email} onChange={handleChange} required />
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                     <label className="form-label" htmlFor="deq-phone">Phone / WhatsApp</label>
-                    <input id="deq-phone" name="phone" type="tel" className="form-input" placeholder="+966..." value={form.phone} onChange={handleChange} required />
+                    <input id="deq-phone" name="phone" type="tel" className="form-input" placeholder="+966..." maxLength={MAX_LENGTHS.phone} value={form.phone} onChange={handleChange} required />
                 </div>
             </div>
 
             <div className="form-group" style={{ marginBottom: 0, marginTop: 'var(--space-5)' }}>
                 <label className="form-label" htmlFor="deq-notes">Additional requirements (optional)</label>
-                <textarea id="deq-notes" name="notes" className="form-textarea" placeholder="Child seat, extra stop, flight number, meet-and-greet sign name, etc." value={form.notes} onChange={handleChange} />
+                <textarea id="deq-notes" name="notes" className="form-textarea" placeholder="Child seat, extra stop, flight number, meet-and-greet sign name, etc." maxLength={notesBudget} value={form.notes} onChange={handleChange} />
             </div>
 
             {error && <p className={styles.error} role="alert">{error}</p>}

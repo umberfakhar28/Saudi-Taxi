@@ -147,6 +147,10 @@ export interface UIStrings {
     errSaveContact: string;
     errSaveBooking: string;
     errGeneric: string;
+    errNameTooLong: string;
+    errNotesTooLong: string;
+    errPassengersInvalid: string;
+    errLocationTooLong: string;
 
     // ── Route page body copy ──
     whatsIncluded: string;
@@ -340,6 +344,10 @@ const en: UIStrings = {
     errSaveContact: 'Could not save your contact details.',
     errSaveBooking: 'Could not save your booking.',
     errGeneric: 'Something went wrong. Please try again.',
+    errNameTooLong: 'Please shorten your name (120 characters at most).',
+    errNotesTooLong: 'Your note is too long. Please shorten it and try again.',
+    errPassengersInvalid: 'Please check the number of passengers.',
+    errLocationTooLong: 'Please shorten the pickup or drop-off location.',
     errorRetry: 'Your entered details are still here — please try again.',
 
     whatsIncluded: "What's Included",
@@ -535,6 +543,10 @@ const ar: UIStrings = {
     errSaveContact: 'لم نتمكن من حفظ بيانات التواصل.',
     errSaveBooking: 'لم نتمكن من حفظ الحجز.',
     errGeneric: 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
+    errNameTooLong: 'يرجى اختصار الاسم (120 حرفًا كحد أقصى).',
+    errNotesTooLong: 'الملاحظة طويلة جدًا. يرجى اختصارها والمحاولة مرة أخرى.',
+    errPassengersInvalid: 'يرجى التحقق من عدد الركاب.',
+    errLocationTooLong: 'يرجى اختصار مكان الانطلاق أو الوصول.',
     errorRetry: 'بياناتك ما زالت محفوظة — يرجى المحاولة مرة أخرى.',
 
     whatsIncluded: 'ما الذي تشمله الخدمة',
@@ -635,21 +647,23 @@ export const SERVICE_LABELS_AR: Record<string, string> = {
 export function bookingErrorMessage(code: unknown, t: UIStrings): string {
     switch (typeof code === 'string' ? code : '') {
         case 'invalid_service': return t.errServiceRequired;
-        case 'name_required':
-        case 'name_too_long': return t.errNameRequired;
+        case 'name_required': return t.errNameRequired;
+        case 'name_too_long': return t.errNameTooLong;
         case 'phone_required': return t.errPhoneRequired;
         case 'phone_invalid': return t.errPhoneInvalid;
         case 'email_required': return t.errEmailRequired;
         case 'email_invalid': return t.errEmailInvalid;
-        case 'pickup_required':
-        case 'pickup_too_long': return t.errPickupRequired;
-        case 'dropoff_required':
-        case 'dropoff_too_long': return t.errDropoffRequired;
+        case 'pickup_required': return t.errPickupRequired;
+        case 'dropoff_required': return t.errDropoffRequired;
+        case 'pickup_too_long':
+        case 'dropoff_too_long': return t.errLocationTooLong;
         case 'date_required':
         case 'date_invalid': return t.errDateRequired;
         case 'date_past': return t.errDatePast;
         case 'time_required':
         case 'time_invalid': return t.errTimeRequired;
+        case 'passengers_invalid': return t.errPassengersInvalid;
+        case 'notes_too_long': return t.errNotesTooLong;
         case 'save_failed': return t.errSaveBooking;
         default: return t.errGeneric;
     }

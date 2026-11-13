@@ -14,6 +14,7 @@ import { TRUSTPILOT_REVIEW_URL, trustpilotBcc } from '@/lib/trustpilot';
 import { buildInvoiceDocument, type InvoiceRecord } from '@/lib/invoiceDocument';
 import { guardPublicRequest } from '@/lib/antiSpam';
 import { PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
+import { DESTINATION_ENQUIRY_SERVICE } from '@/lib/bookingValidation';
 
 /**
  * Writes the row the Admin Portal's realtime subscription and notification
@@ -248,15 +249,108 @@ async function logEmail(supabase: SupabaseClient, bookingId: string | null, type
 
 const SUPPORTED_TYPES = ['new_booking', 'booking_confirmed', 'booking_completed', 'quote_sent', 'destination_enquiry', 'invoice'] as const;
 
-// `new_booking` and `destination_enquiry` are triggered by unauthenticated
-// customers right after they submit a public form (BookOnlineClient.tsx,
-// DestinationEnquiryForm.tsx) — those two must stay callable without a
-// session. The other four are admin-only actions (confirm/complete a
-// booking, send a quote, send an invoice) that previously had no auth
-// check at all and accepted arbitrary client-supplied data, so anyone
-// could POST here directly and send spoofed emails from this business's
-// Resend account (Admin Portal audit §15).
+// The four admin-only actions (confirm/complete a booking, send a quote,
+// send an invoice) previously had no auth check at all and accepted
+// arbitrary client-supplied data, so anyone could POST here directly and
+// send spoofed emails from this business's Resend account (Admin Portal
+// audit §15).
 const ADMIN_ONLY_TYPES = ['booking_confirmed', 'booking_completed', 'quote_sent', 'invoice'] as const;
+
+/**
+ * `new_booking` and `destination_enquiry` are sent by unauthenticated
+ * customers right after a public form saves their booking
+ * (BookOnlineClient.tsx, DestinationEnquiryForm.tsx), so they must stay
+ * callable without a session.
+ *
+ * They used to take the whole booking from the request body, recipient
+ * included. With Turnstile parked, that let anyone send a branded email from
+ * this business to any address with any name in it (QA report 13 Nov 2026,
+ * B4). Now the caller supplies only a booking id, and an email goes out only
+ * when that booking:
+ *   · exists, and is the right kind for the email type;
+ *   · was created in the last 15 minutes (the form sends straight away);
+ *   · has not already had this email sent.
+ * Every detail, the recipient included, is read from the saved row. Sending
+ * mail therefore needs a booking that passed /api/bookings/create's
+ * validation and rate limit, and yields one email pair per booking.
+ */
+const PUBLIC_TYPES = ['new_booking', 'destination_enquiry'] as const;
+const PUBLIC_SEND_WINDOW_MS = 15 * 60 * 1000;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+type PublicBookingResult =
+    | { ok: true; booking: Record<string, unknown> }
+    | { ok: false; status: number; error: string };
+
+async function loadPublicBooking(supabase: SupabaseClient, type: string, bookingId: unknown): Promise<PublicBookingResult> {
+    if (typeof bookingId !== 'string' || !UUID_RE.test(bookingId)) {
+        return { ok: false, status: 400, error: 'bookingId is required' };
+    }
+
+    const { data, error } = await supabase.from('bookings').select('*').eq('id', bookingId).maybeSingle();
+    if (error) {
+        console.error('[EMAIL_PUBLIC_LOOKUP]', error);
+        return { ok: false, status: 500, error: 'Could not load the booking' };
+    }
+    if (!data) return { ok: false, status: 404, error: 'Booking not found' };
+
+    const isEnquiry = data.service_type === DESTINATION_ENQUIRY_SERVICE;
+    if ((type === 'destination_enquiry') !== isEnquiry) {
+        return { ok: false, status: 400, error: 'Email type does not match this booking' };
+    }
+
+    // A minute of allowance either side for clock skew between the database
+    // and this server.
+    const age = Date.now() - new Date(data.created_at as string).getTime();
+    if (!Number.isFinite(age) || age < -60_000 || age > PUBLIC_SEND_WINDOW_MS) {
+        return { ok: false, status: 403, error: 'Automatic confirmations are only sent right after a booking is made' };
+    }
+
+    // One send per booking. Fails closed: if the log cannot be read, nothing
+    // is sent rather than risking repeats.
+    const { count, error: logError } = await supabase
+        .from('email_logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('booking_id', bookingId)
+        .eq('email_type', type)
+        .eq('status', 'sent');
+    if (logError) {
+        console.error('[EMAIL_PUBLIC_LOG_CHECK]', logError);
+        return { ok: false, status: 500, error: 'Could not check earlier emails for this booking' };
+    }
+    if ((count ?? 0) > 0) return { ok: false, status: 409, error: 'The confirmation for this booking has already been sent' };
+
+    return { ok: true, booking: withDisplayFields(data) };
+}
+
+/**
+ * Recovers the email-only fields from the stored notes, so the email reads
+ * as it did when the form sent them alongside the booking.
+ *
+ *  · Book Online stores "Luggage: 2 bag(s) | Return: … | customer's note";
+ *    the luggage and return leg get their own rows again.
+ *  · A destination enquiry stores "Destination: Dubai, UAE | …"; the
+ *    destination names the email. Its notes are left whole, as before.
+ */
+function withDisplayFields(row: Record<string, unknown>): Record<string, unknown> {
+    const notes = typeof row.special_notes === 'string' ? row.special_notes : '';
+    const parts = notes ? notes.split(' | ') : [];
+
+    if (row.service_type === DESTINATION_ENQUIRY_SERVICE) {
+        const first = parts[0] ?? '';
+        return { ...row, destination_name: first.startsWith('Destination: ') ? first.slice('Destination: '.length) : null };
+    }
+
+    let luggage: string | null = null;
+    let returnTrip: string | null = null;
+    if ((parts[0] ?? '').startsWith('Luggage: ')) {
+        luggage = (parts.shift() ?? '').slice('Luggage: '.length).replace(/ bag\(s\)$/, '');
+    }
+    if ((parts[0] ?? '').startsWith('Return: ')) {
+        returnTrip = (parts.shift() ?? '').slice('Return: '.length);
+    }
+    return { ...row, luggage_count: luggage, return_trip: returnTrip, special_notes: parts.join(' | ') || null };
+}
 
 export async function POST(req: Request) {
     const supabase = createAdminClient();
@@ -292,9 +386,14 @@ export async function POST(req: Request) {
             }
         }
 
-        // Fetch booking from DB if only ID provided
+        // The public types never use the request's booking data — see
+        // loadPublicBooking. Admin types may pass the record, or its id.
         let b = bookingData;
-        if (!b && bookingId) {
+        if ((PUBLIC_TYPES as readonly string[]).includes(type)) {
+            const loaded = await loadPublicBooking(supabase, type, bookingId);
+            if (!loaded.ok) return NextResponse.json({ error: loaded.error }, { status: loaded.status });
+            b = loaded.booking;
+        } else if (!b && bookingId) {
             const { data } = await supabase.from('bookings').select('*').eq('id', bookingId).single();
             b = data;
         }
@@ -347,7 +446,7 @@ export async function POST(req: Request) {
             const adminHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📩 New Booking Request</p>${adminReference ? `<p style="color:#e2e8f0;margin:6px 0 0;font-size:0.85rem;">Ref ${escapeHtml(adminReference)}</p>` : ''}</div>
                 ${buildBookingRows(b)}
-                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
+                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${encodeURIComponent(String(b.id))}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
             const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
             await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message, from);
@@ -475,7 +574,7 @@ export async function POST(req: Request) {
                 <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📍 New Destination Enquiry</p></div>
                 ${rowsTable(row('Destination', destLabel))}
                 ${buildBookingRows(b)}
-                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${b.id}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
+                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${encodeURIComponent(String(b.id))}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
             </div></div>`;
             const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
             await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message, from);
@@ -542,7 +641,7 @@ export async function POST(req: Request) {
                     <tr><td style="padding:6px 4px;color:${r.kind === 'total' ? '#0f172a' : '#94a3b8'};font-size:13px;font-weight:${r.kind === 'total' ? 700 : 400};">${escapeHtml(r.label)}</td>
                     <td style="padding:6px 4px;text-align:right;color:${r.kind === 'total' ? '#0f172a' : '#475569'};font-size:13px;font-weight:${r.kind === 'total' || r.kind === 'balance' ? 700 : 400};">${escapeHtml(r.value)}</td></tr>`).join('')}</table>` : ''}
                 ${d.notes.map((n) => noteBlock(n.label, n.text, n.tone === 'accent' ? '#fbf6ec' : '#f8fafc', n.tone === 'accent' ? '#b8945b' : '#94a3b8', n.tone === 'accent' ? '#8a6a35' : '#64748b')).join('')}
-                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/invoices/${inv.invoice_db_id || inv.id || ''}" style="${btnStyle}">View Invoice</a></p>
+                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/invoices/${encodeURIComponent(String(inv.invoice_db_id || inv.id || ''))}" style="${btnStyle}">View Invoice</a></p>
                 <p style="color:#94a3b8;font-size:0.8rem;margin-top:16px;">${escapeHtml(d.footerNote)} For any queries about this invoice, reply to this email or contact us on WhatsApp.</p>
             </div></div>`;
             const invoiceTo = recipient(inv.customer_email);

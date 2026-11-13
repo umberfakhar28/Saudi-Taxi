@@ -13,6 +13,7 @@
  */
 
 import { displayDate, displayTime } from './datetime';
+import { toAsciiDigits } from './digits';
 import { formatMoney } from './currency';
 import { TRUSTPILOT_REVIEW_URL } from './trustpilot';
 
@@ -32,7 +33,7 @@ const DEFAULT_DIALLING_CODE = '966';
 export function toWhatsAppNumber(raw?: string | null): string | null {
     if (!raw) return null;
 
-    let digits = String(raw).replace(/\D/g, '');
+    let digits = toAsciiDigits(String(raw)).replace(/\D/g, '');
     if (!digits) return null;
 
     // 00 is the international access prefix used across the Gulf.

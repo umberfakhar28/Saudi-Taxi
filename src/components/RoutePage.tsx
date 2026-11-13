@@ -1234,7 +1234,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
             )}
 
             <div style={{ textAlign: "center", marginTop: "var(--space-10)" }}>
-              <Link href={`/book-online?from=${encodeURIComponent(data.origin)}&to=${encodeURIComponent(data.destination)}&mode=transfers`} className="btn btn-primary btn-lg">{t.bookNow}</Link>
+              <Link href={`${locale === 'ar' ? '/ar' : ''}/book-online?from=${encodeURIComponent(data.origin)}&to=${encodeURIComponent(data.destination)}&mode=transfers`} className="btn btn-primary btn-lg">{t.bookNow}</Link>
             </div>
           </div>
         </section>

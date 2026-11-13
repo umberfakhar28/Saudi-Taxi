@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { guardPublicRequest } from '@/lib/antiSpam';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
+import { toAsciiDigits } from '@/lib/digits';
 
 /**
  * Creates or updates the `customers` record tied to a booking (Admin Portal
@@ -30,7 +31,8 @@ export async function POST(req: Request) {
 
         const name = (body?.name ?? '').trim();
         const email = (body?.email ?? '').trim() || null;
-        const phone = (body?.phone ?? '').trim();
+        // Same normalisation as /api/bookings/create, so the two match on it.
+        const phone = toAsciiDigits(String(body?.phone ?? '')).trim();
 
         if (!name || !phone) {
             return NextResponse.json({ error: 'name_phone_required', code: !name ? 'name_required' : 'phone_required' }, { status: 400 });

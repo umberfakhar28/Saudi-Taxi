@@ -9,6 +9,7 @@ import {
     PASSENGERS_MAX_ENQUIRY,
     DESTINATION_ENQUIRY_SERVICE,
 } from '@/lib/bookingValidation';
+import { toAsciiDigits } from '@/lib/digits';
 
 /**
  * Creates a `bookings` row. Public booking forms (Book Online, the
@@ -55,7 +56,9 @@ export async function POST(req: Request) {
         }
 
         const text = (v: unknown, max: number): string => String(v ?? '').trim().slice(0, max);
-        const phone = text(body.customer_phone, MAX_LENGTHS.phone);
+        // ASCII digits in storage, so customer matching and wa.me links work
+        // for a number typed on an Arabic keyboard.
+        const phone = toAsciiDigits(text(body.customer_phone, MAX_LENGTHS.phone));
         const serviceType = String(body.service_type).trim();
         // The destination enquiry form allows group sizes the booking form's
         // own 1-10 select does not; clamp to whichever ceiling applies.
