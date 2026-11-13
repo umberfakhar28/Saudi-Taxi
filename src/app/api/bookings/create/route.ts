@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { guardPublicRequest } from '@/lib/antiSpam';
 import {
@@ -10,6 +10,11 @@ import {
     DESTINATION_ENQUIRY_SERVICE,
 } from '@/lib/bookingValidation';
 import { toAsciiDigits } from '@/lib/digits';
+import { notifyNewBooking } from '@/lib/bookingNotify';
+
+/** Bookings one phone number or email address may make in 10 minutes. */
+const SAME_CUSTOMER_LIMIT = 5;
+const SAME_CUSTOMER_WINDOW_MS = 10 * 60 * 1000;
 
 /**
  * Creates a `bookings` row. Public booking forms (Book Online, the
@@ -48,7 +53,11 @@ export async function POST(req: Request) {
         // browser obtained at /api/antispam/verify. Skipped entirely while
         // TURNSTILE_SECRET_KEY is unset — see src/lib/antiSpam.ts.
         const blocked = guardPublicRequest(req, body, { bucket: 'booking', limit: 10 });
-        if (blocked) return NextResponse.json({ error: blocked.error }, { status: blocked.status });
+        if (blocked) {
+            // A code the form can translate, like every other refusal here.
+            const code = blocked.status === 429 ? 'too_many' : 'request_rejected';
+            return NextResponse.json({ error: blocked.error, code }, { status: blocked.status });
+        }
 
         const invalid = validateBookingPayload(body);
         if (invalid) {
@@ -67,6 +76,28 @@ export async function POST(req: Request) {
             : PASSENGERS_MAX;
 
         const supabase = createAdminClient();
+        const email = text(body.customer_email, MAX_LENGTHS.email);
+
+        /**
+         * Database-backed limit per customer. The per-IP limit above lives in
+         * one server instance's memory, so it resets on every cold start and
+         * is not shared between instances; this count is. Five requests in ten
+         * minutes from one phone or one address is not a person booking.
+         */
+        const since = new Date(Date.now() - SAME_CUSTOMER_WINDOW_MS).toISOString();
+        const recentFor = async (column: 'customer_phone' | 'customer_email', value: string) => {
+            const { count, error } = await supabase
+                .from('bookings')
+                .select('id', { count: 'exact', head: true })
+                .eq(column, value)
+                .gte('created_at', since);
+            if (error) console.error('[BOOKING_LIMIT_CHECK]', error);
+            return count ?? 0;
+        };
+        if ((await recentFor('customer_phone', phone)) >= SAME_CUSTOMER_LIMIT
+            || (email && (await recentFor('customer_email', email)) >= SAME_CUSTOMER_LIMIT)) {
+            return NextResponse.json({ error: 'too_many', code: 'too_many' }, { status: 429 });
+        }
 
         /**
          * Resolve the customer link server-side instead of trusting the id
@@ -103,7 +134,7 @@ export async function POST(req: Request) {
         const bookingData = {
             customer_id: customerId,
             customer_name: text(body.customer_name, MAX_LENGTHS.name),
-            customer_email: text(body.customer_email, MAX_LENGTHS.email) || null,
+            customer_email: email || null,
             customer_phone: phone,
             service_type: serviceType,
             pickup_location: text(body.pickup_location, MAX_LENGTHS.location),
@@ -121,11 +152,27 @@ export async function POST(req: Request) {
             status: 'pending',
         };
 
-        const { data: insertedBooking, error: dbError } = await supabase
+        // The language the customer booked in, so their emails follow it.
+        const locale = body.locale === 'ar' ? 'ar' : 'en';
+
+        let { data: insertedBooking, error: dbError } = await supabase
             .from('bookings')
-            .insert([bookingData])
+            .insert([{ ...bookingData, locale }])
             .select()
             .single();
+
+        // supabase/sql/009 adds bookings.locale. Until it has been run, save
+        // without it rather than lose the booking; the booking-received email
+        // still goes out in the right language from the value in hand.
+        if (dbError && /locale/i.test(dbError.message ?? '')) {
+            console.warn('[BOOKING] bookings.locale is missing — run supabase/sql/009_booking_locale.sql. Saving without it.');
+            ({ data: insertedBooking, error: dbError } = await supabase
+                .from('bookings')
+                .insert([bookingData])
+                .select()
+                .single());
+            if (insertedBooking) insertedBooking = { ...insertedBooking, locale };
+        }
 
         if (dbError) {
             // Real technical detail goes to the server log only — the
@@ -133,6 +180,19 @@ export async function POST(req: Request) {
             console.error('[BOOKING_SUBMISSION_ERROR]', dbError);
             return NextResponse.json({ error: 'save_failed', code: 'save_failed' }, { status: 500 });
         }
+
+        // Admin alert and emails, after the response has gone: the customer's
+        // browser has no part in it any more, so a closed tab can no longer
+        // leave a booking that nobody was told about. after() keeps the
+        // function alive until this finishes (waitUntil on Vercel).
+        const saved = insertedBooking;
+        after(async () => {
+            try {
+                await notifyNewBooking(createAdminClient(), saved);
+            } catch (err) {
+                console.error('[BOOKING_NOTIFY]', err);
+            }
+        });
 
         return NextResponse.json({ id: insertedBooking.id, booking: insertedBooking });
     } catch (error: unknown) {

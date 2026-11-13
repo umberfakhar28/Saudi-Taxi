@@ -389,6 +389,8 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                 car_type: formData.vehicleName || null,
                 vehicle_slug: formData.vehicleSlug || null,
                 status: 'pending',
+                // The customer's emails follow the language they booked in.
+                locale,
             };
 
             // 2. Save the booking — the operation that actually matters. If
@@ -428,25 +430,9 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
             // to leave with nothing to quote.
             setReference(bookingRef(insertedBooking?.id ?? bookingJson.id));
 
-            // 3. Send notification emails. The booking is already safely
-            // persisted at this point, so an email hiccup is logged, not
-            // treated as a failed booking — but it's never silently
-            // swallowed either.
-            try {
-                const emailRes = await fetch('/api/emails/send', {
-                    method: 'POST',
-                    headers,
-                    // Only the id: the server reads every detail, the recipient
-                    // included, from the row it has just saved.
-                    body: JSON.stringify({ type: 'new_booking', bookingId: insertedBooking?.id ?? bookingJson.id }),
-                });
-                if (!emailRes.ok) {
-                    const j = await emailRes.json().catch(() => ({}));
-                    console.error('Booking confirmation email failed:', j.error);
-                }
-            } catch (emailErr) {
-                console.error('Booking confirmation email failed:', emailErr);
-            }
+            // 3. Emails and the admin alert are sent by the server once the
+            // booking is saved (/api/bookings/create → lib/bookingNotify), so
+            // they no longer depend on this tab staying open.
 
             setSubmitted(true);
         } catch (error: unknown) {

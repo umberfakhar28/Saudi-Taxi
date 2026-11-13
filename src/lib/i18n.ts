@@ -151,6 +151,7 @@ export interface UIStrings {
     errNotesTooLong: string;
     errPassengersInvalid: string;
     errLocationTooLong: string;
+    errTooMany: string;
 
     // ── Route page body copy ──
     whatsIncluded: string;
@@ -348,6 +349,7 @@ const en: UIStrings = {
     errNotesTooLong: 'Your note is too long. Please shorten it and try again.',
     errPassengersInvalid: 'Please check the number of passengers.',
     errLocationTooLong: 'Please shorten the pickup or drop-off location.',
+    errTooMany: 'You have made several booking requests in a short time. Please wait a few minutes, or message us on WhatsApp.',
     errorRetry: 'Your entered details are still here — please try again.',
 
     whatsIncluded: "What's Included",
@@ -547,6 +549,7 @@ const ar: UIStrings = {
     errNotesTooLong: 'الملاحظة طويلة جدًا. يرجى اختصارها والمحاولة مرة أخرى.',
     errPassengersInvalid: 'يرجى التحقق من عدد الركاب.',
     errLocationTooLong: 'يرجى اختصار مكان الانطلاق أو الوصول.',
+    errTooMany: 'لقد أرسلت عدة طلبات حجز خلال وقت قصير. يرجى الانتظار بضع دقائق أو مراسلتنا عبر واتساب.',
     errorRetry: 'بياناتك ما زالت محفوظة — يرجى المحاولة مرة أخرى.',
 
     whatsIncluded: 'ما الذي تشمله الخدمة',
@@ -664,6 +667,7 @@ export function bookingErrorMessage(code: unknown, t: UIStrings): string {
         case 'time_invalid': return t.errTimeRequired;
         case 'passengers_invalid': return t.errPassengersInvalid;
         case 'notes_too_long': return t.errNotesTooLong;
+        case 'too_many': return t.errTooMany;
         case 'save_failed': return t.errSaveBooking;
         default: return t.errGeneric;
     }

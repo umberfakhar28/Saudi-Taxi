@@ -1,356 +1,33 @@
-import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
-import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/utils/supabase/admin';
-import { displayDate, displayDateTime, displayTime } from '@/lib/datetime';
+import { displayDate, displayTime } from '@/lib/datetime';
 import { formatMoney } from '@/lib/currency';
 import { serviceLabel } from '@/lib/serviceLabels';
-import { bookingRef } from '@/lib/bookingRef';
 import { resolveSender } from '@/lib/emailSender';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
-import { sendPushToAdmins } from '@/lib/webpush';
-import { SITE_CONFIG } from '@/lib/seo';
 import { TRUSTPILOT_REVIEW_URL, trustpilotBcc } from '@/lib/trustpilot';
 import { buildInvoiceDocument, type InvoiceRecord } from '@/lib/invoiceDocument';
-import { guardPublicRequest } from '@/lib/antiSpam';
-import { PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
-import { DESTINATION_ENQUIRY_SERVICE } from '@/lib/bookingValidation';
+import {
+    SITE, baseStyle, btnStyle, cardStyle, escapeHtml, headerStyle, noteBlock, row, rowsTable, sendEmail, whatsappStrip, logEmail,
+} from '@/lib/emailKit';
+import { confirmedEmail, sendReceivedEmail } from '@/lib/bookingNotify';
 
 /**
- * Writes the row the Admin Portal's realtime subscription and notification
- * bell read (NotificationProvider.tsx), and best-effort pushes it to any
- * subscribed browser. Called from this route rather than a DB trigger
- * because this is already the one trusted server-side code path that runs
- * at the exact moment a customer submits a booking or enquiry — adding a
- * trigger/webhook would duplicate that for no benefit (Admin Portal audit
- * §3, §11).
+ * Admin email actions. Layout helpers, the send log and retrying sends live
+ * in lib/emailKit; the booking-shaped customer emails in lib/bookingNotify.
  */
-async function createNotification(
-    supabase: ReturnType<typeof createAdminClient>,
-    type: 'new_booking' | 'new_enquiry',
-    b: Record<string, unknown>,
-    title: string
-) {
-    try {
-        const { data } = await supabase
-            .from('notifications')
-            .insert({
-                type,
-                booking_id: (b.id as string) || null,
-                title,
-                summary: `${b.pickup_location ?? ''} → ${b.dropoff_location ?? ''}`.trim(),
-                customer_name: b.customer_name ?? null,
-                pickup_location: b.pickup_location ?? null,
-                dropoff_location: b.dropoff_location ?? null,
-                travel_date: b.travel_date ?? null,
-                travel_time: b.travel_time ?? null,
-                passengers_count: b.passengers_count ?? null,
-                service_type: b.service_type ?? null,
-            })
-            .select('id')
-            .single();
-
-        await sendPushToAdmins({
-            title,
-            body: `${b.customer_name ?? 'A customer'} — ${b.pickup_location ?? ''} → ${b.dropoff_location ?? ''}`,
-            url: b.id ? `/admin/bookings?view=${b.id}` : '/admin/bookings',
-        });
-
-        return data?.id ?? null;
-    } catch {
-        // The notifications/push_subscriptions tables may not exist yet if
-        // supabase/sql/001_notifications_and_push.sql hasn't been run —
-        // never let that block the actual email send.
-        return null;
-    }
-}
-
-// RESEND_API_KEY is read here, in a server-only route handler. It has no
-// NEXT_PUBLIC_ prefix, so Next.js never inlines it into the client bundle.
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// The sender identity lives in src/lib/emailSender.ts and is resolved per
-// request inside POST(), so a misconfiguration surfaces as a clear error
-// instead of silently falling back to Resend's sandbox address.
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'umberfakhar10@gmail.com';
-/**
- * Base URL for links inside outgoing emails ("View in Admin Panel", "View
- * Invoice").
- *
- * This previously read `process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'`.
- * Whenever that variable was unset on the host — or copied over from
- * .env.local, where localhost is correct — real booking notification emails
- * shipped with admin buttons pointing at localhost, which is unreachable for
- * whoever opens the email. Confirmed happening in production.
- *
- * NEXT_PUBLIC_SITE_URL still wins so a staging/preview deploy can point at
- * itself, but a localhost value is now ignored in production rather than
- * silently breaking every admin link, and the canonical domain is taken from
- * SITE_CONFIG so there's one source of truth rather than a fourth hardcoded
- * copy of it.
- */
-function resolveEmailBaseUrl(): string {
-    const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, '');
-    const isLocal = !!configured && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(configured);
-
-    if (!configured) return SITE_CONFIG.baseUrl;
-
-    if (isLocal && process.env.NODE_ENV === 'production') {
-        console.warn(
-            '[EMAIL_LINKS] NEXT_PUBLIC_SITE_URL is set to a localhost address in production — ' +
-            `using ${SITE_CONFIG.baseUrl} for email links instead. Set NEXT_PUBLIC_SITE_URL to the live domain and redeploy.`
-        );
-        return SITE_CONFIG.baseUrl;
-    }
-
-    return configured;
-}
-
-const SITE = resolveEmailBaseUrl();
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Shared HTML email layout — table-based, not flexbox.
-   The old version built each row as a flex <div> (`display:flex;
-   justify-content:space-between`). Outlook's rendering engine (Word) and
-   several mobile mail clients don't support flexbox at all, so the label
-   and value collapsed onto one line with no visible gap — e.g.
-   "CustomerTest" instead of "Customer: Test". Tables are the one layout
-   primitive that reliably renders the same way across every mail client,
-   so every row below is a real <table><tr><td> — label cell, value cell,
-   consistent padding, a hairline separator between rows.
-   ───────────────────────────────────────────────────────────────────────── */
-const baseStyle = `font-family:'Inter',Arial,sans-serif;background:#f8fafc;padding:32px 16px;`;
-const cardStyle = `background:#fff;border-radius:12px;padding:28px;max-width:560px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,0.06);`;
-const headerStyle = `background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:10px;padding:24px;margin-bottom:24px;text-align:center;`;
-const btnStyle = `display:inline-block;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;padding:12px 28px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;`;
-
-/** One label/value row inside the details table. Skips cleanly if value is empty. */
-function row(label: string, value: unknown): string {
-    if (value === null || value === undefined || value === '') return '';
-    return `
-        <tr>
-            <td style="padding:11px 4px;border-bottom:1px solid #f1f5f9;color:#94a3b8;font-size:13px;width:38%;vertical-align:top;">${label}</td>
-            <td style="padding:11px 4px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:14px;font-weight:600;vertical-align:top;">${escapeHtml(String(value))}</td>
-        </tr>`;
-}
-
-function escapeHtml(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function rowsTable(rowsHtml: string): string {
-    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">${rowsHtml}</table>`;
-}
-
-/**
- * A highlighted note in a customer email — the team's message, or the
- * customer's own trip requirements echoed back. Empty notes render nothing.
- * Line breaks the author typed are kept.
- */
-function noteBlock(label: string, text: string | null | undefined, tint: string, accent: string, labelColor: string): string {
-    const body = String(text ?? '').trim();
-    if (!body) return '';
-    const html = escapeHtml(body).replace(/\r?\n/g, '<br>');
-    return `<div style="background:${tint};border-left:4px solid ${accent};border-radius:8px;padding:14px 16px;margin-top:16px;">
-        <p style="color:${labelColor};margin:0 0 6px;font-size:0.72rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;">${escapeHtml(label)}</p>
-        <p style="color:#0f172a;margin:0;font-size:0.95rem;font-weight:600;line-height:1.55;">${html}</p>
-    </div>`;
-}
-
-/**
- * The WhatsApp route to a reply, for emails a customer receives.
- *
- * Email replies land in an inbox someone has to open; WhatsApp is where
- * this business actually answers fastest, so the customer is given the
- * link and the number in plain text — the number matters because some
- * mail clients strip or warn on buttons, and it can be dialled or saved
- * by hand.
- *
- * The message is pre-filled with the booking reference so the customer
- * does not have to explain which trip they mean.
- */
-function whatsappBlock(prefill: string): string {
-    const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(prefill)}`;
-    return `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px;margin-top:20px;text-align:center;">
-        <p style="color:#166534;font-weight:800;margin:0 0 6px;font-size:1rem;">Need a faster reply?</p>
-        <p style="color:#475569;margin:0 0 16px;font-size:0.9rem;">Message us on WhatsApp and we will answer you there.</p>
-        <a href="${href}" style="display:inline-block;background:#25c766;color:#ffffff;padding:12px 28px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.95rem;">💬 Chat with us on WhatsApp</a>
-        <p style="color:#64748b;margin:14px 0 0;font-size:0.85rem;">Or save our number: <strong style="color:#0f172a;">${escapeHtml(PHONE_DISPLAY)}</strong></p>
-    </div>`;
-}
-
-/** A one-line WhatsApp prompt for the top of an email. */
-function whatsappStrip(prefill: string): string {
-    const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(prefill)}`;
-    return `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;margin-bottom:20px;text-align:center;">
-        <p style="color:#166534;margin:0 0 10px;font-size:0.92rem;font-weight:700;">For a quick reply, message us on WhatsApp</p>
-        <a href="${href}" style="display:inline-block;background:#25c766;color:#ffffff;padding:10px 22px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;">💬 Chat about this quote</a>
-        <p style="color:#64748b;margin:10px 0 0;font-size:0.8rem;">${escapeHtml(PHONE_DISPLAY)}</p>
-    </div>`;
-}
-
-/** Booking/enquiry detail rows shared by every booking-shaped email. */
-function buildBookingRows(b: Record<string, unknown>): string {
-    return rowsTable([
-        row('Customer', b.customer_name),
-        row('Phone', b.customer_phone),
-        row('Email', b.customer_email),
-        row('From', b.pickup_location),
-        row('To', b.dropoff_location),
-        row('Service', serviceLabel(b.service_type as string | null | undefined)),
-        row('Vehicle', b.car_type),
-        row('Date', displayDate(b.travel_date as string | null | undefined, '')),
-        // travel_time arrives as "04:00:00" from the bookings `time` column
-        // and "04:00" from the notifications text column; both were printed
-        // raw, so 4am and 4pm were indistinguishable in the customer's
-        // confirmation and the admin's alert.
-        row('Time', displayTime(b.travel_time as string | null | undefined, '')),
-        row('Passengers', b.passengers_count),
-        // Present on new booking requests only — luggage and the return leg
-        // have no booking columns, so the form passes them alongside.
-        row('Luggage', b.luggage_count !== undefined && b.luggage_count !== null && b.luggage_count !== '' ? `${b.luggage_count} bag(s)` : ''),
-        row('Return Trip', b.return_trip),
-        row('Quote Amount', b.quote_amount ? formatMoney(b.quote_amount as number, b.currency as string | null | undefined) : ''),
-        row('Notes', b.special_notes),
-    ].join(''));
-}
-
-async function logEmail(supabase: SupabaseClient, bookingId: string | null, type: string, to: string, subject: string, resendId: string | null, status: 'sent' | 'failed', error?: string, fromAddress?: string) {
-    const base = {
-        booking_id: bookingId, email_type: type, recipient_email: to,
-        subject, status, resend_id: resendId, error_message: error || null,
-        sent_at: new Date().toISOString(),
-    };
-
-    // Recording the sender makes the log self-sufficient: it previously
-    // showed who an email went TO but not what it went out AS, so the
-    // sandbox-sender fault could only be diagnosed through the Resend API.
-    //
-    // from_address arrives with supabase/sql/003. If that migration has not
-    // been run yet, the insert is rejected for the unknown column — and
-    // because supabase-js returns errors rather than throwing, the row would
-    // simply vanish and logging would stop silently. Retry without the
-    // column so the log keeps working either side of the migration.
-    const { error: withSender } = await supabase
-        .from('email_logs')
-        .insert({ ...base, from_address: fromAddress ?? null });
-
-    if (withSender && /from_address/i.test(withSender.message ?? '')) {
-        console.warn(
-            '[EMAIL_LOG] email_logs.from_address is missing — run supabase/sql/003_email_log_and_rls_hardening.sql. ' +
-            'Logging the send without its sender for now.'
-        );
-        const { error: fallback } = await supabase.from('email_logs').insert(base);
-        if (fallback) console.error('[EMAIL_LOG] Could not write the send log', fallback);
-    } else if (withSender) {
-        console.error('[EMAIL_LOG] Could not write the send log', withSender);
-    }
-}
 
 const SUPPORTED_TYPES = ['new_booking', 'booking_confirmed', 'booking_completed', 'quote_sent', 'destination_enquiry', 'invoice'] as const;
 
-// The four admin-only actions (confirm/complete a booking, send a quote,
-// send an invoice) previously had no auth check at all and accepted
-// arbitrary client-supplied data, so anyone could POST here directly and
-// send spoofed emails from this business's Resend account (Admin Portal
-// audit §15).
-const ADMIN_ONLY_TYPES = ['booking_confirmed', 'booking_completed', 'quote_sent', 'invoice'] as const;
-
 /**
- * `new_booking` and `destination_enquiry` are sent by unauthenticated
- * customers right after a public form saves their booking
- * (BookOnlineClient.tsx, DestinationEnquiryForm.tsx), so they must stay
- * callable without a session.
- *
- * They used to take the whole booking from the request body, recipient
- * included. With Turnstile parked, that let anyone send a branded email from
- * this business to any address with any name in it (QA report 13 Nov 2026,
- * B4). Now the caller supplies only a booking id, and an email goes out only
- * when that booking:
- *   · exists, and is the right kind for the email type;
- *   · was created in the last 15 minutes (the form sends straight away);
- *   · has not already had this email sent.
- * Every detail, the recipient included, is read from the saved row. Sending
- * mail therefore needs a booking that passed /api/bookings/create's
- * validation and rate limit, and yields one email pair per booking.
+ * `new_booking` / `destination_enquiry` here mean an admin pressing
+ * "Resend booking-received email". The automatic emails for a new booking
+ * are sent by /api/bookings/create itself (lib/bookingNotify) the moment the
+ * booking is saved, so no public caller is served by this route any more —
+ * which is also what closed the "send email as the business to anyone" hole
+ * (QA report 13 Nov 2026, B4).
  */
-const PUBLIC_TYPES = ['new_booking', 'destination_enquiry'] as const;
-const PUBLIC_SEND_WINDOW_MS = 15 * 60 * 1000;
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-type PublicBookingResult =
-    | { ok: true; booking: Record<string, unknown> }
-    | { ok: false; status: number; error: string };
-
-async function loadPublicBooking(supabase: SupabaseClient, type: string, bookingId: unknown): Promise<PublicBookingResult> {
-    if (typeof bookingId !== 'string' || !UUID_RE.test(bookingId)) {
-        return { ok: false, status: 400, error: 'bookingId is required' };
-    }
-
-    const { data, error } = await supabase.from('bookings').select('*').eq('id', bookingId).maybeSingle();
-    if (error) {
-        console.error('[EMAIL_PUBLIC_LOOKUP]', error);
-        return { ok: false, status: 500, error: 'Could not load the booking' };
-    }
-    if (!data) return { ok: false, status: 404, error: 'Booking not found' };
-
-    const isEnquiry = data.service_type === DESTINATION_ENQUIRY_SERVICE;
-    if ((type === 'destination_enquiry') !== isEnquiry) {
-        return { ok: false, status: 400, error: 'Email type does not match this booking' };
-    }
-
-    // A minute of allowance either side for clock skew between the database
-    // and this server.
-    const age = Date.now() - new Date(data.created_at as string).getTime();
-    if (!Number.isFinite(age) || age < -60_000 || age > PUBLIC_SEND_WINDOW_MS) {
-        return { ok: false, status: 403, error: 'Automatic confirmations are only sent right after a booking is made' };
-    }
-
-    // One send per booking. Fails closed: if the log cannot be read, nothing
-    // is sent rather than risking repeats.
-    const { count, error: logError } = await supabase
-        .from('email_logs')
-        .select('*', { count: 'exact', head: true })
-        .eq('booking_id', bookingId)
-        .eq('email_type', type)
-        .eq('status', 'sent');
-    if (logError) {
-        console.error('[EMAIL_PUBLIC_LOG_CHECK]', logError);
-        return { ok: false, status: 500, error: 'Could not check earlier emails for this booking' };
-    }
-    if ((count ?? 0) > 0) return { ok: false, status: 409, error: 'The confirmation for this booking has already been sent' };
-
-    return { ok: true, booking: withDisplayFields(data) };
-}
-
-/**
- * Recovers the email-only fields from the stored notes, so the email reads
- * as it did when the form sent them alongside the booking.
- *
- *  · Book Online stores "Luggage: 2 bag(s) | Return: … | customer's note";
- *    the luggage and return leg get their own rows again.
- *  · A destination enquiry stores "Destination: Dubai, UAE | …"; the
- *    destination names the email. Its notes are left whole, as before.
- */
-function withDisplayFields(row: Record<string, unknown>): Record<string, unknown> {
-    const notes = typeof row.special_notes === 'string' ? row.special_notes : '';
-    const parts = notes ? notes.split(' | ') : [];
-
-    if (row.service_type === DESTINATION_ENQUIRY_SERVICE) {
-        const first = parts[0] ?? '';
-        return { ...row, destination_name: first.startsWith('Destination: ') ? first.slice('Destination: '.length) : null };
-    }
-
-    let luggage: string | null = null;
-    let returnTrip: string | null = null;
-    if ((parts[0] ?? '').startsWith('Luggage: ')) {
-        luggage = (parts.shift() ?? '').slice('Luggage: '.length).replace(/ bag\(s\)$/, '');
-    }
-    if ((parts[0] ?? '').startsWith('Return: ')) {
-        returnTrip = (parts.shift() ?? '').slice('Return: '.length);
-    }
-    return { ...row, luggage_count: luggage, return_trip: returnTrip, special_notes: parts.join(' | ') || null };
-}
+const RESEND_TYPES = ['new_booking', 'destination_enquiry'] as const;
 
 export async function POST(req: Request) {
     const supabase = createAdminClient();
@@ -370,31 +47,23 @@ export async function POST(req: Request) {
             );
         }
 
-        if ((ADMIN_ONLY_TYPES as readonly string[]).includes(type)) {
-            const admin = await requireAdmin();
-            if (!admin) {
-                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        // Every type is admin-only. A customer's tab opened before this change
+        // may still call new_booking / destination_enquiry after booking; the
+        // server has already sent those emails, so that call is a no-op.
+        const admin = await requireAdmin();
+        const isResend = (RESEND_TYPES as readonly string[]).includes(type);
+        if (!admin) {
+            if (isResend) {
+                return NextResponse.json({ success: true, results: [], skipped: 'Booking emails are sent by the server when the booking is saved.' });
             }
-        } else {
-            // The two customer-triggered types are the ones a bot can reach,
-            // and each one sends two real emails from this business's Resend
-            // account. Honeypot, per-IP ceiling and the Turnstile pass apply
-            // here; skipped while TURNSTILE_SECRET_KEY is unset.
-            const blocked = guardPublicRequest(req, payload, { bucket: 'email', limit: 10 });
-            if (blocked) {
-                return NextResponse.json({ error: blocked.error }, { status: blocked.status });
-            }
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // The public types never use the request's booking data — see
-        // loadPublicBooking. Admin types may pass the record, or its id.
-        let b = bookingData;
-        if ((PUBLIC_TYPES as readonly string[]).includes(type)) {
-            const loaded = await loadPublicBooking(supabase, type, bookingId);
-            if (!loaded.ok) return NextResponse.json({ error: loaded.error }, { status: loaded.status });
-            b = loaded.booking;
-        } else if (!b && bookingId) {
-            const { data } = await supabase.from('bookings').select('*').eq('id', bookingId).single();
+        // A resend always reads the saved row. Other types may pass the
+        // record they act on, or its id.
+        let b = isResend ? null : bookingData;
+        if (!b && (bookingId || (isResend && bookingData?.id))) {
+            const { data } = await supabase.from('bookings').select('*').eq('id', bookingId ?? bookingData.id).maybeSingle();
             b = data;
         }
 
@@ -414,8 +83,11 @@ export async function POST(req: Request) {
          * the from/reply-to pair or drift from the others. Recipients are
          * unchanged — each caller still passes its own.
          */
-        const sendMail = (to: string, subject: string, html: string, bcc?: string) =>
-            resend.emails.send({ from, replyTo, to, subject, html, ...(bcc ? { bcc } : {}) });
+        const sendMail = async (to: string, subject: string, html: string, bcc?: string) => {
+            // Retries a transient failure twice before giving up (emailKit).
+            const r = await sendEmail({ from, replyTo, to, subject, html, bcc });
+            return { data: r.id ? { id: r.id } : null, error: r.error ? { message: r.error } : null };
+        };
 
         /**
          * A customer's address, or null when none was recorded.
@@ -437,60 +109,24 @@ export async function POST(req: Request) {
 
         const results: Array<Record<string, unknown>> = [];
 
-        // ─── NEW BOOKING ───────────────────────────────────────────────
-        if (type === 'new_booking') {
-            if (!b) return NextResponse.json({ error: 'bookingData or a resolvable bookingId is required' }, { status: 400 });
-
-            const adminReference = (b.booking_number as string) || bookingRef(b.id);
-            const subject = `New Booking Request — ${b.customer_name}`;
-            const adminHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📩 New Booking Request</p>${adminReference ? `<p style="color:#e2e8f0;margin:6px 0 0;font-size:0.85rem;">Ref ${escapeHtml(adminReference)}</p>` : ''}</div>
-                ${buildBookingRows(b)}
-                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${encodeURIComponent(String(b.id))}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
-            </div></div>`;
-            const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
-            await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message, from);
-            if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
-            await createNotification(supabase, 'new_booking', b, `New Booking — ${b.customer_name}`);
-
-            const bookingReference = (b.booking_number as string) || bookingRef(b.id);
-            const custSubject = `Booking Request Received – For a faster reply, message us on WhatsApp`;
-            const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Booking Received!</p></div>
-                <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
-                <p style="color:#475569;">We received your booking request for <strong>${escapeHtml(displayDateTime(b.travel_date as string | null | undefined, b.travel_time as string | null | undefined))}</strong>. Our team will get back to you as soon as possible to confirm your final quote.</p>
-                ${bookingReference ? `<p style="color:#475569;">Your booking reference is <strong>${escapeHtml(bookingReference)}</strong> — please quote it when you contact us.</p>` : ''}
-                ${buildBookingRows(b)}
-                ${whatsappBlock(`Hi, I have just submitted a booking request${bookingReference ? ` (ref ${bookingReference})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
-                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
-            </div></div>`;
-            // The admin notification above has already gone out and the
-            // booking is saved; a customer with no address simply gets no
-            // copy. That is not an error — the request succeeded.
-            const bookingTo = recipient(b.customer_email);
-            if (!bookingTo) {
-                results.push({ admin: r1?.id, customer: null, customerSkipped: NO_EMAIL });
-            } else {
-                const { data: r2, error: e2 } = await sendMail(bookingTo, custSubject, custHtml);
-                await logEmail(supabase, b.id || bookingId, type, bookingTo, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
-                if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
-                results.push({ admin: r1?.id, customer: r2?.id });
+        // ─── RESEND "WE RECEIVED YOUR BOOKING" ─────────────────────────
+        // Customer copy only, in the booking's own language, ignoring the
+        // automatic-email limits: an admin chose to send it.
+        if (isResend) {
+            if (!b) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+            const outcome = await sendReceivedEmail(supabase, b, { force: true });
+            if (outcome.status !== 'sent') {
+                return NextResponse.json({ error: outcome.reason }, { status: outcome.status === 'skipped' ? 422 : 502 });
             }
+            results.push({ customer: outcome.to });
         }
 
         // ─── BOOKING CONFIRMED ─────────────────────────────────────────
         if (type === 'booking_confirmed') {
             if (!b) return NextResponse.json({ error: 'bookingData or a resolvable bookingId is required' }, { status: 400 });
 
-            const subject = `Your Booking is Confirmed – Gulf Trip Service`;
-            const html = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#10b981;font-weight:700;font-size:1.1rem;margin:0;">🎉 Booking Confirmed!</p></div>
-                <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
-                <p style="color:#475569;">Great news! Your booking has been <strong>confirmed</strong>. Here are your trip details:</p>
-                ${buildBookingRows(b)}
-                ${whatsappBlock(`Hi, about my confirmed booking${b.booking_number ? ` (ref ${b.booking_number})` : ''} from ${b.pickup_location ?? ''} to ${b.dropoff_location ?? ''}.`)}
-                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You'll receive a reminder 24 hours before your trip. Thank you for choosing Gulf Trip Service.</p>
-            </div></div>`;
+            // English or Arabic, following the language the customer booked in.
+            const { subject, html } = confirmedEmail(b);
             const confirmTo = recipient(b.customer_email);
             if (!confirmTo) return NextResponse.json({ error: NO_EMAIL }, { status: 422 });
             const { data: r, error: e } = await sendMail(confirmTo, subject, html);
@@ -558,46 +194,6 @@ export async function POST(req: Request) {
             await logEmail(supabase, null, type, quoteTo, subject, r?.id || null, e ? 'failed' : 'sent', e?.message, from);
             if (e) return NextResponse.json({ error: e.message }, { status: 502 });
             results.push({ id: r?.id });
-        }
-
-        // ─── DESTINATION ENQUIRY ───────────────────────────────────────
-        // Fired from DestinationEnquiryForm.tsx (Popular Destinations
-        // pages) — same admin+customer email pair as `new_booking`, but a
-        // destination-specific subject line, since a Riyadh/Dubai/Doha
-        // enquiry is a browsing lead rather than a firm booking request.
-        if (type === 'destination_enquiry') {
-            if (!b) return NextResponse.json({ error: 'bookingData or a resolvable bookingId is required' }, { status: 400 });
-
-            const destLabel = b.destination_name || 'Trip';
-            const subject = `New ${destLabel} Travel Enquiry`;
-            const adminHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📍 New Destination Enquiry</p></div>
-                ${rowsTable(row('Destination', destLabel))}
-                ${buildBookingRows(b)}
-                <p style="margin-top:20px;text-align:center;"><a href="${SITE}/admin/bookings${b.id ? `?view=${encodeURIComponent(String(b.id))}` : ''}" style="${btnStyle}">View in Admin Panel</a></p>
-            </div></div>`;
-            const { data: r1, error: e1 } = await sendMail(ADMIN_EMAIL, subject, adminHtml);
-            await logEmail(supabase, b.id || bookingId, type, ADMIN_EMAIL, subject, r1?.id || null, e1 ? 'failed' : 'sent', e1?.message, from);
-            if (e1) return NextResponse.json({ error: `Admin notification failed: ${e1.message}` }, { status: 502 });
-            await createNotification(supabase, 'new_enquiry', b, `New ${destLabel} Enquiry — ${b.customer_name}`);
-
-            const custSubject = `We've Received Your ${destLabel} Enquiry – For a faster reply, message us on WhatsApp`;
-            const custHtml = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Request Received!</p></div>
-                <p style="color:#475569;">Assalamu Alaikum <strong>${escapeHtml(b.customer_name)}</strong>,</p>
-                <p style="color:#475569;">Thank you for your ${escapeHtml(destLabel)} travel enquiry. Our travel team will review your request and get back to you shortly.</p>
-                ${whatsappBlock(`Hi, I have just sent a ${destLabel} travel enquiry.`)}
-                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
-            </div></div>`;
-            const enquiryTo = recipient(b.customer_email);
-            if (!enquiryTo) {
-                results.push({ admin: r1?.id, customer: null, customerSkipped: NO_EMAIL });
-            } else {
-                const { data: r2, error: e2 } = await sendMail(enquiryTo, custSubject, custHtml);
-                await logEmail(supabase, b.id || bookingId, type, enquiryTo, custSubject, r2?.id || null, e2 ? 'failed' : 'sent', e2?.message, from);
-                if (e2) return NextResponse.json({ error: `Customer confirmation failed: ${e2.message}`, results: [{ admin: r1?.id }] }, { status: 502 });
-                results.push({ admin: r1?.id, customer: r2?.id });
-            }
         }
 
         // ─── INVOICE ───────────────────────────────────────────────────

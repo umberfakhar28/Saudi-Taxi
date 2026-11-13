@@ -110,6 +110,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             car_type: vehicleLabel || null,
             vehicle_slug: form.vehicle || null,
             status: 'pending',
+            locale: 'en',
         };
 
         try {
@@ -143,7 +144,6 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             });
             const bookingJson = await bookingRes.json().catch(() => ({}));
             if (!bookingRes.ok) throw new Error(bookingErrorMessage(bookingJson.code, ui('en')));
-            const insertedBooking = bookingJson.booking;
 
             // Counted the moment the enquiry row exists, before the email
             // attempt below, for the same reason as /book-online: the email
@@ -156,26 +156,8 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
                 detail: destinationName,
             });
 
-            // The enquiry is already saved at this point — an email hiccup
-            // shouldn't make the customer think their request wasn't
-            // received, but it also shouldn't be silently swallowed.
-            try {
-                const emailRes = await fetch('/api/emails/send', {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify({
-                        type: 'destination_enquiry',
-                        // Only the id: the server reads the enquiry it just saved.
-                        bookingId: insertedBooking?.id,
-                    }),
-                });
-                if (!emailRes.ok) {
-                    const j = await emailRes.json().catch(() => ({}));
-                    console.error('Destination enquiry email failed:', j.error);
-                }
-            } catch (emailErr) {
-                console.error('Destination enquiry email failed:', emailErr);
-            }
+            // Emails and the admin alert are sent by the server once the
+            // enquiry is saved (/api/bookings/create → lib/bookingNotify).
 
             setSubmitted(true);
         } catch (err) {

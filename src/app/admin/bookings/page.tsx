@@ -570,6 +570,33 @@ function BookingsPageInner() {
         }
     };
 
+    /**
+     * Re-sends the customer's automatic "we received your booking" email —
+     * for a mistyped address the admin has since corrected, or one that
+     * failed (the admin email and a push say when it does). In the booking's
+     * own language; the server reads every detail from the saved row.
+     */
+    const resendReceived = async (b: { id: string; customer_email?: string | null; service_type?: string | null }) => {
+        setOpenDropdown(null);
+        if (!emailOrNull(b?.customer_email)) {
+            showToast('error', 'This customer has no email address on file. Share it on WhatsApp instead.');
+            return;
+        }
+        try {
+            const type = b.service_type === 'destination-enquiry' ? 'destination_enquiry' : 'new_booking';
+            const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type, bookingId: b.id }) });
+            const json = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showToast('error', 'Not sent: ' + (json.error || `HTTP ${res.status}`));
+                return;
+            }
+            logActivity('booking', b.id, 'email_sent', `Booking-received email re-sent to ${b.customer_email}`);
+            showToast('success', 'Booking-received email sent to the customer.');
+        } catch (err: unknown) {
+            showToast('error', 'Not sent: ' + (err instanceof Error ? err.message : 'unknown error'));
+        }
+    };
+
     const saveNotes = async () => {
         if (!notesModal) return;
         const { error } = await supabase.from('bookings').update({ internal_notes: notes }).eq('id', notesModal.id);
@@ -1313,6 +1340,9 @@ function BookingsPageInner() {
                             <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Communication</div>
                             {b.customer_email && (
                                 <button onClick={() => sendEmail('booking_confirmed', b)} className="dropdown-item">📩 Email Confirmation</button>
+                            )}
+                            {b.customer_email && (
+                                <button onClick={() => resendReceived(b)} className="dropdown-item">📨 Resend Booking-Received Email</button>
                             )}
                             {/* Only offered when the stored number can actually be dialled —
                                 this used to call .replace() on a possibly-null phone, which
