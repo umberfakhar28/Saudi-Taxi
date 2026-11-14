@@ -1,101 +1,167 @@
 /**
- * Invoice / quotation → PNG or PDF, for sharing over WhatsApp and email.
+ * Invoice / quotation → PDF or PNG, for downloading, emailing and sharing.
  *
- * Drawn onto a canvas rather than screenshotting the DOM. That keeps the
- * feature dependency-free (no html2canvas, no PDF library), avoids the
- * CSS-parsing fidelity problems those libraries have, and — most usefully —
- * lets the height be computed from the content, so a long address or a long
- * note extends the document instead of being cut off.
+ * ONE generator for every copy a customer can receive: the Download PDF and
+ * Download Image buttons, the PDF attached to the invoice email and to the
+ * trip-completed email (lib/invoiceAttachment.ts) all come from
+ * renderInvoicePdf / renderInvoicePng below, so they are identical by
+ * construction.
  *
- * The PDF is the same rendering wrapped in a minimal hand-written PDF file,
- * so the image and the PDF can never disagree.
+ * Drawn onto a canvas in the browser rather than produced on the server:
+ *   · the browser shapes Arabic text correctly (joined letters, right to
+ *     left) — the server-side PDF libraries that run on Vercel do not, and a
+ *     customer's Arabic name must print correctly;
+ *   · headless Chrome on the server would work but is ~60 MB per function
+ *     with multi-second cold starts on Vercel.
+ * The fonts are the site's own, self-hosted files (Inter, Manrope, Noto Sans
+ * Arabic), loaded explicitly before drawing; the PDF contains the rendered
+ * pages, so it never depends on fonts installed where it is opened.
  *
- * WHAT to draw is decided by lib/invoiceDocument.ts, which the invoice page,
- * the preview modal and the invoice email read from too. This file only
- * decides HOW to draw it, so a field added to the document model appears
- * here without this file growing its own rules about money or dates.
+ * Item 5 (footer missing from the PDF/image): the root cause was not
+ * clipping. This file drew its own footer — a single centred line with the
+ * payment sentence and the phone/email squeezed together — and never had the
+ * "Questions about this invoice?…" line or the company sign-off that the
+ * on-screen invoice shows. The footer now comes from the shared document
+ * model (doc.footerLines / doc.signature), wraps instead of running off the
+ * edges, and long invoices flow onto further A4 pages instead of one
+ * ever-taller page.
  *
- * The only external asset is the brand mark, which is inlined as a `data:`
- * URL SVG. Nothing is fetched cross-origin, so the canvas is never tainted
- * and exporting always succeeds.
+ * WHAT to draw is decided by lib/invoiceDocument.ts; this file only decides
+ * how it looks (item 3: navy header band, ivory Bill To panel, navy item
+ * table, Total Amount box, Total Due, THANK YOU + Terms & Conditions).
  */
 
 import { brandMarkDataUrl } from './brandMark';
 import { COMPANY_LOCALITY, COMPANY_NAME, EMAIL, PHONE_DISPLAY } from './contact';
-import { buildInvoiceDocument, type InvoiceDocument, type InvoiceRecord } from './invoiceDocument';
+import {
+    buildInvoiceDocument, invoiceFileName, INVOICE_BADGE_COLORS,
+    type InvoiceDocument, type InvoiceRecord,
+} from './invoiceDocument';
 
 /** The data an export takes: an `invoices` row, plus the two presentation
- *  overrides the quote export uses. Unchanged for existing callers. */
+ *  overrides the quote export uses. */
 export type InvoicePngData = InvoiceRecord & {
     /** Legacy alias kept for the quote export, which passes the booking ref
      *  separately rather than on the record. */
     bookingNumber?: string | null;
 };
 
-/** Logical layout units; the bitmap is rendered at SCALE times this. */
-const WIDTH = 820;
-const PAD = 52;
-const SCALE = 3; // ~2460px wide — sharp on a phone screen and when printed.
+/* ── Page geometry (logical units; the bitmap is SCALE times this) ──── */
+const W = 820;
+const PAGE_H = Math.round(W * (841.89 / 595.28)); // A4 proportions: 1160
+const PAD = 48;
+const SCALE = 3;
+const CONTENT = W - PAD * 2;
 
-const INK = '#0f172a';
-const MUTED = '#64748b';
-const FAINT = '#94a3b8';
-const LINE = '#e2e8f0';
-const SURFACE = '#f8fafc';
-const NAVY = '#0f172a';
-const GOLD = '#fbbf24';
-const BRASS = '#b8945b';
+/* ── Brand palette (the website's tokens) ─────────────────────────── */
+const NAVY = '#081827';
+const GOLD = '#B8945B';
+const GOLD_INK = '#7A5C2E';
+const IVORY = '#F5F2EA';
+const LINE = '#E4DFD2';
+const INK = '#1C2528';
+const TEXT = '#3A4447';
+const MUTED = '#5A6569';
+const FAINT = '#6B7280';
+const GREEN = '#16A34A';
+const RED = '#DC2626';
 
-const FONT =
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+/* ── Fonts ────────────────────────────────────────────────────────── */
+let BODY = 'Inter, "Noto Sans Arabic Variable", Arial, Helvetica, sans-serif';
+let HEAD = `"Manrope Variable", ${BODY}`;
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
-/** Note blocks: body type and rhythm. */
-const NOTE_FONT = { weight: 600, size: 13.5 };
-const NOTE_LINE = 21;
+/**
+ * Makes sure the brand fonts are downloaded before a single glyph is drawn —
+ * a canvas silently falls back to Arial for a font that is still loading.
+ * Inter's real family name is generated by next/font, so it is read from
+ * the --font-body variable the root layout sets.
+ */
+async function loadFonts(): Promise<void> {
+    if (typeof document === 'undefined' || !document.fonts) return;
+    const inter = getComputedStyle(document.documentElement).getPropertyValue('--font-body').trim();
+    if (inter) {
+        BODY = `${inter.replace(/,\s*(system-ui|-apple-system|sans-serif).*$/, '')}, "Noto Sans Arabic Variable", Arial, Helvetica, sans-serif`;
+        HEAD = `"Manrope Variable", ${BODY}`;
+    }
+    const sample = 'Invoice 0123456789 محمد';
+    await Promise.all([
+        `400 14px ${BODY}`, `600 14px ${BODY}`, `700 14px ${BODY}`, `800 14px ${BODY}`,
+        `700 14px ${HEAD}`, `800 14px ${HEAD}`,
+    ].map((f) => document.fonts.load(f, sample).catch(() => [])));
+    await document.fonts.ready;
+}
 
-function font(weight: number, size: number, family = FONT) {
+function font(weight: number, size: number, family = BODY) {
     return `${weight} ${size}px ${family}`;
 }
 
-/** Greedy word wrap. Returns the lines that fit within maxWidth. */
+/* ── Text helpers ─────────────────────────────────────────────────── */
+
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
     const words = String(text).split(/\s+/).filter(Boolean);
-    if (words.length === 0) return [''];
+    if (words.length === 0) return [];
     const lines: string[] = [];
     let line = words[0];
     for (let i = 1; i < words.length; i++) {
         const candidate = `${line} ${words[i]}`;
-        if (ctx.measureText(candidate).width <= maxWidth) {
-            line = candidate;
-        } else {
-            lines.push(line);
-            line = words[i];
-        }
+        if (ctx.measureText(candidate).width <= maxWidth) line = candidate;
+        else { lines.push(line); line = words[i]; }
     }
     lines.push(line);
     return lines;
 }
 
-/** Like wrap(), but keeps the author's own line breaks between paragraphs. */
 function wrapParagraphs(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
-    return String(text)
-        .split(/\r?\n/)
-        .map((p) => p.trim())
-        .filter(Boolean)
-        .flatMap((p) => wrap(ctx, p, maxWidth));
+    return String(text).split(/\r?\n/).map((p) => p.trim()).filter(Boolean).flatMap((p) => wrap(ctx, p, maxWidth));
 }
 
-function roundRect(
-    ctx: CanvasRenderingContext2D,
-    x: number, y: number, w: number, h: number, r: number
-) {
+const hasArabic = (s: string) => /[؀-ۿ]/.test(s);
+
+/** Draws one line; Arabic lines are set right-to-left so they join and read correctly. */
+function text(ctx: CanvasRenderingContext2D, value: string, x: number, y: number) {
+    ctx.direction = hasArabic(value) ? 'rtl' : 'ltr';
+    // With direction rtl, 'left'/'right' align keep their physical meaning.
+    ctx.fillText(value, x, y);
+    ctx.direction = 'ltr';
+}
+
+function spaced(ctx: CanvasRenderingContext2D, value: string, x: number, y: number, spacing = 1.2) {
+    // letterSpacing is supported in current Chrome/Edge/Safari; older
+    // browsers simply draw the label without the extra spacing.
+    const c = ctx as CanvasRenderingContext2D & { letterSpacing?: string };
+    const prev = c.letterSpacing;
+    if (prev !== undefined) c.letterSpacing = `${spacing}px`;
+    ctx.fillText(value, x, y);
+    if (prev !== undefined) c.letterSpacing = prev;
+}
+
+function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
     ctx.beginPath();
-    // roundRect is widely supported, but fall back so an older browser still
-    // produces a correct (square-cornered) document rather than throwing.
     if (typeof ctx.roundRect === 'function') ctx.roundRect(x, y, w, h, r);
     else ctx.rect(x, y, w, h);
     ctx.closePath();
+}
+
+function rule(ctx: CanvasRenderingContext2D, x1: number, x2: number, y: number, color = LINE, width = 1) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.moveTo(x1, y);
+    ctx.lineTo(x2, y);
+    ctx.stroke();
+}
+
+function pill(ctx: CanvasRenderingContext2D, label: string, xRight: number, yMid: number, colors: { bg: string; fg: string }) {
+    ctx.font = font(800, 10.5);
+    const w = ctx.measureText(label.toUpperCase()).width + 22;
+    ctx.fillStyle = colors.bg;
+    roundRect(ctx, xRight - w, yMid - 11, w, 22, 11);
+    ctx.fill();
+    ctx.fillStyle = colors.fg;
+    ctx.textAlign = 'left';
+    spaced(ctx, label.toUpperCase(), xRight - w + 11, yMid + 4, 0.6);
+    return w;
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -107,373 +173,480 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     });
 }
 
-interface NoteBlock {
-    label: string;
-    lines: string[];
-    tint: string;
-    accent: string;
-    labelColor: string;
+/* ── Layout: a list of blocks, each measured once and drawn at any y ── */
+
+interface Block {
+    h: number;
+    /** Space above the block. Dropped at the top of a continuation page. */
+    gap: number;
+    draw: (ctx: CanvasRenderingContext2D, y: number) => void;
 }
 
-/** Height of one note block: label band + wrapped lines + bottom padding. */
-function noteHeight(block: NoteBlock) {
-    return 40 + block.lines.length * NOTE_LINE + 14;
-}
+function buildBlocks(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, logo: HTMLImageElement): Block[] {
+    const blocks: Block[] = [];
+    const isQuote = /quot/i.test(doc.title);
+    const badgeColors = INVOICE_BADGE_COLORS[doc.badge.value];
 
-/** Lays the document out and draws it. Shared by the PNG and PDF exports. */
-async function renderInvoiceCanvas(inv: InvoicePngData): Promise<HTMLCanvasElement> {
-    // Everything the document says — money, dates, which rows exist — comes
-    // from the shared model, so this file never decides any of it.
-    const doc: InvoiceDocument = buildInvoiceDocument({
-        ...inv,
-        booking_number: inv.booking_number ?? inv.bookingNumber ?? null,
+    // ── 1. Header band ────────────────────────────────────────────────
+    blocks.push({
+        h: 146, gap: 0,
+        draw: (c, y) => {
+            c.fillStyle = NAVY;
+            c.fillRect(0, y, W, 142);
+            c.fillStyle = GOLD;
+            c.fillRect(0, y + 142, W, 4);
+
+            c.fillStyle = '#FFFFFF';
+            c.textAlign = 'left';
+            c.font = font(800, 42, HEAD);
+            spaced(c, doc.title, PAD, y + 80, 2);
+            c.fillStyle = GOLD;
+            c.font = font(700, 11.5);
+            spaced(c, COMPANY_NAME.toUpperCase(), PAD, y + 106, 2.4);
+
+            const logoSize = 58;
+            c.drawImage(logo, W - PAD - logoSize, y + 20, logoSize, logoSize);
+            c.textAlign = 'right';
+            c.fillStyle = '#FFFFFF';
+            c.font = font(800, 14, HEAD);
+            c.fillText(COMPANY_NAME, W - PAD, y + 100);
+            c.fillStyle = 'rgba(245,242,234,0.78)';
+            c.font = font(400, 11);
+            c.fillText(`${COMPANY_LOCALITY}  ·  ${PHONE_DISPLAY}  ·  ${EMAIL}`, W - PAD, y + 118);
+            c.textAlign = 'left';
+        },
     });
-    const logo = await loadImage(brandMarkDataUrl(200, 'color'));
 
-    // ── Measuring pass ────────────────────────────────────────────────
-    // Lay the document out once on a throwaway context to learn its height,
-    // then draw for real. This is what stops long content being clipped.
+    // ── 2. Bill To / invoice number panel ─────────────────────────────
+    {
+        const colW = CONTENT / 2 - 36;
+        ctx.font = font(800, 18, HEAD);
+        const nameLines = wrap(ctx, doc.billToName, colW).slice(0, 2);
+        ctx.font = font(400, 12.5);
+        const billLines = doc.billToLines.flatMap((l) => wrap(ctx, l, colW).slice(0, 2));
+        const leftH = 22 + nameLines.length * 24 + billLines.length * 18;
+
+        const rightRows: { label: string; value: string; strong?: boolean; number?: boolean }[] = [];
+        if (doc.number) rightRows.push({ label: isQuote ? 'Quotation Number' : 'Invoice Number', value: doc.number, number: true });
+        for (const cell of doc.metaCells) {
+            rightRows.push({ label: cell.label === 'Issued' ? 'Date' : cell.label, value: cell.value, strong: cell.strong });
+        }
+        const rightH = rightRows.length * 44;
+        const h = Math.max(leftH, rightH) + 44;
+
+        blocks.push({
+            h, gap: 24,
+            draw: (c, y) => {
+                c.fillStyle = IVORY;
+                roundRect(c, PAD, y, CONTENT, h, 12);
+                c.fill();
+                // Thin gold rule down the middle, the reference's divider.
+                c.fillStyle = GOLD;
+                c.fillRect(PAD + CONTENT / 2, y + 22, 1, h - 44);
+
+                const lx = PAD + 24;
+                c.textAlign = 'left';
+                c.fillStyle = GOLD_INK;
+                c.font = font(800, 10.5);
+                spaced(c, isQuote ? 'PREPARED FOR' : 'BILL TO', lx, y + 34, 1.6);
+                c.fillStyle = INK;
+                c.font = font(800, 18, HEAD);
+                nameLines.forEach((l, i) => text(c, l, lx, y + 60 + i * 24));
+                c.fillStyle = TEXT;
+                c.font = font(400, 12.5);
+                const by = y + 60 + nameLines.length * 24;
+                billLines.forEach((l, i) => text(c, l, lx, by + i * 18));
+
+                const rx = W - PAD - 24;
+                c.textAlign = 'right';
+                rightRows.forEach((r, i) => {
+                    const ry = y + 34 + i * 44;
+                    c.fillStyle = MUTED;
+                    c.font = font(700, 10);
+                    spaced(c, r.label.toUpperCase(), rx, ry, 1.2);
+                    c.textAlign = 'right';
+                    if (r.number) {
+                        c.fillStyle = INK;
+                        c.font = font(800, 15);
+                        c.fillText(r.value, rx, ry + 20);
+                        if (!isQuote) {
+                            const numW = c.measureText(r.value).width;
+                            pill(c, doc.badge.label, rx - numW - 12, ry + 15, badgeColors);
+                            c.textAlign = 'right';
+                        }
+                    } else {
+                        c.fillStyle = r.strong ? GOLD_INK : INK;
+                        c.font = font(r.strong ? 800 : 600, r.strong ? 16 : 13.5);
+                        c.fillText(r.value, rx, ry + 20);
+                    }
+                });
+                c.textAlign = 'left';
+            },
+        });
+    }
+
+    // ── 3. Trip details ───────────────────────────────────────────────
+    {
+        const colW = CONTENT / 2 - 40;
+        ctx.font = font(600, 13);
+        const pickup = wrap(ctx, doc.pickup, colW);
+        const dropoff = wrap(ctx, doc.dropoff, colW);
+        const when = [doc.outboundWhen && `Pickup: ${doc.outboundWhen}`, doc.returnWhen && `Return: ${doc.returnWhen}`]
+            .filter(Boolean) as string[];
+        ctx.font = font(400, 12);
+        const details = doc.tripDetails.length
+            ? wrap(ctx, doc.tripDetails.map((d) => `${d.label}: ${d.value}`).join('   ·   '), CONTENT - 40)
+            : [];
+        const routeH = 18 + Math.max(pickup.length, dropoff.length) * 19;
+        const h = 44 + routeH + (when.length ? 14 + 18 : 0) + (details.length ? 8 + details.length * 17 : 0) + 10;
+
+        blocks.push({
+            h, gap: 22,
+            draw: (c, y) => {
+                c.strokeStyle = LINE;
+                c.lineWidth = 1;
+                roundRect(c, PAD + 0.5, y + 0.5, CONTENT - 1, h - 1, 12);
+                c.stroke();
+                c.textAlign = 'left';
+                c.fillStyle = NAVY;
+                c.font = font(800, 11, HEAD);
+                spaced(c, 'TRIP DETAILS', PAD + 20, y + 28, 1.8);
+                rule(c, PAD + 20, PAD + 60, y + 36, GOLD, 2);
+
+                const cols = [
+                    { x: PAD + 20, label: 'PICKUP', lines: pickup, color: GREEN, mark: '↑' },
+                    { x: PAD + CONTENT / 2 + 10, label: 'DROP-OFF', lines: dropoff, color: RED, mark: '↓' },
+                ];
+                for (const col of cols) {
+                    c.fillStyle = FAINT;
+                    c.font = font(700, 9.5);
+                    spaced(c, col.label, col.x + 16, y + 58, 1.2);
+                    c.fillStyle = col.color;
+                    c.font = font(800, 13);
+                    c.fillText(col.mark, col.x, y + 76);
+                    c.fillStyle = INK;
+                    c.font = font(600, 13);
+                    col.lines.forEach((l, i) => text(c, l, col.x + 16, y + 76 + i * 19));
+                }
+                let ty = y + 44 + routeH;
+                if (when.length) {
+                    ty += 14;
+                    c.fillStyle = TEXT;
+                    c.font = font(600, 12);
+                    c.fillText(when.join('      '), PAD + 20, ty + 4);
+                    ty += 18;
+                }
+                if (details.length) {
+                    ty += 8;
+                    c.fillStyle = MUTED;
+                    c.font = font(400, 12);
+                    details.forEach((l, i) => c.fillText(l, PAD + 20, ty + 4 + i * 17));
+                }
+            },
+        });
+    }
+
+    // ── 4. Notes ──────────────────────────────────────────────────────
+    for (const n of doc.notes) {
+        ctx.font = font(600, 13.5);
+        const lines = wrapParagraphs(ctx, n.text, CONTENT - 48);
+        const h = 40 + lines.length * 21 + 14;
+        const accent = n.tone === 'accent';
+        blocks.push({
+            h, gap: 16,
+            draw: (c, y) => {
+                c.fillStyle = accent ? '#F6EFE2' : IVORY;
+                roundRect(c, PAD, y, CONTENT, h, 10);
+                c.fill();
+                c.fillStyle = accent ? GOLD : '#B7AD97';
+                roundRect(c, PAD, y, 4, h, 2);
+                c.fill();
+                c.textAlign = 'left';
+                c.fillStyle = accent ? GOLD_INK : MUTED;
+                c.font = font(800, 10.5);
+                spaced(c, n.label.toUpperCase(), PAD + 24, y + 26, 1);
+                c.fillStyle = INK;
+                c.font = font(600, 13.5);
+                lines.forEach((l, i) => text(c, l, PAD + 24, y + 48 + i * 21));
+            },
+        });
+    }
+
+    // ── 5. Items table ────────────────────────────────────────────────
+    {
+        const descW = 330;
+        ctx.font = font(700, 13.5);
+        const desc = wrap(ctx, doc.item.description, descW);
+        const rowH = 22 + desc.length * 19 + (doc.item.reference ? 18 : 0) + 8;
+        const h = 40 + rowH;
+        const xQty = PAD + 440;
+        const xPrice = PAD + 600;
+        const xTotal = W - PAD - 18;
+        blocks.push({
+            h, gap: 20,
+            draw: (c, y) => {
+                c.fillStyle = NAVY;
+                roundRect(c, PAD, y, CONTENT, 40, 8);
+                c.fill();
+                c.fillStyle = '#FFFFFF';
+                c.font = font(800, 11);
+                c.textAlign = 'left';
+                spaced(c, 'ITEM DESCRIPTION', PAD + 18, y + 25, 1.2);
+                c.textAlign = 'center';
+                spaced(c, 'QUANTITY', xQty, y + 25, 1.2);
+                c.textAlign = 'right';
+                spaced(c, 'PRICE', xPrice, y + 25, 1.2);
+                c.textAlign = 'right';
+                spaced(c, 'TOTAL', xTotal, y + 25, 1.2);
+
+                const ry = y + 40 + 26;
+                c.textAlign = 'left';
+                c.fillStyle = INK;
+                c.font = font(700, 13.5);
+                desc.forEach((l, i) => c.fillText(l, PAD + 18, ry + i * 19));
+                if (doc.item.reference) {
+                    c.fillStyle = FAINT;
+                    c.font = font(400, 11.5);
+                    c.fillText(doc.item.reference, PAD + 18, ry + desc.length * 19 + 2);
+                }
+                c.fillStyle = TEXT;
+                c.font = font(600, 13);
+                c.textAlign = 'center';
+                c.fillText(doc.item.quantity, xQty, ry);
+                c.textAlign = 'right';
+                c.fillText(doc.item.price, xPrice, ry);
+                c.fillStyle = INK;
+                c.font = font(800, 13.5);
+                c.fillText(doc.item.total, xTotal, ry);
+                c.textAlign = 'left';
+                rule(c, PAD, W - PAD, y + h - 1);
+            },
+        });
+    }
+
+    // ── 6. Totals ─────────────────────────────────────────────────────
+    {
+        const before = doc.totalRows.filter((r) => r.kind === 'line' || (r.kind === 'credit' && r.label === 'Discount'));
+        const total = doc.totalRows.find((r) => r.kind === 'total');
+        const after = doc.totalRows.filter((r) => (r.kind === 'credit' && r.label !== 'Discount') || r.kind === 'balance');
+        const boxW = 320;
+        const bx = W - PAD - boxW;
+        const h = before.length * 30 + 8 + 50 + after.length * 28 + 4;
+        blocks.push({
+            h, gap: 14,
+            draw: (c, y) => {
+                let ry = y;
+                for (const r of before) {
+                    c.textAlign = 'left';
+                    c.fillStyle = MUTED;
+                    c.font = font(600, 12.5);
+                    c.fillText(r.label, bx + 18, ry + 20);
+                    c.textAlign = 'right';
+                    c.fillStyle = r.kind === 'credit' ? GREEN : INK;
+                    c.font = font(700, 13);
+                    c.fillText(r.value, W - PAD - 18, ry + 20);
+                    rule(c, bx, W - PAD, ry + 30);
+                    ry += 30;
+                }
+                ry += 8;
+                if (total) {
+                    c.fillStyle = NAVY;
+                    roundRect(c, bx, ry, boxW, 50, 10);
+                    c.fill();
+                    c.textAlign = 'left';
+                    c.fillStyle = '#FFFFFF';
+                    c.font = font(800, 12, HEAD);
+                    spaced(c, 'TOTAL AMOUNT', bx + 18, ry + 30, 1.4);
+                    c.textAlign = 'right';
+                    c.fillStyle = GOLD;
+                    c.font = font(800, 19, HEAD);
+                    c.fillText(total.value, W - PAD - 18, ry + 32);
+                }
+                ry += 50;
+                for (const r of after) {
+                    c.textAlign = 'left';
+                    c.fillStyle = r.kind === 'balance' ? INK : MUTED;
+                    c.font = font(r.kind === 'balance' ? 800 : 600, 12.5);
+                    c.fillText(r.label, bx + 18, ry + 20);
+                    c.textAlign = 'right';
+                    c.fillStyle = r.kind === 'balance' ? INK : GREEN;
+                    c.font = font(800, 13);
+                    c.fillText(r.value, W - PAD - 18, ry + 20);
+                    ry += 28;
+                }
+                c.textAlign = 'left';
+            },
+        });
+    }
+
+    // ── 7. Payment method + Total Due ─────────────────────────────────
+    blocks.push({
+        h: 86, gap: 18,
+        draw: (c, y) => {
+            rule(c, PAD, W - PAD, y, GOLD, 1);
+            c.textAlign = 'left';
+            if (doc.paymentMethod) {
+                c.fillStyle = MUTED;
+                c.font = font(700, 10);
+                spaced(c, 'PAYMENT METHOD', PAD, y + 34, 1.4);
+                c.fillStyle = INK;
+                c.font = font(800, 16, HEAD);
+                c.fillText(doc.paymentMethod, PAD, y + 58);
+            }
+            c.textAlign = 'right';
+            c.fillStyle = MUTED;
+            c.font = font(700, 10);
+            spaced(c, doc.headline.label.toUpperCase(), W - PAD, y + 34, 1.4);
+            c.textAlign = 'right';
+            c.fillStyle = doc.settled ? GREEN : NAVY;
+            c.font = font(800, 32, HEAD);
+            c.fillText(doc.headline.value, W - PAD, y + 68);
+            c.textAlign = 'left';
+            rule(c, PAD, W - PAD, y + 85, GOLD, 1);
+        },
+    });
+
+    // ── 8. THANK YOU + Terms & Conditions (+ the footer lines) ────────
+    {
+        const termsX = PAD + CONTENT / 2 + 10;
+        const termsW = W - PAD - termsX;
+        ctx.font = font(500, 12);
+        const lines = doc.footerLines.map((l, i) => ({ i, parts: wrap(ctx, l, termsW) }));
+        const termsH = 30 + lines.reduce((s, l) => s + l.parts.length * 18 + 6, 0);
+        const h = Math.max(84, termsH) + 4;
+        blocks.push({
+            h, gap: 20,
+            draw: (c, y) => {
+                c.textAlign = 'left';
+                c.fillStyle = NAVY;
+                c.font = font(800, 34, HEAD);
+                spaced(c, 'THANK YOU', PAD, y + 40, 1.5);
+                c.fillStyle = MUTED;
+                c.font = font(500, 12.5);
+                c.fillText(`for travelling with ${COMPANY_NAME}`, PAD, y + 64);
+
+                c.fillStyle = NAVY;
+                c.font = font(800, 11, HEAD);
+                spaced(c, isQuote ? 'TERMS' : 'TERMS & CONDITIONS', termsX, y + 16, 1.6);
+                let ly = y + 40;
+                for (const l of lines) {
+                    // The payment sentence is the one a customer acts on: bold,
+                    // and green once there is nothing left to pay.
+                    const first = l.i === 0 && doc.footerLines.length > 1;
+                    c.fillStyle = first ? (doc.settled ? GREEN : INK) : TEXT;
+                    c.font = font(first ? 700 : 500, 12);
+                    l.parts.forEach((p, j) => c.fillText(p, termsX, ly + j * 18));
+                    ly += l.parts.length * 18 + 6;
+                }
+            },
+        });
+    }
+
+    // ── 9. Sign-off ───────────────────────────────────────────────────
+    blocks.push({
+        h: 34, gap: 8,
+        draw: (c, y) => {
+            c.font = font(800, 10.5);
+            const label = doc.signature.toUpperCase();
+            const w = c.measureText(label).width + label.length * 2.4;
+            rule(c, W / 2 - w / 2 - 54, W / 2 - w / 2 - 14, y + 18, GOLD, 1);
+            rule(c, W / 2 + w / 2 + 14, W / 2 + w / 2 + 54, y + 18, GOLD, 1);
+            c.fillStyle = GOLD_INK;
+            c.textAlign = 'center';
+            spaced(c, label, W / 2, y + 22, 2.4);
+            c.textAlign = 'left';
+        },
+    });
+
+    return blocks;
+}
+
+/* ── Rendering ────────────────────────────────────────────────────── */
+
+async function prepare(inv: InvoicePngData) {
+    await loadFonts();
+    const doc = buildInvoiceDocument({ ...inv, booking_number: inv.booking_number ?? inv.bookingNumber ?? null });
+    const logo = await loadImage(brandMarkDataUrl(240, 'white'));
     const measure = document.createElement('canvas').getContext('2d');
     if (!measure) throw new Error('Canvas is unavailable in this browser.');
+    return { doc, blocks: buildBlocks(measure, doc, logo) };
+}
 
-    const contentWidth = WIDTH - PAD * 2;
-    const colWidth = (contentWidth - 20) / 2;
-    const innerCol = colWidth - 32;
-
-    measure.font = font(400, 13);
-    const pickupLines = wrap(measure, doc.pickup, innerCol - 16);
-    const dropoffLines = wrap(measure, doc.dropoff, innerCol - 16);
-
-    // Vehicle / passengers / luggage / trip type, as one wrapped strip under
-    // the itinerary rather than four stacked rows that would push the box
-    // taller than the one beside it.
-    measure.font = font(400, 11.5);
-    const detailText = doc.tripDetails.map((d) => `${d.label}: ${d.value}`).join('  ·  ');
-    const detailLines = detailText ? wrap(measure, detailText, innerCol) : [];
-    const whenLines = [doc.outboundWhen && `Pickup: ${doc.outboundWhen}`,
-        doc.returnWhen && `Return: ${doc.returnWhen}`].filter(Boolean) as string[];
-
-    measure.font = font(400, 13);
-    const serviceLines = wrap(measure, doc.lineDescription, contentWidth - 200);
-
-    // Notes sit directly under the customer and trip boxes, full width and in
-    // heavier type — they used to trail after the totals in small grey text,
-    // where a customer could easily miss them.
-    measure.font = font(NOTE_FONT.weight, NOTE_FONT.size);
-    const noteTextWidth = contentWidth - 48;
-    const noteBlocks: NoteBlock[] = doc.notes.map((n) => ({
-        label: n.label,
-        lines: wrapParagraphs(measure, n.text, noteTextWidth),
-        tint: n.tone === 'accent' ? '#fbf6ec' : SURFACE,
-        accent: n.tone === 'accent' ? BRASS : '#94a3b8',
-        labelColor: n.tone === 'accent' ? '#8a6a35' : MUTED,
-    }));
-    const notesHeight = noteBlocks.reduce((sum, b) => sum + noteHeight(b) + 16, 0);
-
-    // Bill To: the name, then whichever contact lines exist. A customer with
-    // no email gets a shorter box, not a blank line where one would be.
-    const tripBoxHeight = 46 + (pickupLines.length + dropoffLines.length) * 19 + 10
-        + whenLines.length * 17 + (detailLines.length ? detailLines.length * 16 + 6 : 0) + 18;
-    const billBoxHeight = 58 + (1 + doc.billToLines.length) * 19 + 8;
-    const boxHeight = Math.max(tripBoxHeight, billBoxHeight);
-
-    const tableRowHeight = 34 + serviceLines.length * 18;
-
-    // Totals: one row per entry the model produced, with the emphasised
-    // Total row given more room.
-    const totalsHeight = 24
-        + doc.totalRows.reduce((h, r) => h + (r.kind === 'total' ? 30 : 24), 0)
-        + 20;
-
-    const META_H = doc.metaCells.length ? 58 + 24 : 0;
-
-    // Tall enough for the brand block on the right (logo 44 + name + locality
-    // + phone + email) with a little air under it.
-    const HEADER_H = 128;
-    const FOOTER_H = 118;
-    const height =
-        PAD + HEADER_H + 28 + META_H + boxHeight + 28 + notesHeight + 44 + tableRowHeight + 24 +
-        totalsHeight + FOOTER_H + PAD;
-
-    // ── Drawing pass ──────────────────────────────────────────────────
+function newCanvas(height: number) {
     const canvas = document.createElement('canvas');
-    canvas.width = Math.round(WIDTH * SCALE);
+    canvas.width = Math.round(W * SCALE);
     canvas.height = Math.round(height * SCALE);
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Canvas is unavailable in this browser.');
     ctx.scale(SCALE, SCALE);
     ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, height);
+    return { canvas, ctx };
+}
 
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, WIDTH, height);
+const BOTTOM_PAD = 36;
 
-    let y = PAD;
-
-    // ── Header ────────────────────────────────────────────────────────
-    ctx.fillStyle = INK;
-    ctx.font = font(900, 34);
-    ctx.fillText(doc.title, PAD, y + 30);
-
-    ctx.fillStyle = FAINT;
-    ctx.font = font(400, 13, MONO);
-    ctx.fillText(doc.number, PAD, y + 52);
-
-    // Status pill
-    const isPaid = doc.statusValue === 'paid';
-    ctx.font = font(700, 11);
-    const pillW = ctx.measureText(doc.statusLabel).width + 22;
-    ctx.fillStyle = isPaid ? '#dcfce7' : doc.statusValue === 'partially_paid' ? '#e0e7ff' : '#fef3c7';
-    roundRect(ctx, PAD, y + 62, pillW, 22, 11);
-    ctx.fill();
-    ctx.fillStyle = isPaid ? '#166534' : doc.statusValue === 'partially_paid' ? '#3730a3' : '#92400e';
-    ctx.fillText(doc.statusLabel.toUpperCase(), PAD + 11, y + 77);
-
-    // Brand block, right-aligned, led by the full-colour mark. Every line
-    // comes from lib/contact.ts rather than being written out here.
-    const logoSize = 44;
-    ctx.drawImage(logo, WIDTH - PAD - logoSize, y, logoSize, logoSize);
-
-    ctx.textAlign = 'right';
-    ctx.fillStyle = INK;
-    ctx.font = font(800, 16);
-    ctx.fillText(COMPANY_NAME, WIDTH - PAD, y + logoSize + 22);
-    ctx.fillStyle = MUTED;
-    ctx.font = font(400, 12);
-    ctx.fillText(COMPANY_LOCALITY, WIDTH - PAD, y + logoSize + 39);
-    ctx.fillText(PHONE_DISPLAY, WIDTH - PAD, y + logoSize + 55);
-    ctx.fillText(EMAIL, WIDTH - PAD, y + logoSize + 71);
-    ctx.textAlign = 'left';
-
-    y += HEADER_H + 28;
-
-    // ── Meta strip ────────────────────────────────────────────────────
-    if (doc.metaCells.length) {
-        ctx.fillStyle = SURFACE;
-        roundRect(ctx, PAD, y, contentWidth, 58, 10);
-        ctx.fill();
-
-        const cellW = contentWidth / doc.metaCells.length;
-        doc.metaCells.forEach((cell, i) => {
-            const cx = PAD + i * cellW + 20;
-            ctx.fillStyle = FAINT;
-            ctx.font = font(700, 9.5);
-            ctx.fillText(cell.label.toUpperCase(), cx, y + 23);
-            ctx.fillStyle = cell.strong ? BRASS : INK;
-            ctx.font = font(cell.strong ? 800 : 600, cell.strong ? 15.5 : 13.5);
-            ctx.fillText(cell.value, cx, y + 44);
-            // Hairline between cells, never before the first.
-            if (i > 0) {
-                ctx.strokeStyle = LINE;
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(PAD + i * cellW, y + 15);
-                ctx.lineTo(PAD + i * cellW, y + 43);
-                ctx.stroke();
-            }
-        });
-        y += 58 + 24;
-    }
-
-    // ── Bill To / Trip Details ────────────────────────────────────────
-    const drawBoxLabel = (label: string, bx: number, by: number) => {
-        ctx.fillStyle = FAINT;
-        ctx.font = font(700, 10);
-        ctx.fillText(label.toUpperCase(), bx + 16, by + 24);
-    };
-
-    ctx.fillStyle = SURFACE;
-    roundRect(ctx, PAD, y, colWidth, boxHeight, 10);
-    ctx.fill();
-    drawBoxLabel('Bill To', PAD, y);
-    ctx.fillStyle = INK;
-    ctx.font = font(700, 14);
-    ctx.fillText(doc.billToName, PAD + 16, y + 48);
-    ctx.fillStyle = MUTED;
-    ctx.font = font(400, 12.5);
-    doc.billToLines.forEach((line, i) => {
-        // A long billing address wraps rather than running past the box edge.
-        wrap(ctx, line, innerCol).slice(0, 2).forEach((part, j) => {
-            ctx.fillText(part, PAD + 16, y + 68 + (i + j) * 19);
-        });
-    });
-
-    const tx = PAD + colWidth + 20;
-    ctx.fillStyle = SURFACE;
-    roundRect(ctx, tx, y, colWidth, boxHeight, 10);
-    ctx.fill();
-    drawBoxLabel('Trip Details', tx, y);
-
-    let ty = y + 46;
-    ctx.font = font(400, 13);
-    ctx.fillStyle = '#10b981';
-    ctx.fillText('↑', tx + 16, ty);
-    ctx.fillStyle = '#334155';
-    pickupLines.forEach((line, i) => ctx.fillText(line, tx + 32, ty + i * 19));
-    ty += pickupLines.length * 19 + 6;
-    ctx.fillStyle = '#f43f5e';
-    ctx.fillText('↓', tx + 16, ty);
-    ctx.fillStyle = '#334155';
-    dropoffLines.forEach((line, i) => ctx.fillText(line, tx + 32, ty + i * 19));
-    ty += dropoffLines.length * 19 + 8;
-
-    // Pickup, and the return leg when there is one — each dropped entirely
-    // when not recorded, so nothing is ever invented or defaulted.
-    ctx.font = font(400, 11.5);
-    ctx.fillStyle = MUTED;
-    whenLines.forEach((line, i) => ctx.fillText(line, tx + 16, ty + i * 17));
-    ty += whenLines.length * 17;
-
-    if (detailLines.length) {
-        ty += 6;
-        ctx.fillStyle = FAINT;
-        detailLines.forEach((line, i) => ctx.fillText(line, tx + 16, ty + i * 16));
-    }
-
-    y += boxHeight + 28;
-
-    // ── Notes ─────────────────────────────────────────────────────────
-    for (const block of noteBlocks) {
-        const h = noteHeight(block);
-        ctx.fillStyle = block.tint;
-        roundRect(ctx, PAD, y, contentWidth, h, 10);
-        ctx.fill();
-        ctx.fillStyle = block.accent;
-        roundRect(ctx, PAD, y, 4, h, 2);
-        ctx.fill();
-
-        ctx.fillStyle = block.labelColor;
-        ctx.font = font(800, 10.5);
-        ctx.fillText(block.label.toUpperCase(), PAD + 24, y + 26);
-
-        ctx.fillStyle = INK;
-        ctx.font = font(NOTE_FONT.weight, NOTE_FONT.size);
-        block.lines.forEach((line, i) => ctx.fillText(line, PAD + 24, y + 48 + i * NOTE_LINE));
-
-        y += h + 16;
-    }
-
-    // ── Line-item table ───────────────────────────────────────────────
-    ctx.fillStyle = NAVY;
-    roundRect(ctx, PAD, y, contentWidth, 34, 8);
-    ctx.fill();
-    ctx.fillStyle = '#ffffff';
-    ctx.font = font(700, 12);
-    ctx.fillText('DESCRIPTION', PAD + 16, y + 22);
-    ctx.textAlign = 'right';
-    ctx.fillText('AMOUNT', WIDTH - PAD - 16, y + 22);
-    ctx.textAlign = 'left';
-
-    y += 44;
-    ctx.fillStyle = '#334155';
-    ctx.font = font(400, 13);
-    serviceLines.forEach((line, i) => ctx.fillText(line, PAD + 16, y + 14 + i * 18));
-    if (doc.lineReference) {
-        ctx.fillStyle = FAINT;
-        ctx.font = font(400, 11.5);
-        ctx.fillText(doc.lineReference, PAD + 16, y + 16 + serviceLines.length * 18);
-    }
-    ctx.fillStyle = INK;
-    ctx.font = font(700, 13);
-    ctx.textAlign = 'right';
-    ctx.fillText(doc.lineAmount, WIDTH - PAD - 16, y + 14);
-    ctx.textAlign = 'left';
-
-    y += tableRowHeight;
-    ctx.strokeStyle = LINE;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(PAD, y);
-    ctx.lineTo(WIDTH - PAD, y);
-    ctx.stroke();
-
-    y += 24;
-
-    // ── Payment method, in the space beside the totals ────────────────
-    // A transport invoice is settled in cash as often as not, and the
-    // customer's copy should say which. Sits opposite the totals box rather
-    // than in a band of its own, so the document gains a fact, not a row.
-    if (doc.paymentMethod) {
-        ctx.fillStyle = FAINT;
-        ctx.font = font(700, 9.5);
-        ctx.fillText('PAYMENT METHOD', PAD, y + 16);
-        ctx.fillStyle = INK;
-        ctx.font = font(700, 14);
-        ctx.fillText(doc.paymentMethod, PAD, y + 38);
-    }
-
-    // ── Totals ────────────────────────────────────────────────────────
-    const totalsWidth = 268;
-    const totalsX = WIDTH - PAD - totalsWidth;
-    ctx.fillStyle = NAVY;
-    roundRect(ctx, totalsX, y, totalsWidth, totalsHeight, 10);
-    ctx.fill();
-
-    let ry = y + 28;
-    doc.totalRows.forEach((rowData) => {
-        const emphasise = rowData.kind === 'total';
-        // A rule above the Total separates what makes it up from the figure
-        // the customer actually owes.
-        if (emphasise) {
-            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(totalsX + 18, ry - 14);
-            ctx.lineTo(totalsX + totalsWidth - 18, ry - 14);
-            ctx.stroke();
-            ry += 6;
-        }
-        ctx.font = font(emphasise ? 800 : rowData.kind === 'balance' ? 700 : 400,
-            emphasise ? 16 : 12.5);
-        ctx.fillStyle = emphasise ? GOLD
-            : rowData.kind === 'balance' ? '#ffffff'
-                : 'rgba(255,255,255,0.65)';
-        ctx.textAlign = 'left';
-        ctx.fillText(rowData.label, totalsX + 18, ry);
-        ctx.textAlign = 'right';
-        ctx.fillText(rowData.value, totalsX + totalsWidth - 18, ry);
-        ctx.textAlign = 'left';
-        ry += emphasise ? 30 : 24;
-    });
-
-    y += totalsHeight;
-
-    // ── Footer ────────────────────────────────────────────────────────
-    y += 34;
-    ctx.strokeStyle = LINE;
-    ctx.beginPath();
-    ctx.moveTo(PAD, y);
-    ctx.lineTo(WIDTH - PAD, y);
-    ctx.stroke();
-
-    ctx.textAlign = 'center';
-    ctx.fillStyle = INK;
-    ctx.font = font(700, 13.5);
-    ctx.fillText(`Thank you for travelling with ${COMPANY_NAME}`, WIDTH / 2, y + 30);
-    ctx.fillStyle = MUTED;
-    ctx.font = font(400, 11.5);
-    // What to do next, then how to reach us. A quotation and a settled
-    // invoice have nothing to chase, so they show the contact line alone.
-    ctx.fillText(
-        [doc.footerNote, `${PHONE_DISPLAY}  ·  ${EMAIL}`].filter(Boolean).join('   '),
-        WIDTH / 2, y + 50
-    );
-    ctx.textAlign = 'left';
-
+/** The whole document on one canvas — the image export. */
+async function renderSingle(inv: InvoicePngData): Promise<HTMLCanvasElement> {
+    const { blocks } = await prepare(inv);
+    const height = blocks.reduce((s, b) => s + b.gap + b.h, 0) + BOTTOM_PAD;
+    const { canvas, ctx } = newCanvas(height);
+    let y = 0;
+    for (const b of blocks) { y += b.gap; b.draw(ctx, y); y += b.h; }
     return canvas;
 }
 
 /**
- * Renders the document and returns a PNG blob.
- * Exported separately from the download helper so it can also be attached or
- * previewed without forcing a download.
+ * The document as A4 pages — the PDF. Blocks are never split: one that does
+ * not fit moves to the next page, which starts with a slim continuation
+ * header. Page numbers appear only when there is more than one page.
  */
-export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
-    const canvas = await renderInvoiceCanvas(inv);
-    return new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob(
-            (blob) => (blob ? resolve(blob) : reject(new Error('Could not encode the PNG.'))),
-            'image/png'
-        );
+async function renderPages(inv: InvoicePngData): Promise<HTMLCanvasElement[]> {
+    const { doc, blocks } = await prepare(inv);
+    const TOP_CONT = 64;
+    const LIMIT = PAGE_H - 44;
+    const pages: Block[][] = [[]];
+    let y = 0;
+    for (const b of blocks) {
+        const first = pages[pages.length - 1].length === 0;
+        const gap = first && pages.length > 1 ? 0 : b.gap;
+        if (!first && y + gap + b.h > LIMIT) {
+            pages.push([]);
+            y = TOP_CONT;
+            pages[pages.length - 1].push(b);
+            y += b.h;
+            continue;
+        }
+        pages[pages.length - 1].push(b);
+        y += gap + b.h;
+    }
+
+    return pages.map((list, pi) => {
+        const { canvas, ctx } = newCanvas(PAGE_H);
+        let py = 0;
+        if (pi > 0) {
+            ctx.fillStyle = NAVY;
+            ctx.fillRect(0, 0, W, 6);
+            ctx.fillStyle = MUTED;
+            ctx.font = font(700, 10.5);
+            ctx.textAlign = 'left';
+            spaced(ctx, `${doc.title} ${doc.number} — CONTINUED`, PAD, 38, 1.2);
+            py = TOP_CONT;
+        }
+        list.forEach((b, bi) => {
+            py += pi > 0 && bi === 0 ? 0 : b.gap;
+            b.draw(ctx, py);
+            py += b.h;
+        });
+        if (pages.length > 1) {
+            ctx.fillStyle = FAINT;
+            ctx.font = font(500, 10);
+            ctx.textAlign = 'center';
+            ctx.fillText(`Page ${pi + 1} of ${pages.length}`, W / 2, PAGE_H - 18);
+            ctx.textAlign = 'left';
+        }
+        return canvas;
     });
 }
 
@@ -488,19 +661,12 @@ function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Prom
 }
 
 /**
- * Wraps a JPEG in a single-page PDF.
- *
- * The page is A4 wide. It is A4 tall too unless the document is longer, in
- * which case the page grows rather than cutting the content across a break.
- * PDF viewers embed JPEG natively (DCTDecode), so no re-encoding happens.
+ * Wraps JPEG pages in a PDF, one A4 page each. PDF viewers decode JPEG
+ * natively (DCTDecode), so nothing is re-encoded.
  */
-function jpegToPdf(jpeg: Uint8Array, pxWidth: number, pxHeight: number): Blob {
+function jpegsToPdf(pages: { jpeg: Uint8Array; w: number; h: number }[]): Blob {
     const A4_W = 595.28;
-    const A4_H = 841.89;
-    const drawH = (A4_W * pxHeight) / pxWidth;
-    const pageH = Math.max(A4_H, drawH);
     const n = (v: number) => v.toFixed(2);
-
     const enc = new TextEncoder();
     const parts: Uint8Array[] = [];
     const offsets: number[] = [];
@@ -515,38 +681,55 @@ function jpegToPdf(jpeg: Uint8Array, pxWidth: number, pxHeight: number): Blob {
         push(`${id} 0 obj\n${body}\nendobj\n`);
     };
 
-    push('%PDF-1.4\n');
+    // Object ids: 1 catalog, 2 page tree, then three per page
+    // (page, image, content stream).
+    const pageIds = pages.map((_, i) => 3 + i * 3);
+    push('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
     object(1, '<< /Type /Catalog /Pages 2 0 R >>');
-    object(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
-    object(3, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${n(A4_W)} ${n(pageH)}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`);
+    object(2, `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(' ')}] /Count ${pages.length} >>`);
 
-    offsets[4] = length;
-    push(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${pxWidth} /Height ${pxHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
-    push(jpeg);
-    push('\nendstream\nendobj\n');
+    pages.forEach((p, i) => {
+        const pageId = pageIds[i];
+        const imgId = pageId + 1;
+        const contentId = pageId + 2;
+        const pageH = (A4_W * p.h) / p.w;
+        object(pageId, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${n(A4_W)} ${n(pageH)}] /Resources << /XObject << /Im${i} ${imgId} 0 R >> >> /Contents ${contentId} 0 R >>`);
+        offsets[imgId] = length;
+        push(`${imgId} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpeg.length} >>\nstream\n`);
+        push(p.jpeg);
+        push('\nendstream\nendobj\n');
+        const content = `q ${n(A4_W)} 0 0 ${n(pageH)} 0 0 cm /Im${i} Do Q`;
+        object(contentId, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+    });
 
-    // Image anchored to the top of the page; any spare A4 height stays white.
-    const content = `q ${n(A4_W)} 0 0 ${n(drawH)} 0 ${n(pageH - drawH)} cm /Im0 Do Q`;
-    object(5, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
-
+    const count = 3 + pages.length * 3;
     const xrefAt = length;
-    let xref = 'xref\n0 6\n0000000000 65535 f \n';
-    for (let id = 1; id <= 5; id++) xref += `${String(offsets[id]).padStart(10, '0')} 00000 n \n`;
+    let xref = `xref\n0 ${count}\n0000000000 65535 f \n`;
+    for (let id = 1; id < count; id++) xref += `${String(offsets[id]).padStart(10, '0')} 00000 n \n`;
     push(xref);
-    push(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefAt}\n%%EOF\n`);
-
+    push(`trailer\n<< /Size ${count} /Root 1 0 R /Info << /Producer (Gulf Trip Service) >> >>\nstartxref\n${xrefAt}\n%%EOF\n`);
     return new Blob(parts as BlobPart[], { type: 'application/pdf' });
 }
 
-/** Renders the document as a PDF blob. */
-export async function renderInvoicePdf(inv: InvoicePngData): Promise<Blob> {
-    const canvas = await renderInvoiceCanvas(inv);
-    const jpeg = new Uint8Array(await (await toBlob(canvas, 'image/jpeg', 0.92)).arrayBuffer());
-    return jpegToPdf(jpeg, canvas.width, canvas.height);
+/** The document as a PNG blob — the image export, one continuous page. */
+export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
+    return toBlob(await renderSingle(inv), 'image/png');
 }
 
-function fileBase(inv: InvoicePngData): string {
-    return inv.invoice_number || (inv.documentTitle || 'invoice').toLowerCase();
+/** The document as a PDF blob: A4 pages. Used for download and email alike. */
+export async function renderInvoicePdf(inv: InvoicePngData, quality = 0.9): Promise<Blob> {
+    const canvases = await renderPages(inv);
+    const pages = [];
+    for (const canvas of canvases) {
+        const jpeg = new Uint8Array(await (await toBlob(canvas, 'image/jpeg', quality)).arrayBuffer());
+        pages.push({ jpeg, w: canvas.width, h: canvas.height });
+    }
+    return jpegsToPdf(pages);
+}
+
+/** Invoice-{BillToName}-{InvoiceNumber}.pdf (item 5). */
+export function exportFileName(inv: InvoicePngData, ext: 'pdf' | 'png' = 'pdf'): string {
+    return invoiceFileName(inv, ext);
 }
 
 function saveBlob(blob: Blob, filename: string) {
@@ -557,16 +740,15 @@ function saveBlob(blob: Blob, filename: string) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    // Revoked on the next tick so the click has certainly been handled.
     setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
-/** Renders the document and saves it as <number>.png. */
+/** Renders the document and saves it as Invoice-{Name}-{Number}.png. */
 export async function downloadInvoicePng(inv: InvoicePngData): Promise<void> {
-    saveBlob(await renderInvoicePng(inv), `${fileBase(inv)}.png`);
+    saveBlob(await renderInvoicePng(inv), exportFileName(inv, 'png'));
 }
 
-/** Renders the document and saves it as <number>.pdf. */
+/** Renders the document and saves it as Invoice-{Name}-{Number}.pdf. */
 export async function downloadInvoicePdf(inv: InvoicePngData): Promise<void> {
-    saveBlob(await renderInvoicePdf(inv), `${fileBase(inv)}.pdf`);
+    saveBlob(await renderInvoicePdf(inv), exportFileName(inv, 'pdf'));
 }

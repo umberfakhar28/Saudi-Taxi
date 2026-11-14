@@ -21,6 +21,7 @@
 import { formatMoney, toCurrencyCode, type CurrencyCode } from './currency';
 import { displayDate, displayTime } from './datetime';
 import { serviceLabel } from './serviceLabels';
+import { COMPANY_NAME, EMAIL, PHONE_DISPLAY } from './contact';
 
 /* ── Vocabulary ───────────────────────────────────────────────────── */
 
@@ -178,10 +179,66 @@ export interface InvoiceDocument {
     settled: boolean;
     /** Formatted due date, or ''. */
     dueOn: string;
-    /** The single sentence that closes the document. */
+    /** The payment sentence: the first footer line. Kept under its old name
+     *  for the email. */
     footerNote: string;
     /** "Cash" / "Bank Transfer" / ''. */
     paymentMethod: string;
+
+    /**
+     * Every line under "Terms & Conditions" at the foot of the document, in
+     * order: the payment sentence for this invoice's state, then how to reach
+     * us. The renderers print exactly these, so the on-screen invoice, the
+     * PDF, the image and the email can no longer disagree (item 5: the PDF
+     * and image had their own footer and never printed the second line).
+     */
+    footerLines: string[];
+    /** The sign-off under the footer: the company name. */
+    signature: string;
+
+    /** The status shown on the badge. 'overdue' is derived: unpaid (or part
+     *  paid) with the due date passed. The stored status is unchanged. */
+    badge: { value: 'paid' | 'partially_paid' | 'unpaid' | 'overdue'; label: string };
+
+    /** The one figure the customer acts on, shown large: what is still owed,
+     *  or what was paid once settled. */
+    headline: { label: string; value: string };
+    /** The billed line, as an item row: quantity 1, price = total = fare. */
+    item: { description: string; reference: string; quantity: string; price: string; total: string };
+}
+
+/** Status badge colours — paid green, pending amber, overdue red, part-paid blue. */
+export const INVOICE_BADGE_COLORS: Record<InvoiceDocument['badge']['value'], { bg: string; fg: string; solid: string }> = {
+    paid: { bg: '#DCFCE7', fg: '#166534', solid: '#16A34A' },
+    unpaid: { bg: '#FEF3C7', fg: '#92400E', solid: '#D97706' },
+    partially_paid: { bg: '#DBEAFE', fg: '#1E40AF', solid: '#2563EB' },
+    overdue: { bg: '#FEE2E2', fg: '#991B1B', solid: '#DC2626' },
+};
+
+/* ── File name ────────────────────────────────────────────────────── */
+
+const ARABIC_LATIN: Record<string, string> = {
+    'ا': 'a', 'أ': 'a', 'إ': 'i', 'آ': 'a', 'ب': 'b', 'ت': 't', 'ث': 'th', 'ج': 'j', 'ح': 'h', 'خ': 'kh',
+    'د': 'd', 'ذ': 'dh', 'ر': 'r', 'ز': 'z', 'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z',
+    'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'ة': 'a',
+    'و': 'w', 'ؤ': 'u', 'ي': 'y', 'ى': 'a', 'ئ': 'i', 'ء': '', 'پ': 'p', 'چ': 'ch', 'گ': 'g', 'ک': 'k', 'ی': 'y',
+};
+
+/** "Ahmed Ali" → "Ahmed-Ali"; "محمد علي" → "mhmd-aly". ASCII only, so the
+ *  name survives every mail client and file system. */
+export function fileSlug(value: string): string {
+    const latin = String(value ?? '')
+        .replace(/[؀-ۿ]/g, (ch) => ARABIC_LATIN[ch] ?? '')
+        .normalize('NFKD').replace(/[̀-ͯ]/g, '');
+    return latin.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48);
+}
+
+/** Invoice-{BillToName}-{InvoiceNumber}.pdf — e.g. Invoice-Ahmed-Ali-INV-202611-4821.pdf. */
+export function invoiceFileName(inv: Pick<InvoiceRecord, 'customer_name' | 'invoice_number' | 'documentTitle'>, ext: 'pdf' | 'png' = 'pdf'): string {
+    const kind = fileSlug(inv.documentTitle || 'Invoice') || 'Invoice';
+    const parts = [kind.charAt(0).toUpperCase() + kind.slice(1).toLowerCase(), fileSlug(inv.customer_name || ''), fileSlug(inv.invoice_number || '')]
+        .filter(Boolean);
+    return `${parts.join('-')}.${ext}`;
 }
 
 const num = (v: unknown): number => {
@@ -310,17 +367,55 @@ export function buildInvoiceDocument(inv: InvoiceRecord): InvoiceDocument {
     if (text(inv.payment_notes)) notes.push({ label: 'Payment details', text: text(inv.payment_notes), tone: 'plain' });
 
     // ── Footer ───────────────────────────────────────────────────────
+    // One sentence per payment state, so a customer always reads what to do
+    // next — the PDF used to print nothing at all for an unpaid invoice with
+    // no due date.
     const method = paymentMethodLabel(inv.payment_method);
-    const footerNote = settled
-        ? `Paid in full${method ? ` by ${method.toLowerCase()}` : ''} — no further action needed.`
-        : dueOn
-            ? `Please settle by ${dueOn}${method ? ` by ${method.toLowerCase()}` : ''}.`
-            : '';
+    const by = method ? ` by ${method.toLowerCase()}` : '';
+    const isQuote = /quot/i.test(inv.documentTitle || '');
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const overdue = !settled && !isQuote && !!inv.due_date && String(inv.due_date).slice(0, 10) < todayIso;
+    const footerNote = isQuote
+        ? ''
+        : settled
+            ? `Paid in full${by} — no further action needed.`
+            : paid > 0
+                ? `Part-paid: ${money(paid)} received, ${money(balance)} still due${dueOn ? ` by ${dueOn}` : ''}${by}.`
+                : overdue
+                    ? `Payment of ${money(balance)} was due on ${dueOn} — please settle${by} as soon as possible.`
+                    : dueOn
+                        ? `Please settle ${money(balance)} by ${dueOn}${by}.`
+                        : `Amount due: ${money(balance)}${method ? `, payable${by}` : ''}.`;
+    const contactLine = `Questions about this ${isQuote ? 'quotation' : 'invoice'}? Call or message ${PHONE_DISPLAY} — or email ${EMAIL}.`;
+
+    const statusValue = inv.status || 'unpaid';
+    const badge: InvoiceDocument['badge'] = settled
+        ? { value: 'paid', label: 'Paid' }
+        : overdue
+            ? { value: 'overdue', label: 'Overdue' }
+            : statusValue === 'partially_paid' || paid > 0
+                ? { value: 'partially_paid', label: 'Partially Paid' }
+                : { value: 'unpaid', label: 'Unpaid' };
+
+    const lineAmount = money(subtotal);
 
     return {
+        footerLines: [footerNote, contactLine].filter(Boolean),
+        signature: COMPANY_NAME,
+        badge,
+        headline: settled
+            ? { label: 'Amount Paid', value: money(total) }
+            : { label: isQuote ? 'Quoted Total' : 'Total Due', value: money(isQuote ? total : balance) },
+        item: {
+            description: isReturn ? `${service} (return)` : service,
+            reference: ref ? `Booking Ref: ${ref}` : '',
+            quantity: '1',
+            price: lineAmount,
+            total: lineAmount,
+        },
         title: (inv.documentTitle || 'Invoice').toUpperCase(),
         number: text(inv.invoice_number),
-        statusValue: inv.status || 'unpaid',
+        statusValue,
         statusLabel: invoiceStatusLabel(inv.status),
         currency,
         metaCells,
@@ -333,7 +428,7 @@ export function buildInvoiceDocument(inv: InvoiceRecord): InvoiceDocument {
         tripDetails,
         lineDescription,
         lineReference: ref ? `Booking Ref: ${ref}` : '',
-        lineAmount: money(subtotal),
+        lineAmount,
         totalRows,
         notes,
         settled,
