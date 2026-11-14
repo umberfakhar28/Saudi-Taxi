@@ -58,26 +58,26 @@ export default function ReportsPage() {
                     <p className="admin-page-sub" style={{ margin:0 }}>Generate and download business reports as CSV.</p>
                 </div>
             </div>
-            <div style={{ background:'#fff', borderRadius:14, border:'1px solid #e8edf2', padding:'1.5rem', marginBottom:'1.5rem' }}>
-                <div style={{ fontWeight:700, fontSize:'0.95rem', color:'#0f172a', marginBottom:'1rem' }}>1. Choose Report Type</div>
+            <div style={{ background:'#fff', borderRadius:14, border:'1px solid var(--adm-line)', padding:'1.5rem', marginBottom:'1.5rem' }}>
+                <div style={{ fontWeight:700, fontSize:'0.95rem', color:'var(--adm-navy)', marginBottom:'1rem' }}>1. Choose Report Type</div>
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))', gap:'0.75rem', marginBottom:'1.25rem' }}>
                     {opts.map(opt => { const Icon=opt.icon; const active=reportType===opt.id;
                         return (
-                            <button key={opt.id} onClick={() => setReportType(opt.id as ReportType)} style={{ padding:'1rem', borderRadius:10, border:`2px solid ${active?'#fbbf24':'#e2e8f0'}`, background:active?'#fffbeb':'#f8fafc', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
+                            <button key={opt.id} onClick={() => setReportType(opt.id as ReportType)} style={{ padding:'1rem', borderRadius:10, border:`2px solid ${active?'var(--adm-gold)':'var(--adm-line)'}`, background:active?'var(--adm-gold-tint)':'var(--adm-surface)', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
                                 <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.3rem' }}>
-                                    <Icon size={15} color={active?'#d97706':'#64748b'} />
-                                    <span style={{ fontWeight:700, fontSize:'0.85rem', color:active?'#92400e':'#0f172a' }}>{opt.label}</span>
+                                    <Icon size={15} color={active?'var(--adm-warning)':'var(--adm-muted)'} />
+                                    <span style={{ fontWeight:700, fontSize:'0.85rem', color:active?'var(--adm-gold-ink)':'var(--adm-navy)' }}>{opt.label}</span>
                                 </div>
-                                <div style={{ fontSize:'0.75rem', color:'#64748b' }}>{opt.desc}</div>
+                                <div style={{ fontSize:'0.75rem', color:'var(--adm-muted)' }}>{opt.desc}</div>
                             </button>
                         );
                     })}
                 </div>
                 {reportType !== 'customers' && (
                     <div style={{ display:'flex', gap:'0.75rem', flexWrap:'wrap', marginBottom:'1.25rem' }}>
-                        <div><label style={{ fontSize:'0.8rem', fontWeight:600, color:'#64748b', display:'block', marginBottom:4 }}>Date From</label>
+                        <div><label style={{ fontSize:'0.8rem', fontWeight:600, color:'var(--adm-muted)', display:'block', marginBottom:4 }}>Date From</label>
                             <input type="date" value={dateFrom} onChange={e=>setDateFrom(e.target.value)} className="admin-filter-select" /></div>
-                        <div><label style={{ fontSize:'0.8rem', fontWeight:600, color:'#64748b', display:'block', marginBottom:4 }}>Date To</label>
+                        <div><label style={{ fontSize:'0.8rem', fontWeight:600, color:'var(--adm-muted)', display:'block', marginBottom:4 }}>Date To</label>
                             <input type="date" value={dateTo} onChange={e=>setDateTo(e.target.value)} className="admin-filter-select" /></div>
                     </div>
                 )}
@@ -95,23 +95,23 @@ export default function ReportsPage() {
                 <>
                     <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(150px,1fr))', gap:'1rem', marginBottom:'1.5rem' }}>
                         <div className="admin-stat-card">
-                            <div style={{ fontSize:'0.78rem', color:'#94a3b8', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px' }}>Records</div>
-                            <div style={{ fontSize:'1.6rem', fontWeight:800, color:'#0f172a' }}>{data.length}</div>
+                            <div style={{ fontSize:'0.78rem', color:'var(--adm-faint)', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px' }}>Records</div>
+                            <div style={{ fontSize:'1.6rem', fontWeight:800, color:'var(--adm-navy)' }}>{data.length}</div>
                         </div>
                         {reportType==='revenue' && <div className="admin-stat-card">
-                            <div style={{ fontSize:'0.78rem', color:'#94a3b8', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px' }}>Total Revenue</div>
-                            <div style={{ fontSize:'1.2rem', fontWeight:800, color:'#10b981' }}>SAR {data.reduce((s,r)=>s+(r.total_amount||0),0).toFixed(2)}</div>
+                            <div style={{ fontSize:'0.78rem', color:'var(--adm-faint)', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px' }}>Total Revenue</div>
+                            <div style={{ fontSize:'1.2rem', fontWeight:800, color:'var(--adm-success)' }}>SAR {data.reduce((s,r)=>s+(r.total_amount||0),0).toFixed(2)}</div>
                         </div>}
                         {reportType==='trips' && <div className="admin-stat-card">
-                            <div style={{ fontSize:'0.78rem', color:'#94a3b8', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px' }}>Completed</div>
-                            <div style={{ fontSize:'1.6rem', fontWeight:800, color:'#10b981' }}>{data.filter(d=>d.status==='completed').length}</div>
+                            <div style={{ fontSize:'0.78rem', color:'var(--adm-faint)', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px' }}>Completed</div>
+                            <div style={{ fontSize:'1.6rem', fontWeight:800, color:'var(--adm-success)' }}>{data.filter(d=>d.status==='completed').length}</div>
                         </div>}
                     </div>
                     <div className="admin-table-wrap" style={{ overflowX:'auto' }}>
                         {reportType==='trips' && (
                             <table className="admin-table"><thead><tr><th>Customer</th><th>Route</th><th>Date</th><th>Service</th><th>Status</th><th>Amount</th></tr></thead>
                             <tbody>{data.map(b=><tr key={b.id}>
-                                <td><div style={{ fontWeight:600 }}>{b.customer_name}</div><div style={{ fontSize:'0.75rem', color:'#94a3b8' }}>{b.customer_phone}</div></td>
+                                <td><div style={{ fontWeight:600 }}>{b.customer_name}</div><div style={{ fontSize:'0.75rem', color:'var(--adm-faint)' }}>{b.customer_phone}</div></td>
                                 <td style={{ fontSize:'0.8rem' }}><div>↑ {b.pickup_location}</div><div style={{ marginTop:2 }}>↓ {b.dropoff_location}</div></td>
                                 <td style={{ fontSize:'0.82rem' }}>{b.travel_date}</td>
                                 <td style={{ fontSize:'0.82rem' }}>{serviceLabel(b.service_type)}</td>
@@ -124,7 +124,7 @@ export default function ReportsPage() {
                             <tbody>{data.map(i=><tr key={i.id}>
                                 <td style={{ fontWeight:700 }}>{i.invoice_number}</td>
                                 <td>{i.customer_name}</td>
-                                <td style={{ fontWeight:700, color:'#10b981' }}>SAR {i.total_amount}</td>
+                                <td style={{ fontWeight:700, color:'var(--adm-success)' }}>SAR {i.total_amount}</td>
                                 <td><span className={i.status==='paid'?'badge-confirmed':'badge-pending'}>{i.status}</span></td>
                                 <td style={{ fontSize:'0.82rem' }}>{i.created_at ? format(new Date(i.created_at),'dd MMM yyyy') : '—'}</td>
                             </tr>)}</tbody></table>
@@ -136,11 +136,11 @@ export default function ReportsPage() {
                                 <td style={{ fontSize:'0.82rem' }}>{c.email}</td>
                                 <td style={{ fontSize:'0.82rem' }}>{c.phone}</td>
                                 <td style={{ fontWeight:700, textAlign:'center' }}>{c.total_bookings}</td>
-                                <td style={{ fontWeight:700, color:'#10b981' }}>SAR {c.total_spent}</td>
+                                <td style={{ fontWeight:700, color:'var(--adm-success)' }}>SAR {c.total_spent}</td>
                                 <td>{c.is_vip?'⭐':'—'}</td>
                             </tr>)}</tbody></table>
                         )}
-                        {data.length===0 && <div style={{ padding:'4rem', textAlign:'center', color:'#94a3b8' }}>No data found.</div>}
+                        {data.length===0 && <div style={{ padding:'4rem', textAlign:'center', color:'var(--adm-faint)' }}>No data found.</div>}
                     </div>
                 </>
             )}

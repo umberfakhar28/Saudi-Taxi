@@ -2,19 +2,72 @@
    ADMIN PANEL — Dedicated CSS
    ============================================================ */
 
+/* ── Brand tokens ─────────────────────────────────────────────────────
+   One palette for the whole portal: sidebar, buttons, tables, badges,
+   modals, and the inline styles in every admin page (which read these
+   through var(--adm-*) rather than hard-coding hex values).
+
+   The brand colours are the website's own (src/app/globals.css):
+   navy #081827, gold #B8945B, ivory #F5F2EA. Gold is never used as small
+   text on a light surface — it fails contrast there — so text that should
+   read as gold uses --adm-gold-ink (#7A5C2E, 6.2:1 on white).
+   Status colours: paid/success green, pending amber, cancelled/overdue red,
+   sent/info blue. Contrast checked to WCAG AA (4.5:1) for body text. */
+:root {
+    --adm-navy: #081827;
+    --adm-navy-soft: #0E2438;
+    --adm-ink: #1C2528;
+    --adm-text: #3A4447;
+    --adm-muted: #5A6569;
+    --adm-faint: #6B7280;
+    --adm-line: #E4DFD2;
+    --adm-line-strong: #D6CDB8;
+    --adm-tint: #EFE9DE;
+    --adm-surface: #F5F2EA;
+    --adm-card: #FFFFFF;
+
+    --adm-gold: #B8945B;
+    --adm-gold-hover: #A07D46;
+    --adm-gold-ink: #7A5C2E;
+    --adm-gold-tint: #F6EFE2;
+
+    --adm-success: #16A34A;
+    --adm-success-ink: #166534;
+    --adm-success-tint: #DCFCE7;
+    --adm-warning: #D97706;
+    --adm-warning-ink: #92400E;
+    --adm-warning-tint: #FEF3C7;
+    --adm-warning-line: #FDE68A;
+    --adm-danger: #DC2626;
+    --adm-danger-ink: #991B1B;
+    --adm-danger-tint: #FEE2E2;
+    --adm-danger-line: #FCA5A5;
+    --adm-info: #2563EB;
+    --adm-info-ink: #1E40AF;
+    --adm-info-tint: #E6EEFC;
+    --adm-info-line: #93C5FD;
+
+    --adm-whatsapp: #25D366;
+
+    --adm-font: var(--font-body, 'Inter'), 'Noto Sans Arabic Variable', Arial, Helvetica, sans-serif;
+    --adm-font-heading: 'Manrope Variable', var(--font-body, 'Inter'), 'Noto Sans Arabic Variable', Arial, sans-serif;
+}
+
 /* ── Shell ── */
 .admin-shell {
     display: flex;
     min-height: 100vh;
-    background: #f0f4f8;
-    font-family: "matterFont", Arial, sans-serif;
+    background: var(--adm-surface);
+    font-family: var(--adm-font);
+    font-variant-numeric: tabular-nums;
+    color: var(--adm-ink);
 }
 
 /* ── Sidebar ── */
 .admin-sidebar {
     width: 260px;
     min-width: 260px;
-    background: #0f172a;
+    background: var(--adm-navy);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -36,9 +89,10 @@
 .admin-logo-badge {
     border-radius: 10px;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(36, 84, 232, 0.35);
+    box-shadow: 0 0 0 1px rgba(184, 148, 91, 0.45);
 }
 .admin-logo-title {
+    font-family: var(--adm-font-heading);
     font-size: 1rem;
     font-weight: 700;
     color: #ffffff;
@@ -46,7 +100,7 @@
 }
 .admin-logo-sub {
     font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(245, 242, 234, 0.6);
     text-transform: uppercase;
     letter-spacing: 1.2px;
     margin-top: 2px;
@@ -70,7 +124,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(245, 242, 234, 0.6);
     padding: 0 0.75rem;
     margin-bottom: 0.25rem;
     display: block;
@@ -82,7 +136,7 @@
     padding: 0.65rem 0.75rem;
     border-radius: 10px;
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(245, 242, 234, 0.78);
     transition: all 0.18s ease;
     position: relative;
     cursor: pointer;
@@ -92,12 +146,13 @@
     color: rgba(255, 255, 255, 0.9);
 }
 .admin-nav-item.active {
-    background: rgba(36, 84, 232, 0.12);
-    color: #D4AF37;
+    background: rgba(184, 148, 91, 0.14);
+    box-shadow: inset 3px 0 0 var(--adm-gold);
+    color: var(--adm-gold);
 }
 .admin-nav-item.active .admin-nav-icon {
-    background: rgba(36, 84, 232, 0.18);
-    color: #D4AF37;
+    background: rgba(184, 148, 91, 0.22);
+    color: var(--adm-gold);
 }
 .admin-nav-icon {
     width: 34px;
@@ -150,7 +205,7 @@
     border-radius: 10px;
     font-size: 0.85rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(245, 242, 234, 0.72);
     text-decoration: none;
     background: transparent;
     border: none;
@@ -180,7 +235,7 @@
 /* Slim breadcrumb bar */
 .admin-page-bar {
     background: #ffffff;
-    border-bottom: 1px solid #e8edf2;
+    border-bottom: 1px solid var(--adm-line);
     padding: 0.75rem 2rem;
     display: flex;
     align-items: center;
@@ -190,10 +245,10 @@
     align-items: center;
     gap: 0.4rem;
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--adm-faint);
 }
 .admin-breadcrumb-current {
-    color: #1e293b;
+    color: var(--adm-ink);
     font-weight: 600;
 }
 
@@ -208,7 +263,7 @@
     background: #ffffff;
     border-radius: 14px;
     padding: 1.5rem;
-    border: 1px solid #e8edf2;
+    border: 1px solid var(--adm-line);
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
@@ -223,7 +278,7 @@
 .admin-table-wrap {
     background: #ffffff;
     border-radius: 14px;
-    border: 1px solid #e8edf2;
+    border: 1px solid var(--adm-line);
     overflow-x: auto;
     overflow-y: visible;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
@@ -233,14 +288,14 @@
     border-collapse: collapse;
 }
 .admin-table thead tr {
-    background: #f8fafc;
-    border-bottom: 1px solid #e8edf2;
+    background: var(--adm-surface);
+    border-bottom: 1px solid var(--adm-line);
 }
 .admin-table th {
     padding: 0.875rem 1.5rem;
     font-size: 0.72rem;
     font-weight: 700;
-    color: #94a3b8;
+    color: var(--adm-faint);
     text-transform: uppercase;
     letter-spacing: 0.8px;
     text-align: left;
@@ -249,19 +304,19 @@
 .admin-table td {
     padding: 1rem 1.5rem;
     font-size: 0.875rem;
-    color: #334155;
-    border-bottom: 1px solid #f1f5f9;
+    color: var(--adm-text);
+    border-bottom: 1px solid var(--adm-tint);
     vertical-align: middle;
 }
 .admin-table tr:last-child td { border-bottom: none; }
 .admin-table tbody tr { transition: background 0.15s; }
-.admin-table tbody tr:hover { background: #f8fafc; }
+.admin-table tbody tr:hover { background: var(--adm-surface); }
 
 /* Status badges */
-.badge-pending  { background: #fef9c3; color: #854d0e; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
-.badge-confirmed { background: #dcfce7; color: #166534; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
-.badge-completed { background: #dbeafe; color: #1e40af; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
-.badge-cancelled { background: #fee2e2; color: #991b1b; padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
+.badge-pending  { background: var(--adm-warning-tint); color: var(--adm-warning-ink); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
+.badge-confirmed { background: var(--adm-success-tint); color: var(--adm-success-ink); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
+.badge-completed { background: var(--adm-info-tint); color: var(--adm-info-ink); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
+.badge-cancelled { background: var(--adm-danger-tint); color: var(--adm-danger-ink); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
 
 /* ── Icon Buttons ── */
 .admin-icon-btn {
@@ -269,8 +324,8 @@
     height: 34px;
     border-radius: 8px;
     border: none;
-    background: #f1f5f9;
-    color: #64748b;
+    background: var(--adm-tint);
+    color: var(--adm-muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -278,9 +333,9 @@
     transition: all 0.15s;
     flex-shrink: 0;
 }
-.admin-icon-btn:hover { background:#e2e8f0; color:#1e293b; }
-.admin-icon-btn.danger:hover { background:#fee2e2; color:#ef4444; }
-.admin-icon-btn.success:hover { background:#dcfce7; color:#16a34a; }
+.admin-icon-btn:hover { background:var(--adm-line); color:var(--adm-ink); }
+.admin-icon-btn.danger:hover { background:var(--adm-danger-tint); color:var(--adm-danger); }
+.admin-icon-btn.success:hover { background:var(--adm-success-tint); color:var(--adm-success); }
 
 /* ── Filter bar ── */
 .admin-filter-bar {
@@ -289,7 +344,7 @@
     flex-wrap: wrap;
     align-items: center;
     background: #ffffff;
-    border: 1px solid #e8edf2;
+    border: 1px solid var(--adm-line);
     border-radius: 12px;
     padding: 0.875rem 1.25rem;
     margin-bottom: 1.5rem;
@@ -304,42 +359,44 @@
     left: 0.875rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #94a3b8;
+    color: var(--adm-faint);
     pointer-events: none;
 }
 .admin-search-input {
     width: 100%;
     padding: 0.65rem 1rem 0.65rem 2.5rem;
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--adm-line);
     font-size: 0.875rem;
     outline: none;
-    color: #1e293b;
-    background: #f8fafc;
+    color: var(--adm-ink);
+    background: var(--adm-surface);
     transition: border-color 0.15s;
 }
-.admin-search-input:focus { border-color: #D4AF37; background: #fff; }
+.admin-search-input:focus { border-color: var(--adm-gold); background: #fff; }
 .admin-filter-select {
     padding: 0.65rem 1rem;
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--adm-line);
     font-size: 0.875rem;
-    color: #1e293b;
-    background: #f8fafc;
+    color: var(--adm-ink);
+    background: var(--adm-surface);
     cursor: pointer;
     outline: none;
 }
 
 /* ── Page title row ── */
 .admin-page-title {
+    font-family: var(--adm-font-heading);
+    letter-spacing: -0.01em;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--adm-navy);
     margin-bottom: 0.25rem;
 }
 .admin-page-sub {
     font-size: 0.875rem;
-    color: #94a3b8;
+    color: var(--adm-faint);
     margin-bottom: 1.75rem;
 }
 
@@ -349,8 +406,8 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.65rem 1.25rem;
-    background: linear-gradient(135deg, #D4AF37, #E0C55A);
-    color: #0F172A;
+    background: var(--adm-gold);
+    color: var(--adm-navy);
     border: none;
     border-radius: 10px;
     font-size: 0.875rem;
@@ -361,16 +418,17 @@
 }
 .admin-btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(36, 84, 232, 0.45);
+    box-shadow: 0 4px 14px rgba(184, 148, 91, 0.35);
+    background: var(--adm-gold-hover);
 }
 .admin-btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.65rem 1.25rem;
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
+    background: var(--adm-tint);
+    color: var(--adm-text);
+    border: 1px solid var(--adm-line);
     border-radius: 10px;
     font-size: 0.875rem;
     font-weight: 600;
@@ -378,7 +436,7 @@
     transition: all 0.18s;
     text-decoration: none;
 }
-.admin-btn-secondary:hover { background: #e2e8f0; color: #1e293b; }
+.admin-btn-secondary:hover { background: var(--adm-line); color: var(--adm-ink); }
 
 /* Invoice detail page: browser print-to-PDF is a second route to a paper
    copy alongside the canvas-rendered PDF download (window.print() on
@@ -433,9 +491,9 @@
     border: 1px solid transparent;
     cursor: help;
 }
-.admin-role-badge[data-role="admin"]      { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
-.admin-role-badge[data-role="manager"]    { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
-.admin-role-badge[data-role="supervisor"] { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
+.admin-role-badge[data-role="admin"]      { background: var(--adm-info-tint); color: var(--adm-info-ink); border-color: #c7d2fe; }
+.admin-role-badge[data-role="manager"]    { background: var(--adm-success-tint); color: var(--adm-success-ink); border-color: #a7f3d0; }
+.admin-role-badge[data-role="supervisor"] { background: var(--adm-surface); color: var(--adm-text); border-color: var(--adm-line); }
 
 @media (max-width: 720px) {
     /* The breadcrumb already names the page; the badge is the first thing
@@ -461,14 +519,14 @@
     border: none;
     cursor: pointer;
     font-size: 0.8rem;
-    color: #334155;
+    color: var(--adm-text);
     font-weight: 500;
 }
-.dropdown-item:hover:not(:disabled) { background: #f8fafc; color: #0f172a; }
-.text-amber-600 { color: #d97706 !important; }
-.text-blue-600 { color: #2563eb !important; }
-.text-indigo-600 { color: #4f46e5 !important; }
-.text-red-600 { color: #dc2626 !important; }
+.dropdown-item:hover:not(:disabled) { background: var(--adm-surface); color: var(--adm-navy); }
+.text-amber-600 { color: var(--adm-warning) !important; }
+.text-blue-600 { color: var(--adm-info) !important; }
+.text-indigo-600 { color: var(--adm-info) !important; }
+.text-red-600 { color: var(--adm-danger) !important; }
 
 /* ── Mobile / tablet navigation ────────────────────────────────────────
    The sidebar was a permanently-fixed 260px column with no breakpoint at
@@ -479,16 +537,16 @@
     display: none;
     align-items: center;
     justify-content: center;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
+    background: var(--adm-tint);
+    border: 1px solid var(--adm-line);
     border-radius: 8px;
     padding: 0.4rem;
-    color: #334155;
+    color: var(--adm-text);
     cursor: pointer;
     margin-right: 0.75rem;
     flex-shrink: 0;
 }
-.admin-nav-toggle:hover { background: #e2e8f0; }
+.admin-nav-toggle:hover { background: var(--adm-line); }
 
 .admin-nav-backdrop { display: none; }
 
@@ -535,3 +593,29 @@
 @media (max-width: 640px) {
     .admin-role-badge { display: none; }
 }
+
+/* ── Theme additions (item 6) ───────────────────────────────────────── */
+.admin-shell h1, .admin-shell h2, .admin-shell h3 { font-family: var(--adm-font-heading); }
+.admin-shell input, .admin-shell select, .admin-shell textarea, .admin-shell button { font-family: inherit; }
+/* Gold focus ring on every control, so keyboard focus is always visible. */
+.admin-shell :is(button, a, input, select, textarea):focus-visible {
+    outline: 2px solid var(--adm-gold);
+    outline-offset: 2px;
+}
+.admin-btn-primary:disabled, .admin-btn-secondary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+.admin-btn-secondary { background: var(--adm-card); }
+.admin-btn-secondary:hover { background: var(--adm-tint); color: var(--adm-navy); border-color: var(--adm-line-strong); }
+.admin-table thead tr { background: var(--adm-tint); }
+.admin-table th { color: var(--adm-muted); }
+.admin-table tbody tr:hover { background: var(--adm-gold-tint); }
+/* Amounts line up when every digit is the same width. */
+.admin-table td, .admin-stat-card { font-variant-numeric: tabular-nums; }
+/* Status badges: one shape, the status colours from the tokens. */
+.badge-pending, .badge-confirmed, .badge-completed, .badge-cancelled, .badge-paid, .badge-unpaid, .badge-overdue, .badge-sent {
+    display: inline-block; padding: 0.28rem 0.75rem; border-radius: 9999px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.01em; white-space: nowrap;
+}
+.badge-pending, .badge-unpaid { background: var(--adm-warning-tint); color: var(--adm-warning-ink); }
+.badge-confirmed, .badge-paid { background: var(--adm-success-tint); color: var(--adm-success-ink); }
+.badge-completed, .badge-sent { background: var(--adm-info-tint); color: var(--adm-info-ink); }
+.badge-cancelled, .badge-overdue { background: var(--adm-danger-tint); color: var(--adm-danger-ink); }

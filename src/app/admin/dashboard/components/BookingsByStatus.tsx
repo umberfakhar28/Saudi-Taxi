@@ -21,10 +21,10 @@ export interface StatusDatum {
  * and its count, so identity never depends on the colour.
  */
 const STATUS_COLORS: Record<string, string> = {
-    pending: '#f59e0b',
-    confirmed: '#10b981',
-    completed: '#6366f1',
-    cancelled: '#f43f5e',
+    pending: 'var(--adm-warning)',
+    confirmed: 'var(--adm-success)',
+    completed: 'var(--adm-info)',
+    cancelled: 'var(--adm-danger)',
 };
 
 const STATUS_HELP: Record<string, string> = {
@@ -62,16 +62,16 @@ export function BookingsByStatus({ data }: { data: StatusDatum[] }) {
     const totalBookings = data.reduce((sum, d) => sum + d.count, 0);
 
     return (
-        <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 14, border: '1px solid #e8edf2', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 14, border: '1px solid var(--adm-line)', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <div style={{ fontWeight: 700, color: '#0f172a' }}>Bookings by Status</div>
+                <div style={{ fontWeight: 700, color: 'var(--adm-navy)' }}>Bookings by Status</div>
                 <div style={{ display: 'flex', gap: '0.4rem' }}>
                     {view === 'revenue' && currenciesPresent.length > 1 && (
                         <select
                             value={activeCurrency}
                             onChange={(e) => setCurrency(e.target.value)}
                             aria-label="Currency"
-                            style={{ fontSize: '0.75rem', padding: '0.2rem 0.4rem', borderRadius: 4, border: '1px solid #cbd5e1' }}
+                            style={{ fontSize: '0.75rem', padding: '0.2rem 0.4rem', borderRadius: 4, border: '1px solid var(--adm-line-strong)' }}
                         >
                             {currenciesPresent.map((c) => <option key={c} value={c}>{c}</option>)}
                         </select>
@@ -80,7 +80,7 @@ export function BookingsByStatus({ data }: { data: StatusDatum[] }) {
                         value={view}
                         onChange={(e) => setView(e.target.value as 'count' | 'revenue')}
                         aria-label="Show count or revenue"
-                        style={{ fontSize: '0.75rem', padding: '0.2rem 0.4rem', borderRadius: 4, border: '1px solid #cbd5e1' }}
+                        style={{ fontSize: '0.75rem', padding: '0.2rem 0.4rem', borderRadius: 4, border: '1px solid var(--adm-line-strong)' }}
                     >
                         <option value="count">Count</option>
                         <option value="revenue">Revenue</option>
@@ -88,21 +88,21 @@ export function BookingsByStatus({ data }: { data: StatusDatum[] }) {
                 </div>
             </div>
 
-            <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', marginBottom: '1rem' }}>
                 {view === 'count'
                     ? `${totalBookings} booking${totalBookings === 1 ? '' : 's'} in total`
                     : `${formatMoney(total, activeCurrency)} across all statuses`}
             </div>
 
             {totalBookings === 0 ? (
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 180, textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem', padding: '1rem' }}>
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 180, textAlign: 'center', color: 'var(--adm-faint)', fontSize: '0.85rem', padding: '1rem' }}>
                     No bookings yet. Statuses will appear here as soon as the first booking comes in.
                 </div>
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                     {data.map((d) => {
                         const value = valueOf(d);
-                        const color = STATUS_COLORS[d.status] ?? '#94a3b8';
+                        const color = STATUS_COLORS[d.status] ?? 'var(--adm-faint)';
                         const share = totalBookings > 0 ? Math.round((d.count / totalBookings) * 100) : 0;
                         const label = d.status.charAt(0).toUpperCase() + d.status.slice(1);
                         return (
@@ -113,14 +113,14 @@ export function BookingsByStatus({ data }: { data: StatusDatum[] }) {
                             >
                                 <div style={{ width: 92, display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
                                     <span style={{ width: 9, height: 9, borderRadius: '50%', background: color, flexShrink: 0 }} />
-                                    <span style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 500 }}>{label}</span>
+                                    <span style={{ fontSize: '0.8rem', color: 'var(--adm-text)', fontWeight: 500 }}>{label}</span>
                                 </div>
 
                                 <Tooltip
                                     label={`${label} — ${d.count}`}
                                     text={`${STATUS_HELP[d.status] ?? ''} ${share}% of all bookings.`}
                                 >
-                                    <div style={{ flex: 1, height: 22, background: '#f1f5f9', borderRadius: 4, overflow: 'hidden', minWidth: 40, width: '100%' }}>
+                                    <div style={{ flex: 1, height: 22, background: 'var(--adm-tint)', borderRadius: 4, overflow: 'hidden', minWidth: 40, width: '100%' }}>
                                         <div
                                             style={{
                                                 width: `${max > 0 ? (value / max) * 100 : 0}%`,
@@ -133,7 +133,7 @@ export function BookingsByStatus({ data }: { data: StatusDatum[] }) {
                                     </div>
                                 </Tooltip>
 
-                                <div style={{ minWidth: view === 'count' ? 34 : 92, textAlign: 'right', fontWeight: 700, fontSize: '0.85rem', color: value === 0 ? '#94a3b8' : '#0f172a', flexShrink: 0 }}>
+                                <div style={{ minWidth: view === 'count' ? 34 : 92, textAlign: 'right', fontWeight: 700, fontSize: '0.85rem', color: value === 0 ? 'var(--adm-faint)' : 'var(--adm-navy)', flexShrink: 0 }}>
                                     {view === 'count' ? d.count : formatMoney(value, activeCurrency)}
                                 </div>
                             </Link>
@@ -145,7 +145,7 @@ export function BookingsByStatus({ data }: { data: StatusDatum[] }) {
             {/* Currencies are never summed together: there is no exchange rate in
                 this system, and inventing one would misstate real money. */}
             {view === 'revenue' && currenciesPresent.length > 1 && (
-                <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '0.85rem', lineHeight: 1.4 }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)', marginTop: '0.85rem', lineHeight: 1.4 }}>
                     Bookings exist in {currenciesPresent.join(', ')}. Each currency is totalled separately —
                     switch above to see the others.
                 </div>

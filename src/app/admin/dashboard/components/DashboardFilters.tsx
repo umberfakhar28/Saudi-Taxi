@@ -20,13 +20,13 @@ export default function DashboardFilters() {
     };
 
     return (
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', background: '#fff', padding: '1rem', borderRadius: 12, border: '1px solid #e8edf2' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', background: '#fff', padding: '1rem', borderRadius: 12, border: '1px solid var(--adm-line)' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>Date Range</label>
+                <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-muted)' }}>Date Range</label>
                 <select 
                     value={range} 
                     onChange={e => { setRange(e.target.value); updateFilter('range', e.target.value); }}
-                    style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                    style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: '1px solid var(--adm-line-strong)', fontSize: '0.85rem' }}
                 >
                     <option value="today">Today</option>
                     <option value="this_week">This Week</option>
@@ -36,11 +36,11 @@ export default function DashboardFilters() {
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>Booking Status</label>
+                <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--adm-muted)' }}>Booking Status</label>
                 <select 
                     value={status} 
                     onChange={e => { setStatus(e.target.value); updateFilter('status', e.target.value); }}
-                    style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                    style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: '1px solid var(--adm-line-strong)', fontSize: '0.85rem' }}
                 >
                     <option value="all">All Statuses</option>
                     <option value="pending">Pending</option>

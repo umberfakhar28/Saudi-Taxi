@@ -12,9 +12,9 @@ import { QUOTE_CUSTOMER_NOTE } from '@/lib/contact';
 
 const VEHICLES = ['Sedan', 'SUV', 'Luxury', 'Van', 'Minibus'];
 
-const LABEL: React.CSSProperties = { fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 };
-const HINT: React.CSSProperties = { fontSize: '0.72rem', color: '#94a3b8', marginTop: 5, lineHeight: 1.45 };
-const CARD: React.CSSProperties = { background: '#fff', borderRadius: 14, border: '1px solid #e8edf2', padding: '1.5rem' };
+const LABEL: React.CSSProperties = { fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 };
+const HINT: React.CSSProperties = { fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 5, lineHeight: 1.45 };
+const CARD: React.CSSProperties = { background: '#fff', borderRadius: 14, border: '1px solid var(--adm-line)', padding: '1.5rem' };
 
 /** Maps a booking's free-text car_type onto one of the quote vehicle tiers. */
 function matchVehicle(carType?: string | null): string {
@@ -187,8 +187,8 @@ function NewQuoteInner() {
     // avoids presenting a form whose Save button cannot work.
     if (ready && !allowed('quotes.create')) {
         return (
-            <div style={{ padding: '4rem 1rem', textAlign: 'center', color: '#64748b' }}>
-                <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>Not available for your role</div>
+            <div style={{ padding: '4rem 1rem', textAlign: 'center', color: 'var(--adm-muted)' }}>
+                <div style={{ fontWeight: 700, color: 'var(--adm-navy)', marginBottom: 6 }}>Not available for your role</div>
                 <div style={{ fontSize: '0.88rem' }}>Creating quotes requires Manager access or above.</div>
             </div>
         );
@@ -215,21 +215,21 @@ function NewQuoteInner() {
             </div>
 
             {loadingBooking && (
-                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: '0.85rem 1.1rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: '#64748b' }}>
+                <div style={{ background: 'var(--adm-surface)', border: '1px solid var(--adm-line)', borderRadius: 12, padding: '0.85rem 1.1rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--adm-muted)' }}>
                     Loading the booking&apos;s details…
                 </div>
             )}
 
             {sourceBooking && (
-                <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.5rem' }}>
-                    <div style={{ fontWeight: 700, color: '#1e3a8a', fontSize: '0.88rem', marginBottom: 4 }}>
+                <div style={{ background: 'var(--adm-info-tint)', border: '1px solid var(--adm-info-line)', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.5rem' }}>
+                    <div style={{ fontWeight: 700, color: 'var(--adm-info-ink)', fontSize: '0.88rem', marginBottom: 4 }}>
                         Quoting for booking {sourceBooking.booking_number || String(sourceBooking.id).slice(0, 8).toUpperCase()}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: '#1d4ed8', lineHeight: 1.55 }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--adm-info)', lineHeight: 1.55 }}>
                         {sourceBooking.customer_name} · {sourceBooking.pickup_location} → {sourceBooking.dropoff_location}
                         {sourceBooking.travel_date && <> · {displayDate(sourceBooking.travel_date)} at {displayTime(sourceBooking.travel_time)}</>}
                     </div>
-                    <div style={{ fontSize: '0.74rem', color: '#3b82f6', marginTop: 6 }}>
+                    <div style={{ fontSize: '0.74rem', color: 'var(--adm-info)', marginTop: 6 }}>
                         Everything below is editable. The saved quote stays linked to this booking.
                     </div>
                 </div>
@@ -237,7 +237,7 @@ function NewQuoteInner() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div style={CARD}>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: '#0f172a' }}>Customer Info</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--adm-navy)' }}>Customer Info</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.875rem' }}>
                         {[['customer_name', 'Full Name *'], ['customer_email', 'Email'], ['customer_phone', 'Phone *']].map(([k, label]) => (
                             <div key={k}>
@@ -249,7 +249,7 @@ function NewQuoteInner() {
                 </div>
 
                 <div style={CARD}>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: '#0f172a' }}>Trip Details</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--adm-navy)' }}>Trip Details</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.875rem' }}>
                         {[['pickup_location', 'Pickup Location *'], ['dropoff_location', 'Drop-off Location *']].map(([k, label]) => (
                             <div key={k}>
@@ -283,7 +283,7 @@ function NewQuoteInner() {
                 </div>
 
                 <div style={CARD}>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: '#0f172a' }}>Price</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--adm-navy)' }}>Price</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 130px', gap: '0.875rem', alignItems: 'end' }}>
                         <div>
                             <label style={LABEL}>Quote Price *</label>
@@ -297,14 +297,14 @@ function NewQuoteInner() {
                         </div>
                     </div>
                     {hasPrice && (
-                        <div style={{ marginTop: '0.9rem', fontSize: '0.85rem', color: '#475569' }}>
-                            The customer will be quoted <strong style={{ color: '#0f172a' }}>{formatMoney(price, form.currency)}</strong>.
+                        <div style={{ marginTop: '0.9rem', fontSize: '0.85rem', color: 'var(--adm-text)' }}>
+                            The customer will be quoted <strong style={{ color: 'var(--adm-navy)' }}>{formatMoney(price, form.currency)}</strong>.
                         </div>
                     )}
                 </div>
 
                 <div style={CARD}>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: '#0f172a' }}>Notes</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--adm-navy)' }}>Notes</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <div>
                             <label style={LABEL}>Message to Customer</label>
@@ -334,7 +334,7 @@ function NewQuoteInner() {
 
 export default function NewQuotePage() {
     return (
-        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading…</div>}>
+        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading…</div>}>
             <NewQuoteInner />
         </Suspense>
     );

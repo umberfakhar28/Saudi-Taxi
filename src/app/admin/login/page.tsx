@@ -68,9 +68,9 @@ export default function AdminLogin() {
                         <div style={{
                             padding: '1rem',
                             background: 'rgba(245, 158, 11, 0.1)',
-                            border: '1px solid #f59e0b',
+                            border: '1px solid var(--adm-warning)',
                             borderRadius: 'var(--radius-sm)',
-                            color: '#f59e0b',
+                            color: 'var(--adm-warning)',
                             marginBottom: '1.5rem',
                             fontSize: '0.9rem',
                             lineHeight: 1.5
@@ -83,9 +83,9 @@ export default function AdminLogin() {
                         <div style={{ 
                             padding: '1rem', 
                             background: 'rgba(239, 68, 68, 0.1)', 
-                            border: '1px solid #ef4444', 
+                            border: '1px solid var(--adm-danger)', 
                             borderRadius: 'var(--radius-sm)',
-                            color: '#ef4444',
+                            color: 'var(--adm-danger)',
                             marginBottom: '1.5rem',
                             fontSize: '0.9rem'
                         }}>

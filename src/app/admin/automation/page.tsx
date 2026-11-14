@@ -109,24 +109,24 @@ export default function AutomationRulesPage() {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={6} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading rules...</td></tr>
+                            <tr><td colSpan={6} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading rules...</td></tr>
                         ) : rules.length > 0 ? rules.map(rule => (
                             <tr key={rule.id}>
                                 <td>
-                                    <div style={{ fontWeight: 600, color: '#1e293b' }}>{rule.name}</div>
+                                    <div style={{ fontWeight: 600, color: 'var(--adm-ink)' }}>{rule.name}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', background: '#f1f5f9', borderRadius: 6, display: 'inline-block' }}>
+                                    <div style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', background: 'var(--adm-tint)', borderRadius: 6, display: 'inline-block' }}>
                                         {rule.rule_type.replace('_', ' ')}
                                     </div>
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: rule.value > 0 ? '#10b981' : (rule.value < 0 ? '#ef4444' : '#1e293b') }}>
+                                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: rule.value > 0 ? 'var(--adm-success)' : (rule.value < 0 ? 'var(--adm-danger)' : 'var(--adm-ink)') }}>
                                         {rule.value > 0 && '+'}{rule.value}{rule.value_type === 'percentage' ? '%' : ' SAR'}
                                     </div>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{rule.description}</div>
+                                    <div style={{ fontSize: '0.8rem', color: 'var(--adm-muted)' }}>{rule.description}</div>
                                 </td>
                                 <td>
                                     <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
@@ -134,9 +134,9 @@ export default function AutomationRulesPage() {
                                             type="checkbox"
                                             checked={rule.is_active}
                                             onChange={() => toggleRule(rule.id, rule.is_active)}
-                                            style={{ marginRight: 8, cursor: 'pointer', width: 16, height: 16, accentColor: '#fbbf24' }}
+                                            style={{ marginRight: 8, cursor: 'pointer', width: 16, height: 16, accentColor: 'var(--adm-gold)' }}
                                         />
-                                        <span style={{ fontSize: '0.85rem', color: rule.is_active ? '#10b981' : '#94a3b8', fontWeight: 600 }}>
+                                        <span style={{ fontSize: '0.85rem', color: rule.is_active ? 'var(--adm-success)' : 'var(--adm-faint)', fontWeight: 600 }}>
                                             {rule.is_active ? 'Active' : 'Inactive'}
                                         </span>
                                     </label>
@@ -146,7 +146,7 @@ export default function AutomationRulesPage() {
                                 </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>No rules found.</td></tr>
+                            <tr><td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>No rules found.</td></tr>
                         )}
                     </tbody>
                 </table>
@@ -156,8 +156,8 @@ export default function AutomationRulesPage() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)', padding: '1rem' }}>
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', maxWidth: 520, width: '100%', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>{editingId ? 'Edit Rule' : 'Add New Rule'}</h2>
-                            <button onClick={() => setModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
+                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--adm-navy)' }}>{editingId ? 'Edit Rule' : 'Add New Rule'}</h2>
+                            <button onClick={() => setModal(false)} style={{ background: 'none', border: 'none', color: 'var(--adm-faint)', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
                         </div>
                         <form onSubmit={handleSave}>
                             <div className="form-group">
@@ -202,12 +202,12 @@ export default function AutomationRulesPage() {
                                     value={form.conditions}
                                     onChange={e => setForm({ ...form, conditions: e.target.value })}
                                 />
-                                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 4 }}>
+                                <div style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 4 }}>
                                     Examples: base_fare → {'{"vehicle_type":"Sedan"}'} · distance_slab (per-km) → {'{"per_km":true,"vehicle_type":"Sedan"}'} · weekend_surcharge → {'{"days":[5,6]}'} · night_charge → {'{"start_hour":22,"end_hour":6}'}
                                 </div>
                             </div>
                             {formError && (
-                                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '0.6rem 0.8rem', borderRadius: 8, fontSize: '0.8rem', marginBottom: '0.75rem' }}>
+                                <div style={{ background: 'var(--adm-danger-tint)', border: '1px solid var(--adm-danger-line)', color: 'var(--adm-danger-ink)', padding: '0.6rem 0.8rem', borderRadius: 8, fontSize: '0.8rem', marginBottom: '0.75rem' }}>
                                     {formError}
                                 </div>
                             )}

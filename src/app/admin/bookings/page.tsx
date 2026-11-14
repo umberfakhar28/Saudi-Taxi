@@ -820,7 +820,7 @@ function BookingsPageInner() {
     // UI Helpers
     const statusClass = (s: string) => ({ pending: 'badge-pending', confirmed: 'badge-confirmed', completed: 'badge-completed', cancelled: 'badge-cancelled' } as Record<string, string>)[s] ?? 'badge-pending';
     
-    const paymentStatusColor = (s: string) => ({ paid: '#10b981', unpaid: '#ef4444', partially_paid: '#f59e0b', no_invoice: '#94a3b8' } as Record<string, string>)[s] ?? '#94a3b8';
+    const paymentStatusColor = (s: string) => ({ paid: 'var(--adm-success)', unpaid: 'var(--adm-danger)', partially_paid: 'var(--adm-warning)', no_invoice: 'var(--adm-faint)' } as Record<string, string>)[s] ?? 'var(--adm-faint)';
 
     const counts = STATUS_OPTIONS.reduce((acc, s) => { acc[s] = s === 'all' ? processedBookings.length : processedBookings.filter(b => b.status === s).length; return acc; }, {} as Record<string, number>);
 
@@ -829,59 +829,59 @@ function BookingsPageInner() {
             {/* ── View Details Modal (Deep View) ── */}
             {viewModal && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                    <div style={{ background: '#f8fafc', borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
-                        <div style={{ background: '#fff', padding: '1.5rem 2rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10 }}>
+                    <div style={{ background: 'var(--adm-surface)', borderRadius: 16, width: '100%', maxWidth: 700, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)' }}>
+                        <div style={{ background: '#fff', padding: '1.5rem 2rem', borderBottom: '1px solid var(--adm-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10 }}>
                             <div>
-                                <div style={{ fontWeight: 800, fontSize: '1.25rem', color: '#0f172a' }}>Booking Details</div>
-                                <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 4, fontFamily: 'monospace' }}>ID: {viewModal.id}</div>
+                                <div style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--adm-navy)' }}>Booking Details</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', marginTop: 4, fontFamily: 'monospace' }}>ID: {viewModal.id}</div>
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                                 <span className={statusClass(viewModal.status)}>{viewModal.status.toUpperCase()}</span>
-                                <button onClick={() => setViewModal(null)} style={{ background: '#f1f5f9', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: '#64748b' }}><X size={18} /></button>
+                                <button onClick={() => setViewModal(null)} style={{ background: 'var(--adm-tint)', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: 'var(--adm-muted)' }}><X size={18} /></button>
                             </div>
                         </div>
                         <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                                <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '1rem' }}>Customer Info</div>
-                                    <div style={{ fontWeight: 700, color: '#1e293b', fontSize: '1.1rem' }}>{viewModal.customer_name}</div>
-                                    <div style={{ fontSize: '0.9rem', color: '#475569', marginTop: 8 }}>📞 {viewModal.customer_phone}</div>
-                                    <div style={{ fontSize: '0.9rem', color: '#475569', marginTop: 4 }}>✉️ {viewModal.customer_email || 'No email provided'}</div>
+                                <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid var(--adm-line)' }}>
+                                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', marginBottom: '1rem' }}>Customer Info</div>
+                                    <div style={{ fontWeight: 700, color: 'var(--adm-ink)', fontSize: '1.1rem' }}>{viewModal.customer_name}</div>
+                                    <div style={{ fontSize: '0.9rem', color: 'var(--adm-text)', marginTop: 8 }}>📞 {viewModal.customer_phone}</div>
+                                    <div style={{ fontSize: '0.9rem', color: 'var(--adm-text)', marginTop: 4 }}>✉️ {viewModal.customer_email || 'No email provided'}</div>
                                 </div>
-                                <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '1rem' }}>Trip Summary</div>
-                                    <div style={{ fontSize: '0.9rem', color: '#475569' }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> {viewModal.pickup_location}</div>
-                                    <div style={{ fontSize: '0.9rem', color: '#475569', marginTop: 8 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> {viewModal.dropoff_location}</div>
-                                    <div style={{ display: 'flex', gap: '1rem', marginTop: 12, paddingTop: 12, borderTop: '1px solid #f1f5f9' }}>
-                                        <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Date</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.travel_date ? format(new Date(viewModal.travel_date), 'dd MMM yyyy') : 'TBD'}</div></div>
-                                        <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Time</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{displayTime(viewModal.travel_time, 'TBD')}</div></div>
-                                        <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Pax</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.passengers_count}</div></div>
+                                <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid var(--adm-line)' }}>
+                                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', marginBottom: '1rem' }}>Trip Summary</div>
+                                    <div style={{ fontSize: '0.9rem', color: 'var(--adm-text)' }}><span style={{ color: 'var(--adm-success)', fontWeight: 700 }}>↑</span> {viewModal.pickup_location}</div>
+                                    <div style={{ fontSize: '0.9rem', color: 'var(--adm-text)', marginTop: 8 }}><span style={{ color: 'var(--adm-danger)', fontWeight: 700 }}>↓</span> {viewModal.dropoff_location}</div>
+                                    <div style={{ display: 'flex', gap: '1rem', marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--adm-tint)' }}>
+                                        <div><div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>Date</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.travel_date ? format(new Date(viewModal.travel_date), 'dd MMM yyyy') : 'TBD'}</div></div>
+                                        <div><div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>Time</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{displayTime(viewModal.travel_time, 'TBD')}</div></div>
+                                        <div><div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>Pax</div><div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.passengers_count}</div></div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '1rem' }}>Billing & Service</div>
+                            <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid var(--adm-line)' }}>
+                                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', marginBottom: '1rem' }}>Billing & Service</div>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
-                                    <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Service Type</div><div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{serviceLabel(viewModal.service_type) || 'N/A'}</div></div>
-                                    <div><div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Quote Amount</div><div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a' }}>{formatMoney(viewModal.quote_amount, viewModal.currency)}</div></div>
+                                    <div><div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>Service Type</div><div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{serviceLabel(viewModal.service_type) || 'N/A'}</div></div>
+                                    <div><div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>Quote Amount</div><div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--adm-navy)' }}>{formatMoney(viewModal.quote_amount, viewModal.currency)}</div></div>
                                     <div>
-                                        <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Payment Status</div>
+                                        <div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>Payment Status</div>
                                         <div style={{ fontSize: '0.85rem', fontWeight: 700, color: paymentStatusColor(viewModal.payment_status), textTransform: 'capitalize' }}>{viewModal.payment_status.replace('_', ' ')}</div>
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Invoice ID</div>
+                                        <div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>Invoice ID</div>
                                         <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{viewModal.invoice_number || 'None'}</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '1rem' }}>Notes & Special Requests</div>
-                                <div style={{ fontSize: '0.85rem', color: '#334155', background: '#fef3c7', padding: '1rem', borderRadius: 8, borderLeft: '4px solid #f59e0b', marginBottom: '1rem' }}>
+                            <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 12, border: '1px solid var(--adm-line)' }}>
+                                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', marginBottom: '1rem' }}>Notes & Special Requests</div>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--adm-text)', background: 'var(--adm-warning-tint)', padding: '1rem', borderRadius: 8, borderLeft: '4px solid var(--adm-warning)', marginBottom: '1rem' }}>
                                     <strong>Customer Notes:</strong><br/>{viewModal.special_notes || 'No special notes provided by customer.'}
                                 </div>
-                                <div style={{ fontSize: '0.85rem', color: '#334155', background: '#f8fafc', padding: '1rem', borderRadius: 8, borderLeft: '4px solid #3b82f6' }}>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--adm-text)', background: 'var(--adm-surface)', padding: '1rem', borderRadius: 8, borderLeft: '4px solid var(--adm-info)' }}>
                                     <strong>Internal Admin Notes:</strong><br/>{viewModal.internal_notes || 'No internal notes added.'}
                                 </div>
                             </div>
@@ -895,8 +895,8 @@ function BookingsPageInner() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', width: '100%', maxWidth: 600, maxHeight: '90vh', overflowY: 'auto' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#0f172a' }}>Edit Booking</div>
-                            <button onClick={() => setEditModal(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--adm-navy)' }}>Edit Booking</div>
+                            <button onClick={() => setEditModal(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-faint)' }}><X size={20} /></button>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                             {[
@@ -912,7 +912,7 @@ function BookingsPageInner() {
                                 { key: 'quote_amount', label: 'Quote Amount', type: 'number' },
                             ].map(f => (
                                 <div key={f.key} style={{ gridColumn: f.span ? '1/-1' : 'auto' }}>
-                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>{f.label}</label>
+                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>{f.label}</label>
                                     <input
                                         type={f.type || 'text'}
                                         /* A Postgres `time` column hands back "04:00:00", which an
@@ -930,7 +930,7 @@ function BookingsPageInner() {
                             {/* Currency travels with the amount, so a Dubai or Kuwait job is
                                 never silently reported as riyals. */}
                             <div>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Currency</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>Currency</label>
                                 <select
                                     value={toCurrencyCode(editModal.currency)}
                                     onChange={e => setEditModal({ ...editModal, currency: e.target.value })}
@@ -945,7 +945,7 @@ function BookingsPageInner() {
                             {/* Status was previously only reachable through the row Actions
                                 menu, which was itself unusable. */}
                             <div>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Status</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>Status</label>
                                 <select
                                     value={editModal.status || 'pending'}
                                     onChange={e => setEditModal({ ...editModal, status: e.target.value })}
@@ -959,7 +959,7 @@ function BookingsPageInner() {
                                 </select>
                             </div>
                             <div style={{ gridColumn: '1/-1' }}>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Internal Notes (admin only)</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>Internal Notes (admin only)</label>
                                 <textarea value={editModal.internal_notes || ''} onChange={e => setEditModal({ ...editModal, internal_notes: e.target.value })} rows={3} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit' }} />
                             </div>
                         </div>
@@ -978,8 +978,8 @@ function BookingsPageInner() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', width: '100%', maxWidth: 460 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                            <div style={{ fontWeight: 700, color: '#0f172a' }}>Notes — {notesModal.customer_name}</div>
-                            <button onClick={() => setNotesModal(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                            <div style={{ fontWeight: 700, color: 'var(--adm-navy)' }}>Notes — {notesModal.customer_name}</div>
+                            <button onClick={() => setNotesModal(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-faint)' }}><X size={20} /></button>
                         </div>
                         <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={6} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit' }} placeholder="Add internal notes (not visible to customer)..." />
                         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
@@ -1008,18 +1008,18 @@ function BookingsPageInner() {
             {/* Status tabs */}
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
                 {STATUS_OPTIONS.map(s => (
-                    <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }} style={{ padding: '0.45rem 1rem', borderRadius: 9999, border: '1.5px solid', borderColor: statusFilter === s ? '#fbbf24' : '#e2e8f0', background: statusFilter === s ? '#fffbeb' : '#fff', color: statusFilter === s ? '#92400e' : '#64748b', fontWeight: statusFilter === s ? 700 : 500, fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'all 0.2s' }}>
+                    <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }} style={{ padding: '0.45rem 1rem', borderRadius: 9999, border: '1.5px solid', borderColor: statusFilter === s ? 'var(--adm-gold)' : 'var(--adm-line)', background: statusFilter === s ? 'var(--adm-gold-tint)' : '#fff', color: statusFilter === s ? 'var(--adm-gold-ink)' : 'var(--adm-muted)', fontWeight: statusFilter === s ? 700 : 500, fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'all 0.2s' }}>
                         {s.charAt(0).toUpperCase() + s.slice(1)}
-                        <span style={{ background: statusFilter === s ? '#fbbf24' : '#f1f5f9', color: statusFilter === s ? '#0f172a' : '#64748b', borderRadius: 9999, padding: '0 0.4rem', fontSize: '0.72rem', fontWeight: 700 }}>{counts[s]}</span>
+                        <span style={{ background: statusFilter === s ? 'var(--adm-gold)' : 'var(--adm-tint)', color: statusFilter === s ? 'var(--adm-navy)' : 'var(--adm-muted)', borderRadius: 9999, padding: '0 0.4rem', fontSize: '0.72rem', fontWeight: 700 }}>{counts[s]}</span>
                     </button>
                 ))}
             </div>
 
             {/* Advanced Filters & Search */}
-            <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 14, border: '1px solid #e8edf2', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+            <div style={{ background: '#fff', padding: '1.25rem', borderRadius: 14, border: '1px solid var(--adm-line)', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
                 <div style={{ flex: '1 1 300px', position: 'relative' }}>
-                    <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                    <input type="text" style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.2rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }} placeholder="Search ID, name, phone, email, location..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
+                    <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--adm-faint)' }} />
+                    <input type="text" style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.2rem', borderRadius: 8, border: '1px solid var(--adm-line-strong)', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }} placeholder="Search ID, name, phone, email, location..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
                 </div>
                 
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -1027,35 +1027,35 @@ function BookingsPageInner() {
                     <div data-menu-root style={{ position: 'relative' }}>
                         <button
                             onClick={() => setShowCalendar(v => !v)}
-                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.55rem 0.9rem', borderRadius: 8, border: `1.5px solid ${(dateFrom || dateTo) ? '#fbbf24' : '#cbd5e1'}`, background: (dateFrom || dateTo) ? '#fffbeb' : '#f8fafc', fontSize: '0.8rem', fontWeight: 600, color: (dateFrom || dateTo) ? '#92400e' : '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.55rem 0.9rem', borderRadius: 8, border: `1.5px solid ${(dateFrom || dateTo) ? 'var(--adm-gold)' : 'var(--adm-line-strong)'}`, background: (dateFrom || dateTo) ? 'var(--adm-gold-tint)' : 'var(--adm-surface)', fontSize: '0.8rem', fontWeight: 600, color: (dateFrom || dateTo) ? 'var(--adm-gold-ink)' : 'var(--adm-text)', cursor: 'pointer', whiteSpace: 'nowrap' }}
                         >
                             <Calendar size={14} />
                             {dateFrom || dateTo ? `${dateFrom || '…'} → ${dateTo || '…'}` : 'Date Range'}
-                            {(dateFrom || dateTo) && <span onClick={e => { e.stopPropagation(); setDateFrom(''); setDateTo(''); setPage(1); }} style={{ marginLeft: 4, color: '#ef4444', fontWeight: 800, cursor: 'pointer' }}>×</span>}
+                            {(dateFrom || dateTo) && <span onClick={e => { e.stopPropagation(); setDateFrom(''); setDateTo(''); setPage(1); }} style={{ marginLeft: 4, color: 'var(--adm-danger)', fontWeight: 800, cursor: 'pointer' }}>×</span>}
                         </button>
                         {showCalendar && (
-                            <div style={{ position: 'absolute', top: '110%', left: 0, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', zIndex: 999, padding: '1rem', minWidth: 280 }}>
-                                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.8px' }}>Filter by Travel Date</div>
+                            <div style={{ position: 'absolute', top: '110%', left: 0, background: '#fff', border: '1px solid var(--adm-line)', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', zIndex: 999, padding: '1rem', minWidth: 280 }}>
+                                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.8px' }}>Filter by Travel Date</div>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                     <div>
-                                        <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>From</label>
-                                        <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(1); }} style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', boxSizing: 'border-box' }} />
+                                        <label style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>From</label>
+                                        <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(1); }} style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid var(--adm-line-strong)', fontSize: '0.8rem', outline: 'none', boxSizing: 'border-box' }} />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '0.72rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>To</label>
-                                        <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(1); }} style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', boxSizing: 'border-box' }} />
+                                        <label style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>To</label>
+                                        <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(1); }} style={{ width: '100%', padding: '0.5rem', borderRadius: 8, border: '1px solid var(--adm-line-strong)', fontSize: '0.8rem', outline: 'none', boxSizing: 'border-box' }} />
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
                                     {[{l:'Today',f:format(new Date(),'yyyy-MM-dd'),t:format(new Date(),'yyyy-MM-dd')},{l:'This Week',f:format(addDays(new Date(),-6),'yyyy-MM-dd'),t:format(new Date(),'yyyy-MM-dd')},{l:'This Month',f:format(new Date(new Date().getFullYear(),new Date().getMonth(),1),'yyyy-MM-dd'),t:format(new Date(new Date().getFullYear(),new Date().getMonth()+1,0),'yyyy-MM-dd')}].map(q => (
-                                        <button key={q.l} onClick={() => { setDateFrom(q.f); setDateTo(q.t); setPage(1); }} style={{ flex:1, padding:'0.3rem 0.4rem', borderRadius:6, border:'1px solid #e2e8f0', background:'#f8fafc', fontSize:'0.7rem', fontWeight:600, color:'#475569', cursor:'pointer' }}>{q.l}</button>
+                                        <button key={q.l} onClick={() => { setDateFrom(q.f); setDateTo(q.t); setPage(1); }} style={{ flex:1, padding:'0.3rem 0.4rem', borderRadius:6, border:'1px solid var(--adm-line)', background:'var(--adm-surface)', fontSize:'0.7rem', fontWeight:600, color:'var(--adm-text)', cursor:'pointer' }}>{q.l}</button>
                                     ))}
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    <select value={paymentFilter} onChange={e => { setPaymentFilter(e.target.value); setPage(1); }} style={{ padding: '0.55rem 0.8rem', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: '0.8rem', outline: 'none', background: '#f8fafc', color: '#334155', fontWeight: 500 }}>
+                    <select value={paymentFilter} onChange={e => { setPaymentFilter(e.target.value); setPage(1); }} style={{ padding: '0.55rem 0.8rem', borderRadius: 8, border: '1px solid var(--adm-line-strong)', fontSize: '0.8rem', outline: 'none', background: 'var(--adm-surface)', color: 'var(--adm-text)', fontWeight: 500 }}>
                         <option value="all">Any Payment Status</option>
                         <option value="paid">Paid</option>
                         <option value="unpaid">Unpaid</option>
@@ -1067,13 +1067,13 @@ function BookingsPageInner() {
 
             {/* Bulk Actions Bar */}
             {selectedIds.size > 0 && (
-                <div style={{ background: '#eff6ff', padding: '0.75rem 1.25rem', borderRadius: 8, border: '1px solid #bfdbfe', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'fadeIn 0.2s' }}>
-                    <div style={{ fontWeight: 600, color: '#1e3a8a', fontSize: '0.85rem' }}>
+                <div style={{ background: 'var(--adm-info-tint)', padding: '0.75rem 1.25rem', borderRadius: 8, border: '1px solid var(--adm-info-line)', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', animation: 'fadeIn 0.2s' }}>
+                    <div style={{ fontWeight: 600, color: 'var(--adm-info-ink)', fontSize: '0.85rem' }}>
                         {selectedIds.size} bookings selected
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {allowed('bookings.status') && (
-                        <select onChange={(e) => { if (e.target.value) handleBulkStatus(e.target.value); e.target.value = ''; }} style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: '1px solid #93c5fd', fontSize: '0.75rem', outline: 'none' }}>
+                        <select onChange={(e) => { if (e.target.value) handleBulkStatus(e.target.value); e.target.value = ''; }} style={{ padding: '0.4rem 0.8rem', borderRadius: 6, border: '1px solid var(--adm-info-line)', fontSize: '0.75rem', outline: 'none' }}>
                             <option value="">Change Status...</option>
                             <option value="pending">Mark Pending</option>
                             <option value="confirmed">Mark Confirmed</option>
@@ -1081,9 +1081,9 @@ function BookingsPageInner() {
                             <option value="cancelled">Mark Cancelled</option>
                         </select>
                         )}
-                        <button onClick={() => exportCSV(processedBookings.filter(b => selectedIds.has(b.id)))} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: '#fff', borderColor: '#93c5fd', color: '#1e3a8a' }}>Export Selected</button>
+                        <button onClick={() => exportCSV(processedBookings.filter(b => selectedIds.has(b.id)))} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: '#fff', borderColor: 'var(--adm-info-line)', color: 'var(--adm-info-ink)' }}>Export Selected</button>
                         {allowed('bookings.delete') && (
-                            <button onClick={handleBulkDelete} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: '#fef2f2', borderColor: '#fca5a5', color: '#991b1b' }}><Trash size={14} style={{ marginRight: 4 }}/> Delete</button>
+                            <button onClick={handleBulkDelete} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: 'var(--adm-danger-tint)', borderColor: 'var(--adm-danger-line)', color: 'var(--adm-danger-ink)' }}><Trash size={14} style={{ marginRight: 4 }}/> Delete</button>
                         )}
                     </div>
                 </div>
@@ -1092,11 +1092,11 @@ function BookingsPageInner() {
             {/* Table */}
             <div className="admin-table-wrap" style={{ position: 'relative' }}>
                 <table className="admin-table">
-                    <thead style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f8fafc' }}>
+                    <thead style={{ position: 'sticky', top: 0, zIndex: 10, background: 'var(--adm-surface)' }}>
                         <tr>
                             <th style={{ width: 40, textAlign: 'center' }}>
-                                <button onClick={handleSelectAll} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
-                                    {selectedIds.size === paginatedBookings.length && paginatedBookings.length > 0 ? <CheckSquare size={16} color="#3b82f6" /> : <Square size={16} />}
+                                <button onClick={handleSelectAll} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-muted)' }}>
+                                    {selectedIds.size === paginatedBookings.length && paginatedBookings.length > 0 ? <CheckSquare size={16} color="#2563EB" /> : <Square size={16} />}
                                 </button>
                             </th>
                             <th onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>ID/Alerts {sortConfig.key === 'id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
@@ -1111,73 +1111,73 @@ function BookingsPageInner() {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={9} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}><RefreshCw className="animate-spin" style={{ margin: '0 auto', display: 'block', marginBottom: '1rem' }} /> Loading records...</td></tr>
+                            <tr><td colSpan={9} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}><RefreshCw className="animate-spin" style={{ margin: '0 auto', display: 'block', marginBottom: '1rem' }} /> Loading records...</td></tr>
                         ) : paginatedBookings.length > 0 ? paginatedBookings.map(b => (
-                            <tr key={b.id} style={{ background: selectedIds.has(b.id) ? '#eff6ff' : 'transparent', transition: 'background 0.2s' }}>
+                            <tr key={b.id} style={{ background: selectedIds.has(b.id) ? 'var(--adm-info-tint)' : 'transparent', transition: 'background 0.2s' }}>
                                 <td style={{ textAlign: 'center' }}>
-                                    <button onClick={() => handleSelectOne(b.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
-                                        {selectedIds.has(b.id) ? <CheckSquare size={16} color="#3b82f6" /> : <Square size={16} />}
+                                    <button onClick={() => handleSelectOne(b.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-muted)' }}>
+                                        {selectedIds.has(b.id) ? <CheckSquare size={16} color="#2563EB" /> : <Square size={16} />}
                                     </button>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.72rem', color: '#1e293b', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.5px' }}>{b.booking_number || b.id.substring(0,8).toUpperCase()}</div>
+                                    <div style={{ fontSize: '0.72rem', color: 'var(--adm-ink)', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.5px' }}>{b.booking_number || b.id.substring(0,8).toUpperCase()}</div>
                                     <div style={{ display: 'flex', gap: '0.3rem', marginTop: 4, alignItems: 'center' }}>
                                         {b.status === 'pending' && (
                                             <Tooltip label="Pending" text="Booking requires confirmation — the customer has not been told it is confirmed yet.">
-                                                <Clock size={13} color="#f59e0b" />
+                                                <Clock size={13} color="#D97706" />
                                             </Tooltip>
                                         )}
                                         {b.is_upcoming && b.status !== 'completed' && b.status !== 'cancelled' && (
                                             <Tooltip label="Travelling soon" text="Pickup is within the next 24–48 hours.">
-                                                <AlertTriangle size={13} color="#f59e0b" />
+                                                <AlertTriangle size={13} color="#D97706" />
                                             </Tooltip>
                                         )}
                                         {b.payment_status === 'unpaid' && (
                                             <Tooltip label="Unpaid" text="Payment has not been received for this booking's invoice.">
-                                                <CreditCard size={13} color="#ef4444" />
+                                                <CreditCard size={13} color="#DC2626" />
                                             </Tooltip>
                                         )}
                                         {b.payment_status === 'partially_paid' && (
                                             <Tooltip label="Partially paid" text="Some of the invoice total has been received, but a balance remains.">
-                                                <CreditCard size={13} color="#f59e0b" />
+                                                <CreditCard size={13} color="#D97706" />
                                             </Tooltip>
                                         )}
                                         {b.payment_status === 'no_invoice' && b.status === 'completed' && (
                                             <Tooltip label="Missing invoice" text="This trip is complete but no invoice has been generated yet.">
-                                                <FileText size={13} color="#8b5cf6" />
+                                                <FileText size={13} color="#7A5C2E" />
                                             </Tooltip>
                                         )}
                                         {b.internal_notes && (
                                             <Tooltip label="Internal notes" text="An admin has added private notes to this booking. They are never shown to the customer.">
-                                                <MessageCircle size={13} color="#3b82f6" />
+                                                <MessageCircle size={13} color="#2563EB" />
                                             </Tooltip>
                                         )}
                                         {!canWhatsApp(b.customer_phone) && (
                                             <Tooltip label="No usable phone number" text="The stored phone number cannot be dialled, so WhatsApp contact is unavailable for this booking.">
-                                                <PhoneOff size={13} color="#94a3b8" />
+                                                <PhoneOff size={13} color="#6B7280" />
                                             </Tooltip>
                                         )}
                                     </div>
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 700, color: '#1e293b', fontSize: '0.85rem' }}>{b.customer_name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{b.customer_phone}</div>
+                                    <div style={{ fontWeight: 700, color: 'var(--adm-ink)', fontSize: '0.85rem' }}>{b.customer_name}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)' }}>{b.customer_phone}</div>
                                 </td>
                                 <td style={{ minWidth: 200 }}>
-                                    <div style={{ fontSize: '0.8rem', lineHeight: 1.3, display: 'flex', alignItems: 'flex-start', gap: 4 }}><span style={{ color: '#10b981', fontWeight: 700 }}>↑</span> <span>{b.pickup_location}</span></div>
-                                    <div style={{ fontSize: '0.8rem', lineHeight: 1.3, display: 'flex', alignItems: 'flex-start', gap: 4, marginTop: 4 }}><span style={{ color: '#f43f5e', fontWeight: 700 }}>↓</span> <span>{b.dropoff_location}</span></div>
+                                    <div style={{ fontSize: '0.8rem', lineHeight: 1.3, display: 'flex', alignItems: 'flex-start', gap: 4 }}><span style={{ color: 'var(--adm-success)', fontWeight: 700 }}>↑</span> <span>{b.pickup_location}</span></div>
+                                    <div style={{ fontSize: '0.8rem', lineHeight: 1.3, display: 'flex', alignItems: 'flex-start', gap: 4, marginTop: 4 }}><span style={{ color: 'var(--adm-danger)', fontWeight: 700 }}>↓</span> <span>{b.dropoff_location}</span></div>
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#334155' }}>{displayDate(b.travel_date)}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: 2 }}>{displayTime(b.travel_time)}</div>
-                                    <div style={{ fontSize: '0.7rem', color: '#6366f1', fontWeight: 600, marginTop: 4 }}>{serviceLabel(b.service_type)}</div>
+                                    <div style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--adm-text)' }}>{displayDate(b.travel_date)}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--adm-faint)', marginTop: 2 }}>{displayTime(b.travel_time)}</div>
+                                    <div style={{ fontSize: '0.7rem', color: 'var(--adm-info)', fontWeight: 600, marginTop: 4 }}>{serviceLabel(b.service_type)}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>{formatMoney(b.quote_amount, b.currency)}</div>
+                                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--adm-navy)' }}>{formatMoney(b.quote_amount, b.currency)}</div>
                                     <div style={{ fontSize: '0.7rem', fontWeight: 700, color: paymentStatusColor(b.payment_status), textTransform: 'capitalize', marginTop: 2 }}>{b.payment_status.replace('_', ' ')}</div>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginTop: 6 }}>
                                         {(b.tags || []).map((tag: string) => (
-                                            <span key={tag} style={{ fontSize: '0.6rem', background: '#f1f5f9', color: '#475569', padding: '0.1rem 0.3rem', borderRadius: 4, fontWeight: 700 }}>{tag}</span>
+                                            <span key={tag} style={{ fontSize: '0.6rem', background: 'var(--adm-tint)', color: 'var(--adm-text)', padding: '0.1rem 0.3rem', borderRadius: 4, fontWeight: 700 }}>{tag}</span>
                                         ))}
                                     </div>
                                 </td>
@@ -1188,14 +1188,14 @@ function BookingsPageInner() {
                                         const tone = QUOTE_STATE_STYLE[state];
                                         return (
                                             <>
-                                                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: q ? '#0f172a' : '#cbd5e1' }}>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: q ? 'var(--adm-navy)' : 'var(--adm-line-strong)' }}>
                                                     {q ? formatMoney(quoteTotal(q), q.currency) : '—'}
                                                 </div>
                                                 <span style={{ display: 'inline-block', marginTop: 4, fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.03em', textTransform: 'uppercase', padding: '0.15rem 0.45rem', borderRadius: 999, background: tone.bg, color: tone.fg }}>
                                                     {QUOTE_STATE_LABEL[state]}
                                                 </span>
                                                 {q?.shared_at && state === 'sent' && (
-                                                    <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: 3 }}>also shared</div>
+                                                    <div style={{ fontSize: '0.62rem', color: 'var(--adm-faint)', marginTop: 3 }}>also shared</div>
                                                 )}
                                             </>
                                         );
@@ -1207,16 +1207,16 @@ function BookingsPageInner() {
                                 <td style={{ textAlign: 'right' }}>
                                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.4rem', marginBottom: '0.4rem' }}>
                                         <Tooltip label="View booking" text="Open the full booking record, including internal notes.">
-                                            <button onClick={() => setViewModal(b)} aria-label="View booking" style={{ background: '#f1f5f9', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#3b82f6' }}><Eye size={14} /></button>
+                                            <button onClick={() => setViewModal(b)} aria-label="View booking" style={{ background: 'var(--adm-tint)', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-info)' }}><Eye size={14} /></button>
                                         </Tooltip>
                                         {allowed('bookings.edit') && (
                                             <Tooltip label="Edit booking" text="Change trip details, fare, currency or status.">
-                                                <button onClick={() => setEditModal(b)} aria-label="Edit booking" style={{ background: '#f1f5f9', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#10b981' }}><Edit size={14} /></button>
+                                                <button onClick={() => setEditModal(b)} aria-label="Edit booking" style={{ background: 'var(--adm-tint)', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-success)' }}><Edit size={14} /></button>
                                             </Tooltip>
                                         )}
                                         {allowed('comms.send') && canWhatsApp(b.customer_phone) && (
                                             <Tooltip label="WhatsApp customer" text="Open WhatsApp with a booking summary you can edit before sending.">
-                                                <button onClick={() => setWhatsAppModal(b)} aria-label="WhatsApp customer" style={{ background: '#dcfce7', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#15803d' }}><MessageCircle size={14} /></button>
+                                                <button onClick={() => setWhatsAppModal(b)} aria-label="WhatsApp customer" style={{ background: 'var(--adm-success-tint)', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-success-ink)' }}><MessageCircle size={14} /></button>
                                             </Tooltip>
                                         )}
                                         {allowed('quotes.create') && (
@@ -1224,7 +1224,7 @@ function BookingsPageInner() {
                                                 <button
                                                     onClick={() => setQuoteModal(b)}
                                                     aria-label="Quote for this booking"
-                                                    style={{ background: '#fef3c7', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#b45309' }}
+                                                    style={{ background: 'var(--adm-warning-tint)', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-warning-ink)' }}
                                                 >
                                                     <FileText size={14} />
                                                 </button>
@@ -1232,7 +1232,7 @@ function BookingsPageInner() {
                                         )}
                                         {allowed('bookings.status') && b.status === 'confirmed' && (
                                             <Tooltip label="Mark completed" text="Marks the trip as finished and offers to raise an invoice.">
-                                                <button onClick={() => updateStatus(b.id, 'completed')} aria-label="Mark completed" style={{ background: '#e0e7ff', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: '#4f46e5' }}><CheckSquare size={14} /></button>
+                                                <button onClick={() => updateStatus(b.id, 'completed')} aria-label="Mark completed" style={{ background: 'var(--adm-info-tint)', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-info)' }}><CheckSquare size={14} /></button>
                                             </Tooltip>
                                         )}
                                     </div>
@@ -1266,7 +1266,7 @@ function BookingsPageInner() {
                                 </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={9} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>
+                            <tr><td colSpan={9} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>
                                 <Search size={32} style={{ opacity: 0.3, margin: '0 auto', marginBottom: '1rem', display: 'block' }} />
                                 No bookings match your current filters and search.
                             </td></tr>
@@ -1276,20 +1276,20 @@ function BookingsPageInner() {
 
                 {/* Pagination Controls */}
                 {!loading && filteredBookings.length > 0 && (
-                    <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 }}>
-                        <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                    <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--adm-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 }}>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--adm-muted)' }}>
                             Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, filteredBookings.length)} of {filteredBookings.length} bookings
                         </div>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} style={{ padding: '0.4rem', borderRadius: 6, border: '1px solid #e2e8f0', fontSize: '0.75rem', outline: 'none' }}>
+                            <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }} style={{ padding: '0.4rem', borderRadius: 6, border: '1px solid var(--adm-line)', fontSize: '0.75rem', outline: 'none' }}>
                                 <option value={10}>10 per page</option>
                                 <option value={25}>25 per page</option>
                                 <option value={50}>50 per page</option>
                                 <option value={100}>100 per page</option>
                             </select>
                             <div style={{ display: 'flex', gap: '0.3rem' }}>
-                                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={{ padding: '0.4rem', borderRadius: 6, border: '1px solid #e2e8f0', background: page === 1 ? '#f8fafc' : '#fff', color: page === 1 ? '#cbd5e1' : '#334155', cursor: page === 1 ? 'not-allowed' : 'pointer' }}><ChevronLeft size={16} /></button>
-                                <button onClick={() => setPage(p => Math.min(Math.ceil(filteredBookings.length / pageSize), p + 1))} disabled={page >= Math.ceil(filteredBookings.length / pageSize)} style={{ padding: '0.4rem', borderRadius: 6, border: '1px solid #e2e8f0', background: page >= Math.ceil(filteredBookings.length / pageSize) ? '#f8fafc' : '#fff', color: page >= Math.ceil(filteredBookings.length / pageSize) ? '#cbd5e1' : '#334155', cursor: page >= Math.ceil(filteredBookings.length / pageSize) ? 'not-allowed' : 'pointer' }}><ChevronRight size={16} /></button>
+                                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={{ padding: '0.4rem', borderRadius: 6, border: '1px solid var(--adm-line)', background: page === 1 ? 'var(--adm-surface)' : '#fff', color: page === 1 ? 'var(--adm-line-strong)' : 'var(--adm-text)', cursor: page === 1 ? 'not-allowed' : 'pointer' }}><ChevronLeft size={16} /></button>
+                                <button onClick={() => setPage(p => Math.min(Math.ceil(filteredBookings.length / pageSize), p + 1))} disabled={page >= Math.ceil(filteredBookings.length / pageSize)} style={{ padding: '0.4rem', borderRadius: 6, border: '1px solid var(--adm-line)', background: page >= Math.ceil(filteredBookings.length / pageSize) ? 'var(--adm-surface)' : '#fff', color: page >= Math.ceil(filteredBookings.length / pageSize) ? 'var(--adm-line-strong)' : 'var(--adm-text)', cursor: page >= Math.ceil(filteredBookings.length / pageSize) ? 'not-allowed' : 'pointer' }}><ChevronRight size={16} /></button>
                             </div>
                         </div>
                     </div>
@@ -1298,8 +1298,8 @@ function BookingsPageInner() {
 
             {/* ── Portal Dropdown (fixed, never clipped) ── */}
             {openDropdown && paginatedBookings.map(b => b.id === openDropdown ? (
-                <div key={`dd-${b.id}`} data-menu-root role="menu" style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, maxHeight: 'calc(100vh - 16px)', overflowY: 'auto', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.15)', zIndex: 9999, minWidth: 230, overflow: 'hidden', textAlign: 'left', animation: 'fadeIn 0.15s' }}>
-                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>Booking</div>
+                <div key={`dd-${b.id}`} data-menu-root role="menu" style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, maxHeight: 'calc(100vh - 16px)', overflowY: 'auto', background: '#fff', border: '1px solid var(--adm-line)', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.15)', zIndex: 9999, minWidth: 230, overflow: 'hidden', textAlign: 'left', animation: 'fadeIn 0.15s' }}>
+                    <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-surface)', borderBottom: '1px solid var(--adm-tint)' }}>Booking</div>
                     <button onClick={() => { setViewModal(b); setOpenDropdown(null); }} className="dropdown-item">👁️ View Booking</button>
                     {allowed('bookings.edit') && (
                         <button onClick={() => { setEditModal(b); setOpenDropdown(null); }} className="dropdown-item">✏️ Edit Booking</button>
@@ -1318,7 +1318,7 @@ function BookingsPageInner() {
 
                     {allowed('invoices.create') && (
                         <>
-                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Billing &amp; Invoice</div>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-surface)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-tint)' }}>Billing &amp; Invoice</div>
                             <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 {b.invoice_id ? 'View Invoice' : 'Generate Invoice'}</button>
                             {b.invoice_id && <button onClick={() => { setInvoiceModal(b); setOpenDropdown(null); }} className="dropdown-item">📄 Invoice Preview</button>}
                             {b.invoice_id && b.payment_status !== 'paid' && <button onClick={() => markInvoicePaid(b)} className="dropdown-item">✅ Mark Invoice Paid</button>}
@@ -1327,7 +1327,7 @@ function BookingsPageInner() {
 
                     {allowed('bookings.status') && (
                         <>
-                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Booking Status</div>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-surface)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-tint)' }}>Booking Status</div>
                             <button onClick={() => updateStatus(b.id, 'pending')} className="dropdown-item text-amber-600" disabled={b.status === 'pending'}>Mark Pending</button>
                             <button onClick={() => updateStatus(b.id, 'confirmed')} className="dropdown-item text-blue-600" disabled={b.status === 'confirmed'}>Confirm Booking</button>
                             <button onClick={() => updateStatus(b.id, 'completed')} className="dropdown-item text-indigo-600" disabled={b.status === 'completed'}>Mark Completed</button>
@@ -1337,7 +1337,7 @@ function BookingsPageInner() {
 
                     {allowed('comms.send') && (
                         <>
-                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Communication</div>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-surface)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-tint)' }}>Communication</div>
                             {b.customer_email && (
                                 <button onClick={() => sendEmail('booking_confirmed', b)} className="dropdown-item">📩 Email Confirmation</button>
                             )}
@@ -1355,7 +1355,7 @@ function BookingsPageInner() {
 
                     {allowed('bookings.edit') && (
                         <>
-                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>More</div>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-surface)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-tint)' }}>More</div>
                             <button onClick={() => { setNotesModal(b); setNotes(b.internal_notes || ''); setOpenDropdown(null); }} className="dropdown-item">📝 Internal Notes</button>
                             <button onClick={() => addTag(b.id, 'VIP')} className="dropdown-item">🏷️ Toggle VIP Tag</button>
                             <button onClick={() => addTag(b.id, 'Urgent')} className="dropdown-item">🏷️ Toggle Urgent Tag</button>
@@ -1364,7 +1364,7 @@ function BookingsPageInner() {
 
                     {allowed('bookings.delete') && (
                         <>
-                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#fef2f2', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #fee2e2' }}>Danger Zone</div>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-danger-tint)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-danger-tint)' }}>Danger Zone</div>
                             <button onClick={() => deleteBooking(b)} className="dropdown-item text-red-600">🗑️ Delete Booking</button>
                         </>
                     )}
@@ -1385,25 +1385,25 @@ function BookingsPageInner() {
                         <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '1.75rem', width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '1rem' }}>
                                 <div>
-                                    <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
+                                    <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--adm-navy)' }}>
                                         Quote for {quoteModal.customer_name}
                                     </div>
-                                    <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 2 }}>
+                                    <div style={{ fontSize: '0.78rem', color: 'var(--adm-muted)', marginTop: 2 }}>
                                         {quoteModal.pickup_location} → {quoteModal.dropoff_location}
                                         {quoteModal.travel_date ? ` · ${displayDate(quoteModal.travel_date)}` : ''}
                                     </div>
                                     {existing && (
-                                        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 4 }}>
+                                        <div style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 4 }}>
                                             Updating {quoteRef(existing)} · currently {QUOTE_STATE_LABEL[state].toLowerCase()}
                                         </div>
                                     )}
                                 </div>
-                                <button onClick={() => setQuoteModal(null)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                                <button onClick={() => setQuoteModal(null)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-faint)' }}><X size={20} /></button>
                             </div>
 
                             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                                 <div style={{ flex: '1 1 200px', minWidth: 0 }}>
-                                    <label htmlFor="quote-price" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Quote price</label>
+                                    <label htmlFor="quote-price" style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 6 }}>Quote price</label>
                                     <input
                                         id="quote-price"
                                         type="number"
@@ -1417,7 +1417,7 @@ function BookingsPageInner() {
                                     />
                                 </div>
                                 <div style={{ flex: '0 1 120px' }}>
-                                    <label htmlFor="quote-currency" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Currency</label>
+                                    <label htmlFor="quote-currency" style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 6 }}>Currency</label>
                                     <select
                                         id="quote-currency"
                                         value={quoteForm.currency}
@@ -1430,7 +1430,7 @@ function BookingsPageInner() {
                                 </div>
                             </div>
 
-                            <label htmlFor="quote-note" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', margin: '1rem 0 6px' }}>
+                            <label htmlFor="quote-note" style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', margin: '1rem 0 6px' }}>
                                 Message to customer <span style={{ fontWeight: 400 }}>(optional)</span>
                             </label>
                             <textarea
@@ -1443,9 +1443,9 @@ function BookingsPageInner() {
                                 style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }}
                             />
 
-                            <p style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 10, lineHeight: 1.6 }}>
-                                <strong style={{ color: '#475569' }}>Share on WhatsApp</strong> saves the price and opens WhatsApp with the quote — the column shows <em>Shared</em>.<br />
-                                <strong style={{ color: '#475569' }}>Email the quote</strong> sends it from the system — the column shows <em>Sent</em> only once the email actually goes out.
+                            <p style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 10, lineHeight: 1.6 }}>
+                                <strong style={{ color: 'var(--adm-text)' }}>Share on WhatsApp</strong> saves the price and opens WhatsApp with the quote — the column shows <em>Shared</em>.<br />
+                                <strong style={{ color: 'var(--adm-text)' }}>Email the quote</strong> sends it from the system — the column shows <em>Sent</em> only once the email actually goes out.
                             </p>
 
                             {/* Why a send button is unavailable, stated in the modal.
@@ -1458,7 +1458,7 @@ function BookingsPageInner() {
                                 "the button does nothing" reads as the feature being
                                 broken rather than as a missing address. */}
                             {(!quoteModal.customer_email || !canWhatsApp(quoteModal.customer_phone)) && (
-                                <div style={{ marginTop: 12, padding: '0.7rem 0.85rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, fontSize: '0.75rem', color: '#92400e', lineHeight: 1.6 }}>
+                                <div style={{ marginTop: 12, padding: '0.7rem 0.85rem', background: 'var(--adm-gold-tint)', border: '1px solid var(--adm-warning-line)', borderRadius: 8, fontSize: '0.75rem', color: 'var(--adm-gold-ink)', lineHeight: 1.6 }}>
                                     {!quoteModal.customer_email && !canWhatsApp(quoteModal.customer_phone) ? (
                                         <>This booking has <strong>no email address and no usable phone number</strong>, so the quote cannot be sent from here. Add a contact detail to the booking first — use <strong>Edit</strong> on the booking row.</>
                                     ) : !quoteModal.customer_email ? (
@@ -1503,14 +1503,14 @@ function BookingsPageInner() {
                     <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '1.75rem', width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '1rem' }}>
                             <div>
-                                <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>WhatsApp {whatsAppModal.customer_name}</div>
-                                <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: 2 }}>
+                                <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--adm-navy)' }}>WhatsApp {whatsAppModal.customer_name}</div>
+                                <div style={{ fontSize: '0.78rem', color: 'var(--adm-muted)', marginTop: 2 }}>
                                     Sending to +{toWhatsAppNumber(whatsAppModal.customer_phone)}
                                 </div>
                             </div>
-                            <button onClick={() => setWhatsAppModal(null)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                            <button onClick={() => setWhatsAppModal(null)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-faint)' }}><X size={20} /></button>
                         </div>
-                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 6 }}>Message</label>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 6 }}>Message</label>
                         <textarea
                             value={whatsAppText}
                             onChange={e => setWhatsAppText(e.target.value)}
@@ -1518,7 +1518,7 @@ function BookingsPageInner() {
                             className="admin-search-input"
                             style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5 }}
                         />
-                        <p style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 8 }}>
+                        <p style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 8 }}>
                             WhatsApp opens in a new tab with this text prefilled. Nothing is sent until you press send there.
                         </p>
                         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
@@ -1536,14 +1536,14 @@ function BookingsPageInner() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => setInvoiceModal(null)}>
                     <div style={{ background: '#fff', borderRadius: 18, width: '100%', maxWidth: 820, maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.3)' }} onClick={e => e.stopPropagation()}>
                         {/* Header */}
-                        <div style={{ padding: '1.25rem 1.75rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a' }}>
+                        <div style={{ padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--adm-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--adm-navy)' }}>
                             <div>
                                 <div style={{ fontWeight: 800, fontSize: '1rem', color: '#fff' }}>Invoice — {invoiceModal.invoice_number}</div>
                                 <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{invoiceModal.customer_name} · {invoiceModal.booking_number}</div>
                             </div>
                             <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
-                                <button onClick={() => { const url = `/admin/invoices/${invoiceModal.invoice_id || invoiceModal.invoice_db_id}`; window.open(url, '_blank'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#1e293b', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Download size={14} /> Download</button>
-                                <button onClick={() => sendEmail('invoice', invoiceModal)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Mail size={14} /> Email</button>
+                                <button onClick={() => { const url = `/admin/invoices/${invoiceModal.invoice_id || invoiceModal.invoice_db_id}`; window.open(url, '_blank'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: 'var(--adm-ink)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Download size={14} /> Download</button>
+                                <button onClick={() => sendEmail('invoice', invoiceModal)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: 'var(--adm-info)', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Mail size={14} /> Email</button>
                                 {canWhatsApp(invoiceModal.customer_phone) && (
                                     <button onClick={() => {
                                         // The invoice's own total and reference — the
@@ -1567,7 +1567,7 @@ function BookingsPageInner() {
                         {/* Invoice Preview — the same component the invoice page
                             and the print view render, so the preview cannot drift
                             from the document that is actually sent. */}
-                        <div style={{ flex: 1, overflow: 'auto', background: '#f8fafc', padding: 'clamp(1rem, 3vw, 2rem)' }}>
+                        <div style={{ flex: 1, overflow: 'auto', background: 'var(--adm-surface)', padding: 'clamp(1rem, 3vw, 2rem)' }}>
                             <InvoiceDocumentView invoice={invoiceModal} />
                         </div>
                     </div>
@@ -1581,8 +1581,8 @@ function BookingsPageInner() {
                 so the ordinary case is still just Review → Create. */}
             {invoiceFormBooking && invoiceForm && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => { if (!savingInvoice) { setInvoiceFormBooking(null); setInvoiceForm(null); } }}>
-                    <div style={{ background: '#f1f5f9', borderRadius: 18, width: '100%', maxWidth: 760, maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
-                        <div style={{ background: '#0f172a', padding: '1.25rem 1.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ background: 'var(--adm-tint)', borderRadius: 18, width: '100%', maxWidth: 760, maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+                        <div style={{ background: 'var(--adm-navy)', padding: '1.25rem 1.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
                             <div>
                                 <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#fff' }}>Generate Invoice</div>
                                 <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>
@@ -1594,7 +1594,7 @@ function BookingsPageInner() {
                         <div style={{ flex: 1, overflowY: 'auto', padding: 'clamp(1rem, 3vw, 1.5rem)' }}>
                             <InvoiceForm value={invoiceForm} onChange={setInvoiceForm} />
                         </div>
-                        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #e2e8f0', background: '#fff', display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                        <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--adm-line)', background: '#fff', display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                             <button onClick={() => { setInvoiceFormBooking(null); setInvoiceForm(null); }} disabled={savingInvoice} className="admin-btn-secondary">Cancel</button>
                             <button onClick={saveGeneratedInvoice} disabled={savingInvoice} className="admin-btn-primary">
                                 <FilePlus size={15} style={{ marginRight: 6 }} />
@@ -1608,8 +1608,8 @@ function BookingsPageInner() {
             {/* ── New Booking Modal ── */}
             {newBookingModal && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => setNewBookingModal(false)}>
-                    <div style={{ background: '#f8fafc', borderRadius: 18, width: '100%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 30px 60px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
-                        <div style={{ background: '#0f172a', padding: '1.5rem 2rem', borderRadius: '18px 18px 0 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ background: 'var(--adm-surface)', borderRadius: 18, width: '100%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 30px 60px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+                        <div style={{ background: 'var(--adm-navy)', padding: '1.5rem 2rem', borderRadius: '18px 18px 0 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>New Booking</div>
                                 <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>Create a booking directly from admin</div>
@@ -1632,29 +1632,29 @@ function BookingsPageInner() {
                                     { key: 'car_type', label: 'Car Type' },
                                 ].map(f => (
                                     <div key={f.key} style={{ gridColumn: (f as any).span ? '1/-1' : 'auto' }}>
-                                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>{f.label}</label>
+                                        <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--adm-text)', display: 'block', marginBottom: 5 }}>{f.label}</label>
                                         <input type={f.type || 'text'} value={newBooking[f.key] || ''} onChange={e => setNewBooking({ ...newBooking, [f.key]: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem', paddingLeft: '1rem' }} />
                                     </div>
                                 ))}
                                 <div>
-                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>Currency</label>
+                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--adm-text)', display: 'block', marginBottom: 5 }}>Currency</label>
                                     <select value={toCurrencyCode(newBooking.currency)} onChange={e => setNewBooking({ ...newBooking, currency: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem' }}>
                                         {CURRENCY_CODES.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>Status</label>
+                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--adm-text)', display: 'block', marginBottom: 5 }}>Status</label>
                                     <select value={newBooking.status} onChange={e => setNewBooking({ ...newBooking, status: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem' }}>
                                         <option value="pending">Pending</option>
                                         <option value="confirmed">Confirmed</option>
                                     </select>
                                 </div>
                                 <div style={{ gridColumn: '1/-1' }}>
-                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: 5 }}>Special Notes</label>
+                                    <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--adm-text)', display: 'block', marginBottom: 5 }}>Special Notes</label>
                                     <textarea value={newBooking.special_notes || ''} onChange={e => setNewBooking({ ...newBooking, special_notes: e.target.value })} rows={3} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', padding: '0.65rem 1rem' }} placeholder="Any special requests or notes..." />
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', paddingTop: '0.5rem', borderTop: '1px solid #e2e8f0' }}>
+                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', paddingTop: '0.5rem', borderTop: '1px solid var(--adm-line)' }}>
                                 <button onClick={() => setNewBookingModal(false)} className="admin-btn-secondary">Cancel</button>
                                 <button onClick={createBooking} className="admin-btn-primary"><FilePlus size={15} /> Create Booking</button>
                             </div>
@@ -1664,12 +1664,12 @@ function BookingsPageInner() {
             )}
 
             <style dangerouslySetInnerHTML={{__html: `
-                .dropdown-item { display: block; width: 100%; padding: 0.6rem 1rem; text-align: left; background: none; border: none; cursor: pointer; font-size: 0.8rem; color: #334155; font-weight: 500; }
-                .dropdown-item:hover { background: #f8fafc; color: #0f172a; }
-                .text-amber-600 { color: #d97706 !important; }
-                .text-blue-600 { color: #2563eb !important; }
-                .text-indigo-600 { color: #4f46e5 !important; }
-                .text-red-600 { color: #dc2626 !important; }
+                .dropdown-item { display: block; width: 100%; padding: 0.6rem 1rem; text-align: left; background: none; border: none; cursor: pointer; font-size: 0.8rem; color: var(--adm-text); font-weight: 500; }
+                .dropdown-item:hover { background: var(--adm-surface); color: var(--adm-navy); }
+                .text-amber-600 { color: var(--adm-warning) !important; }
+                .text-blue-600 { color: var(--adm-info) !important; }
+                .text-indigo-600 { color: var(--adm-info) !important; }
+                .text-red-600 { color: var(--adm-danger) !important; }
                 @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
             `}} />
         </div>
@@ -1678,7 +1678,7 @@ function BookingsPageInner() {
 
 export default function BookingsPage() {
     return (
-        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading…</div>}>
+        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading…</div>}>
             <BookingsPageInner />
         </Suspense>
     );

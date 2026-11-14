@@ -79,13 +79,13 @@ export default function FleetPage() {
                 {CAR_TYPES.map(type => {
                     const count = fleet.filter(v => v.car_type === type).length;
                     return count > 0 ? (
-                        <div key={type} style={{ background: '#fff', border: '1px solid #e8edf2', borderRadius: 12, padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <div style={{ width: 36, height: 36, borderRadius: 9, background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f59e0b' }}>
+                        <div key={type} style={{ background: '#fff', border: '1px solid var(--adm-line)', borderRadius: 12, padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div style={{ width: 36, height: 36, borderRadius: 9, background: 'var(--adm-gold-tint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--adm-warning)' }}>
                                 <Car size={18} />
                             </div>
                             <div>
-                                <div style={{ fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>{count}</div>
-                                <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{type}</div>
+                                <div style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--adm-navy)' }}>{count}</div>
+                                <div style={{ fontSize: '0.72rem', color: 'var(--adm-faint)' }}>{type}</div>
                             </div>
                         </div>
                     ) : null;
@@ -106,25 +106,25 @@ export default function FleetPage() {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>Loading fleet…</td></tr>
+                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading fleet…</td></tr>
                         ) : fleet.length > 0 ? fleet.map(v => (
                             <tr key={v.id}>
                                 <td>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <div style={{ width: 38, height: 38, borderRadius: 9, background: '#f8fafc', border: '1px solid #e8edf2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
+                                        <div style={{ width: 38, height: 38, borderRadius: 9, background: 'var(--adm-surface)', border: '1px solid var(--adm-line)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--adm-faint)' }}>
                                             <Car size={16} />
                                         </div>
-                                        <div style={{ fontWeight: 700, color: '#1e293b' }}>{v.car_model}</div>
+                                        <div style={{ fontWeight: 700, color: 'var(--adm-ink)' }}>{v.car_model}</div>
                                     </div>
                                 </td>
                                 <td>
-                                    <span style={{ background: '#f1f5f9', color: '#475569', padding: '0.3rem 0.7rem', borderRadius: 6, fontSize: '0.78rem', fontWeight: 600 }}>
+                                    <span style={{ background: 'var(--adm-tint)', color: 'var(--adm-text)', padding: '0.3rem 0.7rem', borderRadius: 6, fontSize: '0.78rem', fontWeight: 600 }}>
                                         {v.car_type}
                                     </span>
                                 </td>
                                 <td>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.85rem' }}>
-                                        <Users size={14} style={{ color: '#94a3b8' }} /> {v.capacity} seats
+                                        <Users size={14} style={{ color: 'var(--adm-faint)' }} /> {v.capacity} seats
                                     </div>
                                 </td>
                                 <td>
@@ -134,8 +134,8 @@ export default function FleetPage() {
                                             display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                                             padding: '0.3rem 0.8rem', borderRadius: 9999, border: 'none',
                                             fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer',
-                                            background: v.is_available ? '#dcfce7' : '#fee2e2',
-                                            color: v.is_available ? '#166534' : '#991b1b',
+                                            background: v.is_available ? 'var(--adm-success-tint)' : 'var(--adm-danger-tint)',
+                                            color: v.is_available ? 'var(--adm-success-ink)' : 'var(--adm-danger-ink)',
                                         }}
                                     >
                                         {v.is_available ? <Check size={11} /> : <X size={11} />}
@@ -151,7 +151,7 @@ export default function FleetPage() {
                             </tr>
                         )) : (
                             <tr>
-                                <td colSpan={5} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>
+                                <td colSpan={5} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>
                                     No vehicles yet. Add your first one!
                                 </td>
                             </tr>
@@ -165,8 +165,8 @@ export default function FleetPage() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)' }}>
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', maxWidth: 440, width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>{editingId ? 'Edit Vehicle' : 'Add New Vehicle'}</h2>
-                            <button onClick={() => setModal(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
+                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--adm-navy)' }}>{editingId ? 'Edit Vehicle' : 'Add New Vehicle'}</h2>
+                            <button onClick={() => setModal(false)} style={{ background: 'none', border: 'none', color: 'var(--adm-faint)', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
                         </div>
                         <form onSubmit={handleSave}>
                             <div className="form-group">

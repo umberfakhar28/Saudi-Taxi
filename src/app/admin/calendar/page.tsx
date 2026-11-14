@@ -7,10 +7,10 @@ import { displayTime, formatTime12h } from '@/lib/datetime';
 import { formatMoney } from '@/lib/currency';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
-    pending:   { bg: '#fef9c3', text: '#854d0e', dot: '#f59e0b' },
-    confirmed: { bg: '#dcfce7', text: '#166534', dot: '#10b981' },
-    completed: { bg: '#dbeafe', text: '#1e40af', dot: '#3b82f6' },
-    cancelled: { bg: '#fee2e2', text: '#991b1b', dot: '#ef4444' },
+    pending:   { bg: 'var(--adm-warning-tint)', text: 'var(--adm-warning-ink)', dot: 'var(--adm-warning)' },
+    confirmed: { bg: 'var(--adm-success-tint)', text: 'var(--adm-success-ink)', dot: 'var(--adm-success)' },
+    completed: { bg: 'var(--adm-info-tint)', text: 'var(--adm-info-ink)', dot: 'var(--adm-info)' },
+    cancelled: { bg: 'var(--adm-danger-tint)', text: 'var(--adm-danger-ink)', dot: 'var(--adm-danger)' },
 };
 
 export default function CalendarPage() {
@@ -90,10 +90,10 @@ export default function CalendarPage() {
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', width: '100%', maxWidth: 480 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                             <div>
-                                <div style={{ fontWeight: 700, fontSize: '1.05rem', color: '#0f172a' }}>{selectedBooking.customer_name}</div>
+                                <div style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--adm-navy)' }}>{selectedBooking.customer_name}</div>
                                 <span className={`badge-${selectedBooking.status}`} style={{ marginTop: 4, display: 'inline-block' }}>{selectedBooking.status}</span>
                             </div>
-                            <button onClick={() => setSelectedBooking(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                            <button onClick={() => setSelectedBooking(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-faint)' }}><X size={20} /></button>
                         </div>
                         {[
                             ['📞 Phone', selectedBooking.customer_phone],
@@ -106,13 +106,13 @@ export default function CalendarPage() {
                             ['👥 Passengers', selectedBooking.passengers_count],
                             ['💰 Quote', selectedBooking.quote_amount ? formatMoney(selectedBooking.quote_amount, selectedBooking.currency) : '—'],
                         ].map(([label, value]) => value ? (
-                            <div key={label as string} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f1f5f9', fontSize: '0.85rem' }}>
-                                <span style={{ color: '#94a3b8' }}>{label}</span>
-                                <span style={{ fontWeight: 600, color: '#1e293b' }}>{String(value)}</span>
+                            <div key={label as string} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--adm-tint)', fontSize: '0.85rem' }}>
+                                <span style={{ color: 'var(--adm-faint)' }}>{label}</span>
+                                <span style={{ fontWeight: 600, color: 'var(--adm-ink)' }}>{String(value)}</span>
                             </div>
                         ) : null)}
                         {selectedBooking.internal_notes && (
-                            <div style={{ marginTop: '1rem', background: '#fffbeb', borderRadius: 8, padding: '0.75rem', fontSize: '0.82rem', color: '#92400e' }}>📝 {selectedBooking.internal_notes}</div>
+                            <div style={{ marginTop: '1rem', background: 'var(--adm-gold-tint)', borderRadius: 8, padding: '0.75rem', fontSize: '0.82rem', color: 'var(--adm-gold-ink)' }}>📝 {selectedBooking.internal_notes}</div>
                         )}
                         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem' }}>
                             <button onClick={() => { window.open(`https://wa.me/${(selectedBooking.customer_phone || '').replace(/\D/g, '')}`, '_blank'); }} className="admin-btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>💬 WhatsApp</button>
@@ -130,9 +130,9 @@ export default function CalendarPage() {
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     {/* View toggle */}
-                    <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: 8, padding: 3 }}>
+                    <div style={{ display: 'flex', background: 'var(--adm-tint)', borderRadius: 8, padding: 3 }}>
                         {(['month', 'week'] as const).map(v => (
-                            <button key={v} onClick={() => setViewMode(v)} style={{ padding: '0.4rem 0.875rem', borderRadius: 6, border: 'none', background: viewMode === v ? '#fff' : 'transparent', fontWeight: viewMode === v ? 700 : 500, fontSize: '0.82rem', cursor: 'pointer', color: viewMode === v ? '#0f172a' : '#64748b', boxShadow: viewMode === v ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.15s' }}>
+                            <button key={v} onClick={() => setViewMode(v)} style={{ padding: '0.4rem 0.875rem', borderRadius: 6, border: 'none', background: viewMode === v ? '#fff' : 'transparent', fontWeight: viewMode === v ? 700 : 500, fontSize: '0.82rem', cursor: 'pointer', color: viewMode === v ? 'var(--adm-navy)' : 'var(--adm-muted)', boxShadow: viewMode === v ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.15s' }}>
                                 {v.charAt(0).toUpperCase() + v.slice(1)}
                             </button>
                         ))}
@@ -148,7 +148,7 @@ export default function CalendarPage() {
                     </select>
                     {/* Nav */}
                     <button onClick={navPrev} className="admin-icon-btn"><ChevronLeft size={17} /></button>
-                    <span style={{ fontWeight: 700, fontSize: '0.92rem', color: '#0f172a', minWidth: 150, textAlign: 'center' }}>
+                    <span style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--adm-navy)', minWidth: 150, textAlign: 'center' }}>
                         {viewMode === 'month' ? format(currentDate, 'MMMM yyyy') : `${format(weekStart, 'MMM d')} – ${format(addDays(weekStart, 6), 'MMM d, yyyy')}`}
                     </span>
                     <button onClick={navNext} className="admin-icon-btn"><ChevronRight size={17} /></button>
@@ -161,18 +161,18 @@ export default function CalendarPage() {
                 {Object.entries(STATUS_COLORS).map(([s, c]) => (
                     <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                         <span style={{ width: 8, height: 8, borderRadius: '50%', background: c.dot, display: 'inline-block' }} />
-                        <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>
+                        <span style={{ fontSize: '0.78rem', color: 'var(--adm-muted)', fontWeight: 600 }}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>
                     </div>
                 ))}
-                <span style={{ fontSize: '0.78rem', color: '#94a3b8', marginLeft: 'auto' }}>{filteredBookings.length} trips</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--adm-faint)', marginLeft: 'auto' }}>{filteredBookings.length} trips</span>
             </div>
 
             {/* ── Calendar Grid ── */}
-            <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e8edf2', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+            <div style={{ background: '#fff', borderRadius: 14, border: '1px solid var(--adm-line)', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
                 {/* Day headers */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid #e8edf2', background: '#f8fafc' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid var(--adm-line)', background: 'var(--adm-surface)' }}>
                     {DAY_LABELS.map(d => (
-                        <div key={d} style={{ padding: '0.75rem', textAlign: 'center', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>{d}</div>
+                        <div key={d} style={{ padding: '0.75rem', textAlign: 'center', fontSize: '0.72rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '0.8px' }}>{d}</div>
                     ))}
                 </div>
 
@@ -190,14 +190,14 @@ export default function CalendarPage() {
                             const expanded = expandedDay === dayKey;
 
                             return (
-                                <div key={i} style={{ minHeight: 110, padding: '0.5rem', borderRight: (i + 1) % 7 !== 0 ? '1px solid #f1f5f9' : 'none', borderBottom: '1px solid #f1f5f9', background: isToday ? '#f0f9ff' : isCurrentMonth ? '#fff' : '#f8fafc', position: 'relative', transition: 'background 0.1s' }}>
+                                <div key={i} style={{ minHeight: 110, padding: '0.5rem', borderRight: (i + 1) % 7 !== 0 ? '1px solid var(--adm-tint)' : 'none', borderBottom: '1px solid var(--adm-tint)', background: isToday ? 'var(--adm-info-tint)' : isCurrentMonth ? '#fff' : 'var(--adm-surface)', position: 'relative', transition: 'background 0.1s' }}>
                                     {/* Day number */}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                                        <span style={{ fontSize: '0.82rem', fontWeight: isToday ? 800 : 600, color: isToday ? '#fff' : isCurrentMonth ? '#334155' : '#cbd5e1', background: isToday ? '#3b82f6' : 'transparent', width: isToday ? 22 : 'auto', height: isToday ? 22 : 'auto', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <span style={{ fontSize: '0.82rem', fontWeight: isToday ? 800 : 600, color: isToday ? '#fff' : isCurrentMonth ? 'var(--adm-text)' : 'var(--adm-line-strong)', background: isToday ? 'var(--adm-info)' : 'transparent', width: isToday ? 22 : 'auto', height: isToday ? 22 : 'auto', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             {format(day, 'd')}
                                         </span>
                                         {isCurrentMonth && dayBookings.length === 0 && (
-                                            <button title="New booking" style={{ opacity: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '0 2px' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0')}>
+                                            <button title="New booking" style={{ opacity: 0, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-faint)', padding: '0 2px' }} onMouseEnter={e => (e.currentTarget.style.opacity = '1')} onMouseLeave={e => (e.currentTarget.style.opacity = '0')}>
                                                 <Plus size={12} />
                                             </button>
                                         )}
@@ -206,12 +206,12 @@ export default function CalendarPage() {
                                     {(expanded ? dayBookings : visible).map(b => <TripChip key={b.id} b={b} compact />)}
                                     {/* +N more */}
                                     {!expanded && hidden > 0 && (
-                                        <button onClick={() => setExpandedDay(dayKey)} style={{ fontSize: '0.68rem', color: '#6366f1', fontWeight: 700, background: '#eef2ff', border: 'none', borderRadius: 4, padding: '1px 6px', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
+                                        <button onClick={() => setExpandedDay(dayKey)} style={{ fontSize: '0.68rem', color: 'var(--adm-info)', fontWeight: 700, background: 'var(--adm-info-tint)', border: 'none', borderRadius: 4, padding: '1px 6px', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
                                             +{hidden} more
                                         </button>
                                     )}
                                     {expanded && (
-                                        <button onClick={() => setExpandedDay(null)} style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, background: '#f1f5f9', border: 'none', borderRadius: 4, padding: '1px 6px', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
+                                        <button onClick={() => setExpandedDay(null)} style={{ fontSize: '0.68rem', color: 'var(--adm-faint)', fontWeight: 700, background: 'var(--adm-tint)', border: 'none', borderRadius: 4, padding: '1px 6px', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
                                             Show less
                                         </button>
                                     )}
@@ -228,11 +228,11 @@ export default function CalendarPage() {
                             const dayBookings = getDayBookings(day);
                             const isToday = isSameDay(day, new Date());
                             return (
-                                <div key={i} style={{ padding: '0.75rem 0.5rem', borderRight: i < 6 ? '1px solid #f1f5f9' : 'none', background: isToday ? '#f0f9ff' : '#fff' }}>
+                                <div key={i} style={{ padding: '0.75rem 0.5rem', borderRight: i < 6 ? '1px solid var(--adm-tint)' : 'none', background: isToday ? 'var(--adm-info-tint)' : '#fff' }}>
                                     {loading ? (
-                                        <div style={{ fontSize: '0.75rem', color: '#cbd5e1', textAlign: 'center' }}>Loading...</div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--adm-line-strong)', textAlign: 'center' }}>Loading...</div>
                                     ) : dayBookings.length > 0 ? dayBookings.map(b => <TripChip key={b.id} b={b} />) : (
-                                        <div style={{ fontSize: '0.72rem', color: '#e2e8f0', textAlign: 'center', marginTop: '1rem' }}>No trips</div>
+                                        <div style={{ fontSize: '0.72rem', color: 'var(--adm-line)', textAlign: 'center', marginTop: '1rem' }}>No trips</div>
                                     )}
                                 </div>
                             );

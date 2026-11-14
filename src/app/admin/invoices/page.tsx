@@ -64,7 +64,7 @@ export default function InvoicesPage() {
                         onChange={e => setSearch(e.target.value)}
                     />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.8rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--adm-faint)', fontSize: '0.8rem' }}>
                     <Filter size={14} />
                     {filtered.length} invoices
                 </div>
@@ -85,17 +85,17 @@ export default function InvoicesPage() {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={7} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading invoices...</td></tr>
+                            <tr><td colSpan={7} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading invoices...</td></tr>
                         ) : filtered.length > 0 ? filtered.map(inv => (
                             <tr key={inv.id}>
                                 <td>
-                                    <div style={{ fontWeight: 700, color: '#1e293b' }}>{inv.invoice_number}</div>
+                                    <div style={{ fontWeight: 700, color: 'var(--adm-ink)' }}>{inv.invoice_number}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 600, color: '#1e293b' }}>{inv.customer_name}</div>
+                                    <div style={{ fontWeight: 600, color: 'var(--adm-ink)' }}>{inv.customer_name}</div>
                                     {/* Email is optional; the phone is what the row
                                         is actually traced by, so it stands in. */}
-                                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{inv.customer_email || inv.customer_phone || '—'}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)' }}>{inv.customer_email || inv.customer_phone || '—'}</div>
                                 </td>
                                 <td>
                                     <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{formatSAR(inv.total_amount)}</div>
@@ -104,7 +104,7 @@ export default function InvoicesPage() {
                                     <div style={{ fontSize: '0.85rem' }}>{format(new Date(inv.created_at), 'dd MMM yyyy')}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.85rem', color: inv.status === 'unpaid' && new Date(inv.due_date) < new Date() ? '#ef4444' : 'inherit' }}>
+                                    <div style={{ fontSize: '0.85rem', color: inv.status === 'unpaid' && new Date(inv.due_date) < new Date() ? 'var(--adm-danger)' : 'inherit' }}>
                                         {inv.due_date ? format(new Date(inv.due_date), 'dd MMM yyyy') : 'N/A'}
                                     </div>
                                 </td>
@@ -121,7 +121,7 @@ export default function InvoicesPage() {
                                 </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>No invoices found.</td></tr>
+                            <tr><td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>No invoices found.</td></tr>
                         )}
                     </tbody>
                 </table>

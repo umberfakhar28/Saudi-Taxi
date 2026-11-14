@@ -168,13 +168,13 @@ export default function InvoiceDetailPage() {
     };
 
     if (loading) {
-        return <div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading invoice...</div>;
+        return <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading invoice...</div>;
     }
 
     if (notFound || !invoice) {
         return (
             <div style={{ padding: '4rem', textAlign: 'center' }}>
-                <div style={{ color: '#94a3b8', marginBottom: '1rem' }}>Invoice not found.</div>
+                <div style={{ color: 'var(--adm-faint)', marginBottom: '1rem' }}>Invoice not found.</div>
                 <Link href="/admin/invoices" className="admin-btn-secondary">Back to Invoices</Link>
             </div>
         );
@@ -183,7 +183,7 @@ export default function InvoiceDetailPage() {
     return (
         <div>
             <div className="invoice-print-hide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-                <Link href="/admin/invoices" style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748b', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
+                <Link href="/admin/invoices" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--adm-muted)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
                     <ArrowLeft size={16} /> Back to Invoices
                 </Link>
                 <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
@@ -216,7 +216,7 @@ export default function InvoiceDetailPage() {
                             onClick={deleteInvoice}
                             disabled={deleting}
                             className="admin-btn-secondary"
-                            style={{ background: '#fef2f2', borderColor: '#fca5a5', color: '#991b1b' }}
+                            style={{ background: 'var(--adm-danger-tint)', borderColor: 'var(--adm-danger-line)', color: 'var(--adm-danger-ink)' }}
                         >
                             <Trash2 size={15} /> {deleting ? 'Deleting...' : 'Delete'}
                         </button>

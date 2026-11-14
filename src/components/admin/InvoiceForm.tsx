@@ -220,23 +220,23 @@ export function invoiceFormToRow(v: InvoiceFormValues) {
 /* ── Presentation ─────────────────────────────────────────────────── */
 
 const LABEL: React.CSSProperties = {
-    fontSize: '0.7rem', fontWeight: 700, color: '#64748b',
+    fontSize: '0.7rem', fontWeight: 700, color: 'var(--adm-muted)',
     textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 5, display: 'block',
 };
 const FIELD: React.CSSProperties = {
     width: '100%', boxSizing: 'border-box', padding: '0.55rem 0.7rem',
-    border: '1px solid #e2e8f0', borderRadius: 8, fontSize: '0.88rem',
-    background: '#fff', color: '#0f172a', fontFamily: 'inherit',
+    border: '1px solid var(--adm-line)', borderRadius: 8, fontSize: '0.88rem',
+    background: '#fff', color: 'var(--adm-navy)', fontFamily: 'inherit',
 };
 const SECTION: React.CSSProperties = {
-    background: '#fff', border: '1px solid #e9eef5', borderRadius: 12,
+    background: '#fff', border: '1px solid var(--adm-line)', borderRadius: 12,
     padding: '1.1rem 1.2rem', marginBottom: '1rem',
 };
 const SECTION_TITLE: React.CSSProperties = {
-    fontSize: '0.72rem', fontWeight: 800, color: '#0f172a',
+    fontSize: '0.72rem', fontWeight: 800, color: 'var(--adm-navy)',
     textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '0.9rem',
 };
-const HINT: React.CSSProperties = { fontSize: '0.7rem', color: '#94a3b8', marginTop: 4 };
+const HINT: React.CSSProperties = { fontSize: '0.7rem', color: 'var(--adm-faint)', marginTop: 4 };
 
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
     return (
@@ -419,7 +419,7 @@ export default function InvoiceForm({ value, onChange, showCustomer = true }: In
 
                 {/* Live total, so the figure about to be saved is the figure
                     on screen. Uses the same helpers the document does. */}
-                <div style={{ marginTop: '1rem', background: '#0f172a', borderRadius: 10, padding: '0.9rem 1.1rem' }}>
+                <div style={{ marginTop: '1rem', background: 'var(--adm-navy)', borderRadius: 10, padding: '0.9rem 1.1rem' }}>
                     {[
                         ['Fare', formatMoney(totals.subtotal, currency)],
                         totals.extra > 0 ? [value.extra_charges_label.trim() || 'Additional charges', formatMoney(totals.extra, currency)] : null,
@@ -433,7 +433,7 @@ export default function InvoiceForm({ value, onChange, showCustomer = true }: In
                             </div>
                         );
                     })}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.05rem', color: '#fbbf24', borderTop: '1px solid rgba(255,255,255,0.12)', paddingTop: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.05rem', color: 'var(--adm-gold)', borderTop: '1px solid rgba(255,255,255,0.12)', paddingTop: 8 }}>
                         <span>Total</span><span>{formatMoney(totals.total, currency)}</span>
                     </div>
                     {totals.paid > 0 && (

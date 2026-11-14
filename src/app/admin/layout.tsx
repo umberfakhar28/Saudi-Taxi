@@ -30,6 +30,10 @@ import AdminFeedbackProvider from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
 import NotificationBell from '@/components/NotificationBell';
 import NotificationToast from '@/components/NotificationToast';
+// Heading face and the Arabic fallback, self-hosted from npm (no build-time
+// fetch from Google). Inter, the body face, is already loaded site-wide.
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/noto-sans-arabic';
 import './admin.css';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

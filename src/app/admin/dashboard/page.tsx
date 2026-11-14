@@ -153,14 +153,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         .reduce((s, i) => s + (Number(i.total_amount) || 0), 0);
 
     const stats = [
-        { name: 'Total Bookings', value: totalBookings, icon: CalendarCheck, color: '#6366f1', bg: '#eef2ff', href: '/admin/bookings', trend: pctChange(totalBookings, prevTotalBookings) },
-        { name: 'Pending', value: pendingBookings, icon: Clock, color: '#f59e0b', bg: '#fffbeb', href: '/admin/bookings?status=pending', trend: null },
-        { name: 'Completed', value: completedBookings, icon: CheckCircle2, color: '#10b981', bg: '#ecfdf5', href: '/admin/bookings?status=completed', trend: pctChange(completedBookings, prevCompletedBookings) },
-        { name: 'Cancelled', value: cancelledBookings, icon: XCircle, color: '#f43f5e', bg: '#ffe4e6', href: '/admin/bookings?status=cancelled', trend: null },
-        { name: 'Revenue (Paid)', value: formatMoney(totalRevenue, baseCurrency), icon: TrendingUp, color: '#fbbf24', bg: '#fffbeb', href: '/admin/invoices', trend: pctChange(totalRevenue, prevRevenue) },
-        { name: 'Avg Booking Value', value: formatMoney(avgBookingValue, baseCurrency), icon: Receipt, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/invoices', trend: null },
-        { name: 'Active Quotes', value: quotesList.filter(q => q.status === 'draft' || q.status === 'sent').length, icon: FileText, color: '#8b5cf6', bg: '#f5f3ff', href: '/admin/quotes', trend: null },
-        { name: 'Customers', value: customersList.length, icon: Users, color: '#0ea5e9', bg: '#f0f9ff', href: '/admin/customers', trend: null },
+        { name: 'Total Bookings', value: totalBookings, icon: CalendarCheck, color: 'var(--adm-info)', bg: 'var(--adm-info-tint)', href: '/admin/bookings', trend: pctChange(totalBookings, prevTotalBookings) },
+        { name: 'Pending', value: pendingBookings, icon: Clock, color: 'var(--adm-warning)', bg: 'var(--adm-gold-tint)', href: '/admin/bookings?status=pending', trend: null },
+        { name: 'Completed', value: completedBookings, icon: CheckCircle2, color: 'var(--adm-success)', bg: 'var(--adm-success-tint)', href: '/admin/bookings?status=completed', trend: pctChange(completedBookings, prevCompletedBookings) },
+        { name: 'Cancelled', value: cancelledBookings, icon: XCircle, color: 'var(--adm-danger)', bg: 'var(--adm-danger-tint)', href: '/admin/bookings?status=cancelled', trend: null },
+        { name: 'Revenue (Paid)', value: formatMoney(totalRevenue, baseCurrency), icon: TrendingUp, color: 'var(--adm-gold)', bg: 'var(--adm-gold-tint)', href: '/admin/invoices', trend: pctChange(totalRevenue, prevRevenue) },
+        { name: 'Avg Booking Value', value: formatMoney(avgBookingValue, baseCurrency), icon: Receipt, color: 'var(--adm-info)', bg: 'var(--adm-info-tint)', href: '/admin/invoices', trend: null },
+        { name: 'Active Quotes', value: quotesList.filter(q => q.status === 'draft' || q.status === 'sent').length, icon: FileText, color: 'var(--adm-gold-ink)', bg: 'var(--adm-tint)', href: '/admin/quotes', trend: null },
+        { name: 'Customers', value: customersList.length, icon: Users, color: 'var(--adm-info)', bg: 'var(--adm-info-tint)', href: '/admin/customers', trend: null },
     ];
 
     const statusClass = (status: string) => {
@@ -277,14 +277,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                         <Icon size={19} />
                                     </div>
                                     {s.trend && (
-                                        <div style={{ fontSize: '0.7rem', fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: s.trend.up ? '#dcfce7' : '#fee2e2', color: s.trend.up ? '#166534' : '#991b1b' }}>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: s.trend.up ? 'var(--adm-success-tint)' : 'var(--adm-danger-tint)', color: s.trend.up ? 'var(--adm-success-ink)' : 'var(--adm-danger-ink)' }}>
                                             {s.trend.up ? '↑' : '↓'} {s.trend.label}
                                         </div>
                                     )}
                                 </div>
                                 <div style={{ marginTop: '0.75rem' }}>
-                                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.name}</div>
-                                    <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', marginTop: '0.25rem', lineHeight: 1.1 }}>{s.value}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.name}</div>
+                                    <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--adm-navy)', marginTop: '0.25rem', lineHeight: 1.1 }}>{s.value}</div>
                                 </div>
                             </div>
                         </Link>
@@ -293,7 +293,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
             </div>
 
             {otherCurrencies.length > 0 && (
-                <div style={{ fontSize: '0.75rem', color: '#64748b', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '0.6rem 0.9rem', marginBottom: '1.25rem' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', background: 'var(--adm-surface)', border: '1px solid var(--adm-line)', borderRadius: 10, padding: '0.6rem 0.9rem', marginBottom: '1.25rem' }}>
                     Revenue figures above are in <strong>{baseCurrency}</strong>. Invoices also exist in{' '}
                     {otherCurrencies.map(c => `${c} ${(revenueByCurrency[c] ?? 0).toFixed(2)}`).join(', ')} — these are reported
                     separately because no exchange rate is stored.
@@ -318,8 +318,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         />
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             {/* Quick Actions Panel */}
-                            <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e8edf2', padding: '1.25rem' }}>
-                                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0f172a', marginBottom: '1rem' }}>Quick Actions</div>
+                            <div style={{ background: '#fff', borderRadius: 14, border: '1px solid var(--adm-line)', padding: '1.25rem' }}>
+                                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--adm-navy)', marginBottom: '1rem' }}>Quick Actions</div>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                                     {[
                                         { label: '✨ New Booking', href: '/admin/bookings?new=1' },
@@ -329,7 +329,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                         { label: '📅 View Calendar', href: '/admin/calendar' },
                                         { label: '📊 Export Data', href: '/admin/reports' },
                                     ].map(a => (
-                                        <Link key={a.label} href={a.href} style={{ display: 'block', padding: '0.75rem', borderRadius: 8, background: '#f8fafc', color: '#334155', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 500, border: '1px solid #f1f5f9' }}>
+                                        <Link key={a.label} href={a.href} style={{ display: 'block', padding: '0.75rem', borderRadius: 8, background: 'var(--adm-surface)', color: 'var(--adm-text)', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 500, border: '1px solid var(--adm-tint)' }}>
                                             {a.label}
                                         </Link>
                                     ))}
@@ -340,8 +340,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
                     {/* Recent Bookings Table Enhancements */}
                     <div className="admin-table-wrap">
-                        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #e8edf2', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.95rem' }}>Recent Bookings</div>
+                        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--adm-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ fontWeight: 700, color: 'var(--adm-navy)', fontSize: '0.95rem' }}>Recent Bookings</div>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 <Link href="/admin/bookings?status=pending" className="admin-btn-secondary" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>Pending</Link>
                                 <Link href="/admin/bookings" className="admin-btn-secondary" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>View All</Link>
@@ -353,29 +353,29 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                 {recentBookings && recentBookings.length > 0 ? recentBookings.map(b => (
                                     <tr key={b.id}>
                                         <td>
-                                            <div style={{ fontWeight: 600, color: '#1e293b' }}>{b.customer_name}</div>
-                                            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{b.customer_phone}</div>
+                                            <div style={{ fontWeight: 600, color: 'var(--adm-ink)' }}>{b.customer_name}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--adm-faint)' }}>{b.customer_phone}</div>
                                         </td>
                                         <td>
-                                            <div style={{ fontSize: '0.8rem' }}><span style={{ color: '#10b981', fontWeight: 600 }}>↑</span> {b.pickup_location}</div>
-                                            <div style={{ fontSize: '0.8rem', marginTop: 2 }}><span style={{ color: '#f43f5e', fontWeight: 600 }}>↓</span> {b.dropoff_location}</div>
+                                            <div style={{ fontSize: '0.8rem' }}><span style={{ color: 'var(--adm-success)', fontWeight: 600 }}>↑</span> {b.pickup_location}</div>
+                                            <div style={{ fontSize: '0.8rem', marginTop: 2 }}><span style={{ color: 'var(--adm-danger)', fontWeight: 600 }}>↓</span> {b.dropoff_location}</div>
                                         </td>
                                         <td>
                                             <div style={{ fontWeight: 600, fontSize: '0.82rem' }}>{new Date(b.travel_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-                                            <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{displayTime(b.travel_time)}</div>
+                                            <div style={{ color: 'var(--adm-faint)', fontSize: '0.75rem' }}>{displayTime(b.travel_time)}</div>
                                         </td>
                                         <td>
                                             <span className={statusClass(b.status)}>{b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                <Link href={`/admin/bookings?edit=${b.id}`} style={{ fontSize: '0.75rem', color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>Edit</Link>
-                                                <Link href={`/admin/bookings?invoice=${b.id}`} style={{ fontSize: '0.75rem', color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>Invoice</Link>
+                                                <Link href={`/admin/bookings?edit=${b.id}`} style={{ fontSize: '0.75rem', color: 'var(--adm-info)', textDecoration: 'none', fontWeight: 500 }}>Edit</Link>
+                                                <Link href={`/admin/bookings?invoice=${b.id}`} style={{ fontSize: '0.75rem', color: 'var(--adm-success)', textDecoration: 'none', fontWeight: 500 }}>Invoice</Link>
                                             </div>
                                         </td>
                                     </tr>
                                 )) : (
-                                    <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>No bookings found.</td></tr>
+                                    <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>No bookings found.</td></tr>
                                 )}
                             </tbody>
                         </table>

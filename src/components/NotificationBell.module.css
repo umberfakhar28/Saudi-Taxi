@@ -10,7 +10,7 @@
     height: 16px;
     padding: 0 4px;
     border-radius: 9999px;
-    background: #ef4444;
+    background: var(--adm-danger);
     color: #fff;
     font-size: 0.65rem;
     font-weight: 700;
@@ -29,12 +29,12 @@
     border-radius: 9999px;
     border: 2px solid #ffffff;
 }
-.connectionDot.connected { background: #22c55e; }
+.connectionDot.connected { background: var(--adm-success); }
 .connectionDot.reconnecting {
-    background: #f59e0b;
+    background: var(--adm-warning);
     animation: pulse 1.2s ease-in-out infinite;
 }
-.connectionDot.connecting { background: #94a3b8; }
+.connectionDot.connecting { background: var(--adm-faint); }
 
 @keyframes pulse {
     0%, 100% { opacity: 1; }
@@ -48,7 +48,7 @@
     width: 360px;
     max-width: calc(100vw - 2rem);
     background: #ffffff;
-    border: 1px solid #e8edf2;
+    border: 1px solid var(--adm-line);
     border-radius: 14px;
     box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
     z-index: 100;
@@ -60,16 +60,16 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.9rem 1.1rem;
-    border-bottom: 1px solid #e8edf2;
+    border-bottom: 1px solid var(--adm-line);
 }
 .panelTitle {
     font-size: 0.85rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--adm-navy);
 }
 .panelStatus {
     font-size: 0.7rem;
-    color: #94a3b8;
+    color: var(--adm-faint);
     display: flex;
     align-items: center;
     gap: 0.35rem;
@@ -77,7 +77,7 @@
 .markAllBtn {
     font-size: 0.72rem;
     font-weight: 600;
-    color: #D4AF37;
+    color: var(--adm-gold);
     background: none;
     border: none;
     cursor: pointer;
@@ -93,23 +93,23 @@
 .empty {
     padding: 2rem 1.25rem;
     text-align: center;
-    color: #94a3b8;
+    color: var(--adm-faint);
     font-size: 0.85rem;
 }
 
 .item {
     display: block;
     padding: 0.85rem 1.1rem;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--adm-tint);
     text-decoration: none;
     color: inherit;
     transition: background 0.15s;
     position: relative;
 }
 .item:last-child { border-bottom: none; }
-.item:hover { background: #f8fafc; }
-.item.unread { background: #fffbeb; }
-.item.unread:hover { background: #fef3c7; }
+.item:hover { background: var(--adm-surface); }
+.item.unread { background: var(--adm-gold-tint); }
+.item.unread:hover { background: var(--adm-warning-tint); }
 
 .itemTop {
     display: flex;
@@ -120,28 +120,28 @@
 .itemTitle {
     font-size: 0.82rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--adm-ink);
 }
 .itemTime {
     font-size: 0.68rem;
-    color: #94a3b8;
+    color: var(--adm-faint);
     white-space: nowrap;
     flex-shrink: 0;
 }
 .itemSummary {
     font-size: 0.78rem;
-    color: #64748b;
+    color: var(--adm-muted);
     margin-top: 0.2rem;
 }
 .pushOffer {
     padding: 0.8rem 1.1rem;
-    border-top: 1px solid #e8edf2;
-    background: #f8fafc;
+    border-top: 1px solid var(--adm-line);
+    background: var(--adm-surface);
 }
 .pushOffer p {
     margin: 0 0 0.5rem;
     font-size: 0.78rem;
-    color: #475569;
+    color: var(--adm-text);
 }
 .pushOfferActions {
     display: flex;
@@ -149,8 +149,8 @@
 }
 .pushEnableBtn {
     padding: 0.4rem 0.9rem;
-    background: linear-gradient(135deg, #D4AF37, #E0C55A);
-    color: #0f172a;
+    background: linear-gradient(135deg, var(--adm-gold), var(--adm-gold));
+    color: var(--adm-navy);
     border: none;
     border-radius: 8px;
     font-size: 0.75rem;
@@ -160,8 +160,8 @@
 .pushDismissBtn {
     padding: 0.4rem 0.9rem;
     background: transparent;
-    color: #64748b;
-    border: 1px solid #e2e8f0;
+    color: var(--adm-muted);
+    border: 1px solid var(--adm-line);
     border-radius: 8px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -175,5 +175,5 @@
     width: 6px;
     height: 6px;
     border-radius: 9999px;
-    background: #D4AF37;
+    background: var(--adm-gold);
 }

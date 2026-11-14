@@ -137,9 +137,9 @@ export default function AdminUsersPage() {
     // whose every control would fail.
     if (ready && !allowed('users.manage')) {
         return (
-            <div style={{ padding: '4rem 1rem', textAlign: 'center', color: '#64748b' }}>
+            <div style={{ padding: '4rem 1rem', textAlign: 'center', color: 'var(--adm-muted)' }}>
                 <ShieldCheck size={32} style={{ opacity: 0.35, marginBottom: '1rem' }} />
-                <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>Admins only</div>
+                <div style={{ fontWeight: 700, color: 'var(--adm-navy)', marginBottom: 6 }}>Admins only</div>
                 <div style={{ fontSize: '0.88rem' }}>Managing portal users requires full admin access.</div>
             </div>
         );
@@ -162,17 +162,17 @@ export default function AdminUsersPage() {
                 have to guess before assigning one. */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem', marginBottom: '1.75rem' }}>
                 {ADMIN_ROLES.map((role) => (
-                    <div key={role} style={{ background: '#fff', border: '1px solid #e8edf2', borderRadius: 12, padding: '0.9rem 1rem' }}>
-                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a', marginBottom: 4 }}>{ROLE_LABELS[role]}</div>
-                        <div style={{ fontSize: '0.76rem', color: '#64748b', lineHeight: 1.5 }}>{ROLE_DESCRIPTIONS[role]}</div>
+                    <div key={role} style={{ background: '#fff', border: '1px solid var(--adm-line)', borderRadius: 12, padding: '0.9rem 1rem' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--adm-navy)', marginBottom: 4 }}>{ROLE_LABELS[role]}</div>
+                        <div style={{ fontSize: '0.76rem', color: 'var(--adm-muted)', lineHeight: 1.5 }}>{ROLE_DESCRIPTIONS[role]}</div>
                     </div>
                 ))}
             </div>
 
             {migrationRequired && (
-                <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: '#92400e', lineHeight: 1.6 }}>
+                <div style={{ background: 'var(--adm-gold-tint)', border: '1px solid var(--adm-warning-line)', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--adm-gold-ink)', lineHeight: 1.6 }}>
                     <strong>One setup step remaining.</strong> Run{' '}
-                    <code style={{ background: '#fef3c7', padding: '1px 5px', borderRadius: 4 }}>supabase/sql/002_roles_currency_soft_delete.sql</code>{' '}
+                    <code style={{ background: 'var(--adm-warning-tint)', padding: '1px 5px', borderRadius: 4 }}>supabase/sql/002_roles_currency_soft_delete.sql</code>{' '}
                     in the Supabase dashboard (SQL Editor → New query → paste → Run). It creates the table that stores portal
                     roles. Until then the portal keeps working exactly as before for the owner account.
                 </div>
@@ -191,27 +191,27 @@ export default function AdminUsersPage() {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>
+                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>
                                 <RefreshCw className="animate-spin" style={{ margin: '0 auto', display: 'block', marginBottom: '0.75rem' }} /> Loading users…
                             </td></tr>
                         ) : loadError && !migrationRequired ? (
-                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: '#991b1b' }}>{loadError}</td></tr>
+                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-danger-ink)' }}>{loadError}</td></tr>
                         ) : users.length === 0 ? (
-                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>
+                            <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>
                                 No portal users yet. Use “Add User” to give someone access.
                             </td></tr>
                         ) : users.map((user) => (
                             <tr key={user.id} style={{ opacity: user.is_active ? 1 : 0.55 }}>
                                 <td>
-                                    <div style={{ fontWeight: 700, color: '#1e293b', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <div style={{ fontWeight: 700, color: 'var(--adm-ink)', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
                                         {user.name || user.email.split('@')[0]}
                                         {user.isOwner && (
                                             <Tooltip label="Owner account" text="The account named by ADMIN_EMAIL. It is always a full admin and cannot be demoted, deactivated or removed — this is what guarantees you can never be locked out.">
-                                                <ShieldCheck size={14} color="#4338ca" />
+                                                <ShieldCheck size={14} color="#1E40AF" />
                                             </Tooltip>
                                         )}
                                     </div>
-                                    <div style={{ fontSize: '0.78rem', color: '#64748b' }}>{user.email}</div>
+                                    <div style={{ fontSize: '0.78rem', color: 'var(--adm-muted)' }}>{user.email}</div>
                                 </td>
                                 <td>
                                     <select
@@ -229,9 +229,9 @@ export default function AdminUsersPage() {
                                         {user.is_active ? 'Active' : 'Disabled'}
                                     </span>
                                 </td>
-                                <td style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                                <td style={{ fontSize: '0.8rem', color: 'var(--adm-muted)' }}>
                                     {displayDate(user.created_at)}
-                                    {user.created_by && <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>by {user.created_by}</div>}
+                                    {user.created_by && <div style={{ fontSize: '0.7rem', color: 'var(--adm-faint)' }}>by {user.created_by}</div>}
                                 </td>
                                 <td style={{ textAlign: 'right' }}>
                                     <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
@@ -259,7 +259,7 @@ export default function AdminUsersPage() {
                                         {!user.isOwner && (
                                             <button
                                                 className="admin-btn-secondary"
-                                                style={{ padding: '0.3rem 0.5rem', fontSize: '0.75rem', background: '#fef2f2', borderColor: '#fca5a5', color: '#991b1b' }}
+                                                style={{ padding: '0.3rem 0.5rem', fontSize: '0.75rem', background: 'var(--adm-danger-tint)', borderColor: 'var(--adm-danger-line)', color: 'var(--adm-danger-ink)' }}
                                                 disabled={busyId === user.id}
                                                 onClick={() => removeUser(user)}
                                                 aria-label={`Remove ${user.email}`}
@@ -280,8 +280,8 @@ export default function AdminUsersPage() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => setShowCreate(false)}>
                     <div onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '1.75rem', width: '100%', maxWidth: 480, maxHeight: '90vh', overflowY: 'auto' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>Add Portal User</div>
-                            <button onClick={() => setShowCreate(false)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
+                            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--adm-navy)' }}>Add Portal User</div>
+                            <button onClick={() => setShowCreate(false)} aria-label="Close" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--adm-faint)' }}><X size={20} /></button>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -315,10 +315,10 @@ export default function AdminUsersPage() {
             {passwordFor && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => setPasswordFor(null)}>
                     <div onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '1.75rem', width: '100%', maxWidth: 420 }}>
-                        <div style={{ fontWeight: 800, fontSize: '1.02rem', color: '#0f172a', marginBottom: '0.4rem' }}>
+                        <div style={{ fontWeight: 800, fontSize: '1.02rem', color: 'var(--adm-navy)', marginBottom: '0.4rem' }}>
                             New password
                         </div>
-                        <div style={{ fontSize: '0.83rem', color: '#64748b', marginBottom: '1.1rem' }}>
+                        <div style={{ fontSize: '0.83rem', color: 'var(--adm-muted)', marginBottom: '1.1rem' }}>
                             For {passwordFor.email}. This takes effect immediately.
                         </div>
                         <input
@@ -346,9 +346,9 @@ export default function AdminUsersPage() {
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
     return (
         <div>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 5 }}>{label}</label>
+            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 5 }}>{label}</label>
             {children}
-            {hint && <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 5, lineHeight: 1.45 }}>{hint}</div>}
+            {hint && <div style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 5, lineHeight: 1.45 }}>{hint}</div>}
         </div>
     );
 }

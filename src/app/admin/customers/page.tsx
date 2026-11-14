@@ -217,7 +217,7 @@ function CustomersPageInner() {
                         onChange={e => setSearch(e.target.value)}
                     />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.8rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--adm-faint)', fontSize: '0.8rem' }}>
                     <Filter size={14} />
                     {filtered.length} customers
                 </div>
@@ -238,38 +238,38 @@ function CustomersPageInner() {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={7} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>
+                            <tr><td colSpan={7} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>
                                 <RefreshCw className="animate-spin" style={{ margin: '0 auto', display: 'block', marginBottom: '0.75rem' }} /> Loading customers…
                             </td></tr>
                         ) : filtered.length > 0 ? filtered.map(c => (
                             <tr key={c.id}>
                                 <td>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
+                                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--adm-tint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--adm-muted)' }}>
                                             <User size={18} />
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 700, color: '#1e293b' }}>{c.name}</div>
-                                            {c.is_vip && <span style={{ fontSize: '0.65rem', background: '#fef3c7', color: '#d97706', padding: '0.1rem 0.4rem', borderRadius: 4, fontWeight: 700 }}>VIP</span>}
+                                            <div style={{ fontWeight: 700, color: 'var(--adm-ink)' }}>{c.name}</div>
+                                            {c.is_vip && <span style={{ fontSize: '0.65rem', background: 'var(--adm-warning-tint)', color: 'var(--adm-warning)', padding: '0.1rem 0.4rem', borderRadius: 4, fontWeight: 700 }}>VIP</span>}
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    {c.email && <div style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}><Mail size={12} /> {c.email}</div>}
-                                    {c.phone && <div style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}><Phone size={12} /> {c.phone}</div>}
+                                    {c.email && <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', display: 'flex', alignItems: 'center', gap: 4 }}><Mail size={12} /> {c.email}</div>}
+                                    {c.phone && <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}><Phone size={12} /> {c.phone}</div>}
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 700, fontSize: '1rem', color: '#0f172a' }}>{c.total_bookings}</div>
+                                    <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--adm-navy)' }}>{c.total_bookings}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#10b981' }}>{formatMoney(c.total_spent, 'SAR')}</div>
+                                    <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--adm-success)' }}>{formatMoney(c.total_spent, 'SAR')}</div>
                                 </td>
                                 <td>
                                     {c.last_booking_date ? (
-                                        <div style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                        <div style={{ fontSize: '0.8rem', color: 'var(--adm-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
                                             <CalendarIcon size={12} /> {displayDate(c.last_booking_date)}
                                         </div>
-                                    ) : <span style={{ color: '#cbd5e1', fontSize: '0.8rem' }}>No bookings</span>}
+                                    ) : <span style={{ color: 'var(--adm-line-strong)', fontSize: '0.8rem' }}>No bookings</span>}
                                 </td>
                                 <td>
                                     {c.total_bookings > 5 ? (
@@ -287,7 +287,7 @@ function CustomersPageInner() {
                                                 <button
                                                     onClick={() => messageCustomer(c)}
                                                     aria-label={`WhatsApp ${c.name}`}
-                                                    style={{ background: '#dcfce7', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: '#15803d' }}
+                                                    style={{ background: 'var(--adm-success-tint)', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-success-ink)' }}
                                                 >
                                                     <MessageCircle size={14} />
                                                 </button>
@@ -298,7 +298,7 @@ function CustomersPageInner() {
                                                 <button
                                                     onClick={() => openEdit(c)}
                                                     aria-label={`Edit ${c.name}`}
-                                                    style={{ background: '#f1f5f9', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: '#10b981' }}
+                                                    style={{ background: 'var(--adm-tint)', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-success)' }}
                                                 >
                                                     <Edit size={14} />
                                                 </button>
@@ -310,7 +310,7 @@ function CustomersPageInner() {
                                                     onClick={() => deleteCustomer(c)}
                                                     disabled={busyId === c.id}
                                                     aria-label={`Remove ${c.name}`}
-                                                    style={{ background: '#fef2f2', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: '#991b1b' }}
+                                                    style={{ background: 'var(--adm-danger-tint)', border: 'none', padding: '0.35rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-danger-ink)' }}
                                                 >
                                                     <Trash2 size={14} />
                                                 </button>
@@ -320,7 +320,7 @@ function CustomersPageInner() {
                                 </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>
+                            <tr><td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>
                                 {search ? `No customers match “${search}”.` : 'No customers yet. They are added automatically when a booking comes in.'}
                             </td></tr>
                         )}
@@ -332,8 +332,8 @@ function CustomersPageInner() {
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)', padding: '1rem' }}>
                     <div style={{ background: '#fff', borderRadius: 16, padding: '2rem', maxWidth: 440, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>{editingId ? 'Edit Customer' : 'Add New Customer'}</h2>
-                            <button onClick={() => { setModal(false); setEditingId(null); }} aria-label="Close" style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
+                            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--adm-navy)' }}>{editingId ? 'Edit Customer' : 'Add New Customer'}</h2>
+                            <button onClick={() => { setModal(false); setEditingId(null); }} aria-label="Close" style={{ background: 'none', border: 'none', color: 'var(--adm-faint)', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
                         </div>
                         <form onSubmit={handleSave}>
                             <div className="form-group">
@@ -361,7 +361,7 @@ function CustomersPageInner() {
                                 </label>
                             </div>
                             {formError && (
-                                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '0.6rem 0.8rem', borderRadius: 8, fontSize: '0.8rem', marginBottom: '0.75rem' }}>
+                                <div style={{ background: 'var(--adm-danger-tint)', border: '1px solid var(--adm-danger-line)', color: 'var(--adm-danger-ink)', padding: '0.6rem 0.8rem', borderRadius: 8, fontSize: '0.8rem', marginBottom: '0.75rem' }}>
                                     {formError}
                                 </div>
                             )}
@@ -379,7 +379,7 @@ function CustomersPageInner() {
 
 export default function CustomersPage() {
     return (
-        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading...</div>}>
+        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading...</div>}>
             <CustomersPageInner />
         </Suspense>
     );

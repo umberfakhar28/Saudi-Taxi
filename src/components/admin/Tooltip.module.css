@@ -9,7 +9,7 @@
 }
 
 .trigger:focus-visible {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid var(--adm-info);
     outline-offset: 2px;
 }
 
@@ -19,8 +19,8 @@
     max-width: min(260px, calc(100vw - 24px));
     padding: 0.45rem 0.65rem;
     border-radius: 8px;
-    background: #0f172a;
-    color: #f8fafc;
+    background: var(--adm-navy);
+    color: var(--adm-surface);
     font-size: 0.73rem;
     font-weight: 500;
     line-height: 1.4;

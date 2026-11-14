@@ -364,7 +364,7 @@ export default function QuotesPage() {
                         onChange={e => setSearch(e.target.value)}
                     />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.8rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--adm-faint)', fontSize: '0.8rem' }}>
                     <Filter size={14} />
                     {filtered.length} quotes
                 </div>
@@ -384,27 +384,27 @@ export default function QuotesPage() {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan={6} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading quotes...</td></tr>
+                            <tr><td colSpan={6} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading quotes...</td></tr>
                         ) : filtered.length > 0 ? filtered.map(q => (
                             <tr key={q.id}>
                                 <td>
-                                    <div style={{ fontWeight: 600, color: '#1e293b' }}>{q.customer_name}</div>
+                                    <div style={{ fontWeight: 600, color: 'var(--adm-ink)' }}>{q.customer_name}</div>
                                     {q.customer_email && (
-                                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 2 }}>{q.customer_email}</div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', marginTop: 2 }}>{q.customer_email}</div>
                                     )}
-                                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{q.customer_phone}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)' }}>{q.customer_phone}</div>
                                 </td>
                                 <td>
-                                    <div style={{ fontSize: '0.8rem' }}><span style={{ color: '#10b981' }}>↑</span> {q.pickup_location}</div>
-                                    <div style={{ fontSize: '0.8rem', marginTop: 3 }}><span style={{ color: '#f43f5e' }}>↓</span> {q.dropoff_location}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 4 }}>
+                                    <div style={{ fontSize: '0.8rem' }}><span style={{ color: 'var(--adm-success)' }}>↑</span> {q.pickup_location}</div>
+                                    <div style={{ fontSize: '0.8rem', marginTop: 3 }}><span style={{ color: 'var(--adm-danger)' }}>↓</span> {q.dropoff_location}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--adm-muted)', marginTop: 4 }}>
                                         {q.vehicle_type} • {q.distance_km} km
                                     </div>
                                 </td>
                                 <td>
                                     <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{formatMoney(quoteTotal(q), q.currency)}</div>
                                     {q.admin_override_amount && (
-                                        <div style={{ fontSize: '0.7rem', color: '#f59e0b', fontWeight: 600 }}>Edited</div>
+                                        <div style={{ fontSize: '0.7rem', color: 'var(--adm-warning)', fontWeight: 600 }}>Edited</div>
                                     )}
                                 </td>
                                 <td>
@@ -447,7 +447,7 @@ export default function QuotesPage() {
                                 </td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>No quotes found.</td></tr>
+                            <tr><td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>No quotes found.</td></tr>
                         )}
                     </tbody>
                 </table>
@@ -459,7 +459,7 @@ export default function QuotesPage() {
                     key={`menu-${q.id}`}
                     data-menu-root
                     role="menu"
-                    style={{ position: 'fixed', top: menuPos.top, right: menuPos.right, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.15)', zIndex: 9999, minWidth: 220, overflow: 'hidden', textAlign: 'left', maxHeight: 'calc(100vh - 16px)', overflowY: 'auto' }}
+                    style={{ position: 'fixed', top: menuPos.top, right: menuPos.right, background: '#fff', border: '1px solid var(--adm-line)', borderRadius: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.15)', zIndex: 9999, minWidth: 220, overflow: 'hidden', textAlign: 'left', maxHeight: 'calc(100vh - 16px)', overflowY: 'auto' }}
                 >
                     <button onClick={() => { setViewModal(q); setOpenMenu(null); }} className="dropdown-item">👁️ View Quote</button>
 
@@ -484,7 +484,7 @@ export default function QuotesPage() {
                         only ever become sent or expired. */}
                     {allowed('quotes.edit') && (
                         <>
-                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#f8fafc', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>Quote Status</div>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-surface)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-tint)' }}>Quote Status</div>
                             {QUOTE_STATUSES.map(st => (
                                 <button
                                     key={st}
@@ -494,7 +494,7 @@ export default function QuotesPage() {
                                     title={QUOTE_STATUS_HELP[st]}
                                 >
                                     {STATUS_ICONS[st]} {st.charAt(0).toUpperCase() + st.slice(1)}
-                                    {q.status === st && <span style={{ color: '#94a3b8', fontWeight: 400 }}> — current</span>}
+                                    {q.status === st && <span style={{ color: 'var(--adm-faint)', fontWeight: 400 }}> — current</span>}
                                 </button>
                             ))}
                         </>
@@ -502,8 +502,8 @@ export default function QuotesPage() {
 
                     {allowed('quotes.delete') && (
                         <>
-                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', background: '#fef2f2', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #fee2e2' }}>Danger Zone</div>
-                            <button onClick={() => deleteQuote(q)} className="dropdown-item" style={{ color: '#dc2626' }}>🗑️ Delete Quote</button>
+                            <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-danger-tint)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-danger-tint)' }}>Danger Zone</div>
+                            <button onClick={() => deleteQuote(q)} className="dropdown-item" style={{ color: 'var(--adm-danger)' }}>🗑️ Delete Quote</button>
                         </>
                     )}
                 </div>
@@ -515,8 +515,8 @@ export default function QuotesPage() {
                     <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '1.75rem', width: '100%', maxWidth: 620, maxHeight: '90vh', overflowY: 'auto' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                             <div>
-                                <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>Edit Quote</div>
-                                <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontFamily: 'monospace', marginTop: 2 }}>{quoteRef(editModal)}</div>
+                                <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--adm-navy)' }}>Edit Quote</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--adm-faint)', fontFamily: 'monospace', marginTop: 2 }}>{quoteRef(editModal)}</div>
                             </div>
                             <button onClick={() => setEditModal(null)} aria-label="Close" className="admin-icon-btn"><X size={16} /></button>
                         </div>
@@ -536,7 +536,7 @@ export default function QuotesPage() {
                                 { key: 'price', label: 'Quote Price', type: 'number' },
                             ].map(f => (
                                 <div key={f.key} style={{ gridColumn: (f as any).span ? '1/-1' : 'auto' }}>
-                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>{f.label}</label>
+                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>{f.label}</label>
                                     <input
                                         type={f.type || 'text'}
                                         value={f.type === 'time' ? toTimeInputValue(editModal[f.key]) : (editModal[f.key] ?? '')}
@@ -547,7 +547,7 @@ export default function QuotesPage() {
                                 </div>
                             ))}
                             <div>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Currency</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>Currency</label>
                                 <select
                                     value={toCurrencyCode(editModal.currency)}
                                     onChange={e => setEditModal({ ...editModal, currency: e.target.value })}
@@ -558,7 +558,7 @@ export default function QuotesPage() {
                                 </select>
                             </div>
                             <div>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Status</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>Status</label>
                                 <select
                                     value={QUOTE_STATUSES.includes(editModal.status) ? editModal.status : 'draft'}
                                     onChange={e => setEditModal({ ...editModal, status: e.target.value })}
@@ -569,13 +569,13 @@ export default function QuotesPage() {
                                         <option key={st} value={st}>{st.charAt(0).toUpperCase() + st.slice(1)}</option>
                                     ))}
                                 </select>
-                                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 5, lineHeight: 1.45 }}>
+                                <div style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 5, lineHeight: 1.45 }}>
                                     {QUOTE_STATUS_HELP[(QUOTE_STATUSES.includes(editModal.status) ? editModal.status : 'draft') as QuoteStatus]}
                                     {editModal.status === 'sent' && editModal.status !== originalStatus && ' Saving does not email the customer.'}
                                 </div>
                             </div>
                             <div style={{ gridColumn: '1/-1' }}>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Message to Customer</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>Message to Customer</label>
                                 <textarea
                                     value={editModal.admin_note || ''}
                                     onChange={e => setEditModal({ ...editModal, admin_note: e.target.value })}
@@ -583,10 +583,10 @@ export default function QuotesPage() {
                                     className="admin-search-input"
                                     style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit' }}
                                 />
-                                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 5 }}>Shown prominently in the quote email and on the downloaded quote.</div>
+                                <div style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: 5 }}>Shown prominently in the quote email and on the downloaded quote.</div>
                             </div>
                             <div style={{ gridColumn: '1/-1' }}>
-                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Customer&apos;s Trip Requirements</label>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--adm-muted)', display: 'block', marginBottom: 4 }}>Customer&apos;s Trip Requirements</label>
                                 <textarea
                                     value={editModal.notes || ''}
                                     onChange={e => setEditModal({ ...editModal, notes: e.target.value })}
@@ -597,7 +597,7 @@ export default function QuotesPage() {
                             </div>
                         </div>
 
-                        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.9rem', lineHeight: 1.5 }}>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--adm-faint)', marginTop: '0.9rem', lineHeight: 1.5 }}>
                             Both notes are visible to the customer — keep internal remarks out of them.
                         </div>
 
@@ -614,8 +614,8 @@ export default function QuotesPage() {
             {viewModal && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} onClick={() => setViewModal(null)}>
                     <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 14, maxWidth: 480, width: '100%', maxHeight: '85vh', overflowY: 'auto' }}>
-                        <div style={{ padding: '1.5rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ fontWeight: 700, fontSize: '1.05rem', color: '#0f172a' }}>Quote Details</div>
+                        <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--adm-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--adm-navy)' }}>Quote Details</div>
                             <button onClick={() => setViewModal(null)} className="admin-icon-btn"><X size={16} /></button>
                         </div>
                         <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.88rem' }}>
@@ -644,9 +644,9 @@ export default function QuotesPage() {
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', paddingBottom: '0.6rem', borderBottom: '1px solid #f1f5f9' }}>
-            <span style={{ color: '#94a3b8', fontWeight: 500 }}>{label}</span>
-            <span style={{ color: '#1e293b', fontWeight: 600, textAlign: 'right' }}>{children}</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', paddingBottom: '0.6rem', borderBottom: '1px solid var(--adm-tint)' }}>
+            <span style={{ color: 'var(--adm-faint)', fontWeight: 500 }}>{label}</span>
+            <span style={{ color: 'var(--adm-ink)', fontWeight: 600, textAlign: 'right' }}>{children}</span>
         </div>
     );
 }
