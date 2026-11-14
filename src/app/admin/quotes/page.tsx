@@ -12,6 +12,7 @@ import { quoteRef, quoteTotal, quoteSummary as buildQuoteSummary } from '@/lib/q
 import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
+import { stampWhatsAppShared } from '@/components/admin/WhatsAppSharedTag';
 
 /**
  * The complete quote lifecycle, matching the quotes_status_check constraint
@@ -270,6 +271,8 @@ export default function QuotesPage() {
         if (!link) { showToast('error', 'This customer has no usable phone number on file.'); return; }
         window.open(link, '_blank', 'noopener,noreferrer');
         logActivity(q.id, 'whatsapp_opened', `Quote ${quoteRef(q)} shared on WhatsApp`);
+        // Item 8: the booking row shows a "Shared" tag with this time.
+        stampWhatsAppShared(supabase, 'quotes', q.id);
     };
 
     // §8.1 — Delete. Goes through the API so the permission is enforced on
