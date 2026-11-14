@@ -28,7 +28,9 @@ export const PAYMENT_METHODS = [
     { value: 'cash', label: 'Cash' },
     { value: 'bank_transfer', label: 'Bank Transfer' },
     { value: 'card', label: 'Card' },
-    { value: 'online', label: 'Online Payment' },
+    // Stored as 'online' (the column's check constraint); shown as 'Payment link',
+    // which is how the business actually takes these payments.
+    { value: 'online', label: 'Payment link' },
 ] as const;
 
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number]['value'];
