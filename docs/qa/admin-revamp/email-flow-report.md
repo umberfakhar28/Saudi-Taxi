@@ -1,31 +1,32 @@
 # Why customer replies never reach the owner (item 20)
 
-> **Decision, 14 Nov 2026: Option B (free Resend forward) — built.** Setup below; nothing else changes.
+> **Decision, 14 Nov 2026: Option B, the free Resend forward. It's built; switch it on with the steps below. No DNS change is needed.**
 >
 > ### Switch it on (about 5 minutes)
-> 1. **Resend dashboard → Webhooks → Add endpoint**
->    - URL: >    - Event: **email.received** (only this one)
->    - Save, then copy the **Signing secret** (starts with ).
-> 2. **Vercel → Project → Settings → Environment Variables:** add  = that secret (Production), then redeploy (or push this branch).
-> 3. **Forward the emails already waiting** (20+ since 27 Oct): sign in to the admin panel, then open
->    >    It forwards about 8 per load; reload until it says **Finished**. Each email is only ever forwarded once.
-> 4. **Test:** from any outside address, email . Within a minute it arrives in your Gmail, subject ending . Press Reply: it goes to the customer.
+> 1. **Resend dashboard → Webhooks → Add endpoint.**
+>    - URL: `https://gulftripservice.com/api/emails/inbound`
+>    - Event: **email.received**, and only that one.
+>    - Save, then copy the **Signing secret**; it starts with `whsec_`.
+> 2. **Vercel → Project → Settings → Environment Variables.** Add `RESEND_WEBHOOK_SECRET` = that secret, for Production. Then redeploy, or push this branch.
+> 3. **Forward the emails already waiting** (20+ since 27 Oct). Sign in to the admin panel, then open
+>    `https://gulftripservice.com/api/emails/inbound?backfill=1`
+>    Each load forwards about 8 emails; reload until it says **Finished**. No email is ever forwarded twice.
+> 4. **Test.** From any outside address, email `info@gulftripservice.com`. Within a minute it should arrive in your Gmail, with a subject ending `— from <sender> [#id]`. Press Reply: the reply goes to the customer.
 >
 > ### How it behaves
-> - Every email to any @gulftripservice.com address (info@, booking@, …) is copied to , with the original message, attachments and inline images.
-> - **Reply goes straight to the customer**, from your Gmail address (so they will see your Gmail). To answer *as* info@, use Gmail → Settings → Accounts → *Send mail as* with Resend SMTP (, port 465, user , password = a Resend API key) — optional.
-> - The originals stay in Resend → Receiving as a backup.
-> - Mail from our own domain is never forwarded (prevents loops). A failed forward is retried by Resend automatically.
-> - Forwards are logged in the admin **Email Log** as .
+> - Every email to any @gulftripservice.com address (info@, booking@, and so on) is copied to `ADMIN_EMAIL`, with the original message, attachments and inline images.
+> - **Your reply goes straight to the customer, from your Gmail address**, so they will see that address. Optional: to answer *as* info@, use Gmail → Settings → Accounts → *Send mail as* with Resend SMTP (`smtp.resend.com`, port 465, user `resend`, password = a Resend API key).
+> - The originals also stay in Resend → Receiving as a backup.
+> - Mail from our own domain is never forwarded, which prevents loops. If a forward fails, Resend retries it automatically.
+> - Each forward is logged in the admin **Email Log** as `inbound_forward`.
 >
-> Code: , . Tested locally against a stand-in for Resend: forward, Reply-To, attachments, no duplicates, no loops, signature check (11/11).
+> Code: `src/app/api/emails/inbound/route.ts` and `src/lib/inboundForward.ts`. Tested locally against a stand-in for Resend, 11/11 checks passing: forwarding, Reply-To, attachments, no duplicates, no loops, and the signature check.
 >
-> **Still recommended, free:** add the DMARC record from the table at the end of this report.
+> **Still recommended (free):** add the DMARC record from the table at the end of this report.
 
 ---
 
-
-*Diagnosis only. No DNS, MX, Resend or code setting was changed. Checked 14 Nov 2026.*
+*Original diagnosis below. It changed no DNS, MX, Resend or code settings. Checked 14 Nov 2026.* No DNS, MX, Resend or code setting was changed. Checked 14 Nov 2026.*
 
 ## Answer in short
 
