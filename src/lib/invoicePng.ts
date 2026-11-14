@@ -7,15 +7,11 @@
  * renderInvoicePdf / renderInvoicePng below, so they are identical by
  * construction.
  *
- * Drawn onto a canvas in the browser rather than produced on the server:
- *   · the browser shapes Arabic text correctly (joined letters, right to
- *     left) — the server-side PDF libraries that run on Vercel do not, and a
- *     customer's Arabic name must print correctly;
- *   · headless Chrome on the server would work but is ~60 MB per function
- *     with multi-second cold starts on Vercel.
- * The fonts are the site's own, self-hosted files (Inter, Manrope, Noto Sans
- * Arabic), loaded explicitly before drawing; the PDF contains the rendered
- * pages, so it never depends on fonts installed where it is opened.
+ * The layout lives here as blocks that draw onto a canvas-like context:
+ *   · the PNG draws them on a real canvas (fonts loaded first);
+ *   · the PDF (lib/invoicePdf.ts) hands the same blocks a context that writes
+ *     real PDF text with embedded fonts and Arabic shaping. So the two share
+ *     one layout and one set of page breaks.
  *
  * Item 5 (footer missing from the PDF/image): the root cause was not
  * clipping. This file drew its own footer — a single centred line with the
