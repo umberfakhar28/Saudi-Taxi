@@ -16,6 +16,9 @@ import InvoiceForm, { invoiceFormFromBooking, invoiceFormToRow, type InvoiceForm
 import { buildInvoiceDocument } from '@/lib/invoiceDocument';
 import InvoiceDocumentView from '@/components/admin/InvoiceDocumentView';
 import PasteBookingBox from '@/components/admin/PasteBookingBox';
+import WhatsAppSharedTag, { stampWhatsAppShared, whatsAppSharedAt } from '@/components/admin/WhatsAppSharedTag';
+import { downloadInvoicePdf } from '@/lib/invoicePng';
+import Link from 'next/link';
 
 /** The fields the quote composer reads off a booking row. The rest of this
  * page still works with the raw Supabase record, which assigns in freely. */
@@ -104,7 +107,7 @@ function BookingsPageInner() {
         // We join with invoices to get payment status
         const { data, error } = await supabase
             .from('bookings')
-            .select('*, booking_number, invoices(id, status, invoice_number, total_amount, paid_amount), quotes(id, status, total_amount, admin_override_amount, currency, admin_note, notes, shared_at, created_at)')
+            .select('*, booking_number, invoices(id, status, invoice_number, total_amount, paid_amount), quotes(*)')
             .order('created_at', { ascending: false });
         if (!error && data) {
             setBookings(data);
@@ -279,6 +282,8 @@ function BookingsPageInner() {
         }
         window.open(link, '_blank', 'noopener,noreferrer');
         logActivity('booking', whatsAppModal.id, 'whatsapp_opened', `WhatsApp message drafted to ${whatsAppModal.customer_name}`);
+        // Item 8: the row shows a "Shared" tag from now on.
+        stampWhatsAppShared(supabase, 'bookings', whatsAppModal.id).then((at) => { if (at) fetchBookings(); });
         setWhatsAppModal(null);
     };
 
@@ -367,7 +372,10 @@ function BookingsPageInner() {
 
             if (how === 'shared') {
                 const link = waLinkTo(b.customer_phone, quoteSummary(saved));
-                if (link) window.open(link, '_blank', 'noopener,noreferrer');
+                if (link) {
+                    window.open(link, '_blank', 'noopener,noreferrer');
+                    await stampWhatsAppShared(supabase, 'quotes', saved.id);
+                }
                 showToast('success', link
                     ? 'Quote saved and WhatsApp opened with the details.'
                     : 'Quote saved. This customer has no usable phone number, so WhatsApp could not be opened.');
@@ -504,10 +512,12 @@ function BookingsPageInner() {
         setOpenDropdown(null);
         // Already invoiced — show what was issued rather than offering to
         // issue it twice.
-        if (b.invoice_id) {
-            const { data: existing } = await supabase.from('invoices').select('*').eq('id', b.invoice_id).single();
-            if (existing) { setInvoiceModal({ ...existing, invoice_db_id: existing.id }); return; }
-        }
+        // The list can be stale (another admin, another tab), so the
+        // database is asked by booking id as well as by the row's pointer.
+        const { data: existing } = b.invoice_id
+            ? await supabase.from('invoices').select('*').eq('id', b.invoice_id).maybeSingle()
+            : await supabase.from('invoices').select('*').eq('booking_id', b.id).order('created_at', { ascending: true }).limit(1).maybeSingle();
+        if (existing) { setInvoiceModal({ ...existing, invoice_db_id: existing.id }); return; }
         setInvoiceFormBooking(b);
         setInvoiceForm(invoiceFormFromBooking(b));
     };
@@ -521,6 +531,18 @@ function BookingsPageInner() {
             return;
         }
         setSavingInvoice(true);
+        // Item 1: one invoice per booking. Checked again at the moment of
+        // saving, and enforced by the database once migration 010 has run.
+        const { data: already } = await supabase.from('invoices').select('*').eq('booking_id', b.id).limit(1).maybeSingle();
+        if (already) {
+            setSavingInvoice(false);
+            setInvoiceFormBooking(null);
+            setInvoiceForm(null);
+            showToast('info', `This booking already has invoice ${already.invoice_number} — showing it instead of creating a second one.`);
+            setInvoiceModal({ ...already, invoice_db_id: already.id });
+            fetchBookings();
+            return;
+        }
         const invNum = `INV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
         const { data: invData, error } = await supabase
             .from('invoices')
@@ -537,6 +559,16 @@ function BookingsPageInner() {
         setSavingInvoice(false);
 
         if (error || !invData) {
+            // 23505: the one-invoice-per-booking index refused a duplicate
+            // that slipped past the check above (two admins at once).
+            if (error?.code === '23505') {
+                showToast('info', 'Another invoice was just created for this booking — showing it.');
+                setInvoiceFormBooking(null);
+                setInvoiceForm(null);
+                fetchBookings();
+                generateInvoice({ ...b, invoice_id: null });
+                return;
+            }
             showToast('error', 'Failed to create invoice: ' + (error?.message || 'unknown error'));
             return;
         }
@@ -1203,16 +1235,28 @@ function BookingsPageInner() {
                                         const q = latestQuote(b.quotes);
                                         const state = bookingQuoteState(q);
                                         const tone = QUOTE_STATE_STYLE[state];
+                                        const sharedAt = whatsAppSharedAt(b, q as { shared_via_whatsapp_at?: string | null; shared_at?: string | null } | null);
                                         return (
                                             <>
                                                 <div style={{ fontSize: '0.8rem', fontWeight: 700, color: q ? 'var(--adm-navy)' : 'var(--adm-line-strong)' }}>
                                                     {q ? formatMoney(quoteTotal(q), q.currency) : '—'}
                                                 </div>
-                                                <span style={{ display: 'inline-block', marginTop: 4, fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.03em', textTransform: 'uppercase', padding: '0.15rem 0.45rem', borderRadius: 999, background: tone.bg, color: tone.fg }}>
-                                                    {QUOTE_STATE_LABEL[state]}
-                                                </span>
-                                                {q?.shared_at && state === 'sent' && (
-                                                    <div style={{ fontSize: '0.62rem', color: 'var(--adm-faint)', marginTop: 3 }}>also shared</div>
+                                                {/* "Shared" is said once, by the WhatsApp tag below. */}
+                                                {!(state === 'shared' && sharedAt) && (
+                                                    <span style={{ display: 'inline-block', marginTop: 4, fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.03em', textTransform: 'uppercase', padding: '0.15rem 0.45rem', borderRadius: 999, background: tone.bg, color: tone.fg }}>
+                                                        {QUOTE_STATE_LABEL[state]}
+                                                    </span>
+                                                )}
+                                                {sharedAt && <div><WhatsAppSharedTag at={sharedAt} /></div>}
+                                                {/* Item 17: the invoice, one click away on the Invoices tab. */}
+                                                {b.invoice_id && (
+                                                    <div>
+                                                        <Tooltip label={`Invoice ${b.invoice_number}`} text="Open it on the Invoices tab.">
+                                                            <Link href={`/admin/invoices?id=${encodeURIComponent(b.invoice_id)}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: '0.66rem', fontWeight: 700, color: 'var(--adm-gold-ink)', background: 'var(--adm-gold-tint)', border: '1px solid var(--adm-line)', padding: '0.12rem 0.45rem', borderRadius: 999, textDecoration: 'none', fontFamily: 'monospace' }}>
+                                                                <FileText size={11} /> {b.invoice_number}
+                                                            </Link>
+                                                        </Tooltip>
+                                                    </div>
                                                 )}
                                             </>
                                         );
@@ -1244,6 +1288,16 @@ function BookingsPageInner() {
                                                     style={{ background: 'var(--adm-warning-tint)', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-warning-ink)' }}
                                                 >
                                                     <FileText size={14} />
+                                                </button>
+                                            </Tooltip>
+                                        )}
+                                        {allowed('invoices.create') && (b.status === 'confirmed' || b.status === 'completed') && (
+                                            <Tooltip
+                                                label={b.invoice_id ? 'View invoice' : 'Create invoice'}
+                                                text={b.invoice_id ? `Open invoice ${b.invoice_number}.` : 'Raise the invoice now — no need to wait for the trip to be completed.'}
+                                            >
+                                                <button onClick={() => generateInvoice(b)} aria-label={b.invoice_id ? 'View invoice' : 'Create invoice'} style={{ background: 'var(--adm-gold-tint)', border: 'none', padding: '0.3rem', borderRadius: 6, cursor: 'pointer', color: 'var(--adm-gold-ink)' }}>
+                                                    {b.invoice_id ? <FileText size={14} /> : <FilePlus size={14} />}
                                                 </button>
                                             </Tooltip>
                                         )}
@@ -1336,8 +1390,7 @@ function BookingsPageInner() {
                     {allowed('invoices.create') && (
                         <>
                             <div style={{ padding: '0.4rem 0.75rem', fontSize: '0.62rem', fontWeight: 700, color: 'var(--adm-faint)', textTransform: 'uppercase', letterSpacing: '1px', background: 'var(--adm-surface)', borderTop: '1px solid var(--adm-tint)', borderBottom: '1px solid var(--adm-tint)' }}>Billing &amp; Invoice</div>
-                            <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 {b.invoice_id ? 'View Invoice' : 'Generate Invoice'}</button>
-                            {b.invoice_id && <button onClick={() => { setInvoiceModal(b); setOpenDropdown(null); }} className="dropdown-item">📄 Invoice Preview</button>}
+                            <button onClick={() => generateInvoice(b)} className="dropdown-item">🧾 {b.invoice_id ? 'View Invoice' : 'Create Invoice'}</button>
                             {b.invoice_id && b.payment_status !== 'paid' && <button onClick={() => markInvoicePaid(b)} className="dropdown-item">✅ Mark Invoice Paid</button>}
                         </>
                     )}
@@ -1559,7 +1612,11 @@ function BookingsPageInner() {
                                 <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{invoiceModal.customer_name} · {invoiceModal.booking_number}</div>
                             </div>
                             <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
-                                <button onClick={() => { const url = `/admin/invoices/${invoiceModal.invoice_id || invoiceModal.invoice_db_id}`; window.open(url, '_blank'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: 'var(--adm-ink)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Download size={14} /> Download</button>
+                                <button onClick={async () => {
+                                    // Item 12: the file itself, straight to Downloads — not a new tab.
+                                    try { await downloadInvoicePdf(invoiceModal); }
+                                    catch (err) { showToast('error', 'Could not create the PDF: ' + (err instanceof Error ? err.message : 'unknown error')); }
+                                }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: 'var(--adm-ink)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Download size={14} /> Download</button>
                                 <button onClick={() => sendEmail('invoice', invoiceModal)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: 'var(--adm-info)', color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer' }}><Mail size={14} /> Email</button>
                                 {canWhatsApp(invoiceModal.customer_phone) && (
                                     <button onClick={() => {
