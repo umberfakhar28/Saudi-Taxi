@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { Search, Filter, User, Mail, Phone, Calendar as CalendarIcon, RefreshCw, Plus, Edit, Trash2, MessageCircle } from 'lucide-react';
+import { Search, Filter, User, Mail, Phone, Calendar as CalendarIcon, RefreshCw, Plus, Edit, Trash2, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatMoney } from '@/lib/currency';
 import { displayDate } from '@/lib/datetime';
 import { canWhatsApp, waLinkTo } from '@/lib/whatsapp';
@@ -11,10 +11,23 @@ import { useAdminAuth } from '@/components/admin/AdminAuthProvider';
 import { useFeedback } from '@/components/admin/AdminFeedback';
 import Tooltip from '@/components/admin/Tooltip';
 
+/** Item 19: customers are paged on the server, 25 at a time. */
+const PAGE_SIZE = 25;
+const SORTS = {
+    total_bookings: 'Total bookings',
+    total_spent: 'Total spent',
+    last_booking_date: 'Last booking',
+    name: 'Name',
+} as const;
+type SortKey = keyof typeof SORTS;
+
+/** Search text safe to put inside a PostgREST or() filter. */
+const searchTerm = (q: string) => q.trim().replace(/[,()*\\%_]/g, ' ').replace(/\s+/g, ' ').trim();
+
 function CustomersPageInner() {
     const [customers, setCustomers] = useState<any[]>([]);
+    const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState('');
     const [modal, setModal] = useState(false);
     const [saving, setSaving] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
@@ -29,22 +42,71 @@ function CustomersPageInner() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
+    // Page, search and sort live in the URL (?page=2&q=ahmed&sort=name&dir=asc),
+    // so a page can be bookmarked, shared, and survives a refresh.
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+    const query = searchParams.get('q') ?? '';
+    const sort: SortKey = (searchParams.get('sort') as SortKey) in SORTS ? (searchParams.get('sort') as SortKey) : 'total_bookings';
+    const dir: 'asc' | 'desc' = searchParams.get('dir') === 'asc' ? 'asc' : searchParams.get('dir') === 'desc' ? 'desc' : (sort === 'name' ? 'asc' : 'desc');
+    const [search, setSearch] = useState(query);
+    const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+    const setParams = useCallback((next: Record<string, string | number | null>) => {
+        const params = new URLSearchParams(searchParams.toString());
+        for (const [k, v] of Object.entries(next)) {
+            if (v === null || v === '' || (k === 'page' && Number(v) === 1)) params.delete(k);
+            else params.set(k, String(v));
+        }
+        const qs = params.toString();
+        router.replace(`/admin/customers${qs ? `?${qs}` : ''}`, { scroll: false });
+    }, [searchParams, router]);
+
+    // Typing searches the whole table (not just this page), a moment after
+    // the last keystroke, and goes back to page 1.
+    useEffect(() => {
+        if (search === query) return;
+        const t = setTimeout(() => setParams({ q: search.trim() || null, page: 1 }), 300);
+        return () => clearTimeout(t);
+    }, [search, query, setParams]);
+
     const fetchCustomers = useCallback(async () => {
         setLoading(true);
-        // Soft-deleted customers are hidden from the portal but their rows —
-        // and every booking, quote and invoice that references them — remain
-        // intact. `.is('deleted_at', null)` is applied client-side after the
-        // fetch so the page still works if supabase/sql/002 has not been run
-        // and the column does not exist yet.
-        const { data, error } = await supabase
-            .from('customers')
-            .select('*')
-            .order('total_bookings', { ascending: false });
-        if (!error) setCustomers((data ?? []).filter((c: any) => !c.deleted_at));
+        const from = (page - 1) * PAGE_SIZE;
+        const build = (withDeleted: boolean) => {
+            let q = supabase.from('customers').select('*', { count: 'exact' });
+            // Soft-deleted customers stay in the table (their bookings and
+            // invoices reference them) but are hidden here.
+            if (withDeleted) q = q.is('deleted_at', null);
+            const term = searchTerm(query);
+            if (term) q = q.or(`name.ilike.*${term}*,email.ilike.*${term}*,phone.ilike.*${term}*`);
+            return q
+                .order(sort, { ascending: dir === 'asc', nullsFirst: false })
+                .order('id', { ascending: true })
+                .range(from, from + PAGE_SIZE - 1);
+        };
+        let { data, error, count } = await build(true);
+        // Before migration 002 the deleted_at column does not exist.
+        if (error && /deleted_at/i.test(error.message)) ({ data, error, count } = await build(false));
+        if (!error) {
+            setCustomers(data ?? []);
+            setTotal(count ?? 0);
+            // A page past the end (rows removed, or a stale link) goes to the last real page.
+            const last = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
+            if (page > last) setParams({ page: last });
+        } else {
+            showToast('error', 'Could not load customers: ' + error.message);
+        }
         setLoading(false);
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, query, sort, dir]);
 
     useEffect(() => { fetchCustomers(); }, [fetchCustomers]);
+
+    const sortBy = (key: SortKey) => {
+        const nextDir = sort === key ? (dir === 'asc' ? 'desc' : 'asc') : (key === 'name' ? 'asc' : 'desc');
+        setParams({ sort: key, dir: nextDir, page: 1 });
+    };
+    const sortMark = (key: SortKey) => (sort === key ? (dir === 'asc' ? ' ↑' : ' ↓') : '');
 
     // Deep link from Dashboard's "Add Customer" quick action.
     useEffect(() => {
@@ -91,7 +153,7 @@ function CustomersPageInner() {
             const res = await fetch(`/api/admin/customers/${c.id}`, { method: 'DELETE' });
             const json = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(json.error || 'The customer could not be removed.');
-            setCustomers(prev => prev.filter(x => x.id !== c.id));
+            fetchCustomers();
             showToast(
                 'success',
                 json.bookingsPreserved
@@ -181,11 +243,12 @@ function CustomersPageInner() {
         fetchCustomers();
     };
 
-    const filtered = customers.filter(c =>
-        c.name.toLowerCase().includes(search.toLowerCase()) ||
-        (c.email && c.email.toLowerCase().includes(search.toLowerCase())) ||
-        (c.phone && c.phone.includes(search))
-    );
+    const filtered = customers;
+    const firstRow = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
+    const lastRow = Math.min(page * PAGE_SIZE, total);
+    // Page numbers around the current one, with the first and last always shown.
+    const pageNumbers = Array.from(new Set([1, page - 2, page - 1, page, page + 1, page + 2, pageCount]))
+        .filter((n) => n >= 1 && n <= pageCount).sort((a, b) => a - b);
 
     return (
         <div>
@@ -219,7 +282,7 @@ function CustomersPageInner() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--adm-faint)', fontSize: '0.8rem' }}>
                     <Filter size={14} />
-                    {filtered.length} customers
+                    {total} customer{total === 1 ? '' : 's'}{query ? ' found' : ''}
                 </div>
             </div>
 
@@ -227,11 +290,11 @@ function CustomersPageInner() {
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th>Customer Profile</th>
+                            <th onClick={() => sortBy('name')} style={{ cursor: 'pointer' }} aria-sort={sort === 'name' ? (dir === 'asc' ? 'ascending' : 'descending') : undefined}>Customer Profile{sortMark('name')}</th>
                             <th>Contact Info</th>
-                            <th>Total Bookings</th>
-                            <th>Total Spent</th>
-                            <th>Last Booking</th>
+                            <th onClick={() => sortBy('total_bookings')} style={{ cursor: 'pointer' }} aria-sort={sort === 'total_bookings' ? (dir === 'asc' ? 'ascending' : 'descending') : undefined}>Total Bookings{sortMark('total_bookings')}</th>
+                            <th onClick={() => sortBy('total_spent')} style={{ cursor: 'pointer' }} aria-sort={sort === 'total_spent' ? (dir === 'asc' ? 'ascending' : 'descending') : undefined}>Total Spent{sortMark('total_spent')}</th>
+                            <th onClick={() => sortBy('last_booking_date')} style={{ cursor: 'pointer' }} aria-sort={sort === 'last_booking_date' ? (dir === 'asc' ? 'ascending' : 'descending') : undefined}>Last Booking{sortMark('last_booking_date')}</th>
                             <th>Status</th>
                             <th style={{ textAlign: 'right' }}>Actions</th>
                         </tr>
@@ -326,6 +389,38 @@ function CustomersPageInner() {
                         )}
                     </tbody>
                 </table>
+
+                {/* Item 19: pagination. */}
+                {!loading && total > 0 && (
+                    <nav aria-label="Customer pages" style={{ padding: '0.9rem 1.25rem', borderTop: '1px solid var(--adm-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', background: 'var(--adm-card)' }}>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--adm-muted)' }}>
+                            Showing <strong>{firstRow}–{lastRow}</strong> of <strong>{total}</strong> customers
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                            <button onClick={() => setParams({ page: page - 1 })} disabled={page <= 1} className="admin-btn-secondary" style={{ padding: '0.35rem 0.6rem' }} aria-label="Previous page">
+                                <ChevronLeft size={15} /> Prev
+                            </button>
+                            {pageNumbers.map((n, i) => (
+                                <span key={n} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                                    {i > 0 && n - pageNumbers[i - 1] > 1 && <span style={{ color: 'var(--adm-faint)' }}>…</span>}
+                                    <button
+                                        onClick={() => setParams({ page: n })}
+                                        aria-current={n === page ? 'page' : undefined}
+                                        style={{
+                                            minWidth: 34, padding: '0.35rem 0.5rem', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem',
+                                            border: `1px solid ${n === page ? 'var(--adm-gold)' : 'var(--adm-line)'}`,
+                                            background: n === page ? 'var(--adm-gold)' : 'var(--adm-card)',
+                                            color: n === page ? 'var(--adm-navy)' : 'var(--adm-text)',
+                                        }}
+                                    >{n}</button>
+                                </span>
+                            ))}
+                            <button onClick={() => setParams({ page: page + 1 })} disabled={page >= pageCount} className="admin-btn-secondary" style={{ padding: '0.35rem 0.6rem' }} aria-label="Next page">
+                                Next <ChevronRight size={15} />
+                            </button>
+                        </div>
+                    </nav>
+                )}
             </div>
 
             {modal && (
