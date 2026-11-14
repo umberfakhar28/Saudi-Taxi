@@ -1,17 +1,28 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { Search, Filter, RefreshCw, FileText, Download } from 'lucide-react';
+import { Search, Filter, RefreshCw, FileText, Download, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { formatSAR } from '@/utils/pricing';
 import Link from 'next/link';
 
-export default function InvoicesPage() {
+/**
+ * Invoices list.
+ *
+ * `?id=<invoice id>` (item 17 — the invoice tag on a Bookings row links
+ * here) selects that invoice: its row is highlighted and scrolled into view,
+ * with a one-click "Open" bar above the table.
+ */
+function InvoicesPageInner() {
     const [invoices, setInvoices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const supabase = createClient();
+    const searchParams = useSearchParams();
+    const selectedId = searchParams.get('id');
+    const selectedRow = useRef<HTMLTableRowElement | null>(null);
 
     const fetchInvoices = useCallback(async () => {
         setLoading(true);
@@ -25,19 +36,28 @@ export default function InvoicesPage() {
 
     useEffect(() => { fetchInvoices(); }, [fetchInvoices]);
 
+    // Bring the selected invoice into view once the list has rendered.
+    useEffect(() => {
+        if (!loading && selectedId && selectedRow.current) {
+            selectedRow.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+    }, [loading, selectedId]);
+
     const statusClass = (s: string) => {
         const map: Record<string, string> = {
-            unpaid: 'badge-pending',
-            paid: 'badge-confirmed',
+            unpaid: 'badge-unpaid',
+            paid: 'badge-paid',
             partially_paid: 'badge-completed',
         };
-        return map[s] ?? 'badge-pending';
+        return map[s] ?? 'badge-unpaid';
     };
 
     const filtered = invoices.filter(i =>
+        i.id === selectedId ||
         i.customer_name.toLowerCase().includes(search.toLowerCase()) ||
         i.invoice_number.toLowerCase().includes(search.toLowerCase())
     );
+    const selected = selectedId ? invoices.find((i) => i.id === selectedId) : null;
 
     return (
         <div>
@@ -52,6 +72,17 @@ export default function InvoicesPage() {
                     </button>
                 </div>
             </div>
+
+            {selected && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', background: 'var(--adm-gold-tint)', border: '1px solid var(--adm-gold)', borderRadius: 12, padding: '0.75rem 1rem', marginBottom: '1rem' }}>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--adm-ink)' }}>
+                        Selected: <strong style={{ fontFamily: 'monospace' }}>{selected.invoice_number}</strong> · {selected.customer_name}
+                    </div>
+                    <Link href={`/admin/invoices/${selected.id}`} className="admin-btn-primary" style={{ padding: '0.45rem 0.9rem' }}>
+                        Open invoice <ArrowRight size={14} />
+                    </Link>
+                </div>
+            )}
 
             <div className="admin-filter-bar">
                 <div className="admin-search-wrap">
@@ -86,8 +117,15 @@ export default function InvoicesPage() {
                     <tbody>
                         {loading ? (
                             <tr><td colSpan={7} style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading invoices...</td></tr>
-                        ) : filtered.length > 0 ? filtered.map(inv => (
-                            <tr key={inv.id}>
+                        ) : filtered.length > 0 ? filtered.map(inv => {
+                            const isSelected = inv.id === selectedId;
+                            return (
+                            <tr
+                                key={inv.id}
+                                ref={isSelected ? selectedRow : undefined}
+                                aria-selected={isSelected || undefined}
+                                style={isSelected ? { background: 'var(--adm-gold-tint)', boxShadow: 'inset 4px 0 0 var(--adm-gold)' } : undefined}
+                            >
                                 <td>
                                     <div style={{ fontWeight: 700, color: 'var(--adm-ink)' }}>{inv.invoice_number}</div>
                                 </td>
@@ -120,12 +158,21 @@ export default function InvoicesPage() {
                                     </div>
                                 </td>
                             </tr>
-                        )) : (
+                            );
+                        }) : (
                             <tr><td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: 'var(--adm-faint)' }}>No invoices found.</td></tr>
                         )}
                     </tbody>
                 </table>
             </div>
         </div>
+    );
+}
+
+export default function InvoicesPage() {
+    return (
+        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center', color: 'var(--adm-faint)' }}>Loading…</div>}>
+            <InvoicesPageInner />
+        </Suspense>
     );
 }
