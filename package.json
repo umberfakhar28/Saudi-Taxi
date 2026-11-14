@@ -9,7 +9,8 @@
     "lint": "eslint",
     "seo:links": "node scripts/seo/check-links.js",
     "seo:audit": "node scripts/seo/build-link-graph.js && node scripts/seo/generate-audit-md.js && node scripts/seo/generate-internal-links-config.js",
-    "check:data": "node scripts/seo/check-data-layer.js"
+    "check:data": "node scripts/seo/check-data-layer.js",
+    "test:parser": "node --test tests/bookingParser.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

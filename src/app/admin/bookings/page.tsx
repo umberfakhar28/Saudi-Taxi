@@ -15,6 +15,7 @@ import { quoteRef, quoteTotal, quoteSummary, latestQuote, bookingQuoteState, QUO
 import InvoiceForm, { invoiceFormFromBooking, invoiceFormToRow, type InvoiceFormValues } from '@/components/admin/InvoiceForm';
 import { buildInvoiceDocument } from '@/lib/invoiceDocument';
 import InvoiceDocumentView from '@/components/admin/InvoiceDocumentView';
+import PasteBookingBox from '@/components/admin/PasteBookingBox';
 
 /** The fields the quote composer reads off a booking row. The rest of this
  * page still works with the raw Supabase record, which assigns in freely. */
@@ -82,6 +83,10 @@ function BookingsPageInner() {
     const [invoiceForm, setInvoiceForm] = useState<InvoiceFormValues | null>(null);
     const [savingInvoice, setSavingInvoice] = useState(false);
     const [newBookingModal, setNewBookingModal] = useState(false);
+    // Item 2: fields the admin has typed in (auto-fill never overwrites
+    // them) and fields auto-fill wrote (highlighted until edited).
+    const [nbTouched, setNbTouched] = useState<Set<string>>(new Set());
+    const [nbFilled, setNbFilled] = useState<Set<string>>(new Set());
     const [newBooking, setNewBooking] = useState<any>({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending', currency:'SAR' });
     const [notes, setNotes] = useState('');
     const [savingEdit, setSavingEdit] = useState(false);
@@ -658,6 +663,16 @@ function BookingsPageInner() {
         if (searchParams.get('edit')) router.replace('/admin/bookings');
     };
 
+    /** One edit to the New Booking form, by hand. */
+    const editNewBooking = (key: string, value: unknown) => {
+        setNewBooking((prev: any) => ({ ...prev, [key]: value }));
+        setNbTouched((prev) => new Set(prev).add(key));
+        setNbFilled((prev) => { if (!prev.has(key)) return prev; const n = new Set(prev); n.delete(key); return n; });
+    };
+    /** Light gold behind a value auto-fill wrote, until the admin edits it. */
+    const filledStyle = (key: string): React.CSSProperties =>
+        nbFilled.has(key) ? { background: 'var(--adm-gold-tint)', borderColor: 'var(--adm-gold)' } : {};
+
     const createBooking = async () => {
         // Every one of these is NOT NULL in the bookings table with no
         // default, so a missing value used to surface as a raw Postgres
@@ -698,6 +713,8 @@ function BookingsPageInner() {
         });
         if (!error) {
             setNewBookingModal(false);
+            setNbTouched(new Set());
+            setNbFilled(new Set());
             setNewBooking({ customer_name:'', customer_phone:'', customer_email:'', service_type:'', pickup_location:'', dropoff_location:'', travel_date:'', travel_time:'', passengers_count:1, quote_amount:'', special_notes:'', car_type:'', status:'pending', currency:'SAR' });
             logActivity('booking', null, 'created', `Booking created for ${newBooking.customer_name} (admin panel)`);
             fetchBookings();
@@ -1616,8 +1633,16 @@ function BookingsPageInner() {
                             </div>
                             <button onClick={() => setNewBookingModal(false)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', color: '#fff', display: 'flex' }}><X size={18} /></button>
                         </div>
-                        <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div style={{ padding: 'clamp(1rem, 4vw, 2rem)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <PasteBookingBox
+                                form={newBooking}
+                                touched={nbTouched}
+                                onFill={(next, filled) => {
+                                    setNewBooking(next);
+                                    setNbFilled((prev) => new Set([...prev, ...filled]));
+                                }}
+                            />
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
                                 {[
                                     { key: 'customer_name', label: 'Customer Name *', span: true },
                                     { key: 'customer_phone', label: 'Phone *' },
@@ -1633,12 +1658,12 @@ function BookingsPageInner() {
                                 ].map(f => (
                                     <div key={f.key} style={{ gridColumn: (f as any).span ? '1/-1' : 'auto' }}>
                                         <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--adm-text)', display: 'block', marginBottom: 5 }}>{f.label}</label>
-                                        <input type={f.type || 'text'} value={newBooking[f.key] || ''} onChange={e => setNewBooking({ ...newBooking, [f.key]: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem', paddingLeft: '1rem' }} />
+                                        <input type={f.type || 'text'} value={newBooking[f.key] || ''} onChange={e => editNewBooking(f.key, e.target.value)} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem', paddingLeft: '1rem', ...filledStyle(f.key) }} />
                                     </div>
                                 ))}
                                 <div>
                                     <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--adm-text)', display: 'block', marginBottom: 5 }}>Currency</label>
-                                    <select value={toCurrencyCode(newBooking.currency)} onChange={e => setNewBooking({ ...newBooking, currency: e.target.value })} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem' }}>
+                                    <select value={toCurrencyCode(newBooking.currency)} onChange={e => editNewBooking('currency', e.target.value)} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', padding: '0.65rem 1rem', ...filledStyle('currency') }}>
                                         {CURRENCY_CODES.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>
                                 </div>
@@ -1651,7 +1676,7 @@ function BookingsPageInner() {
                                 </div>
                                 <div style={{ gridColumn: '1/-1' }}>
                                     <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--adm-text)', display: 'block', marginBottom: 5 }}>Special Notes</label>
-                                    <textarea value={newBooking.special_notes || ''} onChange={e => setNewBooking({ ...newBooking, special_notes: e.target.value })} rows={3} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', padding: '0.65rem 1rem' }} placeholder="Any special requests or notes..." />
+                                    <textarea value={newBooking.special_notes || ''} onChange={e => editNewBooking('special_notes', e.target.value)} rows={3} className="admin-search-input" style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit', padding: '0.65rem 1rem', ...filledStyle('special_notes') }} placeholder="Any special requests or notes..." />
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', paddingTop: '0.5rem', borderTop: '1px solid var(--adm-line)' }}>

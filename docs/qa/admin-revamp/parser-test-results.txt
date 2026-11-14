@@ -1,0 +1,23 @@
+✔ 1. labelled English WhatsApp message (44.3627ms)
+✔ 2. emoji labels and dashes (44.8463ms)
+✔ 3. free text: from … to …, tomorrow, pm time (38.827ms)
+✔ 4. Arabic message with Arabic digits (10.9284ms)
+✔ 5. mixed Arabic / English free text (46.9747ms)
+✔ 6. arrow route, month-first date, currency before amount (6.9427ms)
+✔ 7. Pakistani number, BHD price, flight number not read as a price (2.65ms)
+✔ 8. pickup line carrying the date and time (1.1281ms)
+✔ 9. year-less date already past rolls to next year (1.4292ms)
+✔ 10. only fills what is there — a greeting alone yields nothing (2.9491ms)
+✔ 11. 8-digit local number is kept as typed, with a warning (1.1036ms)
+✔ 12. return trip and notes collected into special notes (1.4602ms)
+✔ 13. markdown bold labels and 12-hour edge cases (0.6742ms)
+✔ 14. email found in free text, short "A to B" line (1.546ms)
+✔ helpers: phone, date and time normalisation (0.5566ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 480.1228
