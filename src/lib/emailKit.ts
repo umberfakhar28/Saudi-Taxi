@@ -434,8 +434,9 @@ export interface SendParams {
     subject: string;
     html: string;
     bcc?: string;
-    /** Base64 content, as Resend expects. */
-    attachments?: { filename: string; content: string }[];
+    /** Base64 `content`, or a `path` URL Resend fetches itself. `contentId`
+     *  makes it an inline image referenced as cid:… in the HTML. */
+    attachments?: { filename: string; content?: string; path?: string; contentId?: string; contentType?: string }[];
 }
 
 export interface SendOutcome {

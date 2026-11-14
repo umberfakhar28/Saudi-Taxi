@@ -1,5 +1,30 @@
 # Why customer replies never reach the owner (item 20)
 
+> **Decision, 14 Nov 2026: Option B (free Resend forward) — built.** Setup below; nothing else changes.
+>
+> ### Switch it on (about 5 minutes)
+> 1. **Resend dashboard → Webhooks → Add endpoint**
+>    - URL: >    - Event: **email.received** (only this one)
+>    - Save, then copy the **Signing secret** (starts with ).
+> 2. **Vercel → Project → Settings → Environment Variables:** add  = that secret (Production), then redeploy (or push this branch).
+> 3. **Forward the emails already waiting** (20+ since 27 Oct): sign in to the admin panel, then open
+>    >    It forwards about 8 per load; reload until it says **Finished**. Each email is only ever forwarded once.
+> 4. **Test:** from any outside address, email . Within a minute it arrives in your Gmail, subject ending . Press Reply: it goes to the customer.
+>
+> ### How it behaves
+> - Every email to any @gulftripservice.com address (info@, booking@, …) is copied to , with the original message, attachments and inline images.
+> - **Reply goes straight to the customer**, from your Gmail address (so they will see your Gmail). To answer *as* info@, use Gmail → Settings → Accounts → *Send mail as* with Resend SMTP (, port 465, user , password = a Resend API key) — optional.
+> - The originals stay in Resend → Receiving as a backup.
+> - Mail from our own domain is never forwarded (prevents loops). A failed forward is retried by Resend automatically.
+> - Forwards are logged in the admin **Email Log** as .
+>
+> Code: , . Tested locally against a stand-in for Resend: forward, Reply-To, attachments, no duplicates, no loops, signature check (11/11).
+>
+> **Still recommended, free:** add the DMARC record from the table at the end of this report.
+
+---
+
+
 *Diagnosis only. No DNS, MX, Resend or code setting was changed. Checked 14 Nov 2026.*
 
 ## Answer in short
