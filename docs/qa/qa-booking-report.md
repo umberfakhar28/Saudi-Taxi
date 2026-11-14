@@ -38,7 +38,7 @@
 
 ## 2) Bug table
 
-Severity: **Critical** = booking lost · **Major** = wrong price or message, or a booking blocked · **Minor** = UI or copy. Screenshots are in `docs/qa/screenshots/`.
+Severity: **Critical** = booking lost · **Major** = wrong price or message, or a booking blocked · **Minor** = UI or copy.
 
 | ID | Page URL | Entry point | Device / browser | Steps to reproduce | Expected | Actual | Severity | Screenshot |
 |---|---|---|---|---|---|---|---|---|
@@ -202,20 +202,3 @@ delete from contact_messages where id = '9f0fee1e-f6ee-4d8d-9e03-3d882f18cb89';
 - **Deep tests:** Riyadh–Bahrain (route-landing); Bahrain–Dammam and Riyadh–Qatar (route, EN); AR Riyadh–Qatar and AR Riyadh–Bahrain; Riyadh Airport; Saudi–Bahrain border; distance and city pages; /book-online (EN and AR); /contact-us (EN and AR); /destinations/dubai enquiry. 14 /book-online URL-parameter combinations.
 - **Matrix:** the full booking path in Chromium, Firefox and WebKit at 360, 390, 768, 1024 and 1440 px, all 15 passing. Phone widths used touch emulation (Chromium and WebKit). The native date and time pickers were filled programmatically. **Not tested on physical iOS or Android devices.**
 - **Sweep:** all 174 pages on an iPhone 13 profile, checking console errors, failed requests, horizontal overflow, quick-form pre-fill and button overlap.
-- **Screenshots** (`docs/qa/screenshots/`):
-
-| File | Shows |
-|---|---|
-| 01 | Riyadh–Bahrain quick form, filled |
-| 02 | /book-online pre-filled from it |
-| 03 | Mocked success |
-| 04 | Empty-form errors |
-| 05 | Arabic-digit phone rejected |
-| 06 | Slow-network loading state |
-| 07–08 | Contact form errors and success |
-| 09 | Destination enquiry after submit |
-| 10 | AR /book-online errors on mobile |
-| 11–12 | Matrix samples |
-| 13 | Keyboard focus |
-| 14–15 | The two real submissions |
-| 16 | AR contact form rejecting Arabic digits |
