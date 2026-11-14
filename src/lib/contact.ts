@@ -30,6 +30,11 @@ export const COMPANY_NAME = "Gulf Trip Service";
  */
 export const COMPANY_LOCALITY = "Saudi Arabia";
 
+/** Social profiles, as given by the owner (14 Nov 2026). Shown in the site
+ *  footer and in every email footer. */
+export const INSTAGRAM_URL = "https://www.instagram.com/gulftripservice/";
+export const FACEBOOK_URL = "https://www.facebook.com/share/1VbxtspYKU/";
+
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 export const TEL_URL = `tel:${PHONE_E164}`;
 

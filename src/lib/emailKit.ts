@@ -17,7 +17,7 @@ import { serviceLabel } from '@/lib/serviceLabels';
 import { SERVICE_LABELS_AR } from '@/lib/i18n';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
-import { EMAIL, PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
+import { EMAIL, FACEBOOK_URL, INSTAGRAM_URL, PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
 
 export type EmailLocale = 'en' | 'ar';
 
@@ -192,7 +192,10 @@ export function emailShell(inner: string, opts: { locale?: EmailLocale; preheade
     <tr><td class="gts-pad" bgcolor="${BRAND.navy}" style="background:${BRAND.navy};padding:22px 32px;border-radius:0 0 12px 12px;font-family:${EMAIL_FONT};font-size:12.5px;line-height:1.7;color:rgba(245,242,234,0.82);text-align:${align};" dir="${dir}">
       <strong style="color:#ffffff;font-size:14px;">Gulf Trip Service</strong><br>
       ${footer}<br>
-      <a href="${SITE}" style="color:${BRAND.gold};text-decoration:none;font-weight:700;">${escapeHtml(site)}</a>
+      <a href="${SITE}" style="color:${BRAND.gold};text-decoration:none;font-weight:700;">${escapeHtml(site)}</a><br>
+      <a href="${INSTAGRAM_URL}" style="color:${BRAND.gold};text-decoration:none;font-weight:700;">Instagram</a>
+      <span style="color:rgba(245,242,234,0.45);">&nbsp;·&nbsp;</span>
+      <a href="${FACEBOOK_URL}" style="color:${BRAND.gold};text-decoration:none;font-weight:700;">Facebook</a>
     </td></tr>
   </table>
 </td></tr>

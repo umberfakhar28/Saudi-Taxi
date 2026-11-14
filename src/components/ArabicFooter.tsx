@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon } from './Icons';
+import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon, InstagramIcon, FacebookIcon } from './Icons';
 import Logo from './Logo';
 import styles from './Footer.module.css';
 import CookieSettingsLink from './CookieSettingsLink';
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from '@/lib/contact';
+import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink, INSTAGRAM_URL, FACEBOOK_URL } from '@/lib/contact';
 
 const ArabicFooter = () => {
     return (
@@ -26,6 +26,12 @@ const ArabicFooter = () => {
                             </a>
                             <a href="mailto:info@gulftripservice.com" className={styles.socialLink} aria-label="بريد إلكتروني">
                                 <MailIcon size={18} />
+                            </a>
+                            <a href={INSTAGRAM_URL} className={styles.socialLink} aria-label="إنستغرام" target="_blank" rel="noopener noreferrer">
+                                <InstagramIcon size={17} />
+                            </a>
+                            <a href={FACEBOOK_URL} className={styles.socialLink} aria-label="فيسبوك" target="_blank" rel="noopener noreferrer">
+                                <FacebookIcon size={17} />
                             </a>
                         </div>
                     </div>
