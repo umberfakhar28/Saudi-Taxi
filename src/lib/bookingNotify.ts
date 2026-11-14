@@ -28,9 +28,9 @@ import { bookingRef } from '@/lib/bookingRef';
 import { displayDate, displayDateTime, displayTime } from '@/lib/datetime';
 import { DESTINATION_ENQUIRY_SERVICE } from '@/lib/bookingValidation';
 import {
-    ADMIN_EMAIL, SITE, asLocale, baseStyle, btnStyle, buildBookingRows, cardStyle, createNotification,
-    customerSendAllowed, escapeHtml, headerStyle, logEmail, pushAdmins, row, rowsTable, sendEmail,
-    whatsappBlock, type EmailLocale,
+    ADMIN_EMAIL, SITE, asLocale, buildBookingRows, createNotification, customerSendAllowed,
+    emailButton, emailMuted, emailPanel, emailPara, emailShell, emailTitle, escapeHtml, logEmail,
+    pushAdmins, row, rowsTable, sendEmail, whatsappBlock, type EmailLocale,
 } from '@/lib/emailKit';
 
 type Row = Record<string, unknown>;
@@ -75,15 +75,14 @@ const recipientOf = (b: Row): string | null => {
 };
 const adminLink = (b: Row) => `${SITE}/admin/bookings${b.id ? `?view=${encodeURIComponent(String(b.id))}` : ''}`;
 
-/** Wraps a card; Arabic emails read right to left. */
+/** The shared email layout (lib/emailKit, item 16); Arabic reads right to left. */
 function layout(inner: string, locale: EmailLocale): string {
-    const dir = locale === 'ar' ? ' dir="rtl" lang="ar"' : '';
-    return `<div style="${baseStyle}"${dir}><div style="${cardStyle}">${inner}</div></div>`;
+    return emailShell(inner, { locale });
 }
-const banner = (text: string, color = '#fbbf24') =>
-    `<div style="${headerStyle}"><p style="color:${color};font-weight:700;font-size:1.1rem;margin:0;">${text}</p></div>`;
-const para = (html: string) => `<p style="color:#475569;">${html}</p>`;
-const muted = (html: string) => `<p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">${html}</p>`;
+// The banner used to be a coloured strip; it is now the email's title.
+const banner = (text: string) => emailTitle(text);
+const para = emailPara;
+const muted = emailMuted;
 
 /* ───────────────────────── Customer templates ───────────────────────── */
 
@@ -149,7 +148,7 @@ export function confirmedEmail(raw: Row): { subject: string; html: string } {
     if (locale === 'ar') {
         return {
             subject: 'تم تأكيد حجزك – Gulf Trip Service',
-            html: layout(`${banner('🎉 تم تأكيد الحجز!', '#10b981')}
+            html: layout(`${banner('🎉 تم تأكيد الحجز!')}
                 ${para(`السلام عليكم <strong>${name}</strong>،`)}
                 ${para('يسعدنا إبلاغك بأنه <strong>تم تأكيد</strong> حجزك. هذه تفاصيل رحلتك:')}
                 ${buildBookingRows(b, 'ar')}
@@ -159,7 +158,7 @@ export function confirmedEmail(raw: Row): { subject: string; html: string } {
     }
     return {
         subject: 'Your Booking is Confirmed – Gulf Trip Service',
-        html: layout(`${banner('🎉 Booking Confirmed!', '#10b981')}
+        html: layout(`${banner('🎉 Booking Confirmed!')}
             ${para(`Assalamu Alaikum <strong>${name}</strong>,`)}
             ${para('Great news! Your booking has been <strong>confirmed</strong>. Here are your trip details:')}
             ${buildBookingRows(b)}
@@ -223,16 +222,13 @@ export async function sendReceivedEmail(supabase: SupabaseClient, booking: Row, 
 }
 
 /** Admin email for a new booking or enquiry, carrying the customer-email result. */
-function adminNewBookingEmail(b: Row, customer: CustomerEmailOutcome): { type: string; subject: string; html: string } {
+export function adminNewBookingEmail(b: Row, customer: CustomerEmailOutcome): { type: string; subject: string; html: string } {
     const enquiry = isEnquiry(b);
     const name = String(b.customer_name ?? '');
     const ref = refOf(b);
     const status = customer.status === 'sent'
-        ? `<p style="color:#166534;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin:0 0 16px;font-size:0.9rem;">✅ Confirmation emailed to the customer${asLocale(b.locale) === 'ar' && !enquiry ? ' (in Arabic)' : ''}.</p>`
-        : `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 14px;margin:0 0 16px;">
-            <p style="color:#991b1b;font-weight:700;margin:0 0 4px;">⚠️ The customer did not receive a confirmation email</p>
-            <p style="color:#7f1d1d;margin:0;font-size:0.9rem;">${escapeHtml(customer.reason.trim().replace(/[.!]?$/, '.'))} Reach them on WhatsApp${b.customer_phone ? ` on <strong dir="ltr">${escapeHtml(b.customer_phone)}</strong>` : ''}, or resend it from the booking's Actions menu.</p>
-        </div>`;
+        ? emailPanel(`✅ Confirmation emailed to the customer${asLocale(b.locale) === 'ar' && !enquiry ? ' (in Arabic)' : ''}.`, 'ok')
+        : emailPanel(`<strong>⚠️ The customer did not receive a confirmation email</strong><br>${escapeHtml(customer.reason.trim().replace(/[.!]?$/, '.'))} Reach them on WhatsApp${b.customer_phone ? ` on <strong dir="ltr">${escapeHtml(b.customer_phone)}</strong>` : ''}, or resend it from the booking's Actions menu.`, 'error');
     const flag = customer.status === 'sent' ? '' : ' ⚠️ customer not emailed';
 
     if (enquiry) {
@@ -244,16 +240,16 @@ function adminNewBookingEmail(b: Row, customer: CustomerEmailOutcome): { type: s
                 ${status}
                 ${rowsTable(row('Destination', dest))}
                 ${buildBookingRows(b)}
-                <p style="margin-top:20px;text-align:center;"><a href="${adminLink(b)}" style="${btnStyle}">View in Admin Panel</a></p>`, 'en'),
+                ${emailButton(adminLink(b), 'View in Admin Panel', 'navy')}`, 'en'),
         };
     }
     return {
         type: 'new_booking',
         subject: `New Booking Request — ${name}${flag}`,
-        html: layout(`<div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">📩 New Booking Request</p>${ref ? `<p style="color:#e2e8f0;margin:6px 0 0;font-size:0.85rem;">Ref ${escapeHtml(ref)}${asLocale(b.locale) === 'ar' ? ' · booked in Arabic' : ''}</p>` : ''}</div>
+        html: layout(`${emailTitle('📩 New Booking Request', ref ? `Ref ${escapeHtml(ref)}${asLocale(b.locale) === 'ar' ? ' · booked in Arabic' : ''}` : undefined)}
             ${status}
             ${buildBookingRows(b)}
-            <p style="margin-top:20px;text-align:center;"><a href="${adminLink(b)}" style="${btnStyle}">View in Admin Panel</a></p>`, 'en'),
+            ${emailButton(adminLink(b), 'View in Admin Panel', 'navy')}`, 'en'),
     };
 }
 

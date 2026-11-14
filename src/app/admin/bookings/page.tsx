@@ -18,6 +18,7 @@ import InvoiceDocumentView from '@/components/admin/InvoiceDocumentView';
 import PasteBookingBox from '@/components/admin/PasteBookingBox';
 import WhatsAppSharedTag, { stampWhatsAppShared, whatsAppSharedAt } from '@/components/admin/WhatsAppSharedTag';
 import { downloadInvoicePdf } from '@/lib/invoicePng';
+import { invoicePdfAttachment, type PdfAttachment } from '@/lib/invoiceAttachment';
 import Link from 'next/link';
 
 /** The fields the quote composer reads off a booking row. The rest of this
@@ -311,6 +312,7 @@ function BookingsPageInner() {
         const b = quoteModal;
         const existing = latestQuote(b.quotes);
         setQuoteBusy(how);
+        const quoteId = existing?.id ?? crypto.randomUUID();
 
         const payload: QuoteRecord = {
             customer_name: b.customer_name,
@@ -337,7 +339,7 @@ function BookingsPageInner() {
                 // Email first: "Sent" must mean the customer received it.
                 const res = await fetch('/api/emails/send', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'quote_sent', quoteData: { ...payload, id: existing?.id } }),
+                    body: JSON.stringify({ type: 'quote_sent', quoteData: { ...payload, id: quoteId } }),
                 });
                 if (!res.ok) {
                     const e = await res.json().catch(() => ({}));
@@ -360,7 +362,7 @@ function BookingsPageInner() {
 
             const { data: saved, error } = existing
                 ? await supabase.from('quotes').update(payload).eq('id', existing.id).select().single()
-                : await supabase.from('quotes').insert(payload).select().single();
+                : await supabase.from('quotes').insert({ ...payload, id: quoteId }).select().single();
             if (error) throw new Error(error.message);
 
             // The booking's own fare follows the quote, so the Billing
@@ -457,10 +459,16 @@ function BookingsPageInner() {
             // carries the review link and is blind-copied to Trustpilot),
             // so it goes out here rather than being a manual step.
             if (target?.customer_email) {
-                const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_completed', bookingId: id }) });
+                // Item 10: attach the invoice if this booking has one. Built
+                // here, by the same generator as Download PDF; if it cannot
+                // be built the email still goes, without the invoice line.
+                let attachment: PdfAttachment | null = null;
+                const { data: inv } = await supabase.from('invoices').select('*').eq('booking_id', id).order('created_at', { ascending: true }).limit(1).maybeSingle();
+                if (inv) attachment = await invoicePdfAttachment(inv).catch(() => null);
+                const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'booking_completed', bookingId: id, attachment }) });
                 if (res.ok) {
                     logActivity('booking', id, 'review_request_sent', `Thank-you and review request emailed to ${target.customer_name ?? 'the customer'}`);
-                    showToast('success', 'Thank-you email with the review link sent.');
+                    showToast('success', attachment ? 'Thank-you email sent with the review link and the invoice PDF attached.' : 'Thank-you email with the review link sent.');
                 } else {
                     const j = await res.json().catch(() => ({}));
                     showToast('error', 'Booking completed, but the thank-you email failed to send: ' + (j.error || 'unknown error'));
@@ -590,8 +598,11 @@ function BookingsPageInner() {
             setOpenDropdown(null);
             return;
         }
-        const body = type === 'invoice' ? { type, invoiceData: payload } : { type, bookingData: payload };
         try {
+            // Item 18: the invoice PDF goes with the email — the same file as Download PDF.
+            const attachment = type === 'invoice' ? await invoicePdfAttachment(payload).catch(() => null) : null;
+            if (type === 'invoice' && !attachment) showToast('info', 'The PDF could not be built in this browser — sending the email without the attachment.');
+            const body = type === 'invoice' ? { type, invoiceData: payload, attachment } : { type, bookingData: payload };
             const res = await fetch('/api/emails/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             const json = await res.json();
             if (!res.ok) {

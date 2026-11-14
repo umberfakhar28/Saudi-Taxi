@@ -3,7 +3,10 @@ import { createAdminClient } from '@/utils/supabase/admin';
 import { guardPublicRequest } from '@/lib/antiSpam';
 import { resolveSender } from '@/lib/emailSender';
 import { sendPushToAdmins } from '@/lib/webpush';
-import { ADMIN_EMAIL, customerSendAllowed, logEmail, sendEmail, whatsappBlock, type EmailLocale } from '@/lib/emailKit';
+import {
+    ADMIN_EMAIL, customerSendAllowed, emailMuted, emailPara, emailShell, emailTitle, logEmail, noteBlock, sendEmail,
+    whatsappBlock, type EmailLocale,
+} from '@/lib/emailKit';
 import { SITE_CONFIG } from '@/lib/seo';
 import {
     contactRef,
@@ -89,16 +92,12 @@ function escapeHtml(s: unknown): string {
         .replace(/'/g, '&#39;');
 }
 
-const baseStyle = `font-family:'Inter',Arial,sans-serif;background:#f8fafc;padding:32px 16px;`;
-const cardStyle = `background:#fff;border-radius:12px;padding:28px;max-width:560px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,0.06);`;
-const headerStyle = `background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:10px;padding:24px;margin-bottom:24px;text-align:center;`;
-
 function row(label: string, value: unknown): string {
     const v = String(value ?? '').trim();
     if (!v) return '';
     return `<tr>
-        <td style="padding:8px 4px;color:#94a3b8;font-size:13px;white-space:nowrap;vertical-align:top;">${escapeHtml(label)}</td>
-        <td style="padding:8px 4px;color:#0f172a;font-size:13px;font-weight:600;">${escapeHtml(v)}</td>
+        <td style="padding:9px 4px;border-bottom:1px solid #E4DFD2;color:#5A6569;font-size:13px;white-space:nowrap;vertical-align:top;">${escapeHtml(label)}</td>
+        <td style="padding:9px 4px;border-bottom:1px solid #E4DFD2;color:#1C2528;font-size:13px;font-weight:600;">${escapeHtml(v)}</td>
     </tr>`;
 }
 
@@ -112,26 +111,22 @@ function autoReplyEmail(name: string, reference: string, locale: EmailLocale): {
     if (locale === 'ar') {
         return {
             subject: 'استلمنا رسالتك – Gulf Trip Service',
-            html: `<div style="${baseStyle}" dir="rtl" lang="ar"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ استلمنا رسالتك</p></div>
-                <p style="color:#475569;">السلام عليكم <strong>${n}</strong>،</p>
-                <p style="color:#475569;">شكرًا لتواصلك معنا. استلمنا رسالتك وسيرد عليك فريقنا في أقرب وقت ممكن.</p>
-                <p style="color:#475569;">رقم المرجع: <strong dir="ltr">${ref}</strong></p>
+            html: emailShell(`${emailTitle('✅ استلمنا رسالتك')}
+                ${emailPara(`السلام عليكم <strong>${n}</strong>،`)}
+                ${emailPara('شكرًا لتواصلك معنا. استلمنا رسالتك وسيرد عليك فريقنا في أقرب وقت ممكن.')}
+                ${emailPara(`رقم المرجع: <strong dir="ltr">${ref}</strong>`)}
                 ${whatsappBlock(`السلام عليكم، أرسلت رسالة عبر الموقع (رقم ${reference}).`, 'ar')}
-                <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">يمكنك أيضًا الرد على هذا البريد مباشرة.</p>
-            </div></div>`,
+                ${emailMuted('يمكنك أيضًا الرد على هذا البريد مباشرة.')}`, { locale: 'ar' }),
         };
     }
     return {
         subject: "We've received your message – Gulf Trip Service",
-        html: `<div style="${baseStyle}"><div style="${cardStyle}">
-            <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✅ Message received</p></div>
-            <p style="color:#475569;">Assalamu Alaikum <strong>${n}</strong>,</p>
-            <p style="color:#475569;">Thank you for contacting us. We have received your message and our team will reply as soon as possible.</p>
-            <p style="color:#475569;">Your reference: <strong>${ref}</strong></p>
+        html: emailShell(`${emailTitle('✅ Message received')}
+            ${emailPara(`Assalamu Alaikum <strong>${n}</strong>,`)}
+            ${emailPara('Thank you for contacting us. We have received your message and our team will reply as soon as possible.')}
+            ${emailPara(`Your reference: <strong>${ref}</strong>`)}
             ${whatsappBlock(`Hi, I sent a message through your website (ref ${reference}).`)}
-            <p style="color:#94a3b8;font-size:0.85rem;margin-top:16px;">You can also simply reply to this email.</p>
-        </div></div>`,
+            ${emailMuted('You can also simply reply to this email.')}`),
     };
 }
 
@@ -296,9 +291,8 @@ export async function POST(req: Request) {
 
             const subject = `New Contact Message — ${input.subject}`;
             const localeLabel = input.locale === 'ar' ? 'Arabic (العربية)' : 'English';
-            const html = `<div style="${baseStyle}"><div style="${cardStyle}">
-                <div style="${headerStyle}"><p style="color:#fbbf24;font-weight:700;font-size:1.1rem;margin:0;">✉️ New Contact Message</p></div>
-                <table style="width:100%;border-collapse:collapse;">
+            const html = emailShell(`${emailTitle('✉️ New Contact Message', `Ref ${escapeHtml(reference)}`)}
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                     ${row('Reference', reference)}
                     ${row('Name', input.name)}
                     ${row('Phone / WhatsApp', input.phone)}
@@ -309,14 +303,8 @@ export async function POST(req: Request) {
                     ${row('Submitted from', input.locale === 'ar' ? '/ar/contact-us' : '/contact-us')}
                     ${row('Auto-reply to customer', autoReply)}
                 </table>
-                <div style="background:#f8fafc;border-left:3px solid #94a3b8;border-radius:8px;padding:16px;margin-top:18px;">
-                    <p style="color:#64748b;margin:0 0 8px;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Message</p>
-                    <p style="color:#1e293b;margin:0;font-size:0.9rem;line-height:1.7;white-space:pre-wrap;">${escapeHtml(input.message)}</p>
-                </div>
-                <p style="color:#94a3b8;font-size:0.8rem;margin-top:18px;">
-                    Reply to this email to answer ${escapeHtml(input.name)} directly${input.email ? '' : ' — note no email address was supplied, so reach them on the number above'}.
-                </p>
-            </div></div>`;
+                ${noteBlock('Message', input.message, '#F5F2EA', '#B7AD97', '#5A6569')}
+                ${emailMuted(`Reply to this email to answer ${escapeHtml(input.name)} directly${input.email ? '' : ' — note no email address was supplied, so reach them on the number above'}.`)}`);
 
             // Reply-To is the business address, matching every other
             // outgoing email. The customer's own address is shown in the

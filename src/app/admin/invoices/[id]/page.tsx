@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { ArrowLeft, Download, Mail, CheckCircle2, Image as ImageIcon, Printer, Trash2, Pencil } from 'lucide-react';
 import { downloadInvoicePdf, downloadInvoicePng } from '@/lib/invoicePng';
+import { invoicePdfAttachment } from '@/lib/invoiceAttachment';
 import InvoiceDocumentView from '@/components/admin/InvoiceDocumentView';
 import InvoiceForm, {
     invoiceFormFromInvoice,
@@ -62,9 +63,13 @@ export default function InvoiceDetailPage() {
         if (!invoice?.customer_email) { showToast('error', 'This invoice has no customer email on file.'); return; }
         setEmailing(true);
         try {
+            // Item 18: emailed from the Invoices tab with the PDF attached —
+            // the same file the Download PDF button saves.
+            const doc = { ...invoice, booking_number: invoice.booking_number ?? bookingNumber };
+            const attachment = await invoicePdfAttachment(doc).catch(() => null);
             const res = await fetch('/api/emails/send', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'invoice', invoiceData: { ...invoice, invoice_db_id: invoice.id } }),
+                body: JSON.stringify({ type: 'invoice', invoiceData: { ...doc, invoice_db_id: invoice.id }, attachment }),
             });
             const json = await res.json();
             if (!res.ok) throw new Error(json.error || 'Unknown error');
@@ -72,7 +77,7 @@ export default function InvoiceDetailPage() {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ entityType: 'invoice', entityId: invoice.id, action: 'email_sent', description: `Invoice ${invoice.invoice_number} emailed to ${invoice.customer_email}` }),
             }).catch(() => {});
-            showToast('success', 'Invoice emailed to ' + invoice.customer_email);
+            showToast('success', `Invoice emailed to ${invoice.customer_email}${attachment ? ' with the PDF attached' : ' (the PDF could not be built, so it went without the attachment)'}.`);
         } catch (err: any) {
             showToast('error', 'Failed to send invoice email: ' + err.message);
         } finally {

@@ -17,7 +17,7 @@ import { serviceLabel } from '@/lib/serviceLabels';
 import { SERVICE_LABELS_AR } from '@/lib/i18n';
 import { sendPushToAdmins } from '@/lib/webpush';
 import { SITE_CONFIG } from '@/lib/seo';
-import { PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
+import { EMAIL, PHONE_DISPLAY, WHATSAPP_NUMBER } from '@/lib/contact';
 
 export type EmailLocale = 'en' | 'ar';
 
@@ -129,10 +129,126 @@ export const SITE = resolveEmailBaseUrl();
    so every row below is a real <table><tr><td> — label cell, value cell,
    consistent padding, a hairline separator between rows.
    ───────────────────────────────────────────────────────────────────────── */
-export const baseStyle = `font-family:'Inter',Arial,sans-serif;background:#f8fafc;padding:32px 16px;`;
-export const cardStyle = `background:#fff;border-radius:12px;padding:28px;max-width:560px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,0.06);`;
-export const headerStyle = `background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:10px;padding:24px;margin-bottom:24px;text-align:center;`;
-export const btnStyle = `display:inline-block;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#0f172a;padding:12px 28px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;`;
+/* ─────────────────────────────────────────────────────────────────────────
+   ONE layout for every email (admin item 16): navy header with the logo,
+   white body card, gold accents, navy footer with contact and website.
+   Table-based throughout (Outlook renders tables, not flexbox or most
+   divs), 600px wide and fluid below that, Inter with Arial/Helvetica
+   fallbacks — Gmail ignores web fonts and falls back cleanly.
+   Brand values are the website's own (src/app/globals.css).
+   ───────────────────────────────────────────────────────────────────────── */
+export const BRAND = {
+    navy: '#081827', gold: '#B8945B', goldInk: '#7A5C2E', goldTint: '#F6EFE2', ivory: '#F5F2EA',
+    line: '#E4DFD2', ink: '#1C2528', text: '#3A4447', muted: '#5A6569',
+    green: '#16A34A', greenInk: '#166534', greenTint: '#DCFCE7',
+    amber: '#D97706', amberInk: '#92400E', amberTint: '#FEF3C7',
+    red: '#DC2626', redInk: '#991B1B', redTint: '#FEE2E2',
+    blueInk: '#1E40AF', blueTint: '#DBEAFE',
+} as const;
+export const EMAIL_FONT = `'Inter', Arial, Helvetica, sans-serif`;
+
+/**
+ * Wraps a template's body in the shared layout and returns a complete HTML
+ * document. `preheader` is the grey preview line inbox lists show.
+ */
+export function emailShell(inner: string, opts: { locale?: EmailLocale; preheader?: string; title?: string } = {}): string {
+    const ar = opts.locale === 'ar';
+    const dir = ar ? 'rtl' : 'ltr';
+    const align = ar ? 'right' : 'left';
+    const site = SITE.replace(/^https?:\/\//, '');
+    const footer = ar
+        ? `واتساب / هاتف: <a href="https://wa.me/${WHATSAPP_NUMBER}" style="color:${BRAND.ivory};text-decoration:none;" dir="ltr">${escapeHtml(PHONE_DISPLAY)}</a><br>البريد: <a href="mailto:${EMAIL}" style="color:${BRAND.ivory};text-decoration:none;">${EMAIL}</a>`
+        : `WhatsApp / phone: <a href="https://wa.me/${WHATSAPP_NUMBER}" style="color:${BRAND.ivory};text-decoration:none;">${escapeHtml(PHONE_DISPLAY)}</a><br>Email: <a href="mailto:${EMAIL}" style="color:${BRAND.ivory};text-decoration:none;">${EMAIL}</a>`;
+    return `<!DOCTYPE html>
+<html lang="${ar ? 'ar' : 'en'}" dir="${dir}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="color-scheme" content="light">
+<title>${escapeHtml(opts.title ?? 'Gulf Trip Service')}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; padding:0; }
+  a { color:${BRAND.goldInk}; }
+  @media (max-width: 620px) {
+    .gts-pad { padding-left:18px !important; padding-right:18px !important; }
+    .gts-h1 { font-size:20px !important; }
+    .gts-big { font-size:26px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:${BRAND.ivory};">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(opts.preheader ?? '')}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${BRAND.ivory};" dir="${dir}">
+<tr><td align="center" style="padding:24px 10px;">
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">
+    <tr><td class="gts-pad" bgcolor="${BRAND.navy}" style="background:${BRAND.navy};padding:22px 32px;border-radius:12px 12px 0 0;border-bottom:3px solid ${BRAND.gold};" align="${align}">
+      <a href="${SITE}" style="text-decoration:none;"><img src="${SITE}/brand/email-logo.png" width="190" alt="Gulf Trip Service" style="display:block;border:0;outline:none;width:190px;max-width:100%;height:auto;color:#ffffff;font:700 20px ${EMAIL_FONT};"></a>
+    </td></tr>
+    <tr><td class="gts-pad" bgcolor="#ffffff" style="background:#ffffff;padding:32px;font-family:${EMAIL_FONT};font-size:15px;line-height:1.6;color:${BRAND.ink};text-align:${align};" dir="${dir}">
+      ${inner}
+    </td></tr>
+    <tr><td class="gts-pad" bgcolor="${BRAND.navy}" style="background:${BRAND.navy};padding:22px 32px;border-radius:0 0 12px 12px;font-family:${EMAIL_FONT};font-size:12.5px;line-height:1.7;color:rgba(245,242,234,0.82);text-align:${align};" dir="${dir}">
+      <strong style="color:#ffffff;font-size:14px;">Gulf Trip Service</strong><br>
+      ${footer}<br>
+      <a href="${SITE}" style="color:${BRAND.gold};text-decoration:none;font-weight:700;">${escapeHtml(site)}</a>
+    </td></tr>
+  </table>
+</td></tr>
+</table>
+</body>
+</html>`;
+}
+
+/** The bold title at the top of an email body, with the gold rule under it. */
+export function emailTitle(text: string, sub?: string): string {
+    return `<h1 class="gts-h1" style="margin:0;font-family:${EMAIL_FONT};font-size:23px;line-height:1.3;font-weight:800;color:${BRAND.navy};">${text}</h1>
+      ${sub ? `<p style="margin:6px 0 0;font-size:13px;color:${BRAND.muted};">${sub}</p>` : ''}
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:14px 0 22px;"><tr><td width="48" height="3" bgcolor="${BRAND.gold}" style="width:48px;height:3px;background:${BRAND.gold};font-size:0;line-height:0;">&nbsp;</td></tr></table>`;
+}
+
+export function emailPara(html: string): string {
+    return `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:${BRAND.text};">${html}</p>`;
+}
+
+export function emailMuted(html: string): string {
+    return `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${html}</p>`;
+}
+
+/**
+ * A "bulletproof" button: the colour sits on a table cell, so it still shows
+ * in Outlook, which ignores padding and backgrounds on links.
+ *   gold — gold fill, navy text (the main call to action)
+ *   navy — navy fill, white text, gold border
+ *   whatsapp — WhatsApp green, navy text (white on that green fails contrast)
+ */
+export function emailButton(href: string, label: string, variant: 'gold' | 'navy' | 'whatsapp' = 'gold'): string {
+    const v = {
+        gold: { bg: BRAND.gold, fg: BRAND.navy, border: BRAND.gold },
+        navy: { bg: BRAND.navy, fg: '#ffffff', border: BRAND.gold },
+        whatsapp: { bg: '#25D366', fg: BRAND.navy, border: '#25D366' },
+    }[variant];
+    return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:22px auto;"><tr>
+      <td align="center" bgcolor="${v.bg}" style="background:${v.bg};border:2px solid ${v.border};border-radius:8px;">
+        <a href="${href}" target="_blank" style="display:inline-block;padding:13px 28px;font-family:${EMAIL_FONT};font-size:15px;font-weight:700;line-height:1.2;color:${v.fg};text-decoration:none;border-radius:8px;">${label}</a>
+      </td></tr></table>`;
+}
+
+/** A coloured status pill (paid / unpaid / overdue / part-paid / info). */
+export function emailBadge(label: string, tone: 'paid' | 'unpaid' | 'overdue' | 'partially_paid' | 'info'): string {
+    const c = {
+        paid: [BRAND.greenTint, BRAND.greenInk], unpaid: [BRAND.amberTint, BRAND.amberInk],
+        overdue: [BRAND.redTint, BRAND.redInk], partially_paid: [BRAND.blueTint, BRAND.blueInk], info: [BRAND.blueTint, BRAND.blueInk],
+    }[tone];
+    return `<span style="display:inline-block;background:${c[0]};color:${c[1]};padding:4px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">${escapeHtml(label)}</span>`;
+}
+
+/** A tinted panel, e.g. a status message in an admin email. */
+export function emailPanel(html: string, tone: 'ok' | 'warn' | 'error' | 'neutral' = 'neutral'): string {
+    const c = { ok: [BRAND.greenTint, BRAND.greenInk], warn: [BRAND.amberTint, BRAND.amberInk], error: [BRAND.redTint, BRAND.redInk], neutral: [BRAND.ivory, BRAND.ink] }[tone];
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;"><tr><td style="background:${c[0]};color:${c[1]};border-radius:8px;padding:12px 16px;font-size:14px;line-height:1.55;">${html}</td></tr></table>`;
+}
 
 /** One label/value row inside the details table. Skips cleanly if value is empty. */
 /**
@@ -145,14 +261,14 @@ export function row(label: string, value: unknown, ltr = false): string {
     if (ltr) {
         return `
         <tr>
-            <td style="padding:11px 4px;border-bottom:1px solid #f1f5f9;color:#94a3b8;font-size:13px;width:38%;vertical-align:top;">${label}</td>
-            <td style="padding:11px 4px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:14px;font-weight:600;vertical-align:top;"><span dir="ltr" style="unicode-bidi:embed;">${escapeHtml(String(value))}</span></td>
+            <td style="padding:11px 4px;border-bottom:1px solid #E4DFD2;color:#5A6569;font-size:13px;width:38%;vertical-align:top;">${label}</td>
+            <td style="padding:11px 4px;border-bottom:1px solid #E4DFD2;color:#1C2528;font-size:14px;font-weight:600;vertical-align:top;"><span dir="ltr" style="unicode-bidi:embed;">${escapeHtml(String(value))}</span></td>
         </tr>`;
     }
     return `
         <tr>
-            <td style="padding:11px 4px;border-bottom:1px solid #f1f5f9;color:#94a3b8;font-size:13px;width:38%;vertical-align:top;">${label}</td>
-            <td style="padding:11px 4px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:14px;font-weight:600;vertical-align:top;">${escapeHtml(String(value))}</td>
+            <td style="padding:11px 4px;border-bottom:1px solid #E4DFD2;color:#5A6569;font-size:13px;width:38%;vertical-align:top;">${label}</td>
+            <td style="padding:11px 4px;border-bottom:1px solid #E4DFD2;color:#1C2528;font-size:14px;font-weight:600;vertical-align:top;">${escapeHtml(String(value))}</td>
         </tr>`;
 }
 
@@ -178,10 +294,12 @@ export function noteBlock(label: string, text: string | null | undefined, tint: 
     const body = String(text ?? '').trim();
     if (!body) return '';
     const html = escapeHtml(body).replace(/\r?\n/g, '<br>');
-    return `<div style="background:${tint};border-left:4px solid ${accent};border-radius:8px;padding:14px 16px;margin-top:16px;">
-        <p style="color:${labelColor};margin:0 0 6px;font-size:0.72rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;">${escapeHtml(label)}</p>
-        <p style="color:#0f172a;margin:0;font-size:0.95rem;font-weight:600;line-height:1.55;">${html}</p>
-    </div>`;
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;"><tr>
+        <td width="4" style="width:4px;background:${accent};border-radius:4px 0 0 4px;"></td>
+        <td style="background:${tint};border-radius:0 8px 8px 0;padding:14px 16px;">
+        <p style="color:${labelColor};margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;">${escapeHtml(label)}</p>
+        <p style="color:#1C2528;margin:0;font-size:15px;font-weight:600;line-height:1.55;">${html}</p>
+        </td></tr></table>`;
 }
 
 /**
@@ -201,22 +319,26 @@ export function whatsappBlock(prefill: string, locale: EmailLocale = 'en'): stri
     const t = locale === 'ar'
         ? { title: 'تحتاج إلى رد أسرع؟', body: 'راسلنا عبر واتساب وسنرد عليك هناك.', button: '💬 تواصل معنا عبر واتساب', save: 'أو احفظ رقمنا:' }
         : { title: 'Need a faster reply?', body: 'Message us on WhatsApp and we will answer you there.', button: '💬 Chat with us on WhatsApp', save: 'Or save our number:' };
-    return `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px;margin-top:20px;text-align:center;">
-        <p style="color:#166534;font-weight:800;margin:0 0 6px;font-size:1rem;">${t.title}</p>
-        <p style="color:#475569;margin:0 0 16px;font-size:0.9rem;">${t.body}</p>
-        <a href="${href}" style="display:inline-block;background:#25c766;color:#ffffff;padding:12px 28px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.95rem;">${t.button}</a>
-        <p style="color:#64748b;margin:14px 0 0;font-size:0.85rem;">${t.save} <strong style="color:#0f172a;" dir="ltr">${escapeHtml(PHONE_DISPLAY)}</strong></p>
-    </div>`;
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:22px;"><tr><td align="center" style="background:#F5F2EA;border:1px solid #E4DFD2;border-radius:10px;padding:20px;">
+        <p style="color:#081827;font-weight:800;margin:0 0 6px;font-size:16px;">${t.title}</p>
+        <p style="color:#3A4447;margin:0;font-size:14px;">${t.body}</p>
+        ${emailButton(href, t.button, 'whatsapp')}
+        <p style="color:#5A6569;margin:0;font-size:13px;">${t.save} <strong style="color:#1C2528;" dir="ltr">${escapeHtml(PHONE_DISPLAY)}</strong></p>
+    </td></tr></table>`;
 }
 
-/** A one-line WhatsApp prompt for the top of an email. */
-export function whatsappStrip(prefill: string): string {
+/**
+ * The WhatsApp prompt in the quote email (item 7). The pre-filled message
+ * carries the whole quote, so the team sees which one the customer means.
+ * encodeURIComponent handles line breaks, Arabic, & and + correctly. The
+ * phone number is no longer printed under the button: it is in the footer.
+ */
+export function whatsappStrip(prefill: string, label = '💬 Chat about this quote'): string {
     const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(prefill)}`;
-    return `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;margin-bottom:20px;text-align:center;">
-        <p style="color:#166534;margin:0 0 10px;font-size:0.92rem;font-weight:700;">For a quick reply, message us on WhatsApp</p>
-        <a href="${href}" style="display:inline-block;background:#25c766;color:#ffffff;padding:10px 22px;text-decoration:none;border-radius:8px;font-weight:700;font-size:0.9rem;">💬 Chat about this quote</a>
-        <p style="color:#64748b;margin:10px 0 0;font-size:0.8rem;">${escapeHtml(PHONE_DISPLAY)}</p>
-    </div>`;
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;"><tr><td align="center" style="background:#F5F2EA;border:1px solid #E4DFD2;border-radius:10px;padding:16px 18px 2px;">
+        <p style="color:#081827;margin:0;font-size:14px;font-weight:700;">For a quick reply, message us on WhatsApp</p>
+        ${emailButton(href, label, 'whatsapp')}
+    </td></tr></table>`;
 }
 
 const ROW_LABELS: Record<EmailLocale, Record<string, string>> = {
@@ -309,6 +431,8 @@ export interface SendParams {
     subject: string;
     html: string;
     bcc?: string;
+    /** Base64 content, as Resend expects. */
+    attachments?: { filename: string; content: string }[];
 }
 
 export interface SendOutcome {
@@ -341,6 +465,7 @@ export async function sendEmail(params: SendParams, attempts = 3): Promise<SendO
                 subject: params.subject,
                 html: params.html,
                 ...(params.bcc ? { bcc: params.bcc } : {}),
+                ...(params.attachments?.length ? { attachments: params.attachments } : {}),
             });
             if (!error) return { id: data?.id ?? null, error: null };
             last = { id: null, error: error.message };
