@@ -47,8 +47,8 @@ export type InvoicePngData = InvoiceRecord & {
 };
 
 /* ── Page geometry (logical units; the bitmap is SCALE times this) ──── */
-const W = 820;
-const PAGE_H = Math.round(W * (841.89 / 595.28)); // A4 proportions: 1160
+export const W = 820;
+export const PAGE_H = Math.round(W * (841.89 / 595.28)); // A4 proportions: 1160
 const PAD = 48;
 const SCALE = 3;
 const CONTENT = W - PAD * 2;
@@ -69,7 +69,6 @@ const RED = '#DC2626';
 /* ── Fonts ────────────────────────────────────────────────────────── */
 let BODY = 'Inter, "Noto Sans Arabic Variable", Arial, Helvetica, sans-serif';
 let HEAD = `"Manrope Variable", ${BODY}`;
-const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
 /**
  * Makes sure the brand fonts are downloaded before a single glyph is drawn —
@@ -175,14 +174,14 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 
 /* ── Layout: a list of blocks, each measured once and drawn at any y ── */
 
-interface Block {
+export interface Block {
     h: number;
     /** Space above the block. Dropped at the top of a continuation page. */
     gap: number;
     draw: (ctx: CanvasRenderingContext2D, y: number) => void;
 }
 
-function buildBlocks(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, logo: HTMLImageElement): Block[] {
+export function buildBlocks(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, logo: HTMLImageElement): Block[] {
     const blocks: Block[] = [];
     const isQuote = /quot/i.test(doc.title);
     const badgeColors = INVOICE_BADGE_COLORS[doc.badge.value];
@@ -231,7 +230,7 @@ function buildBlocks(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, logo: 
         for (const cell of doc.metaCells) {
             rightRows.push({ label: cell.label === 'Issued' ? 'Date' : cell.label, value: cell.value, strong: cell.strong });
         }
-        const rightH = rightRows.length * 44;
+        const rightH = rightRows.length * 40;
         const h = Math.max(leftH, rightH) + 44;
 
         blocks.push({
@@ -260,7 +259,7 @@ function buildBlocks(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, logo: 
                 const rx = W - PAD - 24;
                 c.textAlign = 'right';
                 rightRows.forEach((r, i) => {
-                    const ry = y + 34 + i * 44;
+                    const ry = y + 34 + i * 40;
                     c.fillStyle = MUTED;
                     c.font = font(700, 10);
                     spaced(c, r.label.toUpperCase(), rx, ry, 1.2);
@@ -510,12 +509,19 @@ function buildBlocks(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, logo: 
     {
         const termsX = PAD + CONTENT / 2 + 10;
         const termsW = W - PAD - termsX;
-        ctx.font = font(500, 12);
-        const lines = doc.footerLines.map((l, i) => ({ i, parts: wrap(ctx, l, termsW) }));
+        // Wrapped in the weight each line is drawn in: the payment sentence
+        // is bold, and bold text is wider.
+        const lines = doc.footerLines.map((l, i) => {
+            ctx.font = font(i === 0 && doc.footerLines.length > 1 ? 700 : 500, 12);
+            return { i, parts: wrap(ctx, l, termsW) };
+        });
         const termsH = 30 + lines.reduce((s, l) => s + l.parts.length * 18 + 6, 0);
-        const h = Math.max(84, termsH) + 4;
+        // The company sign-off sits under this block, so the two never part
+        // across a page break.
+        const textH = Math.max(72, termsH) + 2;
+        const h = textH + 8 + 34;
         blocks.push({
-            h, gap: 20,
+            h, gap: 14,
             draw: (c, y) => {
                 c.textAlign = 'left';
                 c.fillStyle = NAVY;
@@ -538,34 +544,88 @@ function buildBlocks(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, logo: 
                     l.parts.forEach((p, j) => c.fillText(p, termsX, ly + j * 18));
                     ly += l.parts.length * 18 + 6;
                 }
+
+                // Sign-off.
+                const sy = y + textH + 8;
+                c.font = font(800, 10.5);
+                const label = doc.signature.toUpperCase();
+                const lw = c.measureText(label).width + label.length * 2.4;
+                rule(c, W / 2 - lw / 2 - 54, W / 2 - lw / 2 - 14, sy + 18, GOLD, 1);
+                rule(c, W / 2 + lw / 2 + 14, W / 2 + lw / 2 + 54, sy + 18, GOLD, 1);
+                c.fillStyle = GOLD_INK;
+                c.textAlign = 'center';
+                spaced(c, label, W / 2, sy + 22, 2.4);
+                c.textAlign = 'left';
             },
         });
     }
-
-    // ── 9. Sign-off ───────────────────────────────────────────────────
-    blocks.push({
-        h: 34, gap: 8,
-        draw: (c, y) => {
-            c.font = font(800, 10.5);
-            const label = doc.signature.toUpperCase();
-            const w = c.measureText(label).width + label.length * 2.4;
-            rule(c, W / 2 - w / 2 - 54, W / 2 - w / 2 - 14, y + 18, GOLD, 1);
-            rule(c, W / 2 + w / 2 + 14, W / 2 + w / 2 + 54, y + 18, GOLD, 1);
-            c.fillStyle = GOLD_INK;
-            c.textAlign = 'center';
-            spaced(c, label, W / 2, y + 22, 2.4);
-            c.textAlign = 'left';
-        },
-    });
 
     return blocks;
 }
 
 /* ── Rendering ────────────────────────────────────────────────────── */
 
+/**
+ * The A4 page breaks, shared by every paged renderer. Blocks are never
+ * split: one that does not fit moves to the next page, which starts with a
+ * slim continuation header.
+ */
+export const PAGE_TOP_CONTINUED = 64;
+export function paginate(blocks: Block[]): Block[][] {
+    const LIMIT = PAGE_H - 44;
+    const pages: Block[][] = [[]];
+    let y = 0;
+    blocks.forEach((b, i) => {
+        const first = pages[pages.length - 1].length === 0;
+        const gap = first && pages.length > 1 ? 0 : b.gap;
+        // The closing sign-off may use the bottom margin of a single-page
+        // document rather than start a page of its own.
+        const limit = i === blocks.length - 1 && pages.length === 1 ? PAGE_H - 12 : LIMIT;
+        if (!first && y + gap + b.h > limit) {
+            pages.push([b]);
+            y = PAGE_TOP_CONTINUED + b.h;
+            return;
+        }
+        pages[pages.length - 1].push(b);
+        y += gap + b.h;
+    });
+    return pages;
+}
+
+/** Draws one page: continuation header, its blocks, page number. */
+export function drawPage(ctx: CanvasRenderingContext2D, doc: InvoiceDocument, list: Block[], pageIndex: number, pageCount: number) {
+    let py = 0;
+    if (pageIndex > 0) {
+        ctx.fillStyle = NAVY;
+        ctx.fillRect(0, 0, W, 6);
+        ctx.fillStyle = MUTED;
+        ctx.font = font(700, 10.5);
+        ctx.textAlign = 'left';
+        spaced(ctx, `${doc.title} ${doc.number} — CONTINUED`, PAD, 38, 1.2);
+        py = PAGE_TOP_CONTINUED;
+    }
+    list.forEach((b, bi) => {
+        py += pageIndex > 0 && bi === 0 ? 0 : b.gap;
+        b.draw(ctx, py);
+        py += b.h;
+    });
+    if (pageCount > 1) {
+        ctx.fillStyle = FAINT;
+        ctx.font = font(500, 10);
+        ctx.textAlign = 'center';
+        ctx.fillText(`Page ${pageIndex + 1} of ${pageCount}`, W / 2, PAGE_H - 18);
+        ctx.textAlign = 'left';
+    }
+}
+
+/** The shared document model for an export. */
+export function exportDocument(inv: InvoicePngData): InvoiceDocument {
+    return buildInvoiceDocument({ ...inv, booking_number: inv.booking_number ?? inv.bookingNumber ?? null });
+}
+
 async function prepare(inv: InvoicePngData) {
     await loadFonts();
-    const doc = buildInvoiceDocument({ ...inv, booking_number: inv.booking_number ?? inv.bookingNumber ?? null });
+    const doc = exportDocument(inv);
     const logo = await loadImage(brandMarkDataUrl(240, 'white'));
     const measure = document.createElement('canvas').getContext('2d');
     if (!measure) throw new Error('Canvas is unavailable in this browser.');
@@ -597,59 +657,6 @@ async function renderSingle(inv: InvoicePngData): Promise<HTMLCanvasElement> {
     return canvas;
 }
 
-/**
- * The document as A4 pages — the PDF. Blocks are never split: one that does
- * not fit moves to the next page, which starts with a slim continuation
- * header. Page numbers appear only when there is more than one page.
- */
-async function renderPages(inv: InvoicePngData): Promise<HTMLCanvasElement[]> {
-    const { doc, blocks } = await prepare(inv);
-    const TOP_CONT = 64;
-    const LIMIT = PAGE_H - 44;
-    const pages: Block[][] = [[]];
-    let y = 0;
-    for (const b of blocks) {
-        const first = pages[pages.length - 1].length === 0;
-        const gap = first && pages.length > 1 ? 0 : b.gap;
-        if (!first && y + gap + b.h > LIMIT) {
-            pages.push([]);
-            y = TOP_CONT;
-            pages[pages.length - 1].push(b);
-            y += b.h;
-            continue;
-        }
-        pages[pages.length - 1].push(b);
-        y += gap + b.h;
-    }
-
-    return pages.map((list, pi) => {
-        const { canvas, ctx } = newCanvas(PAGE_H);
-        let py = 0;
-        if (pi > 0) {
-            ctx.fillStyle = NAVY;
-            ctx.fillRect(0, 0, W, 6);
-            ctx.fillStyle = MUTED;
-            ctx.font = font(700, 10.5);
-            ctx.textAlign = 'left';
-            spaced(ctx, `${doc.title} ${doc.number} — CONTINUED`, PAD, 38, 1.2);
-            py = TOP_CONT;
-        }
-        list.forEach((b, bi) => {
-            py += pi > 0 && bi === 0 ? 0 : b.gap;
-            b.draw(ctx, py);
-            py += b.h;
-        });
-        if (pages.length > 1) {
-            ctx.fillStyle = FAINT;
-            ctx.font = font(500, 10);
-            ctx.textAlign = 'center';
-            ctx.fillText(`Page ${pi + 1} of ${pages.length}`, W / 2, PAGE_H - 18);
-            ctx.textAlign = 'left';
-        }
-        return canvas;
-    });
-}
-
 function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
     return new Promise((resolve, reject) => {
         canvas.toBlob(
@@ -660,71 +667,20 @@ function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Prom
     });
 }
 
-/**
- * Wraps JPEG pages in a PDF, one A4 page each. PDF viewers decode JPEG
- * natively (DCTDecode), so nothing is re-encoded.
- */
-function jpegsToPdf(pages: { jpeg: Uint8Array; w: number; h: number }[]): Blob {
-    const A4_W = 595.28;
-    const n = (v: number) => v.toFixed(2);
-    const enc = new TextEncoder();
-    const parts: Uint8Array[] = [];
-    const offsets: number[] = [];
-    let length = 0;
-    const push = (chunk: string | Uint8Array) => {
-        const bytes = typeof chunk === 'string' ? enc.encode(chunk) : chunk;
-        parts.push(bytes);
-        length += bytes.length;
-    };
-    const object = (id: number, body: string) => {
-        offsets[id] = length;
-        push(`${id} 0 obj\n${body}\nendobj\n`);
-    };
-
-    // Object ids: 1 catalog, 2 page tree, then three per page
-    // (page, image, content stream).
-    const pageIds = pages.map((_, i) => 3 + i * 3);
-    push('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
-    object(1, '<< /Type /Catalog /Pages 2 0 R >>');
-    object(2, `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(' ')}] /Count ${pages.length} >>`);
-
-    pages.forEach((p, i) => {
-        const pageId = pageIds[i];
-        const imgId = pageId + 1;
-        const contentId = pageId + 2;
-        const pageH = (A4_W * p.h) / p.w;
-        object(pageId, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${n(A4_W)} ${n(pageH)}] /Resources << /XObject << /Im${i} ${imgId} 0 R >> >> /Contents ${contentId} 0 R >>`);
-        offsets[imgId] = length;
-        push(`${imgId} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpeg.length} >>\nstream\n`);
-        push(p.jpeg);
-        push('\nendstream\nendobj\n');
-        const content = `q ${n(A4_W)} 0 0 ${n(pageH)} 0 0 cm /Im${i} Do Q`;
-        object(contentId, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
-    });
-
-    const count = 3 + pages.length * 3;
-    const xrefAt = length;
-    let xref = `xref\n0 ${count}\n0000000000 65535 f \n`;
-    for (let id = 1; id < count; id++) xref += `${String(offsets[id]).padStart(10, '0')} 00000 n \n`;
-    push(xref);
-    push(`trailer\n<< /Size ${count} /Root 1 0 R /Info << /Producer (Gulf Trip Service) >> >>\nstartxref\n${xrefAt}\n%%EOF\n`);
-    return new Blob(parts as BlobPart[], { type: 'application/pdf' });
-}
-
 /** The document as a PNG blob — the image export, one continuous page. */
 export async function renderInvoicePng(inv: InvoicePngData): Promise<Blob> {
     return toBlob(await renderSingle(inv), 'image/png');
 }
 
-/** The document as a PDF blob: A4 pages. Used for download and email alike. */
-export async function renderInvoicePdf(inv: InvoicePngData, quality = 0.9): Promise<Blob> {
-    const canvases = await renderPages(inv);
-    const pages = [];
-    for (const canvas of canvases) {
-        const jpeg = new Uint8Array(await (await toBlob(canvas, 'image/jpeg', quality)).arrayBuffer());
-        pages.push({ jpeg, w: canvas.width, h: canvas.height });
-    }
-    return jpegsToPdf(pages);
+/**
+ * The document as a PDF blob: A4 pages of real, selectable text with the
+ * fonts embedded (lib/invoicePdf.ts). Used for download and email alike.
+ * Loaded on demand so the PDF library is not in every admin page's bundle.
+ */
+export async function renderInvoicePdf(inv: InvoicePngData): Promise<Blob> {
+    const { renderInvoicePdfBytes, browserFontLoader } = await import('./invoicePdf');
+    const bytes = await renderInvoicePdfBytes(inv, browserFontLoader);
+    return new Blob([bytes as BlobPart], { type: 'application/pdf' });
 }
 
 /** Invoice-{BillToName}-{InvoiceNumber}.pdf (item 5). */

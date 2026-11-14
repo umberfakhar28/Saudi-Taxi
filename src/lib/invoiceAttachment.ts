@@ -26,8 +26,6 @@ function blobToBase64(blob: Blob): Promise<string> {
 }
 
 export async function invoicePdfAttachment(inv: InvoicePngData): Promise<PdfAttachment> {
-    // Slightly lower JPEG quality than the download keeps a two-page invoice
-    // well inside the 4.5 MB request limit; the difference is not visible.
-    const blob = await renderInvoicePdf(inv, 0.82);
+    const blob = await renderInvoicePdf(inv);
     return { filename: exportFileName(inv, 'pdf'), content: await blobToBase64(blob) };
 }
