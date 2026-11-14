@@ -37,10 +37,10 @@ function isBlank(key: string, value: unknown): boolean {
  * what the admin typed" lives in one testable place.
  */
 export function mergeParsed(
-    form: Record<string, any>,
+    form: Record<string, unknown>,
     parsed: ParsedBooking,
     touched: ReadonlySet<string>,
-): { next: Record<string, any>; filled: string[]; notes: string[] } {
+): { next: Record<string, unknown>; filled: string[]; notes: string[] } {
     const next = { ...form };
     const filled: string[] = [];
     const notes: string[] = [];
@@ -78,9 +78,9 @@ const FIELD_NAMES: Record<string, string> = {
 export default function PasteBookingBox({
     form, touched, onFill,
 }: {
-    form: Record<string, any>;
+    form: Record<string, unknown>;
     touched: ReadonlySet<string>;
-    onFill: (next: Record<string, any>, filled: string[]) => void;
+    onFill: (next: Record<string, unknown>, filled: string[]) => void;
 }) {
     const [text, setText] = useState('');
     const [result, setResult] = useState<{ tone: 'ok' | 'none'; lines: string[] } | null>(null);
