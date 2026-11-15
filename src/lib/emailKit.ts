@@ -438,6 +438,10 @@ export interface SendParams {
     /** Base64 `content`, or a `path` URL Resend fetches itself. `contentId`
      *  makes it an inline image referenced as cid:… in the HTML. */
     attachments?: { filename: string; content?: string; path?: string; contentId?: string; contentType?: string }[];
+    /** Plain-text part. Left out, Resend derives one from the HTML. */
+    text?: string;
+    /** Extra MIME headers, e.g. In-Reply-To / References for threading. */
+    headers?: Record<string, string>;
 }
 
 export interface SendOutcome {
@@ -471,6 +475,8 @@ export async function sendEmail(params: SendParams, attempts = 3): Promise<SendO
                 html: params.html,
                 ...(params.bcc ? { bcc: params.bcc } : {}),
                 ...(params.attachments?.length ? { attachments: params.attachments } : {}),
+                ...(params.text ? { text: params.text } : {}),
+                ...(params.headers && Object.keys(params.headers).length ? { headers: params.headers } : {}),
             });
             if (!error) return { id: data?.id ?? null, error: null };
             last = { id: null, error: error.message };

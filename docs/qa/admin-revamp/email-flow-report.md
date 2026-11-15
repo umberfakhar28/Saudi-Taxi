@@ -11,7 +11,7 @@
 > 3. **Forward the emails already waiting** (20+ since 27 Oct). Sign in to the admin panel, then open
 >    `https://gulftripservice.com/api/emails/inbound?backfill=1`
 >    Each load forwards about 8 emails; reload until it says **Finished**. No email is ever forwarded twice.
-> 4. **Test.** From any outside address, email `info@gulftripservice.com`. Within a minute it should arrive in your Gmail, with a subject ending `— from <sender> [#id]`. Press Reply: the reply goes to the customer.
+> 4. **Test.** From any outside address, email `info@gulftripservice.com`. Within a minute it should arrive in your Gmail as **"<sender name> via Gulf Trip Service"**, under the sender's own subject. Press Reply: the To field shows the customer's address.
 >
 > ### How it behaves
 > - Every email to any @gulftripservice.com address (info@, booking@, and so on) is copied to `ADMIN_EMAIL`, with the original message, attachments and inline images.
@@ -20,7 +20,15 @@
 > - Mail from our own domain is never forwarded, which prevents loops. If a forward fails, Resend retries it automatically.
 > - Each forward is logged in the admin **Email Log** as `inbound_forward`.
 >
-> Code: `src/app/api/emails/inbound/route.ts` and `src/lib/inboundForward.ts`. Tested locally against a stand-in for Resend, 11/11 checks passing: forwarding, Reply-To, attachments, no duplicates, no loops, and the signature check.
+> - **What a forward looks like (since 15 Nov):**
+>   - From: `"<sender name> via Gulf Trip Service" <forwarding@gulftripservice.com>`.
+>   - Reply-To: the sender, with their name.
+>   - Subject: the original, with no "Fwd:" or tags.
+>   - Body: the original HTML and text, with a small "From: name <email>" line on top; attachments included.
+>   - Threading: In-Reply-To and References carry the original Message-ID, so your reply joins the customer's thread.
+> - **Why forwarding@ and not info@:** info@ is a Gmail "Send mail as" address, so Gmail treats mail from it as written by you and ignores Reply-To. That is why Reply showed info@. To change the address, set `INBOUND_FORWARD_FROM` in Vercel.
+>
+> Code: `src/app/api/emails/inbound/route.ts` and `src/lib/inboundForward.ts`. Tested locally against a stand-in for Resend, 23/23 checks passing: From name, Reply-To, original subject, HTML + text, threading headers, attachments, header-injection guard, no duplicates, no loops, and the signature check.
 >
 > **Still recommended (free):** add the DMARC record from the table at the end of this report.
 
