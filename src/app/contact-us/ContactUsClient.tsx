@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
+import { MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "./contact.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
 import { normalizeContactInput, validateContact, contactMessageText, type ContactErrors } from "@/lib/contactMessage";
 import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
@@ -15,13 +15,6 @@ const schemas = [
 ];
 
 const contactInfo = [
-    {
-        icon: <PhoneIcon size={32} />,
-        title: "Phone",
-        details: [PHONE_DISPLAY, PHONE_DISPLAY],
-        action: TEL_URL,
-        linkText: "Call Now",
-    },
     {
         icon: <MessageIcon size={32} />,
         title: "WhatsApp",
@@ -171,7 +164,7 @@ export default function ContactUsClient() {
             {/* Contact Cards */}
             <section className="section-lg">
                 <div className="container">
-                    <div className="grid-4">
+                    <div className="grid-3">
                         {contactInfo.map((info, i) => (
                             <div key={i} className={styles.contactCard}>
                                 <div className={styles.contactIcon}>{info.icon}</div>
@@ -195,7 +188,7 @@ export default function ContactUsClient() {
                         <div className={styles.formInfo}>
                             <h2>Send Us a Message</h2>
                             <p>
-                                Fill out the form and our team will get back to you as soon as possible. For urgent inquiries, please call or WhatsApp us directly.
+                                Fill out the form and our team will get back to you as soon as possible. For urgent inquiries, please message us on WhatsApp.
                             </p>
                             <div className={styles.infoList}>
                                 <div className={styles.infoItem}>

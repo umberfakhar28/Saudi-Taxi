@@ -12,7 +12,7 @@ export const metadata = generatePageMetadata({
 const sections = [
     {
         title: "1. Booking & Confirmation",
-        content: "A booking is confirmed once you receive confirmation via WhatsApp, phone, or email from Gulf Trip Service. Please review your pickup point, destination, date and time carefully before confirming — it is your responsibility to ensure these details are accurate.",
+        content: "A booking is confirmed once you receive confirmation via WhatsApp or email from Gulf Trip Service. Please review your pickup point, destination, date and time carefully before confirming — it is your responsibility to ensure these details are accurate.",
     },
     {
         title: "2. Cancellation Policy",
@@ -40,7 +40,7 @@ const sections = [
     },
     {
         title: "8. Contact Us",
-        content: `Questions about these terms or a cancellation? Contact us at: Email: info@gulftripservice.com | Phone: ${PHONE_DISPLAY} | Address: Saudi Arabia`,
+        content: `Questions about these terms or a cancellation? Contact us at: Email: info@gulftripservice.com | WhatsApp: ${PHONE_DISPLAY} | Address: Saudi Arabia`,
     },
 ];
 

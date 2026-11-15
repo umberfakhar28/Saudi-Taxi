@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { homeFaqsAr } from "@/lib/homeFaqs";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, CheckCircleIcon, GlobeIcon, MessageIcon } from "@/components/Icons";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
   title: "تاكسي في السعودية | نقل العمرة والمطارات ودول الخليج",
@@ -172,7 +172,7 @@ export default function ArabicHome() {
           </p>
           <div style={{ display: "flex", gap: "var(--space-4)", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/ar/book-online" className="btn btn-primary btn-lg">احجز الآن</Link>
-            <Link href="/ar/contact-us" className="btn btn-outline btn-lg">اتصل بنا</Link>
+            <Link href="/ar/contact-us" className="btn btn-outline btn-lg">تواصل معنا</Link>
           </div>
         </div>
       </section>

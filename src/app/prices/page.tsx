@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { MessageIcon, CheckCircleIcon, ShieldIcon, CarIcon } from "@/components/Icons";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Transparent Pricing & Quotes | Gulf Trip Service",

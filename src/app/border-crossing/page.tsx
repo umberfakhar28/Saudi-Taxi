@@ -5,7 +5,7 @@ import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIco
 import RelatedLinks from "@/components/RelatedLinks";
 import QuickBookForm from "@/components/QuickBookForm";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 
 export const metadata = generatePageMetadata({

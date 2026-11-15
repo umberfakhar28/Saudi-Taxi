@@ -12,8 +12,8 @@ export const metadata = generatePageMetadata({
 const SCHEMA_FAQS = [
     { question: "What areas do you serve?", answer: "We provide taxi services across Saudi Arabia with a primary focus on Makkah, Madinah, and Jeddah. We cover all routes between these cities, airports, and holy sites. We also serve Riyadh, Dammam, and Taif upon request." },
     { question: "Are your drivers licensed and professional?", answer: "All our drivers are licensed by the Saudi Transport Authority, fully background-checked, and trained in customer service. Many speak Arabic, English, and Urdu." },
-    { question: "Do you operate 24/7?", answer: "Yes, we operate round the clock, 365 days a year. Our customer support team is also available 24/7 via phone and WhatsApp." },
-    { question: "How do I book a taxi?", answer: "You can book through our online booking form, WhatsApp, phone, or email. We respond within 30 minutes during business hours." },
+    { question: "Do you operate 24/7?", answer: "Yes, we operate round the clock, 365 days a year. Our customer support team is also available 24/7 on WhatsApp." },
+    { question: "How do I book a taxi?", answer: "You can book through our online booking form, WhatsApp, or email. We respond within 30 minutes during business hours." },
     // Must stay word-for-word identical to the same answer in FaqsClient.tsx:
     // FAQ structured data has to match the text a visitor actually sees.
     { question: "What payment methods do you accept?", answer: "Three ways: cash to your driver after drop-off, bank transfer after pickup, or card / payment link. An additional 15% VAT applies to card and payment-link payments, on top of the quoted fare — cash and bank transfer are charged at the quoted price. No advance payment is required to confirm a booking." },

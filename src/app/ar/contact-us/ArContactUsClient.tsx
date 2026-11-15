@@ -2,26 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PhoneIcon, MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
+import { MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "@/app/contact-us/contact.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
 import { normalizeContactInput, validateContact, contactMessageText, type ContactErrors } from "@/lib/contactMessage";
 import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
 
 const schemas = [
-    breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "اتصل بنا", path: "/ar/contact-us" }]),
+    breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "تواصل معنا", path: "/ar/contact-us" }]),
 ];
 
 const contactInfo = [
-    {
-        icon: <PhoneIcon size={32} />,
-        title: "الهاتف",
-        details: [PHONE_DISPLAY, PHONE_DISPLAY],
-        action: TEL_URL,
-        linkText: "اتصل الآن",
-    },
     {
         icon: <MessageIcon size={32} />,
         title: "واتساب",
@@ -148,19 +141,19 @@ export default function ArContactUsClient() {
         <main>
             {/* Hero */}
             <section className="page-hero">
-                <h1>اتصل بنا</h1>
+                <h1>تواصل معنا</h1>
                 <p>
                     لديك سؤال أو مستعد للحجز؟ نحن هنا لمساعدتك على مدار الساعة. تواصل معنا عبر أي قناة أدناه.
                 </p>
                 <div className="breadcrumb">
-                    <Link href="/ar">الرئيسية</Link> / <span>اتصل بنا</span>
+                    <Link href="/ar">الرئيسية</Link> / <span>تواصل معنا</span>
                 </div>
             </section>
 
             {/* Contact Cards */}
             <section className="section-lg">
                 <div className="container">
-                    <div className="grid-4">
+                    <div className="grid-3">
                         {contactInfo.map((info, i) => (
                             <div key={i} className={styles.contactCard}>
                                 <div className={styles.contactIcon}>{info.icon}</div>
@@ -184,7 +177,7 @@ export default function ArContactUsClient() {
                         <div className={styles.formInfo}>
                             <h2>أرسل لنا رسالة</h2>
                             <p>
-                                املأ النموذج وسيتواصل معك فريقنا في أقرب وقت ممكن. للاستفسارات العاجلة، يرجى الاتصال بنا أو التواصل عبر واتساب مباشرة.
+                                املأ النموذج وسيتواصل معك فريقنا في أقرب وقت ممكن. للاستفسارات العاجلة، راسلنا على واتساب مباشرة.
                             </p>
                             <div className={styles.infoList}>
                                 <div className={styles.infoItem}>

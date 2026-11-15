@@ -6,7 +6,9 @@ these instead of hardcoding values in page/component files.
 
 ## `src/lib/contact.ts`
 
-Single source of truth for the site's phone/WhatsApp number and email.
+Single source of truth for the site's WhatsApp number and email. Since
+15 Nov 2026 the site offers **no phone calls**: there are no `tel:` links,
+only WhatsApp, email and the booking/quote forms.
 
 | Export | Value | Used for |
 |---|---|---|
@@ -15,11 +17,14 @@ Single source of truth for the site's phone/WhatsApp number and email.
 | `PHONE_DISPLAY` | `"+966 54 772 1168"` | On-screen display text |
 | `EMAIL` | `"info@gulftripservice.com"` | `mailto:` links |
 | `WHATSAPP_URL` | derived | Base WhatsApp link |
-| `TEL_URL` | derived | Base tel link |
 | `waLink(message)` | function | Builds a `wa.me` link with a URL-encoded pre-filled message |
 
-This file is the only place the business phone/WhatsApp number should be
-edited — every page/component that imports from it updates automatically.
+This file is the only place the business WhatsApp number should be edited
+(`WHATSAPP_NUMBER` and `PHONE_DISPLAY`) — every page, component, email,
+invoice PDF and the JSON-LD update automatically. The `content/*.html` guides
+write `{{WHATSAPP_URL}}` / `{{PHONE_DISPLAY}}`, which `readContentFile`
+(`src/lib/readContent.ts`) fills in from here. Saved quote notes are data,
+not code: a number written into one stays as written (see migration 011).
 
 ## `src/lib/airportTransferConfig.ts`
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 /* Named card networks and wallets (Visa, Mastercard, American Express, STC Pay,
    Mada) were listed here. There is no payment gateway integration behind this

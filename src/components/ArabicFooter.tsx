@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon, InstagramIcon, FacebookIcon } from './Icons';
+import { MessageIcon, MailIcon, MapPinIcon, ClockIcon, InstagramIcon, FacebookIcon } from './Icons';
 import Logo from './Logo';
 import styles from './Footer.module.css';
 import CookieSettingsLink from './CookieSettingsLink';
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink, INSTAGRAM_URL, FACEBOOK_URL } from '@/lib/contact';
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink, INSTAGRAM_URL, FACEBOOK_URL } from '@/lib/contact';
 
 const ArabicFooter = () => {
     return (
@@ -20,9 +20,6 @@ const ArabicFooter = () => {
                         <div className={styles.socialLinks}>
                             <a data-wa-cta="footer-social" href={WHATSAPP_URL} className={styles.socialLink} aria-label="واتساب" target="_blank" rel="noopener noreferrer">
                                 <MessageIcon size={18} />
-                            </a>
-                            <a data-wa-cta="footer-social" href={TEL_URL} className={styles.socialLink} aria-label="هاتف">
-                                <PhoneIcon size={18} />
                             </a>
                             <a href="mailto:info@gulftripservice.com" className={styles.socialLink} aria-label="بريد إلكتروني">
                                 <MailIcon size={18} />
@@ -88,12 +85,8 @@ const ArabicFooter = () => {
                                 <span className={styles.link}>مكة المكرمة، المملكة العربية السعودية</span>
                             </li>
                             <li className={styles.listItem}>
-                                <PhoneIcon className={styles.contactIcon} size={18} />
-                                <a data-wa-cta="footer-contact" href={TEL_URL} className={styles.link} dir="ltr">{PHONE_DISPLAY}</a>
-                            </li>
-                            <li className={styles.listItem}>
                                 <MessageIcon className={styles.contactIcon} size={18} />
-                                <a data-wa-cta="footer-contact" href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">تواصل عبر واتساب</a>
+                                <a data-wa-cta="footer-contact" href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">واتساب <span dir="ltr">{PHONE_DISPLAY}</span></a>
                             </li>
                             <li className={styles.listItem}>
                                 <MailIcon className={styles.contactIcon} size={18} />
@@ -112,7 +105,7 @@ const ArabicFooter = () => {
                         &copy; {new Date().getFullYear()} Gulf Trip Service. جميع الحقوق محفوظة.
                     </div>
                     <div className={styles.bottomLinks}>
-                        <Link href="/ar/contact-us" className={styles.bottomLink}>اتصل بنا</Link>
+                        <Link href="/ar/contact-us" className={styles.bottomLink}>تواصل معنا</Link>
                         <span className={styles.divider}>|</span>
                         <Link href="/ar/book-online" className={styles.bottomLink}>احجز الآن</Link>
                         <span className={styles.divider}>|</span>

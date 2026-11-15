@@ -96,7 +96,7 @@ export const taifZiyarat: TourPageData = {
 
   religiousNote: "Taif holds a place in Islamic history connected to the early years of the Prophet Muhammad's ﷺ mission, and Masjid Addas commemorates one episode from that period. We describe this respectfully and factually as historical background to the area — our drivers are transportation professionals, not religious scholars, and cannot provide religious guidance or rulings.",
 
-  pickupInfo: "Hotel or apartment pickup anywhere in Makkah or Jeddah, coordinated in advance via WhatsApp or phone.",
+  pickupInfo: "Hotel or apartment pickup anywhere in Makkah or Jeddah, coordinated in advance on WhatsApp.",
   dropoffInfo: "Return drop-off at your Makkah or Jeddah hotel, or an alternative address if arranged ahead of time.",
   familyGroupNote: "Vans are available for larger families or groups traveling together, with room for luggage and mountain-trip essentials.",
 
@@ -201,7 +201,7 @@ export const jeddahCityTour: TourPageData = {
   ],
   itineraryNote: "The order of stops may vary depending on traffic, site opening hours and your own pace — your driver will work with you to plan the most sensible route on the day.",
 
-  pickupInfo: "Hotel, airport or apartment pickup anywhere in Jeddah, coordinated in advance via WhatsApp or phone.",
+  pickupInfo: "Hotel, airport or apartment pickup anywhere in Jeddah, coordinated in advance on WhatsApp.",
   dropoffInfo: "Return drop-off at your Jeddah hotel, the airport, or an alternative address if arranged ahead of time.",
   familyGroupNote: "Vans are available for families or groups who'd rather travel together in one vehicle.",
 
@@ -309,7 +309,7 @@ export const aluTour: TourPageData = {
   ],
   itineraryNote: "The exact order of stops may vary depending on traffic, site access hours and operating conditions on the day — your driver will plan the most sensible route for your itinerary.",
 
-  pickupInfo: "AlUla Airport, or hotel pickup in AlUla, Madinah or Jeddah depending on your route, coordinated in advance via WhatsApp or phone.",
+  pickupInfo: "AlUla Airport, or hotel pickup in AlUla, Madinah or Jeddah depending on your route, coordinated in advance on WhatsApp.",
   dropoffInfo: "Return drop-off at your hotel or the airport, as agreed at the time of booking.",
   familyGroupNote: "Vans are available for larger families or groups traveling together across the multi-day options.",
 

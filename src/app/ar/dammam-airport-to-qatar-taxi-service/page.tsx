@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ClockIcon, ShieldIcon, MessageIcon, GlobeIcon } from "@/components/Icons";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
   title: "تاكسي من مطار الدمام إلى قطر",

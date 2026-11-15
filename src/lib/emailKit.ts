@@ -157,14 +157,15 @@ export function emailShell(inner: string, opts: { locale?: EmailLocale; preheade
     const align = ar ? 'right' : 'left';
     const site = SITE.replace(/^https?:\/\//, '');
     const footer = ar
-        ? `واتساب / هاتف: <a href="https://wa.me/${WHATSAPP_NUMBER}" style="color:${BRAND.ivory};text-decoration:none;" dir="ltr">${escapeHtml(PHONE_DISPLAY)}</a><br>البريد: <a href="mailto:${EMAIL}" style="color:${BRAND.ivory};text-decoration:none;">${EMAIL}</a>`
-        : `WhatsApp / phone: <a href="https://wa.me/${WHATSAPP_NUMBER}" style="color:${BRAND.ivory};text-decoration:none;">${escapeHtml(PHONE_DISPLAY)}</a><br>Email: <a href="mailto:${EMAIL}" style="color:${BRAND.ivory};text-decoration:none;">${EMAIL}</a>`;
+        ? `واتساب: <a href="https://wa.me/${WHATSAPP_NUMBER}" style="color:${BRAND.ivory};text-decoration:none;" dir="ltr">${escapeHtml(PHONE_DISPLAY)}</a><br>البريد: <a href="mailto:${EMAIL}" style="color:${BRAND.ivory};text-decoration:none;">${EMAIL}</a>`
+        : `WhatsApp: <a href="https://wa.me/${WHATSAPP_NUMBER}" style="color:${BRAND.ivory};text-decoration:none;">${escapeHtml(PHONE_DISPLAY)}</a><br>Email: <a href="mailto:${EMAIL}" style="color:${BRAND.ivory};text-decoration:none;">${EMAIL}</a>`;
     return `<!DOCTYPE html>
 <html lang="${ar ? 'ar' : 'en'}" dir="${dir}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="x-apple-disable-message-reformatting">
+<meta name="format-detection" content="telephone=no">
 <meta name="color-scheme" content="light">
 <title>${escapeHtml(opts.title ?? 'Gulf Trip Service')}</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -310,9 +311,9 @@ export function noteBlock(label: string, text: string | null | undefined, tint: 
  *
  * Email replies land in an inbox someone has to open; WhatsApp is where
  * this business actually answers fastest, so the customer is given the
- * link and the number in plain text — the number matters because some
- * mail clients strip or warn on buttons, and it can be dialled or saved
- * by hand.
+ * link and the number as text — the number matters because some mail
+ * clients strip or warn on buttons, and it can be saved by hand. It is
+ * itself a wa.me link, so a mail app cannot turn it into a call link.
  *
  * The message is pre-filled with the booking reference so the customer
  * does not have to explain which trip they mean.
@@ -326,7 +327,7 @@ export function whatsappBlock(prefill: string, locale: EmailLocale = 'en'): stri
         <p style="color:#081827;font-weight:800;margin:0 0 6px;font-size:16px;">${t.title}</p>
         <p style="color:#3A4447;margin:0;font-size:14px;">${t.body}</p>
         ${emailButton(href, t.button, 'whatsapp')}
-        <p style="color:#5A6569;margin:0;font-size:13px;">${t.save} <strong style="color:#1C2528;" dir="ltr">${escapeHtml(PHONE_DISPLAY)}</strong></p>
+        <p style="color:#5A6569;margin:0;font-size:13px;">${t.save} <a href="https://wa.me/${WHATSAPP_NUMBER}" style="color:#1C2528;font-weight:700;text-decoration:none;" dir="ltr">${escapeHtml(PHONE_DISPLAY)}</a></p>
     </td></tr></table>`;
 }
 

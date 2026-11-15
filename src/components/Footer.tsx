@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { MessageIcon, PhoneIcon, MailIcon, MapPinIcon, ClockIcon, InstagramIcon, FacebookIcon } from './Icons';
+import { MessageIcon, MailIcon, MapPinIcon, ClockIcon, InstagramIcon, FacebookIcon } from './Icons';
 import Logo from './Logo';
 import HomeLogoLink from './HomeLogoLink';
 import styles from './Footer.module.css';
 import CookieSettingsLink from './CookieSettingsLink';
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink, INSTAGRAM_URL, FACEBOOK_URL } from '@/lib/contact';
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink, INSTAGRAM_URL, FACEBOOK_URL } from '@/lib/contact';
 import { locationLinks } from '@/config/navigation';
 
 const Footer = () => {
@@ -27,9 +27,6 @@ const Footer = () => {
                         <div className={styles.socialLinks}>
                             <a data-wa-cta="footer-social" href={WHATSAPP_URL} className={styles.socialLink} aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
                                 <MessageIcon size={18} />
-                            </a>
-                            <a data-wa-cta="footer-social" href={TEL_URL} className={styles.socialLink} aria-label="Phone">
-                                <PhoneIcon size={18} />
                             </a>
                             <a href="mailto:info@gulftripservice.com" className={styles.socialLink} aria-label="Email">
                                 <MailIcon size={18} />
@@ -105,12 +102,8 @@ const Footer = () => {
                                 <span className={styles.link}>Makkah, Makkah Province, Saudi Arabia</span>
                             </li>
                             <li className={styles.listItem}>
-                                <PhoneIcon className={styles.contactIcon} size={18} />
-                                <a data-wa-cta="footer-contact" href={TEL_URL} className={styles.link}>{PHONE_DISPLAY}</a>
-                            </li>
-                            <li className={styles.listItem}>
                                 <MessageIcon className={styles.contactIcon} size={18} />
-                                <a data-wa-cta="footer-contact" href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">WhatsApp Us</a>
+                                <a data-wa-cta="footer-contact" href={WHATSAPP_URL} className={styles.link} target="_blank" rel="noopener noreferrer">WhatsApp {PHONE_DISPLAY}</a>
                             </li>
                             <li className={styles.listItem}>
                                 <MailIcon className={styles.contactIcon} size={18} />

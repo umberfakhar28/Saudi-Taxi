@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
                             },
                             {
                                 title: "11. Contact Us",
-                                content: `If you have any questions or concerns about this Privacy Policy, please contact us at: Email: info@gulftripservice.com | Phone: ${PHONE_DISPLAY} | Address: Saudi Arabia`
+                                content: `If you have any questions or concerns about this Privacy Policy, please contact us at: Email: info@gulftripservice.com | WhatsApp: ${PHONE_DISPLAY} | Address: Saudi Arabia`
                             },
                         ].map((section, i) => (
                             <div key={i} id={section.id} style={{ marginBottom: '2.5rem', scrollMarginTop: '120px' }}>

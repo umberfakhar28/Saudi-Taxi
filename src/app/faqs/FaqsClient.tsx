@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "./faqs.module.css";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 const faqCategories = [
     {
@@ -24,7 +24,7 @@ const faqCategories = [
             },
             {
                 question: "Do you operate 24/7?",
-                answer: "Yes! We operate round the clock, 365 days a year. Whether your flight lands at 2 AM or you need a ride during Hajj season, we are always available. Our customer support team is also available 24/7 via phone and WhatsApp.",
+                answer: "Yes! We operate round the clock, 365 days a year. Whether your flight lands at 2 AM or you need a ride during Hajj season, we are always available. Our customer support team is also available 24/7 on WhatsApp.",
             },
             {
                 question: "What languages do your drivers speak?",
@@ -38,7 +38,7 @@ const faqCategories = [
         faqs: [
             {
                 question: "How do I book a taxi?",
-                answer: "You can book through multiple channels: (1) Fill out our online booking form, (2) Send us a message on WhatsApp, (3) Call us directly, or (4) Email us with your travel details. We respond to all inquiries within 30 minutes during business hours and within 2 hours outside business hours.",
+                answer: "You can book through multiple channels: (1) Fill out our online booking form, (2) Send us a message on WhatsApp, or (3) Email us with your travel details. We respond to all inquiries within 30 minutes during business hours and within 2 hours outside business hours.",
             },
             {
                 question: "What payment methods do you accept?",
@@ -64,7 +64,7 @@ const faqCategories = [
         faqs: [
             {
                 question: "Where will my driver meet me at the airport?",
-                answer: "Your driver will be waiting in the arrivals hall with a name board displaying your name. After you collect your luggage, simply look for the board. If you can't find the driver, call or WhatsApp the number we provide in your booking confirmation — the driver will guide you.",
+                answer: "Your driver will be waiting in the arrivals hall with a name board displaying your name. After you collect your luggage, simply look for the board. If you can't find the driver, message the WhatsApp number we provide in your booking confirmation — the driver will guide you.",
             },
             {
                 question: "What if my flight is delayed?",

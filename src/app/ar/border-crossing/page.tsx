@@ -2,7 +2,7 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
   title: "خدمة عبور الحدود بالتاكسي | السعودية",
@@ -119,7 +119,7 @@ export default function ArabicBorderCrossing() {
                 <a data-wa-cta="in-article" href={WHATSAPP_URL} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                   <MessageIcon size={18} /> اطلب عرض سعر
                 </a>
-                <Link href="/ar/contact-us" className="btn btn-secondary">اتصل بنا</Link>
+                <Link href="/ar/contact-us" className="btn btn-secondary">تواصل معنا</Link>
               </div>
             </div>
 

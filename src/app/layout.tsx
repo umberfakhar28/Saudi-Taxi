@@ -77,6 +77,8 @@ export const metadata: Metadata = {
   },
   description: SITE_CONFIG.defaultDescription,
   metadataBase: new URL(SITE_CONFIG.baseUrl),
+  // The number is WhatsApp only: stop iOS/Android turning it into a call link.
+  formatDetection: { telephone: false },
   alternates: { canonical: SITE_CONFIG.baseUrl },
   openGraph: {
     siteName: SITE_CONFIG.siteName,

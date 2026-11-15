@@ -1,5 +1,5 @@
-import { MessageIcon, PhoneIcon, TagIcon } from './Icons';
-import { WHATSAPP_URL, TEL_URL } from '@/lib/contact';
+import { MessageIcon, TagIcon } from './Icons';
+import { WHATSAPP_URL } from '@/lib/contact';
 import styles from './StickyMobileBar.module.css';
 
 /** Mobile-only persistent action bar. Renders nothing visible on desktop.
@@ -12,9 +12,6 @@ export default function StickyMobileBar({ ratesHref = '#booking-widget' }: { rat
       <nav className={styles.bar} aria-label="Quick actions">
         <a data-wa-cta="sticky-mobile-bar" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={`btn btn-whatsapp ${styles.action}`}>
           <MessageIcon size={16} /> WhatsApp
-        </a>
-        <a data-wa-cta="sticky-mobile-bar" href={TEL_URL} className={`btn btn-secondary ${styles.action}`}>
-          <PhoneIcon size={16} /> Call
         </a>
         <a href={ratesHref} className={`btn btn-outline-gold ${styles.action}`}>
           <TagIcon size={16} /> Check Rates

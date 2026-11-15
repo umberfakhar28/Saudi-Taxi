@@ -1,13 +1,13 @@
 
 import styles from './contact.module.css';
 import { generatePageMetadata } from "@/lib/seo";
-import { PHONE_DISPLAY } from "@/lib/contact";
+import { PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Contact Us",
-    description: "Contact Gulf Trip Service via phone, WhatsApp, or email. Get a quote, book a ride, or ask questions. Available 24/7 for all your transport needs.",
+    description: "Contact Gulf Trip Service on WhatsApp or by email. Get a quote, book a ride, or ask questions. Available 24/7 for all your transport needs.",
     path: "/contact",
-    keywords: ["contact Gulf Trip Service", "Saudi taxi customer support", "Makkah taxi phone number"],
+    keywords: ["contact Gulf Trip Service", "Saudi taxi customer support", "Makkah taxi WhatsApp number"],
     noindex: true,
 });
 
@@ -31,8 +31,8 @@ export default function ContactPage() {
                         </div>
 
                         <div className={styles.contactItem}>
-                            <strong>📞 Phone:</strong>
-                            <p>{PHONE_DISPLAY}</p>
+                            <strong>💬 WhatsApp:</strong>
+                            <p><a data-wa-cta="contact-info-card" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">{PHONE_DISPLAY}</a></p>
                         </div>
 
                         <div className={styles.contactItem}>

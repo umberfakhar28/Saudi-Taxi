@@ -94,7 +94,9 @@ function font(weight: number, size: number, family = BODY) {
 /* ── Text helpers ─────────────────────────────────────────────────── */
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
-    const words = String(text).split(/\s+/).filter(Boolean);
+    // Plain whitespace only: a no-break space (U+00A0) holds words together,
+    // which is how the footer keeps the WhatsApp number on one line.
+    const words = String(text).split(/[ \t\r\n\f\v]+/).filter(Boolean);
     if (words.length === 0) return [];
     const lines: string[] = [];
     let line = words[0];

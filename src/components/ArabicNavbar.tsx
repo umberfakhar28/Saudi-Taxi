@@ -15,7 +15,7 @@ const links = [
     { href: '/ar/border-crossing', label: 'عبور الحدود' },
     { href: '/ar/dammam-airport-to-bahrain-taxi-service', label: 'الدمام إلى البحرين' },
     { href: '/ar/dammam-airport-to-qatar-taxi-service', label: 'الدمام إلى قطر' },
-    { href: '/ar/contact-us', label: 'اتصل بنا' },
+    { href: '/ar/contact-us', label: 'تواصل معنا' },
 ];
 
 const ArabicNavbar = () => {

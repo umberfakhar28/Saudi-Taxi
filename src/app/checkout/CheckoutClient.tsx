@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 /* A hardcoded sample booking lived here — a fixed route, a fixed passenger
    count and a fixed 150 SAR fare, shown identically to everyone. It is gone

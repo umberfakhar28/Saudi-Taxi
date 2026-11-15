@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { PHONE_DISPLAY, TEL_URL, WHATSAPP_URL } from "./contact";
+import { PHONE_DISPLAY, WHATSAPP_URL } from "./contact";
 
 /**
  * Reads a content HTML file and extracts only the <body> innerHTML.
@@ -18,6 +18,5 @@ export function readContentFile(filename: string): string {
   const match = raw.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
   return (match ? match[1] : raw)
     .replaceAll("{{WHATSAPP_URL}}", WHATSAPP_URL)
-    .replaceAll("{{PHONE_DISPLAY}}", PHONE_DISPLAY)
-    .replaceAll("{{TEL_URL}}", TEL_URL);
+    .replaceAll("{{PHONE_DISPLAY}}", PHONE_DISPLAY);
 }

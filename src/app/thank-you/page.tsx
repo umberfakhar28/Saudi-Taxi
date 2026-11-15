@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { generatePageMetadata } from "@/lib/seo";
-import { WHATSAPP_URL, TEL_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
+import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 export const metadata = generatePageMetadata({
     title: "Thank You | Gulf Trip Service",
@@ -88,7 +88,7 @@ export default function ThankYou() {
                     </div>
 
                     <p style={{ color: 'var(--on-dark-muted)', marginTop: '2rem', fontSize: '0.9rem' }}>
-                        Questions? Call us: <a href={TEL_URL} style={{ color: 'var(--on-dark)', textDecoration: 'underline' }}>{PHONE_DISPLAY}</a>
+                        Questions? Message us on WhatsApp: <a data-wa-cta="thank-you" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--on-dark)', textDecoration: 'underline' }}>{PHONE_DISPLAY}</a>
                     </p>
                 </div>
             </section>

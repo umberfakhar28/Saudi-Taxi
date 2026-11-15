@@ -1,7 +1,11 @@
 /**
- * Single source of truth for phone/WhatsApp contact details.
- * Every file that links to tel:/wa.me or displays the number should import
+ * Single source of truth for the WhatsApp contact details.
+ * Every file that links to wa.me or displays the number should import
  * from here instead of hardcoding digits — see CONFIG.md.
+ *
+ * WhatsApp only: since 15 Nov 2026 the site offers no phone calls, so there
+ * is no tel: link anywhere. PHONE_E164 survives only for the schema.org
+ * "telephone" field, which visitors never see.
  *
  * Business number as of 2026-11-15: +966 54 772 1168 (Saudi). To change it,
  * edit WHATSAPP_NUMBER and PHONE_DISPLAY below and nothing else: pages,
@@ -39,7 +43,6 @@ export const INSTAGRAM_URL = "https://www.instagram.com/gulftripservice/";
 export const FACEBOOK_URL = "https://www.facebook.com/share/1VbxtspYKU/";
 
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-export const TEL_URL = `tel:${PHONE_E164}`;
 
 /** Build a wa.me link with a URL-encoded pre-filled message. */
 export function waLink(message: string): string {

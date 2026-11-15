@@ -9,14 +9,14 @@ import ArContactUsClient from "./ArContactUsClient";
  * ("/contact-us") so both sides of the pair point at each other correctly.
  */
 export const metadata = generatePageMetadata({
-    title: "اتصل بنا",
-    description: "تواصل مع خدمة جلف تريب عبر الهاتف أو واتساب أو البريد الإلكتروني. احصل على عرض سعر أو احجز رحلة أو اطرح استفسارك. متوفرون على مدار الساعة.",
+    title: "تواصل معنا",
+    description: "تواصل مع خدمة جلف تريب عبر واتساب أو البريد الإلكتروني. احصل على عرض سعر أو احجز رحلة أو اطرح استفسارك. متوفرون على مدار الساعة.",
     path: "/ar/contact-us",
     hreflangPath: "/contact-us",
 });
 
 const schemas = [
-    breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "اتصل بنا", path: "/ar/contact-us" }]),
+    breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "تواصل معنا", path: "/ar/contact-us" }]),
 ];
 
 export default function ArContactUsPage() {
@@ -25,7 +25,7 @@ export default function ArContactUsPage() {
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
             <div className="container" style={{ paddingTop: 'var(--space-4)' }}>
                 <div className="breadcrumb">
-                    <Link href="/ar">الرئيسية</Link> / <span>اتصل بنا</span>
+                    <Link href="/ar">الرئيسية</Link> / <span>تواصل معنا</span>
                 </div>
             </div>
             <ArContactUsClient />

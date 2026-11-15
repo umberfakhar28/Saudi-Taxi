@@ -322,7 +322,7 @@ export default function Home() {
               textTransform: 'uppercase',
             }}
           >
-            24/7 Available — Call or WhatsApp Anytime
+            24/7 Available — Message Us on WhatsApp Anytime
           </div>
 
           {/* Heading */}
