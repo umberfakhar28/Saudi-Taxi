@@ -109,13 +109,13 @@ Toyota Camry`);
 
 test('7. Pakistani number, BHD price, flight number not read as a price', () => {
     const f = parse(`Name: Bilal Ahmed
-WhatsApp: 0326 8869669
+WhatsApp: 0300 1234567
 Flight: QR 1172
 Pickup: Bahrain International Airport
 Drop: Dammam
 Date & time: 2/12/2026 14:45
 Fare: 60 BHD`);
-    assert.equal(f.customer_phone, '+923268869669');
+    assert.equal(f.customer_phone, '+923001234567');
     assert.equal(f.travel_date, '2026-12-02');
     assert.equal(f.travel_time, '14:45');
     assert.equal(f.quote_amount, 60);

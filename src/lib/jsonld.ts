@@ -39,6 +39,13 @@ export function localBusinessSchema() {
       "Premium taxi and chauffeur services across Saudi Arabia — Makkah, Madinah, Jeddah, airport transfers, Umrah transport, intercity routes, and GCC cross-border transfers to Bahrain and Qatar.",
     telephone: PHONE,
     email: EMAIL,
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: PHONE,
+      email: EMAIL,
+      contactType: "customer service",
+      availableLanguage: ["English", "Arabic"],
+    },
     address: ADDRESS,
     geo: {
       "@type": "GeoCoordinates",

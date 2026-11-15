@@ -386,7 +386,7 @@ export function buildInvoiceDocument(inv: InvoiceRecord): InvoiceDocument {
                     : dueOn
                         ? `Please settle ${money(balance)} by ${dueOn}${by}.`
                         : `Amount due: ${money(balance)}${method ? `, payable${by}` : ''}.`;
-    const contactLine = `Questions about this ${isQuote ? 'quotation' : 'invoice'}? Call or message ${PHONE_DISPLAY} — or email ${EMAIL}.`;
+    const contactLine = `Questions about this ${isQuote ? 'quotation' : 'invoice'}? Message us on WhatsApp ${PHONE_DISPLAY} or email ${EMAIL}.`;
 
     const statusValue = inv.status || 'unpaid';
     const badge: InvoiceDocument['badge'] = settled

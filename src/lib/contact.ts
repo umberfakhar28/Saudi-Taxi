@@ -3,12 +3,15 @@
  * Every file that links to tel:/wa.me or displays the number should import
  * from here instead of hardcoding digits — see CONFIG.md.
  *
- * Real business number as of 2026-07-24: +923268869669.
+ * Business number as of 2026-11-15: +966 54 772 1168 (Saudi). To change it,
+ * edit WHATSAPP_NUMBER and PHONE_DISPLAY below and nothing else: pages,
+ * footers, the content/*.html guides, emails, invoice PDFs and the JSON-LD
+ * all read from here.
  */
 
-export const WHATSAPP_NUMBER = "923268869669"; // digits only, no +, for wa.me links
-export const PHONE_E164 = "+923268869669"; // for tel: links
-export const PHONE_DISPLAY = "+92 326 8869669"; // for on-screen display
+export const WHATSAPP_NUMBER = "966547721168"; // digits only, no +, for wa.me links
+export const PHONE_E164 = `+${WHATSAPP_NUMBER}`; // E.164, for schema.org "telephone"
+export const PHONE_DISPLAY = "+966 54 772 1168"; // for on-screen display
 export const EMAIL = "info@gulftripservice.com";
 
 /** The trading name, as it appears on anything the customer is given. */

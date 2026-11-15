@@ -10,9 +10,9 @@ Single source of truth for the site's phone/WhatsApp number and email.
 
 | Export | Value | Used for |
 |---|---|---|
-| `WHATSAPP_NUMBER` | `"923268869669"` | Digits only, for `wa.me/` links |
-| `PHONE_E164` | `"+923268869669"` | `tel:` links |
-| `PHONE_DISPLAY` | `"+92 326 8869669"` | On-screen display text |
+| `WHATSAPP_NUMBER` | `"966547721168"` | Digits only, for `wa.me/` links |
+| `PHONE_E164` | `"+966547721168"` (derived) | schema.org `telephone` / `contactPoint` |
+| `PHONE_DISPLAY` | `"+966 54 772 1168"` | On-screen display text |
 | `EMAIL` | `"info@gulftripservice.com"` | `mailto:` links |
 | `WHATSAPP_URL` | derived | Base WhatsApp link |
 | `TEL_URL` | derived | Base tel link |
