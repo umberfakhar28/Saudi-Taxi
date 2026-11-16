@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 export async function GET() {
   let dbStatus: "ok" | "error" = "ok";
 

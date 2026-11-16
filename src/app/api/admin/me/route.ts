@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getAdminIdentity } from '@/utils/supabase/requireAdmin';
 import { ROLE_PERMISSIONS } from '@/lib/roles';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * Who is signed in, and what may they do.
  *

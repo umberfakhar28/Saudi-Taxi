@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { audit, guard, isUuid, badRequest, notFound, serverError } from '@/utils/adminApi';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * PATCH  /api/admin/customers/:id — Manager and up (§10.2)
  * DELETE /api/admin/customers/:id — Admin only (§10.1)

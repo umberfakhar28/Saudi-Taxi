@@ -14,6 +14,9 @@ import {
     validateContactKeys,
 } from '@/lib/contactMessage';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * Contact Us enquiries, from /contact-us and /ar/contact-us.
  *

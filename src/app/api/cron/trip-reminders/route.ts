@@ -3,6 +3,9 @@ import { createAdminClient } from '@/utils/supabase/admin';
 import { riyadhToday } from '@/lib/bookingValidation';
 import { sendReminderEmail } from '@/lib/bookingNotify';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 60;
+
 /**
  * Day-before trip reminders.
  *

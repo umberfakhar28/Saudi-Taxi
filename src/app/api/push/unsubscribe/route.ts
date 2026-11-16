@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 export async function POST(req: Request) {
     const admin = await requireAdmin();
     if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { clientIp, honeypotTripped, issuePass, rateLimited, turnstileConfigured, verifyTurnstileToken } from '@/lib/antiSpam';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * Redeems a Turnstile token once and returns a short-lived signed pass for
  * the public submission endpoints (see src/lib/antiSpam.ts for why the pass

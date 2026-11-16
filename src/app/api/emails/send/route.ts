@@ -7,6 +7,9 @@ import { sendEmail, logEmail } from '@/lib/emailKit';
 import { completedEmail, invoiceEmail, quoteEmail } from '@/lib/adminEmails';
 import { confirmedEmail, sendReceivedEmail } from '@/lib/bookingNotify';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * Admin email actions. Layout helpers, the send log and retrying sends live
  * in lib/emailKit; the booking-shaped customer emails in lib/bookingNotify.

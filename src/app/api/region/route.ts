@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { REGION_COOKIE, REGION_MAX_AGE, regionForCountry } from "@/lib/consent";
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * Tells the browser whether this visitor must be asked before analytics
  * (lib/consent): sets gts_region to "eu" or "other" from Vercel's IP-country

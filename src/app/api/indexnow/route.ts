@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 const INDEXNOW_KEY = "995aadf700384f5c8ef4ad71bc79ab65";
 const HOST = "gulftripservice.com";
 const BASE_URL = `https://${HOST}`;

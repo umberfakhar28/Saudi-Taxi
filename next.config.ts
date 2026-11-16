@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    // Optimised images are kept for 31 days instead of the 4-hour default, so
+    // the same photo is not re-encoded (an image transformation, and CPU)
+    // every few hours. Source files in /public rarely change; when one does,
+    // give it a new filename. docs/perf/perf-report.md, fix F4.
+    minimumCacheTTL: 2678400,
+  },
   async headers() {
     // Conservative, non-breaking security headers only (Admin Portal audit
     // §23). A strict Content-Security-Policy is deliberately NOT included
@@ -20,6 +27,19 @@ const nextConfig: NextConfig = {
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
         ],
+      },
+      // Browser caching for files served straight from /public (fix F4).
+      // Vercel's default for these is max-age=0, so every visit re-checked
+      // every image. Not `immutable`: these filenames carry no content hash,
+      // so a replaced image must still be picked up — 7 days for images and
+      // video, a year for the fonts (they never change in place).
+      {
+        source: "/fonts/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000" }],
+      },
+      {
+        source: "/:path*\\.(png|jpg|jpeg|webp|avif|gif|svg|ico|mp4|webm)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }],
       },
     ];
   },

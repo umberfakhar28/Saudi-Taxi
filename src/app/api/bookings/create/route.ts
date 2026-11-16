@@ -12,6 +12,9 @@ import {
 import { toAsciiDigits } from '@/lib/digits';
 import { notifyNewBooking } from '@/lib/bookingNotify';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /** Bookings one phone number or email address may make in 10 minutes. */
 const SAME_CUSTOMER_LIMIT = 5;
 const SAME_CUSTOMER_WINDOW_MS = 10 * 60 * 1000;

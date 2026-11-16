@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * Writes a real row to `audit_logs` so the admin Dashboard's Recent Activity
  * widget reflects actual admin actions instead of querying a table nothing

@@ -3,6 +3,9 @@ import { createAdminClient } from '@/utils/supabase/admin';
 import { audit, guard, isUuid, badRequest, notFound, serverError } from '@/utils/adminApi';
 import { ADMIN_ROLES, toAdminRole } from '@/lib/roles';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * PATCH  /api/admin/users/:id — change a user's role or active state
  * DELETE /api/admin/users/:id — remove a user's portal access

@@ -4,6 +4,9 @@ import { guardPublicRequest } from '@/lib/antiSpam';
 import { requireAdmin } from '@/utils/supabase/requireAdmin';
 import { toAsciiDigits } from '@/lib/digits';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * Creates or updates the `customers` record tied to a booking (Admin Portal
  * audit §Customers / §10 — the table existed with a full read UI but nothing

@@ -3,6 +3,9 @@ import { createAdminClient } from '@/utils/supabase/admin';
 import { audit, guard, badRequest, serverError } from '@/utils/adminApi';
 import { ADMIN_ROLES, toAdminRole } from '@/lib/roles';
 
+/** Hard stop for a stuck call (docs/perf/perf-report.md, fix F4). */
+export const maxDuration = 15;
+
 /**
  * GET  /api/admin/users — list portal users
  * POST /api/admin/users — create one
