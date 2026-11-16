@@ -10,6 +10,10 @@ export function generateStaticParams() {
   return allHotels.map((h) => ({ city: h.citySlug, hotel: h.slug }));
 }
 
+// Every real hotel page is built above; any other URL gets the static 404
+// instead of a server render (docs/perf/perf-report.md, fix F3).
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: { params: Promise<{ city: string; hotel: string }> }) {
   const { city, hotel } = await params;
   const data = getHotel(hotel);

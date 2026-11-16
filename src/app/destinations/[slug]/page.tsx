@@ -7,6 +7,11 @@ export function generateStaticParams() {
   return Object.keys(DESTINATION_DETAILS).map((slug) => ({ slug }));
 }
 
+// Every real destination is built above. Any other slug gets the static 404
+// straight away instead of a server render (bots guessing URLs used to cost
+// one each — docs/perf/perf-report.md, fix F3).
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const data = getDestinationDetail(slug);
