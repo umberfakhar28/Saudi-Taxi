@@ -1,26 +1,25 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { CONSENT_MAX_AGE, REGION_COOKIE, regionForCountry } from "@/lib/consent";
 
 /**
- * Tells the browser whether this visitor must be asked before analytics
- * (lib/consent). Set here, not in a layout, so the pages themselves stay
- * static. Only written when missing or changed, so a normal page view sends
- * no Set-Cookie at all. Off Vercel (local runs) there is no country header
- * and the visitor counts as "other", i.e. GA loads as it always has.
+ * The proxy (middleware) runs on exactly two kinds of request — see `config`
+ * at the bottom:
+ *
+ *   1. /admin/* — the portal's sign-in and role check.
+ *   2. Any page asked for with `Accept: text/markdown` — "Markdown for
+ *      agents" (below).
+ *
+ * It used to run on every request except images and _next files: every
+ * public page, every link prefetch (~300 per desktop page view), every /api
+ * call and every bot 404. On Vercel each run is a function invocation, and
+ * the proxy was essentially all of this site's invocations (Observability,
+ * Nov 2026: ~12K/day). Public pages are static and need nothing from it.
+ *
+ * The one thing it did for public pages — the gts_region cookie that tells
+ * the cookie banner whether to ask first — now comes from /api/region, called
+ * by the browser only when that cookie is missing (lib/consent ensureRegion).
+ * See docs/perf/perf-report.md, fix F1.
  */
-function withRegionCookie(request: NextRequest, response: NextResponse): NextResponse {
-  const region = regionForCountry(request.headers.get("x-vercel-ip-country"));
-  if (request.cookies.get(REGION_COOKIE)?.value !== region) {
-    response.cookies.set(REGION_COOKIE, region, {
-      path: "/",
-      maxAge: CONSENT_MAX_AGE,
-      sameSite: "lax",
-      secure: request.nextUrl.protocol === "https:",
-    });
-  }
-  return response;
-}
 
 /* ─────────────────────────────────────────────────────────────────────────
    Lightweight HTML → Markdown converter for content negotiation.
@@ -62,7 +61,50 @@ function htmlToMarkdown(html: string): string {
     .trim();
 }
 
+/**
+ * Markdown for Agents (content negotiation): when a request includes
+ * Accept: text/markdown, fetch the HTML version of the same page and return
+ * it converted to Markdown. Null when the request doesn't want Markdown or
+ * the conversion fails, so the normal page is served instead.
+ */
+async function markdownFor(request: NextRequest): Promise<NextResponse | null> {
+  const acceptHeader = request.headers.get("accept") ?? "";
+  const wantsMarkdown =
+    acceptHeader.includes("text/markdown") &&
+    !request.nextUrl.pathname.startsWith("/api") &&
+    !request.nextUrl.pathname.startsWith("/_next") &&
+    !request.nextUrl.pathname.startsWith("/.well-known");
+  if (!wantsMarkdown) return null;
+
+  try {
+    // Fetch HTML of the same URL without the markdown Accept header. That
+    // request does not match this proxy, so it never comes back round.
+    const htmlRes = await fetch(request.url, {
+      headers: { accept: "text/html" },
+    });
+    const html = await htmlRes.text();
+    const markdown = htmlToMarkdown(html);
+    return new NextResponse(markdown, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/markdown; charset=utf-8",
+        "X-Markdown-Tokens": String(markdown.split(/\s+/).length),
+        "Vary": "Accept",
+      },
+    });
+  } catch {
+    // Fall through to normal response if markdown conversion fails
+    return null;
+  }
+}
+
 export async function proxy(request: NextRequest) {
+  // Public pages only reach the proxy when they ask for Markdown (see
+  // config.matcher); they never need the Supabase session below.
+  if (!request.nextUrl.pathname.startsWith("/admin")) {
+    return (await markdownFor(request)) ?? NextResponse.next();
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -101,15 +143,14 @@ export async function proxy(request: NextRequest) {
     const { data } = await supabase.auth.getUser();
     user = data.user;
   } catch {
-    // Supabase unavailable (e.g. project paused).
-    // Allow public routes through; send admin routes to login.
+    // Supabase unavailable (e.g. project paused): send admin routes to login.
     if (
       request.nextUrl.pathname.startsWith("/admin") &&
       request.nextUrl.pathname !== "/admin/login"
     ) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-    return withRegionCookie(request, response);
+    return response;
   }
 
   // Protect admin routes
@@ -182,55 +223,23 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  /* ───────────────────────────────────────────────────────────────────────
-     Markdown for Agents (content negotiation)
-     When a request includes Accept: text/markdown, fetch the HTML version
-     of the same page and convert it to Markdown before returning.
-     ─────────────────────────────────────────────────────────────────────── */
-  const acceptHeader = request.headers.get("accept") ?? "";
-  const wantsMarkdown =
-    acceptHeader.includes("text/markdown") &&
-    !request.nextUrl.pathname.startsWith("/api") &&
-    !request.nextUrl.pathname.startsWith("/_next") &&
-    !request.nextUrl.pathname.startsWith("/.well-known");
-
-  if (wantsMarkdown) {
-    try {
-      // Fetch HTML of the same URL without the markdown Accept header
-      const htmlRes = await fetch(request.url, {
-        headers: { accept: "text/html" },
-      });
-      const html = await htmlRes.text();
-      const markdown = htmlToMarkdown(html);
-      const mdResponse = new NextResponse(markdown, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/markdown; charset=utf-8",
-          "X-Markdown-Tokens": String(markdown.split(/\s+/).length),
-          "Vary": "Accept",
-        },
-      });
-      return mdResponse;
-    } catch {
-      // Fall through to normal response if markdown conversion fails
-    }
-  }
-
-  return withRegionCookie(request, response);
+  return (await markdownFor(request)) ?? response;
 }
 
 export const config = {
   matcher: [
+    // Every admin page, prefetch and RSC request: the sign-in/role check.
+    // (Admin APIs under /api/admin check the session themselves, in
+    // utils/adminApi guard() and utils/supabase/requireAdmin.)
     "/admin/:path*",
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - sitemap.xml / robots.txt (SEO crawlers must always access these)
-     * - public image files
-     */
-    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // Markdown for agents: any page, but ONLY when the request asks for
+    // Markdown. Browsers, prefetches, crawlers and bots asking for HTML never
+    // match this, so they never invoke the proxy. _next files, /api, the
+    // sitemap/robots and image files are excluded as before.
+    {
+      source: "/((?!api/|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+      has: [{ type: "header", key: "accept", value: ".*text/markdown.*" }],
+    },
   ],
 };
 

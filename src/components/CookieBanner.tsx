@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   OPEN_COOKIE_SETTINGS_EVENT,
   consentRequired,
+  ensureRegion,
   grantAnalytics,
   revokeAnalytics,
   saveChoice,
@@ -50,13 +51,21 @@ export default function CookieBanner() {
 
   useEffect(() => {
     // Reading cookies has to wait for the browser; the banner is never part
-    // of the server HTML.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (consentRequired() && !storedChoice()) setOpen(true);
+    // of the server HTML. On a first visit the region is not known until
+    // /api/region answers (lib/consent ensureRegion).
+    let active = true;
+    if (!storedChoice()) {
+      ensureRegion().then(() => {
+        if (active && consentRequired() && !storedChoice()) setOpen(true);
+      });
+    }
 
     const reopen = () => setOpen(true);
     window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, reopen);
-    return () => window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, reopen);
+    return () => {
+      active = false;
+      window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, reopen);
+    };
   }, []);
 
   if (!open || pathname.startsWith('/admin')) return null;

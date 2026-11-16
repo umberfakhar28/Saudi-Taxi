@@ -11,10 +11,13 @@
  * the footer — a stored choice is always honoured, whatever the region.
  *
  * ── Where the region comes from ──
- * proxy.ts reads Vercel's x-vercel-ip-country header and writes it to the
- * gts_region cookie. Doing that in the proxy rather than a layout is what keeps
- * every page statically generated: the HTML is identical for everyone, and only
- * this small client-side check differs.
+ * /api/region reads Vercel's x-vercel-ip-country header and writes it to the
+ * gts_region cookie; the browser calls it only when that cookie is missing
+ * (ensureRegion below). Doing that outside the page rather than in a layout is
+ * what keeps every page statically generated: the HTML is identical for
+ * everyone, and only this small client-side check differs. (Until Nov 2026 the
+ * proxy set it on every request, which made the proxy run on every request —
+ * docs/perf/perf-report.md, fix F1.)
  *
  * ── Saudi Arabia ──
  * Not in the list. Whether Saudi PDPL requires prior consent for analytics
@@ -58,16 +61,52 @@ export function consentRequired(): boolean {
   return readCookie(REGION_COOKIE) === "eu";
 }
 
+/** Has /api/region told this browser where it is yet? */
+export function regionKnown(): boolean {
+  return readCookie(REGION_COOKIE) !== null;
+}
+
+/**
+ * How long the region answer is trusted before it is asked again: 30 days,
+ * so a visitor who moves (or travels) is re-checked monthly at the cost of
+ * one tiny request. The consent choice itself keeps CONSENT_MAX_AGE.
+ */
+export const REGION_MAX_AGE = 60 * 60 * 24 * 30;
+
+let regionRequest: Promise<void> | null = null;
+
+/**
+ * Make sure gts_region is set. Normally a no-op: the cookie is already
+ * there. Without it (first visit, or 30 days later) one small call to
+ * /api/region sets it from Vercel's IP-country header — the same answer the
+ * proxy used to give on every request, now asked once per visitor instead
+ * (docs/perf/perf-report.md, fix F1). Never rejects: if the call fails the
+ * cookie is simply still missing, and callers treat that as "unknown".
+ */
+export function ensureRegion(): Promise<void> {
+  if (typeof document === "undefined" || regionKnown()) return Promise.resolve();
+  regionRequest ??= fetch("/api/region", { cache: "no-store", credentials: "same-origin" })
+    .then(() => undefined)
+    .catch(() => undefined);
+  return regionRequest;
+}
+
 export function storedChoice(): ConsentChoice | null {
   const value = readCookie(CONSENT_COOKIE);
   return value === "granted" || value === "denied" ? value : null;
 }
 
-/** May GA load on this page view? */
+/**
+ * May GA load on this page view? A stored choice decides on its own.
+ * Otherwise the region must be known and outside the consent countries; an
+ * unknown region (the /api/region call failed) loads nothing — the safe
+ * answer for a visitor who might be in the EU — and is asked again on the
+ * next page view.
+ */
 export function analyticsAllowed(): boolean {
   const choice = storedChoice();
   if (choice) return choice === "granted";
-  return !consentRequired();
+  return regionKnown() && !consentRequired();
 }
 
 export function saveChoice(choice: ConsentChoice): void {

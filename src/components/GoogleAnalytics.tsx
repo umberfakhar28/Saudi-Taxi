@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { analyticsAllowed, loadGoogleAnalytics } from '@/lib/consent';
+import { analyticsAllowed, ensureRegion, loadGoogleAnalytics } from '@/lib/consent';
 
 /**
  * GA4 for the whole site (property G-TQZY85DG7H, see lib/consent).
@@ -21,7 +21,11 @@ import { analyticsAllowed, loadGoogleAnalytics } from '@/lib/consent';
  */
 export default function GoogleAnalytics() {
   useEffect(() => {
-    if (analyticsAllowed()) loadGoogleAnalytics();
+    // ensureRegion is instant once the gts_region cookie exists; on a first
+    // visit it waits for one small /api/region call before deciding.
+    ensureRegion().then(() => {
+      if (analyticsAllowed()) loadGoogleAnalytics();
+    });
   }, []);
 
   return null;
