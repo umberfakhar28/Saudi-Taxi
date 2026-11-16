@@ -17,15 +17,15 @@ import styles from "./DistanceRouteCard.module.css";
  * without a matching photo, rather than a broken image.
  */
 const DESTINATION_COVERS: Record<string, { src: string; alt: string }> = {
-  Riyadh: { src: "/images/distance/riyadh.png", alt: "Riyadh's Kingdom Centre Tower skyline with a private chauffeur vehicle on the highway" },
-  Jeddah: { src: "/images/distance/jeddah.png", alt: "Jeddah's Corniche skyline with King Fahd's Fountain" },
-  Makkah: { src: "/images/distance/makkah.png", alt: "The Kaaba and Abraj Al-Bait clock tower in Makkah at sunrise" },
-  Madinah: { src: "/images/distance/madinah.png", alt: "The Prophet's Mosque courtyard in Madinah at golden hour" },
-  Dammam: { src: "/images/distance/dammam.png", alt: "Dammam's Corniche waterfront skyline at sunset" },
-  Jubail: { src: "/images/distance/jubail.png", alt: "Jubail's coastal promenade with the city's water tower and industrial skyline" },
-  Kuwait: { src: "/images/distance/kuwait.png", alt: "Kuwait City skyline with the Kuwait Towers on the waterfront" },
-  "Abu Dhabi": { src: "/images/distance/abu-dhabi.png", alt: "Sheikh Zayed Grand Mosque in Abu Dhabi reflected in its courtyard pool" },
-  Dubai: { src: "/images/distance/dubai.png", alt: "Burj Khalifa and the Downtown Dubai skyline with a private chauffeur vehicle" },
+  Riyadh: { src: "/images/distance/riyadh.webp", alt: "Riyadh's Kingdom Centre Tower skyline with a private chauffeur vehicle on the highway" },
+  Jeddah: { src: "/images/distance/jeddah.webp", alt: "Jeddah's Corniche skyline with King Fahd's Fountain" },
+  Makkah: { src: "/images/distance/makkah.webp", alt: "The Kaaba and Abraj Al-Bait clock tower in Makkah at sunrise" },
+  Madinah: { src: "/images/distance/madinah.webp", alt: "The Prophet's Mosque courtyard in Madinah at golden hour" },
+  Dammam: { src: "/images/distance/dammam.webp", alt: "Dammam's Corniche waterfront skyline at sunset" },
+  Jubail: { src: "/images/distance/jubail.webp", alt: "Jubail's coastal promenade with the city's water tower and industrial skyline" },
+  Kuwait: { src: "/images/distance/kuwait.webp", alt: "Kuwait City skyline with the Kuwait Towers on the waterfront" },
+  "Abu Dhabi": { src: "/images/distance/abu-dhabi.webp", alt: "Sheikh Zayed Grand Mosque in Abu Dhabi reflected in its courtyard pool" },
+  Dubai: { src: "/images/distance/dubai.webp", alt: "Burj Khalifa and the Downtown Dubai skyline with a private chauffeur vehicle" },
 };
 
 const FALLBACK_COVER = { src: "/hero-slider/gulf-cross-border-chauffeur-service.webp", alt: "Private chauffeur vehicle on a Gulf highway" };
