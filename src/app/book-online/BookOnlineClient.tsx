@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { waLink } from "@/lib/contact";
 import { HOURLY_DURATIONS, VEHICLE_OPTIONS } from "@/lib/searchBarConfig";
 import { bookingWhatsAppText, formatWhen } from "@/lib/bookingMessage";

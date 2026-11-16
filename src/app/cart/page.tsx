@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { generatePageMetadata } from "@/lib/seo";
 
 // Transactional, session-specific page with no unique content for search —

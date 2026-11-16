@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { preload } from "react-dom";
 import {

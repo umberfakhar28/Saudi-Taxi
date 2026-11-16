@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import Image from 'next/image';
 import { faqSchema, breadcrumbSchema, jsonLd } from '@/lib/jsonld';
 import {

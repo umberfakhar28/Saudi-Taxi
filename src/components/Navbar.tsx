@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import IntentLink from './IntentLink';
 import { usePathname } from 'next/navigation';
 import { MenuIcon, XIcon, ChevronDownIcon, GlobeIcon, WhatsAppIcon } from './Icons';
 import Logo from './Logo';
@@ -33,9 +34,12 @@ const DropdownPanel = ({ groups, open, onLinkClick }: { groups: NavGroup[]; open
             <div key={group.label} className={styles.dropdownColumn}>
                 <div className={styles.dropdownLabel}>{group.label}</div>
                 {group.items.map((item) => (
-                    <Link key={item.href} href={item.href} className={styles.dropdownItem} onClick={onLinkClick}>
+                    // Prefetched on hover/focus/touch only: these panels are
+                    // always in the DOM, so a plain Link prefetched all of
+                    // them on every page view (components/IntentLink).
+                    <IntentLink key={item.href} href={item.href} className={styles.dropdownItem} onClick={onLinkClick}>
                         {item.label}
-                    </Link>
+                    </IntentLink>
                 ))}
             </div>
         ))}
@@ -197,7 +201,7 @@ const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: Na
                     ))}
 
                     {/* Language switcher — mobile only; desktop shows it in .navActions instead */}
-                    <Link
+                    <IntentLink
                         href={arabicPathFor(pathname)}
                         className={`${styles.link} ${styles.mobileLangItem}`}
                         onClick={close}
@@ -205,16 +209,16 @@ const Navbar = ({ transparent = false, menuOpen, onToggleMenu, onCloseMenu }: Na
                     >
                         <GlobeIcon size={14} />
                         العربية
-                    </Link>
+                    </IntentLink>
                 </div>
 
                 {/* ---- RIGHT GROUP — hamburger (mobile) + actions (language switcher + CTAs), anchored top-right ---- */}
                 <div className={styles.rightGroup}>
                     <div className={styles.navActions}>
-                        <Link href={arabicPathFor(pathname)} className={styles.langSwitcher} lang="ar">
+                        <IntentLink href={arabicPathFor(pathname)} className={styles.langSwitcher} lang="ar">
                             <GlobeIcon size={14} />
                             العربية
-                        </Link>
+                        </IntentLink>
                         <a data-wa-cta="navbar" href={pageWhatsAppMessage(pathname) ? waLink(pageWhatsAppMessage(pathname)!) : WHATSAPP_URL} className={styles.ctaWhatsapp} target="_blank" rel="noopener noreferrer" onClick={close}>
                             <WhatsAppIcon size={16} />
                             <span className={styles.ctaWhatsappLabel}>WhatsApp</span>

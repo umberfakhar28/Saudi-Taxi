@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import Image from 'next/image';
 import { countryFor, type DestinationSummary } from '@/lib/destinationData';
 import styles from './DestinationCard.module.css';

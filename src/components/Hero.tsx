@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import { ShieldIcon, WhatsAppIcon } from './Icons';
 import HeroSearchBar from './HeroSearchBar';
 import HeroImageSlider from './HeroImageSlider';

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { generatePageMetadata } from "@/lib/seo";
 import { WhatsAppIcon } from "@/components/Icons";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";

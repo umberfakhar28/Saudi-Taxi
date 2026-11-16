@@ -7,7 +7,7 @@ import FlightDisruptionBanner from "@/components/FlightDisruptionBanner";
 import VehiclesSection from "@/components/VehiclesSection";
 import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { CheckCircleIcon, GlobeIcon } from "@/components/Icons";
 import { generatePageMetadata } from "@/lib/seo";

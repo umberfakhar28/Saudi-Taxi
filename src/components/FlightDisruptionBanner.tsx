@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import { PlaneIcon, ArrowRightIcon } from './Icons';
 import styles from './FlightDisruptionBanner.module.css';
 

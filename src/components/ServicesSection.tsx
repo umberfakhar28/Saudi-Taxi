@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { LandmarkIcon, PlaneIcon, CarIcon, HotelIcon, CompassIcon, ArrowRightIcon } from "./Icons";
 import styles from "./ServicesSection.module.css";
 

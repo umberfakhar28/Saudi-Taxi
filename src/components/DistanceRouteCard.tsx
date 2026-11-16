@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { MapPinIcon, ClockIcon, GlobeIcon, NavigationIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
 import type { DistanceRouteData } from "@/lib/distanceRouteData";

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import { MessageIcon, MailIcon, MapPinIcon, ClockIcon, InstagramIcon, FacebookIcon } from './Icons';
 import Logo from './Logo';
 import styles from './Footer.module.css';

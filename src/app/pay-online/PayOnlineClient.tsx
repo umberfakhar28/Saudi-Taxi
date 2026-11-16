@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 
 /* Named card networks and wallets (Visa, Mastercard, American Express, STC Pay,

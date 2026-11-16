@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { PlaneIcon, CarIcon, ClockIcon, ChevronRightIcon, CompassIcon, MapPinIcon, WhatsAppIcon, ShieldIcon } from "@/components/Icons";
 import DestinationCard from "@/components/DestinationCard";

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import IntentLink from './IntentLink';
 import { usePathname } from 'next/navigation';
 import { MenuIcon, XIcon } from './Icons';
 import Logo from './Logo';
@@ -44,15 +45,17 @@ const ArabicNavbar = () => {
 
                 <div className={`${styles.navLinks} ${menuOpen ? styles.navLinksOpen : ''}`}>
                     {links.map((item) => (
-                        <Link key={item.href} href={item.href} className={styles.link} onClick={close}>
+                        // Prefetched on intent (components/IntentLink); the
+                        // logo and Book Now keep the ordinary prefetch.
+                        <IntentLink key={item.href} href={item.href} className={styles.link} onClick={close}>
                             {item.label}
-                        </Link>
+                        </IntentLink>
                     ))}
 
                     {/* Language switcher */}
-                    <Link href={englishPathFor(pathname)} className={styles.link} onClick={close} lang="en">
+                    <IntentLink href={englishPathFor(pathname)} className={styles.link} onClick={close} lang="en">
                         English
-                    </Link>
+                    </IntentLink>
 
                     {/* This said "احجز الآن" ("Book Now") and opened WhatsApp, so the
                         Arabic navbar had no route to the booking form at all, while

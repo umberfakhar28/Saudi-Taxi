@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import styles from "./faqs.module.css";
 import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 

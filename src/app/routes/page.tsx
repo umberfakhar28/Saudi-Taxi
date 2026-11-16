@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { generatePageMetadata } from "@/lib/seo";
 import { MapPinIcon, ClockIcon, ChevronRightIcon, WhatsAppIcon } from "@/components/Icons";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";

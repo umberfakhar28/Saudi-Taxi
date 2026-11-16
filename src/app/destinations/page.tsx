@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { generatePageMetadata } from "@/lib/seo";
 import { serviceSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { ChevronRightIcon } from "@/components/Icons";

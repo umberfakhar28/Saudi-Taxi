@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { generatePageMetadata } from "@/lib/seo";
 import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import { ClockIcon, MapPinIcon, CarIcon } from './Icons';
 import { AIRPORT_PRICING_ENABLED } from '@/lib/airportTransferConfig';
 import { FLEET_TIERS } from '@/lib/fleetConfig';

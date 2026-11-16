@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import { MessageIcon, MailIcon, MapPinIcon, ClockIcon, GlobeIcon, CalendarIcon, ChevronRightIcon } from "@/components/Icons";
 import styles from "@/app/contact-us/contact.module.css";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";

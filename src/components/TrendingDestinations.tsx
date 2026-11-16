@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import DestinationCard from './DestinationCard';
 import { FEATURED_DESTINATIONS } from '@/lib/destinationData';
 import styles from './TrendingDestinations.module.css';

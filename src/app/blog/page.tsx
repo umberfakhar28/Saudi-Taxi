@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";

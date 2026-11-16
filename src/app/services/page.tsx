@@ -1,6 +1,6 @@
 
 import styles from './services.module.css';
-import Link from 'next/link';
+import Link from '@/components/IntentLink';
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
