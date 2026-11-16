@@ -117,7 +117,7 @@ export default function NotificationBell() {
                             <div className={styles.empty}>No notifications yet.</div>
                         ) : (
                             notifications.map((n) => (
-                                <Link
+                                <Link prefetch={false}
                                     key={n.id}
                                     href={n.booking_id ? `/admin/bookings?view=${n.booking_id}` : '/admin/bookings'}
                                     className={`${styles.item} ${!n.is_read ? styles.unread : ''}`}

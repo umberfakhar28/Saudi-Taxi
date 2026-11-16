@@ -16,7 +16,7 @@ export default function DashboardFilters() {
         } else {
             params.delete(key);
         }
-        router.push(`?${params.toString()}`);
+        router.replace(`?${params.toString()}`);
     };
 
     return (

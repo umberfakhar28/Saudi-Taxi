@@ -101,7 +101,7 @@ export function AlertsSection({ overdueInvoices, expiredQuotes, pendingOldBookin
 function AlertItem({ label, count, href, help }: any) {
     if (!count) return null;
     return (
-        <Link href={href} title={help} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0.9rem', background: '#fff', borderRadius: 8, textDecoration: 'none', border: '1px solid var(--adm-danger-tint)' }}>
+        <Link prefetch={false} href={href} title={help} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0.9rem', background: '#fff', borderRadius: 8, textDecoration: 'none', border: '1px solid var(--adm-danger-tint)' }}>
             <span style={{ color: 'var(--adm-danger-ink)', fontSize: '0.85rem', fontWeight: 500 }}>{label}</span>
             <span style={{ background: 'var(--adm-danger)', color: '#fff', padding: '2px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 700 }}>{count}</span>
         </Link>
@@ -123,7 +123,7 @@ export function UpcomingBookings({ bookings }: { bookings: any[] }) {
             <div style={{ fontWeight: 700, color: 'var(--adm-navy)', marginBottom: '1rem' }}>Upcoming (Next 48h)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                 {bookings.map((b) => (
-                    <Link key={b.id} href={`/admin/bookings?edit=${b.id}`} style={{ display: 'block', textDecoration: 'none', border: '1px solid var(--adm-tint)', padding: '0.875rem', borderRadius: 8 }}>
+                    <Link prefetch={false} key={b.id} href={`/admin/bookings?edit=${b.id}`} style={{ display: 'block', textDecoration: 'none', border: '1px solid var(--adm-tint)', padding: '0.875rem', borderRadius: 8 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                             <div style={{ fontWeight: 600, color: 'var(--adm-ink)', fontSize: '0.9rem' }}>{b.customer_name}</div>
                             <div style={{ fontSize: '0.8rem', color: 'var(--adm-info)', fontWeight: 600 }}>{displayTime(b.travel_time)}</div>

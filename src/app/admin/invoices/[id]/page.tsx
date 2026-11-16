@@ -180,7 +180,7 @@ export default function InvoiceDetailPage() {
         return (
             <div style={{ padding: '4rem', textAlign: 'center' }}>
                 <div style={{ color: 'var(--adm-faint)', marginBottom: '1rem' }}>Invoice not found.</div>
-                <Link href="/admin/invoices" className="admin-btn-secondary">Back to Invoices</Link>
+                <Link prefetch={false} href="/admin/invoices" className="admin-btn-secondary">Back to Invoices</Link>
             </div>
         );
     }
@@ -188,7 +188,7 @@ export default function InvoiceDetailPage() {
     return (
         <div>
             <div className="invoice-print-hide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-                <Link href="/admin/invoices" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--adm-muted)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
+                <Link prefetch={false} href="/admin/invoices" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--adm-muted)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
                     <ArrowLeft size={16} /> Back to Invoices
                 </Link>
                 <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>

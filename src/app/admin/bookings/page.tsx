@@ -1263,7 +1263,7 @@ function BookingsPageInner() {
                                                 {b.invoice_id && (
                                                     <div>
                                                         <Tooltip label={`Invoice ${b.invoice_number}`} text="Open it on the Invoices tab.">
-                                                            <Link href={`/admin/invoices?id=${encodeURIComponent(b.invoice_id)}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: '0.66rem', fontWeight: 700, color: 'var(--adm-gold-ink)', background: 'var(--adm-gold-tint)', border: '1px solid var(--adm-line)', padding: '0.12rem 0.45rem', borderRadius: 999, textDecoration: 'none', fontFamily: 'monospace' }}>
+                                                            <Link prefetch={false} href={`/admin/invoices?id=${encodeURIComponent(b.invoice_id)}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 4, fontSize: '0.66rem', fontWeight: 700, color: 'var(--adm-gold-ink)', background: 'var(--adm-gold-tint)', border: '1px solid var(--adm-line)', padding: '0.12rem 0.45rem', borderRadius: 999, textDecoration: 'none', fontFamily: 'monospace' }}>
                                                                 <FileText size={11} /> {b.invoice_number}
                                                             </Link>
                                                         </Tooltip>

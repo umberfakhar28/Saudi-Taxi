@@ -46,7 +46,7 @@ export default function NotificationToast() {
             </div>
 
             <div className={styles.actions}>
-                <Link
+                <Link prefetch={false}
                     href={toast.booking_id ? `/admin/bookings?view=${toast.booking_id}` : '/admin/bookings'}
                     className={styles.viewBtn}
                     onClick={() => {

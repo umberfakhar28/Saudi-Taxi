@@ -1,215 +1,24 @@
-'use client';
+import type { Metadata } from 'next';
+import AdminLayoutClient from './AdminLayoutClient';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import {
-    LayoutDashboard,
-    CalendarCheck,
-    Users,
-    Settings,
-    LogOut,
-    Car,
-    Globe,
-    ChevronRight,
-    FileText,
-    Receipt,
-    BarChart3,
-    Calendar,
-    Zap,
-    ShieldCheck,
-    Menu,
-    Mail,
-} from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
-import { LogoMark } from '@/components/Logo';
-import { ROLE_LABELS, ROLE_DESCRIPTIONS } from '@/lib/roles';
-import NotificationProvider from '@/components/NotificationProvider';
-import AdminAuthProvider, { useAdminAuth } from '@/components/admin/AdminAuthProvider';
-import AdminFeedbackProvider from '@/components/admin/AdminFeedback';
-import Tooltip from '@/components/admin/Tooltip';
-import NotificationBell from '@/components/NotificationBell';
-import NotificationToast from '@/components/NotificationToast';
-// Heading face and the Arabic fallback, self-hosted from npm (no build-time
-// fetch from Google). Inter, the body face, is already loaded site-wide.
-import '@fontsource-variable/manrope';
-import '@fontsource-variable/noto-sans-arabic';
-import './admin.css';
+/**
+ * Server wrapper for the admin portal, so the portal can carry its own
+ * metadata (a client component cannot export `metadata`). The portal itself
+ * is AdminLayoutClient, unchanged.
+ *
+ * Before this, every admin page inherited the homepage's title, description
+ * and canonical URL — which is also why admin page views in GA showed up as
+ * the homepage title (docs/perf/perf-report.md §1.6.3). robots.txt already
+ * disallows /admin/; the noindex here covers a crawler that reaches a page
+ * anyway, and the canonical is removed rather than pointing at the homepage.
+ */
+export const metadata: Metadata = {
+    title: { absolute: 'Admin | Gulf Trip Service' },
+    description: 'Gulf Trip Service admin portal.',
+    robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
+    alternates: { canonical: null },
+};
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-    const pathname = usePathname();
-
-    // The login page must not be wrapped in the portal chrome or the
-    // providers — none of them can resolve a role before sign-in.
-    if (pathname === '/admin/login') return <>{children}</>;
-
-    return (
-        <AdminAuthProvider>
-            <AdminFeedbackProvider>
-                <NotificationProvider>
-                    <AdminShell>{children}</AdminShell>
-                </NotificationProvider>
-            </AdminFeedbackProvider>
-        </AdminAuthProvider>
-    );
-}
-
-function AdminShell({ children }: { children: React.ReactNode }) {
-    const pathname = usePathname();
-    const router = useRouter();
-    const supabase = createClient();
-    const { role, email, name, isOwner, allowed } = useAdminAuth();
-    const [navOpen, setNavOpen] = useState(false);
-
-    // The drawer must not stay open over the page you just navigated to.
-    useEffect(() => { setNavOpen(false); }, [pathname]);
-
-    const handleSignOut = async () => {
-        await supabase.auth.signOut();
-        router.push('/admin/login');
-        router.refresh();
-    };
-
-    const navGroups = [
-        {
-            label: 'Main',
-            items: [
-                { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, desc: 'Overview & Stats' },
-                { name: 'Bookings', href: '/admin/bookings', icon: CalendarCheck, desc: 'Manage Rides' },
-                { name: 'Calendar', href: '/admin/calendar', icon: Calendar, desc: 'Schedule View' },
-            ],
-        },
-        {
-            label: 'Sales & Billing',
-            items: [
-                { name: 'Quotes', href: '/admin/quotes', icon: FileText, desc: 'Pricing Estimates' },
-                { name: 'Invoices', href: '/admin/invoices', icon: Receipt, desc: 'Billing & Payments' },
-            ],
-        },
-        {
-            label: 'Management',
-            items: [
-                { name: 'Fleet', href: '/admin/fleet', icon: Car, desc: 'Vehicles' },
-                { name: 'Customers', href: '/admin/customers', icon: Users, desc: 'Client Database' },
-            ],
-        },
-        {
-            label: 'System',
-            items: [
-                { name: 'Reports', href: '/admin/reports', icon: BarChart3, desc: 'Analytics & Export' },
-                { name: 'Email Log', href: '/admin/emails', icon: Mail, desc: 'Sent & Failed' },
-                { name: 'Automation', href: '/admin/automation', icon: Zap, desc: 'Pricing Rules' },
-                // Only a full admin may manage portal users, so the section is
-                // hidden for everyone else. /api/admin/users enforces the same
-                // rule server-side; this only avoids showing a dead end.
-                ...(allowed('users.manage')
-                    ? [{ name: 'Users', href: '/admin/users', icon: ShieldCheck, desc: 'Portal Access' }]
-                    : []),
-                { name: 'Settings', href: '/admin/settings', icon: Settings, desc: 'Configuration' },
-            ],
-        },
-    ];
-
-    const allItems = navGroups.flatMap(g => g.items);
-    const currentPage = allItems.find(i => pathname.startsWith(i.href));
-
-    return (
-        <div className={`admin-shell${navOpen ? ' nav-open' : ''}`}>
-            {/* Tapping away from the drawer closes it. */}
-            <div className="admin-nav-backdrop" onClick={() => setNavOpen(false)} aria-hidden="true" />
-            {/* ── Sidebar ── */}
-            <aside className="admin-sidebar">
-                {/* Logo */}
-                <div className="admin-logo">
-                    <LogoMark size={40} className="admin-logo-badge" />
-                    <div>
-                        <div className="admin-logo-title">Gulf Trip Service</div>
-                        <div className="admin-logo-sub">Admin Portal</div>
-                    </div>
-                </div>
-
-                {/* Nav */}
-                <nav className="admin-nav">
-                    {navGroups.map(group => (
-                        <div key={group.label} className="admin-nav-group">
-                            <span className="admin-nav-label">{group.label}</span>
-                            {group.items.map(item => {
-                                const Icon = item.icon;
-                                const active = pathname.startsWith(item.href);
-                                return (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        className={`admin-nav-item${active ? ' active' : ''}`}
-                                    >
-                                        <div className="admin-nav-icon">
-                                            <Icon size={18} />
-                                        </div>
-                                        <div className="admin-nav-text">
-                                            <span className="admin-nav-name">{item.name}</span>
-                                            <span className="admin-nav-desc">{item.desc}</span>
-                                        </div>
-                                        {active && <ChevronRight size={14} className="admin-nav-arrow" />}
-                                    </Link>
-                                );
-                            })}
-                        </div>
-                    ))}
-                </nav>
-
-                {/* Footer actions */}
-                <div className="admin-sidebar-footer">
-                    <Link href="/" target="_blank" className="admin-footer-link">
-                        <Globe size={16} />
-                        View Website
-                    </Link>
-                    <button onClick={handleSignOut} className="admin-footer-link admin-signout">
-                        <LogOut size={16} />
-                        Sign Out
-                    </button>
-                </div>
-            </aside>
-
-            {/* ── Main ── */}
-            <main className="admin-main">
-                {/* Page breadcrumb strip */}
-                <div className="admin-page-bar" style={{ justifyContent: 'space-between' }}>
-                    <div className="admin-breadcrumb">
-                        <button
-                            type="button"
-                            className="admin-nav-toggle"
-                            onClick={() => setNavOpen((v) => !v)}
-                            aria-label={navOpen ? 'Close navigation' : 'Open navigation'}
-                            aria-expanded={navOpen}
-                        >
-                            <Menu size={18} />
-                        </button>
-                        <span>Admin</span>
-                        <ChevronRight size={14} />
-                        <span className="admin-breadcrumb-current">
-                            {currentPage?.name ?? 'Page'}
-                        </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                        {role && (
-                            <Tooltip
-                                label={ROLE_LABELS[role]}
-                                text={`${ROLE_DESCRIPTIONS[role]}${isOwner ? ' This is the owner account.' : ''}`}
-                            >
-                                <span className="admin-role-badge" data-role={role}>
-                                    {name || email?.split('@')[0] || 'Signed in'} · {role}
-                                </span>
-                            </Tooltip>
-                        )}
-                        <NotificationBell />
-                    </div>
-                </div>
-
-                <div className="admin-content">
-                    {children}
-                </div>
-            </main>
-            <NotificationToast />
-        </div>
-    );
+    return <AdminLayoutClient>{children}</AdminLayoutClient>;
 }

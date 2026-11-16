@@ -70,7 +70,7 @@ export default function SettingsPage() {
                 </dl>
 
                 <p style={{ fontSize: '0.8rem', color: 'var(--adm-muted)', margin: '1.25rem 0 0' }}>
-                    Pricing rules live under <Link href="/admin/automation" style={{ color: 'var(--adm-info)', fontWeight: 600 }}>Automation</Link>.
+                    Pricing rules live under <Link prefetch={false} href="/admin/automation" style={{ color: 'var(--adm-info)', fontWeight: 600 }}>Automation</Link>.
                 </p>
             </div>
         </div>

@@ -253,8 +253,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                     <p className="admin-page-sub" style={{ margin: 0 }}>Comprehensive overview and analytics.</p>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                    <Link href="/admin/quotes/new" className="admin-btn-secondary">+ New Quote</Link>
-                    <Link href="/admin/bookings?new=1" className="admin-btn-primary">+ New Booking</Link>
+                    <Link prefetch={false} href="/admin/quotes/new" className="admin-btn-secondary">+ New Quote</Link>
+                    <Link prefetch={false} href="/admin/bookings?new=1" className="admin-btn-primary">+ New Booking</Link>
                 </div>
             </div>
 
@@ -270,7 +270,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 {stats.map(s => {
                     const Icon = s.icon;
                     return (
-                        <Link key={s.name} href={s.href} style={{ textDecoration: 'none' }}>
+                        <Link prefetch={false} key={s.name} href={s.href} style={{ textDecoration: 'none' }}>
                             <div className="admin-stat-card" style={{ position: 'relative' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <div style={{ width: 40, height: 40, borderRadius: 10, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>
@@ -329,7 +329,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                         { label: '📅 View Calendar', href: '/admin/calendar' },
                                         { label: '📊 Export Data', href: '/admin/reports' },
                                     ].map(a => (
-                                        <Link key={a.label} href={a.href} style={{ display: 'block', padding: '0.75rem', borderRadius: 8, background: 'var(--adm-surface)', color: 'var(--adm-text)', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 500, border: '1px solid var(--adm-tint)' }}>
+                                        <Link prefetch={false} key={a.label} href={a.href} style={{ display: 'block', padding: '0.75rem', borderRadius: 8, background: 'var(--adm-surface)', color: 'var(--adm-text)', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 500, border: '1px solid var(--adm-tint)' }}>
                                             {a.label}
                                         </Link>
                                     ))}
@@ -343,8 +343,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--adm-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ fontWeight: 700, color: 'var(--adm-navy)', fontSize: '0.95rem' }}>Recent Bookings</div>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <Link href="/admin/bookings?status=pending" className="admin-btn-secondary" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>Pending</Link>
-                                <Link href="/admin/bookings" className="admin-btn-secondary" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>View All</Link>
+                                <Link prefetch={false} href="/admin/bookings?status=pending" className="admin-btn-secondary" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>Pending</Link>
+                                <Link prefetch={false} href="/admin/bookings" className="admin-btn-secondary" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>View All</Link>
                             </div>
                         </div>
                         <table className="admin-table">
@@ -369,8 +369,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                <Link href={`/admin/bookings?edit=${b.id}`} style={{ fontSize: '0.75rem', color: 'var(--adm-info)', textDecoration: 'none', fontWeight: 500 }}>Edit</Link>
-                                                <Link href={`/admin/bookings?invoice=${b.id}`} style={{ fontSize: '0.75rem', color: 'var(--adm-success)', textDecoration: 'none', fontWeight: 500 }}>Invoice</Link>
+                                                <Link prefetch={false} href={`/admin/bookings?edit=${b.id}`} style={{ fontSize: '0.75rem', color: 'var(--adm-info)', textDecoration: 'none', fontWeight: 500 }}>Edit</Link>
+                                                <Link prefetch={false} href={`/admin/bookings?invoice=${b.id}`} style={{ fontSize: '0.75rem', color: 'var(--adm-success)', textDecoration: 'none', fontWeight: 500 }}>Invoice</Link>
                                             </div>
                                         </td>
                                     </tr>

@@ -106,7 +106,7 @@ export function BookingsByStatus({ data }: { data: StatusDatum[] }) {
                         const share = totalBookings > 0 ? Math.round((d.count / totalBookings) * 100) : 0;
                         const label = d.status.charAt(0).toUpperCase() + d.status.slice(1);
                         return (
-                            <Link
+                            <Link prefetch={false}
                                 key={d.status}
                                 href={`/admin/bookings?status=${d.status}`}
                                 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}

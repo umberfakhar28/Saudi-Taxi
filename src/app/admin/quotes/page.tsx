@@ -350,7 +350,7 @@ export default function QuotesPage() {
                     <button onClick={fetchQuotes} className="admin-btn-secondary">
                         <RefreshCw size={15} /> Refresh
                     </button>
-                    <Link href="/admin/quotes/new" className="admin-btn-primary">
+                    <Link prefetch={false} href="/admin/quotes/new" className="admin-btn-primary">
                         <Plus size={15} /> New Quote
                     </Link>
                 </div>

@@ -208,7 +208,7 @@ function NewQuoteInner() {
                     </p>
                 </div>
                 {sourceBooking && (
-                    <Link href="/admin/bookings" className="admin-btn-secondary">
+                    <Link prefetch={false} href="/admin/bookings" className="admin-btn-secondary">
                         <ArrowLeft size={15} /> Back to Bookings
                     </Link>
                 )}

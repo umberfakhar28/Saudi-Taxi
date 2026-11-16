@@ -78,7 +78,7 @@ function InvoicesPageInner() {
                     <div style={{ fontSize: '0.85rem', color: 'var(--adm-ink)' }}>
                         Selected: <strong style={{ fontFamily: 'monospace' }}>{selected.invoice_number}</strong> · {selected.customer_name}
                     </div>
-                    <Link href={`/admin/invoices/${selected.id}`} className="admin-btn-primary" style={{ padding: '0.45rem 0.9rem' }}>
+                    <Link prefetch={false} href={`/admin/invoices/${selected.id}`} className="admin-btn-primary" style={{ padding: '0.45rem 0.9rem' }}>
                         Open invoice <ArrowRight size={14} />
                     </Link>
                 </div>
@@ -153,8 +153,8 @@ function InvoicesPageInner() {
                                 </td>
                                 <td>
                                     <div style={{ display: 'flex', gap: '0.35rem' }}>
-                                        <Link href={`/admin/invoices/${inv.id}`} className="admin-icon-btn" title="View Details"><FileText size={15} /></Link>
-                                        <Link href={`/admin/invoices/${inv.id}`} className="admin-icon-btn" title="Download PDF"><Download size={15} /></Link>
+                                        <Link prefetch={false} href={`/admin/invoices/${inv.id}`} className="admin-icon-btn" title="View Details"><FileText size={15} /></Link>
+                                        <Link prefetch={false} href={`/admin/invoices/${inv.id}`} className="admin-icon-btn" title="Download PDF"><Download size={15} /></Link>
                                     </div>
                                 </td>
                             </tr>
