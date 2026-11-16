@@ -869,7 +869,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                               className="btn btn-whatsapp btn-sm"
                               target="_blank"
                               rel="noopener noreferrer"
-                              data-wa-cta="pricing-table"
+                              data-wa-cta="pricing-table" data-vehicle={r.vehicle}
                               style={{ whiteSpace: "nowrap" }}
                             >
                               <MessageIcon size={14} /> {r.amount !== null ? "Book on WhatsApp" : "Get a price on WhatsApp"}
@@ -1186,7 +1186,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                         className="btn btn-whatsapp"
                         target="_blank"
                         rel="noopener noreferrer"
-                        data-wa-cta="vehicle-card"
+                        data-wa-cta="vehicle-card" data-vehicle={v.name}
                         style={{ marginTop: "auto", width: "100%", justifyContent: "center" }}
                       >
                         <MessageIcon size={16} /> {t.bookThisVehicle}
@@ -1221,7 +1221,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                           className="btn btn-whatsapp"
                           target="_blank"
                           rel="noopener noreferrer"
-                          data-wa-cta="vehicle-card"
+                          data-wa-cta="vehicle-card" data-vehicle={v.name}
                           style={{ marginTop: "auto", width: "100%", justifyContent: "center" }}
                         >
                           <MessageIcon size={16} /> {t.bookThisVehicle}
@@ -1276,7 +1276,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                               className="btn btn-whatsapp btn-sm"
                               target="_blank"
                               rel="noopener noreferrer"
-                              data-wa-cta="pricing-table"
+                              data-wa-cta="pricing-table" data-vehicle={v.name}
                             >
                               <MessageIcon size={14} /> {t.whatsappQuote}
                             </a>

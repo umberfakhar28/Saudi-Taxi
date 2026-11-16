@@ -326,7 +326,7 @@ export default function RouteLanding({ data }: { data: RouteData }) {
                             <p className={s.carPrice}>
                               {price ? <><strong>{price}</strong> <span>one way</span></> : <strong>Price on request</strong>}
                             </p>
-                            <a href={vehicleWhatsApp(v)} className={`btn btn-whatsapp ${s.carCta}`} target="_blank" rel="noopener noreferrer" data-wa-cta="vehicle-card">
+                            <a href={vehicleWhatsApp(v)} className={`btn btn-whatsapp ${s.carCta}`} target="_blank" rel="noopener noreferrer" data-wa-cta="vehicle-card" data-vehicle={v.name}>
                               <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={16} /></span>
                               {price ? "Book this car" : "Get a price"}<span className="sr-only">: {v.name}</span>
                             </a>

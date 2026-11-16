@@ -26,6 +26,8 @@
  * nothing else needs to change.
  */
 
+import { PERSONAL_PARAMS } from "@/lib/bookingPrefill";
+
 /** EEA (EU 27 + Iceland, Liechtenstein, Norway), plus the UK and Switzerland. */
 export const CONSENT_COUNTRIES = new Set([
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU",
@@ -210,7 +212,15 @@ export function loadGoogleAnalytics(measurementId: string = GA_MEASUREMENT_ID): 
   // ?ga_debug=1 on any page sends that page view's hits to GA4 DebugView
   // (Admin → DebugView), for checking events without waiting for reports.
   const debug = new URLSearchParams(location.search).has("ga_debug");
-  window.gtag("config", measurementId, debug ? { debug_mode: true } : {});
+  // The first page view's address, with any personal query parameters
+  // removed (lib/bookingPrefill): explicit, so it never depends on whether
+  // /book-online has already cleaned its address bar by the time gtag runs.
+  const pageUrl = new URL(location.href);
+  PERSONAL_PARAMS.forEach((p) => pageUrl.searchParams.delete(p));
+  window.gtag("config", measurementId, {
+    page_location: pageUrl.toString(),
+    ...(debug ? { debug_mode: true } : {}),
+  });
 
   const script = document.createElement("script");
   script.async = true;

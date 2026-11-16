@@ -109,7 +109,7 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
                 {subheading && <p className={styles.subtitle}>{subheading}</p>}
             </div>
 
-            <form onSubmit={handleSubmit} className={vehicles ? `${styles.grid} ${styles.gridWithVehicle}` : styles.grid}>
+            <form data-track-form="booking" onSubmit={handleSubmit} className={vehicles ? `${styles.grid} ${styles.gridWithVehicle}` : styles.grid}>
                 <div className={styles.field}>
                     <SearchAutocomplete
                         variant="field"

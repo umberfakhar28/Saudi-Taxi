@@ -13,6 +13,7 @@ import { HOURLY_DURATIONS, DEFAULT_PASSENGERS, DEFAULT_LUGGAGE, VEHICLE_OPTIONS 
 import { TOURS } from '@/lib/tourData';
 import { waLink } from '@/lib/contact';
 import { bookingWhatsAppText, formatWhen } from '@/lib/bookingMessage';
+import { stashPersonalPrefill } from '@/lib/bookingPrefill';
 import styles from './HeroSearchBar.module.css';
 
 type Mode = 'transfers' | 'hourly' | 'daytrips';
@@ -139,7 +140,13 @@ function HeroSearchBarInner() {
         return Object.keys(e).length === 0;
     }
 
-    function buildParams(): URLSearchParams {
+    /**
+     * The trip, as /book-online query params. Name, email and note are NOT
+     * included when they could be handed over through sessionStorage
+     * instead (lib/bookingPrefill): a page address is recorded by Google
+     * Analytics, and personal details must not be.
+     */
+    function buildParams(includePersonal = true): URLSearchParams {
         const params = new URLSearchParams();
         params.set('mode', mode);
         params.set('from', from);
@@ -161,10 +168,10 @@ function HeroSearchBarInner() {
         }
         params.set('passengers', String(passengers));
         params.set('luggage', String(luggage));
-        if (name.trim()) params.set('name', name.trim());
-        if (email.trim()) params.set('email', email.trim());
+        if (includePersonal && name.trim()) params.set('name', name.trim());
+        if (includePersonal && email.trim()) params.set('email', email.trim());
         if (vehicle) params.set('vehicleName', vehicle);
-        if (note.trim()) params.set('notes', note.trim());
+        if (includePersonal && note.trim()) params.set('notes', note.trim());
         return params;
     }
 
@@ -196,7 +203,11 @@ function HeroSearchBarInner() {
     function handleDetailsSubmit(e: React.FormEvent): boolean {
         e.preventDefault();
         if (!validateDetails()) return false;
-        router.push(`/book-online?${buildParams().toString()}`);
+        // Name, email and note go through this tab's sessionStorage, not the
+        // URL (lib/bookingPrefill); only if that is unavailable do they ride
+        // in the URL, where /book-online removes them again on arrival.
+        const stashed = stashPersonalPrefill({ name: name.trim(), email: email.trim(), notes: note.trim() });
+        router.push(`/book-online?${buildParams(!stashed).toString()}`);
         return true;
     }
 
@@ -492,6 +503,7 @@ function HeroSearchBarInner() {
             {/* Desktop / tablet: Step 2 swaps into the same bar, in place */}
             {step === 2 && <div className={styles.desktopOnly}>{stepHeader}</div>}
             <form
+                data-track-form="booking"
                 id={`${tabsId}-panel`}
                 role="tabpanel"
                 aria-labelledby={`${tabsId}-tab-${mode}`}
@@ -548,6 +560,7 @@ function HeroSearchBarInner() {
                             </button>
                         </div>
                         <form
+                            data-track-form="booking"
                             onSubmit={(e) => {
                                 if (step === 1) handleTripSubmit(e);
                                 else if (handleDetailsSubmit(e)) setMobileSheetOpen(false);

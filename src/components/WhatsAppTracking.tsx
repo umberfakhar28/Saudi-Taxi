@@ -4,9 +4,11 @@ import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   pageTemplateFromPath,
-  trackPhoneClick,
+  trackEmailClick,
+  trackFormStart,
   trackWhatsAppClick,
   whatsAppDestination,
+  type LeadFormType,
 } from '@/lib/analytics';
 
 /**
@@ -54,16 +56,29 @@ import {
 const WHATSAPP_LINK_SELECTOR = 'a[href*="wa.me"], a[href*="api.whatsapp.com"]';
 
 /**
- * Call buttons ride on the same listener, for the same reasons: they sit in
+ * Email links ride on the same listener, for the same reasons: they sit in
  * the same server-rendered pages, and one listener means one count per tap.
- * They report as phone_click, never as whatsapp_click. Their position label
- * comes from the same data-wa-cta attribute (the name predates calls being
- * tracked), so "sticky-mobile-bar" or "footer-contact" means the same
- * place for either channel. The admin exclusion
- * below matters even more here, since an admin tel: link is a customer's
- * own number.
+ * They report as email_click, with their position from the same data-wa-cta
+ * attribute (or the nearest landmark), so "footer-contact" means the same
+ * place for either channel. (Call buttons were tracked here as phone_click
+ * until 15 Nov 2026, when every call option was removed from the site.)
  */
-const PHONE_LINK_SELECTOR = 'a[href^="tel:"]';
+const EMAIL_LINK_SELECTOR = 'a[href^="mailto:"]';
+
+/**
+ * Lead forms mark themselves with data-track-form="booking" | "contact" |
+ * "destination_enquiry"; the first focus inside one is its form_start.
+ */
+const FORM_SELECTOR = '[data-track-form]';
+const FORM_TYPES: readonly LeadFormType[] = ['booking', 'contact', 'destination_enquiry'];
+
+/**
+ * Vehicle cards and price rows name their vehicle with data-vehicle on the
+ * button (a value from the site's own fleet data, never customer input).
+ */
+function vehicleFor(anchor: Element): string | undefined {
+  return anchor.closest('[data-vehicle]')?.getAttribute('data-vehicle')?.trim() || undefined;
+}
 
 /**
  * The admin portal is excluded, and not as a matter of taste.
@@ -130,15 +145,15 @@ export default function WhatsAppTracking() {
       if (!(target instanceof Element)) return;
 
       const anchor = target.closest(WHATSAPP_LINK_SELECTOR);
-      const callAnchor = anchor ? null : target.closest(PHONE_LINK_SELECTOR);
-      if (!anchor && !callAnchor) return;
+      const mailAnchor = anchor ? null : target.closest(EMAIL_LINK_SELECTOR);
+      if (!anchor && !mailAnchor) return;
 
       const path = pathRef.current || window.location.pathname;
       if (EXCLUDED_PATH.test(path)) return;
 
       const pageLocation = `${window.location.origin}${window.location.pathname}`;
-      if (callAnchor) {
-        trackPhoneClick(ctaSourceFor(callAnchor), pageTemplateFor(path), { pagePath: path, pageLocation });
+      if (mailAnchor) {
+        trackEmailClick(ctaSourceFor(mailAnchor), { pagePath: path, pageLocation });
         return;
       }
       if (!anchor) return;
@@ -147,7 +162,25 @@ export default function WhatsAppTracking() {
         pagePath: path,
         pageLocation,
         linkUrl: whatsAppDestination(anchor.getAttribute('href') || ''),
+        vehicle: vehicleFor(anchor),
       });
+    };
+
+    // First interaction inside a lead form = form_start (trackFormStart keeps
+    // it to once per form per page view). focusin bubbles, so one listener
+    // covers every form, including ones rendered after navigation. change and
+    // input are listened to as well: Safari does not focus a radio button or
+    // checkbox when it is clicked, and /book-online opens with radio cards.
+    const onFocusIn = (event: Event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const form = target.closest(FORM_SELECTOR);
+      if (!form) return;
+      const type = form.getAttribute('data-track-form') as LeadFormType;
+      if (!FORM_TYPES.includes(type)) return;
+      const path = pathRef.current || window.location.pathname;
+      if (EXCLUDED_PATH.test(path)) return;
+      trackFormStart(type, path);
     };
 
     // Capture phase: the event is seen on the way down, so a handler further
@@ -155,7 +188,12 @@ export default function WhatsAppTracking() {
     // link is never intercepted — no preventDefault, nothing awaited — so
     // WhatsApp opens exactly as it did before, blocked analytics or not.
     document.addEventListener('click', onClick, true);
-    return () => document.removeEventListener('click', onClick, true);
+    const formEvents = ['focusin', 'change', 'input'] as const;
+    formEvents.forEach((name) => document.addEventListener(name, onFocusIn, true));
+    return () => {
+      document.removeEventListener('click', onClick, true);
+      formEvents.forEach((name) => document.removeEventListener(name, onFocusIn, true));
+    };
   }, []);
 
   return null;

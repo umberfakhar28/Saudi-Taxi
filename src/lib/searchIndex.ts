@@ -41,6 +41,24 @@ export const SEARCH_INDEX: SearchEntry[] = [
   })),
 ];
 
+/**
+ * A short route label for analytics, e.g. "Riyadh-Bahrain" or "RUH-Dammam":
+ * cities by name, airports by IATA code. Only when BOTH ends are values from
+ * this index — anything a customer typed freely is never sent anywhere.
+ */
+export function routeLabel(from: string, to: string): string | undefined {
+  const a = placeLabel(from);
+  const b = placeLabel(to);
+  return a && b ? `${a}-${b}` : undefined;
+}
+
+/** "Riyadh" for a city value, "RUH" for an airport value, else undefined. */
+export function placeLabel(value: string): string | undefined {
+  const e = SEARCH_INDEX.find((x) => x.value === value);
+  if (!e) return undefined;
+  return e.type === "airport" ? e.id.replace(/^airport-/, "") : e.label;
+}
+
 export function searchEntries(query: string): SearchEntry[] {
   const q = query.trim().toLowerCase();
   if (!q) return SEARCH_INDEX;

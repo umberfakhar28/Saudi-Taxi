@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { MapPinIcon, CalendarIcon, UserIcon, PackageIcon, CarIcon, WhatsAppIcon, CheckCircleIcon } from './Icons';
 import { WHATSAPP_URL, waLink } from '@/lib/contact';
 import { FLEET_TIERS } from '@/lib/fleetConfig';
-import { SEARCH_INDEX } from '@/lib/searchIndex';
+import { SEARCH_INDEX, placeLabel } from '@/lib/searchIndex';
 import styles from './DestinationEnquiryForm.module.css';
 import TurnstileWidget from './TurnstileWidget';
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from '@/lib/antiSpamClient';
-import { trackFormSubmit, FORM_EVENTS } from '@/lib/analytics';
+import { trackLead } from '@/lib/analytics';
 // This form is English-only (it renders on the English destination pages),
 // so it maps the booking API's error codes through the English strings.
 import { ui, bookingErrorMessage } from '@/lib/i18n';
@@ -150,10 +150,15 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
             // is allowed to fail without the enquiry being lost, so it must
             // not be allowed to make a saved enquiry go uncounted.
             // destinationName comes from site data, not from the customer.
-            trackFormSubmit(FORM_EVENTS.destinationEnquiry, {
+            trackLead({
                 formType: 'destination_enquiry',
                 pagePath: window.location.pathname,
+                submitKey: String(bookingJson.booking?.id ?? bookingJson.id ?? `${Date.now()}`),
                 detail: destinationName,
+                // Only when the pickup was picked from the site's own list;
+                // the destination name is site data.
+                route: placeLabel(form.pickup) ? `${placeLabel(form.pickup)}-${destinationName}` : undefined,
+                vehicle: form.vehicle ? vehicleLabel : undefined,
             });
 
             // Emails and the admin alert are sent by the server once the
@@ -189,7 +194,7 @@ export default function DestinationEnquiryForm({ destinationName, countryName, s
     }
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit} data-track-form="destination_enquiry">
             <div className={styles.destinationChip}>
                 <MapPinIcon size={16} />
                 Destination: <strong>{destinationName}, {countryName}</strong>

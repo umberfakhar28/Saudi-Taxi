@@ -8,7 +8,7 @@ import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { WHATSAPP_URL, PHONE_DISPLAY, waLink } from "@/lib/contact";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
 import { normalizeContactInput, validateContact, contactMessageText, type ContactErrors } from "@/lib/contactMessage";
-import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
+import { trackLead } from "@/lib/analytics";
 
 const schemas = [
     breadcrumbSchema([{ name: "الرئيسية", path: "/ar" }, { name: "تواصل معنا", path: "/ar/contact-us" }]),
@@ -118,12 +118,13 @@ export default function ArContactUsClient() {
             }
 
             // Counted at the same point as the English form, and with the
-            // same event name — page_language separates the two, so an
+            // same event name — `language` separates the two, so an
             // Arabic enquiry is comparable to an English one rather than
             // living in a metric of its own.
-            trackFormSubmit(FORM_EVENTS.contact, {
+            trackLead({
                 formType: 'contact',
                 pagePath: window.location.pathname,
+                submitKey: String(json.reference ?? `${Date.now()}`),
                 detail: input.service || undefined,
             });
             setSubmitted({ reference: json.reference ?? '' });
@@ -239,7 +240,7 @@ export default function ArContactUsClient() {
                             </div>
                         </div>
                         ) : (
-                        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+                        <form className={styles.form} onSubmit={handleSubmit} noValidate data-track-form="contact">
                             {formError && (
                                 <div
                                     role="alert"

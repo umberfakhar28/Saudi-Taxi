@@ -7,11 +7,12 @@ import { waLink } from "@/lib/contact";
 import { HOURLY_DURATIONS, VEHICLE_OPTIONS } from "@/lib/searchBarConfig";
 import { bookingWhatsAppText, formatWhen } from "@/lib/bookingMessage";
 import { TOURS } from "@/lib/tourData";
-import { SEARCH_INDEX } from "@/lib/searchIndex";
+import { SEARCH_INDEX, routeLabel } from "@/lib/searchIndex";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { getSpamPass, submissionHeaders, honeypotFieldProps } from "@/lib/antiSpamClient";
-import { trackFormSubmit, FORM_EVENTS } from "@/lib/analytics";
+import { trackLead } from "@/lib/analytics";
+import { stripPersonalParamsFromAddressBar, takePersonalPrefill } from "@/lib/bookingPrefill";
 import { ui, SERVICE_LABELS_AR, bookingErrorMessage, type Locale } from "@/lib/i18n";
 import { BOOKING_SERVICES } from "@/lib/bookingServices";
 import { bookingRef } from "@/lib/bookingRef";
@@ -147,6 +148,17 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
     // param is left at its default rather than blocking the rest of the
     // prefill (Homepage Hero + Multi-Mode Search addendum §2.4).
     useEffect(() => {
+        // Personal details from the homepage arrive through sessionStorage
+        // (lib/bookingPrefill), or — older links, the WebMCP tool, a browser
+        // without storage — in the URL. Either way they are read here once
+        // and then removed from the address bar before analytics loads, so
+        // no page address recorded by Google Analytics ever contains them.
+        const personal = takePersonalPrefill();
+        const nameParam = personal.name || searchParams.get('name') || '';
+        const emailParam = personal.email || searchParams.get('email') || '';
+        const notesParam = personal.notes || searchParams.get('notes') || '';
+        stripPersonalParamsFromAddressBar();
+
         const mode = searchParams.get('mode');
         const fromParam = searchParams.get('from');
         const vehicleSlug = searchParams.get('vehicle');
@@ -194,9 +206,6 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
         // details step (HeroSearchBar). Luggage and the return leg get their
         // own fields rather than being written into the notes box, where a
         // customer editing their note could delete them without noticing.
-        const nameParam = searchParams.get('name') ?? '';
-        const emailParam = searchParams.get('email') ?? '';
-        const notesParam = searchParams.get('notes') ?? '';
         const returnTrip = returnDate ? formatWhen(returnDate, returnTime ?? '') : '';
 
         setFormData((prev) => ({
@@ -416,12 +425,18 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
             // the emails below, and not at setSubmitted. The customer
             // upsert in step 1 is an intermediate step and is deliberately
             // not counted: only this insert means a real enquiry was saved.
-            // `service` is a radio value from a fixed list; nothing the
-            // customer typed is sent.
-            trackFormSubmit(FORM_EVENTS.booking, {
+            // `service` is a radio value from a fixed list, the route is
+            // sent only when both ends were picked from the site's own list,
+            // and the vehicle comes from the fleet buttons; nothing the
+            // customer typed is sent. The saved row's id makes it one lead
+            // per booking, whatever happens to this handler afterwards.
+            trackLead({
                 formType: 'booking',
                 pagePath: window.location.pathname,
+                submitKey: String(insertedBooking?.id ?? bookingJson.id ?? `${Date.now()}`),
                 detail: formData.service || undefined,
+                route: routeLabel(formData.from, formData.to),
+                vehicle: formData.vehicleName || undefined,
             });
 
             // The customer-facing reference, derived from the row that now
@@ -508,7 +523,7 @@ export default function BookOnlineClient({ locale = 'en' }: { locale?: Locale } 
                             })}
                         </ol>
 
-                        <form onSubmit={handleSubmit} noValidate>
+                        <form onSubmit={handleSubmit} noValidate data-track-form="booking">
                             {/* ───────── Step 1 — Your Trip ───────── */}
                             {step === 1 && (
                                 <div className="card">
