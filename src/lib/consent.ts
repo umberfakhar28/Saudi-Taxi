@@ -147,6 +147,36 @@ export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G
 
 let loaded = false;
 
+/** The only hosts whose visits belong in the GA property. */
+const ANALYTICS_HOSTS = new Set(["gulftripservice.com", "www.gulftripservice.com"]);
+
+/**
+ * May this page send anything to GA at all, consent aside?
+ *  - only on the live domain: local `npm run dev`, local test runs and Vercel
+ *    preview URLs used to report into the live property, because the ID has
+ *    a hard-coded fallback;
+ *  - never in the admin portal: staff page views are not visitors, and admin
+ *    WhatsApp links carry customers' own phone numbers.
+ */
+export function analyticsPageAllowed(pathname: string = typeof location === "undefined" ? "" : location.pathname): boolean {
+  if (typeof location === "undefined") return false;
+  if (!ANALYTICS_HOSTS.has(location.hostname)) return false;
+  return !/^\/admin(\/|$)/.test(pathname);
+}
+
+/**
+ * Switch GA collection off (true) or back on (false) for this tab, without
+ * unloading it — used when a client-side navigation enters or leaves /admin.
+ */
+export function pauseAnalytics(paused: boolean, measurementId: string = GA_MEASUREMENT_ID): void {
+  if (typeof window === "undefined") return;
+  // Leaving /admin never overrides a Reject made earlier in this tab.
+  (window as unknown as Record<string, unknown>)[`ga-disable-${measurementId}`] = paused || revoked;
+}
+
+/** True after a Reject in this tab (until an Accept). */
+let revoked = false;
+
 /**
  * Load GA4 once. Idempotent: the footer link, the banner and the page-load
  * check can all call it, and only the first does anything.
@@ -157,7 +187,7 @@ let loaded = false;
  * keeps GA behaving exactly as it did before this module existed.
  */
 export function loadGoogleAnalytics(measurementId: string = GA_MEASUREMENT_ID): void {
-  if (loaded || typeof window === "undefined") return;
+  if (loaded || typeof window === "undefined" || !analyticsPageAllowed()) return;
   loaded = true;
 
   window.dataLayer = window.dataLayer || [];
@@ -177,7 +207,10 @@ export function loadGoogleAnalytics(measurementId: string = GA_MEASUREMENT_ID): 
     });
   }
   window.gtag("js", new Date());
-  window.gtag("config", measurementId);
+  // ?ga_debug=1 on any page sends that page view's hits to GA4 DebugView
+  // (Admin → DebugView), for checking events without waiting for reports.
+  const debug = new URLSearchParams(location.search).has("ga_debug");
+  window.gtag("config", measurementId, debug ? { debug_mode: true } : {});
 
   const script = document.createElement("script");
   script.async = true;
@@ -192,6 +225,7 @@ export function loadGoogleAnalytics(measurementId: string = GA_MEASUREMENT_ID): 
  * on later client-side navigations.
  */
 export function revokeAnalytics(measurementId: string = GA_MEASUREMENT_ID): void {
+  revoked = true;
   (window as unknown as Record<string, unknown>)[`ga-disable-${measurementId}`] = true;
   if (typeof window.gtag === "function") {
     window.gtag("consent", "update", { analytics_storage: "denied" });
@@ -205,6 +239,7 @@ export function revokeAnalytics(measurementId: string = GA_MEASUREMENT_ID): void
  * set, so the flag is cleared and consent updated rather than loading twice.
  */
 export function grantAnalytics(measurementId: string = GA_MEASUREMENT_ID): void {
+  revoked = false;
   if (!loaded) {
     loadGoogleAnalytics(measurementId);
     return;
