@@ -526,3 +526,27 @@ Method:
    - open any page with `?ga_debug=1` (e.g. `https://gulftripservice.com/riyadh-to-bahrain-taxi-service?ga_debug=1`);
    - press a WhatsApp button and an email link;
    - watch the events arrive in Admin → DebugView.
+
+---
+
+## Deployment 3: F9 `/public` slim-down (16 Nov 2026)
+
+| | Before | After |
+|---|---|---|
+| `/public` size (copied into every deployment) | 150 MB | **26 MB** |
+| PNG files | 71 (130.6 MB) | 8 (icons, email logo, CEO photo) |
+
+- **F9a:** 44 unused PNGs removed (86.4 MB). This is the owner-approved list; each file was checked by path, URL-encoded path, filename and code-built path.
+- **F9b:** the 19 photos still in use (9 distance cards, 10 city photos) were converted to WebP at quality 90.
+  - Total size: 42.5 MB → 5.0 MB.
+  - Dimensions are unchanged.
+  - PSNR is 39.0–42.7 dB, and a zoomed side-by-side shows no visible difference.
+- **Kept as PNG:** favicons and app icons, the email logo, and the CEO photo (also the About page's social-preview image).
+- **Checks:**
+  - Every sitemap page (174) was loaded in a browser and scrolled: no image fails apart from the two below.
+  - `<head>` diff: the only change is the social-preview image on `/services/riyadh`, `/jeddah` and `/makkah`, which now points at the `.webp`.
+
+**Pre-existing, not caused by F9:**
+- `/jeddah-to-makkah-guide` (`content/jeddah-to-makkah-taxi.html`) shows two images that have never existed in the repo: `/images/jeddah-city.jpg` and `/images/makkah-haram.jpg`.
+- Both return 404 on the live site today.
+- This is reported only: it needs either real photos or the two `<img>` tags removed.
