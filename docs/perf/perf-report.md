@@ -431,3 +431,98 @@ Method:
 - **Region / GA:** first visit makes 1 `/api/region` call → cookie `other` → gtag.js loads. The second page view makes no call.
 
 **Next:** in 24–48 h, compare Vercel Observability (proxy invocations/day, ~12K before) and Usage (Function Invocations, Active CPU).
+
+---
+
+## Deployment 2: F4–F8 (built and tested locally, 16 Nov 2026)
+
+### F4: caching and limits
+- `images.minimumCacheTTL` is now 31 days: an optimised image is re-encoded at most monthly, not every 4 h.
+- Browser caching for `/public` files, which Vercel serves with `max-age=0` by default:
+  - images and video: 7 days, plus 1 day `stale-while-revalidate`;
+  - `/fonts/*`: 1 year.
+  - Not `immutable`, because the filenames carry no hash.
+- `maxDuration`:
+  - 15 s on every API route;
+  - 60 s for the inbound-email webhook (unchanged) and the daily reminder cron.
+
+### F5: admin
+- `prefetch={false}` on every admin `<Link>` (24 links in 12 files). Each admin prefetch ran the proxy's sign-in check.
+- The dashboard filter uses `router.replace`.
+- The admin portal has its own metadata: title "Admin | Gulf Trip Service", `noindex, nofollow, nocache`, and no canonical. It used to inherit the homepage's.
+- `app/admin/layout.tsx` is now a small server wrapper. The portal itself (`AdminLayoutClient.tsx`) is unchanged.
+- An idle admin tab still makes 0 requests to Vercel. There are no timers; realtime goes straight to Supabase.
+
+### F6: where GA runs
+- GA loads only on `gulftripservice.com` / `www`. Not on localhost or `*.vercel.app` previews: the empty env variable used to fall back to the live ID.
+- It never loads on `/admin`.
+- A client-side move into `/admin` pauses collection, and leaving resumes it. Pausing never overrides a visitor's Reject.
+- `?ga_debug=1` on any page sends that page's hits to GA4 **DebugView**.
+
+### F7: GA4 event set (all through `lib/analytics.ts`)
+
+| Old event | New event | When it fires | Parameters |
+|---|---|---|---|
+| `booking_form_submit` | **`generate_lead`** | `/book-online` (EN+AR), after `/api/bookings/create` returns OK | `form_type=booking`, `form_location`=page path, `form_detail`=service, `route`*, `vehicle`*, `value`+`currency=SAR`**, `page_template`, `site_language` |
+| `destination_enquiry_submit` | **`generate_lead`** | destination pages, after the enquiry is saved | `form_type=destination_enquiry`, `form_location`=page path, `form_detail`=destination, `route`*, `vehicle`* |
+| `contact_form_submit` | **`generate_lead`** | `/contact-us` + `/ar/contact-us`, after the message is saved | `form_type=contact`, `form_location=contact`, `form_detail`=topic |
+| `whatsapp_click` | `whatsapp_click` | any WhatsApp link | **`button_location`** (header / hero / sticky / floating / vehicle_card / price_card / form / footer / in_page), `cta_source` (granular label), **`route`** (from the page URL), **`vehicle`** (vehicle cards and price rows), `page_template`, `link_url` (no message text), `site_language` |
+| — | **`email_click`** | any `mailto:` link | `button_location`, `cta_source`, `site_language` |
+| — | **`form_start`** | first focus, change or typing in a lead form, once per form per page view | `form_type`, `form_location`, `site_language` |
+| `phone_click` | *(removed)* | call links no longer exist | — |
+
+\* Only when taken from the site's own lists (the location list, the fleet). Anything a customer typed is never sent.
+\*\* Sent only when a price is known. **No form has a price today**, so `value`/`currency` stay empty until one does.
+
+**Parameter-name notes:**
+- The page language goes out as **`site_language`**, not `language`. In gtag, `language` is GA's own field for the visitor's *browser* language, so sending "en" would have overwritten GA's Language report.
+- `page_path` / `page_location` are read by gtag as the page itself, i.e. GA's built-in Page path / Page location dimensions.
+
+**Guards against double-firing:**
+- `generate_lead` fires once per saved record (keyed by the record id/reference).
+- WhatsApp and email clicks: the same button within 1 s counts once.
+- `form_start`: once per form per page view.
+
+**Tested on the local production build**, served as gulftripservice.com. GA hits were captured, never delivered, and the lead APIs were stubbed (no database rows, no emails):
+- one `page_view` per load;
+- `whatsapp_click` (vehicle card, double-tapped) once, with `button_location=vehicle_card route=Riyadh-Bahrain vehicle=Toyota Camry`;
+- `email_click` with `button_location=footer`;
+- `form_start` once;
+- one `generate_lead` with `form_type=booking route=Riyadh-Dammam vehicle=SUV`;
+- no GA on `/admin/login` or on localhost.
+
+**Personal data in GA (found while testing, fixed in the same commit):**
+- **The problem:** the homepage search bar's step 2 put the customer's **name, email and note into the `/book-online` URL**, and GA records every page URL. Google's terms forbid personal data in GA, and it can delete a property's data over it.
+- **The fix:** those fields now go to `/book-online` through the tab's `sessionStorage`, read once and then cleared (`lib/bookingPrefill.ts`). `/book-online` also strips `name`, `email`, `phone` and `notes` from any URL that still carries them (old links, the WebMCP tool), and GA's first page_view is given that cleaned address explicitly.
+- **Tested:**
+  - a URL with all four fields → address bar and GA hits contain none of them, and the form is still prefilled;
+  - the real homepage flow → `/book-online` URL without personal fields, name prefilled, no personal data in any hit.
+- **Still in the URL:** free-text pickup/drop-off addresses (from the trip step) can still appear in it. GA's own "Redact data" setting can cover them (checklist below).
+
+### F8: deployments
+- **`vercel.json` `ignoreCommand` → `scripts/vercel-ignore-build.sh`:**
+  - `main` builds production unless only docs changed (`*.md`, `docs/`, `seo-audit/`, `tests/`);
+  - `preview/*` builds a preview;
+  - every other branch is skipped.
+  - Simulated for all four cases. When it can't compare commits it builds, to be safe.
+- **`DEPLOY.md`:**
+  - workflow (dev branch → local `npm run build` → batch merge to `main`);
+  - no manual redeploys of the same commit;
+  - clean-up order (errored → duplicate commits → old previews → production beyond the newest 5) with dashboard steps and `vercel rm --safe` commands (not run);
+  - the Deployment Retention Policy setting.
+
+### GA4 UI checklist for the owner (updated)
+1. Admin → Data streams → Web: confirm the Measurement ID is **G-TQZY85DG7H**.
+2. Admin → Events: once `generate_lead` appears (up to 24 h after the first real lead), **mark `generate_lead` and `whatsapp_click` as Key events**. `whatsapp_click` can be marked now. The old `booking_form_submit` / `contact_form_submit` / `destination_enquiry_submit` / `phone_click` will stop arriving; leave them unmarked.
+3. Admin → Events: remove any "Create event" or "Modify event" rules that copy these events.
+4. Data streams → Web → **Enhanced measurement**:
+   - keep **Page views** + "Page changes based on browser history events" **ON**;
+   - turn **Form interactions OFF** (our `form_start` / `generate_lead` replace it);
+   - optionally turn **Outbound clicks OFF**: every WhatsApp tap otherwise also sends GA's own `click` event, and `whatsapp_click` / `email_click` already cover them.
+5. Data streams → Web → **Redact data**: turn on email redaction, and add `name, email, phone, notes, from, to` to the URL query parameters to redact (a second layer for the URL issue above).
+6. Data streams → Configure tag settings → **Define internal traffic**: add the owner's and team's IPs. Then Admin → Data filters → "Internal Traffic" → **Active**.
+7. **Custom definitions** (Admin → Custom definitions → Create custom dimension, scope Event), so the parameters show in reports: `form_type`, `form_location`, `button_location`, `cta_source`, `route`, `vehicle`, `site_language`, `page_template`.
+8. Verify in **DebugView**:
+   - open any page with `?ga_debug=1` (e.g. `https://gulftripservice.com/riyadh-to-bahrain-taxi-service?ga_debug=1`);
+   - press a WhatsApp button and an email link;
+   - watch the events arrive in Admin → DebugView.
