@@ -358,3 +358,76 @@ Every item below leaves content, design, URLs, canonicals, hreflang, schema and 
 ```
 
 223 pages generated at build. Legend: `○` static, `●` SSG, `ƒ` server-rendered on demand.
+
+---
+
+## SEO flags (report only, not fixed on this branch)
+
+Checked on the live site on 16 Nov 2026.
+
+| URL | Live status | robots | canonical | In sitemap | Internal links to it |
+|---|---|---|---|---|---|
+| `/contact` | **308 → `/contact-us`** (`next.config.ts` redirect) | — | — | no | 0 |
+| `/contact-us` | 200 | indexable | self | yes | many |
+| `/cart` | 200 | `noindex, follow` | self | no | 1 (breadcrumb on `/checkout`) |
+| `/checkout` | 200 | `noindex, follow` | self | no | 0 |
+| `/my-account` | 200 | `noindex, follow` | self | no | 0 |
+| `/pay-online` | 200 | `noindex, follow` | self | no | 0 |
+
+**`/contact` vs `/contact-us`: not a duplicate.**
+- `/contact` permanently redirects to `/contact-us`, so only one URL can be indexed.
+- The `src/app/contact/page.tsx` file still exists, but the redirect wins and its page is never served.
+- Deleting that file would be housekeeping only, with no SEO effect.
+
+**`/cart`, `/checkout`, `/my-account`, `/pay-online`: unused template leftovers.**
+- All four are `noindex`, absent from the sitemap, and orphaned: nothing on the site links to them except `/checkout`'s breadcrumb to `/cart`.
+- They do no SEO harm as they are.
+- Options for later:
+  - leave them as they are;
+  - or 301 them to `/book-online`, delete the pages, and drop them from the build (four fewer prerendered pages per deployment).
+
+---
+
+## Deployment 1: F1 + F2 + F3 (live 16 Nov 2026, 09:26 UTC, commit `470067f`)
+
+### Requests to Vercel per page view (live, same Playwright method before and after)
+
+Method:
+- fresh browser, GA blocked;
+- load the page, then scroll to the bottom;
+- count every request to gulftripservice.com.
+
+**Proxy runs** are the number of those requests that invoke the proxy (a Vercel function).
+
+| Page | Device | Requests before | Requests after | RSC prefetches before → after | Proxy runs before → after |
+|---|---|---|---|---|---|
+| `/` | desktop | 353 | **50** | 292 → 8 | ~293 → **0** |
+| `/airport-transfers` | desktop | 347 | **32** | 307 → 8 | ~308 → **0** |
+| `/ar` | desktop | 88 | **29** | 60 → 9 | ~61 → **0** |
+| `/ar/riyadh-to-bahrain-taxi-service` | desktop | 105 | **33** | 73 → 9 | ~74 → **0** |
+| `/` | mobile | 222 | **51** | 165 → 8 | ~166 → **0** |
+| `/airport-transfers` | mobile | 163 | **32** | 131 → 8 | ~132 → **0** |
+| `/ar` | mobile | 88 | **29** | 60 → 9 | ~61 → **0** |
+| `/ar/riyadh-to-bahrain-taxi-service` | mobile | 105 | **33** | 73 → 9 | ~74 → **0** |
+
+**What the "after" numbers include:**
+- The 8–9 remaining prefetches are Home and Book Now (EN or AR), about 4 segment requests each.
+- "after" also includes one `/api/region` call, made on the first visit only (30-day cookie). That call is now the only function a public visitor triggers.
+- Requests fell **72–91%**. Proxy invocations from public page views fell **100%**.
+
+### Checks on live after deploy
+
+- **`<head>` of 12 pages unchanged:** title, meta, canonical, hreflang, JSON-LD, H1. Diff = 0 lines (EN + AR, route, city, destination, hotel, distance, guide, contact).
+- **No `Set-Cookie` on public pages or bot 404s** (the proxy no longer runs there).
+- **Markdown for agents:** `Accept: text/markdown` on `/routes` returns `200 text/markdown`, `X-Markdown-Tokens: 917`, the same as before.
+- **Signed-out admin:**
+  - `/admin`, `/admin/dashboard`, `/admin/bookings`, `/admin/invoices/[id]`, `/admin/settings`, `/admin/users` and admin RSC prefetches all return `307 → /admin/login`.
+  - `/api/admin/*` returns `401`/`403`.
+  - `/api/emails/send` returns `401`.
+- **Unknown slugs:** `/destinations/zz-…` and `/hotels/riyadh/zz-…` return `404` from cache (`HIT`; before: `MISS`, a server render).
+- **Intent prefetch:**
+  - Desktop: hovering a drop-down link 3× prefetches that one page once. The click then shows it in **119 ms** with no further request.
+  - Mobile: a tap on a footer link fetches the page on touch. In the headless test (from Pakistan, where touch and click arrive together) it showed in about 1.1 s. A real finger gives ~100 ms of head start, and Gulf visitors are closer to Vercel's edge.
+- **Region / GA:** first visit makes 1 `/api/region` call → cookie `other` → gtag.js loads. The second page view makes no call.
+
+**Next:** in 24–48 h, compare Vercel Observability (proxy invocations/day, ~12K before) and Usage (Function Invocations, Active CPU).
