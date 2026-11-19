@@ -29,6 +29,32 @@
     margin: 0;
 }
 
+/* Banner heading: big, bold and uppercase in a gold frame, centred. */
+.headerBanner {
+    text-align: center;
+}
+
+.titleBanner {
+    margin: 0 0 var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    border: 3px solid var(--gold);
+    border-radius: var(--radius-md);
+    color: var(--navy);
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    line-height: 1.15;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+}
+
+@media (max-width: 640px) {
+    .titleBanner {
+        font-size: var(--text-xl);
+        padding: var(--space-3) var(--space-4);
+    }
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 1.3fr) repeat(3, 1fr);

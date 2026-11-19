@@ -31,6 +31,9 @@ interface QuickBookFormProps {
     footerNote?: string;
     /** Heading level for the card title. Defaults to h3. */
     headingAs?: "h2" | "h3";
+    /** "banner": a large, bold, uppercase heading in a gold frame, for a
+     *  keyword-rich heading such as "Online Booking for Riyadh to Kuwait Taxi". */
+    headingStyle?: "default" | "banner";
     /** First line of the WhatsApp message, e.g. "Hi, I want to book
      *  Riyadh to Bahrain". When set, the message lists the chosen vehicle
      *  with its price (the option label), then date, time and passengers,
@@ -46,7 +49,7 @@ interface QuickBookFormProps {
  * for everything else (vehicle, contact details) — one booking system,
  * not a second parallel one that also has to write to Supabase.
  */
-export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading, subheading, locale = 'en', vehicles, maxPassengers = 8, footerNote, headingAs: Heading = 'h3', whatsappIntro }: QuickBookFormProps) {
+export default function QuickBookForm({ defaultFrom = "", defaultTo = "", service, heading, subheading, locale = 'en', vehicles, maxPassengers = 8, footerNote, headingAs: Heading = 'h3', headingStyle = 'default', whatsappIntro }: QuickBookFormProps) {
     const t = ui(locale);
     const title = heading ?? t.quickQuoteHeading;
     const router = useRouter();
@@ -104,8 +107,8 @@ export default function QuickBookForm({ defaultFrom = "", defaultTo = "", servic
 
     return (
         <div className={styles.card}>
-            <div className={styles.header}>
-                <Heading className={styles.title}>{title}</Heading>
+            <div className={headingStyle === 'banner' ? `${styles.header} ${styles.headerBanner}` : styles.header}>
+                <Heading className={headingStyle === 'banner' ? styles.titleBanner : styles.title}>{title}</Heading>
                 {subheading && <p className={styles.subtitle}>{subheading}</p>}
             </div>
 

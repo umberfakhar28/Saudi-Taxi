@@ -14,7 +14,17 @@ export type LandingIcon =
     | "mapPin" | "clock" | "landmark" | "route" | "coffee" | "tag" | "car"
     | "shieldCheck" | "home" | "luggage" | "fuel" | "messageCircle" | "users"
     | "briefcase" | "plane" | "fileCheck" | "badgeCheck" | "calendarCheck"
-    | "navigation" | "headset";
+    | "navigation" | "headset" | "creditCard" | "banknote" | "mail" | "receipt"
+    | "building" | "languages" | "anchor";
+
+/** The sections after the hero and the form, in the order a route lists
+ *  them. Routes without `order` keep the original sequence (DEFAULT_ORDER
+ *  in RouteLanding.tsx). Backgrounds alternate by position, so any order
+ *  still alternates ivory and white. */
+export type LandingSection =
+    | "highlights" | "prices" | "bookingMethods" | "payment" | "videos" | "timeline"
+    | "crossing" | "documents" | "airport" | "waysToTravel" | "included" | "howToBook"
+    | "destinations" | "hotels" | "nearby" | "faq" | "returnRoutes" | "finalCta";
 
 /** A real image, or a sized slot waiting for one. A slot renders as a
  *  styled placeholder with a fixed aspect ratio, so adding the photo later
@@ -43,6 +53,10 @@ export interface RouteLanding {
         subheading: string;
         chips: { icon: LandingIcon; label: string }[];
         priceBadge: string;
+        /** Small tag beside the price badge, e.g. "prices may vary". */
+        priceTag?: string;
+        /** Replaces the default "one way, per vehicle · time · distance" line. */
+        facts?: string;
         bookOnlineHref: string;
         image: {
             /** Largest file; smaller widths follow the -768 / -1280 naming. */
@@ -56,6 +70,8 @@ export interface RouteLanding {
     };
     form: {
         heading: string;
+        /** "banner": the big framed heading (Kuwait page, owner's reference). */
+        headingStyle?: "default" | "banner";
         subheading?: string;
         maxPassengers: number;
         footerNote: string;
@@ -71,7 +87,9 @@ export interface RouteLanding {
     prices: {
         heading: string;
         intro: string;
-        currency: "SAR";
+        currency: "SAR" | "KWD";
+        /** "starting": cards read "from 220 KWD". Default: the figure alone. */
+        basis?: "starting" | "fixed";
         confirmedOn: string;
         groups: { heading: string; vehicles: LandingVehicle[] }[];
         /** Short note card: private car vs a shared seat. */
@@ -101,7 +119,8 @@ export interface RouteLanding {
         heading: string;
         intro: string;
         steps: { icon: LandingIcon; title: string; body: string }[];
-        image: LandingImage;
+        /** Without an image the steps take the full width. */
+        image?: LandingImage;
         /** Airport sub-block inside the journey section (an H3, not a
          *  section of its own). */
         airport?: {
@@ -134,12 +153,20 @@ export interface RouteLanding {
         selfDrive?: string;
         callout: string;
         outro: string;
+        eyebrow?: string;
+        /** Photo beside the crossing options. */
+        image?: LandingImage;
+        /** Which crossing is used when: one card each. */
+        options?: { title: string; tag?: string; body: string }[];
+        /** Related pages, shown as a row of link buttons. */
+        links?: { href: string; label: string }[];
     };
     included: {
+        eyebrow?: string;
         heading: string;
         items: { icon: LandingIcon; title: string; body: string }[];
     };
-    howToBook: {
+    howToBook?: {
         heading: string;
         steps: { icon: LandingIcon; title: string; body: string }[];
     };
@@ -149,6 +176,53 @@ export interface RouteLanding {
         items: { href: string; name: string; blurb: string; image: LandingImage }[];
     };
     returnTrip: { text: string; href: string; label: string };
+    /** Overrides "{route} Taxi: Your Questions Answered". */
+    faqHeading?: string;
+    order?: LandingSection[];
+    /** Three ways to book: WhatsApp, the form above, email. */
+    bookingMethods?: {
+        heading: string;
+        intro?: string;
+        items: { kind: "whatsapp" | "form" | "email"; icon: LandingIcon; title: string; body: string; cta: string }[];
+    };
+    payment?: {
+        heading: string;
+        intro?: string;
+        items: { icon: LandingIcon; title: string; body: string }[];
+        /** Shown as a callout under the cards. */
+        note: string;
+    };
+    documents?: {
+        heading: string;
+        intro?: string;
+        items: { title: string; detail: string }[];
+        callout: string;
+    };
+    /** Airport as its own section (the timeline's airport block is a
+     *  sub-section of the journey). */
+    airport?: {
+        heading: string;
+        intro: string;
+        items: { icon: LandingIcon; title: string; body: string }[];
+        /** May carry [anchor](/path) links. */
+        links: string;
+        whatsappMessage: string;
+        ctaLabel: string;
+    };
+    destinations?: {
+        heading: string;
+        intro: string;
+        items: { name: string; blurb: string; href?: string }[];
+        link: { href: string; label: string };
+    };
+    /** Hotel cards. No hotel photos or logos, and no partnership claims. */
+    hotels?: {
+        heading: string;
+        intro: string;
+        items: { name: string; area: string; type: string; fromAirport: string }[];
+        note: string;
+    };
+    finalCta?: { heading: string; body: string };
     popularRoutes: {
         heading: string;
         items: { href: string; from: string; to: string; tag: string }[];
