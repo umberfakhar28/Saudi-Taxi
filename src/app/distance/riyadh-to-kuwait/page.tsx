@@ -3,13 +3,12 @@ import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
 
 export const metadata = generatePageMetadata({
-  // "by Road" matches the phrasing this page's search demand actually uses
-  // ("riyadh to kuwait by road", "... distance by road"), which Google bolds
-  // in the snippet. The border-crossing angle — the part a SERP distance
-  // panel can't answer — moves into the description, since the title has no
-  // room for it once generatePageMetadata appends the 20-char brand suffix.
-  title: "Riyadh to Kuwait by Road: 639 km",
-  description: "Riyadh to Kuwait is roughly 639 km via the inland crossing — plan most of a day once border processing and rest stops are counted.",
+  // Answers the search in the title (distance, time) and invites the click
+  // with the fare (docs/seo/kuwait/keyword-map.md, Step 3). Owner-confirmed
+  // figures, 19 Nov 2026. No brand suffix: it would push past 60 chars.
+  title: "Riyadh to Kuwait Distance by Road: 648 km, 7h 40m, Taxi Fare",
+  brandSuffix: false,
+  description: "Riyadh to Kuwait is about 648 km by road, roughly 7 h 40 min of driving via the Al Khafji–Al Nuwaiseeb border. Private taxi door to door from 220 KWD.",
   path: "/distance/riyadh-to-kuwait",
 });
 

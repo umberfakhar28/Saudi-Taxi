@@ -8,7 +8,7 @@ import {
   MapPinIcon, ClockIcon, GlobeIcon, ArrowRightIcon, MountainIcon,
   CheckCircleIcon, MessageIcon, ChevronDownIcon, CalendarIcon, CarIcon,
 } from '@/components/Icons';
-import { transferQuoteWhatsAppLink } from '@/lib/contact';
+import { transferQuoteWhatsAppLink, waLink } from '@/lib/contact';
 import type { DistanceRouteData } from '@/lib/distanceRouteData';
 import { distanceRoutes } from '@/lib/distanceRouteData';
 import routeStyles from './RoutePage.module.css';
@@ -82,6 +82,25 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
             <p data-distance-answer style={{ fontWeight: 600 }}>
               {data.origin} to {data.destination} is {data.roadDistance}, and the trip takes {data.driveTime}.
             </p>
+            {data.answerBox && (
+              <div
+                style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: 'var(--space-6) auto 0', padding: 'var(--space-5) var(--space-6)', background: 'var(--white)', border: '1px solid var(--line)', borderTop: '3px solid var(--gold)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}
+              >
+                <dl style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-4)', margin: 0, textAlign: 'center' }}>
+                  {data.answerBox.items.map((it) => (
+                    <div key={it.label}>
+                      <dt style={{ fontSize: 'var(--text-xs)', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>{it.label}</dt>
+                      <dd style={{ margin: '4px 0 0', fontWeight: 800, color: 'var(--navy)', fontSize: 'var(--text-lg)' }}>{it.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                {data.answerBox.arabic && (
+                  <p lang="ar" dir="rtl" style={{ margin: 'var(--space-4) auto 0', fontSize: 'var(--text-base)', color: 'var(--text-body)', animation: 'none' }}>
+                    {data.answerBox.arabic}
+                  </p>
+                )}
+              </div>
+            )}
             <p>{data.intro}</p>
             <div className="breadcrumb">
               <Link href="/">Home</Link> / <Link href="/distance">Distance Guides</Link> / <span>{data.breadcrumbLabel}</span>
@@ -128,7 +147,35 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
             Styling follows RoutePage's reverse-route callout, the site's
             established "next step" pattern, so it needs no new CSS and
             wraps onto two lines on a phone rather than overflowing. */}
-        {data.routeHref && (
+        {/* Booking box: the commercial next step, with the fare, for the
+            pages that set one (the Kuwait corridor first). */}
+        {data.bookingBox && (
+          <section style={{ padding: 'var(--space-8) 0 0' }}>
+            <div className="container">
+              <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-5)', flexWrap: 'wrap', padding: 'var(--space-6) var(--space-8)', borderInlineStart: '4px solid var(--gold)' }}>
+                <div style={{ flex: '1 1 320px' }}>
+                  <h2 style={{ fontSize: 'var(--text-2xl)', margin: '0 0 var(--space-2)', color: 'var(--navy)' }}>{data.bookingBox.title}</h2>
+                  <p style={{ margin: 0, color: 'var(--text-body)' }}>{data.bookingBox.text}</p>
+                  {data.bookingBox.links && (
+                    <p style={{ margin: 'var(--space-3) 0 0', display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
+                      {data.bookingBox.links.map((l) => (
+                        <Link key={l.href} href={l.href} style={{ color: 'var(--accent)', fontWeight: 700 }}>{l.label} →</Link>
+                      ))}
+                    </p>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
+                  <a data-wa-cta="booking-box" href={waLink(data.bookingBox.whatsappMessage)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                    <MessageIcon size={16} /> WhatsApp
+                  </a>
+                  <Link href={data.bookingBox.href} className="btn btn-primary">{data.bookingBox.hrefLabel}</Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {data.routeHref && !data.bookingBox && (
           <section style={{ padding: 'var(--space-8) 0 0' }}>
             <div className="container">
               <Link
@@ -243,6 +290,54 @@ export default function DistancePage({ data }: { data: DistanceRouteData }) {
             </div>
           </div>
         </section>
+
+        {/* The same corridor in the other direction, as its own H2, for
+            the searches that name it the other way round. */}
+        {data.reverse && (
+          <section className="section">
+            <div className="container" style={{ maxWidth: 860 }}>
+              <span className="section-eyebrow">Reverse direction</span>
+              <h2 className="section-title">{data.reverse.heading}</h2>
+              {data.reverse.paragraphs.map((p, i) => (
+                <p key={i} style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-5)' }}>{p}</p>
+              ))}
+              <Link href={data.reverse.link.href} className="btn btn-outline-gold">{data.reverse.link.label}</Link>
+            </div>
+          </section>
+        )}
+
+        {data.comparison && (
+          <section className="section" style={{ background: 'var(--bg-subtle)' }}>
+            <div className="container" style={{ maxWidth: 960 }}>
+              <div className="section-header centered">
+                <span className="section-eyebrow">Compare</span>
+                <h2 className="section-title">{data.comparison.heading}</h2>
+                <p className="section-subtitle">{data.comparison.intro}</p>
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--white)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', fontSize: 'var(--text-sm)' }}>
+                  <thead>
+                    <tr>
+                      {data.comparison.head.map((h) => (
+                        <th key={h} scope="col" style={{ textAlign: 'start', padding: 'var(--space-3) var(--space-4)', background: 'var(--navy)', color: 'var(--on-dark)' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.comparison.rows.map((r) => (
+                      <tr key={r[0]}>
+                        {r.map((c, i) => i === 0
+                          ? <th key={i} scope="row" style={{ textAlign: 'start', padding: 'var(--space-3) var(--space-4)', borderTop: '1px solid var(--line)', color: 'var(--navy)' }}>{c}</th>
+                          : <td key={i} style={{ padding: 'var(--space-3) var(--space-4)', borderTop: '1px solid var(--line)', color: 'var(--text-body)' }}>{c}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {data.comparison.note && <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', marginTop: 'var(--space-3)' }}>{data.comparison.note}</p>}
+            </div>
+          </section>
+        )}
 
         {/* Travel Options */}
         <section className="section">

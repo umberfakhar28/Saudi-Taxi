@@ -3,8 +3,9 @@ import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
 
 export const metadata = generatePageMetadata({
-  title: "Dammam to Kuwait Distance: 410 km by Road",
-  description: "Dammam to Kuwait is about 410 km along the Gulf coast, roughly 5 to 6 hours including the Al Nuwaiseeb crossing. What affects the time, plus private transfers.",
+  title: "Dammam to Kuwait Distance by Road: 410 km, 4.5 hrs + Border",
+  brandSuffix: false,
+  description: "Dammam to Kuwait is about 410 km by road, around 4.5 hours of driving via the Khafji–Nuwaiseeb border. Private door-to-door taxi, 24/7, on WhatsApp.",
   path: "/distance/dammam-to-kuwait",
 });
 

@@ -102,6 +102,29 @@ export interface DistanceRouteData {
    */
   routeHref?: string;
 
+  /**
+   * A boxed answer in the hero: the figures someone searched for, before
+   * anything else (featured-snippet shape). `arabic` adds one line in
+   * Arabic for the Arabic searches the page is shown for.
+   */
+  answerBox?: { items: { label: string; value: string }[]; arabic?: string };
+  /**
+   * A booking box straight under the hero, replacing the plain route-page
+   * card: the commercial next step, with the fare where one is confirmed.
+   * `links` points at route pages when no single page owns the corridor.
+   */
+  bookingBox?: {
+    title: string;
+    text: string;
+    href: string;
+    hrefLabel: string;
+    whatsappMessage: string;
+    links?: { href: string; label: string }[];
+  };
+  /** The same corridor the other way round, as its own H2. */
+  reverse?: { heading: string; paragraphs: string[]; link: { href: string; label: string } };
+  /** A small comparison table, e.g. the three ways into Kuwait by road. */
+  comparison?: { heading: string; intro: string; head: string[]; rows: string[][]; note?: string };
 
   ctaText: string;
   heroImage?: string;
@@ -110,6 +133,24 @@ export interface DistanceRouteData {
    * never a fabricated freshness signal. */
   lastReviewed?: string;
 }
+
+/**
+ * Saudi Arabia to Kuwait by road, from each starting city. Shared by the
+ * three Kuwait distance pages so they always quote the same figures.
+ * Riyadh: owner-confirmed route and time (19 Nov 2026). Dammam and Khafji:
+ * map routing (OSRM), Nov 2026. All three use the coastal crossing.
+ */
+const SAUDI_TO_KUWAIT_TABLE: NonNullable<DistanceRouteData["comparison"]> = {
+  heading: "Saudi Arabia to Kuwait by Road: Distance from Each City",
+  intro: "All three routes cross at Al Khafji (Saudi) / Al Nuwaiseeb (Kuwait). Driving times exclude the border.",
+  head: ["From", "To Kuwait City", "Driving time", "Private taxi"],
+  rows: [
+    ["Riyadh", "~648 km", "~7 h 40 min", "Starting from 220 KWD"],
+    ["Dammam", "~410 km", "~4.5 h", "Quote on WhatsApp"],
+    ["Al Khafji", "~125 km", "~1.5 h", "Quote on WhatsApp"],
+  ],
+  note: "Road distances to central Kuwait City. Figures are estimates; border time varies with the day and hour.",
+};
 
 export const distanceRoutes: Record<string, DistanceRouteData> = {
   "abha-to-madinah": {
@@ -960,21 +1001,49 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     destinationAirportHref: "/dammam-airport-taxi-service",
 
     eyebrow: "Distance & Travel Guide",
-    h1: "Dammam to Kuwait Distance & Travel Time",
-    intro: "How far Kuwait is from Dammam, how long the drive along the Gulf coast takes, and what to expect crossing the Al Nuwaiseeb border.",
+    h1: "Dammam to Kuwait Distance by Road & Travel Time",
+    intro: "How far Kuwait is from Dammam by road, how long the drive up the Gulf coast takes, and what to expect at the Al Khafji / Al Nuwaiseeb border.",
     breadcrumbLabel: "Dammam to Kuwait",
 
-    roadDistance: "approximately 410 km by road",
-    driveTime: "approximately 5–6 hours, including border processing",
+    // Map routing (OSRM), Nov 2026: 413 km, about 4.4 hours of driving via
+    // Al Khafji. One figure on every Dammam/Kuwait page.
+    roadDistance: "about 410 km by road via the Al Khafji / Al Nuwaiseeb border",
+    driveTime: "about 4.5 hours of driving, 5 to 6 hours with the border",
     routeType: "Cross-border route between Saudi Arabia and Kuwait via the Al Khafji / Al Nuwaiseeb border",
 
+    answerBox: {
+      items: [
+        { label: "Distance by road", value: "~410 km" },
+        { label: "Driving time", value: "~4.5 h" },
+        { label: "With the border", value: "5–6 h" },
+        { label: "Border", value: "Al Khafji / Al Nuwaiseeb" },
+      ],
+      arabic: "المسافة من الدمام إلى الكويت نحو 410 كم براً، ومدة القيادة نحو 4.5 ساعات عبر منفذ الخفجي والنويصيب.",
+    },
+    bookingBox: {
+      title: "Need a ride? Private taxi Dammam ↔ Kuwait",
+      text: "Door to door across the border, 24/7. Tell us your date and we confirm the fare on WhatsApp before you book.",
+      href: "/dammam-to-kuwait-taxi-service",
+      hrefLabel: "Dammam to Kuwait taxi",
+      whatsappMessage: "Hi, I want to book Dammam to Kuwait",
+      links: [{ href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi" }],
+    },
+    reverse: {
+      heading: "Kuwait to Dammam Distance by Road",
+      paragraphs: [
+        "Kuwait to Dammam is about 410 km the other way: Route 40 south to Al Nuwaiseeb, into Saudi Arabia at Al Khafji, then down the coast highway past Jubail. Allow about 4.5 hours of driving, 5 to 6 hours with the border.",
+      ],
+      link: { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi" },
+    },
+    comparison: SAUDI_TO_KUWAIT_TABLE,
+
     overviewParagraphs: [
-      "Dammam to Kuwait follows the Gulf coast highway north through Jubail, Ras Tanura, and Khafji before reaching the Al Nuwaiseeb border crossing — the most direct land route between Saudi Arabia's Eastern Province and Kuwait.",
+      "Dammam to Kuwait follows the Gulf coast highway north past Jubail to Al Khafji and the Al Nuwaiseeb border crossing — the most direct land route between Saudi Arabia's Eastern Province and Kuwait.",
       "This corridor carries a steady flow of business and family travel, reflecting the close economic and personal ties between the Eastern Province and Kuwait, including a significant oil and gas sector workforce that moves regularly between the two.",
       "Once across the border, the drive continues into Kuwait City or specific districts such as Al Ahmadi or Fahaheel, depending on your final destination.",
     ],
     routeCharacteristics: [
-      "Runs along the Gulf coast highway through Jubail, Ras Tanura, and Khafji.",
+      "Runs along the Gulf coast highway past Jubail to Al Khafji.",
       "Crosses at Al Nuwaiseeb, the most direct border point between the Eastern Province and Kuwait.",
       "A well-traveled corridor for oil and gas sector business travel and family visits.",
       "Involves one international border crossing — no other borders en route.",
@@ -1020,8 +1089,9 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     faqs: [
-      { q: "How far is Dammam from Kuwait?", a: "Approximately 410 km by road, following the Gulf coast highway through Jubail and Khafji to the Al Nuwaiseeb border. Allow 5–6 hours in total, since border processing adds to the driving time." },
-      { q: "How long does it take to drive from Dammam to Kuwait?", a: "Around 5.5 to 6.5 hours including border processing at Al Nuwaiseeb." },
+      { q: "How far is Dammam from Kuwait by road?", a: "About 410 km, following the Gulf coast highway past Jubail to the Al Khafji / Al Nuwaiseeb border." },
+      { q: "How long does it take to drive from Dammam to Kuwait?", a: "About 4.5 hours of driving, or 5 to 6 hours including border processing at Al Khafji / Al Nuwaiseeb." },
+      { q: "How far is Kuwait to Dammam by road?", a: "The same road the other way: about 410 km, about 4.5 hours of driving plus the border." },
       { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "What is the best way to travel from Dammam to Kuwait?", a: "A private taxi or chauffeur transfer covers the full distance in one vehicle. A short flight is a realistic alternative for travelers on a tight schedule." },
       { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service arranges direct Dammam to Kuwait transfers via the Al Nuwaiseeb border." },
@@ -1034,10 +1104,11 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
       { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait taxi service" },
       { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi service" },
       { href: "/destinations/kuwait-city", label: "Kuwait City private transfer" },
+      { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
     ],
 
     ctaText: "Get a Private Transfer Quote for Dammam to Kuwait",
-    lastReviewed: "2026-08-26",
+    lastReviewed: "2026-11-19",
   },
 
   "riyadh-to-kuwait": {
@@ -1049,34 +1120,59 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     originAirportHref: "/riyadh-airport-taxi-service",
 
     eyebrow: "Distance & Travel Guide",
-    h1: "Riyadh to Kuwait Distance & Travel Time",
-    intro: "How far Kuwait is from Riyadh, how long the road journey takes, which border crossings it can use, and what business travelers should know before booking.",
+    h1: "Riyadh to Kuwait Distance by Road & Travel Time",
+    intro: "How far Kuwait is from Riyadh by road, how long the drive takes, which border it crosses, and how to book a private taxi for the trip.",
     breadcrumbLabel: "Riyadh to Kuwait",
 
-    // Road distance is the inland Al Ruqi'i / Al Salmi routing. The coastal
-    // Al Khafji / Al Nuwaiseeb alternative is materially longer, so the figure
-    // is qualified rather than presented as "the" Riyadh–Kuwait distance.
-    // (Previously this field held the straight-line figure, which belongs in
-    // straightLineDistance below — the template labels the two differently.)
-    roadDistance: "approximately 639 km by road via the inland crossing",
+    // Owner-confirmed (19 Nov 2026): the coastal Al Khafji / Al Nuwaiseeb
+    // crossing via Routes 65, 550 and 95, then Route 40 in Kuwait. The same
+    // figures are on the route pages in both directions.
+    roadDistance: "about 648 km by road via the Al Khafji / Al Nuwaiseeb border",
     straightLineDistance: "about 535 km",
-    driveTime: "most of a day, including border processing and rest stops",
-    routeType: "Cross-border route between Saudi Arabia and Kuwait",
+    driveTime: "roughly 7 hours 40 minutes of driving, plus time at the border",
+    routeType: "Cross-border route via the coastal Al Khafji (Saudi) / Al Nuwaiseeb (Kuwait) crossing",
+
+    answerBox: {
+      items: [
+        { label: "Distance by road", value: "~648 km" },
+        { label: "Driving time", value: "~7 h 40 min" },
+        { label: "Border", value: "Al Khafji / Al Nuwaiseeb" },
+        { label: "Straight line", value: "~535 km" },
+      ],
+      arabic: "المسافة من الرياض إلى الكويت بالسيارة نحو 648 كم، ومدة القيادة نحو 7 ساعات و40 دقيقة عبر منفذ الخفجي والنويصيب.",
+    },
+    bookingBox: {
+      title: "Need a ride? Private taxi Riyadh → Kuwait from 220 KWD",
+      text: "One car and one driver, door to door, across the border. Prices may vary depending on date and availability.",
+      href: "/riyadh-to-kuwait-taxi-service#booking",
+      hrefLabel: "Book Online",
+      whatsappMessage: "Hi, I want to book Riyadh to Kuwait",
+      links: [{ href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" }],
+    },
+    reverse: {
+      heading: "Kuwait to Riyadh Distance by Road",
+      paragraphs: [
+        "Kuwait to Riyadh is the same road the other way: about 648 km via the Al Nuwaiseeb / Al Khafji border, on Route 40 in Kuwait and then Routes 95, 550 and 65 to Riyadh. Expect roughly 7 hours 40 minutes of driving, plus the border.",
+        "Leaving from Kuwait? Our private Kuwait to Riyadh taxi makes the same door-to-door trip, also starting from 220 KWD per car.",
+      ],
+      link: { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh taxi" },
+    },
+    comparison: SAUDI_TO_KUWAIT_TABLE,
 
     overviewParagraphs: [
-      "Riyadh to Kuwait runs north-east across Saudi Arabia to one of two land crossings into Kuwait: Al Khafji / Al Nuwaiseeb on the Gulf coast, reached through the Eastern Province, or Al Ruqi'i / Al Salmi inland, in the Hafar Al Batin area.",
-      "This is a genuine long-distance journey — Kuwait City is about 535 km from Riyadh as the crow flies, and the road route is longer — favored by business travelers, GCC nationals, and families who prefer a private overland journey over flying and arranging separate ground transport.",
-      "Given the distance, a scheduled rest stop roughly midway is standard, and executive vehicles with extra legroom are commonly used for the multi-hour drive.",
+      "Riyadh to Kuwait runs north-east from the capital to the Gulf coast on Routes 65, 550 and 95, crosses into Kuwait at Al Khafji / Al Nuwaiseeb, and finishes on Route 40 into Kuwait City.",
+      "This is a genuine long-distance journey: about 648 km by road and roughly 7 hours 40 minutes of driving, against about 535 km in a straight line. The coastal road has more towns and services than the inland alternative through Hafar Al Batin.",
+      "Business travelers, GCC nationals and families often prefer the private overland trip to flying and arranging separate ground transport at each end, especially with luggage.",
     ],
     routeCharacteristics: [
-      "Runs north-east through Saudi Arabia's central and eastern regions.",
-      "Crosses into Kuwait at Al Khafji / Al Nuwaiseeb or Al Ruqi'i / Al Salmi, depending on the route chosen.",
-      "A regular corridor for business travelers and GCC nationals.",
-      "Involves one international border crossing — no other borders en route.",
+      "Routes 65, 550 and 95 in Saudi Arabia, then Route 40 in Kuwait.",
+      "Crosses at Al Khafji (Saudi) / Al Nuwaiseeb (Kuwait) on the Gulf coast.",
+      "More towns and services along the way than the inland route.",
+      "One international border crossing, no other borders en route.",
     ],
     factorsAffectingTime: [
-      "Border processing time varies with traffic at whichever crossing the route uses.",
-      "Given the distance, rest and meal stops meaningfully extend the total journey beyond pure driving time.",
+      "Border processing time varies with the day and hour; weekends and holidays are busier.",
+      "Rest, meal and prayer stops add to the driving time on a trip this long.",
       "GCC nationals cross with a national ID, while other nationalities need a valid visa.",
     ],
 
@@ -1115,24 +1211,27 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     faqs: [
-      { q: "How far is Riyadh from Kuwait?", a: "By road it is roughly 639 km via the inland Al Ruqi'i / Al Salmi crossing. The coastal route through Al Khafji / Al Nuwaiseeb is longer, so the exact distance depends on which crossing the route uses. In a straight line the two cities are about 535 km apart." },
-      { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Plan for most of a day, including border processing and rest stops. The exact time depends on the route, traffic and border queues." },
-      { q: "Is it faster to fly instead of driving?", a: "For business travelers on a tight schedule, yes — a direct flight between Riyadh and Kuwait City is usually faster than the full-day drive." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the whole journey, door to door, including the crossing." },
-      { q: "Can I book a private transfer for the whole trip?", a: "Yes — Gulf Trip Service arranges door-to-door Riyadh to Kuwait transfers across the Saudi–Kuwait land border." },
-      { q: "Is this route different from the Dammam to Kuwait route?", a: "It can be. From Dammam the natural crossing is Al Khafji / Al Nuwaiseeb on the coast; from Riyadh the inland Al Ruqi'i / Al Salmi crossing is also an option. Your driver confirms the route before departure." },
-      { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid visa — confirm current requirements before traveling." },
+      { q: "How far is Riyadh from Kuwait by road?", a: "About 648 km by road via the Al Khafji / Al Nuwaiseeb border on the coast. In a straight line the two cities are about 535 km apart." },
+      { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Roughly 7 hours 40 minutes of driving. Border processing and rest stops add to that, so plan most of a day." },
+      { q: "What is the Kuwait to Riyadh distance by road?", a: "The same road the other way: about 648 km, roughly 7 hours 40 minutes of driving plus the border." },
+      { q: "Which highways go from Riyadh to Kuwait?", a: "Routes 65, 550 and 95 in Saudi Arabia, then Route 40 in Kuwait after the Al Nuwaiseeb border." },
+      { q: "Is it faster to fly instead of driving?", a: "For one person on a tight schedule, yes. By car you go door to door with your luggage and skip two airports." },
+      { q: "Do I need to change vehicles at the border?", a: "No. One vehicle and driver cover the whole journey, door to door, including the crossing." },
+      { q: "How much is a private taxi from Riyadh to Kuwait?", a: "Gulf Trip Service runs private, door-to-door Riyadh to Kuwait taxis starting from 220 KWD per car. Prices may vary depending on date and availability." },
+      { q: "Is this route different from Dammam to Kuwait?", a: "Both use the Al Khafji / Al Nuwaiseeb crossing. From Dammam it is about 410 km; from Riyadh about 648 km." },
+      { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Kuwait visa or eVisa; confirm current requirements before traveling." },
     ],
 
     relatedDistanceSlugs: ["dammam-to-kuwait", "khafji-to-kuwait"],
     relatedServiceLinks: [
-      { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi service" },
+      { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" },
+      { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
       { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh taxi service" },
       { href: "/destinations/kuwait-city", label: "Kuwait City private transfer" },
     ],
 
-    ctaText: "Get a Private Transfer Quote for Riyadh to Kuwait",
-    lastReviewed: "2026-08-26",
+    ctaText: "Book a Private Riyadh to Kuwait Taxi",
+    lastReviewed: "2026-11-19",
   },
 
   "khafji-to-kuwait": {
@@ -1146,8 +1245,30 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     intro: "How far Kuwait City is from Khafji, how long the short border crossing at Al Nuwaiseeb takes, and why this is the most direct Saudi-Kuwait route.",
     breadcrumbLabel: "Khafji to Kuwait",
 
-    roadDistance: "approximately 15 km to the border, roughly 180 km on to Kuwait City",
-    driveTime: "approximately 2.5–3 hours, including border processing",
+    // Map routing (OSRM), Nov 2026: 124 km and about 1.4 hours of driving
+    // to central Kuwait City. Was "roughly 180 km", which was wrong.
+    // Border first, total last: the distance card shows the last km figure.
+    roadDistance: "about 15 km to the border and about 125 km by road to Kuwait City",
+    driveTime: "about 1.5 hours of driving, 2 to 3 hours with the border",
+
+    answerBox: {
+      items: [
+        { label: "To Kuwait City", value: "~125 km" },
+        { label: "To the border", value: "~15 km" },
+        { label: "Driving time", value: "~1.5 h" },
+        { label: "Border", value: "Al Khafji / Al Nuwaiseeb" },
+      ],
+      arabic: "تبعد الخفجي عن مدينة الكويت نحو 125 كم براً، منها نحو 15 كم حتى منفذ النويصيب، ومدة القيادة نحو ساعة ونصف.",
+    },
+    bookingBox: {
+      title: "Need a ride? Private taxi Khafji ↔ Kuwait",
+      text: "Door to door through the Al Nuwaiseeb border, 24/7. We confirm your fare on WhatsApp before you book.",
+      href: "/khafji-to-kuwait-taxi-service",
+      hrefLabel: "Khafji to Kuwait taxi",
+      whatsappMessage: "Hi, I want to book Khafji to Kuwait",
+      links: [{ href: "/kuwait-to-khafji-taxi-service", label: "Kuwait to Khafji taxi" }],
+    },
+    comparison: SAUDI_TO_KUWAIT_TABLE,
     routeType: "Cross-border route between Saudi Arabia and Kuwait via the Al Nuwaiseeb border",
 
     overviewParagraphs: [
@@ -1197,8 +1318,8 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     faqs: [
-      { q: "How far is Khafji from Kuwait?", a: "About 15 km to the Al Nuwaiseeb border itself, and roughly 180 km on to Kuwait City." },
-      { q: "How long does it take to get from Khafji to Kuwait?", a: "Around 2.5 to 3 hours including border processing — the shortest of the Saudi-Kuwait crossings." },
+      { q: "How far is Khafji from Kuwait?", a: "About 15 km to the Al Nuwaiseeb border itself, and about 125 km by road to Kuwait City." },
+      { q: "How long does it take to get from Khafji to Kuwait?", a: "About 1.5 hours of driving to Kuwait City, or 2 to 3 hours including border processing: the shortest of the Saudi–Kuwait routes." },
       { q: "Why is this route shorter than Dammam or Riyadh to Kuwait?", a: "Khafji is Saudi Arabia's northernmost Gulf coast city, sitting right next to the Al Nuwaiseeb border — the most direct gateway into Kuwait from anywhere in Saudi Arabia." },
       { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
       { q: "Is this route used by daily commuters?", a: "Yes — a meaningful share of traffic here is cross-border commuters and workers in the joint Neutral Zone oil fields." },
@@ -1214,7 +1335,7 @@ export const distanceRoutes: Record<string, DistanceRouteData> = {
     ],
 
     ctaText: "Get a Private Transfer Quote for Khafji to Kuwait",
-    lastReviewed: "2026-08-26",
+    lastReviewed: "2026-11-19",
   },
 
   "dammam-to-abu-dhabi": {

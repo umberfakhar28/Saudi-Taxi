@@ -38,8 +38,8 @@ function coverFor(destination: string) {
  * route's full prose distance string for the compact stat tile — the full
  * sentence (with causeway/border caveats) still renders on the detail
  * page untouched. Takes the *last* km figure in the string so the one
- * two-figure entry (Khafji: "15 km to the border, ... 180 km on to Kuwait
- * City") surfaces the total-to-destination distance, consistent with
+ * two-figure entry (Khafji: "15 km to the border and ... 125 km by road
+ * to Kuwait City") surfaces the total-to-destination distance, consistent with
  * every other route's single figure. */
 function shortDistance(roadDistance: string): string {
   const matches = roadDistance.match(/\d[\d,]*(?:\s*[-–]\s*\d[\d,]*)?\s*km/g);
@@ -47,9 +47,10 @@ function shortDistance(roadDistance: string): string {
 }
 
 /** Same idea for drive time — first "X–Y hours/minutes" figure is the
- * baseline (off-peak) estimate already presented first in the prose. */
+ * baseline (off-peak) estimate already presented first in the prose.
+ * "7 hours 40 minutes" is kept whole rather than cut to "7 hours". */
 function shortDuration(driveTime: string): string {
-  const match = driveTime.match(/\d+(?:\.\d+)?(?:\s*[-–]\s*\d+(?:\.\d+)?)?\s*(?:hours?|hrs?|minutes?|mins?)/i);
+  const match = driveTime.match(/\d+(?:\.\d+)?(?:\s*[-–]\s*\d+(?:\.\d+)?)?\s*(?:hours?|hrs?)(?:\s+\d+\s*(?:minutes?|mins?))?|\d+(?:\s*[-–]\s*\d+)?\s*(?:minutes?|mins?)/i);
   return match ? match[0] : driveTime;
 }
 
