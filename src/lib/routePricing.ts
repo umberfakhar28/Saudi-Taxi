@@ -99,7 +99,10 @@ export function routeVehicles(slugs: string[] | undefined): FleetVehicle[] {
  * untrue and the kind of claim that strands a customer at a border.
  */
 /**
- * The Kuwait-Riyadh fare, stripped of language.
+ * The Kuwait-Riyadh fare, stripped of language. Starting from 220 KWD per
+ * vehicle, one way, in both directions (owner, 19 Nov 2026; was 300 KWD
+ * from 18 Oct). Pages pair it with "prices may vary depending on date and
+ * availability".
  *
  * Both the English and the Arabic route objects build their `pricing` from
  * these, so the wording around the fare can differ between locales while
@@ -107,7 +110,7 @@ export function routeVehicles(slugs: string[] | undefined): FleetVehicle[] {
  */
 export const KUWAIT_RIYADH_FARE = {
     currency: 'KWD' as const,
-    amount: 300,
+    amount: 220,
     basis: 'starting' as const,
     direction: 'one-way' as const,
     vehicleSlugs: ['toyota-land-cruiser-prado', 'gmc-yukon'],

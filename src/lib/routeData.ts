@@ -1,27 +1,25 @@
 import type { RouteData } from "@/components/RoutePage";
 import type { LandingVehicle } from "./routeLanding";
+import { KUWAIT_HOTELS } from "./kuwaitHotels";
 import {
   CROSS_BORDER_EXCLUSIONS,
   CROSS_BORDER_INCLUSIONS,
   KSA_KUWAIT_CHECKLIST,
+  KUWAIT_RIYADH_FARE,
   type RoutePricing,
 } from "@/lib/routePricing";
 
 /**
- * Kuwait <-> Riyadh, confirmed by the business on 18 October 2026:
- * 300 KWD one way, covering both the Prado and the Yukon, in both
- * directions. Declared once and shared by the two route objects so the
- * figure cannot drift between them.
+ * Kuwait <-> Riyadh: starting from 220 KWD one way per vehicle, Prado and
+ * Yukon, both directions (owner, 19 Nov 2026). The figure comes from
+ * KUWAIT_RIYADH_FARE, which the Arabic pages share, so no page can quote
+ * a different number.
  */
 const KUWAIT_RIYADH_PRICING: RoutePricing = {
-  currency: "KWD",
-  amount: 300,
-  basis: "starting",
-  direction: "one-way",
-  vehicleSlugs: ["toyota-land-cruiser-prado", "gmc-yukon"],
+  ...KUWAIT_RIYADH_FARE,
   includes: CROSS_BORDER_INCLUSIONS,
   excludes: CROSS_BORDER_EXCLUSIONS,
-  confirmedOn: "18 October 2026",
+  confirmedOn: "19 November 2026",
 };
 
 /** The two vehicles confirmed for the Kuwait cross-border routes. */
@@ -104,8 +102,10 @@ export const dammamAirportToKhafji: RouteData = {
   h1: "Dammam Airport to Khafji — Private Taxi & Cross-Border Transfer",
   intro: "Comfortable intercity transfer from King Fahd International Airport to Khafji, Saudi Arabia's northernmost Gulf coast city and the gateway crossing point to Kuwait. Direct highway route, fixed pricing, and drivers familiar with the Al Khafji corridor.",
   breadcrumbLabel: "Dammam Airport → Khafji",
-  distance: "~180 km",
-  travelTime: "2 – 2.5 hours",
+  // Map routing (OSRM), Nov 2026: 283 km, about 3.1 hours. Was "~180 km,
+  // 2 – 2.5 hours", which was wrong.
+  distance: "~280 km",
+  travelTime: "about 3 hours",
   heroImage: "/images/airport-terminal.jpg",
   overviewTitle: "Direct Transfer to Khafji from King Fahd International Airport",
   overviewParagraphs: [
@@ -504,8 +504,10 @@ export const khafjiToKuwait: RouteData = {
   h1: "Khafji to Kuwait Private Taxi & Border Transfer — 24/7",
   intro: "Direct taxi transfer from Al Khafji, Saudi Arabia, across the Al Nuwaiseeb border crossing into Kuwait. The shortest and most direct land route between the two countries — ideal for business travelers, workers, and families.",
   breadcrumbLabel: "Khafji → Kuwait",
-  distance: "~15 km to border / ~180 km to Kuwait City",
-  travelTime: "2.5 – 3 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 124 km and about 1.4 hours of driving
+  // to central Kuwait City. Was "~180 km", which was wrong.
+  distance: "~15 km to border / ~125 km to Kuwait City",
+  travelTime: "~1.5 h driving, 2 – 3 hours with the border",
   vehicleSlugs: KUWAIT_VEHICLE_SLUGS,
   checklist: KSA_KUWAIT_CHECKLIST,
   heroImage: "/images/fleet-suv.jpg",
@@ -531,6 +533,37 @@ export const khafjiToKuwait: RouteData = {
   ],
   pickupPoints: ["Al Khafji city center", "Khafji Joint Operations (KJO) compound", "Khafji hotels", "Ras Al Khafji coastal area"],
   dropoffInfo: "Direct drop-off in Kuwait City, Al Ahmadi, Fahaheel, or Kuwait International Airport for onward connections.",
+  // Owns the border searches ("khafji border kuwait", "nuwaiseeb border",
+  // "تاكسي الخفجي"): docs/seo/kuwait/keyword-map.md.
+  contentSections: [
+    {
+      id: "khafji-nuwaiseeb-border",
+      placement: "afterBorder",
+      eyebrow: "Border guide",
+      heading: "The Al Khafji–Al Nuwaiseeb Border Crossing (Khafji Border, Kuwait)",
+      paragraphs: [
+        "The Al Khafji–Al Nuwaiseeb crossing is the coastal land border between Saudi Arabia and Kuwait, on the Gulf road: Route 95 on the Saudi side and Route 40 on the Kuwaiti side. Al Khafji is the Saudi post; Al Nuwaiseeb (also written Nuwaiseb) is the Kuwaiti post.",
+        "It is the crossing for trips from Khafji and Dammam, and the one our [Riyadh to Kuwait taxi](/riyadh-to-kuwait-taxi-service) uses. You pass the Saudi exit post and then the Kuwaiti entry post in the same car: your driver handles the vehicle's insurance, toll and papers, and each passenger shows their own passport or GCC ID.",
+      ],
+      table: {
+        head: ["", "Detail"],
+        rows: [
+          ["Saudi post", "Al Khafji (منفذ الخفجي)"],
+          ["Kuwaiti post", "Al Nuwaiseeb (منفذ النويصيب)"],
+          ["From Khafji city", "About 15 km, 15–20 minutes"],
+          ["On to Kuwait City", "About 125 km from Khafji in total, about 1.5 hours of driving"],
+          ["Open", "24 hours"],
+          ["Waiting time", "Varies; Thursday and Friday evenings and public holidays are busiest"],
+          ["Driver handles", "Vehicle insurance, toll and vehicle papers"],
+          ["You bring", "Passport or GCC ID, and a Kuwait visa or eVisa if your nationality needs one"],
+        ],
+      },
+      outro: [
+        "Coming from further south? See the [Dammam to Kuwait taxi](/dammam-to-kuwait-taxi-service) and the full [Saudi Arabia to Kuwait by road guide](/guides/saudi-arabia-to-kuwait-by-road).",
+      ],
+      subtle: true,
+    },
+  ],
   vehicleOptions: [
     { name: "Sedan", capacity: "1–3 passengers", note: "Quick and efficient for the short border crossing route." },
     { name: "SUV", capacity: "1–5 passengers", note: "Popular with oil and gas industry commuters." },
@@ -546,6 +579,7 @@ export const khafjiToKuwait: RouteData = {
     { q: "Can I combine this with a Dammam Airport pickup?", a: "Yes — book our Dammam Airport to Khafji service first, then continue with this Khafji to Kuwait leg, or ask us to arrange the combined itinerary in one booking." },
   ],
   relatedRoutes: [
+    { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" },
     { href: "/distance/khafji-to-kuwait", label: "Khafji to Kuwait Distance & Border Crossing Time" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
     { href: "/dammam-airport-to-khafji-taxi-service", label: "Dammam Airport to Khafji Taxi" },
@@ -554,7 +588,7 @@ export const khafjiToKuwait: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Kuwait Border Crossing",
-  lastReviewed: "August 2026",
+  lastReviewed: "19 November 2026",
 };
 
 /* ── 8. Riyadh → Bahrain ────────────────────────────────────── */
@@ -564,6 +598,7 @@ export const khafjiToKuwait: RouteData = {
  * with a Gulf Trip Service badge, served as 800w and 400w WebP.
  */
 const R2B_IMAGES = "/images/routes/riyadh-to-bahrain";
+const R2K_IMAGES = "/images/routes/riyadh-to-kuwait";
 function r2bVehicle(slug: string, name: string, category: string, passengers: string, luggage: string | undefined, amount: number | null, alt?: string): LandingVehicle {
   const base = `${R2B_IMAGES}/${slug}-riyadh-to-bahrain`;
   return {
@@ -938,19 +973,20 @@ export const dammamToKuwait: RouteData = {
   intro: "Direct door-to-door transfer from Dammam and the Eastern Province to Kuwait via the Al Nuwaiseeb border crossing at Khafji. A single vehicle covers the entire journey, ideal for business travelers, families, and oil industry commuters.",
   breadcrumbLabel: "Dammam → Kuwait",
   distance: "~410 km",
-  travelTime: "5 – 6 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 413 km, about 4.4 hours of driving.
+  travelTime: "~4.5 h driving, 5 – 6 hours with the border",
   vehicleSlugs: KUWAIT_VEHICLE_SLUGS,
   checklist: KSA_KUWAIT_CHECKLIST,
   heroImage: "/images/fleet-suv.jpg",
   overviewTitle: "Direct Transfer from Dammam to Kuwait",
   overviewParagraphs: [
     "Dammam and the wider Eastern Province have deep business and family ties to Kuwait, with the Al Nuwaiseeb crossing near Khafji offering the most direct route north. Our service covers the full journey in one vehicle, avoiding the need to book separate legs or arrange your own onward transport.",
-    "The drive follows the Gulf coast highway north through Jubail, Ras Tanura, and Khafji before reaching the Saudi–Kuwait border, then continues into Kuwait City or your specific destination such as Al Ahmadi or Fahaheel.",
+    "The drive follows the Gulf coast highway north past Jubail to Khafji before reaching the Saudi–Kuwait border, then continues into Kuwait City or your specific destination such as Al Ahmadi or Fahaheel.",
     "This route is especially popular with corporate travelers, oil and gas sector employees, and families making regular visits between the two countries.",
   ],
   borderProcessTitle: "Crossing into Kuwait via Al Nuwaiseeb",
   borderProcessParagraphs: [
-    "From Dammam, the drive to the border takes roughly 4.5–5 hours along the coastal Highway 95, passing through Jubail and Khafji.",
+    "From Dammam, the drive to the border takes about 3.5 hours along the coastal Highway 95, passing Jubail and Khafji.",
     "At the Saudi exit checkpoint, GCC nationals present their national ID, while other nationalities complete standard passport and exit formalities. Vehicle documentation is checked before crossing.",
     "On the Kuwaiti side at Al Nuwaiseeb, entry is via GCC ID for GCC nationals or a valid Kuwait visa/visa-on-arrival for eligible other nationalities. The crossing is open 24 hours and typically adds 30–90 minutes to the total journey, though Thursday/Friday evenings and holidays can see longer queues. A mandatory third-party vehicle insurance policy and small road toll are purchased at the border complex.",
   ],
@@ -976,6 +1012,7 @@ export const dammamToKuwait: RouteData = {
     { q: "Can I break the journey into two legs via Khafji?", a: "Yes, you can book our Dammam Airport to Khafji and Khafji to Kuwait services separately if you want a stopover, or book this combined direct route for a single non-stop journey." },
   ],
   relatedRoutes: [
+    { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" },
     { href: "/distance/dammam-to-kuwait", label: "Dammam to Kuwait Distance & Travel Time Guide" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
     { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait Taxi" },
@@ -984,7 +1021,7 @@ export const dammamToKuwait: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Kuwait Transfer",
-  lastReviewed: "August 2026",
+  lastReviewed: "19 November 2026",
 };
 
 /* ── 10. Kuwait → Dammam ────────────────────────────────────── */
@@ -1003,14 +1040,15 @@ export const kuwaitToDammam: RouteData = {
   intro: "Direct door-to-door transfer from Kuwait City to Dammam and the Eastern Province via the Al Nuwaiseeb border crossing at Khafji. One vehicle for the entire journey — ideal for business travelers, families, and oil industry commuters.",
   breadcrumbLabel: "Kuwait → Dammam",
   distance: "~410 km",
-  travelTime: "5 – 6 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 413 km, about 4.4 hours of driving.
+  travelTime: "~4.5 h driving, 5 – 6 hours with the border",
   vehicleSlugs: KUWAIT_VEHICLE_SLUGS,
   checklist: KSA_KUWAIT_CHECKLIST,
   heroImage: "/images/fleet-suv.jpg",
   overviewTitle: "Direct Transfer from Kuwait to Dammam",
   overviewParagraphs: [
     "Kuwait and Saudi Arabia's Eastern Province share close business and family ties, with the Al Nuwaiseeb crossing near Khafji offering the most direct route south. Our service covers the full journey in one vehicle, so there's no need to arrange separate legs or onward transport once you cross the border.",
-    "The drive departs Kuwait City southbound along the coastal highway, crosses into Saudi Arabia at Al Nuwaiseeb, then continues through Khafji, Ras Tanura, and Jubail before reaching Dammam, Al Khobar, or Dhahran.",
+    "The drive departs Kuwait City southbound along the coastal highway, crosses into Saudi Arabia at Al Nuwaiseeb, then continues past Khafji and Jubail before reaching Dammam, Al Khobar, or Dhahran.",
     "This route is popular with corporate travelers, oil and gas sector employees, and families making regular visits between the two countries.",
   ],
   borderProcessTitle: "Crossing into Saudi Arabia via Al Nuwaiseeb",
@@ -1048,7 +1086,7 @@ export const kuwaitToDammam: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Dammam Transfer",
-  lastReviewed: "August 2026",
+  lastReviewed: "19 November 2026",
 };
 
 /* ── 11. Kuwait → Riyadh ────────────────────────────────────── */
@@ -1061,19 +1099,17 @@ export const kuwaitToRiyadh: RouteData = {
   origin: "Kuwait",
   destination: "Riyadh",
   isCrossBorder: true,
-  borderCrossingName: "Saudi–Kuwait Land Border",
+  borderCrossingName: "Al Nuwaiseeb / Al Khafji Border",
   eyebrow: "Long-Distance Border Transfer",
   h1: "Kuwait to Riyadh — Private Taxi & Cross-Border Transfer",
   intro: "Private door-to-door transfer from Kuwait City to Riyadh by road, across the Kuwait–Saudi land border. One vehicle for the full journey — a comfortable overland alternative to flying, especially for groups and travelers with luggage.",
   breadcrumbLabel: "Kuwait → Riyadh",
-  // Qualified to the inland Al Ruqi'i / Al Salmi routing — the coastal Al
-  // Khafji / Al Nuwaiseeb alternative is materially longer, and this page
-  // tells the reader either crossing may be used. travelTime stays a
-  // qualitative range: border clearance and traffic make a fixed time
-  // unpromisable. See /distance/riyadh-to-kuwait for the full breakdown.
-  distance: "~639 km by road (inland crossing)",
-  travelTime: "7 – 9 hours driving, plus the border",
-  durationHours: "7–9 hours driving",
+  // Owner-confirmed route (19 Nov 2026): Route 40 in Kuwait to the Al
+  // Nuwaiseeb / Al Khafji crossing, then Routes 95, 550 and 65 to Riyadh.
+  // Driving time excludes the border, which varies.
+  distance: "~648 km by road",
+  travelTime: "~7 h 40 min driving, plus the border",
+  durationHours: "About 7 hours 40 minutes driving",
   pricing: KUWAIT_RIYADH_PRICING,
   vehicleSlugs: KUWAIT_VEHICLE_SLUGS,
   checklist: KSA_KUWAIT_CHECKLIST,
@@ -1081,7 +1117,7 @@ export const kuwaitToRiyadh: RouteData = {
   overviewTitle: "Direct Overland Transfer from Kuwait to Riyadh",
   overviewParagraphs: [
     "For business travelers, GCC nationals, and families who prefer a private overland journey to flying, the Kuwait–Riyadh route runs south-west from Kuwait City into Saudi Arabia and on across the desert interior to the capital.",
-    "There are two land crossings between Kuwait and Saudi Arabia: Al Khafji / Al Nuwaiseeb on the Gulf coast, reached through the Eastern Province, or Al Ruqi'i / Al Salmi inland, in the Hafar Al Batin area. Your driver confirms the route before departure, based on your pickup point, your Riyadh destination and conditions on the day.",
+    "The route leaves Kuwait on Route 40 to the Al Nuwaiseeb / Al Khafji border on the coast, then runs down Routes 95, 550 and 65 to Riyadh: about 648 km, roughly 7 hours 40 minutes of driving before border time. The inland Al Ruqi'i / Al Salmi crossing is an alternative we use only when it suits your pickup or conditions on the day.",
     "Given the distance, we build in a scheduled rest stop roughly midway, and offer executive vehicles with extra legroom for the multi-hour drive.",
   ],
   borderProcessTitle: "Crossing the Saudi–Kuwait Border",
@@ -1106,12 +1142,12 @@ export const kuwaitToRiyadh: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For delegations or groups traveling together to Riyadh." },
   ],
   faqs: [
-    { q: "How much does a private taxi from Kuwait to Riyadh cost?", a: "Fares start at 300 KWD one way for the whole vehicle — not per seat — and the same starting fare applies to both the Toyota Land Cruiser Prado and the GMC Yukon. Message us with your travel date and passenger count and we will confirm the final price before you book." },
+    { q: "How much does a private taxi from Kuwait to Riyadh cost?", a: "Fares start from 220 KWD one way for the whole vehicle, not per seat, for both the Toyota Land Cruiser Prado and the GMC Yukon. Prices may vary depending on date and availability; we confirm your final fare on WhatsApp before you book." },
     { q: "What is included in the price?", a: "The private vehicle for your party alone, a licensed driver for the whole journey, door-to-door pickup and drop-off, border fees and vehicle insurance, road tolls and fuel, one free hour of waiting on airport pickups, and a planned rest stop. Your own passport and visa remain your responsibility, and waiting beyond the first hour is charged hourly." },
     { q: "Are border fees and tolls included?", a: "Yes. The border fees, the vehicle insurance for the crossing and the road tolls are all covered by the confirmed fare — there is nothing extra to pay at the border." },
     { q: "Will we have to walk across the border?", a: "No. You stay in the same vehicle with the same driver for the whole journey, and there is no changing cars at the crossing. Passengers do still present their own passports and complete immigration themselves — that part cannot be done on your behalf — but there is no walking across." },
-    { q: "How long does the drive from Kuwait to Riyadh take?", a: "Around 7 to 9 hours of driving, plus however long the border takes on the day. Published road distances for the route range from about 630 km to 715 km depending on which crossing is used, so treat any single figure as an estimate." },
-    { q: "Which border crossing does the route use?", a: "There are two land crossings between Kuwait and Saudi Arabia — Al Khafji / Al Nuwaiseeb on the coast and Al Ruqi\'i / Al Salmi inland. Your driver confirms which one before departure, based on your pickup point, your Riyadh destination and conditions on the day." },
+    { q: "How long does the drive from Kuwait to Riyadh take?", a: "Roughly 7 hours 40 minutes of driving for about 648 km, plus however long the border takes on the day, which varies. See the [Kuwait to Riyadh distance by road](/distance/riyadh-to-kuwait) for the full breakdown." },
+    { q: "Which border crossing does the route use?", a: "The coastal Al Nuwaiseeb (Kuwait) / Al Khafji (Saudi) crossing, then Routes 95, 550 and 65 to Riyadh. The inland Al Ruqi'i / Al Salmi crossing is used only when it suits your pickup or conditions on the day." },
     { q: "Which vehicles are available on this route?", a: "Two: the Toyota Land Cruiser Prado and the GMC Yukon, both seating up to 6 passengers. Both carry the same starting fare, so the choice comes down to space and comfort." },
     { q: "Do I need a visa to enter Saudi Arabia this way?", a: "Non-GCC nationals need a valid Saudi entry visa or e-visa. GCC nationals generally cross on their national ID. Requirements differ by nationality and residency and do change — confirm yours with the relevant embassy before booking." },
     { q: "Is a single driver used for the entire trip?", a: "Yes, one vehicle and one driver cover the full route from Kuwait, across the border, to your final Riyadh destination." },
@@ -1119,6 +1155,7 @@ export const kuwaitToRiyadh: RouteData = {
     { q: "Is it better to fly or drive this route?", a: "Flying is faster. Driving suits groups, travellers with luggage that would cost extra in the hold, and anyone who would rather go door to door than through two airports — and one fare covers the whole vehicle rather than each seat." },
   ],
   relatedRoutes: [
+    { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" },
     { href: "/distance/riyadh-to-kuwait", label: "Riyadh–Kuwait Distance & Travel Time Guide" },
     { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam Taxi" },
     { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait Taxi" },
@@ -1127,7 +1164,7 @@ export const kuwaitToRiyadh: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Riyadh Transfer",
-  lastReviewed: "August 2026",
+  lastReviewed: "19 November 2026",
   stops: [
     { name: "Midway rest stop", note: "A scheduled break roughly halfway through the desert crossing, before continuing into Riyadh." },
   ],
@@ -2380,8 +2417,10 @@ export const khafjiToDammamAirport: RouteData = {
   h1: "Khafji to Dammam Airport — Private Taxi & Intercity Transfer",
   intro: "Direct highway transfer from Al Khafji to King Fahd International Airport (DMM) — for KJO staff, residents, and travelers connecting to a flight after crossing in from Kuwait.",
   breadcrumbLabel: "Khafji → Dammam Airport",
-  distance: "~180 km",
-  travelTime: "2 – 2.5 hours",
+  // Map routing (OSRM), Nov 2026: 283 km, about 3.1 hours. Was "~180 km,
+  // 2 – 2.5 hours", which was wrong.
+  distance: "~280 km",
+  travelTime: "about 3 hours",
   heroImage: "/images/fleet-suv.jpg",
   overviewTitle: "Direct Transfer from Khafji to King Fahd International Airport",
   overviewParagraphs: [
@@ -2433,8 +2472,9 @@ export const kuwaitToKhafji: RouteData = {
   h1: "Kuwait to Khafji Private Taxi & Border Transfer — 24/7",
   intro: "Direct taxi transfer from Kuwait City across the Al Nuwaiseeb border crossing into Al Khafji, Saudi Arabia. The shortest and most direct land route between the two countries.",
   breadcrumbLabel: "Kuwait → Khafji",
-  distance: "~180 km to Khafji",
-  travelTime: "2.5 – 3 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: about 125 km, 1.5 hours of driving.
+  distance: "~125 km to Khafji",
+  travelTime: "~1.5 h driving, 2 – 3 hours with the border",
   vehicleSlugs: KUWAIT_VEHICLE_SLUGS,
   checklist: KSA_KUWAIT_CHECKLIST,
   heroImage: "/images/fleet-suv.jpg",
@@ -2479,7 +2519,7 @@ export const kuwaitToKhafji: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Khafji Border Crossing",
-  lastReviewed: "August 2026",
+  lastReviewed: "19 November 2026",
 };
 
 /* ── 31. Riyadh → Kuwait (W7 P1.5 reciprocal) ───────────────── */
@@ -2493,57 +2533,62 @@ export const riyadhToKuwait: RouteData = {
   origin: "Riyadh",
   destination: "Kuwait",
   isCrossBorder: true,
-  borderCrossingName: "Saudi–Kuwait Land Border",
-  eyebrow: "Long-Distance Border Transfer",
-  h1: "Riyadh to Kuwait — Private Taxi & Cross-Border Transfer",
-  intro: "Private door-to-door transfer from Riyadh to Kuwait City by road, across the Saudi–Kuwait land border. One vehicle for the full journey — a comfortable overland alternative to flying for groups and travelers with luggage.",
+  borderCrossingName: "Al Khafji / Al Nuwaiseeb Border",
+  eyebrow: "Private Cross-Border Taxi",
+  h1: "Riyadh to Kuwait Taxi by Road: Private Car Door to Door",
+  intro: "Private Riyadh to Kuwait taxi by road: one car and one licensed driver from your door in Riyadh to your address in Kuwait City, Salmiya or Kuwait Airport. About 648 km via the Al Khafji–Al Nuwaiseeb border, roughly 7 hours 40 minutes of driving, starting from 220 KWD per car.",
   breadcrumbLabel: "Riyadh → Kuwait",
-  // See the note on kuwaitToRiyadh above — same corridor, same qualification.
-  distance: "~639 km by road (inland crossing)",
-  travelTime: "7 – 9 hours driving, plus the border",
-  durationHours: "7–9 hours driving",
+  // Route and figures confirmed by the owner, 19 Nov 2026: the coastal
+  // Al Khafji / Al Nuwaiseeb crossing, Routes 65, 550 and 95 in Saudi
+  // Arabia, then Route 40 in Kuwait. Driving time excludes the border.
+  distance: "~648 km by road",
+  travelTime: "~7 h 40 min driving, plus the border",
+  durationHours: "About 7 hours 40 minutes driving",
   pricing: KUWAIT_RIYADH_PRICING,
   vehicleSlugs: KUWAIT_VEHICLE_SLUGS,
   checklist: KSA_KUWAIT_CHECKLIST,
-  heroImage: "/images/chauffeur.jpg",
+  heroImage: `${R2K_IMAGES}/riyadh-to-kuwait-taxi-by-road.webp`,
   overviewTitle: "Direct Overland Transfer from Riyadh to Kuwait",
   overviewParagraphs: [
-    "For business travelers, GCC nationals, and families who prefer a private overland journey to flying, the Riyadh–Kuwait route runs north-east across Saudi Arabia to the Kuwaiti border and on to Kuwait City.",
-    "There are two land crossings between Saudi Arabia and Kuwait: Al Khafji / Al Nuwaiseeb on the Gulf coast, reached through the Eastern Province, or Al Ruqi'i / Al Salmi inland, in the Hafar Al Batin area. Your driver confirms the route before departure, based on your pickup point, your Kuwait destination and conditions on the day.",
-    "Given the distance, we build in a scheduled rest stop roughly midway, and offer executive vehicles with extra legroom for the multi-hour drive.",
+    "For business travelers, GCC nationals and families who prefer a private overland journey to flying, the Riyadh to Kuwait route runs north-east to the Gulf coast and crosses into Kuwait at Al Khafji / Al Nuwaiseeb.",
+    "The drive is about 648 km on Routes 65, 550 and 95 in Saudi Arabia, then Route 40 in Kuwait, roughly 7 hours 40 minutes at the wheel before border time. The coastal road has more towns and services than the inland alternative.",
+    "We build in a rest stop along the way, and the car and driver stay with you from Riyadh to your door in Kuwait.",
   ],
-  borderProcessTitle: "Crossing the Saudi–Kuwait Border",
+  borderProcessTitle: "Crossing at Al Khafji and Al Nuwaiseeb",
   borderProcessParagraphs: [
-    "The border is several hours from Riyadh across the desert interior. Passengers present passports (or GCC ID) for Saudi exit formalities before proceeding to the Kuwaiti entry post.",
-    "GCC nationals cross with their national ID; other nationalities need a valid Kuwait entry visa. Vehicle customs checks apply on both sides.",
-    "After clearing into Kuwait, the journey continues to Kuwait City and your drop-off point.",
+    "Passengers present passports (or GCC ID) at the Saudi exit post at Al Khafji, then at the Kuwaiti entry post at Al Nuwaiseeb, without changing cars.",
+    "GCC nationals cross with their national ID; other nationalities need a valid Kuwait visa or eVisa. Vehicle checks apply on both sides.",
+    "After clearing into Kuwait, the journey continues north on Route 40 to Kuwait City and your drop-off.",
   ],
   documents: [
     "Valid passport (6+ months validity)",
-    "Kuwait entry visa or GCC national ID",
-    "Saudi exit clearance (standard for residents/visitors)",
+    "Kuwait visa or eVisa, or GCC national ID",
+    "Iqama and exit/re-entry visa for Saudi residents",
     "Kuwait drop-off address or hotel confirmation",
   ],
   pickupPoints: ["Riyadh hotels (Olaya, KAFD)", "King Khalid International Airport", "Diriyah", "Riyadh corporate offices"],
   originAreas: ["Olaya", "KAFD", "Diplomatic Quarter", "Diriyah", "King Khalid International Airport"],
-  destinationAreas: ["Kuwait City", "Salmiya", "Hawally", "Al Ahmadi", "Fahaheel", "Kuwait International Airport"],
-  dropoffInfo: "Direct drop-off anywhere in Kuwait City, Salmiya, or Kuwait International Airport for onward connections.",
+  destinationAreas: ["Kuwait City", "Salmiya", "Hawally", "Al Rai", "Farwaniya", "Kuwait International Airport"],
+  dropoffInfo: "Direct drop-off anywhere in Kuwait City, Salmiya or at Kuwait International Airport for onward connections.",
   vehicleOptions: [
-    { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats and extra comfort for the long journey." },
-    { name: "SUV", capacity: "1–5 passengers", note: "Popular for families and business travelers with luggage." },
-    { name: "Van", capacity: "6–10 passengers", note: "For delegations or groups traveling together to Kuwait." },
+    { name: "Toyota Land Cruiser Prado", capacity: "1–6 passengers", note: "Starting from 220 KWD one way." },
+    { name: "GMC Yukon", capacity: "1–6 passengers", note: "Starting from 220 KWD one way, with more room for bags." },
   ],
+  // Short answers (25 words or fewer) to the searches this page is shown
+  // for. FAQPage schema reads the same text.
   faqs: [
-    { q: "How much does a private taxi from Riyadh to Kuwait cost?", a: "Fares start at 300 KWD one way for the whole vehicle — not per seat — and the same starting fare applies to both the Toyota Land Cruiser Prado and the GMC Yukon. Message us with your travel date and passenger count and we will confirm the final price before you book." },
-    { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Around 7 to 9 hours of driving, plus however long the border takes on the day. Published road distances range from about 630 km to 715 km depending on which crossing is used, so treat any single figure as an estimate rather than a schedule." },
-    { q: "What is included in the price?", a: "The private vehicle for your party alone, a licensed driver for the whole journey, door-to-door pickup and drop-off, border fees and vehicle insurance, road tolls and fuel, one free hour of waiting on airport pickups, and a planned rest stop. Your own passport and visa remain your responsibility, and waiting beyond the first hour is charged hourly." },
-    { q: "Are border fees and tolls included?", a: "Yes. Border fees, the vehicle insurance for the crossing and road tolls are all covered by the confirmed fare — there is nothing extra to pay at the border." },
-    { q: "Will we have to walk across the border?", a: "No. You stay in the same vehicle with the same driver throughout, and there is no changing cars at the crossing. Passengers do still present their own passports and complete immigration themselves — that part cannot be done on your behalf — but there is no walking across." },
-    { q: "Which border crossing does the route use?", a: "There are two land crossings between Saudi Arabia and Kuwait — Al Khafji / Al Nuwaiseeb on the coast and Al Ruqi\'i / Al Salmi inland. Your driver confirms which one before departure, based on your pickup point, your Kuwait destination and conditions on the day." },
-    { q: "Which vehicles are available on this route?", a: "Two: the Toyota Land Cruiser Prado and the GMC Yukon, both seating up to 6 passengers. Both carry the same starting fare, so the choice comes down to space and comfort." },
-    { q: "Do I need a visa to enter Kuwait this way?", a: "Non-GCC nationals need a valid Kuwait entry visa, or an e-visa or visa on arrival where their nationality is eligible. GCC nationals generally cross on their national ID. Requirements differ by nationality and residency and do change — confirm yours with the relevant embassy before booking." },
-    { q: "Is a single driver used for the entire trip?", a: "Yes, one vehicle and one driver cover the full route from Riyadh, across the border, to your final Kuwait destination." },
-    { q: "Can this trip be booked for a group or delegation?", a: "Yes. Each vehicle seats up to 6, so larger groups are arranged as a multi-vehicle convoy. Tell us the total headcount when you enquire and we will quote accordingly." },
+    { q: "How far is Riyadh to Kuwait by road?", a: "About **648 km** via the Al Khafji–Al Nuwaiseeb border, roughly **7 hours 40 minutes** of driving plus time at the border." },
+    { q: "How long does the drive from Riyadh to Kuwait take?", a: "Roughly **7 hours 40 minutes** of driving. Add a rest stop and the border, where waiting time **varies** with the day and hour." },
+    { q: "How much is a taxi from Riyadh to Kuwait?", a: "**Starting from 220 KWD** one way for the whole car, not per seat. Prices may vary depending on date and availability." },
+    { q: "Is it better to travel from Riyadh to Kuwait by car or by plane?", a: "Flying is quicker alone. By car you go **door to door** with all your luggage and no airport transfers at either end." },
+    { q: "Which border crossing does the Riyadh to Kuwait taxi use?", a: "The coastal **Al Khafji (Saudi) / Al Nuwaiseeb (Kuwait)** crossing, via Routes 65, 550 and 95, then Route 40 into Kuwait." },
+    { q: "What happens at the Khafji border?", a: "You stay in the car. Your driver handles the **vehicle papers**; each passenger shows their **own passport and visa** at both posts." },
+    { q: "What documents do I need for Saudi to Kuwait by road?", a: "A **passport valid 6+ months**, a Kuwait visa or eVisa if required, or a GCC ID. Saudi residents also need an **exit and re-entry visa**." },
+    { q: "Can you take me to Kuwait Airport?", a: "**Yes.** We drop off at **Kuwait International Airport (KWI)** and meet arrivals there, with flight tracking and one hour of free waiting." },
+    { q: "How do I pay for the Riyadh to Kuwait taxi?", a: "**Cash** to the driver after drop-off, **bank transfer** after pickup, or **card or payment link** (an additional 15% VAT applies to card payments)." },
+    { q: "Do I get an invoice?", a: "**Yes.** An invoice is issued for every booking, for company expenses or your own records." },
+    { q: "Can I book a return taxi from Kuwait to Riyadh?", a: "**Yes.** Book both legs together, or see our [taxi from Kuwait to Riyadh](/kuwait-to-riyadh-taxi-service), also **starting from 220 KWD**." },
+    { q: "Is the car shared with other passengers?", a: "**No.** The car and driver are yours alone, from your door in Riyadh to your address in Kuwait." },
   ],
   relatedRoutes: [
     { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait Distance & Travel Time Guide" },
@@ -2554,10 +2599,263 @@ export const riyadhToKuwait: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Kuwait Transfer",
-  lastReviewed: "August 2026",
+  lastReviewed: "19 November 2026",
   stops: [
-    { name: "Midway rest stop", note: "A scheduled break roughly halfway through the desert crossing toward the Kuwaiti border." },
+    { name: "Rest stop on the coast road", note: "A planned break on the way north; the coastal route has more towns and services than the inland one." },
   ],
+  landing: {
+    airportsServed: [
+      { name: "King Khalid International Airport", iataCode: "RUH" },
+      { name: "Kuwait International Airport", iataCode: "KWI" },
+    ],
+    order: [
+      "highlights", "prices", "bookingMethods", "payment", "included", "timeline", "crossing",
+      "documents", "airport", "destinations", "hotels", "nearby", "returnRoutes", "faq", "finalCta",
+    ],
+    hero: {
+      subheading: "One private car and one licensed driver from your door in Riyadh to your address in Kuwait City, Salmiya or Kuwait Airport, across the Al Khafji–Al Nuwaiseeb border.",
+      chips: [
+        { icon: "clock", label: "24/7" },
+        { icon: "plane", label: "Flight tracking" },
+        { icon: "languages", label: "English & Arabic drivers" },
+        { icon: "receipt", label: "Invoice issued" },
+      ],
+      priceBadge: "Starting from 220 KWD",
+      priceTag: "Prices may vary depending on date & availability",
+      bookOnlineHref: "/book-online?from=Riyadh&to=Kuwait&mode=transfers",
+      image: {
+        src: `${R2K_IMAGES}/riyadh-to-kuwait-taxi-by-road.webp`,
+        srcSet: [
+          { src: `${R2K_IMAGES}/riyadh-to-kuwait-taxi-by-road-768.webp`, width: 768 },
+          { src: `${R2K_IMAGES}/riyadh-to-kuwait-taxi-by-road-1280.webp`, width: 1280 },
+          { src: `${R2K_IMAGES}/riyadh-to-kuwait-taxi-by-road.webp`, width: 1672 },
+        ],
+        width: 1672,
+        height: 941,
+        alt: "Private taxi from Riyadh to Kuwait by road, SUV on desert highway toward Kuwait City",
+        title: "Riyadh to Kuwait Taxi by Road – Gulf Trip Service",
+      },
+    },
+    form: {
+      heading: "Online Booking for Riyadh to Kuwait Taxi",
+      headingStyle: "banner",
+      subheading: "Private car, door to door. Pick a date and a car, and confirm everything on the next step.",
+      maxPassengers: 6,
+      footerNote: "Prices may vary by date, vehicle and availability. Your final fare is confirmed before booking.",
+    },
+    highlights: {
+      heading: "Riyadh to Kuwait Route at a Glance",
+      intro: "Private, door-to-door taxi from any Riyadh address to Kuwait City, Salmiya or Kuwait Airport: about **648 km by road**, roughly **7 h 40 min** of driving, across the **Al Khafji–Al Nuwaiseeb** border, **starting from 220 KWD**.",
+      items: [
+        { icon: "navigation", label: "Route", value: "Riyadh → Kuwait" },
+        { icon: "mapPin", label: "Distance", value: "~648 km by road" },
+        { icon: "clock", label: "Driving time", value: "~7 h 40 min + border", emphasis: true },
+        { icon: "landmark", label: "Border crossing", value: "Al Khafji / Al Nuwaiseeb" },
+        { icon: "car", label: "Transfer type", value: "Private, door to door" },
+        { icon: "tag", label: "Fare", value: "Starting from 220 KWD", emphasis: true },
+      ],
+      note: "Driving time is an estimate. Border queues, traffic and rest stops add to it.",
+      link: { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait distance by road" },
+    },
+    prices: {
+      heading: "Riyadh to Kuwait Taxi Fare 2026",
+      intro: "**Per-car** fares, not per seat. One price covers the car, the driver, fuel, tolls and the vehicle's border fees.",
+      currency: "KWD",
+      basis: "starting",
+      confirmedOn: "19 November 2026",
+      groups: [
+        {
+          heading: "SUV · starting from 220 KWD",
+          vehicles: [
+            r2bVehicle("toyota-land-cruiser-prado", "Toyota Land Cruiser Prado", "SUV", "1–6", undefined, 220, "Toyota Land Cruiser Prado for a private Riyadh to Kuwait taxi"),
+            r2bVehicle("gmc-yukon", "GMC Yukon", "SUV", "1–6", "6", 220, "GMC Yukon for a private Riyadh to Kuwait taxi"),
+          ],
+        },
+      ],
+      privateVsShared: {
+        title: "Priced per car, not per seat",
+        body: "The fare is for the whole vehicle. A family of four in one car starting from 220 KWD pays about 55 KWD each.",
+      },
+      fareFactors: {
+        heading: "What affects the fare",
+        items: [
+          { icon: "calendarCheck", label: "Travel date and availability" },
+          { icon: "car", label: "Vehicle type" },
+          { icon: "mapPin", label: "Pickup outside Riyadh city, or extra stops" },
+          { icon: "clock", label: "Airport waiting after the first free hour" },
+        ],
+      },
+      note: "Per vehicle, one way. Prices may vary depending on date and availability; your final fare is confirmed on WhatsApp before you book. Visas and extra waiting time are not included. Compare every model in [our fleet](/fleet).",
+    },
+    bookingMethods: {
+      heading: "Three Ways to Book Your Riyadh to Kuwait Taxi",
+      intro: "Pick whichever is easiest. Every booking gets the same private car and driver.",
+      items: [
+        { kind: "whatsapp", icon: "messageCircle", title: "WhatsApp", body: "Send your date, pickup and number of passengers. We reply with your fare and confirm the car.", cta: "Book on WhatsApp" },
+        { kind: "form", icon: "calendarCheck", title: "Online form", body: "Use the booking form above: choose the date, time and car, then confirm on the next step.", cta: "Go to the booking form" },
+        { kind: "email", icon: "mail", title: "Email", body: "Write to info@gulftripservice.com with your travel details and we reply with a quote.", cta: "Email us" },
+      ],
+    },
+    payment: {
+      heading: "Payment and Invoice",
+      intro: "Pay the way that suits you. Cash and bank transfer need no advance payment.",
+      items: [
+        { icon: "banknote", title: "Cash to the driver", body: "Pay your driver in cash after drop-off." },
+        { icon: "building", title: "Bank transfer", body: "Transfer after pickup, with no advance payment needed." },
+        { icon: "creditCard", title: "Card or payment link", body: "We send a secure payment link. An additional 15% VAT applies to card and payment-link payments." },
+      ],
+      note: "An invoice is issued for every booking.",
+    },
+    included: {
+      eyebrow: "Why book with us",
+      heading: "Why Book Your Riyadh to Kuwait Taxi with Us",
+      items: [
+        { icon: "clock", title: "24/7 service", body: "Day or night departures, and a team on WhatsApp around the clock." },
+        { icon: "plane", title: "Flight tracking", body: "Airport pickups follow your flight, so a delay doesn't cost you the ride." },
+        { icon: "briefcase", title: "Chauffeur service", body: "Licensed, professional drivers who know the Kuwait road." },
+        { icon: "languages", title: "English & Arabic speaking", body: "Drivers who speak English and Arabic, at home and at the border." },
+        { icon: "landmark", title: "Smooth border crossing", body: "Your driver handles the vehicle papers; passengers handle their own visas." },
+        { icon: "shieldCheck", title: "Private, never shared", body: "The car is reserved for your party alone." },
+        { icon: "home", title: "Door to door", body: "Pickup and drop-off at the exact addresses you give us." },
+        { icon: "fuel", title: "Fuel, tolls and border fees", body: "Part of the fare, with nothing extra to pay at the border." },
+      ],
+    },
+    timeline: {
+      heading: "Your Journey from Riyadh to Kuwait",
+      intro: "Riyadh to Kuwait by car, with one driver for the whole trip. This is how the day runs.",
+      steps: [
+        { icon: "home", title: "Pickup in Riyadh", body: "From your home, hotel or office in Olaya or KAFD, or from arrivals at King Khalid International Airport." },
+        { icon: "route", title: "North-east on Routes 65 and 550", body: "The long desert stretch out of Riyadh towards the Gulf coast." },
+        { icon: "coffee", title: "Rest stop", body: "A planned break for prayer, coffee or a stretch. The coast road has more towns and services." },
+        { icon: "navigation", title: "Route 95 to Al Khafji", body: "Up the coast to Al Khafji, the last Saudi town before Kuwait." },
+        { icon: "landmark", title: "Saudi exit and Kuwait entry", body: "Through the Al Khafji and Al Nuwaiseeb posts without changing cars." },
+        { icon: "mapPin", title: "Drop-off in Kuwait", body: "Route 40 north to Kuwait City, Salmiya, your hotel or Kuwait International Airport." },
+      ],
+    },
+    crossing: {
+      heading: "Crossing at Al Khafji and Al Nuwaiseeb",
+      intro: "The coastal border on Route 95: Al Khafji on the Saudi side, Al Nuwaiseeb on the Kuwaiti side. You pass both posts in the same car.",
+      image: {
+        src: `${R2K_IMAGES}/al-khafji-nuwaiseeb-border-crossing.webp`,
+        srcSet: [
+          { src: `${R2K_IMAGES}/al-khafji-nuwaiseeb-border-crossing-768.webp`, width: 768 },
+          { src: `${R2K_IMAGES}/al-khafji-nuwaiseeb-border-crossing.webp`, width: 1200 },
+        ],
+        width: 1200,
+        height: 900,
+        alt: "Al Khafji Nuwaiseeb border crossing between Saudi Arabia and Kuwait",
+      },
+      options: [
+        { tag: "Our usual route", title: "Coastal: Al Khafji / Al Nuwaiseeb", body: "About **648 km** from Riyadh on Routes 65, 550 and 95, then Route 40 in Kuwait, with more towns and services along the Gulf coast." },
+        { tag: "Alternative", title: "Inland: Al Ruqi'i / Al Salmi", body: "The inland crossing near Hafar Al Batin. We use it only when it suits your pickup or conditions on the day, and tell you before departure." },
+        { tag: "Waiting time", title: "How long the border takes", body: "It **varies** with the day and hour. Weekends and holidays are busier, so we plan your departure around the queues." },
+      ],
+      driverHeading: "What your driver handles",
+      driver: [
+        "The vehicle's registration, insurance and border paperwork",
+        "The vehicle's border fees and tolls, already in your fare",
+        "Choosing the right lanes at the Saudi exit and the Kuwait entry",
+        "Keeping you and your luggage in one car from door to door",
+      ],
+      passengerHeading: "What you need",
+      passenger: [
+        "A passport valid for at least 6 months",
+        "A Kuwait visa or eVisa if your nationality needs one, or your GCC ID",
+        "Your Iqama plus a valid exit and re-entry visa if you live in Saudi Arabia",
+        "The full address of your drop-off in Kuwait",
+      ],
+      callout: "Entry rules change. Please verify with official authorities before travel.",
+      links: [
+        { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait taxi" },
+        { href: "/kuwait-to-khafji-taxi-service", label: "Kuwait to Khafji taxi" },
+        { href: "/dammam-airport-to-khafji-taxi-service", label: "Dammam Airport to Khafji" },
+        { href: "/khafji-to-dammam-airport-taxi-service", label: "Khafji to Dammam Airport" },
+        { href: "/border-crossing", label: "All border crossings" },
+      ],
+      outro: "Planning the whole trip? Read our guide to [Saudi Arabia to Kuwait by road](/guides/saudi-arabia-to-kuwait-by-road).",
+    },
+    documents: {
+      heading: "Documents Checklist: Saudi Arabia to Kuwait by Road",
+      intro: "What each passenger should carry. Your driver carries the vehicle's papers.",
+      items: [
+        { title: "Passport valid for 6+ months", detail: "Checked on both sides of the border." },
+        { title: "Kuwait visa or eVisa", detail: "Needed by most non-GCC nationals. Check whether your nationality can get an eVisa or a visa on arrival." },
+        { title: "GCC national ID", detail: "GCC citizens generally cross on their national ID card." },
+        { title: "Iqama and exit/re-entry visa", detail: "Saudi residents need a valid Iqama and an exit and re-entry visa to come back." },
+        { title: "Every passenger named at booking", detail: "Border records are per person, so tell us everyone travelling." },
+        { title: "Your Kuwait address", detail: "A hotel booking or the full address of your drop-off." },
+      ],
+      callout: "Rules change. Verify with official sources, such as the Kuwaiti and Saudi embassies, before you travel.",
+    },
+    airport: {
+      heading: "Kuwait Airport (KWI) Pickups and Drop-offs",
+      intro: "Flying in or out of Kuwait International Airport? We drop off at departures and meet arrivals at whichever terminal your airline uses.",
+      items: [
+        { icon: "plane", title: "Drop-off for your flight", body: "Leave Riyadh at least 11 hours before an international departure: the drive, the border, a rest stop and check-in." },
+        { icon: "users", title: "Meet and greet on arrival", body: "Your driver waits at arrivals with a name board, then drives you to Riyadh or anywhere in Kuwait." },
+        { icon: "clock", title: "Flight tracking", body: "We follow your flight, so a delay doesn't cost you the pickup. The first hour of waiting is free." },
+      ],
+      links: "Staying in Kuwait? See our [chauffeur service in Kuwait](/destinations/kuwait-city). Starting at the airport in Riyadh? We pick up at [King Khalid Airport](/riyadh-airport-taxi-service) too.",
+      whatsappMessage: "Hi, I want to book Riyadh to Kuwait Airport",
+      ctaLabel: "Book a Kuwait Airport transfer",
+    },
+    destinations: {
+      heading: "Top Destinations in Kuwait",
+      intro: "Where our passengers head once they arrive. We drop off at any of them.",
+      items: [
+        { name: "Kuwait Towers", blurb: "Three towers on the Gulf Road, Kuwait's best-known landmark." },
+        { name: "The Avenues Mall", blurb: "One of the region's largest malls, in Al Rai." },
+        { name: "Souq Al-Mubarakiya", blurb: "The old market in the city centre: spices, dates and street food." },
+        { name: "Salmiya & Marina Mall", blurb: "The seafront district, with the corniche, Marina Mall and cafés.", href: "/destinations/salmiya" },
+        { name: "Grand Mosque", blurb: "Kuwait's largest mosque, in the heart of the city." },
+        { name: "Al Hamra Tower", blurb: "Kuwait's tallest building, with shops and dining at its base." },
+        { name: "Sheikh Jaber Al-Ahmad Cultural Centre", blurb: "Kuwait's opera house and cultural centre on the Gulf Road." },
+        { name: "Al Shaheed Park", blurb: "A large city park with gardens, lakes and museums.", href: "/destinations/al-shaheed-park" },
+        { name: "Failaka Island", blurb: "Island with ancient ruins, reached by ferry from Salmiya.", href: "/destinations/failaka-island" },
+      ],
+      link: { href: "/destinations/kuwait-city", label: "Explore Kuwait City" },
+    },
+    hotels: {
+      heading: "Top Hotels in Kuwait",
+      intro: "Popular hotels our passengers travel to. We drop you at the door; we are not affiliated with any hotel.",
+      items: KUWAIT_HOTELS,
+      note: "Times from Kuwait International Airport are estimates and vary with traffic. Staying somewhere else? We drop off at any address in Kuwait.",
+    },
+    nearby: {
+      heading: "Explore Nearby Destinations from Kuwait",
+      intro: "Other private, door-to-door trips we run from Kuwait.",
+      items: [
+        { href: "/kuwait-to-khafji-taxi-service", name: "Al Khafji", blurb: "The first Saudi town after the border, about 125 km from Kuwait City.", image: { src: `${R2K_IMAGES}/al-khafji-nuwaiseeb-border-crossing-768.webp`, alt: "Al Khafji Nuwaiseeb border crossing between Saudi Arabia and Kuwait", width: 768, height: 576 } },
+        { href: "/kuwait-to-dammam-taxi-service", name: "Dammam & Al Khobar", blurb: "The Eastern Province, about 410 km down the coast road.", image: { src: "/destinations/dammam-eastern-province-skyline.webp", alt: "Dammam skyline in the Eastern Province of Saudi Arabia", width: 1672, height: 941 } },
+        { href: "/services/jubail", name: "Jubail", blurb: "The industrial city on the Gulf coast, on the way to Dammam.", image: { src: "/images/distance/jubail.webp", alt: "Jubail's coastal promenade with the city's water tower and industrial skyline", width: 1536, height: 1024 } },
+        { href: "/destinations/manama", name: "Bahrain", blurb: "Manama, across the King Fahd Causeway from Al Khobar.", image: { src: "/destinations/manama-skyline-world-trade-center.webp", alt: "Manama skyline with the Bahrain World Trade Center", width: 1600, height: 900 } },
+      ],
+    },
+    returnTrip: { text: "Travelling back?", href: "/kuwait-to-riyadh-taxi-service", label: "Taxi from Kuwait to Riyadh" },
+    popularRoutes: {
+      heading: "Other Popular Routes",
+      items: [
+        { href: "/dammam-to-kuwait-taxi-service", from: "Dammam", to: "Kuwait", tag: "Cross-border" },
+        { href: "/kuwait-to-dammam-taxi-service", from: "Kuwait", to: "Dammam", tag: "Cross-border" },
+        { href: "/khafji-to-kuwait-taxi-service", from: "Khafji", to: "Kuwait", tag: "Cross-border" },
+        { href: "/riyadh-to-bahrain-taxi-service", from: "Riyadh", to: "Bahrain", tag: "Cross-border" },
+        { href: "/riyadh-to-qatar-taxi-service", from: "Riyadh", to: "Doha", tag: "Cross-border" },
+        { href: "/riyadh-to-dubai-taxi-service", from: "Riyadh", to: "Dubai", tag: "Cross-border" },
+        { href: "/riyadh-to-dammam-airport-taxi-service", from: "Riyadh", to: "Dammam Airport", tag: "Airport" },
+        { href: "/riyadh-to-makkah-taxi-service", from: "Riyadh", to: "Makkah", tag: "Intercity" },
+        { href: "/kuwait-to-khafji-taxi-service", from: "Kuwait", to: "Khafji", tag: "Cross-border" },
+      ],
+      servicesHeading: "Related services",
+      services: [
+        { href: "/riyadh-airport-taxi-service", label: "Riyadh airport taxi" },
+        { href: "/private-taxi", label: "Private taxi service" },
+      ],
+    },
+    finalCta: {
+      heading: "Book Your Riyadh to Kuwait Taxi Today",
+      body: "Starting from 220 KWD per car, private and door to door. Message us on WhatsApp or book online, 24/7.",
+    },
+  },
 };
 
 /* ── 32. Abu Dhabi → Dammam (W7 P1.5 reciprocal) ────────────── */

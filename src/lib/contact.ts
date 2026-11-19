@@ -57,6 +57,8 @@ export function waLink(message: string): string {
  */
 const PAGE_WHATSAPP_MESSAGES: Record<string, string> = {
   "/riyadh-to-bahrain-taxi-service": "Hi, I want to book Riyadh to Bahrain",
+  "/riyadh-to-kuwait-taxi-service": "Hi, I want to book Riyadh to Kuwait",
+  "/ar/riyadh-to-kuwait-taxi-service": "السلام عليكم، أرغب في حجز تاكسي من الرياض إلى الكويت",
 };
 
 export function pageWhatsAppMessage(pathname: string | null | undefined): string | undefined {
