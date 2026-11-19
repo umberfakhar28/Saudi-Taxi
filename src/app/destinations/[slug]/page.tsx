@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return generatePageMetadata({
     title: data.seoTitle,
+    brandSuffix: data.brandSuffix ?? true,
     description: data.metaDescription,
     path: `/destinations/${data.slug}`,
     ogImage: data.imagePending ? undefined : data.heroImage,

@@ -22,6 +22,8 @@
  * to change.
  */
 
+import { KUWAIT_HOTELS } from "./kuwaitHotels";
+
 export type CountrySlug = "saudi-arabia" | "uae" | "qatar" | "bahrain" | "oman" | "kuwait";
 
 export interface Country {
@@ -75,6 +77,8 @@ export interface DestinationDetail {
   name: string;
   country: CountrySlug;
   seoTitle: string;
+  /** false: the title is used as written, without " | Gulf Trip Service". */
+  brandSuffix?: boolean;
   metaDescription: string;
   h1: string;
   heroImage: string;
@@ -97,6 +101,23 @@ export interface DestinationDetail {
   practicalInfo: { title: string; note: string }[];
   faqs: { q: string; a: string }[];
   reviews: { name: string; origin: string; text: string }[];
+
+  /**
+   * Extra sections for a destination that acts as a hub (Kuwait City for the
+   * Kuwait cluster, Nov 2026), shown after "Transfer & Chauffeur Options".
+   * Cards may link; paragraphs may carry [anchor](/path) links. Other pages
+   * leave this unset and render as before.
+   */
+  extraSections?: {
+    id: string;
+    eyebrow: string;
+    heading: string;
+    paragraphs?: string[];
+    cards?: { title: string; body: string; href?: string; linkLabel?: string }[];
+    subtle?: boolean;
+  }[];
+  /** Hotel cards (no photos, logos or partnership claims). */
+  hotels?: { heading: string; intro: string; items: { name: string; area: string; type: string; fromAirport: string }[]; note: string };
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -993,12 +1014,15 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
   // ----------------------------------------------------------- Kuwait ----
   "kuwait-city": {
     slug: "kuwait-city", name: "Kuwait City", country: "kuwait",
-    seoTitle: "Kuwait City Private Taxi & Chauffeur Service | Gulf Trip Service",
-    metaDescription: "Private taxi, airport transfer and chauffeur service in Kuwait City. Transport from Kuwait International Airport to the Kuwait Towers, Gulf Road, and across the city — book with Gulf Trip Service.",
-    h1: "Private Taxi & Chauffeur Service in Kuwait City",
+    // The Kuwait hub (docs/seo/kuwait/keyword-map.md): owns "chauffeur
+    // service in kuwait", "private driver kuwait" and Kuwait Airport.
+    seoTitle: "Chauffeur Service in Kuwait & Kuwait Airport Transfers",
+    brandSuffix: false,
+    metaDescription: "Private driver and chauffeur service in Kuwait: Kuwait Airport (KWI) pickups, hotel and city transfers, and taxis to Riyadh, Dammam and Khafji. 24/7.",
+    h1: "Chauffeur Service & Private Driver in Kuwait",
     heroImage: "/destinations/kuwait-city-towers-skyline.webp",
     heroImageAlt: "Kuwait Towers and the Kuwait City skyline at sunset — premium private chauffeur and transfer service",
-    intro: "Kuwait City is Kuwait's compact Gulf capital, built along a curving Gulf Road corniche and defined by the iconic Kuwait Towers. Gulf Trip Service runs private airport transfers within the city and cross-border transport connecting Kuwait to Saudi Arabia's Eastern Province.",
+    intro: "Private chauffeur service in Kuwait: Kuwait Airport pickups, hotel and city transfers, hourly drivers for business days, and private taxis across the border to Riyadh, Dammam and Khafji. One licensed driver, booked on WhatsApp, 24/7.",
     whyVisit: "Kuwait City packs a dense downtown, a long waterfront corniche, and some of the Gulf's most distinctive 1970s–80s architecture into a city that's easy to navigate by private car, with road links directly across the border into Saudi Arabia.",
     attractions: [
       { name: "Kuwait Towers", description: "The country's most recognisable landmark — three water towers on the Gulf Road corniche, with an observation deck and revolving restaurant." },
@@ -1010,11 +1034,13 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     cityTransferInfo: "Kuwait City's downtown, Gulf Road corniche, and Salmiya district are each a short private-car ride apart — we run fixed-rate transfers between hotels, business districts, and the city's main sights.",
     chauffeurInfo: "An hourly chauffeur suits business travel between Kuwait City's commercial towers, or a sightseeing day combining the Kuwait Towers, Souq Al-Mubarakiya, and the National Museum.",
     internalLinks: [
-      { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi service" },
+      { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" },
       { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh taxi service" },
       { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait taxi service" },
       { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi service" },
       { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait taxi service" },
+      { href: "/kuwait-to-khafji-taxi-service", label: "Kuwait to Khafji taxi service" },
+      { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
       { href: "/border-crossing", label: "GCC border crossing routes" },
       { href: "/distance/dammam-to-kuwait", label: "Dammam to Kuwait distance & travel time" },
       { href: "/distance/riyadh-to-kuwait", label: "Riyadh to Kuwait distance & travel time" },
@@ -1024,19 +1050,56 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     quickFacts: [
       { label: "Country", value: "Kuwait 🇰🇼" },
       { label: "Airport", value: "Kuwait Intl (KWI)" },
-      { label: "Saudi Corridor", value: "Eastern Province road link via Khafji" },
+      { label: "Saudi Corridor", value: "Coastal road via Al Khafji / Al Nuwaiseeb" },
       { label: "Best For", value: "Business travel & city sightseeing" },
     ],
     practicalInfo: [
-      { title: "Cross-Border Timing", note: "Road travelers crossing from Saudi Arabia's Eastern Province via Khafji should allow extra time for border processing." },
+      { title: "Cross-Border Timing", note: "Road travelers crossing from Saudi Arabia at Al Khafji / Al Nuwaiseeb should allow extra time for border processing, which varies with the day and hour." },
       { title: "Compact Downtown", note: "Kuwait City's downtown, Gulf Road corniche and Salmiya district are each a short private-car ride apart." },
     ],
     faqs: [
-      { q: "Do you run transfers between Kuwait and Saudi Arabia?", a: "Yes — we operate road transfers connecting Kuwait City to Riyadh, Dammam and Khafji." },
+      { q: "Do you offer a chauffeur service in Kuwait?", a: "Yes. We provide private drivers in Kuwait for airport pickups, hotel and city transfers, hourly business days and sightseeing, booked on WhatsApp 24/7." },
+      { q: "Do you run transfers between Kuwait and Saudi Arabia?", a: "Yes. Private taxis connect Kuwait City with Riyadh (about 648 km, starting from 220 KWD per car), Dammam (about 410 km) and Khafji (about 125 km)." },
+      { q: "How far is Kuwait Airport from Kuwait City?", a: "About 30 km, usually 25 to 35 minutes by car depending on traffic. Salmiya is similar; Farwaniya is closer, about 15 to 20 minutes." },
+      { q: "How do I get to Failaka Island?", a: "By ferry from the Ras Salmiya area. Schedules vary by operator and tide, so check before you go; we can drive you to the terminal and back." },
       { q: "Do you meet arrivals at Kuwait International Airport?", a: "Yes, with real-time flight tracking and a name-board pickup straight to a private vehicle." },
       { q: "Can I book a chauffeur for a business day across the city?", a: "Yes, an hourly chauffeur suits business travel between Kuwait City's commercial towers, or a sightseeing day combining the Towers, souq and museum." },
     ],
     reviews: [],
+    extraSections: [
+      {
+        id: "chauffeur-service-kuwait",
+        eyebrow: "Chauffeur services",
+        heading: "Chauffeur Service in Kuwait",
+        paragraphs: [
+          "A private driver for the day, a ride from the airport, or a car across the border: every booking is one licensed driver and one private car, for your party only.",
+        ],
+        cards: [
+          { title: "Kuwait Airport transfers", body: "Meet and greet at Kuwait International Airport (KWI) with a name board and flight tracking, at whichever terminal your airline uses. The first hour of waiting is free." },
+          { title: "Hourly chauffeur", body: "A driver on call for meetings across Kuwait City's business districts, or a full day of sightseeing at your own pace." },
+          { title: "Hotel and city transfers", body: "Door to door between hotels, malls, offices and sights, from Sharq and Kuwait City centre to Salmiya, Al Rai and Messilah." },
+          { title: "Riyadh to Kuwait taxi", body: "Private car across the Al Khafji / Al Nuwaiseeb border: about 648 km, starting from 220 KWD per car.", href: "/riyadh-to-kuwait-taxi-service", linkLabel: "Riyadh to Kuwait taxi" },
+          { title: "Dammam and Khafji", body: "Down the coast road to the Eastern Province: about 410 km to Dammam, 125 km to Khafji.", href: "/kuwait-to-dammam-taxi-service", linkLabel: "Kuwait to Dammam taxi" },
+          { title: "Return to Riyadh", body: "The same private trip the other way, also starting from 220 KWD per car.", href: "/kuwait-to-riyadh-taxi-service", linkLabel: "Kuwait to Riyadh taxi" },
+        ],
+        subtle: true,
+      },
+      {
+        id: "failaka-island-ferry",
+        eyebrow: "Day trip",
+        heading: "How to Get to Failaka Island",
+        paragraphs: [
+          "Failaka Island is reached by ferry from the Ras Salmiya area of Kuwait City. Sailing times and crossing times vary by operator and with the tide, so check the schedule before you go.",
+          "We drive you from your hotel or Kuwait Airport to the ferry terminal and collect you when you come back. See [Failaka Island transfers](/destinations/failaka-island) for more.",
+        ],
+      },
+    ],
+    hotels: {
+      heading: "Hotels in Kuwait We Drive To",
+      intro: "Popular hotels our passengers stay at. We drop you at the door; we are not affiliated with any hotel.",
+      items: KUWAIT_HOTELS,
+      note: "Times from Kuwait International Airport are estimates and vary with traffic. Staying somewhere else? We drive to any address in Kuwait.",
+    },
   },
   salmiya: {
     slug: "salmiya", name: "Salmiya", country: "kuwait",
@@ -1152,11 +1215,24 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { title: "Local Transport on the Island", note: "We handle the Kuwait City side of the trip — the island itself is explored on foot or by local transport once you arrive." },
     ],
     faqs: [
+      { q: "How do I get to Failaka Island from Kuwait City?", a: "By ferry from the Ras Salmiya area. Schedules and crossing times vary by operator and tide, so check before you go; we drive you to and from the terminal." },
       { q: "Is there an airport on Failaka Island?", a: "No — visitors fly into Kuwait International Airport (KWI) and we transfer you to Kuwait City's ferry terminal for the crossing." },
       { q: "Can you help me catch the ferry on time?", a: "Yes, a pre-arranged transfer to the terminal is particularly useful for making a specific sailing time." },
       { q: "Can I combine Failaka with other Kuwait City sightseeing?", a: "Yes, many visitors combine a Failaka day trip with Kuwait City sights on the same day — let us know when booking." },
     ],
     reviews: [],
+    extraSections: [
+      {
+        id: "how-to-get-to-failaka",
+        eyebrow: "Getting there",
+        heading: "How to Get to Failaka Island",
+        paragraphs: [
+          "Failaka is reached by ferry from the Ras Salmiya area of Kuwait City. Sailing times and crossing times vary by operator and with the tide, and some ferries also carry cars, so check the current schedule and book ahead at busy times.",
+          "We handle the mainland side: a private car from your hotel or Kuwait International Airport to the ferry terminal, and back when you return. Coming from Saudi Arabia? Our [Riyadh to Kuwait taxi](/riyadh-to-kuwait-taxi-service) can drop you in Salmiya.",
+        ],
+        subtle: true,
+      },
+    ],
   },
 };
 

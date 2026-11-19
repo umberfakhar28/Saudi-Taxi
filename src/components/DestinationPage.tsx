@@ -7,6 +7,7 @@ import RelatedLinks from "@/components/RelatedLinks";
 import { countryFor, getDestination, type DestinationDetail } from "@/lib/destinationData";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { waLink } from "@/lib/contact";
+import { renderInline } from "@/components/RoutePage";
 import { FLEET_TIERS } from "@/lib/fleetConfig";
 import styles from "./DestinationPage.module.css";
 
@@ -235,6 +236,67 @@ export default function DestinationPage({ data }: { data: DestinationDetail }) {
                     </div>
                 </div>
             </section>
+
+            {/* Hub sections, for destinations that set them (Kuwait City). */}
+            {data.extraSections?.map((x) => (
+                <section key={x.id} id={x.id} className="section-lg" style={x.subtle ? { background: "var(--bg-subtle)" } : undefined}>
+                    <div className="container">
+                        <div className="section-header centered">
+                            <span className="section-eyebrow">{x.eyebrow}</span>
+                            <h2 className="section-title">{x.heading}</h2>
+                        </div>
+                        {x.paragraphs?.map((p, i) => (
+                            <p key={i} style={{ color: "var(--text-body)", lineHeight: 1.8, maxWidth: 820, margin: "0 auto var(--space-5)" }}>{renderInline(p)}</p>
+                        ))}
+                        {x.cards && (
+                            <div className="grid-3" style={{ marginTop: "var(--space-6)" }}>
+                                {x.cards.map((c) => (
+                                    <div key={c.title} className="card" style={{ display: "flex", flexDirection: "column" }}>
+                                        <h3>{c.title}</h3>
+                                        <p style={{ flex: 1 }}>{c.body}</p>
+                                        {c.href && (
+                                            <Link href={c.href} style={{ color: "var(--accent)", fontWeight: 700, fontSize: "var(--text-sm)" }}>{c.linkLabel ?? c.title} →</Link>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </section>
+            ))}
+
+            {data.hotels && (
+                <section className="section-lg">
+                    <div className="container">
+                        <div className="section-header centered">
+                            <span className="section-eyebrow">Where to Stay</span>
+                            <h2 className="section-title">{data.hotels.heading}</h2>
+                            <p className="section-subtitle">{data.hotels.intro}</p>
+                        </div>
+                        <div className="grid-3">
+                            {data.hotels.items.map((h) => (
+                                <div key={h.name} className="card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", borderTop: "3px solid var(--gold)" }}>
+                                    <span style={{ alignSelf: "flex-start", fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-muted)" }}>{h.type}</span>
+                                    <h3 style={{ margin: 0 }}>{h.name}</h3>
+                                    <p style={{ margin: 0, display: "flex", gap: "var(--space-2)", alignItems: "center" }}><MapPinIcon size={16} /> {h.area}</p>
+                                    <p style={{ margin: "0 0 var(--space-3)", display: "flex", gap: "var(--space-2)", alignItems: "center" }}><PlaneIcon size={16} /> {h.fromAirport} from Kuwait Airport</p>
+                                    <a
+                                        href={waLink(`Hi, I want to book a transfer to ${h.name}, Kuwait`)}
+                                        className="btn btn-whatsapp btn-sm"
+                                        style={{ marginTop: "auto", justifyContent: "center" }}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        data-wa-cta="hotel-card"
+                                    >
+                                        <WhatsAppIcon size={14} /> Book a transfer here
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+                        <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "var(--text-sm)", marginTop: "var(--space-6)" }}>{data.hotels.note}</p>
+                    </div>
+                </section>
+            )}
 
             {/* Travel Use Cases */}
             <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
