@@ -1,6 +1,7 @@
 import Link from "@/components/IntentLink";
 import Image from "next/image";
-import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { serviceSchema, faqSchema, breadcrumbSchema, blogPostingSchema, jsonLd } from "@/lib/jsonld";
+import { renderInline } from "@/components/RoutePage";
 import { waLink } from "@/lib/contact";
 import { WhatsAppIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
 
@@ -60,6 +61,13 @@ export interface GuideData {
   /** Editorial freshness stamp — only ever set when the content has
    * actually just been reviewed (ground rule against fake update dates). */
   lastReviewed?: string;
+  /**
+   * Article schema plus a byline under the hero, for guides written as
+   * articles (the Kuwait guide, Nov 2026). Dates are ISO (YYYY-MM-DD) and
+   * only ever the real publish/review dates. Section text may then carry
+   * [anchor](/path) links.
+   */
+  article?: { datePublished: string; dateModified?: string; image?: string; areaServed?: string[] };
 }
 
 /** Exported so BlogPost can render the identical checklist markup. */
@@ -130,8 +138,15 @@ export default function GuidePage({ data }: { data: GuideData }) {
       name: data.title,
       description: data.subtitle,
       url: data.path,
-      areaServed: ["Saudi Arabia"],
+      areaServed: data.article?.areaServed ?? ["Saudi Arabia"],
     }),
+    ...(data.article
+      ? [{
+          ...blogPostingSchema({ headline: data.title, description: data.subtitle, url: data.path, datePublished: data.article.datePublished, image: data.article.image }),
+          "@type": "Article",
+          dateModified: data.article.dateModified ?? data.article.datePublished,
+        }]
+      : []),
     faqSchema(data.faqs.map((f) => ({ question: f.q, answer: f.a }))),
     breadcrumbSchema([
       { name: "Home", path: "/" },
@@ -148,6 +163,11 @@ export default function GuidePage({ data }: { data: GuideData }) {
           <span className="section-eyebrow">{data.eyebrow}</span>
           <h1>{data.title}</h1>
           <p>{data.subtitle}</p>
+          {data.article && (
+            <p style={{ fontSize: "var(--text-sm)", marginTop: "var(--space-3)" }}>
+              By the Gulf Trip Service team · Published <time dateTime={data.article.datePublished}>{new Date(data.article.datePublished).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</time>
+            </p>
+          )}
           <div className="breadcrumb">
             <Link href="/">Home</Link> / <Link href="/our-services">Guides</Link>
             {data.category && <> / <Link href={data.category.href}>{data.category.label}</Link></>}
@@ -191,7 +211,7 @@ export default function GuidePage({ data }: { data: GuideData }) {
             {data.sections.map((s, i) => (
               <div key={i}>
                 <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)", marginBottom: "var(--space-4)", borderLeft: "3px solid var(--accent)", paddingLeft: "var(--space-5)" }}>{s.heading}</h2>
-                <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>{s.content}</p>
+                <p style={{ color: "var(--text-body)", lineHeight: 1.85 }}>{data.article ? renderInline(s.content) : s.content}</p>
                 {s.list && s.list.length > 0 && <GuideList items={s.list} />}
                 {s.table && <GuideTable table={s.table} />}
                 {s.image && (

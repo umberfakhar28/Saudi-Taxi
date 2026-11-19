@@ -71,7 +71,7 @@ const borders = [
     {
         name: "Al Khafji / Al Nuwaiseeb (Kuwait)",
         route: "Saudi Arabia ↔ Kuwait",
-        distance: "~15 km from Khafji / ~410 km from Dammam",
+        distance: "~15 km from Khafji / ~410 km from Dammam / ~648 km from Riyadh",
         note: "The primary land crossing between Saudi Arabia and Kuwait, on the coast just north of Khafji. Commonly used by GCC nationals and residents with a valid Kuwait entry status.",
         highlights: ["GCC ID often sufficient for GCC nationals", "Confirm work/residency visa requirements for others", "Open 24 hours — usually 30–90 min outside peak times", "Vehicle insurance is mandatory on the Kuwaiti side"],
     },
@@ -309,7 +309,10 @@ export default function BorderCrossing() {
                                     <Link href="/saudi-arabia-to-qatar-taxi-service" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
                                 )}
                                 {border.name.includes("Kuwait") && (
-                                    <Link href="/khafji-to-kuwait-taxi-service" className="btn btn-outline-gold btn-sm" style={{ alignSelf: 'flex-start' }}>More Details</Link>
+                                    <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+                                        <Link href="/khafji-to-kuwait-taxi-service" className="btn btn-outline-gold btn-sm">More Details</Link>
+                                        <Link href="/riyadh-to-kuwait-taxi-service" className="btn btn-outline-gold btn-sm">Riyadh to Kuwait taxi</Link>
+                                    </div>
                                 )}
                             </div>
                         ))}

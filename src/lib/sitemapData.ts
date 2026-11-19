@@ -345,6 +345,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
     "chauffeur-vs-taxi-saudi-arabia", "regional-airport-transfer-guide",
     "rent-a-car-vs-private-driver", "bahrain-saudi-commuter-guide",
     "long-distance-private-transfers", "red-sea-coast-travel",
+    // Kuwait cluster, Nov 2026 (docs/seo/kuwait/keyword-map.md)
+    "saudi-arabia-to-kuwait-by-road",
   ].map((slug) => ({
     url: `${BASE_URL}/guides/${slug}`,
     lastModified: lastMod(`/guides/${slug}`),
