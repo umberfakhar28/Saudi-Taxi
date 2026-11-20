@@ -156,29 +156,33 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/umrah-transport-package", label: "Umrah Transport Package" },
       { href: "/jeddah-city-tour-services-in-saudi-arabia", label: "Jeddah City Tour" },
       { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah Taxi" },
-      { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Airport Taxi vs Private Transfer" },
+      { href: "/guides/rent-a-car-vs-private-driver", label: "Airport Taxi vs Private Transfer" },
     ],
     terminals: [
       {
+        // Jeddah terminals updated 20 Nov 2026: Terminal 4 (the rebuilt South
+        // Terminal) opened in stages from 27 Sep 2026, and North Terminal
+        // flights moved to T4 and the Hajj and Umrah halls from 17 Oct 2026.
+        // Airlines are still moving, so no airline lists.
         name: "Terminal 1",
-        type: "International Terminal",
-        flights: "International flights from Saudia, Emirates, Qatar Airways, Turkish Airlines, and other major carriers.",
+        type: "Main Terminal",
+        flights: "The main terminal, used by most domestic and international airlines. Confirm your terminal with your airline.",
         meeting: "Exit through Gates 5–6 into the arrival hall. Your driver waits at the designated meeting area with a name board.",
         facilities: ["Immigration and customs", "Baggage claim carousels 1–8", "Currency exchange", "SIM card vendors (STC, Mobily, Zain)", "Prayer facilities"],
       },
       {
-        name: "Hajj Terminal",
-        type: "Seasonal Pilgrimage Terminal",
-        flights: "Operates during Hajj season (Dhul-Hijjah) only, with streamlined immigration dedicated to Hajj pilgrims.",
-        meeting: "The main arrival hall's designated group meeting zone — a large open area, so look for your driver's name board rather than a fixed gate number.",
+        name: "Hajj and Umrah Terminal",
+        type: "Hajj, Umrah and Other Flights",
+        flights: "A separate complex of halls (codes such as B3) for Hajj and Umrah flights and some regular flights. Send the hall code on your ticket with your flight number.",
+        meeting: "Your driver waits at your hall's arrivals exit with a name board. The halls are large, so keep your phone on for a WhatsApp message.",
         facilities: ["Dedicated Hajj immigration counters", "Group coordination for large parties", "Luggage assistance", "Direct transport on to Makkah or Madinah"],
       },
       {
-        name: "South Terminal",
-        type: "Domestic Terminal",
-        flights: "Domestic flights within Saudi Arabia on Saudia, Flynas, and Flyadeal, plus some regional routes.",
-        meeting: "After domestic baggage claim, exit to the main lobby — your driver waits near the exit doors with a name board.",
-        facilities: ["Domestic baggage claim", "Food court and retail", "Quick exit procedures"],
+        name: "Terminal 4",
+        type: "New Terminal (2026)",
+        flights: "The rebuilt former South Terminal, open in stages since 27 September 2026. Airlines are moving here in phases.",
+        meeting: "After baggage claim, walk out through arrivals — your driver waits at the exit with a name board.",
+        facilities: ["Baggage claim", "Arrivals hall", "Ground transport pickup"],
       },
     ],
     relatedServices: [
@@ -208,7 +212,7 @@ export const AIRPORTS: AirportPageInfo[] = [
     },
     practicalInfo: [
       { title: "Confirm your terminal", note: "KAIA has three distinct terminals with different meeting points — tell us your flight number so your driver waits at the right one." },
-      { title: "Hajj Terminal seasonality", note: "The Hajj Terminal only operates during Dhul-Hijjah — outside that window, pilgrim flights typically use Terminal 1." },
+      { title: "Terminals are changing", note: "Terminal 4 opened in September 2026 and airlines are moving in phases. Confirm your terminal with your airline, and send us your flight number." },
       { title: "Ramadan and Hajj congestion", note: "Roads toward Makkah get noticeably heavier during Ramadan evenings and the weeks before Hajj — build in extra time." },
     ],
     reviews: [],
@@ -479,7 +483,7 @@ export const AIRPORTS: AirportPageInfo[] = [
       { href: "/services/tabuk", label: "Tabuk Taxi Service" },
       { href: "/services/neom", label: "NEOM Transfers" },
       { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
-      { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
+      { href: "/guides/rent-a-car-vs-private-driver", label: "Chauffeur vs Taxi Guide" },
     ],
     relatedServices: [
       { href: "/corporate-transportation-services", label: "Corporate Transportation" },

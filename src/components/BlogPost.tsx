@@ -1,7 +1,7 @@
 import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { blogPostingSchema, breadcrumbSchema, faqSchema, jsonLd } from "@/lib/jsonld";
-import { posts as allPosts } from "@/app/blog/page";
+import { ARTICLES, articleByPath } from "@/lib/articles";
 import { waLink } from "@/lib/contact";
 import { WhatsAppIcon } from "@/components/Icons";
 import { GuideList, GuideTable, SectionCta, type GuideSection } from "@/components/GuidePage";
@@ -44,19 +44,21 @@ export interface BlogPostData {
   lastReviewed?: string;
 }
 
-/** Same-category posts first, then fill to 4 with the rest — every post
- * gets real related reading even if its own category has few members
- * (e.g. the sole "Luxury Travel" post). Relevance-based, capped at 4. */
-function relatedPosts(currentSlug: string, category: string) {
-  const others = allPosts.filter((p) => p.slug !== currentSlug);
-  const sameCategory = others.filter((p) => p.category === category);
-  const rest = others.filter((p) => p.category !== category);
-  return [...sameCategory, ...rest].slice(0, 4);
+/** Same-topic posts and guides first (lib/articles.ts), then fill to 4
+ * with other blog posts. */
+function relatedPosts(path: string) {
+  const topic = articleByPath(path)?.topic;
+  const others = ARTICLES.filter((p) => p.path !== path);
+  const same = others.filter((p) => p.topic === topic);
+  const rest = others.filter((p) => p.topic !== topic && p.kind === "blog");
+  return [...same, ...rest].slice(0, 4).map((p) => ({
+    slug: p.path, href: p.path, title: p.title, category: p.kind === "guide" ? "Guide" : "Blog",
+    featuredImage: p.cover?.src, featuredImageAlt: p.cover?.alt,
+  }));
 }
 
 export default function BlogPost({ data }: { data: BlogPostData }) {
-  const slug = data.path.replace("/blog/", "");
-  const related = relatedPosts(slug, data.category);
+  const related = relatedPosts(data.path);
   const schemas: object[] = [
     blogPostingSchema({
       headline: data.title,
@@ -169,7 +171,7 @@ export default function BlogPost({ data }: { data: BlogPostData }) {
                 <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-xl)", marginBottom: "var(--space-5)" }}>Related Reading</h3>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-4)" }}>
                   {related.map((p) => (
-                    <Link key={p.slug} href={`/blog/${p.slug}`} className="card" style={{ display: "block", textDecoration: "none", padding: p.featuredImage ? 0 : undefined, overflow: "hidden" }}>
+                    <Link key={p.slug} href={p.href} className="card" style={{ display: "block", textDecoration: "none", padding: p.featuredImage ? 0 : undefined, overflow: "hidden" }}>
                       {p.featuredImage && (
                         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9" }}>
                           <Image

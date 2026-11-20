@@ -84,7 +84,7 @@ export const riyadh: CityData = {
     { title: "Summer heat", note: "Daytime temperatures routinely pass 45°C from June–August — most riders shift outdoor plans to early morning or evening." },
   ],
   relatedGuides: [
-    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Chauffeur vs Taxi Guide" },
     { href: "/guides/business-travel", label: "Business Travel Guide" },
     { href: "/blog/top-attractions-riyadh", label: "Top Attractions in Riyadh" },
     { href: "/guides/king-khalid-airport", label: "King Khalid Airport (RUH) Guide" },
@@ -161,7 +161,7 @@ export const jeddah: CityData = {
     { name: "North Jeddah hotel corridor", note: "Newer international hotel brands near Red Sea Mall and North Obhur." },
     { name: "Al-Balad guesthouses", note: "Smaller heritage-district stays, a useful base for exploring the historic old town on foot." },
   ],
-  airportNote: "King Abdulaziz International Airport (KAIA) has three terminals, including the Hajj Terminal used seasonally for pilgrim flights — we confirm which terminal you're landing at before dispatching a driver.",
+  airportNote: "King Abdulaziz International Airport (KAIA) has three passenger areas: Terminal 1, the new Terminal 4 and the Hajj and Umrah Terminal — we confirm which terminal you're landing at before dispatching a driver.",
   religiousTravel: {
     intro: "Jeddah is the main air gateway for Umrah pilgrims arriving from abroad — most riders here are heading straight on to Makkah or Madinah rather than staying in the city. We run this connection daily, including overnight arrivals timed around long-haul flight schedules.",
     links: [
@@ -252,7 +252,7 @@ export const makkah: CityData = {
   relatedGuides: [
     { href: "/guides/umrah-transportation", label: "Complete Umrah Transportation Guide" },
     { href: "/guides/hajj-transportation", label: "Hajj Transportation Guide" },
-    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Chauffeur vs Taxi Guide" },
   ],
 };
 

@@ -260,7 +260,7 @@ export const tabuk: CityData = {
     { title: "Long distances", note: "Distances to Wadi Disah, the coastal road towards Haql and NEOM sites can exceed 200km from the city centre — plan for a full day, not a quick trip." },
   ],
   relatedGuides: [
-    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi Guide" },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Chauffeur vs Taxi Guide" },
     { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
     { href: "/guides/long-distance-private-transfers", label: "Long-Distance Private Transfers Guide" },
     // Tabuk is the Saudi city nearest Halat Ammar (~1.5h) and already names

@@ -1,121 +1,177 @@
 import { generatePageMetadata } from "@/lib/seo";
-import GuidePage, { type GuideData } from "@/components/GuidePage";
+import ArticlePage from "@/components/ArticlePage";
+import { COVERS, type ArticleData } from "@/lib/articles";
 
 export const metadata = generatePageMetadata({
-  title: "Commuting Between Bahrain and Saudi Arabia's Eastern Province",
-  description: "A practical guide for people regularly crossing the King Fahd Causeway between Bahrain and Saudi Arabia's Eastern Province for work — timing, documents, and transfer options.",
+  title: "Commuting Between Bahrain and Saudi Arabia: Causeway Guide",
+  brandSuffix: false,
+  description: "Crossing the King Fahd Causeway every week: the quietest and busiest times, documents, Riyadh to Bahrain by bus, train or car, and standing arrangements.",
   path: "/guides/bahrain-saudi-commuter-guide",
-  keywords: ["commuting Bahrain Saudi Arabia", "King Fahd Causeway commute", "Bahrain to Khobar daily", "cross border work travel Bahrain Dammam"],
 });
 
 /*
- * Content map (informational-blog brief §29):
- * PRIMARY KEYWORD: commuting between Bahrain and Saudi Arabia
- * SEARCH INTENT: Informational — logistics for a repeat/habitual crossing,
- *   not a one-off trip.
- * CONTENT GAP: /distance/bahrain-to-dammam and bahrain-to-dammam-taxi-service
- *   both cover a single journey. Neither addresses the person crossing
- *   weekly or monthly for work — a genuinely different planning problem
- *   (recurring booking, corporate accounts, timing patterns over a work
- *   week rather than a one-off trip). The 28-day Search Console export
- *   showed a real cluster of small Bahrain<->Dammam/Khobar query variants
- *   consistent with habitual crossers, not tourists.
- * PRIMARY COMMERCIAL PAGE: /services/khobar (closest Eastern Province city
- *   to the causeway, per that page's own existing content)
- * DOES NOT COMPETE WITH: /distance/bahrain-to-dammam (single-journey
- *   distance/time facts), bahrain-to-dammam-taxi-service (single-journey
- *   booking), /border-crossing (the general 5-country hub) — this article
- *   is specifically about the *recurring* crossing pattern.
+ * Owner page for clusters C2 and C3 (docs/seo/content/content-audit.md §4).
+ * 62 impressions, 0 clicks, position 5.5 (GSC 28 days to 19 Nov 2026): the
+ * old 81-character title was cut off in results.
+ * Queries: "bahrain to riyadh distance by bus" 17, "how to go bahrain from
+ * riyadh by road" 2, "how close is bahrain to saudi arabia" 4.
+ *
+ * Does not compete with: /blog/bahrain-to-dammam-travel-options (the
+ * one-off mode choice), /distance/bahrain-to-riyadh and
+ * /distance/bahrain-to-dammam (distance and time), the route pages.
+ *
+ * Figures: distance pages (Bahrain–Dammam 65 km / 1–2 h; Bahrain–Jubail
+ * 160 km / 2.5–3 h; Bahrain–Riyadh 470 km / 4.5–5.5 h with the border).
+ * Fares: route pages only (Dammam → Bahrain 500 SAR, Riyadh → Bahrain
+ * 1,250 SAR, both "starting from").
  */
 
-const data: GuideData = {
+const data: ArticleData = {
   path: "/guides/bahrain-saudi-commuter-guide",
-  eyebrow: "Travel Guide",
-  category: { label: "Cross-Border Travel", href: "/border-crossing" },
-  title: "Commuting Between Bahrain and Saudi Arabia's Eastern Province",
-  subtitle: "A practical guide for people crossing the King Fahd Causeway regularly for work — what changes when it's a weekly routine rather than a one-off trip.",
-  keyTakeaways: [
-    "A meaningful number of people live in Bahrain and work in Saudi Arabia's Eastern Province, or the reverse — a genuinely different trip pattern from a one-time tourist or business crossing.",
-    "The causeway crossing works the same way for a daily commuter as a first-time visitor: the same checkpoint, the same documents, and a pre-booked car that takes you through it door to door.",
-    "Khobar sits closest to the causeway of any Eastern Province city, making it the natural staging point for regular crossings.",
-    "Thursday and Friday evenings see the heaviest weekend leisure traffic — weekday mornings are consistently the fastest time to cross, worth building into a regular commute schedule.",
-  ],
+  kind: "guide",
+  topic: "bahrain",
+  h1: "Commuting Between Bahrain and Saudi Arabia's Eastern Province",
+  lead: "Bahrain is joined to Saudi Arabia by the **25 km King Fahd Causeway**: Al Khobar and Dammam are about **65 km** from Manama, **1 to 2 hours** door to door. Regular crossers save the most time by going on **weekday mornings**, avoiding **Thursday and Friday evenings**, keeping documents valid, and using **one standing arrangement** instead of booking every trip.",
+  description: "A practical guide to crossing the King Fahd Causeway every week: timing, documents, Riyadh to Bahrain by bus, train or car, and regular transfers.",
+  published: "2026-09-01",
+  updated: "2026-11-20",
+  cover: COVERS.CAUSEWAY_BORDER,
+  quickAnswer: {
+    stats: [
+      { icon: "route", label: "Causeway", value: "25 km bridge, open 24 h" },
+      { icon: "clock", label: "Khobar or Dammam ↔ Manama", value: "About 65 km, 1–2 h" },
+      { icon: "calendar", label: "Quietest", value: "Weekday mornings" },
+      { icon: "flag", label: "Busiest", value: "Thursday and Friday evenings" },
+    ],
+    points: [
+      "**How close is Bahrain to Saudi Arabia?** Very: the causeway lands at Al Khobar, and Manama is about 65 km from Dammam by road.",
+      "**Timing:** weekday mornings are the quickest; Thursday and Friday evenings are the slowest in both directions.",
+      "**Documents:** GCC citizens use their national ID. Others need a valid Saudi visa or Iqama with re-entry, and a Bahrain visa where required.",
+      "**Riyadh to Bahrain:** about 470 km, 4.5 to 5.5 hours by car with the border. Coaches and the Riyadh–Dammam train are cheaper but slower overall.",
+    ],
+  },
+  cta: {
+    heading: "Book a regular causeway crossing",
+    body: "A private car between the Eastern Province and Bahrain, door to door. From Dammam, a sedan is starting from 500 SAR, toll included; regular crossers can set up a standing booking.",
+    waMessage: "Hi, I cross the causeway regularly. From:  To:  Days and times:  Passengers:",
+    bookHref: "/book-online?mode=transfers&from=Dammam&to=Bahrain",
+    route: "Dammam-Bahrain",
+  },
   sections: [
     {
-      heading: "A Real, Common Pattern",
-      content: "Manama and the Eastern Province are close enough — and connected closely enough by the King Fahd Causeway — that a genuine population of people live on one side and work on the other. This is a different planning problem from a one-off trip: the questions aren't \"how do I get there once\" but \"how do I make this predictable, week after week.\" This guide is for that specific situation.",
-    },
-    {
-      heading: "How the Crossing Works, Whether It's Your First Trip or Your Fiftieth",
-      content: "The causeway's mechanics don't change for a regular commuter. A pre-booked private transfer collects you at your address, goes through the mid-causeway checkpoint with you, and continues to the other side — the same vehicle and, on a standing arrangement, often the same driver. What an app ride cannot do is cross at all: those services are scoped to one country, so the crossing has to be arranged in advance either way. For someone crossing regularly, the practical difference is familiarity: the same checkpoint process, trip after trip.",
-      list: [
-        "GCC nationals cross with a national ID — no passport stamp required in most cases",
-        "Other nationalities need a valid Saudi visa or Iqama (residency permit) if returning as a resident",
-        "The causeway itself is a 25km bridge with the passport control and customs point roughly midway across",
+      id: "how-it-works",
+      heading: "How the crossing works, first trip or fiftieth",
+      toc: "How the crossing works",
+      blocks: [
+        { type: "p", text: "The process is the same every time. A pre-booked car collects you, goes through the checkpoint halfway across the bridge with you, and continues to the other side: the same car, and on a standing booking often the same driver. Ride-hailing apps can't cross, so the crossing has to be arranged either way." },
+        { type: "list", items: [
+          "**GCC citizens** cross with their national ID.",
+          "**Residents of Saudi Arabia** need a valid Iqama and an exit and re-entry visa to come back.",
+          "**Other nationalities** need a valid Saudi visa, and a Bahrain visa or eVisa where their passport requires one.",
+          "Passport control and customs for both countries sit roughly midway across the causeway.",
+        ] },
+        { type: "callout", tone: "warn", title: "Watch your expiry dates", text: "For a regular commuter, a lapsed Iqama, re-entry visa or Bahrain visa stops every future crossing, not just one. Put the renewal dates in your calendar." },
       ],
     },
     {
-      heading: "Timing Patterns Worth Building Into a Regular Schedule",
-      content: "Traffic at the causeway checkpoint follows a genuine weekly pattern, and it's worth planning a recurring commute around it rather than treating every crossing the same.",
-      table: {
-        headers: ["When", "What to Expect"],
-        rows: [
-          ["Weekday mornings", "Consistently the fastest time to cross"],
-          ["Weekday afternoons/evenings", "Moderate — busier than mornings, lighter than Thursday/Friday"],
-          ["Thursday & Friday evenings", "Heaviest weekend leisure traffic in both directions — worth avoiding for a commute if your schedule allows"],
-          ["Weekend daytime", "Variable — generally lighter than the Thursday/Friday evening surge"],
-        ],
-      },
-    },
-    {
-      heading: "Khobar: The Natural Staging Point",
-      content: "Of the Eastern Province's cities, Khobar sits closest to the causeway crossing — which is exactly why it functions as the natural staging point for regular trips into Bahrain, rather than Dammam or Dhahran. If your commute involves the Khobar side specifically, that proximity is worth factoring into where you base yourself or arrange pickup.",
-      cta: { text: "Based in or near Khobar?", link: "/services/khobar" },
-    },
-    {
-      heading: "Options for Regular Crossers",
-      content: "A one-off visitor typically books a single transfer. Someone crossing weekly or monthly has a few more practical options worth knowing about.",
-      list: [
-        "Ad-hoc booking per trip — straightforward, but means arranging a new booking every time",
-        "A corporate account with monthly invoiced billing and a named driver — removes the need to book each crossing individually, and suits a predictable weekly schedule",
-        "Self-driving with a GCC-registered vehicle and the correct cross-border insurance — a realistic option for some regular commuters, though most without a Gulf-registered vehicle book a transfer instead",
+      id: "timing",
+      heading: "Quiet and busy times at the causeway",
+      toc: "Best times to cross",
+      blocks: [
+        {
+          type: "table",
+          head: ["When", "What to expect"],
+          rows: [
+            ["Weekday mornings", "Usually the quickest time to cross"],
+            ["Weekday afternoons and evenings", "Moderate: busier than mornings"],
+            ["Thursday and Friday evenings", "The busiest: weekend traffic in both directions"],
+            ["Weekend daytime", "Variable, usually lighter than the evening peak"],
+            ["Public holidays and Eid", "Very busy; leave early or cross another day"],
+          ],
+          highlightRow: 0,
+        },
+        { type: "cta" },
       ],
-      cta: { text: "Ask about a corporate account for regular crossings", link: "/corporate-transportation-services" },
     },
     {
-      heading: "Common Mistakes",
-      content: "A few patterns come up repeatedly for people settling into a regular Bahrain-Saudi commute.",
-      list: [
-        "Scheduling a recurring commute through Thursday or Friday evening without accounting for the weekend leisure surge",
-        "Not setting up a corporate or standing arrangement, and losing time re-booking an identical trip every single week",
-        "Assuming any personal vehicle can make the crossing — it needs to be GCC-registered with the correct cross-border insurance, which a borrowed or hired car often isn't",
-        "Not confirming Iqama or visa validity dates in advance for a long-term recurring commute, since a lapsed document affects every future crossing, not just one trip",
+      id: "riyadh-to-bahrain",
+      heading: "Riyadh to Bahrain: bus, train or car?",
+      toc: "Riyadh to Bahrain",
+      blocks: [
+        { type: "p", text: "From Riyadh the road runs east on Highway 40 to Al Khobar, then across the causeway: about **470 km**, roughly **4.5 hours** of driving and **4.5 to 5.5 hours** with the border. See [Bahrain to Riyadh distance](/distance/bahrain-to-riyadh) for the full route." },
+        {
+          type: "table",
+          head: ["Option", "How it works", "Good to know"],
+          rows: [
+            ["Coach", "Scheduled cross-border coach, terminal to terminal", "Cheapest; longer overall with stops; check that it runs on your day"],
+            ["Train, then car", "Riyadh–Dammam train, then a car across the causeway", "Comfortable; you change once in Dammam"],
+            ["Your own car", "Highway 40, then the causeway", "GCC registration and cross-border insurance; toll on the causeway"],
+            ["Private car with driver", "One car from your Riyadh address to Bahrain", "Door to door, starting from 1,250 SAR per car"],
+          ],
+          highlightRow: 3,
+        },
+        { type: "p", text: "Book the whole trip on our [Riyadh to Bahrain taxi](/riyadh-to-bahrain-taxi-service) page." },
+      ],
+    },
+    {
+      id: "where-to-base",
+      heading: "Al Khobar: the natural base",
+      toc: "Where to base yourself",
+      blocks: [
+        { type: "p", text: "The causeway lands at Al Khobar, so it is the closest Eastern Province city to Bahrain and the natural base for regular crossings. Dammam and Dhahran are a few minutes further. Commuting from Jubail adds distance: about 160 km to Bahrain, 2.5 to 3 hours with the border; see [Jubail to Bahrain taxi](/jubail-to-bahrain-taxi-service)." },
+      ],
+    },
+    {
+      id: "options",
+      heading: "Options for regular crossers",
+      toc: "Ways to commute",
+      blocks: [
+        {
+          type: "cards",
+          items: [
+            { icon: "car", title: "Book each trip", body: "Simple, but you book again every time. Fine for a crossing every few weeks.", href: "/dammam-to-bahrain-taxi-service", linkLabel: "Dammam to Bahrain taxi" },
+            { icon: "calendar", title: "A standing booking", body: "Set days and times with the same driver where possible. Suits a fixed weekly pattern." },
+            { icon: "briefcase", title: "A corporate account", body: "Monthly invoicing and named drivers for staff who cross on company business.", href: "/corporate-transportation-services", linkLabel: "Corporate transport" },
+            { icon: "shield", title: "Driving yourself", body: "Realistic with a GCC-registered car and cross-border insurance. A borrowed or hired car often isn't covered." },
+          ],
+        },
+      ],
+    },
+    {
+      id: "mistakes",
+      heading: "Common mistakes",
+      toc: "Common mistakes",
+      blocks: [
+        { type: "list", items: [
+          "Scheduling a weekly crossing on Thursday or Friday evening without allowing for the weekend queue.",
+          "Re-booking the same trip every week instead of a standing arrangement.",
+          "Assuming any car can cross: it needs GCC registration and the right insurance.",
+          "Letting an Iqama, re-entry visa or Bahrain visa lapse mid-routine.",
+        ] },
+        { type: "p", text: "Crossing just once? Compare every option in [Bahrain to Dammam: taxi, Uber, bus or private car](/blog/bahrain-to-dammam-travel-options)." },
       ],
     },
   ],
   faqs: [
-    { q: "Can I set up a standing arrangement instead of booking every crossing individually?", a: "Yes — a corporate account with monthly invoiced billing and a named driver is available for people with a recurring, predictable crossing schedule." },
-    { q: "Which Eastern Province city is closest to the causeway?", a: "Khobar — it sits closest to the crossing of any Eastern Province city, making it the natural staging point for regular Bahrain trips." },
-    { q: "Is the crossing process different for someone who does it every week?", a: "No — the checkpoint process and document requirements are the same regardless of how often you cross. Familiarity with it is the main thing that changes." },
-    { q: "What's the best time of day for a regular commute across the causeway?", a: "Weekday mornings are consistently the fastest. Thursday and Friday evenings see the heaviest weekend leisure traffic — worth avoiding for a recurring commute if your schedule allows." },
-    { q: "Do GCC nationals need a visa for a regular commute?", a: "No — GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama, which is worth keeping a close eye on for a long-term recurring crossing specifically." },
-    { q: "Can I self-drive across the causeway instead of using a transfer service?", a: "It's realistic with a GCC-registered vehicle and the correct cross-border insurance. Most people without a Gulf-registered vehicle book a private transfer instead, and are driven through the crossing door to door." },
+    { q: "How close is Bahrain to Saudi Arabia?", a: "Very close: the 25 km King Fahd Causeway joins them. Manama is about 65 km from Dammam by road, 1 to 2 hours door to door with the border." },
+    { q: "What is the best time to cross the causeway for a commute?", a: "Weekday mornings are usually the quickest. Thursday and Friday evenings are the busiest in both directions." },
+    { q: "How far is Riyadh from Bahrain by bus?", a: "The road distance is about 470 km. A coach takes longer than a car because of stops and terminal times; a car takes 4.5 to 5.5 hours with the border." },
+    { q: "How do I get from Riyadh to Bahrain by road?", a: "Take Highway 40 east to Al Khobar, then the King Fahd Causeway. By private car with driver it is door to door, starting from 1,250 SAR per car." },
+    { q: "Can I set up a standing arrangement instead of booking every crossing?", a: "Yes. Regular crossers can book set days and times, and companies can open a corporate account with monthly invoicing." },
+    { q: "Do GCC citizens need a visa to commute?", a: "No, GCC citizens cross with their national ID. Other nationalities need a valid Saudi visa or Iqama, and a Bahrain visa where required." },
   ],
-  relatedLinks: [
-    { href: "/services/khobar", label: "Khobar Taxi & Transfer Service", reason: "The Eastern Province city closest to the King Fahd Causeway." },
-    { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam Taxi Service", reason: "Single-journey booking and the full causeway crossing process." },
-    { href: "/corporate-transportation-services", label: "Corporate Transportation", reason: "Monthly accounts and named drivers for a predictable recurring schedule." },
-    { href: "/border-crossing", label: "Saudi Arabia Border Crossing Guide", reason: "The full hub covering every GCC land border, not just the causeway." },
-    { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain Taxi Service", reason: "For commutes reaching further into Saudi Arabia beyond the Eastern Province." },
-    { href: "/guides/business-travel", label: "Business Travel Transportation Guide", reason: "Broader Eastern Province business travel logistics." },
-    { href: "/blog/bahrain-to-dammam-travel-options", label: "Every Way to Cross the Causeway", reason: "Taxi, ride-hailing, coach, self-drive or private transfer — which ones actually cross end to end." },
+  routes: [
+    { href: "/dammam-to-bahrain-taxi-service", title: "Dammam to Bahrain taxi", body: "Dammam, Al Khobar or Dhahran. Sedan starting from 500 SAR.", icon: "car" },
+    { href: "/bahrain-to-dammam-taxi-service", title: "Bahrain to Dammam taxi", body: "From any Bahrain address to the Eastern Province.", icon: "car" },
+    { href: "/riyadh-to-bahrain-taxi-service", title: "Riyadh to Bahrain taxi", body: "Door to door, starting from 1,250 SAR.", icon: "car" },
+    { href: "/jubail-to-bahrain-taxi-service", title: "Jubail to Bahrain taxi", body: "About 160 km via the causeway.", icon: "car" },
+    { href: "/corporate-transportation-services", title: "Corporate transport", body: "Accounts and named drivers for staff.", icon: "briefcase" },
+    { href: "/distance/bahrain-to-riyadh", title: "Bahrain to Riyadh distance", body: "470 km: route and border time.", icon: "route" },
   ],
-  ctaText: "Set Up a Regular Crossing Arrangement",
-  ctaLink: "/corporate-transportation-services",
-  ctaHelper: "Monthly invoicing and a named driver for anyone crossing the causeway on a predictable schedule.",
-  lastReviewed: "September 2026",
+  related: ["/blog/bahrain-to-dammam-travel-options", "/guides/saudi-arabia-to-kuwait-by-road", "/guides/business-travel"],
+  sourcesNote: "Distances and times: our distance pages. Fares: our route pages, per car, one way; prices may vary with date and availability.",
 };
 
 export default function BahrainSaudiCommuterGuide() {
-  return <GuidePage data={data} />;
+  return <ArticlePage data={data} />;
 }

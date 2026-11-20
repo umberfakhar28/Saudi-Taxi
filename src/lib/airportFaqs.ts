@@ -6,8 +6,8 @@
  */
 export const AIRPORT_FAQS: { q: string; a: string; airports?: Array<"JED" | "MED" | "DMM" | "RUH" | "AHB" | "TIF" | "TUU" | "YNB" | "ULH"> }[] = [
   {
-    q: "Where does the driver wait at Jeddah Airport — Terminal 1, the Hajj Terminal, or the South Terminal?",
-    a: "Your driver waits at the arrivals exit of whichever terminal your flight lands at — Terminal 1 for most international and domestic carriers, the Hajj Terminal during the seasonal pilgrimage period, or the South Terminal for domestic arrivals. Your terminal is confirmed in your booking, and the driver holds a name board so you can find them easily.",
+    q: "Where does the driver wait at Jeddah Airport — Terminal 1, Terminal 4 or the Hajj Terminal?",
+    a: "Your driver waits at the arrivals exit of whichever terminal your flight lands at — Terminal 1 for most airlines, the new Terminal 4, or a hall of the Hajj and Umrah Terminal (send the hall code, such as B3, if your ticket shows one). Your terminal is confirmed in your booking, and the driver holds a name board so you can find them easily.",
     airports: ["JED"],
   },
   {

@@ -90,7 +90,7 @@ const data: GuideData = {
     { href: "/services/riyadh", label: "Riyadh Business Travel Services", reason: "KAFD and Olaya corporate transfers, executive vehicles, airport pickup." },
     { href: "/services/dammam", label: "Dammam Business Travel Services", reason: "Eastern Province corporate transfers near King Fahd International Airport." },
     { href: "/services/jubail", label: "Jubail Corporate Transportation", reason: "Industrial City gate access and shift-timed contractor transfers." },
-    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi: What's the Difference?", reason: "How a pre-booked chauffeur compares to an airport taxi for a business trip." },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Rental, Taxi or Car with Driver?", reason: "How a pre-booked chauffeur compares to a taxi or a rental for a business trip." },
     { href: "/corporate-transportation-services", label: "Corporate Transportation Services", reason: "Monthly accounts, named drivers, and multi-vehicle team coordination." },
     { href: "/guides/king-khalid-airport", label: "King Khalid International Airport Guide", reason: "What to expect arriving in Riyadh for a business trip." },
   ],

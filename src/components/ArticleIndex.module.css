@@ -1,0 +1,85 @@
+/* /blog and /guides indexes. Colours come from ArticlePage.module.css's
+   page tokens (the .page class on <main>). */
+
+.topicChips {
+    list-style: none;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.topicChips a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--ap-line-dark);
+    border-radius: var(--radius-full);
+    color: var(--ap-on-dark);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color var(--ease-base);
+}
+
+.topicChips a:hover,
+.topicChips a:focus-visible {
+    border-color: var(--ap-accent);
+}
+
+.topic {
+    scroll-margin-top: 90px;
+}
+
+.topicBlurb {
+    margin: var(--space-3) 0 0;
+    color: var(--ap-muted);
+    line-height: 1.6;
+}
+
+.crossLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding: var(--space-8);
+    border: 1px solid var(--ap-border);
+    border-left: 4px solid var(--ap-accent);
+    border-radius: var(--radius-lg);
+    background: var(--ap-tint);
+    color: var(--ap-primary);
+    text-decoration: none;
+    transition: box-shadow var(--ease-base);
+}
+
+.crossLink:hover,
+.crossLink:focus-visible {
+    box-shadow: var(--shadow-md);
+}
+
+.crossTitle {
+    display: block;
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    color: var(--ap-primary);
+}
+
+.crossBody {
+    display: block;
+    margin-top: var(--space-2);
+    color: var(--ap-muted);
+    line-height: 1.6;
+}
+
+.crossLink > svg {
+    flex-shrink: 0;
+    color: var(--ap-accent-ink);
+}
+
+@media (max-width: 640px) {
+    .crossLink {
+        padding: var(--space-6);
+    }
+}

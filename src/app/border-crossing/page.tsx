@@ -21,6 +21,9 @@ const faqs = [
     { q: "Do you offer help with visa or entry requirements?", a: "We can share general guidance, but we are a transportation provider, not an immigration authority. Visa and entry requirements vary by nationality and can change — always confirm current requirements with the relevant embassy or an official government source before you travel." },
     { q: "Do the same driver and vehicle take me all the way across the border?", a: "Yes — every crossing we cover is driven door to door. One vehicle and a licensed driver take you from your pickup address, through the border, to your destination, whether you are heading to Bahrain, Qatar, Kuwait, the UAE or Jordan." },
     { q: "How far in advance should I book a border crossing transfer?", a: "We recommend at least 48 hours ahead for most crossings, and longer for the UAE and Jordan routes given the distance involved." },
+    // Border queries from the content audit (docs/seo/content/content-audit.md §4 D).
+    { q: "How far is Doha from the Saudi border?", a: "About 90 km by road from central Doha to the Abu Samra post, roughly an hour. The Saudi post at Salwa is just beyond it. From the Salwa border it is about 160 km to Hofuf and about 230 km to Dammam." },
+    { q: "Where is the Al Batha border crossing?", a: "On the coast road between Saudi Arabia and the UAE, at the western edge of Abu Dhabi emirate: Al Batha on the Saudi side, Al Ghuwaifat on the UAE side. It is about 350 km from Dammam and about 360 km from Abu Dhabi city." },
     { q: "Which border crossings do you cover?", a: "The King Fahd Causeway to Bahrain, the Salwa/Abu Samra crossing to Qatar, Al Batha/Ghuwaifat to the UAE, Al Khafji/Al Nuwaiseeb to Kuwait, and the Halat Ammar, Ad-Durra and Al-Haditha crossings to Jordan — see the routes below for journey-specific pages." },
 ];
 
@@ -56,7 +59,10 @@ const borders = [
     {
         name: "Al Batha / Ghuwaifat (UAE)",
         route: "Saudi Arabia ↔ UAE",
-        distance: "~330 km from the Riyadh direction",
+        // Was "~330 km from the Riyadh direction", which matched no road
+        // figure. OSRM, 20 Nov 2026: Dammam–Al Batha 350 km, Al Batha–Abu
+        // Dhabi 363 km.
+        distance: "~350 km from Dammam / ~360 km to Abu Dhabi",
         note: "The main land route between Saudi Arabia and the UAE. GCC nationals typically cross with a national ID; other nationalities should confirm current UAE visa requirements.",
         highlights: ["GCC ID often sufficient for GCC nationals", "Entry permit may apply for others", "Well-maintained highway route", "Open 24 hours"],
     },
@@ -79,7 +85,10 @@ const borders = [
     {
         name: "Abu Samra / Salwa (Qatar)",
         route: "Saudi Arabia ↔ Qatar",
-        distance: "~100 km from Hofuf / ~580 km from Riyadh",
+        // Was "~100 km from Hofuf / ~580 km from Riyadh" (580 km is
+        // Riyadh–Doha). OSRM, 20 Nov 2026: Doha–Abu Samra 97 km, Hofuf–Salwa
+        // 162 km, Dammam–Salwa 234 km.
+        distance: "~90 km from Doha / ~160 km from Hofuf / ~230 km from Dammam",
         note: "The primary land border with Qatar, modernised for higher traffic volumes. Qatar's Hayya platform, a visa, or GCC ID may apply depending on nationality.",
         highlights: ["Hayya Card, visa or GCC ID entry", "Efficient, high-capacity processing", "Direct route to Doha", "Open 24 hours"],
     },
@@ -336,6 +345,60 @@ export default function BorderCrossing() {
                             </div>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* Qatar and UAE crossings in detail: the border queries in the
+                content audit (Salwa, Abu Samra, Al Batha) belong here rather
+                than in separate guides (20 Nov 2026). Figures: OSRM. */}
+            <section className="section-lg">
+                <div className="container">
+                    <div className="section-header centered">
+                        <span className="section-eyebrow">Crossing Details</span>
+                        <h2 className="section-title">The Qatar and UAE Borders in Detail</h2>
+                        <p className="section-subtitle">Distances by road, how long the crossing takes, and which of our routes use each border.</p>
+                    </div>
+                    <div className="grid-2">
+                        {[
+                            {
+                                id: "salwa-abu-samra",
+                                title: "Salwa / Abu Samra (Saudi Arabia – Qatar)",
+                                intro: "Qatar's only land border. The Saudi post is at Salwa and the Qatari post at Abu Samra, about 90 km from Doha. Crossing both posts typically takes 30–60 minutes outside peak times.",
+                                rows: [["Doha to Abu Samra", "~90 km, about 1 hour"], ["Salwa to Hofuf", "~160 km, about 2 hours"], ["Salwa to Dammam", "~230 km, about 3 hours"], ["Doha to Dammam", "~330 km, 4.5–5.5 h with the border"], ["Doha to Riyadh", "~580 km, 6.5–7.5 h with the border"]],
+                                links: [{ href: "/distance/doha-to-dammam", label: "Doha to Dammam distance" }, { href: "/distance/doha-to-riyadh", label: "Doha to Riyadh distance" }, { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Doha taxi" }, { href: "/qatar-to-dammam-taxi-service", label: "Doha to Dammam taxi" }],
+                            },
+                            {
+                                id: "al-batha-ghuwaifat",
+                                title: "Al Batha / Al Ghuwaifat (Saudi Arabia – UAE)",
+                                intro: "The main land border with the UAE, on the coast road at the western edge of Abu Dhabi emirate. It is the busiest crossing on these routes, so allow extra time, especially at weekends and holidays.",
+                                rows: [["Dammam to Al Batha", "~350 km, about 4 hours"], ["Al Batha to Abu Dhabi", "~360 km, about 3.5 hours"], ["Dammam to Abu Dhabi", "~700 km, 8–9.5 h with the border"], ["Dammam to Dubai", "~800 km, 9–10.5 h with the border"], ["Riyadh to Dubai", "~1,000 km, 11–12.5 h with the border"]],
+                                links: [{ href: "/distance/dammam-to-abu-dhabi", label: "Dammam to Abu Dhabi distance" }, { href: "/distance/riyadh-to-dubai", label: "Riyadh to Dubai distance" }, { href: "/dammam-to-dubai-taxi-service", label: "Dammam to Dubai taxi" }, { href: "/riyadh-to-dubai-taxi-service", label: "Riyadh to Dubai taxi" }],
+                            },
+                        ].map((b) => (
+                            <div key={b.id} id={b.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', scrollMarginTop: 100 }}>
+                                <h3 style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', margin: 0 }}>{b.title}</h3>
+                                <p style={{ color: 'var(--text-body)', lineHeight: 1.7, margin: 0 }}>{b.intro}</p>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+                                    <tbody>
+                                        {b.rows.map(([k, v]) => (
+                                            <tr key={k} style={{ borderTop: '1px solid var(--line)' }}>
+                                                <th scope="row" style={{ textAlign: 'left', padding: '10px 8px 10px 0', color: 'var(--text-primary)', fontWeight: 700 }}>{k}</th>
+                                                <td style={{ padding: '10px 0', color: 'var(--text-body)' }}>{v}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                <p style={{ margin: 0, fontSize: 'var(--text-sm)', display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1) var(--space-3)' }}>
+                                    {b.links.map((l) => (
+                                        <Link key={l.href} href={l.href} style={{ color: 'var(--accent)', fontWeight: 700 }}>{l.label}</Link>
+                                    ))}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', textAlign: 'center', marginTop: 'var(--space-6)' }}>
+                        Road distances by map routing, November 2026, driving only unless stated. Kuwait: see our <Link href="/guides/saudi-arabia-to-kuwait-by-road" style={{ color: 'var(--accent)', fontWeight: 700 }}>Saudi Arabia to Kuwait by road</Link> guide. Bahrain: <Link href="/blog/bahrain-to-dammam-travel-options" style={{ color: 'var(--accent)', fontWeight: 700 }}>every way to cross the causeway</Link>.
+                    </p>
                 </div>
             </section>
 

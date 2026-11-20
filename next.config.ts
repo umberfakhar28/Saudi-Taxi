@@ -76,6 +76,20 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // Blog and guides audit, 20 Nov 2026 (docs/seo/content/content-audit.md §3):
+        // one owner page per query. The chauffeur-vs-taxi comparison now
+        // lives in the rent-a-car guide; the family transport guide (vehicle
+        // sizes, child seats, grandparents) in the family destinations post.
+        source: "/guides/chauffeur-vs-taxi-saudi-arabia",
+        destination: "/guides/rent-a-car-vs-private-driver",
+        permanent: true,
+      },
+      {
+        source: "/guides/family-travel",
+        destination: "/blog/family-saudi-destinations",
+        permanent: true,
+      },
+      {
         // /quote was a CTA-only marketing page with no actual form —
         // every /quote link sitewide now points straight at /book-online
         // (booking-flow revision brief §1); this redirect catches any

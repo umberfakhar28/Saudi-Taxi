@@ -1,100 +1,20 @@
-import Link from "@/components/IntentLink";
-import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
-import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import ArticleIndex from "@/components/ArticleIndex";
 
 export const metadata = generatePageMetadata({
-  title: "Travel Blog & Transportation Tips",
-  description: "Expert travel tips, airport guides, Umrah transportation advice, and destination content for Saudi Arabia travelers — by Gulf Trip Service.",
+  title: "Saudi Arabia Travel Blog: Family Trips, Routes and Tips",
+  brandSuffix: false,
+  description: "Saudi Arabia travel blog: family destinations, Abha vs Taif, Bahrain to Dammam travel options, Riyadh and Jeddah sights, Umrah planning and airport tips.",
   path: "/blog",
-  keywords: ["Saudi Arabia travel blog", "Umrah travel tips", "Saudi transportation guide", "Riyadh Jeddah travel"],
 });
 
-export interface BlogPostSummary {
-  slug: string;
-  category: string;
-  title: string;
-  excerpt: string;
-  /** Optional featured image — powers both the index/related-post cards
-   * below and the individual article's own featured image in BlogPost.tsx
-   * (matched there by slug). None of the 12 posts have one yet; add real,
-   * article-accurate photography here when it exists — never a generic
-   * stock photo standing in for the actual place/topic. */
-  featuredImage?: string;
-  featuredImageAlt?: string;
-}
-
-export const posts: BlogPostSummary[] = [
-  { slug: "airport-transfer-tips",        category: "Travel Tips",       title: "10 Airport Transfer Tips Every Saudi Arabia Traveler Should Know",       excerpt: "Avoid common pitfalls and arrive stress-free with these expert airport transfer tips for Saudi Arabia's busiest airports." },
-  { slug: "umrah-travel-planning",        category: "Religious Travel",  title: "The Complete Umrah Travel Planning Checklist",                           excerpt: "A step-by-step checklist covering visas, accommodation, transport, and packing for your Umrah trip to Saudi Arabia." },
-  { slug: "top-attractions-riyadh",       category: "Destinations",      title: "Top 10 Attractions in Riyadh You Must Visit",                            excerpt: "From Diriyah's UNESCO mud-brick palaces to the futuristic Boulevard — Riyadh's best sights for every type of traveler." },
-  { slug: "jeddah-hidden-gems",           category: "Destinations",      title: "Hidden Gems in Jeddah Most Tourists Miss",                               excerpt: "Al-Balad is just the beginning. Discover Jeddah's secret Corniche spots, local souqs, and Red Sea pearls." },
-  { slug: "alula-complete-guide",         category: "Destinations",      title: "AlUla Complete Travel Guide: Hegra, Elephant Rock & Beyond",             excerpt: "Everything you need to plan the perfect AlUla trip — itinerary, transport, best times, and insider tips." },
-  { slug: "benefits-private-airport-transfer", category: "Transportation", title: "5 Reasons Private Airport Transfers Beat Every Other Option",         excerpt: "Flight tracking, fixed pricing, zero waiting — here's exactly why pre-booked private transfers win every time." },
-  { slug: "family-saudi-destinations",   category: "Travel Tips",        title: "Best Family Destinations in Saudi Arabia in 2025",                       excerpt: "AlUla, Abha, Taif, and the Red Sea coast — the top spots for Saudi family vacations and how to get there." },
-  { slug: "vip-transport-saudi",         category: "Luxury Travel",      title: "VIP & Executive Transportation in Saudi Arabia: What to Expect",         excerpt: "From Mercedes chauffeur service to dedicated executive accounts — the premium transport experience explained." },
-  { slug: "riyadh-to-jeddah-travel",     category: "Transportation",     title: "Riyadh to Jeddah: All Your Travel Options Compared",                     excerpt: "Fly, drive, take the bus, or book a private transfer? We compare every Riyadh–Jeddah option by cost, time, and comfort." },
-  { slug: "bahrain-to-dammam-travel-options", category: "Transportation", title: "Bahrain to Dammam: Every Way to Cross the King Fahd Causeway, Compared", excerpt: "Taxi, Uber, coach, your own car or a private transfer? Only some of them actually cross the causeway end to end — here’s how each works." },
-  { slug: "safe-travel-tips-saudi",      category: "Travel Tips",        title: "Safe Travel Tips for First-Time Visitors to Saudi Arabia",               excerpt: "Everything a first-time visitor needs to know about staying safe, navigating transport, and respecting local customs." },
-];
-
-const categories = [...new Set(posts.map((p) => p.category))];
-
-const schemas = [
-  breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Blog", path: "/blog" }]),
-];
-
+// Posts come from lib/articles.ts, grouped by topic (redesigned 20 Nov 2026).
 export default function BlogIndex() {
   return (
-    <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <section className="page-hero">
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <span className="section-eyebrow">Travel Blog</span>
-          <h1>Saudi Arabia Travel & Transportation Blog</h1>
-          <p>Expert guides, destination content, and transport tips from Gulf Trip Service.</p>
-          <div className="breadcrumb">
-            <Link href="/">Home</Link> / <span>Blog</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-lg">
-        <div className="container">
-          {categories.map((cat) => (
-            <div key={cat} style={{ marginBottom: "var(--space-16)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-4)", marginBottom: "var(--space-8)" }}>
-                <h2 style={{ color: "var(--text-main)", fontSize: "var(--text-2xl)" }}>{cat}</h2>
-                <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
-              </div>
-              <div className="grid-3">
-                {posts.map((post) => post.category !== cat ? null : (
-                  <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-                    <div className="card" style={{ height: "100%", padding: post.featuredImage ? 0 : undefined, overflow: "hidden" }}>
-                      {post.featuredImage && (
-                        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9" }}>
-                          <Image
-                            src={post.featuredImage}
-                            alt={post.featuredImageAlt ?? post.title}
-                            fill
-                            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
-                            style={{ objectFit: "cover" }}
-                          />
-                        </div>
-                      )}
-                      <div style={{ padding: post.featuredImage ? "var(--space-6) var(--space-6) var(--space-8)" : undefined }}>
-                        <span className="badge badge-gold" style={{ marginBottom: "var(--space-4)", display: "inline-flex" }}>{post.category}</span>
-                        <h3 style={{ color: "var(--text-main)", fontSize: "var(--text-lg)", marginBottom: "var(--space-3)", lineHeight: 1.4 }}>{post.title}</h3>
-                        <p style={{ color: "var(--text-muted)", fontSize: "var(--text-sm)", lineHeight: 1.7, marginBottom: 0 }}>{post.excerpt}</p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
+    <ArticleIndex
+      kind="blog"
+      h1="Saudi Arabia Travel Blog"
+      lead="Where to take the family, how to cross to Bahrain, what to see in Riyadh and Jeddah, and how to plan Umrah: written by the team that drives these roads every day."
+    />
   );
 }

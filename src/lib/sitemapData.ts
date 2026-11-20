@@ -345,8 +345,10 @@ export function buildSitemapEntries(): SitemapEntry[] {
 
   const guidePages: SitemapEntry[] = [
     "king-khalid-airport", "king-abdulaziz-airport", "umrah-transportation",
-    "hajj-transportation", "business-travel", "family-travel",
-    "chauffeur-vs-taxi-saudi-arabia", "regional-airport-transfer-guide",
+    // family-travel and chauffeur-vs-taxi-saudi-arabia: merged with 301s,
+    // 20 Nov 2026 (docs/seo/content/content-audit.md §3).
+    "hajj-transportation", "business-travel",
+    "regional-airport-transfer-guide",
     "rent-a-car-vs-private-driver", "bahrain-saudi-commuter-guide",
     "long-distance-private-transfers", "red-sea-coast-travel",
     // Kuwait cluster, Nov 2026 (docs/seo/kuwait/keyword-map.md)
@@ -369,6 +371,8 @@ export function buildSitemapEntries(): SitemapEntry[] {
     "family-saudi-destinations", "vip-transport-saudi",
     "riyadh-to-jeddah-travel", "safe-travel-tips-saudi",
     "bahrain-to-dammam-travel-options",
+    // New post, 20 Nov 2026.
+    "abha-vs-taif-summer-family-trip",
   ];
   const blogPages: SitemapEntry[] = blogSlugs.map((slug) => ({
     url: `${BASE_URL}/blog/${slug}`,
@@ -417,6 +421,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     ...distancePages,
     ...longFormGuides,
     { url: `${BASE_URL}/blog`, lastModified: lastMod("/blog"), changeFrequency: "weekly", priority: 0.80 },
+    { url: `${BASE_URL}/guides`, lastModified: lastMod("/guides"), changeFrequency: "weekly", priority: 0.80 },
     ...blogPages,
     ...cityPages,
     ...guidePages,

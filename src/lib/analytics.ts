@@ -151,6 +151,10 @@ const BUTTON_LOCATIONS: Record<string, string> = {
   "final-cta": "final_cta",
   "booking-box": "booking_box",
   "distance-booking-box": "distance_booking_box",
+  // Blog and guide posts (ArticlePage, Nov 2026).
+  "blog-hero": "hero",
+  "blog-inline": "blog_inline",
+  "blog-final": "blog_final",
   "footer-social": "footer",
   "footer-contact": "footer",
   "unlabelled-footer": "footer",
@@ -220,18 +224,43 @@ export interface ClickContext {
 export function trackWhatsAppClick(
   source: string,
   pageTemplate: string,
-  context: ClickContext & { linkUrl: string; vehicle?: string },
+  context: ClickContext & { linkUrl: string; vehicle?: string; route?: string },
 ): void {
   if (isRepeat(`wa|${source}|${context.pagePath}|${context.linkUrl}|${context.vehicle ?? ""}`)) return;
   gaEvent(WHATSAPP_CLICK_EVENT, {
     button_location: buttonLocationFor(source),
     cta_source: source,
-    route: routeFromPath(context.pagePath),
+    // A page about a route its URL doesn't name (a blog post) declares it
+    // with data-route; route pages are read from the path as before.
+    route: context.route ?? routeFromPath(context.pagePath),
     vehicle: context.vehicle,
     page_path: context.pagePath,
     page_template: pageTemplate,
     page_location: context.pageLocation,
     link_url: context.linkUrl,
+    site_language: pageLanguage(context.pagePath),
+    transport_type: "beacon",
+  });
+}
+
+/* ───────────────────────── Book Online clicks ───────────────────────── */
+
+/** A link to /book-online pressed (Nov 2026). Interest, like a WhatsApp click. */
+export const BOOK_ONLINE_CLICK_EVENT = "book_online_click";
+
+export function trackBookOnlineClick(
+  source: string,
+  pageTemplate: string,
+  context: ClickContext & { route?: string },
+): void {
+  if (isRepeat(`book|${source}|${context.pagePath}`)) return;
+  gaEvent(BOOK_ONLINE_CLICK_EVENT, {
+    button_location: buttonLocationFor(source),
+    cta_source: source,
+    route: context.route ?? routeFromPath(context.pagePath),
+    page_path: context.pagePath,
+    page_template: pageTemplate,
+    page_location: context.pageLocation,
     site_language: pageLanguage(context.pagePath),
     transport_type: "beacon",
   });

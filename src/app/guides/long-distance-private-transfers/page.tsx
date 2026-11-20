@@ -19,7 +19,7 @@ export const metadata = generatePageMetadata({
  *   (distance, time, booking) already belong to the /distance and route
  *   pages; nothing on the site explains the long-distance journey itself.
  * DOES NOT COMPETE WITH:
- *   /guides/chauffeur-vs-taxi-saudi-arabia  — chauffeur vs metered taxi
+ *   /guides/rent-a-car-vs-private-driver  — rental vs taxi vs chauffeur (absorbed chauffeur-vs-taxi, Nov 2026)
  *   /guides/rent-a-car-vs-private-driver    — self-drive vs driver
  *   /blog/vip-transport-saudi               — executive service standards
  *   /distance/* and route pages             — one corridor each
@@ -154,7 +154,7 @@ const data: GuideData = {
     { href: "/border-crossing", label: "Saudi Arabia Border Crossings", reason: "How each GCC and Jordan land border works." },
     { href: "/fleet", label: "Our Fleet", reason: "Sedans to coaches — seating and luggage space compared." },
     { href: "/blog/riyadh-to-jeddah-travel", label: "Riyadh to Jeddah Travel Options", reason: "Flying, driving, coach or private transfer — compared." },
-    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi", reason: "How a private chauffeur differs from a metered taxi." },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Rental, Taxi or Car with Driver?", reason: "How a private chauffeur differs from a taxi or a rental car." },
   ],
   ctaText: "Plan Your Door-to-Door Journey",
   ctaLink: "/book-online",

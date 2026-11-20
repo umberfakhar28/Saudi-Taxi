@@ -150,7 +150,7 @@ export default function GuidePage({ data }: { data: GuideData }) {
     faqSchema(data.faqs.map((f) => ({ question: f.q, answer: f.a }))),
     breadcrumbSchema([
       { name: "Home", path: "/" },
-      { name: "Guides", path: "/our-services" },
+      { name: "Guides", path: "/guides" },
       { name: data.title, path: data.path },
     ]),
   ];
@@ -169,7 +169,7 @@ export default function GuidePage({ data }: { data: GuideData }) {
             </p>
           )}
           <div className="breadcrumb">
-            <Link href="/">Home</Link> / <Link href="/our-services">Guides</Link>
+            <Link href="/">Home</Link> / <Link href="/guides">Guides</Link>
             {data.category && <> / <Link href={data.category.href}>{data.category.label}</Link></>}
             {" "}/ <span>{data.title}</span>
           </div>

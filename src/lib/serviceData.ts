@@ -17,9 +17,12 @@ import type { ServiceData } from "@/components/CoreServicePage";
 export const privateTaxi: ServiceData = {
   slug: "private-taxi",
   title: "Private Taxi Service",
-  h1: "Private Taxi & Chauffeur Service Across Saudi Arabia",
-  breadcrumbLabel: "Private Taxi",
-  intro: "Your own dedicated vehicle and driver — flexible, comfortable and fully private. Available by the hour or for the full day, in Saudi Arabia's major hubs and beyond.",
+  h1: "Car with Driver in Saudi Arabia: Hire by the Hour or Day",
+  breadcrumbLabel: "Car with Driver",
+  // Owner page for "rent a car with driver" (content audit, 20 Nov 2026).
+  // The comparison (rental vs taxi vs driver) stays with
+  // /guides/rent-a-car-vs-private-driver.
+  intro: "Rent a car with a driver instead of driving yourself: your own private car and professional driver, booked by the hour, the day or for one journey. No licence, deposit or fuel to arrange, in Riyadh, Jeddah, Makkah, Madinah, Dammam and beyond.",
   overviewTitle: "One Vehicle, One Driver, Your Schedule",
   overviewParagraphs: [
     "A private taxi means the vehicle is exclusively yours for the duration of your booking — no shared rides, no fixed route, no meter. You set the stops and the pace, whether that's a single cross-town trip or a full day covering several destinations.",
@@ -79,6 +82,7 @@ export const privateTaxi: ServiceData = {
   ],
   reviews: [],
   faqs: [
+    { q: "Can I rent a car with a driver in Saudi Arabia?", a: "Yes. You book a private car with a professional driver for a number of hours, a full day, several days, or one journey. Fuel and the driver are included, and you need no driving licence, deposit or insurance of your own. We don't rent self-drive cars." },
     { q: "What's the difference between private taxi and a standard transfer?", a: "A standard transfer is one pickup and one drop-off. Private taxi hire keeps the same vehicle and driver with you for a set number of hours, so you can make multiple stops on your own schedule." },
     { q: "Can I book by the hour for a short trip?", a: "Yes — hourly, half-day and full-day hire are all available. Tell us your rough itinerary and we'll recommend the right duration." },
     { q: "Is private taxi available outside the major cities?", a: "Yes — including Abha, Yanbu, Tabuk and NEOM, using the same booking process as Riyadh or Jeddah." },
@@ -89,6 +93,7 @@ export const privateTaxi: ServiceData = {
     { href: "/hotel-transfers", label: "Hotel Transfers" },
     { href: "/corporate-transportation-services", label: "Corporate Transportation" },
     { href: "/umrah-taxi-services", label: "Umrah Taxi Services" },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Guide: Rent a Car, Taxi or Car with Driver?" },
   ],
   ctaText: "Hire Your Private Taxi Today",
 };

@@ -55,6 +55,18 @@ const ALL_URLS = [
   `${BASE_URL}/dammam-airport-to-bahrain-taxi-service`,
   `${BASE_URL}/distance/bahrain-to-jubail`,
   `${BASE_URL}/distance/bahrain-to-dammam`,
+  // Blog and guides, wave 1 (20 Nov 2026): the indexes, the rewritten posts,
+  // the new post, and the service pages whose content changed with them.
+  `${BASE_URL}/blog`,
+  `${BASE_URL}/guides`,
+  `${BASE_URL}/blog/bahrain-to-dammam-travel-options`,
+  `${BASE_URL}/blog/family-saudi-destinations`,
+  `${BASE_URL}/blog/abha-vs-taif-summer-family-trip`,
+  `${BASE_URL}/guides/rent-a-car-vs-private-driver`,
+  `${BASE_URL}/guides/red-sea-coast-travel`,
+  `${BASE_URL}/guides/bahrain-saudi-commuter-guide`,
+  `${BASE_URL}/guides/king-khalid-airport`,
+  `${BASE_URL}/guides/king-abdulaziz-airport`,
   // City tours
   `${BASE_URL}/jeddah-city-tour-services-in-saudi-arabia`,
   `${BASE_URL}/jeddah-to-makkah-taxi-service`,

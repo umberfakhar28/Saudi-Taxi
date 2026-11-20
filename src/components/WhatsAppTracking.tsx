@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   pageTemplateFromPath,
+  trackBookOnlineClick,
   trackEmailClick,
   trackFormStart,
   trackWhatsAppClick,
@@ -64,6 +65,14 @@ const WHATSAPP_LINK_SELECTOR = 'a[href*="wa.me"], a[href*="api.whatsapp.com"]';
  * until 15 Nov 2026, when every call option was removed from the site.)
  */
 const EMAIL_LINK_SELECTOR = 'a[href^="mailto:"]';
+
+/** Links to the booking page ride on the same listener (book_online_click). */
+const BOOK_LINK_SELECTOR = 'a[href^="/book-online"]';
+
+/** The route a page declares with data-route, e.g. "Dammam-Bahrain". */
+function routeFor(anchor: Element): string | undefined {
+  return anchor.closest('[data-route]')?.getAttribute('data-route')?.trim() || undefined;
+}
 
 /**
  * Lead forms mark themselves with data-track-form="booking" | "contact" |
@@ -146,12 +155,17 @@ export default function WhatsAppTracking() {
 
       const anchor = target.closest(WHATSAPP_LINK_SELECTOR);
       const mailAnchor = anchor ? null : target.closest(EMAIL_LINK_SELECTOR);
-      if (!anchor && !mailAnchor) return;
+      const bookAnchor = anchor || mailAnchor ? null : target.closest(BOOK_LINK_SELECTOR);
+      if (!anchor && !mailAnchor && !bookAnchor) return;
 
       const path = pathRef.current || window.location.pathname;
       if (EXCLUDED_PATH.test(path)) return;
 
       const pageLocation = `${window.location.origin}${window.location.pathname}`;
+      if (bookAnchor) {
+        trackBookOnlineClick(ctaSourceFor(bookAnchor), pageTemplateFor(path), { pagePath: path, pageLocation, route: routeFor(bookAnchor) });
+        return;
+      }
       if (mailAnchor) {
         trackEmailClick(ctaSourceFor(mailAnchor), { pagePath: path, pageLocation });
         return;
@@ -163,6 +177,7 @@ export default function WhatsAppTracking() {
         pageLocation,
         linkUrl: whatsAppDestination(anchor.getAttribute('href') || ''),
         vehicle: vehicleFor(anchor),
+        route: routeFor(anchor),
       });
     };
 

@@ -92,7 +92,7 @@ const data: GuideData = {
     { href: "/taif-airport-taxi-service", label: "Taif Airport Taxi Service", reason: "30km from Taif — connections to Al-Hada, the rose farms, and onward routes to Makkah." },
     { href: "/tabuk-airport-taxi-service", label: "Tabuk Airport Taxi Service", reason: "8km from Tabuk — the shortest regional-airport transfer on this list, serving NEOM-bound travelers." },
     { href: "/yanbu-airport-taxi-service", label: "Yanbu Airport Taxi Service", reason: "10km from Yanbu — Red Sea coast arrivals and connections to nearby industrial sites." },
-    { href: "/guides/chauffeur-vs-taxi-saudi-arabia", label: "Chauffeur vs Taxi: What's the Difference?", reason: "How a pre-booked chauffeur compares to an airport taxi rank." },
+    { href: "/guides/rent-a-car-vs-private-driver", label: "Rental, Taxi or Car with Driver?", reason: "How a pre-booked chauffeur compares to an airport taxi rank or a rental." },
     { href: "/airport-transfers", label: "All Airport Transfer Services", reason: "Every airport Gulf Trip Service covers, including the major international hubs." },
   ],
   ctaText: "Book Your Airport Transfer",

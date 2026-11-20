@@ -1,137 +1,209 @@
 import { generatePageMetadata } from "@/lib/seo";
-import BlogPost, { type BlogPostData } from "@/components/BlogPost";
+import ArticlePage from "@/components/ArticlePage";
+import { COVERS, type ArticleData } from "@/lib/articles";
 
 export const metadata = generatePageMetadata({
   title: "Bahrain to Dammam: Taxi, Uber, Bus or Private Car?",
-  description: "Can an Uber cross the causeway? Every way to travel between Bahrain and Dammam compared — taxi, bus, ride-hailing, self-drive and private transfer.",
+  brandSuffix: false,
+  description: "Can Uber or Careem cross the causeway? Taxi, bus, self-drive and private car between Bahrain and Dammam compared, plus Dammam station to Janabiya.",
   path: "/blog/bahrain-to-dammam-travel-options",
+  ogImage: "/images/routes/dammam-to-bahrain/dammam-to-bahrain-taxi-king-fahd-causeway-og.jpg",
+  ogImageAlt: "Private car on the King Fahd Causeway between Saudi Arabia and Bahrain",
 });
 
 /*
- * Content map — Search Console report, 7 days to 2026-09-10
+ * Owner page for cluster C1 (docs/seo/content/content-audit.md §4): the
+ * mode choice between Bahrain and Dammam / Khobar. The site's only post with
+ * clicks (1,226 impressions, 36 clicks, position 6.3; GSC 28 days to 19 Nov
+ * 2026).
  *
- * CLUSTER: Bahrain <-> Dammam / Saudi cross-border (the report's largest).
- *   Queries: "bahrain to dammam" (21 impr), "saudi bahrain cross border
- *   taxis" (7, pos 11.7), "bahrain to saudi taxi", "taxi bahrain to dammam",
- *   "car service from dammam to bahrain", "uber taxi from dammam train
- *   station to janabiya bahrain". Page: /bahrain-to-dammam-taxi-service is
- *   the report's single most-seen URL (153 impressions, pos 12.6).
+ * Queries: "bahrain to dammam", "bahrain to dammam by road" (50 / 6.8),
+ * "uber taxi from dammam train station to janabiya bahrain" (23 / 9.2),
+ * "careem dammam to bahrain", "can i uber from bahrain to saudi".
  *
- * INTENT: Informational / decision-making — "which way should I cross?"
+ * Does not compete with:
+ *   /bahrain-to-dammam-taxi-service, /dammam-to-bahrain-taxi-service (booking)
+ *   /distance/bahrain-to-dammam (distance and time)
+ *   /guides/bahrain-saudi-commuter-guide (crossing every week)
  *
- * THE GAP: nothing on the site mentions Uber, Careem or a coach at all, and
- *   /distance/bahrain-to-dammam lists only two travel options (private
- *   taxi, self-drive). The "can a ride-hail take me across?" question — the
- *   one the Janabiya query is literally asking — was unanswered.
- *
- * DOES NOT COMPETE WITH:
- *   /bahrain-to-dammam-taxi-service  — transactional booking page
- *   /distance/bahrain-to-dammam      — distance, crossing time, best time
- *   /guides/bahrain-saudi-commuter-guide — the recurring/weekly crossing
- *   This post owns the mode choice, and defers to those pages for distance,
- *   timing and booking rather than restating them.
- *
- * PATTERN: mirrors /blog/riyadh-to-jeddah-travel, the site's best-ranking
- *   blog post (pos 8), which coexists with /distance/riyadh-to-jeddah.
+ * Figures: 65 km and 1–2 h door to door (route pages). Dammam station to
+ * Janabiya ~65 km, ~50 min driving: OSRM, 20 Nov 2026. Fares are the route
+ * pages' "starting from" fares, nothing else.
  */
 
-const data: BlogPostData = {
+const data: ArticleData = {
   path: "/blog/bahrain-to-dammam-travel-options",
-  title: "Bahrain to Dammam: Every Way to Cross the King Fahd Causeway, Compared",
-  category: "Transportation",
-  date: "September 2026",
-  excerpt: "Taxi, Uber, coach, your own car or a private transfer? Only some of them actually take you across the causeway from door to door — here’s how each one works, and who it suits.",
-  body: [
+  kind: "blog",
+  topic: "bahrain",
+  h1: "Bahrain to Dammam: Taxi, Uber, Bus or Private Car?",
+  lead: "Bahrain and Dammam are about **65 km** apart, **1 to 2 hours** door to door with the King Fahd Causeway. Only three options take you all the way across: a **pre-booked private car**, a **scheduled coach**, or **your own GCC car**. Uber, Careem and street taxis stop at the border.",
+  description: "Which ways of travelling between Bahrain and Dammam actually cross the King Fahd Causeway: taxi, Uber and Careem, coach, self-drive and private car compared.",
+  published: "2026-09-10",
+  updated: "2026-11-20",
+  cover: COVERS.CAUSEWAY_D2B,
+  ogImage: "/images/routes/dammam-to-bahrain/dammam-to-bahrain-taxi-king-fahd-causeway-og.jpg",
+  quickAnswer: {
+    stats: [
+      { icon: "route", label: "Distance", value: "About 65 km" },
+      { icon: "clock", label: "Door to door", value: "1–2 hours with the border" },
+      { icon: "flag", label: "Border", value: "King Fahd Causeway, 24 h" },
+      { icon: "wallet", label: "Private car, Dammam → Bahrain", value: "Starting from 500 SAR" },
+    ],
+    points: [
+      "**Crosses end to end:** a pre-booked private car, a scheduled coach, or your own GCC-registered car with cross-border insurance.",
+      "**Stops at the border:** Uber, Careem and taxis hailed on the day. Nobody can walk across the causeway.",
+      "**From the Dammam train station to Janabiya** (about 65 km): book a car that crosses, or take an app ride to the coach and check the timetable first.",
+      "**Quickest time to cross:** weekday mornings. Thursday and Friday evenings are the busiest.",
+    ],
+  },
+  cta: {
+    heading: "Book a private car from Dammam to Bahrain",
+    body: "One car and one driver from your door, through the causeway, to your address in Bahrain. A sedan from Dammam is starting from 500 SAR, toll included.",
+    waMessage: "Hi, I'd like a private car between Dammam and Bahrain. Pickup:  Drop-off:  Date and time:  Passengers:",
+    bookHref: "/book-online?mode=transfers&from=Dammam&to=Bahrain",
+    route: "Dammam-Bahrain",
+  },
+  sections: [
     {
-      heading: "The Short Answer",
-      text: "Bahrain and Dammam are only about 65 km apart, and the whole trip usually takes one to two hours including border processing. What decides how you travel isn’t the distance — it’s whether your ride is set up to cross at all. Nobody can walk the causeway, and a car needs the right permits and insurance to take paying passengers over it. So the options that genuinely get you from one side to the other are a pre-booked private transfer, a scheduled coach, or your own GCC-registered car. An app ride will take you to the border, but not across it.",
-      // The booking page was first linked about 79% of the way down. A reader
-      // who has decided after the short answer should not have to scroll for it.
-      cta: { text: "Already decided? Book a Bahrain to Dammam taxi, door to door across the causeway.", link: "/bahrain-to-dammam-taxi-service" },
-    },
-    {
-      heading: "Why an App Ride Stops at the Border",
-      text: "The King Fahd Causeway is a 25 km bridge and the only land link between Bahrain and Saudi Arabia, with passport control and customs roughly halfway across. Ride-hailing apps operate country by country, so a trip booked in one of them ends at the checkpoint. A street taxi flagged down on the day is a similar gamble: carrying paying passengers across needs cross-border permits and insurance that ordinary city taxis don’t carry. A pre-booked transfer is different — the vehicle and driver are arranged for the crossing before you travel. And since the causeway is a motorway bridge with no pedestrian crossing, being dropped at the border with nothing arranged isn’t a workable plan.",
-    },
-    {
-      heading: "Ride-Hailing: Uber and Careem",
-      text: "Ride-hailing works well inside Bahrain and inside the Eastern Province, and it’s a sensible choice for the short legs on either side — getting to your hotel once you’ve crossed, for example. What it can’t do is carry one booking across the border. An app trip toward the causeway leaves you at a point you can’t walk across, with no guarantee of a car on the far side. Service areas are set by each app, so check in the app itself — but arrange the crossing itself in advance rather than assuming a ride-hail will complete it.",
-    },
-    {
-      heading: "A Local Taxi Hailed on the Day",
-      text: "A city taxi can get you to the causeway, but whether it can take you through depends on permits and insurance that an ordinary metered taxi is unlikely to hold — and you find that out at the checkpoint, not before. The hard part of this route has never been the driving; it’s arriving at the border in a car that is set up to continue. That is the one thing booking ahead settles.",
-    },
-    {
-      heading: "Scheduled Coach",
-      text: "Licensed international coach services are a different case from taxis: they run as scheduled cross-border services, so you stay with the same service through the checkpoint and go through passport control and customs like every other traveller. The Saudi Public Transport Company (SAPTCO) has operated services between the Eastern Province and Bahrain. A coach is usually the cheapest way across, but it runs to a timetable and goes terminal to terminal rather than door to door, and luggage space is limited. Routes and timetables change, so confirm directly with the operator that a service is currently running before you plan around it.",
-    },
-    {
-      heading: "Driving Yourself",
-      text: "Driving across is realistic if you have a GCC-registered vehicle and the correct cross-border insurance — and it’s how many regular crossers do it. A vehicle toll applies at the causeway. A hire car is less straightforward: whether you can take one into the other country depends on your rental agreement and its insurance, and many agreements don’t allow it, so check before you book rather than at the border.",
-    },
-    {
-      heading: "A Pre-Booked Private Transfer",
-      text: "A private transfer is the door-to-door option: you’re collected from your address, your driver takes you through the checkpoint, and the same vehicle continues to where you’re going on the other side. One booking, one point of contact, and nothing left to work out at the border. It’s the option that fits luggage, children, a late-night arrival or a business schedule, because nothing depends on finding transport at the crossing itself. The main thing to get right is the vehicle size for your group and bags.",
-      cta: { text: "Travelling with family or a lot of luggage? Pick the right vehicle size.", link: "/fleet" },
-    },
-    {
-      heading: "The Options Side by Side",
-      text: "The differences come down to two questions: does the option actually cross the border, and does it take you door to door?",
-      // Four columns, not five: on a phone a fifth column pushed the most
-      // important caveats off-screen, and mobile is the larger share of this
-      // site's search traffic. Who each option suits is covered in full in
-      // the section that follows.
-      table: {
-        headers: ["Option", "Crosses end to end?", "Door to door?", "Good to know"],
-        rows: [
-          ["Ride-hailing (Uber, Careem)", "No — stops at the border", "Within one country only", "Fine for short legs either side — but you can’t walk the causeway"],
-          ["Local taxi hailed on the day", "Usually not — stops at the border", "Within one country only", "An ordinary city taxi is unlikely to hold cross-border permits"],
-          ["Scheduled coach", "Yes", "No — terminal to terminal", "The cheapest option; fixed timetable, so confirm it’s running"],
-          ["Your own car", "Yes", "Yes", "Needs cross-border insurance; hire agreements often don’t allow it"],
-          ["Private transfer", "Yes — one vehicle, all the way", "Yes", "Suits families and luggage; book ahead so the right vehicle is reserved"],
-        ],
-      },
-    },
-    {
-      heading: "Which Option Fits Your Trip",
-      text: "A few common situations, and what tends to work for each:",
-      list: [
-        "Arriving by train at Dammam and heading into Bahrain — a ride-hail will get you as far as the causeway, not across it, so either book a transfer in advance or check coach times before you travel.",
-        "Landing at King Fahd International and going straight to Bahrain — a direct airport-to-Bahrain transfer avoids a stop in the city altogether.",
-        "A family with luggage — a private transfer or your own car; coach luggage space is limited, and app rides stop at the border.",
-        "Crossing every week for work — a standing arrangement usually beats booking each crossing individually.",
-        "Going further than Dammam, to Riyadh or Jubail — the same crossing applies, followed by a longer road leg; one booking still covers the whole thing.",
+      id: "options-compared",
+      heading: "Every option, side by side",
+      toc: "Options compared",
+      blocks: [
+        { type: "p", text: "Two questions decide it: does the option actually cross the border, and does it take you door to door?" },
+        {
+          type: "table",
+          head: ["Option", "Crosses the border?", "Door to door?", "Good to know"],
+          rows: [
+            ["Uber, Careem", "No, stops at the border", "Within one country", "Fine for short trips on either side"],
+            ["Taxi hailed on the day", "Usually not", "Within one country", "City taxis rarely hold cross-border permits"],
+            ["Scheduled coach", "Yes", "No, terminal to terminal", "Cheapest; fixed timetable, so check it runs"],
+            ["Your own car", "Yes", "Yes", "GCC registration and cross-border insurance; toll on the causeway"],
+            ["Private car with driver", "Yes, one car all the way", "Yes", "Suits families, luggage and late arrivals; book ahead"],
+          ],
+          highlightRow: 4,
+        },
+        { type: "cta" },
       ],
     },
     {
-      heading: "Before You Set Off",
-      text: "Whichever way you cross, the checkpoint is the same, so a little preparation saves time on every option.",
-      list: [
-        "GCC nationals cross with a national ID; other nationalities need a valid Saudi visa or Iqama — confirm the current requirements before you travel.",
-        "Weekday mornings are usually the quickest time to cross; Thursday and Friday evenings see the heaviest weekend traffic in both directions.",
-        "Keep passports and ID within reach rather than packed in luggage.",
-        "If someone is collecting you on the far side, confirm the exact meeting point before you leave.",
+      id: "uber-careem",
+      heading: "Can you take Uber or Careem from Bahrain to Dammam?",
+      toc: "Uber and Careem",
+      blocks: [
+        { type: "p", text: "Not as one trip. Ride-hailing apps work country by country, so a booking made in Bahrain ends at the causeway checkpoint, and so does one made in Saudi Arabia. The causeway is a 25 km motorway bridge with no footpath, so being dropped at the border with nothing arranged on the other side does not work." },
+        { type: "p", text: "Apps are still useful for the short trips on either side: to your hotel once you have crossed, or around Manama or Al Khobar during your stay. Check service areas in the app itself, because they change." },
+        { type: "callout", tone: "warn", title: "Don't plan to change cars at the border", text: "There is no taxi rank between the two posts, and you cannot cross on foot. Arrange the crossing itself before you set off." },
+      ],
+    },
+    {
+      id: "train-station-to-janabiya",
+      heading: "From the Dammam train station to Janabiya or Manama",
+      toc: "Dammam station to Bahrain",
+      blocks: [
+        { type: "p", text: "Many people arrive in Dammam by train from Riyadh and then head for Bahrain. The railway station is in the west of Dammam. From there it is about **65 km to Janabiya**, on the Bahrain side just past the causeway, and about **80 km to central Manama**: roughly 50 to 60 minutes of driving, plus the time at the border." },
+        {
+          type: "cards",
+          items: [
+            { icon: "car", tag: "Easiest", title: "A private car booked ahead", body: "Your driver meets you at the station and takes you through the causeway to your address in Janabiya, Saar, Budaiya, Seef or Manama. Give the train time when you book, and the pickup moves if the train is late." },
+            { icon: "bus", tag: "Cheapest", title: "App ride to the coach, then the coach", body: "Take a ride-hail to the coach stop in Dammam or Al Khobar, then a scheduled coach across. Check that day's timetable first: coaches go terminal to terminal, not to Janabiya." },
+          ],
+        },
+        { type: "callout", tone: "tip", text: "Booking a car for a train arrival? Send the train number and arrival time on WhatsApp. If you are going on to the Bahrain airport rather than an address, say so: see our [Dammam to Bahrain taxi](/dammam-to-bahrain-taxi-service) for pickups across Dammam, Al Khobar and Dhahran." },
+      ],
+    },
+    {
+      id: "street-taxi",
+      heading: "A taxi hailed on the day",
+      toc: "Street taxis",
+      blocks: [
+        { type: "p", text: "A city taxi can take you to the causeway, but carrying paying passengers across needs cross-border permits and insurance that ordinary city taxis rarely hold. You find out at the checkpoint, not before. That is the one thing booking ahead settles." },
+      ],
+    },
+    {
+      id: "coach",
+      heading: "Scheduled coach",
+      toc: "Coach",
+      blocks: [
+        { type: "p", text: "Licensed international coaches run as scheduled cross-border services, so you stay with the same coach through the checkpoint. The Saudi Public Transport Company (SAPTCO) has run services between the Eastern Province and Bahrain. A coach is usually the cheapest way across, but it runs to a timetable, goes terminal to terminal, and has limited room for luggage." },
+        { type: "callout", tone: "info", text: "Routes and timetables change. Confirm with the operator that a service is running on your day before you plan around it." },
+      ],
+    },
+    {
+      id: "driving-yourself",
+      heading: "Driving yourself",
+      toc: "Self-drive",
+      blocks: [
+        { type: "p", text: "Driving across is easy with a **GCC-registered car** and the right **cross-border insurance**, and it is how many regular crossers do it. A toll applies on the causeway. A hire car is harder: many rental agreements do not allow the car to leave the country, so check the agreement before you book, not at the border." },
+      ],
+    },
+    {
+      id: "private-car",
+      heading: "A pre-booked private car",
+      toc: "Private car",
+      blocks: [
+        { type: "p", text: "A private car is the door-to-door option. You are collected at your address, your driver takes you through both posts, and the same car continues to your destination. One booking, one contact, nothing to work out at the border." },
+        { type: "list", items: [
+          "**Dammam, Al Khobar or Dhahran to Bahrain:** a sedan starting from 500 SAR, toll included. See [Dammam to Bahrain taxi](/dammam-to-bahrain-taxi-service).",
+          "**Landing at Dammam Airport (DMM):** straight from arrivals to Bahrain, a sedan starting from 550 SAR. See [Dammam Airport to Bahrain taxi](/dammam-airport-to-bahrain-taxi-service).",
+          "**Bahrain to Dammam or Al Khobar:** fares on WhatsApp. See [Bahrain to Dammam taxi](/bahrain-to-dammam-taxi-service).",
+          "**Further into Saudi Arabia:** Riyadh to Bahrain starts from 1,250 SAR. See [Riyadh to Bahrain taxi](/riyadh-to-bahrain-taxi-service).",
+        ] },
+        { type: "p", text: "Fares are per car, not per seat. Prices may vary with date and availability, and yours is confirmed before you travel." },
+        { type: "cta", heading: "Crossing with family or luggage?", body: "Tell us how many people and bags, and we send the right car: a sedan, an SUV or a van." },
+      ],
+    },
+    {
+      id: "which-option",
+      heading: "Which option fits your trip",
+      toc: "Which one fits",
+      blocks: [
+        {
+          type: "cards",
+          items: [
+            { icon: "train", title: "Arriving by train in Dammam", body: "An app ride gets you to the causeway, not across. Book a car to meet the train, or check coach times first." },
+            { icon: "plane", title: "Landing at Dammam Airport", body: "Go straight from arrivals to Bahrain without stopping in the city.", href: "/dammam-airport-to-bahrain-taxi-service", linkLabel: "Dammam Airport to Bahrain" },
+            { icon: "users", title: "A family with luggage", body: "A private car or your own car. Coach luggage space is limited, and app rides stop at the border.", href: "/fleet", linkLabel: "Choose a vehicle size" },
+            { icon: "briefcase", title: "Crossing every week", body: "A standing arrangement beats booking each trip. Our commuter guide covers the busy and quiet hours.", href: "/guides/bahrain-saudi-commuter-guide", linkLabel: "Commuter guide" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "before-you-go",
+      heading: "Before you set off",
+      toc: "Documents and timing",
+      blocks: [
+        { type: "list", items: [
+          "**GCC citizens** cross with their national ID. **Other nationalities** need a valid Saudi visa or Iqama, and a Bahrain visa or eVisa where required. Check the current rules for your passport before you travel.",
+          "**Weekday mornings** are usually the quickest. **Thursday and Friday evenings** are the busiest, in both directions.",
+          "Keep passports and IDs in the car with you, not packed in the boot.",
+          "If someone is meeting you on the other side, agree the exact address before you leave.",
+        ] },
+        { type: "p", text: "Distance and the best time of day are covered in detail on [Bahrain to Dammam: distance and time](/distance/bahrain-to-dammam)." },
       ],
     },
   ],
   faqs: [
-    { q: "Can I take an Uber or Careem from Bahrain to Dammam?", a: "Not as one trip across the border. Ride-hailing operates country by country, so a single booking won’t carry you across the causeway, and you can’t walk the crossing. Use ride-hailing for the legs on either side, and arrange the crossing itself with a pre-booked transfer, a coach or your own car." },
-    { q: "Can I walk across the King Fahd Causeway?", a: "No. The causeway is a motorway bridge with no pedestrian crossing, which is why being dropped at the border with nothing arranged doesn’t work." },
-    { q: "Can a car take me all the way across, or do I change vehicles?", a: "A pre-booked private transfer takes you the whole way in one vehicle: your driver handles the crossing and continues to your destination address. What doesn’t work is an app ride or a taxi flagged down on the day, which is scoped to the country you’re standing in." },
-    { q: "Is there a bus between Bahrain and Dammam?", a: "Scheduled coach services have operated across the causeway, including from the Saudi Public Transport Company (SAPTCO). Routes and timetables change, so check directly with the operator that a service is currently running before you rely on it." },
-    { q: "Can I drive a hire car from Saudi Arabia into Bahrain?", a: "Only if your rental agreement and its insurance allow it — many don’t. Check with the rental company before you book. With your own GCC-registered vehicle you’ll need the correct cross-border insurance, and a vehicle toll applies at the causeway." },
-    { q: "Which option is best with children and luggage?", a: "A private transfer or your own car. Both take you door to door; coach luggage space is limited, and app rides stop at the border." },
+    { q: "Can I take an Uber or Careem from Bahrain to Dammam?", a: "Not as one trip. Ride-hailing works country by country, so a booking stops at the causeway checkpoint, and you cannot walk across. Use apps on either side, and book the crossing itself as a private car, a coach or your own car." },
+    { q: "How do I get from the Dammam train station to Janabiya in Bahrain?", a: "It is about 65 km, roughly 50 minutes of driving plus the border. The simplest way is a private car booked to meet your train and drive you through the causeway to Janabiya. The cheaper way is an app ride to the coach stop and a scheduled coach, if one runs that day." },
+    { q: "Can I walk across the King Fahd Causeway?", a: "No. The causeway is a motorway bridge with no pedestrian crossing." },
+    { q: "Do I change cars at the border?", a: "Not with a private car. The same car and driver take you through both posts to your address. App rides and city taxis stop at the border, which is why they don't work for the crossing." },
+    { q: "Is there a bus between Bahrain and Dammam?", a: "Scheduled coaches have run across the causeway, including SAPTCO services. Timetables change, so confirm with the operator before you rely on one." },
+    { q: "How much is a private taxi from Dammam to Bahrain?", a: "A sedan from Dammam is starting from 500 SAR per car, one way, with the causeway toll included. From Dammam Airport it starts from 550 SAR. Prices may vary with date and availability." },
+    { q: "Can I drive a hire car from Saudi Arabia into Bahrain?", a: "Only if the rental agreement and its insurance allow it, and many don't. With your own GCC-registered car you need cross-border insurance, and a toll applies on the causeway." },
   ],
-  relatedServiceLinks: [
-    { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam Transfer", reason: "Door-to-door across the causeway, arranged in advance." },
-    { href: "/distance/bahrain-to-dammam", label: "Bahrain to Dammam: Distance & Time", reason: "Distance, crossing time and the quickest time of day to go." },
-    { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain", reason: "Landing at King Fahd International and heading straight across." },
-    { href: "/guides/bahrain-saudi-commuter-guide", label: "Commuting Across the Causeway", reason: "Crossing every week? What changes for regular commuters." },
-    { href: "/services/khobar", label: "Khobar Taxi & Transfer Service", reason: "The Eastern Province city closest to the causeway." },
-    { href: "/border-crossing", label: "Saudi Arabia Border Crossings", reason: "Every GCC land border — Bahrain, Qatar, UAE and Kuwait." },
+  routes: [
+    { href: "/dammam-to-bahrain-taxi-service", title: "Dammam to Bahrain taxi", body: "From Dammam, Al Khobar or Dhahran. Sedan starting from 500 SAR.", icon: "car" },
+    { href: "/bahrain-to-dammam-taxi-service", title: "Bahrain to Dammam taxi", body: "From any Bahrain address to the Eastern Province.", icon: "car" },
+    { href: "/dammam-airport-to-bahrain-taxi-service", title: "Dammam Airport to Bahrain", body: "Straight from arrivals. Sedan starting from 550 SAR.", icon: "plane" },
+    { href: "/distance/bahrain-to-dammam", title: "Bahrain to Dammam distance", body: "65 km: route, border time and the best time of day.", icon: "route" },
+    { href: "/riyadh-to-bahrain-taxi-service", title: "Riyadh to Bahrain taxi", body: "Door to door from the capital, starting from 1,250 SAR.", icon: "car" },
+    { href: "/border-crossing", title: "All border crossings", body: "Bahrain, Qatar, Kuwait, the UAE and Jordan.", icon: "flag" },
   ],
+  related: ["/guides/bahrain-saudi-commuter-guide", "/guides/saudi-arabia-to-kuwait-by-road", "/guides/rent-a-car-vs-private-driver"],
+  sourcesNote: "Distances: map routing (OSRM), checked 20 November 2026. Fares: our own route pages, per car, one way.",
 };
 
 export default function Post() {
-  return <BlogPost data={data} />;
+  return <ArticlePage data={data} />;
 }

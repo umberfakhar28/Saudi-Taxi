@@ -206,6 +206,7 @@ export const taif: CityData = {
   relatedGuides: [
     { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
     { href: "/guides/rent-a-car-vs-private-driver", label: "Rent a Car vs a Car With a Driver" },
+    { href: "/blog/abha-vs-taif-summer-family-trip", label: "Abha vs Taif for a Summer Family Trip" },
   ],
 };
 
@@ -272,5 +273,7 @@ export const abha: CityData = {
   ],
   relatedGuides: [
     { href: "/guides/regional-airport-transfer-guide", label: "Regional Airport Transfer Guide" },
+    { href: "/blog/abha-vs-taif-summer-family-trip", label: "Abha vs Taif for a Summer Family Trip" },
+    { href: "/blog/family-saudi-destinations", label: "Best Family Destinations in Saudi Arabia" },
   ],
 };

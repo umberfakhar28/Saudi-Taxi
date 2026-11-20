@@ -1,4 +1,5 @@
 import Link from "@/components/IntentLink";
+import { ARTICLES } from "@/lib/articles";
 import { generatePageMetadata } from "@/lib/seo";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 
@@ -131,41 +132,20 @@ const groups: Group[] = [
             { href: "/taif-ziyarat-taxi-service", label: "Taif Ziyarat Tour" },
         ],
     },
+    // Both lists come from the post registry (lib/articles.ts), so merged
+    // or new posts can't drift out of the site map (20 Nov 2026).
     {
         title: "Travel Guides",
         links: [
-            { href: "/guides/king-khalid-airport", label: "King Khalid International Airport Guide" },
-            { href: "/guides/king-abdulaziz-airport", label: "King Abdulaziz International Airport Guide" },
-            { href: "/guides/umrah-transportation", label: "Umrah Transportation Guide" },
-            { href: "/guides/hajj-transportation", label: "Hajj Transportation Guide" },
-            { href: "/guides/business-travel", label: "Business Travel Guide" },
-            { href: "/guides/family-travel", label: "Family Travel Guide" },
-            { href: "/guides/red-sea-coast-travel", label: "Travelling Saudi Arabia's Red Sea Coast" },
-            { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by Road" },
+            { href: "/guides", label: "All Travel Guides" },
+            ...ARTICLES.filter((a) => a.kind === "guide").map((a) => ({ href: a.path, label: a.title })),
         ],
     },
     {
         title: "Blog",
         links: [
             { href: "/blog", label: "All Blog Posts" },
-            { href: "/blog/airport-transfer-tips", label: "10 Airport Transfer Tips" },
-            // Points at the live guide, not /blog/private-vs-rental-car — that
-            // URL is a permanent 301 into this one (next.config.ts), so linking
-            // it sent users and crawlers through a needless redirect hop.
-            { href: "/guides/rent-a-car-vs-private-driver", label: "Private Taxi vs Rental Car" },
-            { href: "/blog/umrah-travel-planning", label: "Umrah Travel Planning Checklist" },
-            { href: "/blog/top-attractions-riyadh", label: "Top 10 Attractions in Riyadh" },
-            { href: "/blog/jeddah-hidden-gems", label: "Hidden Gems in Jeddah" },
-            { href: "/blog/alula-complete-guide", label: "AlUla Complete Travel Guide" },
-            { href: "/blog/benefits-private-airport-transfer", label: "5 Reasons Private Airport Transfers Win" },
-            // /blog/hajj-transport-guide dropped rather than relinked: it is a
-            // permanent 301 into /guides/hajj-transportation, which the Travel
-            // Guides section above already lists. Relinking it here would have
-            // duplicated that entry on the same page.
-            { href: "/blog/family-saudi-destinations", label: "Best Family Destinations in Saudi Arabia" },
-            { href: "/blog/vip-transport-saudi", label: "VIP & Executive Transportation" },
-            { href: "/blog/riyadh-to-jeddah-travel", label: "Riyadh to Jeddah Travel Options" },
-            { href: "/blog/safe-travel-tips-saudi", label: "Safe Travel Tips for First-Time Visitors" },
+            ...ARTICLES.filter((a) => a.kind === "blog").map((a) => ({ href: a.path, label: a.title })),
         ],
     },
     {

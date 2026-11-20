@@ -28,7 +28,7 @@ const data = {
   ],
   ctaText: "Enquire About Hajj Transport",
   ctaLink: "/contact-us",
-  relatedGuide: { href: "/guides/family-travel", label: "Family Travel in Saudi Arabia guide" },
+  relatedGuide: { href: "/blog/family-saudi-destinations", label: "family travel in Saudi Arabia guide" },
 };
 
 export default function HajjTransportationGuide() {
