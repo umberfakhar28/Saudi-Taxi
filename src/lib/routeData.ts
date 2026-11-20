@@ -22,6 +22,18 @@ const KUWAIT_RIYADH_PRICING: RoutePricing = {
   confirmedOn: "19 November 2026",
 };
 
+/**
+ * Riyadh <-> Doha fares, per vehicle, one way: sedan 1,700 SAR and GMC
+ * Yukon 3,000 SAR (business, 10 Nov 2026); the same fares apply Doha to
+ * Riyadh (owner, 20 Nov 2026). SUV and van are quoted on WhatsApp.
+ */
+const RIYADH_DOHA_FARE_ROWS = [
+  { vehicle: "Executive Sedan", passengers: "1–3", luggage: "2–3", amount: 1700 },
+  { vehicle: "SUV", passengers: "1–5", luggage: "4", amount: null },
+  { vehicle: "GMC Yukon", passengers: "1–6", luggage: "6", amount: 3000 },
+  { vehicle: "Van (Hiace class)", passengers: "6–10", luggage: "8+", amount: null },
+];
+
 /** The two vehicles confirmed for the Kuwait cross-border routes. */
 const KUWAIT_VEHICLE_SLUGS = ["toyota-land-cruiser-prado", "gmc-yukon"];
 
@@ -40,8 +52,9 @@ export const dammamAirportToBahrain: RouteData = {
   h1: "Dammam Airport to Bahrain — Chauffeur & Car Transfer Service",
   intro: "Direct taxi transfer from King Fahd International Airport (DMM) to the King Fahd Causeway and on to Bahrain. Meet-and-greet pickup, fixed pricing, and drivers experienced with the busiest GCC land crossing.",
   breadcrumbLabel: "Dammam Airport → Bahrain",
-  distance: "~65 km",
-  travelTime: "1 – 1.5 hours (incl. causeway)",
+  // Map routing (OSRM), Nov 2026: 102 km from the airport to Manama. Was ~65 km.
+  distance: "~100 km",
+  travelTime: "1.5 – 2.5 hours (incl. causeway)",
   heroImage: "/images/airport-terminal.jpg",
   overviewTitle: "Fastest Way from Dammam Airport to Bahrain",
   overviewParagraphs: [
@@ -162,8 +175,9 @@ export const dammamAirportToQatar: RouteData = {
   h1: "Dammam Airport to Qatar Private Taxi & Border Transfer — 24/7",
   intro: "Direct land transfer from King Fahd International Airport in Dammam to Doha, Qatar, via the Salwa (Abu Samra) border crossing. One vehicle, one driver, door-to-door — no need to change transport mid-journey.",
   breadcrumbLabel: "Dammam Airport → Qatar",
-  distance: "~440 km",
-  travelTime: "5 – 6 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 351 km, about 4.1 h driving. Was ~440 km.
+  distance: "~350 km",
+  travelTime: "4.5 – 5.5 hours (incl. border)",
   heroImage: "/images/airport-terminal.jpg",
   overviewTitle: "Non-Stop Transfer from Dammam Airport to Doha",
   overviewParagraphs: [
@@ -173,7 +187,7 @@ export const dammamAirportToQatar: RouteData = {
   ],
   borderProcessTitle: "Salwa / Abu Samra Crossing Process",
   borderProcessParagraphs: [
-    "From DMM Airport, the drive to the Salwa border takes roughly 3.5–4 hours via the Al-Ahsa route. We build in a rest stop along the way for longer journeys.",
+    "From DMM Airport, the drive to the Salwa border takes roughly 2.5–3 hours via the Al-Ahsa route. We build in a rest stop along the way for longer journeys.",
     "At the Saudi exit post, passengers clear passport control and the vehicle undergoes a standard customs check. On the Qatari side at Abu Samra, travelers present a valid passport along with a Hayya Card (for event ticket holders) or an approved Qatar visa for non-GCC nationals.",
     "GCC nationals cross with just their national ID. The Abu Samra facility has been significantly modernized, and typical processing during off-peak hours is 30–60 minutes total for both sides combined.",
   ],
@@ -188,13 +202,13 @@ export const dammamAirportToQatar: RouteData = {
   dropoffInfo: "Direct door-to-door drop-off anywhere in Doha — hotels, residential towers, corporate offices, or Hamad International Airport (DOH) for onward connections.",
   vehicleOptions: [
     { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the long-distance drive with reclining seats." },
-    { name: "SUV", capacity: "1–5 passengers", note: "Extra legroom and luggage space for the 5–6 hour journey." },
+    { name: "SUV", capacity: "1–5 passengers", note: "Extra legroom and luggage space for the 4.5–5.5 hour journey." },
     { name: "Van", capacity: "6–10 passengers", note: "Popular for event groups and families heading to Doha." },
   ],
   faqs: [
     { q: "Does the driver stay with me for the whole trip to Doha?", a: "Yes. Unlike the Bahrain causeway route, our vehicles and drivers are authorized to complete the full journey from DMM Airport into Qatar and to your final Doha address." },
     { q: "Do I need a Hayya Card for this route?", a: "A Hayya Card is required only if you're attending an event that issues one; otherwise a standard Qatar visa or GCC national ID applies. Check current entry requirements before booking." },
-    { q: "How long is the total trip including the border?", a: "Typically 5–6 hours door-to-door, including the drive from DMM, the Salwa/Abu Samra crossing, and the final leg into Doha." },
+    { q: "How long is the total trip including the border?", a: "Typically 4.5–5.5 hours door-to-door, including the drive from DMM, the Salwa/Abu Samra crossing, and the final leg into Doha." },
     { q: "Is it cheaper than flying DMM to Doha?", a: "For groups of 2 or more, the private taxi is often comparable to or cheaper than multiple flight tickets, plus you avoid layovers and extra airport transfers on both ends." },
     { q: "Can I be dropped at Hamad International Airport instead of a hotel?", a: "Yes, we can route your drop-off directly to Hamad International Airport (DOH) if you have an onward connecting flight." },
   ],
@@ -461,12 +475,30 @@ export const qatarToRiyadh: RouteData = {
   ],
   pickupPoints: ["Doha hotels (West Bay, The Pearl)", "Hamad International Airport", "Lusail", "Al Wakrah", "Doha corporate offices"],
   dropoffInfo: "Direct drop-off anywhere in Riyadh — KAFD, Olaya, Diriyah, government ministries, or King Khalid International Airport for onward connections.",
+  // Same fares as Riyadh to Doha (owner, 20 Nov 2026).
+  fareTable: {
+    heading: "Doha to Riyadh Taxi Price",
+    intro: "One fixed fare per vehicle, whether you travel alone or fill every seat. The same fares apply in both directions.",
+    currency: "SAR",
+    direction: "one-way",
+    confirmedOn: "20 November 2026",
+    rows: RIYADH_DOHA_FARE_ROWS,
+    notes: [
+      "Prices are per vehicle, not per person.",
+      "The fare covers fuel, tolls, your driver for the whole journey, and the vehicle's border fees and insurance for the crossing.",
+      "Visas, meals, extra stops and extra waiting time are not included. SUV, van and round-trip fares are quoted on WhatsApp, and we confirm the final fare there before you book.",
+    ],
+    includedHeading: "What's Included in Your Doha to Riyadh Fare",
+    includes: CROSS_BORDER_INCLUSIONS,
+    excludes: CROSS_BORDER_EXCLUSIONS,
+  },
   vehicleOptions: [
     { name: "Executive Sedan", capacity: "1–3 passengers", note: "Reclining seats and extra comfort for the 7-hour journey." },
     { name: "SUV", capacity: "1–5 passengers", note: "Popular for families and business travelers with luggage." },
     { name: "Van", capacity: "6–10 passengers", note: "For delegations or groups traveling together to Riyadh." },
   ],
   faqs: [
+    { q: "How much is a taxi from Doha to Riyadh?", a: "From 1,700 SAR one way in an executive sedan, or 3,000 SAR in a GMC Yukon, per vehicle. SUV and van fares are quoted on WhatsApp." },
     { q: "Is a single driver used for the entire Doha to Riyadh trip?", a: "Yes, one vehicle and driver cover the full route from Doha, through the Salwa border, to your final Riyadh destination — no vehicle changes required." },
     { q: "How long does the full journey take?", a: "Typically 6.5–7.5 hours including the border crossing and a scheduled rest stop, depending on traffic and border processing times." },
     { q: "Do I need a visa to enter Saudi Arabia from Qatar this way?", a: "Non-GCC nationals need a valid Saudi entry visa. GCC nationals can cross with just their national ID." },
@@ -483,7 +515,7 @@ export const qatarToRiyadh: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Doha to Riyadh Transfer",
-  lastReviewed: "August 2026",
+  lastReviewed: "20 November 2026",
   stops: [
     { name: "Al-Ahsa area", note: "Scheduled rest stop roughly midway through Saudi Arabia, after clearing the Salwa border." },
   ],
@@ -736,7 +768,7 @@ export const riyadhToBahrain: RouteData = {
         { icon: "tag", label: "Fixed fare", value: "Starting from 1,250 SAR", emphasis: true },
       ],
       note: "Times are estimates and vary with traffic and causeway queues.",
-      link: { href: "/distance/bahrain-to-riyadh", label: "Riyadh to Bahrain distance & travel time guide" },
+      link: { href: "/distance/bahrain-to-riyadh", label: "Riyadh to Bahrain distance by road" },
     },
     prices: {
       heading: "Riyadh to Bahrain Taxi Fare 2026",
@@ -1185,8 +1217,9 @@ export const qatarToDammam: RouteData = {
   h1: "Qatar to Dammam Private Taxi & Border Transfer — 24/7",
   intro: "Direct door-to-door transfer from Doha, Qatar, to Dammam and the Eastern Province via the Salwa (Abu Samra) border crossing. One vehicle, one driver, all the way to your Dammam-area destination.",
   breadcrumbLabel: "Qatar → Dammam",
-  distance: "~440 km",
-  travelTime: "5 – 6 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 327 km, about 3.9 h driving. Was ~440 km.
+  distance: "~330 km",
+  travelTime: "4.5 – 5.5 hours (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Non-Stop Transfer from Doha to Dammam",
   overviewParagraphs: [
@@ -1209,13 +1242,13 @@ export const qatarToDammam: RouteData = {
   pickupPoints: ["Doha hotels (West Bay, The Pearl)", "Hamad International Airport", "Lusail", "Al Wakrah"],
   dropoffInfo: "Direct drop-off in Dammam, Al Khobar, or Dhahran — hotels, residential compounds, or King Fahd International Airport for onward flights.",
   vehicleOptions: [
-    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the 5–6 hour highway drive." },
+    { name: "Sedan", capacity: "1–3 passengers", note: "Comfortable for the 4.5–5.5 hour highway drive." },
     { name: "SUV", capacity: "1–5 passengers", note: "Popular with business travelers and families." },
     { name: "Van", capacity: "6–10 passengers", note: "For groups or families making the trip together." },
   ],
   faqs: [
     { q: "Does the driver stay with me for the whole trip to Dammam?", a: "Yes. Unlike the Bahrain causeway route, our vehicles and drivers are authorized to complete the full journey from Doha into Saudi Arabia and to your final Dammam-area address." },
-    { q: "How long is the total trip including the border?", a: "Typically 5–6 hours door-to-door, including the drive from Doha, the Salwa/Abu Samra crossing, and the final leg into Dammam." },
+    { q: "How long is the total trip including the border?", a: "Typically 4.5–5.5 hours door-to-door, including the drive from Doha, the Salwa/Abu Samra crossing, and the final leg into Dammam." },
     { q: "Do I need a visa to enter Saudi Arabia this way?", a: "Non-GCC nationals need a valid Saudi entry visa. GCC nationals can cross with just their national ID." },
     { q: "Is it cheaper than flying Doha to Dammam?", a: "For groups of 2 or more, the private taxi is often comparable to or cheaper than multiple flight tickets, plus you avoid layovers and extra airport transfers on both ends." },
     { q: "Can I be dropped directly at Dammam Airport instead of a hotel?", a: "Yes, we can route your drop-off directly to King Fahd International Airport if you have an onward flight." },
@@ -1248,12 +1281,13 @@ export const dammamToAbuDhabi: RouteData = {
   h1: "Dammam to Abu Dhabi — Executive Car Transfer Service",
   intro: "Private long-distance overland transfer from Dammam to Abu Dhabi via the Al Batha (Ghuwaifat) border crossing into the UAE. A single executive vehicle for the full journey — a private, direct alternative to flying for groups and travelers with luggage.",
   breadcrumbLabel: "Dammam → Abu Dhabi",
-  distance: "~950 km",
-  travelTime: "10 – 11.5 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 706 km, about 6.9 h driving via Al Batha. Was ~700 km.
+  distance: "~700 km",
+  travelTime: "8 – 9.5 hours (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Dammam to Abu Dhabi",
   overviewParagraphs: [
-    "This is a genuine long-haul overland journey — well over 900 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
+    "This is a genuine long-haul overland journey — about 700 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
     "The route runs south-east from Dammam through Saudi Arabia's Eastern Province and along the Gulf coast toward the Al Batha / Ghuwaifat border crossing into the UAE, then continues to Abu Dhabi.",
     "Given the distance, we schedule one or more rest stops along the way and use executive-grade vehicles built for long-distance comfort.",
   ],
@@ -1278,8 +1312,8 @@ export const dammamToAbuDhabi: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together on the long-haul route." },
   ],
   faqs: [
-    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~950 km route from Dammam through the Ghuwaifat border to Abu Dhabi. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
-    { q: "How long does the full journey take?", a: "Typically 10–11.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
+    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~700 km route from Dammam through the Ghuwaifat border to Abu Dhabi. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
+    { q: "How long does the full journey take?", a: "Typically 8–9.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
     { q: "Do I need a UAE visa for this route?", a: "GCC nationals cross with just their national ID. Other nationalities should confirm current UAE visa-on-arrival eligibility or arrange a visa in advance of travel — requirements vary by nationality." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
@@ -1295,10 +1329,10 @@ export const dammamToAbuDhabi: RouteData = {
   ctaText: "Book Your Abu Dhabi Transfer",
   lastReviewed: "August 2026",
   stops: [
-    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~950 km drive — timed for fuel, food, and prayer along the Gulf coastal highway." },
+    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~700 km drive — timed for fuel, food, and prayer along the Gulf coastal highway." },
   ],
   practicalInfo: [
-    { title: "This is a genuine long-haul drive", note: "Nearly 950 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
+    { title: "This is a genuine long-haul drive", note: "About 700 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
     { title: "Overnight departure option", note: "Leaving in the evening avoids daytime heat and traffic on the long coastal stretch." },
   ],
   reviews: [],
@@ -1319,12 +1353,13 @@ export const dammamToDubai: RouteData = {
   h1: "Dammam to Dubai — Private Taxi & Cross-Border Transfer",
   intro: "Private long-distance overland transfer from Dammam to Dubai via the Al Batha (Ghuwaifat) border crossing into the UAE. A single executive vehicle for the full journey — a private, direct alternative to flying for groups and travelers with luggage.",
   breadcrumbLabel: "Dammam → Dubai",
-  distance: "~1,100 km",
-  travelTime: "11.5 – 13 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 803 km, about 7.8 h driving via Al Batha. Was ~800 km.
+  distance: "~800 km",
+  travelTime: "9 – 10.5 hours (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Dammam to Dubai",
   overviewParagraphs: [
-    "This is a genuine long-haul overland journey — well over 1,000 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
+    "This is a genuine long-haul overland journey — about 800 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
     "The route runs south-east from Dammam through Saudi Arabia's Eastern Province and along the Gulf coast toward the Al Batha / Ghuwaifat border crossing into the UAE, then continues across Abu Dhabi emirate to Dubai.",
     "Given the distance, we schedule one or more rest stops along the way and use executive-grade vehicles built for long-distance comfort.",
   ],
@@ -1349,8 +1384,8 @@ export const dammamToDubai: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together on the long-haul route." },
   ],
   faqs: [
-    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~1,100 km route from Dammam through the Ghuwaifat border to Dubai. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
-    { q: "How long does the full journey take?", a: "Typically 11.5–13 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
+    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~800 km route from Dammam through the Ghuwaifat border to Dubai. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
+    { q: "How long does the full journey take?", a: "Typically 9–10.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
     { q: "Do I need a UAE visa for this route?", a: "GCC nationals cross with just their national ID. Other nationalities should confirm current UAE visa-on-arrival eligibility or arrange a visa in advance of travel — requirements vary by nationality." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
@@ -1366,11 +1401,11 @@ export const dammamToDubai: RouteData = {
   ctaText: "Book Your Dubai Transfer",
   lastReviewed: "August 2026",
   stops: [
-    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~1,100 km drive — timed for fuel, food, and prayer via Abu Dhabi." },
+    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~800 km drive — timed for fuel, food, and prayer via Abu Dhabi." },
   ],
   practicalInfo: [
-    { title: "This is a genuine long-haul drive", note: "Over 1,100 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
-    { title: "Plan for a full day", note: "11.5–13 hours means this is realistically a full-day journey — we build the schedule around your preferred arrival time." },
+    { title: "This is a genuine long-haul drive", note: "About 800 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
+    { title: "Plan for a full day", note: "9–10.5 hours means this is realistically a full-day journey — we build the schedule around your preferred arrival time." },
   ],
   reviews: [],
 };
@@ -1390,12 +1425,13 @@ export const dubaiToDammam: RouteData = {
   h1: "Dubai to Dammam — Chauffeur & Car Transfer Service",
   intro: "Private long-distance overland transfer from Dubai to Dammam via the Al Batha (Ghuwaifat) border crossing into Saudi Arabia. A single executive vehicle for the full journey — a private, direct alternative to flying for groups and travelers with luggage.",
   breadcrumbLabel: "Dubai → Dammam",
-  distance: "~1,100 km",
-  travelTime: "11.5 – 13 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 803 km, about 7.8 h driving via Al Batha. Was ~800 km.
+  distance: "~800 km",
+  travelTime: "9 – 10.5 hours (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Dubai to Dammam",
   overviewParagraphs: [
-    "This is a genuine long-haul overland journey — well over 1,000 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
+    "This is a genuine long-haul overland journey — about 800 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
     "The route runs west from Dubai across Abu Dhabi emirate toward the Al Batha / Ghuwaifat border crossing into Saudi Arabia, then continues along the Gulf coast to Dammam.",
     "Given the distance, we schedule one or more rest stops along the way and use executive-grade vehicles built for long-distance comfort.",
   ],
@@ -1419,8 +1455,8 @@ export const dubaiToDammam: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together on the long-haul route." },
   ],
   faqs: [
-    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~1,100 km route from Dubai through the Ghuwaifat border to Dammam. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
-    { q: "How long does the full journey take?", a: "Typically 11.5–13 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
+    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~800 km route from Dubai through the Ghuwaifat border to Dammam. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
+    { q: "How long does the full journey take?", a: "Typically 9–10.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
     { q: "Do I need a Saudi visa for this route?", a: "Non-GCC nationals need a valid Saudi entry visa. GCC nationals can cross with just their national ID." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
     { q: "Do you recommend flying instead for this distance?", a: "For a single traveler in a hurry, flying is usually faster and more practical. This overland option suits groups, those with excess luggage, or travelers who value a private, uninterrupted journey over airport processes on both ends." },
@@ -1436,7 +1472,7 @@ export const dubaiToDammam: RouteData = {
   ctaText: "Book Your Dammam Transfer",
   lastReviewed: "August 2026",
   stops: [
-    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~1,100 km drive via Abu Dhabi and the Ghuwaifat border." },
+    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~800 km drive via Abu Dhabi and the Ghuwaifat border." },
   ],
   reviews: [],
 };
@@ -1484,7 +1520,30 @@ export const bahrainToRiyadh: RouteData = {
     { name: "SUV", capacity: "1–5 passengers", note: "Extra comfort and luggage space for the journey." },
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together to Riyadh." },
   ],
+  // Same fares as Riyadh to Bahrain (owner, 20 Nov 2026), taken from that
+  // page's price cards so the two can never differ.
+  fareTable: {
+    heading: "Bahrain to Riyadh Taxi Price",
+    intro: "Fixed per-car fares, not per seat. The same fares apply in both directions.",
+    currency: "SAR",
+    direction: "one-way",
+    confirmedOn: "20 November 2026",
+    rows: riyadhToBahrain.landing!.prices.groups.flatMap((g) => g.vehicles).map((v) => ({
+      vehicle: v.name,
+      passengers: v.passengers,
+      luggage: v.luggage ?? "Ask us",
+      amount: v.amount,
+    })),
+    notes: [
+      "Prices are per vehicle, one way, and cover fuel, tolls and the causeway fees.",
+      "Visas, personal entry fees and extra waiting time are not included. Vans and round trips are quoted on WhatsApp.",
+    ],
+    includedHeading: "What's Included in Your Bahrain to Riyadh Fare",
+    includes: CROSS_BORDER_INCLUSIONS,
+    excludes: CROSS_BORDER_EXCLUSIONS,
+  },
   faqs: [
+    { q: "How much is a taxi from Bahrain to Riyadh?", a: "From 1,250 SAR one way in a Toyota Camry, or 1,500 SAR in an SUV or premium sedan, per vehicle. Vans are quoted on WhatsApp." },
     { q: "Do I stay in the same vehicle across the causeway?", a: "Yes — one vehicle and driver cover the whole journey, from your Bahrain pickup through the crossing to your Riyadh address." },
     { q: "How long is the full trip from Bahrain to Riyadh?", a: "Typically 4.5–5.5 hours total, including the causeway crossing and the drive on to the capital." },
     { q: "Is this route busy during Bahrain Grand Prix weekends?", a: "Yes, demand and causeway traffic both increase significantly during F1 weekends — we recommend booking well in advance for those dates." },
@@ -1500,7 +1559,7 @@ export const bahrainToRiyadh: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Book Your Riyadh Transfer",
-  lastReviewed: "August 2026",
+  lastReviewed: "20 November 2026",
   reviews: [],
 };
 
@@ -1519,12 +1578,13 @@ export const riyadhToDubai: RouteData = {
   h1: "Riyadh to Dubai — Private Taxi & Cross-Border Transfer",
   intro: "Private long-distance overland transfer from Riyadh to Dubai via the Al Batha (Ghuwaifat) border crossing into the UAE. A single executive vehicle for the full journey — a private, direct alternative to flying for groups and travelers with luggage.",
   breadcrumbLabel: "Riyadh → Dubai",
-  distance: "~1,100 km",
+  // Map routing (OSRM), Nov 2026: 996 km, about 10.4 h driving via Route 10 and Al Batha. Was ~1,000 km.
+  distance: "~1,000 km",
   travelTime: "11 – 12.5 hours (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Riyadh to Dubai",
   overviewParagraphs: [
-    "This is a genuine long-haul overland journey — well over 1,000 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
+    "This is a genuine long-haul overland journey — about 1,000 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
     "The route runs east from Riyadh across the Najd plateau and Eastern Province toward the Al Batha / Ghuwaifat border crossing into the UAE, then continues across Abu Dhabi emirate to Dubai.",
     "Given the distance, we schedule one or more rest stops along the way and use executive-grade vehicles built for long-distance comfort.",
   ],
@@ -1549,7 +1609,7 @@ export const riyadhToDubai: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together on the long-haul route." },
   ],
   faqs: [
-    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~1,100 km route from Riyadh through the Ghuwaifat border to Dubai. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
+    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~1,000 km route from Riyadh through the Ghuwaifat border to Dubai. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
     { q: "How long does the full journey take?", a: "Typically 11–12.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
     { q: "Do I need a UAE visa for this route?", a: "GCC nationals cross with just their national ID. Other nationalities should confirm current UAE visa-on-arrival eligibility or arrange a visa in advance of travel — requirements vary by nationality." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
@@ -1567,10 +1627,10 @@ export const riyadhToDubai: RouteData = {
   ctaText: "Book Your Dubai Transfer",
   lastReviewed: "August 2026",
   stops: [
-    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~1,100 km drive across the Eastern Province toward the Ghuwaifat border." },
+    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~1,000 km drive across the Eastern Province toward the Ghuwaifat border." },
   ],
   practicalInfo: [
-    { title: "This is a genuine long-haul drive", note: "Over 1,100 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
+    { title: "This is a genuine long-haul drive", note: "About 1,000 km — best suited to groups, heavy luggage, or travelers who specifically prefer a private overland journey over flying." },
   ],
   reviews: [],
 };
@@ -1590,12 +1650,13 @@ export const dubaiToRiyadh: RouteData = {
   h1: "Dubai to Riyadh — Private Car & Chauffeur Transfer",
   intro: "Private long-distance overland transfer from Dubai to Riyadh via the Al Batha (Ghuwaifat) border crossing into Saudi Arabia. A single executive vehicle for the full journey — a private, direct alternative to flying for groups and travelers with luggage.",
   breadcrumbLabel: "Dubai → Riyadh",
-  distance: "~1,100 km",
+  // Map routing (OSRM), Nov 2026: 996 km, about 10.4 h driving via Route 10 and Al Batha. Was ~1,000 km.
+  distance: "~1,000 km",
   travelTime: "11 – 12.5 hours (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Dubai to Riyadh",
   overviewParagraphs: [
-    "This is a genuine long-haul overland journey — well over 1,000 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
+    "This is a genuine long-haul overland journey — about 1,000 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers who prefer to avoid airport-to-airport connections on both ends.",
     "The route runs west from Dubai across Abu Dhabi emirate toward the Al Batha / Ghuwaifat border crossing into Saudi Arabia, then continues across the Eastern Province and Najd plateau to Riyadh.",
     "Given the distance, we schedule one or more rest stops along the way and use executive-grade vehicles built for long-distance comfort.",
   ],
@@ -1619,7 +1680,7 @@ export const dubaiToRiyadh: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together on the long-haul route." },
   ],
   faqs: [
-    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~1,100 km route from Dubai through the Ghuwaifat border to Riyadh. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
+    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~1,000 km route from Dubai through the Ghuwaifat border to Riyadh. Given the distance, we recommend this option mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains the faster option for solo travelers in a hurry." },
     { q: "How long does the full journey take?", a: "Typically 11–12.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
     { q: "Do I need a Saudi visa for this route?", a: "Non-GCC nationals need a valid Saudi entry visa. GCC nationals can cross with just their national ID." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
@@ -2263,12 +2324,7 @@ export const riyadhToQatar: RouteData = {
     currency: "SAR",
     direction: "one-way",
     confirmedOn: "10 November 2026",
-    rows: [
-      { vehicle: "Executive Sedan", passengers: "1–3", luggage: "2–3", amount: 1700 },
-      { vehicle: "SUV", passengers: "1–5", luggage: "4", amount: null },
-      { vehicle: "GMC Yukon", passengers: "1–6", luggage: "6", amount: 3000 },
-      { vehicle: "Van (Hiace class)", passengers: "6–10", luggage: "8+", amount: null },
-    ],
+    rows: RIYADH_DOHA_FARE_ROWS,
     notes: [
       "Prices are per vehicle, not per person.",
       "The fare covers fuel, tolls, your driver for the whole journey, and the vehicle's border fees and insurance for the crossing.",
@@ -2874,12 +2930,13 @@ export const abuDhabiToDammam: RouteData = {
   h1: "Abu Dhabi to Dammam — Executive Car Transfer Service",
   intro: "Private long-distance overland transfer from Abu Dhabi to Dammam via the Al Batha (Ghuwaifat) border crossing into Saudi Arabia. A single executive vehicle for the full journey.",
   breadcrumbLabel: "Abu Dhabi → Dammam",
-  distance: "~950 km",
-  travelTime: "10 – 11.5 hours (incl. border)",
+  // Map routing (OSRM), Nov 2026: 706 km, about 6.9 h driving via Al Batha. Was ~700 km.
+  distance: "~700 km",
+  travelTime: "8 – 9.5 hours (incl. border)",
   heroImage: "/images/chauffeur.jpg",
   overviewTitle: "Direct Overland Transfer from Abu Dhabi to Dammam",
   overviewParagraphs: [
-    "This is a genuine long-haul overland journey — well over 900 km — best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers avoiding airport-to-airport connections on both ends.",
+    "This is a genuine long-haul overland journey — about 700 km — best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers avoiding airport-to-airport connections on both ends.",
     "The route runs north-west from Abu Dhabi along the Gulf coast to the Ghuwaifat / Al Batha border crossing into Saudi Arabia, then continues through the Eastern Province to Dammam.",
     "Given the distance, we schedule one or more rest stops along the way and use executive-grade vehicles built for long-distance comfort.",
   ],
@@ -2903,8 +2960,8 @@ export const abuDhabiToDammam: RouteData = {
     { name: "Van", capacity: "6–10 passengers", note: "For families or groups traveling together on the long-haul route." },
   ],
   faqs: [
-    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~950 km route from Abu Dhabi through the Ghuwaifat border to Dammam. We recommend this mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains faster for solo travelers in a hurry." },
-    { q: "How long does the full journey take?", a: "Typically 10–11.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
+    { q: "Is this really a private taxi drive the whole way?", a: "Yes — one vehicle and driver cover the entire ~700 km route from Abu Dhabi through the Ghuwaifat border to Dammam. We recommend this mainly for groups, those with heavy luggage, or travelers who specifically prefer a private overland journey; flying remains faster for solo travelers in a hurry." },
+    { q: "How long does the full journey take?", a: "Typically 8–9.5 hours including the border crossing and scheduled rest stops, depending on traffic and border processing times." },
     { q: "Do I need a Saudi visa for this route?", a: "GCC nationals cross with just their national ID. Other nationalities should confirm current Saudi visa requirements before travel." },
     { q: "Can this be booked for a group or delegation?", a: "Yes, we arrange multi-vehicle convoys for delegations, corporate groups, and families making this trip together." },
   ],
@@ -2919,7 +2976,7 @@ export const abuDhabiToDammam: RouteData = {
   ctaText: "Book Your Dammam Transfer",
   lastReviewed: "August 2026",
   stops: [
-    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~950 km drive along the Gulf coastal highway toward the Eastern Province." },
+    { name: "Scheduled rest stop", note: "One or more breaks are built into this ~700 km drive along the Gulf coastal highway toward the Eastern Province." },
   ],
   reviews: [],
 };

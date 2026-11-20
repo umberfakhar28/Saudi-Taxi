@@ -59,10 +59,10 @@ export default function ArabicDammamToBahrain() {
         <div className="container">
           <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-6)", justifyContent: "center", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
-              <MapPinIcon size={16} /> ~65 كم
+              <MapPinIcon size={16} /> ~100 كم
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
-              <ClockIcon size={16} /> 1 – 1.5 ساعة (شامل الجسر)
+              <ClockIcon size={16} /> 1.5 – 2.5 ساعة (شامل الجسر)
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
               <GlobeIcon size={16} /> جسر الملك فهد
@@ -99,8 +99,8 @@ export default function ArabicDammamToBahrain() {
               <div className="card">
                 <div className="card-icon"><CarIcon size={22} /></div>
                 <h3>تفاصيل الرحلة</h3>
-                <p>المسافة: <strong style={{ color: "var(--accent)" }}>~65 كم</strong></p>
-                <p>وقت الرحلة: <strong style={{ color: "var(--accent)" }}>1 – 1.5 ساعة</strong></p>
+                <p>المسافة: <strong style={{ color: "var(--accent)" }}>~100 كم</strong></p>
+                <p>وقت الرحلة: <strong style={{ color: "var(--accent)" }}>1.5 – 2.5 ساعة</strong></p>
                 <p>المعبر: <strong style={{ color: "var(--accent)" }}>جسر الملك فهد</strong></p>
               </div>
               <div className="card">

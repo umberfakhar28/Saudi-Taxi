@@ -14,7 +14,7 @@ export const metadata = generatePageMetadata({
 const faqs = [
   { q: "هل يبقى السائق معي طوال الرحلة إلى الدوحة؟", a: "نعم. على عكس مسار جسر البحرين، سياراتنا وسائقونا مصرّح لهم بإكمال الرحلة كاملة من مطار الدمام حتى دخول قطر ووصولك إلى عنوانك في الدوحة." },
   { q: "هل أحتاج بطاقة حياة لهذه الرحلة؟", a: "بطاقة حياة مطلوبة فقط إذا كنت تحضر فعالية تصدر لها بطاقة حياة؛ بخلاف ذلك تكفي تأشيرة قطر العادية أو الهوية الوطنية الخليجية. تحقق من متطلبات الدخول الحالية قبل الحجز." },
-  { q: "كم تستغرق الرحلة كاملة شاملة الحدود؟", a: "عادة 5–6 ساعات من الباب إلى الباب، شاملة الرحلة من مطار الدمام، وعبور حدود سلوى / أبو سمرة، والمسار الأخير إلى الدوحة." },
+  { q: "كم تستغرق الرحلة كاملة شاملة الحدود؟", a: "عادة 4.5–5.5 ساعات من الباب إلى الباب، شاملة الرحلة من مطار الدمام، وعبور حدود سلوى / أبو سمرة، والمسار الأخير إلى الدوحة." },
   { q: "هل هذا أرخص من الطيران بين الدمام والدوحة؟", a: "بالنسبة للمجموعات من شخصين أو أكثر، غالباً ما يكون التاكسي الخاص مماثلاً أو أرخص من تذاكر طيران متعددة، إضافة إلى تجنب التوقفات ونقل المطار الإضافي في الطرفين." },
   { q: "هل يمكن إنزالي في مطار حمد الدولي بدلاً من الفندق؟", a: "نعم، يمكننا توجيه نقطة النزول مباشرة إلى مطار حمد الدولي (DOH) إذا كانت لديك رحلة متابعة." },
 ];
@@ -59,10 +59,10 @@ export default function ArabicDammamToQatar() {
         <div className="container">
           <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-6)", justifyContent: "center", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
-              <MapPinIcon size={16} /> ~440 كم
+              <MapPinIcon size={16} /> ~350 كم
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
-              <ClockIcon size={16} /> 5 – 6 ساعات (شامل الحدود)
+              <ClockIcon size={16} /> 4.5 – 5.5 ساعات (شامل الحدود)
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--accent-on-light)", fontWeight: 700, fontSize: "var(--text-sm)" }}>
               <GlobeIcon size={16} /> حدود سلوى / أبو سمرة
@@ -99,8 +99,8 @@ export default function ArabicDammamToQatar() {
               <div className="card">
                 <div className="card-icon"><CarIcon size={22} /></div>
                 <h3>تفاصيل الرحلة</h3>
-                <p>المسافة: <strong style={{ color: "var(--accent)" }}>~440 كم</strong></p>
-                <p>وقت الرحلة: <strong style={{ color: "var(--accent)" }}>5 – 6 ساعات</strong></p>
+                <p>المسافة: <strong style={{ color: "var(--accent)" }}>~350 كم</strong></p>
+                <p>وقت الرحلة: <strong style={{ color: "var(--accent)" }}>4.5 – 5.5 ساعات</strong></p>
                 <p>المعبر: <strong style={{ color: "var(--accent)" }}>سلوى / أبو سمرة</strong></p>
               </div>
               <div className="card">
@@ -127,7 +127,7 @@ export default function ArabicDammamToQatar() {
               <span className="section-eyebrow">إجراءات العبور</span>
               <h2 className="section-title">إجراءات عبور حدود سلوى / أبو سمرة</h2>
               <p style={{ color: "var(--text-body)", lineHeight: 1.8, marginBottom: "var(--space-5)" }}>
-                من مطار الدمام، تستغرق الرحلة إلى حدود سلوى حوالي 3.5–4 ساعات عبر طريق الأحساء. نخصص وقتاً للاستراحة
+                من مطار الدمام، تستغرق الرحلة إلى حدود سلوى حوالي 2.5–3 ساعات عبر طريق الأحساء. نخصص وقتاً للاستراحة
                 في الطريق للرحلات الطويلة.
               </p>
               <p style={{ color: "var(--text-body)", lineHeight: 1.8 }}>

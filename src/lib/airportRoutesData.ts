@@ -26,7 +26,7 @@ export const AIRPORT_ROUTES: AirportRoute[] = [
   { id: "med-makkah", airportCode: "MED", from: "Madinah Airport (MED)", to: "Makkah Hotels", time: "~4.5 hrs", distance: "~450 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/services/makkah" },
 
   // Dammam — King Fahd International (DMM)
-  { id: "dmm-bahrain", airportCode: "DMM", from: "Dammam Airport (DMM)", to: "Bahrain (King Fahd Causeway)", time: "~1–1.5 hrs", distance: "~65 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/dammam-airport-to-bahrain-taxi-service" },
+  { id: "dmm-bahrain", airportCode: "DMM", from: "Dammam Airport (DMM)", to: "Bahrain (King Fahd Causeway)", time: "~1.5–2.5 hrs", distance: "~100 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/dammam-airport-to-bahrain-taxi-service" },
   { id: "dmm-khobar", airportCode: "DMM", from: "Dammam Airport (DMM)", to: "Khobar / Dhahran", time: "~30–40 min", distance: "~30 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/dammam-airport-taxi-service" },
   { id: "dmm-riyadh", airportCode: "DMM", from: "Dammam Airport (DMM)", to: "Riyadh", time: "~3.5–4.5 hrs", distance: "~400 km", vehicles: ["sedan", "suv", "van", "luxury"], href: "/dammam-airport-to-riyadh-taxi-service" },
   { id: "dmm-qatar", airportCode: "DMM", from: "Dammam Airport (DMM)", to: "Qatar (Salwa Border)", time: "~2.5-3 hrs", distance: "~230 km", vehicles: ["sedan", "suv", "van"], href: "/dammam-airport-to-qatar-taxi-service" },
