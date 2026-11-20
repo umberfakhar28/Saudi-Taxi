@@ -5,7 +5,7 @@ import { preload } from "react-dom";
 import {
   MapPin, Clock, Landmark, Route, Coffee, Tag, Car, ShieldCheck, House, Luggage, Fuel,
   MessageCircle, Users, Briefcase, Plane, FileCheck, BadgeCheck, CalendarCheck, Navigation,
-  Headset, CreditCard, Banknote, Mail, Receipt, Building2, Languages, Anchor,
+  Headset, CreditCard, Banknote, Mail, Receipt, Building2, Languages, Anchor, Flag,
   ArrowRight, ArrowLeft, ChevronDown, Info, CircleCheck, type LucideIcon,
 } from "lucide-react";
 // Lucide ships no brand logos, so WhatsApp buttons keep the WhatsApp mark.
@@ -27,7 +27,7 @@ const ICONS: Record<LandingIcon, LucideIcon> = {
   messageCircle: MessageCircle, users: Users, briefcase: Briefcase, plane: Plane,
   fileCheck: FileCheck, badgeCheck: BadgeCheck, calendarCheck: CalendarCheck,
   navigation: Navigation, headset: Headset, creditCard: CreditCard, banknote: Banknote,
-  mail: Mail, receipt: Receipt, building: Building2, languages: Languages, anchor: Anchor,
+  mail: Mail, receipt: Receipt, building: Building2, languages: Languages, anchor: Anchor, flag: Flag,
 };
 
 type Locale = "en" | "ar";
@@ -60,7 +60,8 @@ const UI = {
       crossing: "Border crossing", included: "What's included", howToBook: "How it works", nearby: "Explore",
       faq: "FAQ", moreRoutes: "More routes", bookingMethods: "Ways to book", payment: "Payment",
       documents: "Documents", airport: "Airport", destinations: "Things to see", hotels: "Where to stay",
-      finalCta: "Ready when you are",
+      finalCta: "Ready when you are", pickup: "Pickup", compare: "Compare", timing: "When to travel",
+      steps: "Step by step", ideas: "Ideas", crossLinks: "Other ways", fares: "Fares",
     },
   },
   ar: {
@@ -83,7 +84,8 @@ const UI = {
       crossing: "عبور الحدود", included: "ما يشمله السعر", howToBook: "طريقة الحجز", nearby: "استكشف",
       faq: "أسئلة شائعة", moreRoutes: "رحلات أخرى", bookingMethods: "طرق الحجز", payment: "الدفع",
       documents: "المستندات", airport: "المطار", destinations: "معالم الكويت", hotels: "أين تقيم",
-      finalCta: "جاهزون متى ما كنت جاهزاً",
+      finalCta: "جاهزون متى ما كنت جاهزاً", pickup: "الاستلام", compare: "مقارنة", timing: "متى تسافر",
+      steps: "خطوة بخطوة", ideas: "أفكار", crossLinks: "خيارات أخرى", fares: "الأسعار",
     },
   },
 } as const;
@@ -242,12 +244,15 @@ export default function RouteLanding({ data, locale = "en" }: { data: RouteData;
       areaServed: [data.origin, data.destination],
       airportsServed: L.airportsServed,
       image: hero.image.src,
-      // One Offer per vehicle with a confirmed fare, as shown on the page.
-      offers: vehicles.filter((v) => v.amount !== null).map((v) => ({
-        name: `${v.name}, ${route}, one-way`,
-        price: v.amount as number,
-        priceCurrency: prices.currency,
-      })),
+      // One Offer per vehicle with a confirmed fare, as shown on the page,
+      // or the route's own list when the fare depends on the drop-off.
+      offers: L.schemaOffers
+        ? L.schemaOffers.map((o) => ({ name: o.name, price: o.price, priceCurrency: prices.currency }))
+        : vehicles.filter((v) => v.amount !== null).map((v) => ({
+          name: `${v.name}, ${route}, one-way`,
+          price: v.amount as number,
+          priceCurrency: prices.currency,
+        })),
     }),
     faqSchema(data.faqs.map((f) => ({ question: f.q, answer: plain(f.a) }))),
     breadcrumbSchema([
@@ -454,7 +459,7 @@ export default function RouteLanding({ data, locale = "en" }: { data: RouteData;
     ),
 
     /* Journey timeline */
-    timeline: (bg) => (
+    timeline: (bg) => L.timeline && (
       <section className={`section ${bg}`}>
         <div className="container">
           <SectionHeader eyebrow={t.eyebrow.journey} title={L.timeline.heading} intro={L.timeline.intro} align="start" />
@@ -510,7 +515,7 @@ export default function RouteLanding({ data, locale = "en" }: { data: RouteData;
     ),
 
     /* The border crossing: which crossing when, then driver vs passenger. */
-    crossing: (bg) => (
+    crossing: (bg) => L.crossing && (
       <section className={`section ${bg}`}>
         <div className="container">
           <SectionHeader eyebrow={L.crossing.eyebrow ?? t.eyebrow.crossing} title={L.crossing.heading} intro={L.crossing.intro} />
@@ -659,7 +664,7 @@ export default function RouteLanding({ data, locale = "en" }: { data: RouteData;
     ),
 
     /* What's included: staggered fade-up as it scrolls in. */
-    included: (bg) => (
+    included: (bg) => L.included && (
       <section className={`section ${bg}`}>
         <div className="container">
           <SectionHeader eyebrow={L.included.eyebrow ?? t.eyebrow.included} title={L.included.heading} />
@@ -765,7 +770,7 @@ export default function RouteLanding({ data, locale = "en" }: { data: RouteData;
     ),
 
     /* Nearby destinations */
-    nearby: (bg) => (
+    nearby: (bg) => L.nearby && (
       <section className={`section ${bg}`}>
         <div className="container">
           <SectionHeader eyebrow={t.eyebrow.nearby} title={L.nearby.heading} intro={L.nearby.intro} />
@@ -835,6 +840,206 @@ export default function RouteLanding({ data, locale = "en" }: { data: RouteData;
               <Link key={x.href} href={x.href} className="btn btn-outline-gold btn-sm">{x.label}</Link>
             ))}
           </div>
+        </div>
+      </section>
+    ),
+
+    /* Pickup areas with the road distance from each: named cards, or a
+       comparison table, optionally beside a photo. */
+    pickupAreas: (bg) => L.pickupAreas && (
+      <section className={`section ${bg}`}>
+        <div className="container">
+          <SectionHeader eyebrow={L.pickupAreas.eyebrow ?? t.eyebrow.pickup} title={L.pickupAreas.heading} intro={L.pickupAreas.intro} />
+          <div className={L.pickupAreas.image ? s.pickupGrid : undefined}>
+            {L.pickupAreas.layout === "cards" ? (
+              <ul className={s.zoneGrid}>
+                {L.pickupAreas.items.map((z) => (
+                  <li key={z.name} className={s.zone}>
+                    <Icon name="mapPin" chip />
+                    <h3>{z.name}</h3>
+                    <p>{z.detail}</p>
+                    <p className={s.zoneFigures}>{z.figures.join(" · ")}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className={s.tableWrap}>
+                <table className={s.dataTable}>
+                  <thead>
+                    <tr>{(L.pickupAreas.head ?? []).map((h) => <th key={h} scope="col">{h}</th>)}</tr>
+                  </thead>
+                  <tbody>
+                    {L.pickupAreas.items.map((z) => (
+                      <tr key={z.name}>
+                        <th scope="row">{z.name}<span className={s.cellDetail}>{z.detail}</span></th>
+                        {z.figures.map((f, i) => <td key={i}>{f}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {L.pickupAreas.image && (
+              <figure className={s.pickupFigure}>
+                <Media image={L.pickupAreas.image} ratio="4 / 3" sizes="(max-width: 1024px) calc(100vw - 32px), 460px" label={t.photoSoon} />
+              </figure>
+            )}
+          </div>
+          {L.pickupAreas.note && <p className={`${s.sectionNote} ${s.inlineLink}`}>{rich(L.pickupAreas.note)}</p>}
+        </div>
+      </section>
+    ),
+
+    /* A comparison table; our row carries the accent. */
+    compare: (bg) => L.compare && (
+      <section className={`section ${bg}`}>
+        <div className="container">
+          <SectionHeader eyebrow={L.compare.eyebrow ?? t.eyebrow.compare} title={L.compare.heading} intro={L.compare.intro} />
+          <div className={s.tableWrap}>
+            <table className={s.dataTable}>
+              <thead>
+                <tr>{L.compare.head.map((h) => <th key={h} scope="col">{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {L.compare.rows.map((r) => (
+                  <tr key={r.cells[0]} className={r.ours ? s.rowOurs : undefined}>
+                    <th scope="row">{r.cells[0]}</th>
+                    {r.cells.slice(1).map((c, i) => <td key={i} className={s.inlineLink}>{rich(c)}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {L.compare.note && <p className={`${s.sectionNote} ${s.inlineLink}`}>{rich(L.compare.note)}</p>}
+        </div>
+      </section>
+    ),
+
+    /* When to travel: each row tagged quiet, busy or busiest. */
+    timingGuide: (bg) => L.timingGuide && (
+      <section className={`section ${bg}`}>
+        <div className="container">
+          <SectionHeader eyebrow={L.timingGuide.eyebrow ?? t.eyebrow.timing} title={L.timingGuide.heading} intro={L.timingGuide.intro} />
+          <div className={s.tableWrap}>
+            <table className={s.dataTable}>
+              <thead>
+                <tr>{L.timingGuide.head.map((h) => <th key={h} scope="col">{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {L.timingGuide.rows.map((r) => (
+                  <tr key={r.when}>
+                    <th scope="row">{r.when}</th>
+                    <td><span className={`${s.level} ${s[`level_${r.level}`]}`}>{r.levelLabel}</span></td>
+                    <td>{r.advice}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {L.timingGuide.note && <p className={s.sectionNote}>{L.timingGuide.note}</p>}
+        </div>
+      </section>
+    ),
+
+    /* Numbered steps in order, e.g. the causeway from exit to entry. */
+    checklist: (bg) => L.checklist && (
+      <section className={`section ${bg}`}>
+        <div className="container">
+          <SectionHeader eyebrow={L.checklist.eyebrow ?? t.eyebrow.steps} title={L.checklist.heading} intro={L.checklist.intro} />
+          <ol className={s.stepList}>
+            {L.checklist.steps.map((st, i) => (
+              <li key={st.title} className={s.stepItem}>
+                <span className={s.stepNo} aria-hidden="true">{i + 1}</span>
+                <div>
+                  <h3>{st.title}</h3>
+                  <p className={s.inlineLink}>{rich(st.body)}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          {L.checklist.callout && (
+            <p className={s.callout} role="note">
+              <span className={s.icon} aria-hidden="true"><Info size={20} aria-hidden="true" /></span>
+              {L.checklist.callout}
+            </p>
+          )}
+        </div>
+      </section>
+    ),
+
+    /* Idea cards with a tag; linked where we have a page. */
+    ideas: (bg) => L.ideas && (
+      <section className={`section ${bg}`}>
+        <div className="container">
+          <SectionHeader eyebrow={L.ideas.eyebrow ?? t.eyebrow.ideas} title={L.ideas.heading} intro={L.ideas.intro} />
+          <ul className={s.ideaGrid}>
+            {L.ideas.items.map((it) => {
+              const body = (
+                <>
+                  <Icon name={it.icon} chip />
+                  {it.tag && <span className={s.ideaTag}>{it.tag}</span>}
+                  <h3>{it.title}</h3>
+                  <p>{it.body}</p>
+                  {it.href && <span className={s.viewLink}>{t.view(it.title)} <Arrow size={14} aria-hidden="true" /></span>}
+                </>
+              );
+              return (
+                <li key={it.title}>
+                  {it.href ? <Link href={it.href} className={`${s.idea} ${s.ideaLink}`}>{body}</Link> : <div className={s.idea}>{body}</div>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
+    ),
+
+    /* Sibling pages: the other direction, the airport version, a nearby city. */
+    crossLinks: (bg) => L.crossLinks && (
+      <section className={`section ${bg}`}>
+        <div className="container">
+          <SectionHeader eyebrow={L.crossLinks.eyebrow ?? t.eyebrow.crossLinks} title={L.crossLinks.heading} />
+          <ul className={s.crossGrid}>
+            {L.crossLinks.items.map((c) => (
+              <li key={c.href} className={s.crossCard}>
+                <Icon name={c.icon} chip />
+                <div>
+                  <h3>{c.title}</h3>
+                  <p>{c.body}</p>
+                  <Link href={c.href} className={s.guideLink}>
+                    {c.label} <Arrow size={16} strokeWidth={2.25} aria-hidden="true" />
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ),
+
+    /* Fare table for routes priced by drop-off rather than by car. */
+    fares: (bg) => L.fares && (
+      <section id="price" className={`section ${bg}`}>
+        <div className="container">
+          <SectionHeader eyebrow={t.eyebrow.fares} title={L.fares.heading} intro={L.fares.intro} />
+          <div className={s.tableWrap}>
+            <table className={s.dataTable}>
+              <thead>
+                <tr>{L.fares.head.map((h) => <th key={h} scope="col">{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {L.fares.rows.map((r) => (
+                  <tr key={r.trip + r.vehicle}>
+                    <th scope="row">{r.trip}</th>
+                    <td>{r.vehicle}</td>
+                    <td><strong className={s.em}>{r.fare}</strong></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className={`${s.priceFootnote} ${s.inlineLink}`}>{rich(L.fares.note)}</p>
+          <p className={s.reviewed}>{t.pricesConfirmed(L.fares.confirmedOn)}</p>
         </div>
       </section>
     ),

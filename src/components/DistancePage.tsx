@@ -4,7 +4,7 @@ import {
   MapPin, Clock, Landmark, Tag, Info, ChevronDown, ArrowRight, CircleCheck, Route as RouteIcon,
   Coffee, Car, ShieldCheck, House, Luggage, Fuel, MessageCircle, Users, Briefcase, Plane, FileCheck,
   BadgeCheck, CalendarCheck, Navigation, Headset, CreditCard, Banknote, Mail, Receipt, Building2,
-  Languages, Anchor, type LucideIcon,
+  Languages, Anchor, Flag, type LucideIcon,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
 import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
@@ -21,7 +21,7 @@ const ICONS: Record<LandingIcon, LucideIcon> = {
   messageCircle: MessageCircle, users: Users, briefcase: Briefcase, plane: Plane,
   fileCheck: FileCheck, badgeCheck: BadgeCheck, calendarCheck: CalendarCheck,
   navigation: Navigation, headset: Headset, creditCard: CreditCard, banknote: Banknote,
-  mail: Mail, receipt: Receipt, building: Building2, languages: Languages, anchor: Anchor,
+  mail: Mail, receipt: Receipt, building: Building2, languages: Languages, anchor: Anchor, flag: Flag,
 };
 
 function Icon({ name, size = 20, chip }: { name: LandingIcon; size?: number; chip?: boolean }) {

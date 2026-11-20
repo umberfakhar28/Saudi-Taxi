@@ -15,7 +15,7 @@ export type LandingIcon =
     | "shieldCheck" | "home" | "luggage" | "fuel" | "messageCircle" | "users"
     | "briefcase" | "plane" | "fileCheck" | "badgeCheck" | "calendarCheck"
     | "navigation" | "headset" | "creditCard" | "banknote" | "mail" | "receipt"
-    | "building" | "languages" | "anchor";
+    | "building" | "languages" | "anchor" | "flag";
 
 /** The sections after the hero and the form, in the order a route lists
  *  them. Routes without `order` keep the original sequence (DEFAULT_ORDER
@@ -24,7 +24,10 @@ export type LandingIcon =
 export type LandingSection =
     | "highlights" | "prices" | "bookingMethods" | "payment" | "videos" | "timeline"
     | "crossing" | "documents" | "airport" | "waysToTravel" | "included" | "howToBook"
-    | "destinations" | "hotels" | "nearby" | "faq" | "returnRoutes" | "finalCta";
+    | "destinations" | "hotels" | "nearby" | "faq" | "returnRoutes" | "finalCta"
+    // Phase A route pages (docs/seo/routes/new-routes-plan.md): section types
+    // that let each page have its own structure, not one fixed skeleton.
+    | "pickupAreas" | "compare" | "timingGuide" | "checklist" | "ideas" | "crossLinks" | "fares";
 
 /** A real image, or a sized slot waiting for one. A slot renders as a
  *  styled placeholder with a fixed aspect ratio, so adding the photo later
@@ -115,7 +118,8 @@ export interface RouteLanding {
             uploadDate: string;
         }[];
     };
-    timeline: {
+    /** Optional: a page may tell the journey another way (a checklist). */
+    timeline?: {
         heading: string;
         intro: string;
         steps: { icon: LandingIcon; title: string; body: string }[];
@@ -142,7 +146,7 @@ export interface RouteLanding {
         rows: { option: string; doorToDoor: boolean; connections: string; time: string; bestFor: string; recommended?: boolean }[];
         takeaway: string;
     };
-    crossing: {
+    crossing?: {
         heading: string;
         intro: string;
         driverHeading: string;
@@ -161,7 +165,7 @@ export interface RouteLanding {
         /** Related pages, shown as a row of link buttons. */
         links?: { href: string; label: string }[];
     };
-    included: {
+    included?: {
         eyebrow?: string;
         heading: string;
         items: { icon: LandingIcon; title: string; body: string }[];
@@ -170,7 +174,7 @@ export interface RouteLanding {
         heading: string;
         steps: { icon: LandingIcon; title: string; body: string }[];
     };
-    nearby: {
+    nearby?: {
         heading: string;
         intro: string;
         items: { href: string; name: string; blurb: string; image: LandingImage }[];
@@ -223,6 +227,71 @@ export interface RouteLanding {
         note: string;
     };
     finalCta?: { heading: string; body: string };
+    /** Offers for the Service schema when they differ from the vehicle
+     *  cards (e.g. one car, two drop-off fares). Omit for no Offer. */
+    schemaOffers?: { name: string; price: number }[];
+    /** Where pickups happen at the origin, with the road distance from each.
+     *  "cards" for named zones, "table" for a distance comparison. */
+    pickupAreas?: {
+        eyebrow?: string;
+        heading: string;
+        intro?: string;
+        layout: "cards" | "table";
+        /** Table layout: column headings (area, then one per figure). */
+        head?: string[];
+        items: { name: string; detail: string; figures: string[] }[];
+        note?: string;
+        image?: LandingImage;
+    };
+    /** A comparison table (e.g. city vs airport pickup). One row may be ours. */
+    compare?: {
+        eyebrow?: string;
+        heading: string;
+        intro?: string;
+        head: string[];
+        rows: { cells: string[]; ours?: boolean }[];
+        /** May carry [anchor](/path) links. */
+        note?: string;
+    };
+    /** When to travel: rows marked quiet / busy / busiest. */
+    timingGuide?: {
+        eyebrow?: string;
+        heading: string;
+        intro?: string;
+        head: [string, string, string];
+        rows: { when: string; level: "quiet" | "busy" | "busiest"; levelLabel: string; advice: string }[];
+        note?: string;
+    };
+    /** Numbered steps, e.g. the causeway crossing in order. */
+    checklist?: {
+        eyebrow?: string;
+        heading: string;
+        intro?: string;
+        steps: { title: string; body: string }[];
+        callout?: string;
+    };
+    /** Idea cards (day trips, audiences), each optionally linked. */
+    ideas?: {
+        eyebrow?: string;
+        heading: string;
+        intro?: string;
+        items: { icon: LandingIcon; tag?: string; title: string; body: string; href?: string }[];
+    };
+    /** "Going the other way?" / "Arriving by air?": cross-links to sibling pages. */
+    crossLinks?: {
+        eyebrow?: string;
+        heading: string;
+        items: { icon: LandingIcon; title: string; body: string; href: string; label: string }[];
+    };
+    /** A small fare table when the fare depends on the drop-off, not the car. */
+    fares?: {
+        heading: string;
+        intro?: string;
+        head: [string, string, string];
+        rows: { trip: string; vehicle: string; fare: string }[];
+        note: string;
+        confirmedOn: string;
+    };
     popularRoutes: {
         heading: string;
         items: { href: string; from: string; to: string; tag: string }[];
