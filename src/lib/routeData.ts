@@ -50,7 +50,7 @@ export const dammamAirportToBahrain: RouteData = {
   borderCrossingName: "King Fahd Causeway",
   eyebrow: "Airport to Border Transfer",
   h1: "Dammam Airport to Bahrain — Chauffeur & Car Transfer Service",
-  intro: "Direct taxi transfer from King Fahd International Airport (DMM) to the King Fahd Causeway and on to Bahrain. Meet-and-greet pickup, fixed pricing, and drivers experienced with the busiest GCC land crossing.",
+  intro: "Direct taxi transfer from King Fahd International Airport (DMM) to the King Fahd Causeway and on to Bahrain. Meet-and-greet pickup, a sedan starting from 550 SAR, and drivers experienced with the busiest GCC land crossing.",
   breadcrumbLabel: "Dammam Airport → Bahrain",
   // Map routing (OSRM), Nov 2026: 102 km from the airport to Manama. Was ~65 km.
   distance: "~100 km",
@@ -77,12 +77,35 @@ export const dammamAirportToBahrain: RouteData = {
   ],
   pickupPoints: ["DMM Airport arrivals hall (Terminal 1)", "Dammam city hotels", "Al Khobar Corniche hotels", "Dhahran business district", "Half Moon Bay resorts"],
   dropoffInfo: "Drop-off is at your address in Bahrain — a Manama or Seef hotel, a residence, or Bahrain International Airport for an onward flight. Share the exact address when you book.",
+  // Owner, 20 Nov 2026: sedan starting from 550 SAR, causeway toll included.
+  fareTable: {
+    heading: "Dammam Airport to Bahrain Taxi Fare",
+    intro: "Per car, not per seat, with the causeway toll included. Picking up in the city instead? Our [Dammam to Bahrain taxi](/dammam-to-bahrain-taxi-service) starts from 500 SAR.",
+    currency: "SAR",
+    direction: "one-way",
+    basis: "starting",
+    confirmedOn: "20 November 2026",
+    rows: [
+      { vehicle: "Sedan (Toyota Camry or similar)", passengers: "1–4", luggage: "3", amount: 550 },
+      { vehicle: "SUV (GMC Yukon or similar)", passengers: "1–6", luggage: "6", amount: null },
+      { vehicle: "Van (Toyota Hiace or similar)", passengers: "6–10", luggage: "8+", amount: null },
+    ],
+    notes: [
+      "Per vehicle, one way. Prices may vary by date, vehicle and availability.",
+      "The fare covers your driver, fuel, the causeway toll and the vehicle's border fees. Your final fare is confirmed on WhatsApp before you book.",
+      "Visas, extra stops and waiting beyond the first free hour are not included. SUV and van fares are quoted on WhatsApp.",
+    ],
+    includedHeading: "What's Included in Your Dammam Airport to Bahrain Fare",
+    includes: CROSS_BORDER_INCLUSIONS,
+    excludes: CROSS_BORDER_EXCLUSIONS,
+  },
   vehicleOptions: [
     { name: "Sedan", capacity: "1–3 passengers", note: "Ideal for solo or couple airport-to-causeway transfers." },
     { name: "SUV", capacity: "1–5 passengers", note: "Extra luggage space for longer Bahrain stays." },
     { name: "Van", capacity: "6–10 passengers", note: "Best for families or groups crossing together." },
   ],
   faqs: [
+    { q: "How much is a taxi from Dammam Airport to Bahrain?", a: "A sedan is starting from 550 SAR, per car, one way, with the causeway toll included. SUV and van fares on WhatsApp." },
     { q: "Can your taxi drive all the way into Manama?", a: "Yes — we drive you door to door, from DMM arrivals through the causeway crossing to your address in Manama or anywhere else in Bahrain, with licensed drivers who make this crossing regularly." },
     { q: "Do I need a visa before arriving at the causeway?", a: "Most nationalities can get a Bahrain eVisa online in advance or a visa-on-arrival at the causeway checkpoint. GCC nationals cross with just their national ID. We recommend confirming your visa route 48 hours before travel." },
     { q: "How long does the causeway crossing itself take?", a: "The 25 km bridge takes about 20–30 minutes to drive, but total crossing time including passport and customs checks is usually 45–75 minutes depending on traffic and time of day." },
@@ -99,7 +122,7 @@ export const dammamAirportToBahrain: RouteData = {
     { href: "/border-crossing", label: "All Border Crossing Routes" },
   ],
   ctaText: "Ready to Cross to Bahrain?",
-  lastReviewed: "August 2026",
+  lastReviewed: "20 November 2026",
   reviews: [],
 };
 
@@ -3107,7 +3130,7 @@ export const makkahToRiyadh: RouteData = {
    - Jubail → Bahrain: leaving Jubail (pickup zones, weekend timing,
      exit/re-entry), the reverse of bahrainToJubail's arrival angle.
    - Dammam → Bahrain: the short causeway ride from the city, priced
-     (sedan from 500 SAR, 550 SAR to Bahrain Airport, toll included;
+     (sedan from 500 SAR, toll included; Dammam Airport pickups 550 SAR on their own page;
      owner, 20 Nov 2026). Khobar and Dhahran pickups carry no price.
    Distances: OSRM road routing, 20 Nov 2026. Door-to-door times add the
    45–75 min causeway crossing (owner-approved ranges, 20 Nov 2026). */
@@ -3381,14 +3404,14 @@ export const dammamToBahrain: RouteData = {
   destinationAreas: ["Manama", "Seef", "Juffair", "Bahrain International Circuit", "Amwaj Islands", "Bahrain International Airport"],
   dropoffInfo: "Any address in Bahrain, including Bahrain International Airport.",
   vehicleOptions: [
-    { name: "Sedan", capacity: "1–4 passengers", note: "Starting from 500 SAR from Dammam; 550 SAR to Bahrain Airport." },
+    { name: "Sedan", capacity: "1–4 passengers", note: "Starting from 500 SAR from Dammam." },
     { name: "SUV", capacity: "1–6 passengers", note: "Fare on WhatsApp." },
     { name: "Van", capacity: "6–10 passengers", note: "Fare on WhatsApp." },
   ],
   faqs: [
     { q: "How far is Dammam from Bahrain?", a: "About **65 km** on average: **52 km** from Al Khobar and **75 km** from central Dammam to Manama." },
     { q: "How long is Dammam to Bahrain by road?", a: "About **1 hour** of driving plus the causeway, usually **1–2 hours** door to door." },
-    { q: "How much is a taxi from Dammam to Bahrain?", a: "A sedan from Dammam is **starting from 500 SAR**, or **550 SAR** to Bahrain Airport. Per car, one way, toll included." },
+    { q: "How much is a taxi from Dammam to Bahrain?", a: "A sedan from Dammam is **starting from 500 SAR**, per car, one way, toll included. From Dammam Airport it starts from **550 SAR**." },
     { q: "How far is Khobar from Bahrain Airport?", a: "About **58 km**, roughly **50 minutes** of driving plus the causeway crossing." },
     { q: "Is the causeway toll included in the fare?", a: "**Yes.** The toll is part of your fare; your driver pays it at the plaza." },
     { q: "Do I need a visa for Bahrain?", a: "GCC citizens cross on their **ID**. Others need a **Bahrain eVisa** or visa on arrival, by nationality. Saudi residents also need an **exit/re-entry visa**." },
@@ -3413,7 +3436,6 @@ export const dammamToBahrain: RouteData = {
     ],
     schemaOffers: [
       { name: "Sedan, Dammam to Bahrain, one-way", price: 500 },
-      { name: "Sedan, Dammam to Bahrain International Airport, one-way", price: 550 },
     ],
     hero: {
       subheading: "Shopping in Seef, dinner in Manama, race day at Sakhir or a flight from Bahrain Airport: one private car from your door in Dammam, Al Khobar or Dhahran.",
@@ -3485,11 +3507,11 @@ export const dammamToBahrain: RouteData = {
       intro: "The fare is **per car**, not per seat, and the **causeway toll is included**. Where you're dropped off sets the price.",
       head: ["Trip", "Car", "Fare"],
       rows: [
-        { trip: "Dammam to Manama, Seef, Juffair or any Bahrain address", vehicle: "Sedan (up to 4)", fare: "Starting from 500 SAR" },
-        { trip: "Dammam to Bahrain International Airport", vehicle: "Sedan (up to 4)", fare: "Starting from 550 SAR" },
+        { trip: "Dammam city to Manama, Seef, Juffair or any Bahrain address", vehicle: "Sedan (up to 4)", fare: "Starting from 500 SAR" },
+        { trip: "Dammam Airport (DMM) to Bahrain", vehicle: "Sedan (up to 4)", fare: "Starting from 550 SAR" },
         { trip: "SUV or van, or more than four passengers", vehicle: "SUV / van", fare: "Get your fare on WhatsApp" },
       ],
-      note: "Per vehicle, one way. Prices may vary by date, vehicle and availability. Your final fare is confirmed before booking. Picking up in Al Khobar or Dhahran? Send us the address and we confirm the fare on WhatsApp.",
+      note: "Per vehicle, one way. Prices may vary by date, vehicle and availability. Your final fare is confirmed before booking. Landing at DMM? See our [Dammam Airport to Bahrain taxi](/dammam-airport-to-bahrain-taxi-service). Picking up in Al Khobar or Dhahran? Send us the address and we confirm the fare on WhatsApp.",
       confirmedOn: "20 November 2026",
     },
     pickupAreas: {
@@ -3518,10 +3540,10 @@ export const dammamToBahrain: RouteData = {
     compare: {
       heading: "City Pickup or Dammam Airport Pickup?",
       intro: "Two different trips. This page is the city one; flying in to Dammam has its own page.",
-      head: ["Pickup", "Distance to Manama", "Door to door", "Best for"],
+      head: ["Pickup", "Distance to Manama", "Door to door", "Sedan fare", "Best for"],
       rows: [
-        { cells: ["Dammam, Al Khobar or Dhahran", "52–75 km", "1–2 hours", "Residents, hotels, offices and day trips"], ours: true },
-        { cells: ["King Fahd International Airport (DMM)", "~105 km", "1.5–2.5 hours", "Arriving flights: see our [Dammam Airport to Bahrain taxi](/dammam-airport-to-bahrain-taxi-service)"] },
+        { cells: ["Dammam, Al Khobar or Dhahran", "52–75 km", "1–2 hours", "From Dammam: starting from 500 SAR", "Residents, hotels, offices and day trips"], ours: true },
+        { cells: ["King Fahd International Airport (DMM)", "~105 km", "1.5–2.5 hours", "Starting from 550 SAR", "Arriving flights: see our [Dammam Airport to Bahrain taxi](/dammam-airport-to-bahrain-taxi-service)"] },
       ],
       note: "Going the other way? Our [Bahrain to Dammam taxi](/bahrain-to-dammam-taxi-service) covers pickups in Manama, Seef and Bahrain Airport.",
     },
@@ -3562,7 +3584,7 @@ export const dammamToBahrain: RouteData = {
     crossLinks: {
       heading: "Other Ways to Bahrain",
       items: [
-        { icon: "plane", title: "Arriving by air?", body: "Landing at King Fahd International Airport? Go straight from arrivals to Bahrain.", href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi" },
+        { icon: "plane", title: "Arriving by air?", body: "Landing at King Fahd International Airport? Go straight from arrivals to Bahrain, starting from 550 SAR.", href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi" },
         { icon: "navigation", title: "The way back", body: "Pickups in Manama, Seef, Juffair or Bahrain Airport, to your door in the Eastern Province.", href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi" },
         { icon: "route", title: "Further up the coast?", body: "Living in Jubail? The same causeway, about 160 km from your door.", href: "/jubail-to-bahrain-taxi-service", label: "Jubail to Bahrain taxi" },
       ],

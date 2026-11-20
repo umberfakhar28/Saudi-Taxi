@@ -248,6 +248,8 @@ export interface RouteData {
     intro?: string;
     currency: RouteCurrency;
     direction: "one-way" | "return";
+    /** "starting": figures read "Starting from 550 SAR". Default: the figure alone. */
+    basis?: "starting" | "fixed";
     confirmedOn: string;
     rows: { vehicle: string; passengers: string; luggage: string; amount: number | null }[];
     notes: string[];
@@ -873,7 +875,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
                           <td data-label="Passengers" style={cellStyle}>{r.passengers}</td>
                           <td data-label="Large bags" style={cellStyle}>{r.luggage}</td>
                           <td data-label={fareTable.direction === "one-way" ? "One-way fare" : "Return fare"} style={{ ...cellStyle, fontWeight: 800, color: "var(--navy)", whiteSpace: "nowrap" }}>
-                            {r.amount !== null ? formatRoutePrice(r.amount, fareTable.currency) : "On request"}
+                            {r.amount !== null ? `${fareTable.basis === "starting" ? "Starting from " : ""}${formatRoutePrice(r.amount, fareTable.currency)}` : "On request"}
                           </td>
                           <td style={cellStyle}>
                             <a

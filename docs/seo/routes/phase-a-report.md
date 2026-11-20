@@ -8,7 +8,8 @@ Branch `dev`, 20 November 2026. Plan and research: [new-routes-plan.md](new-rout
    - Jubail ↔ Bahrain: **~160 km, 2.5–3 h** (was 150 km, 2–2.5 h);
    - Dammam ↔ Bahrain: **~65 km, 1–2 h** (was 1–1.5 h).
 2. **Dammam → Bahrain fare:**
-   - a **sedan** is "Starting from **500 SAR**", and "Starting from **550 SAR**" to Bahrain International Airport;
+   - a **sedan** from Dammam city is "Starting from **500 SAR**";
+   - **Dammam Airport (DMM) → Bahrain** is "Starting from **550 SAR**" (sedan). It is shown on the airport page (English fare table with Offer schema; Arabic price FAQ), and the city pages point to it. This was first misread as a drop-off at Bahrain Airport and corrected the same day;
    - the causeway **toll is included**;
    - **no price is stated for Khobar or Dhahran pickups**, which are told the fare is confirmed on WhatsApp;
    - SUV and van fares are not stated ("Get your fare on WhatsApp").
@@ -22,8 +23,8 @@ Branch `dev`, 20 November 2026. Plan and research: [new-routes-plan.md](new-rout
 | Page | Title (chars) | H1 | Canonical | Primary keyword | Price |
 |---|---|---|---|---|---|
 | /jubail-to-bahrain-taxi-service | Jubail to Bahrain Taxi: Private Car via the Causeway (52) | Jubail to Bahrain Taxi: From Jubail Industrial City to Manama | self, absolute | jubail to bahrain taxi | none ("Fare confirmed before booking") |
-| /dammam-to-bahrain-taxi-service | Dammam to Bahrain Taxi from 500 SAR \| Private Car (49) | Dammam to Bahrain Taxi: Private Car Across the Causeway | self; hreflang en/ar/x-default | dammam to bahrain taxi | Starting from 500 SAR (550 SAR to BAH) |
-| /ar/dammam-to-bahrain-taxi-service | تاكسي الدمام إلى البحرين من 500 ريال \| سيارة خاصة (49) | تاكسي من الدمام إلى البحرين بالسيارة عبر جسر الملك فهد | self; hreflang en/ar/x-default | من الدمام إلى البحرين سيارة | يبدأ من 500 ريال (550 إلى المطار) |
+| /dammam-to-bahrain-taxi-service | Dammam to Bahrain Taxi from 500 SAR \| Private Car (49) | Dammam to Bahrain Taxi: Private Car Across the Causeway | self; hreflang en/ar/x-default | dammam to bahrain taxi | Starting from 500 SAR (Dammam Airport pickups: 550 SAR, on the airport page) |
+| /ar/dammam-to-bahrain-taxi-service | تاكسي الدمام إلى البحرين من 500 ريال \| سيارة خاصة (49) | تاكسي من الدمام إلى البحرين بالسيارة عبر جسر الملك فهد | self; hreflang en/ar/x-default | من الدمام إلى البحرين سيارة | يبدأ من 500 ريال (من مطار الدمام 550) |
 
 **Meta descriptions:** 149, 155 and 147 characters.
 
@@ -38,7 +39,7 @@ Branch `dev`, 20 November 2026. Plan and research: [new-routes-plan.md](new-rout
 
 **Schema per page:**
 - Service with `areaServed` set to both endpoints plus BAH;
-- an Offer **only** on the two priced pages (500 and 550 SAR, SAR);
+- an Offer **only** on the priced pages: the two Dammam city pages (500 SAR), and the Dammam Airport → Bahrain page (550 SAR, through its fare table);
 - FAQPage;
 - BreadcrumbList.
 
