@@ -1,4 +1,5 @@
 import Link from "@/components/IntentLink";
+import { allDistanceRoutes, type DistanceRegion } from "@/lib/distanceRouteData";
 import Image from "next/image";
 import { generatePageMetadata } from "@/lib/seo";
 import { CheckCircleIcon, MapPinIcon, CarIcon, ShieldIcon, ClockIcon, MessageIcon } from "@/components/Icons";
@@ -85,7 +86,7 @@ const borders = [
     {
         name: "Aqabat Al Hamra (Oman)",
         route: "Saudi Arabia ↔ Oman",
-        distance: "~1,100 km from Riyadh",
+        distance: "~1,000 km from Riyadh",
         note: "A longer southern crossing into Oman. GCC nationals typically cross with a national ID; other nationalities should confirm current Oman visa requirements.",
         highlights: ["GCC ID often sufficient for GCC nationals", "Confirm visa requirements for others", "Scenic desert route", "Fuel stations en route"],
     },
@@ -101,6 +102,9 @@ const inclusions = [
     "Comfortable vehicles for long-distance travel",
     "Pick-up from hotel, home or airport",
 ];
+
+/** Which distance pages belong to each crossing card, by the country in its name. */
+const BORDER_REGIONS: Record<string, DistanceRegion> = { Bahrain: "bahrain", Qatar: "qatar", Kuwait: "kuwait", UAE: "uae" };
 
 export default function BorderCrossing() {
     return (
@@ -314,6 +318,21 @@ export default function BorderCrossing() {
                                         <Link href="/riyadh-to-kuwait-taxi-service" className="btn btn-outline-gold btn-sm">Riyadh to Kuwait taxi</Link>
                                     </div>
                                 )}
+                                {/* Distance pages for routes through this crossing. */}
+                                {(() => {
+                                    const region = (Object.entries(BORDER_REGIONS).find(([k]) => border.name.includes(k))?.[1]) as DistanceRegion | undefined;
+                                    const guides = region ? allDistanceRoutes.filter((r) => r.region === region) : [];
+                                    return guides.length > 0 && (
+                                        <p style={{ margin: 'var(--space-3) 0 0', fontSize: 'var(--text-sm)', display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1) var(--space-3)' }}>
+                                            <span style={{ color: 'var(--text-muted)' }}>Distance by road:</span>
+                                            {guides.map((g) => (
+                                                <Link key={g.slug} href={`/distance/${g.slug}`} style={{ color: 'var(--accent)', fontWeight: 700 }}>
+                                                    {g.origin} to {g.destination}
+                                                </Link>
+                                            ))}
+                                        </p>
+                                    );
+                                })()}
                             </div>
                         ))}
                     </div>

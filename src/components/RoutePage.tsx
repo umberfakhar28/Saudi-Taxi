@@ -1,6 +1,7 @@
 import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { serviceSchema, faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { distanceLinkForRoute } from "@/lib/distanceRouteData";
 import {
   CheckCircleIcon, MapPinIcon, CarIcon, ClockIcon, ShieldIcon, MessageIcon, GlobeIcon, ArrowRightIcon,
   PlaneIcon,
@@ -505,6 +506,7 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
   const namedVehicles = routeVehicles(data.vehicleSlugs);
   const fare = headlineFare(data);
   const fareTable = data.fareTable;
+  const distanceGuide = locale === "en" ? distanceLinkForRoute(`/${data.slug}`) : null;
   const sectionsAt = (placement: NonNullable<RouteData["contentSections"]>[number]["placement"]) =>
     (data.contentSections ?? []).filter((s) => s.placement === placement);
   const schemas = [
@@ -698,13 +700,23 @@ export default function RoutePage({ data, locale = 'en' }: { data: RouteData; lo
             <p style={{ color: "var(--text-muted)", fontSize: "var(--text-xs)", marginTop: "var(--space-3)" }}>
               {data.isCrossBorder ? t.glanceNoteBorder : t.glanceNote}
             </p>
+            {/* The distance page for this pair, with a descriptive anchor
+                (docs/seo/distance/distance-audit.md, Step 4). */}
+            {distanceGuide && (
+              <p style={{ marginTop: "var(--space-3)" }}>
+                <Link href={distanceGuide.href} style={{ color: "var(--accent)", fontWeight: 700 }}>
+                  {distanceGuide.label} →
+                </Link>
+              </p>
+            )}
           </div>
         </section>
 
         {/* Quick booking form — directly under the H1, with pickup/drop-off
             pre-filled from this route's own origin/destination and still
-            editable (booking-flow brief §1/§2). */}
-        <section style={{ padding: "var(--space-8) 0 0" }}>
+            editable (booking-flow brief §1/§2). #booking is where the
+            distance pages' "Book Online" buttons land. */}
+        <section id="booking" style={{ padding: "var(--space-8) 0 0", scrollMarginTop: 96 }}>
           <div className="container">
             <QuickBookForm
               locale={locale}
