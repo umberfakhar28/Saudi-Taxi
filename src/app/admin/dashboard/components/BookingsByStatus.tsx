@@ -25,6 +25,7 @@ const STATUS_COLORS: Record<string, string> = {
     confirmed: 'var(--adm-success)',
     completed: 'var(--adm-info)',
     cancelled: 'var(--adm-danger)',
+    past: 'var(--adm-faint)',
 };
 
 const STATUS_HELP: Record<string, string> = {
@@ -32,6 +33,7 @@ const STATUS_HELP: Record<string, string> = {
     confirmed: 'Confirmed with the customer; the trip has not happened yet.',
     completed: 'The trip has been carried out.',
     cancelled: 'Called off — kept for the record, and excluded from revenue.',
+    past: 'The trip date went by while the booking was still pending — never confirmed or completed.',
 };
 
 /**

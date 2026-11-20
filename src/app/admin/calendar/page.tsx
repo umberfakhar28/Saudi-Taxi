@@ -11,6 +11,7 @@ const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> =
     confirmed: { bg: 'var(--adm-success-tint)', text: 'var(--adm-success-ink)', dot: 'var(--adm-success)' },
     completed: { bg: 'var(--adm-info-tint)', text: 'var(--adm-info-ink)', dot: 'var(--adm-info)' },
     cancelled: { bg: 'var(--adm-danger-tint)', text: 'var(--adm-danger-ink)', dot: 'var(--adm-danger)' },
+    past:      { bg: 'var(--adm-tint)', text: 'var(--adm-muted)', dot: 'var(--adm-faint)' },
 };
 
 export default function CalendarPage() {
@@ -140,7 +141,7 @@ export default function CalendarPage() {
                     {/* Status filter */}
                     <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="admin-filter-select" style={{ fontSize: '0.82rem' }}>
                         <option value="all">All Statuses</option>
-                        {['pending', 'confirmed', 'completed', 'cancelled'].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+                        {['pending', 'confirmed', 'completed', 'cancelled', 'past'].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                     </select>
                     {/* Service filter */}
                     <select value={serviceFilter} onChange={e => setServiceFilter(e.target.value)} className="admin-filter-select" style={{ fontSize: '0.82rem' }}>

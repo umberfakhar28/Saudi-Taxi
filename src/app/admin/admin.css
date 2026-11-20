@@ -317,6 +317,7 @@
 .badge-confirmed { background: var(--adm-success-tint); color: var(--adm-success-ink); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
 .badge-completed { background: var(--adm-info-tint); color: var(--adm-info-ink); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
 .badge-cancelled { background: var(--adm-danger-tint); color: var(--adm-danger-ink); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
+.badge-past { background: var(--adm-tint); color: var(--adm-muted); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size:0.72rem; font-weight:700; }
 
 /* ── Icon Buttons ── */
 .admin-icon-btn {
@@ -611,7 +612,7 @@
 /* Amounts line up when every digit is the same width. */
 .admin-table td, .admin-stat-card { font-variant-numeric: tabular-nums; }
 /* Status badges: one shape, the status colours from the tokens. */
-.badge-pending, .badge-confirmed, .badge-completed, .badge-cancelled, .badge-paid, .badge-unpaid, .badge-overdue, .badge-sent {
+.badge-pending, .badge-confirmed, .badge-completed, .badge-cancelled, .badge-past, .badge-paid, .badge-unpaid, .badge-overdue, .badge-sent {
     display: inline-block; padding: 0.28rem 0.75rem; border-radius: 9999px;
     font-size: 0.72rem; font-weight: 700; letter-spacing: 0.01em; white-space: nowrap;
 }
@@ -619,3 +620,4 @@
 .badge-confirmed, .badge-paid { background: var(--adm-success-tint); color: var(--adm-success-ink); }
 .badge-completed, .badge-sent { background: var(--adm-info-tint); color: var(--adm-info-ink); }
 .badge-cancelled, .badge-overdue { background: var(--adm-danger-tint); color: var(--adm-danger-ink); }
+.badge-past { background: var(--adm-tint); color: var(--adm-muted); }

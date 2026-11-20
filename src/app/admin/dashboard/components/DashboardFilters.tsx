@@ -47,6 +47,7 @@ export default function DashboardFilters() {
                     <option value="confirmed">Confirmed</option>
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
+                    <option value="past">Past</option>
                 </select>
             </div>
         </div>

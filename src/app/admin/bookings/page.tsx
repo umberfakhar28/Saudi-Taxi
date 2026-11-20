@@ -48,7 +48,9 @@ interface BookingRow {
     quotes?: QuoteRecord[] | null;
 }
 
-const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
+// 'past': a pending booking whose trip date went by without being confirmed
+// or completed (migration 012, 20 Nov 2026). Setting it sends nothing.
+const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled', 'past'];
 const PAYMENT_OPTIONS = ['all', 'paid', 'unpaid', 'partially_paid'];
 
 function BookingsPageInner() {
@@ -878,7 +880,7 @@ function BookingsPageInner() {
     };
 
     // UI Helpers
-    const statusClass = (s: string) => ({ pending: 'badge-pending', confirmed: 'badge-confirmed', completed: 'badge-completed', cancelled: 'badge-cancelled' } as Record<string, string>)[s] ?? 'badge-pending';
+    const statusClass = (s: string) => ({ pending: 'badge-pending', confirmed: 'badge-confirmed', completed: 'badge-completed', cancelled: 'badge-cancelled', past: 'badge-past' } as Record<string, string>)[s] ?? 'badge-pending';
     
     const paymentStatusColor = (s: string) => ({ paid: 'var(--adm-success)', unpaid: 'var(--adm-danger)', partially_paid: 'var(--adm-warning)', no_invoice: 'var(--adm-faint)' } as Record<string, string>)[s] ?? 'var(--adm-faint)';
 
@@ -1139,6 +1141,7 @@ function BookingsPageInner() {
                             <option value="confirmed">Mark Confirmed</option>
                             <option value="completed">Mark Completed</option>
                             <option value="cancelled">Mark Cancelled</option>
+                            <option value="past">Mark Past</option>
                         </select>
                         )}
                         <button onClick={() => exportCSV(processedBookings.filter(b => selectedIds.has(b.id)))} className="admin-btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem', background: '#fff', borderColor: 'var(--adm-info-line)', color: 'var(--adm-info-ink)' }}>Export Selected</button>
@@ -1413,6 +1416,7 @@ function BookingsPageInner() {
                             <button onClick={() => updateStatus(b.id, 'confirmed')} className="dropdown-item text-blue-600" disabled={b.status === 'confirmed'}>Confirm Booking</button>
                             <button onClick={() => updateStatus(b.id, 'completed')} className="dropdown-item text-indigo-600" disabled={b.status === 'completed'}>Mark Completed</button>
                             <button onClick={() => updateStatus(b.id, 'cancelled')} className="dropdown-item text-red-600" disabled={b.status === 'cancelled'}>Cancel Booking</button>
+                            <button onClick={() => updateStatus(b.id, 'past')} className="dropdown-item" disabled={b.status === 'past'}>Mark Past</button>
                         </>
                     )}
 

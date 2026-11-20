@@ -109,6 +109,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     const confirmedBookings = bookingsList.filter(b => b.status === 'confirmed').length;
     const completedBookings = bookingsList.filter(b => b.status === 'completed').length;
     const cancelledBookings = bookingsList.filter(b => b.status === 'cancelled').length;
+    const pastBookings = bookingsList.filter(b => b.status === 'past').length;
 
     const paidInvoices = invoicesList.filter(i => i.status === 'paid');
     const unpaidInvoices = invoicesList.filter(i => i.status === 'unpaid' || i.status === 'partially_paid');
@@ -189,6 +190,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         { status: 'confirmed', count: confirmedBookings, revenueByCurrency: revenueFor('confirmed') },
         { status: 'completed', count: completedBookings, revenueByCurrency: revenueFor('completed') },
         { status: 'cancelled', count: cancelledBookings, revenueByCurrency: revenueFor('cancelled') },
+        { status: 'past', count: pastBookings, revenueByCurrency: revenueFor('past') },
     ];
 
     // Real trend buckets from the 6-month window above — replaces the old
