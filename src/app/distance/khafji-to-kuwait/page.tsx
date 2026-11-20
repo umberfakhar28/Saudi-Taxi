@@ -1,14 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Khafji to Kuwait Distance: 125 km, 1.5 hrs via Nuwaiseeb",
-  brandSuffix: false,
-  description: "Khafji is about 15 km from the Al Nuwaiseeb border and about 125 km from Kuwait City by road: 1.5 hours of driving, 2 to 3 hours with the border.",
-  path: "/distance/khafji-to-kuwait",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["khafji-to-kuwait"];
+
+export const metadata = distanceMetadata(data);
 
 export default function KhafjiToKuwaitDistance() {
-  return <DistancePage data={distanceRoutes["khafji-to-kuwait"]} />;
+  return <DistancePage data={data} />;
 }

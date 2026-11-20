@@ -1,511 +1,397 @@
-'use client';
-
-import { useState } from 'react';
-import Link from '@/components/IntentLink';
-import Image from 'next/image';
-import { faqSchema, breadcrumbSchema, jsonLd } from '@/lib/jsonld';
+import { Fragment } from "react";
+import Link from "@/components/IntentLink";
 import {
-  MapPinIcon, ClockIcon, GlobeIcon, ArrowRightIcon, MountainIcon,
-  CheckCircleIcon, MessageIcon, ChevronDownIcon, CalendarIcon, CarIcon,
-} from '@/components/Icons';
-import { transferQuoteWhatsAppLink, waLink } from '@/lib/contact';
-import type { DistanceRouteData } from '@/lib/distanceRouteData';
-import { distanceRoutes } from '@/lib/distanceRouteData';
-import routeStyles from './RoutePage.module.css';
-import faqStyles from './FAQSection.module.css';
+  MapPin, Clock, Landmark, Tag, Info, ChevronDown, ArrowRight, CircleCheck, Route as RouteIcon,
+  Coffee, Car, ShieldCheck, House, Luggage, Fuel, MessageCircle, Users, Briefcase, Plane, FileCheck,
+  BadgeCheck, CalendarCheck, Navigation, Headset, CreditCard, Banknote, Mail, Receipt, Building2,
+  Languages, Anchor, type LucideIcon,
+} from "lucide-react";
+import { WhatsAppIcon } from "@/components/Icons";
+import { faqSchema, breadcrumbSchema, jsonLd } from "@/lib/jsonld";
+import { waLink } from "@/lib/contact";
+import { distanceRoutes, kmLabel, type DistanceRouteData } from "@/lib/distanceRouteData";
+import { distanceFare, fillFare } from "@/lib/distanceFare";
+import type { LandingIcon } from "@/lib/routeLanding";
+import s from "./RouteLanding.module.css";
+import d from "./DistancePage.module.css";
 
-function bookingHref(from: string, to: string): string {
-  const params = new URLSearchParams({ mode: 'transfers', from, to });
-  return `/book-online?${params.toString()}`;
+const ICONS: Record<LandingIcon, LucideIcon> = {
+  mapPin: MapPin, clock: Clock, landmark: Landmark, route: RouteIcon, coffee: Coffee, tag: Tag,
+  car: Car, shieldCheck: ShieldCheck, home: House, luggage: Luggage, fuel: Fuel,
+  messageCircle: MessageCircle, users: Users, briefcase: Briefcase, plane: Plane,
+  fileCheck: FileCheck, badgeCheck: BadgeCheck, calendarCheck: CalendarCheck,
+  navigation: Navigation, headset: Headset, creditCard: CreditCard, banknote: Banknote,
+  mail: Mail, receipt: Receipt, building: Building2, languages: Languages, anchor: Anchor,
+};
+
+function Icon({ name, size = 20, chip }: { name: LandingIcon; size?: number; chip?: boolean }) {
+  const Svg = ICONS[name];
+  return (
+    <span className={chip ? s.chip : s.icon} aria-hidden="true">
+      <Svg size={size} strokeWidth={2} aria-hidden="true" focusable="false" />
+    </span>
+  );
 }
 
-function DistanceFAQAccordion({ faqs }: { faqs: { q: string; a: string }[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+/** **bold** and [anchor](/path), as on the route pages. */
+const INLINE = /\*\*(.+?)\*\*|\[([^\]]+)\]\((\/[^)\s]*)\)/g;
+function rich(text: string): React.ReactNode {
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(INLINE)) {
+    const at = m.index ?? 0;
+    if (at > last) out.push(text.slice(last, at));
+    out.push(m[1] !== undefined ? <strong key={at} className={s.em}>{m[1]}</strong> : <Link key={at} href={m[3]}>{m[2]}</Link>);
+    last = at + m[0].length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+const plain = (text: string) => text.replace(INLINE, (_, bold, anchor) => bold ?? anchor);
 
+function Head({ eyebrow, title, intro }: { eyebrow: string; title: string; intro?: string }) {
   return (
-    <div className={faqStyles.accordion}>
-      {faqs.map((f, i) => {
-        const isOpen = openIndex === i;
-        return (
-          <div key={i} className={`${faqStyles.accordionItem} ${isOpen ? faqStyles.accordionItemOpen : ''}`}>
-            <button
-              className={faqStyles.accordionTrigger}
-              onClick={() => setOpenIndex(isOpen ? null : i)}
-              aria-expanded={isOpen}
-            >
-              <span className={faqStyles.accordionQuestion}>{f.q}</span>
-              <ChevronDownIcon size={20} className={`${faqStyles.accordionIcon} ${isOpen ? faqStyles.accordionIconOpen : ''}`} />
-            </button>
-            <div className={`${faqStyles.accordionBody} ${isOpen ? faqStyles.accordionBodyOpen : ''}`} style={isOpen ? { maxHeight: 400 } : undefined}>
-              <p className={faqStyles.accordionAnswer}>{f.a}</p>
-            </div>
-          </div>
-        );
-      })}
+    <div className={`${s.head} ${s.headCenter}`}>
+      <span className={s.eyebrow}>{eyebrow}</span>
+      <h2 className={s.title}>{title}</h2>
+      {intro && <p className={`${s.sub} ${s.inlineLink}`}>{rich(intro)}</p>}
     </div>
   );
 }
 
+const bookOnlineFallback = (from: string, to: string) =>
+  `/book-online?${new URLSearchParams({ mode: "transfers", from, to }).toString()}`;
+
+/**
+ * The /distance/[pair] template (docs/seo/distance/distance-audit.md):
+ * answer first, booking box beside it, then the reverse direction, the
+ * road, the border, ways to travel, tips, FAQ and related routes.
+ *
+ * Built from one record per pair (lib/distanceRouteData.ts); the fare
+ * comes from the route page's own data (lib/distanceFare.ts). Same design
+ * tokens and section styles as the redesigned route pages. A server
+ * component: the FAQ uses <details>, so no client JavaScript is needed.
+ */
 export default function DistancePage({ data }: { data: DistanceRouteData }) {
+  const A = data.origin;
+  const B = data.destination;
+  const f = (t: string) => fillFare(t, data);
+  const fare = distanceFare(data);
+  const km = kmLabel(data);
+  const message = `Hi, I want to book ${A} to ${B}`;
+  const bookHref = data.routeForward ? `${data.routeForward.href}#booking` : bookOnlineFallback(A, B);
+  const reverseHref = data.routeReverse?.href ?? bookOnlineFallback(B, A);
+
+  const answer = `The road distance from ${A} to ${B} is about **${data.km.toLocaleString("en-US")} km**, around **${data.drive}** by car${data.border ? `, plus border time at the ${data.border.name}` : ""}.`;
+
+  const faqs = [...data.faqs, ...(data.arabic?.faqs ?? [])].map((x) => ({ q: f(x.q), a: f(x.a) }));
   const schemas = [
-    faqSchema(data.faqs.map((f) => ({ question: f.q, answer: f.a }))),
+    faqSchema(faqs.map((x) => ({ question: x.q, answer: plain(x.a) }))),
     breadcrumbSchema([
-      { name: 'Home', path: '/' },
-      { name: 'Distance Guides', path: '/distance' },
+      { name: "Home", path: "/" },
+      { name: "Distance Guides", path: "/distance" },
       { name: data.breadcrumbLabel, path: `/distance/${data.slug}` },
     ]),
   ];
 
-  // Same message as the route page for this corridor, naming the journey, so
-  // the team knows which trip the customer means without asking.
-  const whatsApp = transferQuoteWhatsAppLink(data.origin, data.destination);
+  const related = data.relatedDistanceSlugs.map((x) => distanceRoutes[x]).filter((x): x is DistanceRouteData => Boolean(x));
+  const routeCards = [data.routeForward, data.routeReverse].filter((x): x is { href: string; label: string } => Boolean(x));
 
-  const relatedDistance = data.relatedDistanceSlugs
-    .map((slug) => distanceRoutes[slug])
-    .filter((r): r is DistanceRouteData => Boolean(r));
+  /* Sections after the hero, in order. Backgrounds alternate by position. */
+  const sections: { key: string; render: (bg: string) => React.ReactNode }[] = [
+    {
+      key: "reverse",
+      render: (bg) => (
+        <section className={`section ${bg}`}>
+          <div className="container">
+            <div className={d.reverse}>
+              <div>
+                <span className={s.eyebrow}>Both directions</span>
+                <h2 className={s.title}>{B} to {A} Distance by Road</h2>
+                <p className={`${s.lead} ${s.inlineLink}`}>{rich(f(data.reverse))}</p>
+              </div>
+              <Link href={reverseHref} className={`btn btn-primary ${d.reverseCta}`}>
+                {data.routeReverse?.label ?? `Book ${B} to ${A}`} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    ...(data.table
+      ? [{
+          key: "table",
+          render: (bg: string) => (
+            <section className={`section ${bg}`}>
+              <div className="container">
+                <Head eyebrow="Compare" title={data.table!.heading} intro={data.table!.intro} />
+                <div className={d.tableWrap}>
+                  <table className={d.table}>
+                    <thead><tr>{data.table!.head.map((h) => <th key={h} scope="col">{h}</th>)}</tr></thead>
+                    <tbody>
+                      {data.table!.rows.map((r) => (
+                        <tr key={r[0]}>{r.map((c, i) => (i === 0 ? <th key={i} scope="row">{c}</th> : <td key={i}>{f(c)}</td>))}</tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {data.table!.note && <p className={s.smallNote}>{data.table!.note}</p>}
+              </div>
+            </section>
+          ),
+        }]
+      : []),
+    {
+      key: "route",
+      render: (bg) => (
+        <section className={`section ${bg}`}>
+          <div className="container">
+            <div className={s.head}>
+              <span className={s.eyebrow}>Route &amp; highways</span>
+              <h2 className={s.title}>The Road from {A} to {B}</h2>
+              <p className={s.sub}>{data.routeIntro}</p>
+            </div>
+            <div className={s.timelineSolo}>
+              <ol className={s.timeline}>
+                {data.steps.map((st, i) => (
+                  <li key={st.title} className={s.timelineStep}>
+                    <span className={`${s.chip} ${d.stepNo}`} aria-hidden="true">{i + 1}</span>
+                    <div>
+                      <h3 className={s.timelineTitle}>{st.title}</h3>
+                      <p className={s.timelineBody}>{st.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <p className={d.highways}><Icon name="route" size={18} /> <span><strong>Main roads:</strong> {data.highways}</span></p>
+            {data.altRoute && (
+              <p className={s.callout} role="note"><span className={s.icon} aria-hidden="true"><Info size={20} aria-hidden="true" /></span>{data.altRoute}</p>
+            )}
+          </div>
+        </section>
+      ),
+    },
+    ...(data.border
+      ? [{
+          key: "border",
+          render: (bg: string) => {
+            const b = data.border!;
+            return (
+              <section className={`section ${bg}`}>
+                <div className="container">
+                  <Head eyebrow="Border crossing" title={`Crossing at the ${b.name}`} intro={b.posts} />
+                  <div className={s.crossingGrid}>
+                    <div className={s.card}>
+                      <div className={s.cardHead}><Icon name="clock" chip /><h3>Waiting time</h3></div>
+                      <p className={s.inlineLink}>{rich(b.wait)}</p>
+                      <p className={d.cardNote}>You stay in the same car at both posts; your driver handles the vehicle&apos;s papers and fees.</p>
+                    </div>
+                    <div className={s.card}>
+                      <div className={s.cardHead}><Icon name="fileCheck" chip /><h3>Documents</h3></div>
+                      <ul className={s.checkList}>
+                        {b.documents.map((x) => (
+                          <li key={x}><span className={s.icon} aria-hidden="true"><CircleCheck size={18} aria-hidden="true" /></span> {x}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className={s.callout} role="note"><span className={s.icon} aria-hidden="true"><Info size={20} aria-hidden="true" /></span>Entry rules change. Please verify with official authorities before travel.</p>
+                  <div className={s.linkRow}>
+                    {b.links.map((x) => <Link key={x.href} href={x.href} className="btn btn-outline-gold btn-sm">{x.label}</Link>)}
+                  </div>
+                </div>
+              </section>
+            );
+          },
+        }]
+      : []),
+    {
+      key: "options",
+      render: (bg) => (
+        <section className={`section ${bg}`}>
+          <div className="container">
+            <Head eyebrow="Compare options" title={`Ways to Travel from ${A} to ${B}`} />
+            <table className={s.compare}>
+              <thead><tr>{["Option", "Door to door", "Time", "Connections", "Best for"].map((h) => <th key={h} scope="col">{h}</th>)}</tr></thead>
+              <tbody>
+                {data.options.map((r) => (
+                  <tr key={r.option} className={r.recommended ? s.compareOurs : undefined}>
+                    <th scope="row">{r.option}{r.recommended && <span className={s.recommended}>Recommended</span>}</th>
+                    <td data-label="Door to door">
+                      <span className={r.doorToDoor ? s.yes : s.no} aria-hidden="true">{r.doorToDoor ? "✔" : "✖"}</span>
+                      <span className="sr-only">{r.doorToDoor ? "Yes" : "No"}</span>
+                    </td>
+                    <td data-label="Time">{r.time}</td>
+                    <td data-label="Connections">{r.transfers}</td>
+                    <td data-label="Best for">{r.bestFor}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: "tips",
+      render: (bg) => (
+        <section className={`section ${bg}`}>
+          <div className="container">
+            <Head eyebrow="Travel tips" title={`Tips for the ${A} to ${B} Drive`} />
+            <div className={`${s.includedGrid} ${data.tips.length === 5 ? d.tipsFive : ""}`}>
+              {data.tips.map((t) => (
+                <div key={t.title} className={s.revealItem}>
+                  <div className={s.includedItem}>
+                    <Icon name={t.icon} chip />
+                    <h3>{t.title}</h3>
+                    <p>{t.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: "faq",
+      render: (bg) => (
+        <section className={`section ${bg}`}>
+          <div className="container">
+            <Head eyebrow="FAQ" title={`${A} to ${B} Distance: Your Questions Answered`} />
+            <div className={s.faqList}>
+              {faqs.map((x, i) => {
+                const ar = /[؀-ۿ]/.test(x.q);
+                return (
+                  <details key={x.q} className={s.faq} open={i === 0} {...(ar ? { lang: "ar", dir: "rtl" } : {})}>
+                    <summary>
+                      <h3>{x.q}</h3>
+                      <span className={`${s.icon} ${s.faqChevron}`} aria-hidden="true"><ChevronDown size={18} aria-hidden="true" /></span>
+                    </summary>
+                    <p className={s.inlineLink}>{rich(x.a)}</p>
+                  </details>
+                );
+              })}
+            </div>
+            <p className={s.reviewed}>
+              Distances checked against map routing on {new Date(data.verified).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}.
+            </p>
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: "related",
+      render: (bg) => (
+        <section className={`section ${bg}`}>
+          <div className="container">
+            <Head eyebrow="More routes" title="Book or Explore More Routes" />
+            <div className={s.routeGrid}>
+              {routeCards.map((r) => (
+                <Link key={r.href} href={r.href} className={s.routeCard}>
+                  <span className={s.routeTag}>Private taxi</span>
+                  <h3 className={s.routeName}>{r.label}</h3>
+                  <span className={s.viewLink}>View route and fares <ArrowRight size={14} aria-hidden="true" /></span>
+                </Link>
+              ))}
+              {related.map((r) => (
+                <Link key={r.slug} href={`/distance/${r.slug}`} className={s.routeCard}>
+                  <span className={s.routeTag}>Distance · {kmLabel(r)}</span>
+                  <h3 className={s.routeName}>
+                    {r.origin} <ArrowRight size={16} aria-hidden="true" className={s.routeArrow} /><span className="sr-only">to</span> {r.destination}
+                  </h3>
+                  <span className={s.viewLink}>{r.origin} to {r.destination} distance <ArrowRight size={14} aria-hidden="true" /></span>
+                </Link>
+              ))}
+            </div>
+            <div className={s.servicesRow}>
+              <h3>Related pages</h3>
+              {data.relatedLinks.map((x) => <Link key={x.href} href={x.href} className="btn btn-outline-gold btn-sm">{x.label}</Link>)}
+              <Link href="/distance" className="btn btn-outline-gold btn-sm">All distance guides</Link>
+            </div>
+          </div>
+        </section>
+      ),
+    },
+  ];
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schemas) }} />
-      <main data-page-template="distance">
-        {/* Hero — route, distance, time and the primary CTA are all above
-            the fold, per the brief's above-the-fold requirement. */}
-        <section className="page-hero">
-          <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-            <span className="section-eyebrow">{data.eyebrow}</span>
-            <h1>{data.h1}</h1>
-            {/* The answer, first. The intro below describes what the page
-                covers; someone who searched "bahrain to riyadh distance"
-                should not have to read past that to get the number. Built
-                only from roadDistance and driveTime, the same fields the
-                facts strip shows, so it can never disagree with them. */}
-            <p data-distance-answer style={{ fontWeight: 600 }}>
-              {data.origin} to {data.destination} is {data.roadDistance}, and the trip takes {data.driveTime}.
-            </p>
-            {data.answerBox && (
-              <div
-                style={{ position: 'relative', zIndex: 1, maxWidth: 760, margin: 'var(--space-6) auto 0', padding: 'var(--space-5) var(--space-6)', background: 'var(--white)', border: '1px solid var(--line)', borderTop: '3px solid var(--gold)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}
-              >
-                <dl style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-4)', margin: 0, textAlign: 'center' }}>
-                  {data.answerBox.items.map((it) => (
-                    <div key={it.label}>
-                      <dt style={{ fontSize: 'var(--text-xs)', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>{it.label}</dt>
-                      <dd style={{ margin: '4px 0 0', fontWeight: 800, color: 'var(--navy)', fontSize: 'var(--text-lg)' }}>{it.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-                {data.answerBox.arabic && (
-                  <p lang="ar" dir="rtl" style={{ margin: 'var(--space-4) auto 0', fontSize: 'var(--text-base)', color: 'var(--text-body)', animation: 'none' }}>
-                    {data.answerBox.arabic}
-                  </p>
-                )}
-              </div>
-            )}
-            <p>{data.intro}</p>
-            <div className="breadcrumb">
-              <Link href="/">Home</Link> / <Link href="/distance">Distance Guides</Link> / <span>{data.breadcrumbLabel}</span>
-            </div>
-            <div style={{ marginTop: 'var(--space-6)', display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-              <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary btn-lg">
-                Get a Private Transfer Quote
-              </Link>
-              <a data-wa-cta="hero" href={whatsApp} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
-                <MessageIcon size={18} /> Ask on WhatsApp
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Route facts strip */}
-        <section style={{ background: 'var(--bg-dark)', padding: '1.75rem 0' }}>
+      <main data-page-template="distance" className={s.page}>
+        {/* Hero: the answer first, the booking box beside it (under it on a
+            phone, before the stat tiles). */}
+        <section className={s.hero}>
           <div className="container">
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-6)', justifyContent: 'center', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--on-dark)', fontWeight: 700, fontSize: 'var(--text-sm)' }}>
-                <MapPinIcon size={16} /> {data.roadDistance}
+            <nav aria-label="Breadcrumb" className={`breadcrumb ${s.breadcrumb}`}>
+              <ol>
+                <li><Link href="/">Home</Link></li>
+                <li><Link href="/distance">Distance Guides</Link></li>
+                <li aria-current="page">{data.breadcrumbLabel}</li>
+              </ol>
+            </nav>
+            <div className={d.heroGrid}>
+              <div className={d.heroText}>
+                <span className={s.heroEyebrow}>Distance guide</span>
+                <h1 className={s.heroTitle}>{A} to {B} Distance by Road</h1>
+                <p className={d.answer} data-distance-answer>{rich(answer)}</p>
+                {data.arabic && <p className={d.arabic} lang="ar" dir="rtl">{f(data.arabic.answer)}</p>}
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--on-dark)', fontWeight: 700, fontSize: 'var(--text-sm)' }}>
-                <ClockIcon size={16} /> {data.driveTime}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--on-dark)', fontWeight: 700, fontSize: 'var(--text-sm)' }}>
-                <GlobeIcon size={16} /> {data.routeType}
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Next step toward the commercial route page for this corridor.
-            Placed immediately under the facts strip because the facts are
-            what the visitor came for: once they have the distance and the
-            drive time, this is the moment they either act or leave, and
-            until now the page gave them nothing to act on.
-
-            Always the same direction the page is about — see routeHref's
-            note in distanceRouteData. A page with no same-direction route
-            page renders nothing here rather than offering the return leg,
-            which is a different journey.
-
-            Styling follows RoutePage's reverse-route callout, the site's
-            established "next step" pattern, so it needs no new CSS and
-            wraps onto two lines on a phone rather than overflowing. */}
-        {/* Booking box: the commercial next step, with the fare, for the
-            pages that set one (the Kuwait corridor first). */}
-        {data.bookingBox && (
-          <section style={{ padding: 'var(--space-8) 0 0' }}>
-            <div className="container">
-              <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-5)', flexWrap: 'wrap', padding: 'var(--space-6) var(--space-8)', borderInlineStart: '4px solid var(--gold)' }}>
-                <div style={{ flex: '1 1 320px' }}>
-                  <h2 style={{ fontSize: 'var(--text-2xl)', margin: '0 0 var(--space-2)', color: 'var(--navy)' }}>{data.bookingBox.title}</h2>
-                  <p style={{ margin: 0, color: 'var(--text-body)' }}>{data.bookingBox.text}</p>
-                  {data.bookingBox.links && (
-                    <p style={{ margin: 'var(--space-3) 0 0', display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
-                      {data.bookingBox.links.map((l) => (
-                        <Link key={l.href} href={l.href} style={{ color: 'var(--accent)', fontWeight: 700 }}>{l.label} →</Link>
-                      ))}
-                    </p>
-                  )}
-                </div>
-                <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
-                  <a data-wa-cta="booking-box" href={waLink(data.bookingBox.whatsappMessage)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                    <MessageIcon size={16} /> WhatsApp
+              <aside className={d.booking} aria-label={`Book a taxi from ${A} to ${B}`}>
+                <h2 className={d.bookingTitle}>Need a ride from {A} to {B}?</h2>
+                <p className={d.bookingText}>
+                  {fare ? <>Private taxi <strong>from {fare.en}</strong>, door to door.</> : <>Private taxi, door to door. We confirm your fare on WhatsApp.</>}
+                </p>
+                <div className={d.bookingButtons}>
+                  <a href={waLink(message)} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer" data-wa-cta="distance-booking-box">
+                    <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={16} /></span> Book on WhatsApp
                   </a>
-                  <Link href={data.bookingBox.href} className="btn btn-primary">{data.bookingBox.hrefLabel}</Link>
+                  <Link href={bookHref} className="btn btn-primary">Book Online</Link>
                 </div>
-              </div>
-            </div>
-          </section>
-        )}
+                <Link href={reverseHref} className={d.reverseLink}>
+                  Travelling {B} to {A}? <ArrowRight size={14} aria-hidden="true" />
+                </Link>
+              </aside>
 
-        {data.routeHref && !data.bookingBox && (
-          <section style={{ padding: 'var(--space-8) 0 0' }}>
-            <div className="container">
-              <Link
-                href={data.routeHref}
-                className="card"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)', flexWrap: 'wrap', padding: 'var(--space-5) var(--space-8)' }}
-              >
-                <span style={{ color: 'var(--text-body)', fontSize: 'var(--text-base)' }}>
-                  Travelling this route? Explore private transfer options and fares for{' '}
-                  <strong style={{ color: 'var(--accent)' }}>{data.origin} to {data.destination}</strong>.
-                </span>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--accent)', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                  View transfer options <ArrowRightIcon size={16} />
-                </span>
-              </Link>
-            </div>
-          </section>
-        )}
-
-        {data.heroImage && (
-          <section style={{ padding: 'var(--space-8) 0 0' }}>
-            <div className="container">
-              <div style={{ position: 'relative', width: '100%', height: 360, borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-xl)' }}>
-                <Image
-                  src={data.heroImage}
-                  alt={data.heroImageAlt ?? `${data.origin} to ${data.destination} route`}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                />
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Journey path — same visual language as RoutePage.tsx's corridor
-            chip chain, standing in for a map (no mapping dependency exists
-            in the project — see RoutePage.tsx's own note on this). */}
-        <section style={{ padding: 'var(--space-8) 0 0' }}>
-          <div className="container">
-            <div className={routeStyles.journeyPath}>
-              <span className={routeStyles.journeyPoint}>{data.origin}</span>
-              <ArrowRightIcon size={18} className={routeStyles.journeyArrow} />
-              <span className={`${routeStyles.journeyPoint} ${routeStyles.journeyDestination}`}>{data.destination}</span>
-            </div>
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 'var(--text-xs)', marginTop: 'var(--space-3)' }}>
-              Route shown for orientation — road distance and drive time above reflect the actual driving route, not a straight line.
-            </p>
-          </div>
-        </section>
-
-        {/* Route Overview */}
-        <section className="section-lg">
-          <div className="container">
-            <div className="grid-60-40">
-              <div>
-                <span className="section-eyebrow">Route Overview</span>
-                <h2 className="section-title">{data.origin} to {data.destination}: What the Journey Involves</h2>
-                {data.overviewParagraphs.map((p, i) => (
-                  <p key={i} style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>{p}</p>
-                ))}
-              </div>
-              <div className="card">
-                <div className="card-icon"><MountainIcon size={22} /></div>
-                <h3>Route Characteristics</h3>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
-                  {data.routeCharacteristics.map((c, i) => (
-                    <li key={i} style={{ color: 'var(--text-body)', fontSize: 'var(--text-sm)', display: 'flex', gap: 'var(--space-2)', alignItems: 'flex-start' }}>
-                      <span style={{ color: 'var(--navy)', flexShrink: 0 }}>›</span> {c}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Distance & Driving Time */}
-        <section className="section" style={{ background: 'var(--bg-subtle)' }}>
-          <div className="container">
-            <div className="section-header centered">
-              <span className="section-eyebrow">Distance & Driving Time</span>
-              <h2 className="section-title">Road Distance vs. Driving Time</h2>
-            </div>
-            <div className="grid-2">
-              <div className="card">
-                <div className="card-icon"><MapPinIcon size={22} /></div>
-                <h3>Road Distance</h3>
-                <p style={{ color: 'var(--navy)', fontWeight: 700, fontSize: 'var(--text-xl)' }}>{data.roadDistance}</p>
-                {data.straightLineDistance && (
-                  <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
-                    Straight-line distance: {data.straightLineDistance}. The gap between the two figures reflects the actual road network, not an inefficient route.
-                  </p>
-                )}
-              </div>
-              <div className="card">
-                <div className="card-icon"><ClockIcon size={22} /></div>
-                <h3>Estimated Drive Time</h3>
-                <p style={{ color: 'var(--navy)', fontWeight: 700, fontSize: 'var(--text-xl)' }}>{data.driveTime}</p>
-                <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>Pure driving estimate — add time for rest, meal and prayer stops.</p>
-              </div>
-            </div>
-            <div style={{ marginTop: 'var(--space-8)' }}>
-              <h3 style={{ marginBottom: 'var(--space-4)' }}>What Affects Travel Time on This Route</h3>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                {data.factorsAffectingTime.map((f, i) => (
-                  <li key={i} style={{ color: 'var(--text-body)', display: 'flex', gap: 'var(--space-3)', alignItems: 'flex-start' }}>
-                    <CheckCircleIcon size={18} style={{ color: 'var(--success)', flexShrink: 0, marginTop: 3 }} /> {f}
-                  </li>
-                ))}
+              <ul className={d.tiles}>
+                <li>
+                  <span className={d.tileLabel}><MapPin size={14} aria-hidden="true" /> Distance</span>
+                  <span className={d.tileValue}>{km}</span>
+                </li>
+                <li>
+                  <span className={d.tileLabel}><Clock size={14} aria-hidden="true" /> Driving time</span>
+                  <span className={d.tileValue}>{data.drive.replace(/^about /, "~")}</span>
+                  {data.withBorder && <span className={d.tileSub}>{data.withBorder} with the border</span>}
+                </li>
+                <li>
+                  <span className={d.tileLabel}><Landmark size={14} aria-hidden="true" /> Border</span>
+                  <span className={d.tileValue}>{data.border ? data.border.name : "None"}</span>
+                </li>
+                <li>
+                  <span className={d.tileLabel}><Tag size={14} aria-hidden="true" /> Private taxi</span>
+                  <span className={d.tileValue}>{fare ? `From ${fare.en}` : "Quote on WhatsApp"}</span>
+                </li>
               </ul>
             </div>
           </div>
         </section>
 
-        {/* The same corridor in the other direction, as its own H2, for
-            the searches that name it the other way round. */}
-        {data.reverse && (
-          <section className="section">
-            <div className="container" style={{ maxWidth: 860 }}>
-              <span className="section-eyebrow">Reverse direction</span>
-              <h2 className="section-title">{data.reverse.heading}</h2>
-              {data.reverse.paragraphs.map((p, i) => (
-                <p key={i} style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-5)' }}>{p}</p>
-              ))}
-              <Link href={data.reverse.link.href} className="btn btn-outline-gold">{data.reverse.link.label}</Link>
-            </div>
-          </section>
-        )}
+        {sections.map((x, i) => <Fragment key={x.key}>{x.render(i % 2 === 0 ? s.surface : s.tint)}</Fragment>)}
 
-        {data.comparison && (
-          <section className="section" style={{ background: 'var(--bg-subtle)' }}>
-            <div className="container" style={{ maxWidth: 960 }}>
-              <div className="section-header centered">
-                <span className="section-eyebrow">Compare</span>
-                <h2 className="section-title">{data.comparison.heading}</h2>
-                <p className="section-subtitle">{data.comparison.intro}</p>
-              </div>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', background: 'var(--white)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', fontSize: 'var(--text-sm)' }}>
-                  <thead>
-                    <tr>
-                      {data.comparison.head.map((h) => (
-                        <th key={h} scope="col" style={{ textAlign: 'start', padding: 'var(--space-3) var(--space-4)', background: 'var(--navy)', color: 'var(--on-dark)' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.comparison.rows.map((r) => (
-                      <tr key={r[0]}>
-                        {r.map((c, i) => i === 0
-                          ? <th key={i} scope="row" style={{ textAlign: 'start', padding: 'var(--space-3) var(--space-4)', borderTop: '1px solid var(--line)', color: 'var(--navy)' }}>{c}</th>
-                          : <td key={i} style={{ padding: 'var(--space-3) var(--space-4)', borderTop: '1px solid var(--line)', color: 'var(--text-body)' }}>{c}</td>)}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {data.comparison.note && <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', marginTop: 'var(--space-3)' }}>{data.comparison.note}</p>}
-            </div>
-          </section>
-        )}
-
-        {/* Travel Options */}
-        <section className="section">
+        <section className={s.finalCta}>
           <div className="container">
-            <div className="section-header centered">
-              <span className="section-eyebrow">Travel Options</span>
-              <h2 className="section-title">Ways to Travel from {data.origin} to {data.destination}</h2>
-            </div>
-            <div className="grid-3">
-              {data.travelOptions.map((o) => (
-                <div key={o.title} className="card">
-                  <div className="card-icon"><CarIcon size={22} /></div>
-                  <h3>{o.title}</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', lineHeight: 1.7 }}>{o.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Private Transfer — pivots the informational intent to Gulf Trip
-            Service's actual offering, per the brief's commercial-connection
-            requirement. */}
-        <section className="section" style={{ background: 'var(--bg-subtle)' }}>
-          <div className="container">
-            <div className="grid-2">
-              <div>
-                <span className="section-eyebrow">Private Transfer</span>
-                <h2 className="section-title">Book a Private {data.origin} to {data.destination} Transfer</h2>
-                <p style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-6)' }}>
-                  If you&apos;d rather not drive the distance yourself, Gulf Trip Service arranges private, door-to-door transfers for this route.
-                </p>
-                <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-                  <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary">Book Your Private Transfer</Link>
-                  <a data-wa-cta="in-article" href={whatsApp} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                    <MessageIcon size={16} /> Ask on WhatsApp
-                  </a>
-                </div>
+            <div className={s.finalInner}>
+              <span className={s.heroEyebrow}>Private taxi</span>
+              <h2 className={s.finalTitle}>Book Your {A} to {B} Taxi</h2>
+              <p className={s.finalBody}>{fare ? `From ${fare.en} per car, ` : ""}one car and one driver, door to door, 24/7.</p>
+              <div className={`${s.ctaRow} ${s.finalButtons}`}>
+                <a href={waLink(message)} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer" data-wa-cta="final-cta">
+                  <span className={s.icon} aria-hidden="true"><WhatsAppIcon size={18} /></span> Book on WhatsApp
+                </a>
+                <Link href={bookHref} className={`btn btn-lg ${s.btnOnDark}`}>Book Online</Link>
               </div>
-              <div className="card">
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                  {data.transferBenefits.map((b, i) => (
-                    <li key={i} style={{ color: 'var(--text-body)', display: 'flex', gap: 'var(--space-3)', alignItems: 'flex-start', fontSize: 'var(--text-sm)' }}>
-                      <CheckCircleIcon size={18} style={{ color: 'var(--success)', flexShrink: 0, marginTop: 2 }} /> {b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Journey Planning */}
-        <section className="section">
-          <div className="container">
-            <div className="section-header centered">
-              <span className="section-eyebrow">Journey Planning</span>
-              <h2 className="section-title">Planning Your {data.origin} to {data.destination} Trip</h2>
-            </div>
-            <div className="grid-3">
-              {data.journeyPlanning.map((j) => (
-                <div key={j.title} className="card">
-                  <div className="card-icon"><CalendarIcon size={22} /></div>
-                  <h3 style={{ fontSize: 'var(--text-base)' }}>{j.title}</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-sm)', lineHeight: 1.7 }}>{j.note}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Best Time to Travel */}
-        <section className="section" style={{ background: 'var(--bg-subtle)' }}>
-          <div className="container">
-            <div className="section-header centered">
-              <span className="section-eyebrow">Best Time to Travel</span>
-              <h2 className="section-title">When to Travel from {data.origin} to {data.destination}</h2>
-            </div>
-            <div style={{ maxWidth: 780, margin: '0 auto' }}>
-              {data.bestTimeToTravel.map((p, i) => (
-                <p key={i} style={{ color: 'var(--text-body)', lineHeight: 1.8, marginBottom: 'var(--space-5)' }}>{p}</p>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section className="section">
-          <div className="container">
-            <div className="section-header centered">
-              <span className="section-eyebrow">FAQ</span>
-              <h2 className="section-title">{data.origin} to {data.destination} — Frequently Asked Questions</h2>
-            </div>
-            <div style={{ maxWidth: 820, margin: '0 auto' }}>
-              <DistanceFAQAccordion faqs={data.faqs} />
-            </div>
-          </div>
-        </section>
-
-        {/* Related Distance Guides — only rendered once another entry
-            actually resolves, same defensive pattern as RoutePage.tsx's
-            reverseRoute callout (never a link to a page that doesn't exist). */}
-        {relatedDistance.length > 0 && (
-          <section className="section" style={{ background: 'var(--bg-subtle)' }}>
-            <div className="container">
-              <div className="section-header centered">
-                <span className="section-eyebrow">Explore More</span>
-                <h2 className="section-title">Related Distance Guides</h2>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', justifyContent: 'center' }}>
-                {relatedDistance.map((r) => (
-                  <Link key={r.slug} href={`/distance/${r.slug}`} className="btn btn-outline-gold">
-                    {r.origin} → {r.destination}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Related Cities, Airports & Services */}
-        <section className="section">
-          <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-10)' }}>
-              {(data.originCitySlug || data.destinationCitySlug) && (
-                <div>
-                  <h3 style={{ marginBottom: 'var(--space-4)' }}>Related Cities</h3>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
-                    {data.originCitySlug && <Link href={`/services/${data.originCitySlug}`} className="btn btn-outline-gold btn-sm">{data.origin} transfer service</Link>}
-                    {data.destinationCitySlug && <Link href={`/services/${data.destinationCitySlug}`} className="btn btn-outline-gold btn-sm">{data.destination} transfer service</Link>}
-                  </div>
-                </div>
-              )}
-              {(data.originAirportHref || data.destinationAirportHref) && (
-                <div>
-                  <h3 style={{ marginBottom: 'var(--space-4)' }}>Related Airports</h3>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
-                    {data.originAirportHref && <Link href={data.originAirportHref} className="btn btn-outline-gold btn-sm">{data.origin} airport transfer</Link>}
-                    {data.destinationAirportHref && <Link href={data.destinationAirportHref} className="btn btn-outline-gold btn-sm">{data.destination} airport transfer</Link>}
-                  </div>
-                </div>
-              )}
-              <div>
-                <h3 style={{ marginBottom: 'var(--space-4)' }}>Related Services</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
-                  {data.relatedServiceLinks.map((l) => (
-                    <Link key={l.href} href={l.href} className="btn btn-outline-gold btn-sm">{l.label}</Link>
-                  ))}
-                  <Link href="/fleet" className="btn btn-outline-gold btn-sm">Our Fleet</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Closing CTA */}
-        <section style={{ background: 'var(--bg-dark)', padding: 'var(--space-20) 0', textAlign: 'center' }}>
-          <div className="container">
-            <span className="section-eyebrow" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'var(--line-dark)', color: 'var(--on-dark)' }}>Book Now</span>
-            <h2 style={{ color: 'var(--on-dark)', fontSize: 'var(--text-4xl)', margin: 'var(--space-4) 0' }}>{data.ctaText}</h2>
-            <p style={{ color: 'var(--on-dark-muted)', fontSize: 'var(--text-lg)', maxWidth: 560, margin: '0 auto var(--space-8)' }}>
-              Private, door-to-door transfers for {data.origin} to {data.destination} — fixed quote before you travel.
-            </p>
-            <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href={bookingHref(data.origin, data.destination)} className="btn btn-primary btn-lg">Get a Quote</Link>
-              <a data-wa-cta="closing-cta" href={whatsApp} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
-                <MessageIcon size={18} /> WhatsApp Quote
-              </a>
             </div>
           </div>
         </section>

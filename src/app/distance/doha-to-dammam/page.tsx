@@ -1,13 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Doha to Dammam Distance: 440 km by Road",
-  description: "Doha to Dammam is about 440 km by road through the Salwa / Abu Samra border, usually 5 to 6 hours including crossing time.",
-  path: "/distance/doha-to-dammam",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["doha-to-dammam"];
+
+export const metadata = distanceMetadata(data);
 
 export default function DohaToDammamDistance() {
-  return <DistancePage data={distanceRoutes["doha-to-dammam"]} />;
+  return <DistancePage data={data} />;
 }

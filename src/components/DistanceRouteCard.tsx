@@ -1,7 +1,8 @@
 import Link from "@/components/IntentLink";
 import Image from "next/image";
 import { MapPinIcon, ClockIcon, GlobeIcon, NavigationIcon, CheckCircleIcon, ArrowRightIcon } from "@/components/Icons";
-import type { DistanceRouteData } from "@/lib/distanceRouteData";
+import { isCrossBorder, kmLabel, type DistanceRouteData } from "@/lib/distanceRouteData";
+import { fillFare } from "@/lib/distanceFare";
 import styles from "./DistanceRouteCard.module.css";
 
 /**
@@ -34,34 +35,11 @@ function coverFor(destination: string) {
   return DESTINATION_COVERS[destination] ?? FALLBACK_COVER;
 }
 
-/** Pulls the single short "80 km" / "980–1,060 km" figure out of the
- * route's full prose distance string for the compact stat tile — the full
- * sentence (with causeway/border caveats) still renders on the detail
- * page untouched. Takes the *last* km figure in the string so the one
- * two-figure entry (Khafji: "15 km to the border and ... 125 km by road
- * to Kuwait City") surfaces the total-to-destination distance, consistent with
- * every other route's single figure. */
-function shortDistance(roadDistance: string): string {
-  const matches = roadDistance.match(/\d[\d,]*(?:\s*[-–]\s*\d[\d,]*)?\s*km/g);
-  return matches ? matches[matches.length - 1] : roadDistance;
-}
-
-/** Same idea for drive time — first "X–Y hours/minutes" figure is the
- * baseline (off-peak) estimate already presented first in the prose.
- * "7 hours 40 minutes" is kept whole rather than cut to "7 hours". */
-function shortDuration(driveTime: string): string {
-  const match = driveTime.match(/\d+(?:\.\d+)?(?:\s*[-–]\s*\d+(?:\.\d+)?)?\s*(?:hours?|hrs?)(?:\s+\d+\s*(?:minutes?|mins?))?|\d+(?:\s*[-–]\s*\d+)?\s*(?:minutes?|mins?)/i);
-  return match ? match[0] : driveTime;
-}
-
-function isCrossBorder(route: DistanceRouteData): boolean {
-  return route.routeType.toLowerCase().includes("cross-border");
-}
 
 export default function DistanceRouteCard({ route, priority = false }: { route: DistanceRouteData; priority?: boolean }) {
   const cover = coverFor(route.destination);
   const crossBorder = isCrossBorder(route);
-  const features = route.transferBenefits.slice(0, 3);
+  const features = route.transferBenefits.slice(0, 3).map((x) => fillFare(x, route));
 
   return (
     <Link
@@ -92,19 +70,19 @@ export default function DistanceRouteCard({ route, priority = false }: { route: 
             <MapPinIcon size={16} className={styles.statIcon} />
             <div className={styles.statText}>
               <span className={styles.statLabel}>Distance</span>
-              <span className={styles.statValue}>{shortDistance(route.roadDistance)}</span>
+              <span className={styles.statValue}>{kmLabel(route)}</span>
             </div>
           </div>
           <div className={styles.stat}>
             <ClockIcon size={16} className={styles.statIcon} />
             <div className={styles.statText}>
               <span className={styles.statLabel}>Duration</span>
-              <span className={styles.statValue}>{shortDuration(route.driveTime)}</span>
+              <span className={styles.statValue}>{route.withBorder ?? route.drive.replace(/^about /, "~")}</span>
             </div>
           </div>
         </div>
 
-        <p className={styles.description}>{route.intro}</p>
+        <p className={styles.description}>{route.routeIntro}</p>
 
         {features.length > 0 && (
           <ul className={styles.features}>

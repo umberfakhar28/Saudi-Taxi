@@ -1,14 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Dammam to Kuwait Distance by Road: 410 km, 4.5 hrs + Border",
-  brandSuffix: false,
-  description: "Dammam to Kuwait is about 410 km by road, around 4.5 hours of driving via the Khafji–Nuwaiseeb border. Private door-to-door taxi, 24/7, on WhatsApp.",
-  path: "/distance/dammam-to-kuwait",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["dammam-to-kuwait"];
+
+export const metadata = distanceMetadata(data);
 
 export default function DammamToKuwaitDistance() {
-  return <DistancePage data={distanceRoutes["dammam-to-kuwait"]} />;
+  return <DistancePage data={data} />;
 }

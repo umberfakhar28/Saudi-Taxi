@@ -1,13 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Riyadh to Jeddah Distance: 950–1,000 km",
-  description: "Riyadh to Jeddah is roughly 950 to 1,000 km by road — about 10 to 11 hours of driving, which is why most travellers fly this route.",
-  path: "/distance/riyadh-to-jeddah",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["riyadh-to-jeddah"];
+
+export const metadata = distanceMetadata(data);
 
 export default function RiyadhToJeddahDistance() {
-  return <DistancePage data={distanceRoutes["riyadh-to-jeddah"]} />;
+  return <DistancePage data={data} />;
 }

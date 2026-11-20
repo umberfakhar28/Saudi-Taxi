@@ -1,2068 +1,1167 @@
 /**
- * Distance / Route Guide page family (/distance/[route]).
+ * The /distance/* pages: one record per city pair, and the only place each
+ * pair's figures are written down (docs/seo/distance/distance-audit.md).
  *
- * Distinct in intent from RouteData (routeData.ts, powers the "-taxi-service"
- * pages) — those are commercial/booking-first pages; this family answers the
- * research-stage question ("how far is X from Y, how long does it take")
- * before pivoting to the private-transfer option. Kept as a separate data
- * file and template (DistancePage.tsx) rather than reusing RoutePage.tsx, so
- * neither page family has to carry fields/sections that don't belong to it.
+ * Figures. Every distance and driving time was checked against map routing
+ * (OpenStreetMap / OSRM, city centre to city centre, 19–20 Nov 2026) and
+ * matches the route pages for the same pair. `drive` is driving only;
+ * `withBorder` adds the crossing. Riyadh–Kuwait uses the owner's figure
+ * (648 km, 19 Nov 2026), not the router's 716 km.
  *
- * Each entry is genuinely unique content — no field here is a find/replace
- * of city names into a shared sentence template. New routes are added by
- * appending another entry to `distanceRoutes` and a thin page.tsx that reads
- * it; nothing else needs to change (sitemapData.ts derives its entries from
- * this map's keys automatically).
+ * Fares are never written here. `fareRoute` names the route page whose
+ * confirmed fare applies in both directions, and the page reads the fare
+ * from that route's own data (lib/distanceFare.ts). Copy writes {{fare}}
+ * (or {{fareAr}} in Arabic) for this pair's starting fare, and
+ * {{fare:<route-slug>}} for another route's.
+ *
+ * Copy may carry **bold** and [anchor](/path) links. FAQ answers are kept
+ * to about 25 words and are built from the searches each pair receives.
  */
+import type { LandingIcon } from "./routeLanding";
+
+export type DistanceRegion = "bahrain" | "qatar" | "kuwait" | "uae" | "saudi";
+
+export interface DistanceBorder {
+  name: string;
+  /** Where the two posts are. */
+  posts: string;
+  /** Waiting time, as published on the route pages, or "varies". */
+  wait: string;
+  documents: string[];
+  links: { href: string; label: string }[];
+}
 
 export interface DistanceRouteData {
   slug: string;
   origin: string;
   destination: string;
-  /** CityData slug for the origin, where a /services/[slug] page exists. */
-  originCitySlug?: string;
-  /** CityData slug for the destination, where a /services/[slug] page exists. */
-  destinationCitySlug?: string;
-  /** Real hub-page hrefs from airportRoutesData.ts — only set where that
-   * endpoint's city actually has its own airport page. */
-  originAirportHref?: string;
-  destinationAirportHref?: string;
-
-  eyebrow: string;
-  h1: string;
-  intro: string;
+  region: DistanceRegion;
   breadcrumbLabel: string;
+  /** ≤ 60 characters, used without the brand suffix. */
+  title: string;
+  /** ≤ 155 characters. */
+  meta: string;
 
-  /** Road (driving) distance — always a range, never a single invented
-   * figure, per the ground rule against presenting estimates as exact facts. */
-  roadDistance: string;
-  /** Straight-line ("as the crow flies") distance — optional context only,
-   * shown alongside road distance to explain why the two numbers differ. */
-  straightLineDistance?: string;
-  driveTime: string;
-  routeType: string;
+  /** Road distance, city centre to city centre, rounded. */
+  km: number;
+  straightKm?: number;
+  /** Driving time only, e.g. "about 4.5 hours". */
+  drive: string;
+  /** Door to door including the border, for cross-border pairs. */
+  withBorder?: string;
+  /** Main roads, one short phrase. */
+  highways: string;
+  border?: DistanceBorder;
 
-  overviewParagraphs: string[];
-  /** Genuine, verifiable geographic/road characteristics of this specific
-   * corridor — not generic filler that would read the same on any route. */
-  routeCharacteristics: string[];
-  /** Real factors that actually change this route's travel time. */
-  factorsAffectingTime: string[];
+  /** Route pages for this pair, matched on origin and destination. */
+  routeForward?: { href: string; label: string };
+  routeReverse?: { href: string; label: string };
+  /** Route page slug whose confirmed fare applies to both directions. */
+  fareRoute?: string;
 
-  travelOptions: { title: string; description: string }[];
-  /** Reuses the site's already-established service claims (see
-   * RoutePage.tsx's includedItemsFor) — nothing new asserted here. */
-  transferBenefits: string[];
-
-  journeyPlanning: { title: string; note: string }[];
-  bestTimeToTravel: string[];
-
+  routeIntro: string;
+  steps: { title: string; body: string }[];
+  altRoute?: string;
+  /** Paragraph under the "{B} to {A} Distance by Road" heading. */
+  reverse: string;
+  options: { option: string; doorToDoor: boolean; time: string; transfers: string; bestFor: string; recommended?: boolean }[];
+  tips: { icon: LandingIcon; title: string; body: string }[];
   faqs: { q: string; a: string }[];
+  /** For pairs with Arabic searches: one answer line and Arabic FAQs. */
+  arabic?: { answer: string; faqs: { q: string; a: string }[] };
+  table?: { heading: string; intro: string; head: string[]; rows: string[][]; note?: string };
 
-  /** Slugs of other distanceRoutes entries this page should link to. Only
-   * rendered for slugs that actually resolve (see DistancePage.tsx) — a
-   * forward reference to a route not yet built is safe and becomes live
-   * automatically once that page ships, same pattern as RouteData.reverseSlug. */
+  /** Three short points for the distance card on /distance. */
+  transferBenefits: string[];
   relatedDistanceSlugs: string[];
-  /** Existing, live pages elsewhere on the site — taxi-service routes,
-   * fleet, quote, etc. Every href here must already resolve; never a
-   * planned/future page. */
-  relatedServiceLinks: { href: string; label: string }[];
+  /** City pages and other relevant pages (route pages come from routeForward/Reverse). */
+  relatedLinks: { href: string; label: string }[];
 
-  /**
-   * The commercial route page for this exact corridor, in this direction.
-   *
-   * Why this exists: over the 28 days to 2026-11-01 this page family drew
-   * 7,878 Search Console impressions — 35.5% of the whole site — and
-   * converted 0.34% of them, against 7.10% on the route pages. The queries
-   * behind it are informational ("bahrain to riyadh distance"), which Google
-   * answers on the results page, so most of that volume was never going to
-   * click. The visitors who do land, though, had nowhere commercial to go:
-   * this template linked to city pages, airport pages, the fleet and the
-   * booking form, but never to the route page for the corridor they were
-   * reading about.
-   *
-   * Set ONLY where a route page covers the same two endpoints in the same
-   * direction, verified against routeData's own origin/destination fields.
-   *
-   * Match on those fields, never on the slug. This page family was first
-   * mapped by slug shape ({origin}-to-{destination}-taxi-service), which
-   * missed /riyadh-to-dammam-guide — a real RoutePage, origin Riyadh,
-   * destination Dammam — purely because its slug ends "-guide". The
-   * corridor was written off as reverse-direction-only as a result.
-   *
-   * Deliberately unset where the only candidate is an airport-origin page:
-   * /distance/jeddah-to-madinah has only jeddah-airport-to-madinah, and
-   * sending a Jeddah-city reader to a Jeddah-Airport page offers them a
-   * different product. Owner decision, 2026-11-05.
-   *
-   * Left unset for the four corridors with no route page at all (the Abha
-   * three and riyadh-to-jeddah); the template renders nothing rather than
-   * inventing a destination.
-   */
-  routeHref?: string;
-
-  /**
-   * A boxed answer in the hero: the figures someone searched for, before
-   * anything else (featured-snippet shape). `arabic` adds one line in
-   * Arabic for the Arabic searches the page is shown for.
-   */
-  answerBox?: { items: { label: string; value: string }[]; arabic?: string };
-  /**
-   * A booking box straight under the hero, replacing the plain route-page
-   * card: the commercial next step, with the fare where one is confirmed.
-   * `links` points at route pages when no single page owns the corridor.
-   */
-  bookingBox?: {
-    title: string;
-    text: string;
-    href: string;
-    hrefLabel: string;
-    whatsappMessage: string;
-    links?: { href: string; label: string }[];
-  };
-  /** The same corridor the other way round, as its own H2. */
-  reverse?: { heading: string; paragraphs: string[]; link: { href: string; label: string } };
-  /** A small comparison table, e.g. the three ways into Kuwait by road. */
-  comparison?: { heading: string; intro: string; head: string[]; rows: string[][]; note?: string };
-
-  ctaText: string;
-  heroImage?: string;
-  heroImageAlt?: string;
-  /** Only set when this content has genuinely just been authored/reviewed —
-   * never a fabricated freshness signal. */
-  lastReviewed?: string;
+  /** How the figures were checked. */
+  source: string;
+  verified: string;
 }
 
-/**
- * Saudi Arabia to Kuwait by road, from each starting city. Shared by the
- * three Kuwait distance pages so they always quote the same figures.
- * Riyadh: owner-confirmed route and time (19 Nov 2026). Dammam and Khafji:
- * map routing (OSRM), Nov 2026. All three use the coastal crossing.
- */
-const SAUDI_TO_KUWAIT_TABLE: NonNullable<DistanceRouteData["comparison"]> = {
+/* ── Shared border facts ──────────────────────────────────────── */
+
+const PASSPORT = "A passport valid for at least 6 months";
+const GCC_ID = "GCC citizens: the national ID card is usually enough";
+const IQAMA = "Saudi residents: a valid Iqama and an exit and re-entry visa";
+
+const CAUSEWAY: DistanceBorder = {
+  name: "King Fahd Causeway",
+  posts: "The Saudi and Bahraini passport and customs posts sit on the island halfway across the 25 km causeway.",
+  wait: "Usually **45–75 minutes** for the whole crossing, depending on traffic and time of day. Weekends and holidays are busier.",
+  documents: [PASSPORT, "A Bahrain eVisa or visa on arrival when entering Bahrain; a Saudi visa when entering Saudi Arabia", GCC_ID, IQAMA],
+  links: [
+    { href: "/border-crossing", label: "All border crossings" },
+    { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain taxi" },
+  ],
+};
+
+const KHAFJI: DistanceBorder = {
+  name: "Al Khafji / Al Nuwaiseeb",
+  posts: "The Saudi post is at Al Khafji and the Kuwaiti post at Al Nuwaiseeb, on the coast road.",
+  wait: "Usually **30–90 minutes** outside peak times. Thursday and Friday evenings and public holidays can take longer; it varies.",
+  documents: [PASSPORT, "A Kuwait visa or eVisa if your nationality needs one", GCC_ID, IQAMA],
+  links: [
+    { href: "/border-crossing", label: "All border crossings" },
+    { href: "/khafji-to-kuwait-taxi-service", label: "The Khafji–Nuwaiseeb crossing" },
+    { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
+  ],
+};
+
+const SALWA: DistanceBorder = {
+  name: "Salwa / Abu Samra",
+  posts: "The Saudi post is at Salwa and the Qatari post at Abu Samra, about 90 km from Doha.",
+  wait: "Typically **30–60 minutes** for both sides outside peak hours; it varies with the day and time.",
+  documents: [PASSPORT, "A Qatar visa or visa waiver when entering Qatar; a Saudi visa when entering Saudi Arabia", GCC_ID, IQAMA],
+  links: [
+    { href: "/border-crossing", label: "All border crossings" },
+    { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar taxi" },
+  ],
+};
+
+const BATHA: DistanceBorder = {
+  name: "Al Batha / Al Ghuwaifat",
+  posts: "The Saudi post is at Al Batha and the UAE post at Al Ghuwaifat, at the western edge of Abu Dhabi emirate.",
+  wait: "It **varies** with traffic and time of day, and this is the busiest land crossing on these routes, so allow extra time.",
+  documents: [PASSPORT, "A UAE visa or visa on arrival when entering the UAE; a Saudi visa when entering Saudi Arabia", GCC_ID, IQAMA],
+  links: [
+    { href: "/border-crossing", label: "All border crossings" },
+    { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE taxi" },
+  ],
+};
+
+const OSRM = "OpenStreetMap routing (OSRM), city centre to city centre, 19–20 Nov 2026";
+
+/** Saudi Arabia to Kuwait, from each starting city (shared by the three Kuwait pages). */
+const SAUDI_TO_KUWAIT_TABLE: NonNullable<DistanceRouteData["table"]> = {
   heading: "Saudi Arabia to Kuwait by Road: Distance from Each City",
   intro: "All three routes cross at Al Khafji (Saudi) / Al Nuwaiseeb (Kuwait). Driving times exclude the border.",
   head: ["From", "To Kuwait City", "Driving time", "Private taxi"],
   rows: [
-    ["Riyadh", "~648 km", "~7 h 40 min", "Starting from 220 KWD"],
+    ["Riyadh", "~648 km", "~7 h 40 min", "Starting from {{fare:riyadh-to-kuwait-taxi-service}}"],
     ["Dammam", "~410 km", "~4.5 h", "Quote on WhatsApp"],
     ["Al Khafji", "~125 km", "~1.5 h", "Quote on WhatsApp"],
   ],
   note: "Road distances to central Kuwait City. Figures are estimates; border time varies with the day and hour.",
 };
 
+/** Saudi Arabia to Bahrain, from each starting city (Bahrain pages). */
+const SAUDI_TO_BAHRAIN_TABLE: NonNullable<DistanceRouteData["table"]> = {
+  heading: "Saudi Arabia to Bahrain by Road: Distance from Each City",
+  intro: "Every route crosses the King Fahd Causeway from Al Khobar. Times are driving only; add 45–75 minutes for the crossing.",
+  head: ["From", "To Manama", "Driving time", "Private taxi"],
+  rows: [
+    ["Al Khobar", "~50 km", "~45 min", "Quote on WhatsApp"],
+    ["Dammam", "~65 km", "~1 h", "Quote on WhatsApp"],
+    ["Jubail", "~150 km", "~2 h", "Quote on WhatsApp"],
+    ["Al-Ahsa (Hofuf)", "~195 km", "~2.5 h", "Quote on WhatsApp"],
+    ["Riyadh", "~470 km", "~4.5 h", "From {{fare:riyadh-to-bahrain-taxi-service}}"],
+  ],
+  note: "Road distances to central Manama, from map routing. Figures are estimates.",
+};
+
+const ROUTE_TAXI = (time: string) => ({ option: "Private taxi (us)", doorToDoor: true, time, transfers: "None", bestFor: "Families, groups, luggage", recommended: true });
+const SELF_DRIVE = (time: string, note = "Your own car and paperwork") => ({ option: "Self-drive", doorToDoor: true, time, transfers: note, bestFor: "Confident long-distance drivers" });
+const FLIGHT = { option: "Flight", doorToDoor: false, time: "Short in the air, plus airport time at both ends", transfers: "A ride to and from each airport", bestFor: "Solo travellers with light luggage" };
+
 export const distanceRoutes: Record<string, DistanceRouteData> = {
-  "abha-to-madinah": {
-    slug: "abha-to-madinah",
-    origin: "Abha",
-    destination: "Madinah",
-    originCitySlug: "abha",
-    destinationCitySlug: "madinah",
-    originAirportHref: "/abha-airport-taxi-service",
-    destinationAirportHref: "/madina-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Abha to Madinah Distance & Travel Guide",
-    intro:
-      "How far Abha is from Madinah, how long the drive actually takes, and the realistic ways to cover this long north–south corridor — from self-driving to a private chauffeur transfer.",
-    breadcrumbLabel: "Abha to Madinah",
-
-    roadDistance: "approximately 980–1,060 km by road",
-    straightLineDistance: "roughly 700–750 km measured directly (straight-line)",
-    driveTime: "approximately 11–12.5 hours of continuous driving",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Abha sits at roughly 2,200 metres in the Asir mountains, in Saudi Arabia's southwest — Madinah lies far to the north, in the western Hejaz region. There's no direct short cut between the two: any journey starts with a descent out of the highlands before joining the main north–south highway network for the long run up the western side of the country.",
-      "The gap between road distance and straight-line distance is unusually wide on this corridor — around 300 km wider than the direct distance — because the route has to work around mountainous terrain near Abha before it can straighten out onto flatter highway further north. That's normal for a journey that starts in the Asir highlands; it isn't a sign of an inefficient route.",
-      "Because of the distance involved, this is realistically a full-day journey by road. Most travelers either commit to one long driving day with planned stops, split it across two days, or cover the distance by air and arrange ground transport at each end instead.",
-    ],
-    routeCharacteristics: [
-      "Starts with a mountain descent out of the Asir highlands around Abha before joining the main highway network heading north.",
-      "The middle section of the journey runs through the western interior, broadly parallel to the coast rather than along it.",
-      "This is one of the longest domestic city-to-city corridors in the kingdom — noticeably longer than the well-traveled Jeddah–Makkah–Madinah routes further north.",
-      "No international border crossing is involved — this is entirely a domestic Saudi Arabia journey.",
-    ],
-    factorsAffectingTime: [
-      "Mountain roads on the initial descent from Abha are slower than open highway and factor into the total time beyond pure highway-speed driving.",
-      "Rest stops for meals, prayer, and fuel meaningfully extend an 11–12.5 hour drive — most travelers should plan for a longer total journey time than the pure driving estimate.",
-      "Traffic density increases noticeably on the approach to Madinah during Umrah season and the weeks around Ramadan and Hajj.",
-      "Time of departure matters on a drive this long — starting early avoids finishing the mountain descent or the final approach into Madinah after dark.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description:
-          "A private vehicle covers the full distance in one continuous, door-to-door trip, with the driver handling navigation, rest-stop timing, and the mountain descent out of Abha — the most direct option if you'd rather not drive the distance yourself.",
-      },
-      {
-        title: "Self-Driving",
-        description:
-          "Realistic for confident long-distance drivers, but an 11–12.5 hour drive on unfamiliar mountain and highway roads is a genuinely demanding single-day undertaking — most self-drivers on this corridor plan an overnight stop partway rather than attempting it in one continuous run.",
-      },
-      {
-        title: "Domestic Flight",
-        description:
-          "Given the distance, a short domestic flight between Abha and Madinah is a realistic alternative worth knowing about — it removes the long drive entirely, at the cost of needing separate ground transport at each end.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door pickup — no need to transfer between vehicles or arrange separate transport at either end",
-      "A private vehicle for your group only, not a shared ride",
-      "Professional, licensed driver who handles the mountain descent and the long highway stretch",
-      "Flexible departure time, so you can start early and avoid finishing either leg of the journey after dark",
-      "Luggage space suited to a full-day journey, not just a short city transfer",
-      "Rest stops planned around your group rather than a fixed schedule",
-      "Suitable for families and small groups traveling together, including Umrah pilgrims connecting on to Madinah",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day", note: "Between the 11–12.5 hour driving estimate and realistic rest stops, treat this as a full-day journey rather than something to fit around other plans." },
-      { title: "Luggage & Packing", note: "A journey this long is more comfortable with luggage that's easy to access mid-trip — keep water, snacks, and any medication within reach rather than packed away." },
-      { title: "Families & Elderly Passengers", note: "Build in extra rest stops beyond the minimum — a long mountain-to-highway drive is more tiring for young children and elderly travelers than the driving-time estimate alone suggests." },
-      { title: "Departure Timing", note: "An early-morning start is generally more comfortable than a late-day departure, since it avoids finishing either the mountain descent or the Madinah approach after dark." },
-      { title: "Seasonal Timing", note: "If your trip lines up with Ramadan, Hajj, or peak Umrah season, expect busier roads and more traffic on the Madinah approach specifically." },
-    ],
-    bestTimeToTravel: [
-      "Cooler early-morning hours are generally easier for the mountain descent out of Abha than the heat of midday.",
-      "Traffic on the approach into Madinah is consistently busier during Ramadan and the weeks around Hajj — if your schedule is flexible, traveling outside those periods tends to mean a smoother final stretch.",
-      "Outside of those peak religious travel periods, this route doesn't have a strongly seasonal traffic pattern — road conditions matter more than the time of year for a journey this long.",
-    ],
-
-    faqs: [
-      { q: "How far is Abha from Madinah?", a: "By road, approximately 980–1,060 km. The straight-line distance is shorter, at roughly 700–750 km — the difference comes from having to route around the Asir highlands rather than travel in a straight line." },
-      { q: "How long does it take to drive from Abha to Madinah?", a: "Around 11–12.5 hours of continuous driving. In practice, most journeys take longer once you add meal, prayer, and fuel stops — treat it as a full-day trip." },
-      { q: "What is the best way to travel from Abha to Madinah?", a: "For a direct, door-to-door journey without driving it yourself, a private taxi or chauffeur transfer is the most straightforward option. Confident long-distance drivers can self-drive, and a domestic flight is a realistic alternative if you'd rather skip the drive entirely." },
-      { q: "Can I book a private taxi from Abha to Madinah?", a: "Yes — Gulf Trip Service arranges private transfers for this route. Get in touch for a quote based on your travel date and group size." },
-      { q: "Is Abha to Madinah suitable for a family road trip?", a: "It can be, with realistic planning — build in extra rest stops beyond the minimum, especially with young children or elderly passengers, since it's a genuinely long single-day journey." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — the whole journey stays within Saudi Arabia with no border crossing involved." },
-      { q: "Does travel time vary by traffic or season?", a: "Yes. The driving-time estimate is based on typical road conditions — expect the approach into Madinah specifically to be busier during Ramadan and peak Umrah/Hajj periods." },
-      { q: "Can I request a private vehicle for a larger group or extra luggage?", a: "Yes — vehicle options range from a private sedan up to larger vehicles suited to groups and additional luggage. Share your group size when requesting a quote." },
-    ],
-
-    relatedDistanceSlugs: ["makkah-to-madinah", "riyadh-to-makkah"],
-    relatedServiceLinks: [
-      { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah taxi service" },
-      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
-      { href: "/private-taxi", label: "Private taxi service" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Abha to Madinah",
-    heroImage: "/destinations/abha-asir-mountains-view.webp",
-    heroImageAlt: "The Asir mountains near Abha, starting point of the Abha to Madinah route",
-    lastReviewed: "2026-08-26",
-  },
-
-  // ─────────────────────────────────────────────────────────────────
-  // Priority-A additions (route-inventory audit): each of the routes
-  // below already has a live commercial "-taxi-service" page — this is
-  // the strongest possible justification per the audit's own criteria,
-  // since the two pages can link to and reinforce each other. Distance
-  // and drive-time figures are pulled from that existing commercial
-  // page's own data (routeData.ts) rather than re-estimated, so the two
-  // pages never state conflicting facts about the same corridor.
-  // ─────────────────────────────────────────────────────────────────
-
-  "jeddah-to-makkah": {
-    slug: "jeddah-to-makkah",
-    routeHref: "/jeddah-to-makkah-taxi-service",
-    origin: "Jeddah",
-    destination: "Makkah",
-    originCitySlug: "jeddah",
-    destinationCitySlug: "makkah",
-    originAirportHref: "/jeddah-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Jeddah to Makkah Distance & Travel Time",
-    intro: "How far Makkah is from Jeddah, how long the drive takes from King Abdulaziz International Airport, and why this short corridor is the single most-traveled route for Umrah pilgrims arriving in Saudi Arabia.",
-    breadcrumbLabel: "Jeddah to Makkah",
-
-    roadDistance: "approximately 80 km by road",
-    driveTime: "approximately 60–90 minutes outside peak season, 90–120 minutes during Umrah season",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Jeddah to Makkah is short by the standards of Saudi Arabia's other city-to-city corridors, but it carries an outsized amount of traffic: King Abdulaziz International Airport (KAIA) is the main international gateway for Umrah pilgrims, and this 80km stretch is the very next leg of almost every arriving pilgrim's journey.",
-      "The route runs inland from the coast on a direct highway connection, without any mountain passes or complex terrain — the drive itself is straightforward. What actually varies is traffic density, which climbs noticeably during Ramadan, Dhul Qa'dah, and the weeks around Hajj as pilgrim arrival volumes rise.",
-      "Because the destination is Makkah's central Haram area, most transfers are timed and routed with Ihram etiquette in mind — pilgrims arriving already in Ihram, or who put it on before leaving the airport, expect a driver who understands the etiquette involved.",
-    ],
-    routeCharacteristics: [
-      "A direct inland highway connection — no mountain terrain or complex routing.",
-      "One of the shortest major city-to-city corridors in the country by distance.",
-      "The default first leg for the large majority of pilgrims flying into Saudi Arabia for Umrah.",
-      "No international border crossing — entirely domestic.",
-    ],
-    factorsAffectingTime: [
-      "Traffic density rises substantially during Umrah season, Ramadan, and the weeks around Hajj — the same 80km can take 90–120 minutes instead of 60–90.",
-      "Time of day matters less here than season does, though airport-adjacent traffic can add a few minutes at peak arrival banks.",
-      "Vehicles need to be Ihram-appropriate (space for Ihram clothing, driver familiarity with the etiquette) — not a time factor, but worth planning around.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "The standard option for arriving pilgrims — a driver meets you at KAIA arrivals and takes you directly to your Makkah hotel, with no need to arrange a second leg of transport.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Straightforward for confident drivers given the short, direct highway distance — though most first-time visitors and pilgrims prefer not to navigate an unfamiliar city while managing luggage and Ihram clothing.",
-      },
-      {
-        title: "Shared Group Transport",
-        description: "Some pilgrim groups travel this leg together on organized package transport — a realistic option if you're already traveling with a tour group, though it typically runs on a fixed schedule rather than your own arrival time.",
-      },
-    ],
-    transferBenefits: [
-      "Meet-and-greet pickup at KAIA arrivals, with flight tracking so a delayed landing doesn't mean a missed pickup",
-      "A private vehicle for your group only, not a shared shuttle",
-      "Professional, licensed driver experienced with Ihram etiquette",
-      "Direct to your Makkah hotel — no intermediate stops unless you request one",
-      "Luggage assistance from the arrivals hall to the vehicle",
-      "Available 24/7, since pilgrim flights land at every hour",
-    ],
-
-    journeyPlanning: [
-      { title: "Book Before You Fly", note: "Pre-booking your Makkah transfer before departure avoids relying on unofficial taxis at arrivals, especially during peak Umrah periods when demand is highest." },
-      { title: "Ihram Timing", note: "If you're putting on Ihram before or at the airport, let your driver know — vehicles can be arranged with the space and privacy this involves." },
-      { title: "Peak Season Buffer", note: "During Ramadan and the weeks around Hajj, build in extra time for both traffic and higher airport arrival volumes." },
-      { title: "Flight Delays", note: "A tracked, pre-booked transfer means a delayed flight doesn't turn into a missed pickup — the driver adjusts automatically." },
-    ],
-    bestTimeToTravel: [
-      "Outside of Ramadan and the Hajj season, this route runs close to its baseline 60–90 minute drive time with relatively little variation by time of day.",
-      "During peak Umrah periods, both airport arrival volumes and road traffic increase together — if your schedule allows flexibility, traveling just before or after the very busiest weeks tends to mean a smoother transfer.",
-    ],
-
-    faqs: [
-      { q: "How far is Jeddah from Makkah?", a: "Approximately 80 km by road — one of the shortest major city-to-city distances in Saudi Arabia." },
-      { q: "How long does it take to drive from Jeddah to Makkah?", a: "Around 60–90 minutes under normal conditions, extending to 90–120 minutes during Ramadan and peak Umrah/Hajj season." },
-      { q: "Is this the route most Umrah pilgrims take first?", a: "Yes — King Abdulaziz International Airport (KAIA) is the main international gateway for Umrah, and this transfer is typically the very first leg of a pilgrim's journey in Saudi Arabia." },
-      { q: "Can I book a private transfer straight from the airport?", a: "Yes — Gulf Trip Service offers meet-and-greet pickup at KAIA arrivals with direct transfer to your Makkah hotel." },
-      { q: "Do I need to be in Ihram for this transfer?", a: "Not necessarily — it depends on your personal Umrah plan and where you intend to enter Ihram. Let your driver know your plans so the vehicle and timing suit your needs." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Does traffic vary a lot by season?", a: "Yes, more than most routes — this corridor sees a genuine, noticeable increase in both airport arrivals and road traffic during Ramadan and the weeks around Hajj." },
-    ],
-
-    relatedDistanceSlugs: ["makkah-to-madinah", "jeddah-to-madinah"],
-    relatedServiceLinks: [
-      { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah taxi service" },
-      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
-      { href: "/airport-transfer-for-umrah", label: "Umrah airport transfer" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Jeddah to Makkah",
-    lastReviewed: "2026-08-26",
-  },
-
-  "makkah-to-madinah": {
-    slug: "makkah-to-madinah",
-    routeHref: "/makkah-to-madinah-taxi-service",
-    origin: "Makkah",
-    destination: "Madinah",
-    originCitySlug: "makkah",
-    destinationCitySlug: "madinah",
-    destinationAirportHref: "/madina-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Makkah to Madinah Distance & Travel Time",
-    intro: "How far Madinah is from Makkah, how long the drive takes on the Haramain Expressway, and what to expect on one of the most-traveled routes between Islam's two holiest cities.",
-    breadcrumbLabel: "Makkah to Madinah",
-
-    roadDistance: "approximately 450 km by road",
-    driveTime: "approximately 4–5 hours via the Haramain Expressway",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Makkah to Madinah is one of the most consistently traveled corridors in the country — most Umrah itineraries include both cities, and this is the direct road link between them, run via the Haramain Expressway.",
-      "The expressway is a modern, direct highway built specifically to connect the two Holy Cities, which is why this route's drive time is proportionally shorter than other Saudi corridors of similar distance — there's no need to route through intermediate cities.",
-      "Some travelers request the historical route instead of the expressway, trading a longer journey for more of the landscape between the two cities — a genuine option, not the default.",
-    ],
-    routeCharacteristics: [
-      "Runs via the purpose-built Haramain Expressway, connecting the two Holy Cities directly.",
-      "No intermediate major city required — a direct point-to-point highway link.",
-      "One of the most frequently traveled corridors in the country for religious travel.",
-      "No international border crossing — entirely domestic.",
-    ],
-    factorsAffectingTime: [
-      "Traffic on the expressway increases during Ramadan and the weeks around Hajj, when both cities see peak pilgrim volumes simultaneously.",
-      "A Miqat stop (for travelers beginning Umrah from Madinah, heading toward Makkah) adds time to the journey and should be planned for, not treated as a delay.",
-      "Requesting the historical route instead of the expressway will meaningfully extend the journey — confirm which route you want when booking.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct, door-to-door journey via the Haramain Expressway, with drivers experienced in Ihram etiquette and — where relevant — the Miqat stop for pilgrims beginning Umrah from Madinah.",
-      },
-      {
-        title: "Self-Driving",
-        description: "A manageable single day's drive for confident long-distance drivers, on a well-built modern expressway — though most pilgrims prefer not to navigate while managing Ihram and luggage.",
-      },
-      {
-        title: "Domestic Flight",
-        description: "A short domestic flight is a realistic alternative if you'd rather skip the road entirely, though it removes the option of stopping at the Miqat en route.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door transfer between your Makkah and Madinah hotels, no intermediate transfers",
-      "A private vehicle for your group only",
-      "Professional driver experienced with Ihram etiquette and Miqat stops",
-      "Flexible departure timing around your own schedule, not a fixed group timetable",
-      "Suitable for families and groups traveling the Umrah circuit together",
-      "Available for either direction — Makkah to Madinah or Madinah to Makkah",
-    ],
-
-    journeyPlanning: [
-      { title: "Miqat Planning", note: "If you're beginning Umrah from Madinah, plan for a stop at the Miqat en route — let your driver know in advance so it's built into the journey, not an afterthought." },
-      { title: "Choose Your Route", note: "The Haramain Expressway is fastest; the historical route takes longer but shows more of the landscape between the two cities — decide which fits your schedule when booking." },
-      { title: "Peak Season Timing", note: "Ramadan and the weeks around Hajj bring the heaviest traffic on this corridor, since both cities are at peak pilgrim volume simultaneously." },
-      { title: "Rest Stops", note: "A 4–5 hour drive is manageable in one stretch, but a single rest stop partway is common and easy to build in." },
-    ],
-    bestTimeToTravel: [
-      "Outside Ramadan and the Hajj season, this route runs close to its baseline 4–5 hour drive time with relatively predictable traffic.",
-      "During peak religious travel periods, allow extra time in both directions — the expressway itself doesn't change, but volume does.",
-    ],
-
-    faqs: [
-      { q: "How far is Makkah from Madinah?", a: "Approximately 450 km by road via the Haramain Expressway." },
-      { q: "How long does it take to drive from Makkah to Madinah?", a: "Typically 4 to 5 hours via the Haramain Expressway, depending on traffic and any requested stops." },
-      { q: "Is there a faster way than the expressway?", a: "The Haramain Expressway is already the fastest direct route — a historical alternative route exists for travelers who want more of the landscape, but it takes longer." },
-      { q: "Do you stop at the Miqat if I'm starting Umrah from Madinah?", a: "Yes — this is a standard part of the Madinah-to-Makkah direction for pilgrims beginning their Umrah, and drivers plan for it as part of the journey." },
-      { q: "Can I book this transfer in either direction?", a: "Yes — the route and journey time are the same whether you're traveling Makkah to Madinah or Madinah to Makkah." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Is this route suitable for families and groups?", a: "Yes — vehicle options range from a private sedan to larger vehicles suited to families and groups traveling the Umrah circuit together." },
-    ],
-
-    relatedDistanceSlugs: ["jeddah-to-makkah", "jeddah-to-madinah", "abha-to-madinah"],
-    relatedServiceLinks: [
-      { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah taxi service" },
-      { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah taxi service" },
-      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Makkah to Madinah",
-    lastReviewed: "2026-08-26",
-  },
-
-  "jeddah-to-madinah": {
-    slug: "jeddah-to-madinah",
-    origin: "Jeddah",
-    destination: "Madinah",
-    originCitySlug: "jeddah",
-    destinationCitySlug: "madinah",
-    originAirportHref: "/jeddah-airport-taxi-service",
-    destinationAirportHref: "/madina-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Jeddah to Madinah Distance & Travel Time",
-    intro: "How far Madinah is from Jeddah, how long the drive takes from King Abdulaziz International Airport, and why some pilgrims choose this route to begin their Umrah in Madinah rather than Makkah.",
-    breadcrumbLabel: "Jeddah to Madinah",
-
-    roadDistance: "approximately 420 km by road",
-    driveTime: "approximately 4.5 hours",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Jeddah to Madinah is the second major route out of King Abdulaziz International Airport, alongside the much shorter Jeddah-to-Makkah leg — chosen specifically by pilgrims who plan to begin their Umrah in Madinah rather than Makkah.",
-      "Unlike the Jeddah-Makkah corridor, this journey doesn't end inside a restricted Haram zone, so there's more routing flexibility, though the distance itself is considerably longer at roughly 420 km.",
-      "The Madinah-first itinerary is a genuine, common choice — some pilgrims prefer to visit the Prophet's Mosque and settle in before the more physically demanding Umrah rites in Makkah, rather than the reverse order.",
-    ],
-    routeCharacteristics: [
-      "A direct highway connection north along the western region, distinct from the shorter Jeddah-Makkah corridor.",
-      "One of two primary onward routes from King Abdulaziz International Airport, alongside Jeddah-Makkah.",
-      "Ends outside a restricted zone, giving more routing and drop-off flexibility than a Makkah-bound transfer.",
-      "No international border crossing — entirely domestic.",
-    ],
-    factorsAffectingTime: [
-      "Traffic increases during Ramadan and the weeks around Hajj, as with every major pilgrim corridor.",
-      "Flight arrival timing at KAIA affects when the road journey actually begins — a late-night landing means a late-night drive.",
-      "This is a longer drive than Jeddah-Makkah, so realistic rest-stop planning matters more here.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct transfer from KAIA arrivals to your Madinah hotel, suited to pilgrims beginning their Umrah in Madinah rather than continuing straight to Makkah.",
-      },
-      {
-        title: "Self-Driving",
-        description: "A manageable single day's drive for confident drivers, though most arriving pilgrims — often managing luggage and jet lag — prefer not to navigate the route themselves.",
-      },
-      {
-        title: "Domestic Flight",
-        description: "A short domestic flight between Jeddah and Madinah is a realistic alternative for travelers who'd rather not spend 4.5 hours on the road after a long-haul flight.",
-      },
-    ],
-    transferBenefits: [
-      "Meet-and-greet pickup at KAIA arrivals with flight tracking for delays",
-      "Direct to your Madinah hotel — no need to arrange a connecting flight or second booking",
-      "A private vehicle for your group only",
-      "Professional driver experienced with pilgrim travel and Ziyarat planning around Rawdah timing",
-      "Suitable for a Madinah-first Umrah itinerary",
-      "Available 24/7, since international pilgrim flights land at every hour",
-    ],
-
-    journeyPlanning: [
-      { title: "Madinah-First Itinerary", note: "If you're beginning Umrah in Madinah, confirm this with your driver so the journey plan and any Rawdah-visit timing are set before you land." },
-      { title: "Rest After a Long Flight", note: "After a long-haul international flight, a 4.5-hour road journey is a lot in one day — a short rest stop partway is worth planning for." },
-      { title: "Peak Season Buffer", note: "Ramadan and the weeks around Hajj bring heavier traffic and higher airport volumes — build in extra time during those periods." },
-      { title: "Luggage for a Full Umrah Trip", note: "Pilgrims often travel with more luggage than a typical city transfer — mention your group size and luggage when booking so the right vehicle is arranged." },
-    ],
-    bestTimeToTravel: [
-      "Outside Ramadan and the Hajj season, this route runs close to its baseline 4.5-hour drive time.",
-      "During peak religious travel periods, both airport arrivals and road traffic increase — flexible travelers benefit from avoiding the very busiest weeks.",
-    ],
-
-    faqs: [
-      { q: "How far is Jeddah from Madinah?", a: "Approximately 420 km by road." },
-      { q: "How long does it take to drive from Jeddah to Madinah?", a: "Around 4.5 hours under typical conditions, longer during Ramadan and peak Umrah/Hajj season." },
-      { q: "Why would I go to Madinah first instead of Makkah?", a: "Some pilgrims prefer to visit the Prophet's Mosque and settle in before the more physically demanding Umrah rites in Makkah — it's a genuine, common itinerary choice, not the default one." },
-      { q: "Can I book this directly from King Abdulaziz Airport?", a: "Yes — Gulf Trip Service offers meet-and-greet pickup at KAIA arrivals with direct transfer to Madinah." },
-      { q: "Is this route longer than Jeddah to Makkah?", a: "Yes, considerably — Jeddah to Makkah is about 80 km, while Jeddah to Madinah is roughly 420 km." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Can you help plan a Rawdah visit as part of this transfer?", a: "Yes — if you share your planned Rawdah time slot (booked via the Nusuk app), your driver can plan pickup and Ziyarat timing around it." },
-    ],
-
-    relatedDistanceSlugs: ["jeddah-to-makkah", "makkah-to-madinah"],
-    relatedServiceLinks: [
-      { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah taxi service" },
-      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
-      { href: "/airport-transfer-for-umrah", label: "Umrah airport transfer" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Jeddah to Madinah",
-    lastReviewed: "2026-08-26",
-  },
-
-  "riyadh-to-dammam": {
-    slug: "riyadh-to-dammam",
-    routeHref: "/riyadh-to-dammam-guide",
-    origin: "Riyadh",
-    destination: "Dammam",
-    originCitySlug: "riyadh",
-    destinationCitySlug: "dammam",
-    originAirportHref: "/riyadh-airport-taxi-service",
-    destinationAirportHref: "/dammam-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Riyadh to Dammam Distance & Travel Time",
-    intro: "How far Dammam is from Riyadh, how long the drive takes across the central Saudi highway network, and what business and leisure travelers should know before booking this route.",
-    breadcrumbLabel: "Riyadh to Dammam",
-
-    roadDistance: "approximately 400 km by road",
-    driveTime: "approximately 4 hours",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Riyadh to Dammam connects the capital to the Eastern Province's commercial and industrial hub — a route run heavily by business travelers, with Dammam's oil, petrochemical, and port-related industries drawing a steady flow of corporate trips in both directions.",
-      "The road itself runs across relatively flat, open desert highway for most of its length — there's no mountainous terrain to navigate, which keeps the drive time fairly predictable compared to routes with more complex geography.",
-      "This is a comfortable single-day round trip for a business meeting, or a straightforward one-way transfer for travelers connecting between the two cities' airports.",
-    ],
-    routeCharacteristics: [
-      "Runs across flat, open highway through central Saudi Arabia — no mountain terrain.",
-      "Connects the political capital to the Eastern Province's commercial and industrial centre.",
-      "One of the country's most consistently traveled business corridors.",
-      "No international border crossing — entirely domestic.",
-    ],
-    factorsAffectingTime: [
-      "This route has relatively little seasonal variation compared to religious-travel corridors — traffic patterns track business travel more than pilgrimage seasons.",
-      "Fuel and rest stops are straightforward to plan given the open highway, but still worth building into a 4-hour drive.",
-      "Weather (occasional dust or sandstorms) can affect visibility and driving conditions on the open desert stretches — a genuine, if infrequent, consideration.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct, comfortable option for business travelers who want to work, rest, or take calls during the drive rather than self-drive across the country.",
-      },
-      {
-        title: "Self-Driving",
-        description: "A realistic option on this route given the flat, open highway — a comfortable single day's drive for confident drivers.",
-      },
-      {
-        title: "Domestic Flight",
-        description: "A very common alternative for business travelers on a tight schedule, given how frequently both cities are served by domestic flights.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door pickup from your Riyadh or Dammam address, hotel, or airport",
-      "A private vehicle suited to business travel — comfortable for calls or work during the drive",
-      "Professional, licensed driver experienced with this corridor",
-      "Flexible departure timing around your own meeting schedule",
-      "Available for either direction — Riyadh to Dammam or Dammam to Riyadh",
-      "Suitable for both business travelers and families making the trip together",
-    ],
-
-    journeyPlanning: [
-      { title: "Business Day Trips", note: "The 4-hour drive each way makes this a realistic same-day round trip for a single meeting, though many business travelers prefer an overnight stay to avoid two long drives in one day." },
-      { title: "Airport Connections", note: "If you're connecting between Riyadh (RUH) and Dammam (DMM) airports rather than city centres, factor in the airport-to-highway leg on both ends." },
-      { title: "Weather Awareness", note: "Occasional dust or reduced-visibility conditions on the open desert stretch are worth checking before departure, though they're not a frequent occurrence." },
-      { title: "Rest Stops", note: "A straightforward highway drive makes fuel and rest stops easy to plan — most travelers take one short stop partway." },
-    ],
-    bestTimeToTravel: [
-      "This route doesn't have a strong seasonal traffic pattern the way religious-travel corridors do — road conditions and weather matter more than time of year.",
-      "Weekday daytime travel is generally the most predictable, avoiding both nighttime driving on the open highway and any weekend leisure traffic near either city.",
-    ],
-
-    faqs: [
-      { q: "How far is Riyadh from Dammam?", a: "Approximately 400 km by road." },
-      { q: "How long does it take to drive from Riyadh to Dammam?", a: "Around 4 hours under typical conditions, across flat, open highway." },
-      { q: "Is this mainly a business travel route?", a: "Yes, predominantly — Dammam's commercial and industrial sector draws a steady flow of business travelers to and from Riyadh." },
-      { q: "Can I book a same-day round trip?", a: "Yes, it's a realistic single-day round trip for one meeting, though many travelers prefer to stay overnight rather than drive 8 hours total in one day." },
-      { q: "Is self-driving realistic on this route?", a: "Yes — the highway is flat and open for most of the journey, making it a comfortable single day's drive for confident drivers." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Can you connect me between the two cities' airports specifically?", a: "Yes — we run this route between Riyadh (RUH) and Dammam (DMM) airports as well as city-centre addresses." },
-    ],
-
-    relatedDistanceSlugs: [],
-    relatedServiceLinks: [
-      { href: "/riyadh-to-dammam-guide", label: "Riyadh to Dammam taxi service" },
-      { href: "/dammam-to-riyadh-taxi-service", label: "Dammam to Riyadh taxi service" },
-      { href: "/corporate-transportation-services", label: "Corporate transportation" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Riyadh to Dammam",
-    lastReviewed: "2026-08-26",
-  },
-
-  "riyadh-to-makkah": {
-    slug: "riyadh-to-makkah",
-    routeHref: "/riyadh-to-makkah-taxi-service",
-    origin: "Riyadh",
-    destination: "Makkah",
-    originCitySlug: "riyadh",
-    destinationCitySlug: "makkah",
-    originAirportHref: "/riyadh-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Riyadh to Makkah Distance & Travel Time",
-    intro: "How far Makkah is from Riyadh, how long the long cross-country drive actually takes, and the realistic alternatives worth knowing about for pilgrims and travelers starting their journey from the capital.",
-    breadcrumbLabel: "Riyadh to Makkah",
-
-    roadDistance: "approximately 870 km by road",
-    driveTime: "approximately 9–10 hours of continuous driving",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Riyadh to Makkah is one of the longest major domestic corridors in Saudi Arabia — nearly 870 km across the width of the country, connecting the capital in the central Najd region to the Holy City on the western coast.",
-      "Given the distance, this is realistically a full-day journey by road, and a meaningful number of travelers — particularly solo pilgrims on a tight schedule — choose a domestic flight instead and arrange ground transport at each end.",
-      "For those who do drive, the route crosses genuinely varied terrain moving from the central plateau down toward the western Hejaz region, which is part of why the driving time is proportionally longer than a similar distance on flatter ground.",
-    ],
-    routeCharacteristics: [
-      "One of the longest major domestic city-to-city corridors in the country, at nearly 870 km.",
-      "Crosses from the central Najd plateau to the western Hejaz region.",
-      "A common route for pilgrims and travelers based in or connecting through Riyadh.",
-      "No international border crossing — entirely domestic.",
-    ],
-    factorsAffectingTime: [
-      "Given the length of this drive, rest, meal, and prayer stops meaningfully extend the total journey time beyond the pure driving estimate.",
-      "Traffic on the approach into Makkah increases during Ramadan and the weeks around Hajj, adding to an already long drive.",
-      "Departure timing matters — starting early avoids finishing the approach into Makkah late at night after a 9-10 hour drive.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct, door-to-door option for travelers who'd rather not drive the distance themselves — the driver handles the full cross-country journey and any Ihram-related planning.",
-      },
-      {
-        title: "Domestic Flight",
-        description: "Given the distance, a short domestic flight between Riyadh and Jeddah (with a short onward transfer to Makkah) is a realistic and commonly chosen alternative to the full road journey.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for confident long-distance drivers, though a 9-10 hour single-day drive is demanding — some self-drivers split the journey with an overnight stop partway.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door pickup — no need to arrange a flight plus separate ground transport",
-      "A private vehicle for your group only, suited to a full-day journey",
-      "Professional driver experienced with Ihram etiquette and long-distance travel",
-      "Flexible departure time, so you can start early and avoid a late-night arrival",
-      "Rest stops planned around your group rather than a fixed schedule",
-      "Suitable for families and small groups making the full journey together",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day", note: "Between the 9-10 hour driving estimate and realistic rest stops, treat this as a full-day journey — most travelers don't fit other plans around it." },
-      { title: "Consider Flying for a Quick Trip", note: "At nearly 870 km, solo travelers or those on a tight schedule are often better served flying via Jeddah and arranging a short ground transfer from there." },
-      { title: "Early Departure", note: "Starting early in the day is more comfortable than a late departure, since it avoids finishing the approach into Makkah after dark." },
-      { title: "Ihram Planning", note: "If you're beginning Umrah from Riyadh, confirm your Miqat plans with your driver before departure." },
-    ],
-    bestTimeToTravel: [
-      "Traffic on the approach into Makkah is consistently busier during Ramadan and the weeks around Hajj — outside those periods, this route doesn't have a strongly seasonal pattern.",
-      "Given the length of the drive, time of day matters more than time of year — an early start is generally more comfortable regardless of season.",
-    ],
-
-    faqs: [
-      { q: "How far is Riyadh from Makkah?", a: "Approximately 870 km by road — one of the longest major domestic corridors in Saudi Arabia." },
-      { q: "How long does it take to drive from Riyadh to Makkah?", a: "Around 9 to 10 hours of continuous driving. In practice, most journeys take longer once rest, meal, and prayer stops are added." },
-      { q: "What is the best way to travel from Riyadh to Makkah?", a: "A private taxi or chauffeur transfer covers the full distance directly. Given the length, a domestic flight via Jeddah with a short onward transfer is also a realistic and commonly chosen alternative." },
-      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges private transfers for the full Riyadh to Makkah journey." },
-      { q: "Is this route suitable for a family road trip?", a: "It's a genuinely long single-day journey, so families should plan for extra rest stops beyond the minimum, especially with young children." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Would it be faster to fly instead of driving?", a: "For a single traveler or small group on a tight schedule, yes — flying to Jeddah and arranging a short onward transfer is often faster overall than the full 9-10 hour drive." },
-    ],
-
-    relatedDistanceSlugs: ["abha-to-madinah", "jeddah-to-makkah"],
-    relatedServiceLinks: [
-      { href: "/riyadh-to-makkah-taxi-service", label: "Riyadh to Makkah taxi service" },
-      { href: "/makkah-to-riyadh-taxi-service", label: "Makkah to Riyadh taxi service" },
-      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Riyadh to Makkah",
-    lastReviewed: "2026-08-26",
-  },
-
-  "bahrain-to-dammam": {
-    slug: "bahrain-to-dammam",
-    routeHref: "/bahrain-to-dammam-taxi-service",
-    origin: "Bahrain",
-    destination: "Dammam",
-    destinationCitySlug: "dammam",
-    destinationAirportHref: "/dammam-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Bahrain to Dammam Distance & Travel Time",
-    intro: "How far Dammam is from Bahrain, how long the King Fahd Causeway crossing takes, and what to expect on one of the most-traveled cross-border routes in the Gulf.",
-    breadcrumbLabel: "Bahrain to Dammam",
-
-    roadDistance: "approximately 65 km by road, including the causeway",
-    driveTime: "approximately 1–1.5 hours, including border processing",
-    routeType: "Cross-border route between Bahrain and Saudi Arabia via the King Fahd Causeway",
-
-    overviewParagraphs: [
-      "Bahrain to Dammam is short by distance but involves an international border crossing, which is why the travel-time range accounts for passport and customs processing rather than driving speed alone.",
-      "The King Fahd Causeway is the only land link between the two countries — a 25km bridge with its own passport control and customs point roughly midway across, before the road continues into Dammam, Khobar, and Dhahran on the Saudi side.",
-      "This is one of the most frequently traveled cross-border routes in the Gulf — a mix of shoppers, weekend visitors, families, and business travelers moving between Manama and the Eastern Province.",
-    ],
-    routeCharacteristics: [
-      "Crosses the King Fahd Causeway — the only land link between Bahrain and Saudi Arabia.",
-      "Involves a mid-causeway passport control and customs checkpoint.",
-      "One of the shortest and most frequently traveled cross-border corridors in the Gulf.",
-      "Ends in the Dammam/Khobar/Dhahran metropolitan area, Saudi Arabia's Eastern Province hub.",
-    ],
-    factorsAffectingTime: [
-      "Border processing time varies with traffic at the checkpoint — Thursday and Friday evenings see the heaviest weekend leisure crossings in both directions.",
-      "Passport and customs checks at the causeway checkpoint are a real, built-in part of the journey time, not an add-on to plan around separately.",
-      "Nationality affects processing: GCC nationals cross with a national ID, while other nationalities need a valid Saudi visa or Iqama.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A licensed driver collects you in Bahrain and takes you through the causeway crossing to your address in the Eastern Province — one vehicle, door to door.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for travelers with their own vehicle and the correct cross-border insurance and documentation, though most visitors without a Gulf-registered vehicle book a private transfer instead.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door: collected at your Bahrain address and dropped at your Saudi one",
-      "A private vehicle for your group only, for the whole journey",
-      "Licensed drivers who make this crossing regularly and know its peak-hour patterns",
-      "Luggage handled for you, including through the checkpoint",
-      "Suitable for shoppers, families, and business travelers alike",
-      "Available 24/7 for either direction of the crossing",
-    ],
-
-    journeyPlanning: [
-      { title: "Documents Ready", note: "Have your passport (and Saudi visa, Iqama, or GCC ID as applicable) ready before departure — this is the single biggest factor in how smoothly the crossing goes." },
-      { title: "Weekend Timing", note: "Thursday and Friday evenings see the heaviest weekend leisure traffic across the causeway in both directions — weekday mornings tend to be quickest." },
-      { title: "Book Ahead", note: "Booking at least 24 hours ahead lets the pickup be timed around the quieter crossing hours and the right vehicle reserved for your group." },
-      { title: "Onward Travel", note: "If you're continuing past Dammam to Khobar, Dhahran, or further up the coast, mention your final destination when booking." },
-    ],
-    bestTimeToTravel: [
-      "Weekday mornings are typically the fastest time to cross, with lighter traffic at the checkpoint.",
-      "Thursday and Friday evenings consistently see the heaviest weekend leisure crossings — worth avoiding if your schedule is flexible.",
-    ],
-
-    faqs: [
-      { q: "How far is Bahrain from Dammam?", a: "Approximately 65 km by road, including the King Fahd Causeway crossing." },
-      { q: "How long does it take to get from Bahrain to Dammam?", a: "Around 1 to 1.5 hours including border processing — the causeway drive itself is short, but passport and customs checks add time." },
-      { q: "Do I need to change vehicles at the border?", a: "No — the transfer is door to door. Your driver takes you through the causeway crossing and on to your address in Dammam, Khobar or Dhahran." },
-      { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service runs private Bahrain-to-Dammam transfers door to door, with licensed drivers who handle the causeway crossing with you." },
-      { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama — confirm current requirements before you travel." },
-      { q: "Is Bahrain to Dammam by road the only option?", a: "Yes — the King Fahd Causeway is the only land link between the two countries; there's no rail or ferry alternative for this specific route." },
-      { q: "What's the best time to cross to avoid queues?", a: "Weekday mornings are typically fastest. Thursday and Friday evenings see the heaviest weekend leisure traffic." },
-    ],
-
-    relatedDistanceSlugs: ["bahrain-to-jubail"],
-    relatedServiceLinks: [
-      { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi service" },
-      { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },
-      { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain taxi service" },
-      { href: "/blog/bahrain-to-dammam-travel-options", label: "Every way to cross the causeway, compared" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Bahrain to Dammam",
-    heroImage: "/destinations/manama-skyline-world-trade-center.webp",
-    heroImageAlt: "Manama skyline, Bahrain — starting point of the Bahrain to Dammam route",
-    lastReviewed: "2026-08-26",
-  },
-
+  /* ── Bahrain ──────────────────────────────────────────────────── */
   "bahrain-to-riyadh": {
-    slug: "bahrain-to-riyadh",
-    routeHref: "/bahrain-to-riyadh-taxi-service",
-    origin: "Bahrain",
-    destination: "Riyadh",
-    destinationCitySlug: "riyadh",
-    destinationAirportHref: "/riyadh-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Bahrain to Riyadh Distance & Travel Time",
-    intro: "How far Riyadh is from Bahrain, how long the causeway crossing plus onward drive takes, and what business travelers and families should know before planning this longer cross-border route.",
+    slug: "bahrain-to-riyadh", origin: "Bahrain", destination: "Riyadh", region: "bahrain",
     breadcrumbLabel: "Bahrain to Riyadh",
-
-    roadDistance: "approximately 470 km by road, including the causeway",
-    driveTime: "approximately 4.5–5.5 hours, including border processing",
-    routeType: "Cross-border route between Bahrain and Saudi Arabia via the King Fahd Causeway",
-
-    overviewParagraphs: [
-      "Bahrain to Riyadh combines the King Fahd Causeway crossing with a considerably longer onward drive than Bahrain to Dammam — the causeway gets you into Saudi Arabia, but Riyadh itself is still several hours further west across the country.",
-      "This route sees a steady flow of business travelers — Manama's financial sector and Riyadh's corporate and government districts generate regular trips in both directions — alongside families and leisure travelers making the fuller journey.",
-      "As with any causeway crossing, passport and customs processing is a built-in part of the journey time rather than a delay to plan around separately.",
+    title: "Bahrain to Riyadh Distance by Road: 470 km & Taxi Fare",
+    meta: "Bahrain to Riyadh is about 470 km by road, 4.5–5.5 hrs incl. the King Fahd Causeway. Same distance Riyadh to Bahrain. Private taxi from {{fare}}, 24/7.",
+    km: 470, straightKm: 420,
+    drive: "about 4.5 hours", withBorder: "4.5–5.5 hours",
+    highways: "King Fahd Causeway, Route 95 through Al Khobar, then Highway 40",
+    border: CAUSEWAY,
+    routeForward: { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh taxi" },
+    routeReverse: { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi" },
+    fareRoute: "riyadh-to-bahrain-taxi-service",
+    routeIntro: "The trip is a short causeway crossing followed by a long, straight run west across the Eastern Province. Most of the 470 km is on Highway 40, the main Dammam–Riyadh motorway.",
+    steps: [
+      { title: "Manama to the causeway", body: "About 20–25 minutes from central Manama on the Sheikh Isa bin Salman Highway to the causeway entry." },
+      { title: "King Fahd Causeway", body: "The 25 km bridge, with Bahrain exit and Saudi entry on the island halfway across. You stay in the car." },
+      { title: "Al Khobar and Dhahran", body: "Route 95 past Al Khobar and Dhahran to the Highway 40 junction near Dammam." },
+      { title: "Highway 40 west", body: "About 390 km of motorway across the desert to Riyadh, with one planned rest stop." },
+      { title: "Into Riyadh", body: "Drop-off in Olaya, KAFD, Diriyah, the Diplomatic Quarter or at King Khalid International Airport." },
     ],
-    routeCharacteristics: [
-      "Combines the King Fahd Causeway crossing with a long onward drive west to the capital.",
-      "A meaningfully longer journey than Bahrain to Dammam, which stops in the Eastern Province.",
-      "A regular business-travel corridor between Manama's financial district and Riyadh's corporate centre.",
-      "Involves one international border crossing — no other borders en route.",
+    reverse: "Riyadh to Bahrain is the same 470 km in the other direction: Highway 40 east to Dammam, Route 95 to Al Khobar, then the King Fahd Causeway into Manama. Allow 4.5–5.5 hours with the crossing. Our Riyadh to Bahrain taxi also starts from {{fare}} per car.",
+    options: [
+      ROUTE_TAXI("4.5–5.5 h"),
+      SELF_DRIVE("4.5–5.5 h", "Insurance valid in both countries and the causeway toll"),
+      { option: "Intercity bus", doorToDoor: false, time: "Longer, fixed timetable", transfers: "Bus station at each end", bestFor: "Low budget" },
+      { option: "Train and taxi", doorToDoor: false, time: "Longer, two or more legs", transfers: "Train to Dammam, then a car across the causeway", bestFor: "Travellers who prefer rail" },
+      FLIGHT,
     ],
-    factorsAffectingTime: [
-      "Border processing time at the causeway varies with traffic, same as any crossing — Thursday and Friday evenings are busiest.",
-      "The onward drive from the Eastern Province to Riyadh adds several hours beyond the crossing itself, and benefits from a rest stop given the total distance.",
-      "Business travelers on a tight schedule sometimes prefer flying into Riyadh directly rather than the full causeway-plus-road journey.",
+    tips: [
+      { icon: "clock", title: "Leave early", body: "Morning departures reach the causeway before the afternoon build-up and Riyadh before evening traffic." },
+      { icon: "calendarCheck", title: "Avoid peak causeway days", body: "Thursday evenings, Saturday evenings and the Bahrain Grand Prix weekend are the slowest times to cross." },
+      { icon: "fileCheck", title: "Documents in the cabin", body: "Keep passports, GCC IDs or Iqamas to hand, not in the boot; every passenger is checked." },
+      { icon: "coffee", title: "One rest stop", body: "A break on Highway 40 for prayer, coffee or fuel splits the drive neatly in two." },
+      { icon: "luggage", title: "Tell us your bags", body: "A sedan takes three to four cases; an SUV takes six. We send the right car." },
     ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "One vehicle and a licensed driver cover the whole run — your Bahrain pickup, the causeway crossing, and the long drive west to Riyadh.",
-      },
-      {
-        title: "Domestic Flight",
-        description: "Given the combined distance, some business travelers fly from Bahrain International Airport to Riyadh directly, arranging ground transport only within Riyadh itself.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for travelers with a Gulf-registered vehicle and the correct cross-border documentation, though it's a demanding single day given the combined causeway-plus-onward distance.",
-      },
-    ],
-    transferBenefits: [
-      "One booking covering the causeway crossing and the full onward drive to Riyadh",
-      "A private vehicle for your group only, for the whole journey",
-      "Licensed drivers experienced with both the causeway crossing and the long Eastern-Province-to-Riyadh stretch",
-      "Comfortable for business travelers who want to work or rest during the longer drive",
-      "Flexible departure timing around your own schedule",
-      "Suitable for families making the full journey together",
-    ],
-
-    journeyPlanning: [
-      { title: "Documents Ready", note: "Have your passport and Saudi visa, Iqama, or GCC ID ready before departure — this affects how smoothly the causeway crossing goes." },
-      { title: "Plan for a Long Day", note: "Between the crossing and the onward drive to Riyadh, this is a multi-hour journey — build in a rest stop rather than treating it as a quick trip." },
-      { title: "Consider Flying for Tight Schedules", note: "Business travelers on a same-day schedule sometimes prefer flying from Bahrain International Airport directly into Riyadh." },
-      { title: "Weekend Timing", note: "Thursday and Friday evenings see the heaviest causeway traffic — weekday mornings are typically quicker for the border-crossing portion." },
-    ],
-    bestTimeToTravel: [
-      "Weekday mornings are generally the smoothest time to cross the causeway, before the onward drive to Riyadh.",
-      "This route doesn't have a strongly seasonal pattern beyond the causeway's own weekend traffic — the onward drive to Riyadh is otherwise fairly consistent year-round.",
-    ],
-
     faqs: [
-      { q: "How far is Bahrain from Riyadh?", a: "Approximately 470 km by road, including the King Fahd Causeway crossing." },
-      { q: "How long does it take to get from Bahrain to Riyadh?", a: "Around 4.5 to 5.5 hours including border processing and the onward drive to Riyadh." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the journey from your Bahrain pickup through the crossing to your Riyadh address." },
-      { q: "Is it faster to fly instead of driving the whole way?", a: "For business travelers on a tight schedule, yes — flying from Bahrain International Airport directly to Riyadh is often faster than the combined causeway-and-road journey." },
-      { q: "Can I book one transfer for the whole trip?", a: "Yes — the full journey is one booking, door to door, covering the causeway crossing and the onward drive to Riyadh." },
-      { q: "Do I need a visa to cross into Saudi Arabia this way?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa or Iqama — confirm current requirements before traveling." },
-      { q: "Is this route suitable for a family trip?", a: "Yes, with realistic planning — it's a longer journey than a simple Dammam crossing, so build in a rest stop given the total distance." },
+      { q: "How far is Bahrain from Riyadh by road?", a: "About **470 km**, via the King Fahd Causeway and Highway 40. In a straight line it is roughly 420 km." },
+      { q: "How far is Riyadh from Bahrain?", a: "The same **470 km** the other way, from Riyadh east on Highway 40 to the causeway and Manama." },
+      { q: "How many hours is Bahrain to Riyadh by car?", a: "About **4.5 hours** of driving, or **4.5–5.5 hours** including the causeway crossing, depending on traffic." },
+      { q: "Can you drive from Riyadh to Bahrain?", a: "**Yes.** The King Fahd Causeway is open to cars 24 hours; you need insurance valid in Bahrain and pay the causeway toll." },
+      { q: "Which border do you cross between Bahrain and Riyadh?", a: "The **King Fahd Causeway**. Both countries' passport posts are on its middle island; you stay in the car." },
+      { q: "How much is a taxi from Bahrain to Riyadh?", a: "**From {{fare}}** one way per car, and the same Riyadh to Bahrain. Every vehicle's fare is on the route page." },
+      { q: "How far is Bahrain from Saudi Arabia?", a: "Al Khobar is about **50 km** from Manama and Dammam about **65 km**, across the King Fahd Causeway." },
     ],
-
-    relatedDistanceSlugs: ["bahrain-to-dammam", "bahrain-to-jubail"],
-    relatedServiceLinks: [
-      { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh taxi service" },
-      { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi" },
-      { href: "/corporate-transportation-services", label: "Corporate transportation" },
-      { href: "/guides/long-distance-private-transfers", label: "How long-distance private transfers work" },
+    arabic: {
+      answer: "المسافة من البحرين إلى الرياض بالسيارة نحو 470 كم، والرحلة 4.5 إلى 5.5 ساعات شاملة عبور جسر الملك فهد.",
+      faqs: [
+        { q: "كم ساعة من البحرين إلى الرياض بالسيارة؟", a: "نحو **4.5 ساعات قيادة**، أو **4.5 إلى 5.5 ساعات** مع عبور جسر الملك فهد حسب الازدحام." },
+        { q: "كم المسافة بين الرياض والبحرين بالسيارة؟", a: "نحو **470 كم** عبر الطريق السريع 40 وجسر الملك فهد، والتاكسي الخاص يبدأ من **{{fareAr}}** للسيارة." },
+      ],
+    },
+    table: SAUDI_TO_BAHRAIN_TABLE,
+    transferBenefits: ["Same car across the causeway", "From {{fare}} per car", "One rest stop on Highway 40"],
+    relatedDistanceSlugs: ["bahrain-to-dammam", "bahrain-to-jubail", "riyadh-to-dammam", "doha-to-riyadh"],
+    relatedLinks: [
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/destinations/manama", label: "Manama private transfers" },
+      { href: "/guides/long-distance-private-transfers", label: "How long-distance transfers work" },
     ],
-
-    ctaText: "Get a Private Transfer Quote for Bahrain to Riyadh",
-    heroImage: "/destinations/manama-skyline-world-trade-center.webp",
-    heroImageAlt: "Manama skyline, Bahrain — starting point of the Bahrain to Riyadh route",
-    lastReviewed: "2026-08-26",
+    source: `${OSRM}: 472 km, 4.6 h (Riyadh–Manama 467 km)`,
+    verified: "2026-11-20",
   },
 
   "bahrain-to-jubail": {
-    slug: "bahrain-to-jubail",
-    routeHref: "/bahrain-to-jubail-taxi-service",
-    origin: "Bahrain",
-    destination: "Jubail",
-    destinationCitySlug: "jubail",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Bahrain to Jubail Distance & Travel Time",
-    intro: "How far Jubail is from Bahrain, how long the causeway crossing plus the onward leg past Dammam takes, and what contractors and business travelers should know before booking this extended route.",
+    slug: "bahrain-to-jubail", origin: "Bahrain", destination: "Jubail", region: "bahrain",
     breadcrumbLabel: "Bahrain to Jubail",
-
-    roadDistance: "approximately 150 km by road, including the causeway",
-    driveTime: "approximately 2–2.5 hours, including border processing",
-    routeType: "Cross-border route between Bahrain and Saudi Arabia via the King Fahd Causeway",
-
-    overviewParagraphs: [
-      "Bahrain to Jubail is really the King Fahd Causeway crossing plus a further stretch north past Dammam and Khobar — Jubail sits roughly an hour up the coast from where most causeway traffic stops.",
-      "A meaningful share of travelers on this route are contractors and technical staff heading to Jubail Industrial City or a Royal Commission assignment, rather than the shopping or family-visit trips that dominate the shorter Bahrain-to-Dammam crossing.",
-      "The crossing itself works exactly as it does on any causeway trip — what differs here is simply the longer onward leg once you are on the Saudi side.",
+    title: "Bahrain to Jubail Distance by Road: 150 km, 2–2.5 hrs",
+    meta: "Bahrain to Jubail is about 150 km by road, 2–2.5 hrs incl. the King Fahd Causeway. Same distance Jubail to Bahrain. Private taxi door to door, 24/7.",
+    km: 150,
+    drive: "about 2 hours", withBorder: "2–2.5 hours",
+    highways: "King Fahd Causeway, then the Dhahran–Jubail highway (Route 613)",
+    border: CAUSEWAY,
+    routeForward: { href: "/bahrain-to-jubail-taxi-service", label: "Bahrain to Jubail taxi" },
+    routeIntro: "Jubail sits about an hour north of where most causeway traffic stops. After the crossing, the Dhahran–Jubail highway runs straight up the coast to Jubail Industrial City.",
+    steps: [
+      { title: "Manama to the causeway", body: "About 20–25 minutes from central Manama to the causeway entry." },
+      { title: "King Fahd Causeway", body: "Bahrain exit and Saudi entry on the middle island, in the same car." },
+      { title: "Dhahran–Jubail highway", body: "About 85 km north on Route 613, past Dhahran and the Dammam turn-offs." },
+      { title: "Jubail", body: "Drop-off in Jubail city, Jubail Industrial City or a Royal Commission site, with gate details agreed in advance." },
     ],
-    routeCharacteristics: [
-      "Crosses the King Fahd Causeway, then continues north past Dammam and Khobar to Jubail.",
-      "Roughly twice the distance of the shorter Bahrain-to-Dammam crossing.",
-      "A route with a notably higher share of business and contractor travel than Bahrain's shorter Saudi crossings.",
-      "Involves one international border crossing — no other borders en route.",
+    reverse: "Jubail to Bahrain is the same 150 km the other way: Route 613 south to Al Khobar, then the causeway into Manama. Allow 2–2.5 hours with the crossing. Bahrain International Airport, on Muharraq, is about 165 km from Jubail.",
+    options: [
+      ROUTE_TAXI("2–2.5 h"),
+      SELF_DRIVE("2–2.5 h", "Insurance valid in both countries and the causeway toll"),
+      { option: "Bus to Al Khobar, then taxi", doorToDoor: false, time: "Longer", transfers: "Change at Al Khobar", bestFor: "Low budget" },
     ],
-    factorsAffectingTime: [
-      "Border processing time at the causeway varies with traffic, same as any crossing.",
-      "The additional Dammam-to-Jubail leg adds roughly 50–70 minutes beyond a standard Bahrain-to-Dammam crossing.",
-      "First-time arrivals at Jubail Industrial City gates should confirm site-pass requirements in advance to avoid delays at the final stretch.",
+    tips: [
+      { icon: "briefcase", title: "Site access", body: "For Jubail Industrial City or a contractor camp, share the gate, badge office and contact name when you book." },
+      { icon: "clock", title: "Shift-change traffic", body: "The highway is busiest around early-morning and late-afternoon shift changes; we time pickups around them." },
+      { icon: "fileCheck", title: "Work documents", body: "Contractors entering Saudi Arabia should carry the visa or Iqama their employer arranged." },
+      { icon: "calendarCheck", title: "Weekend causeway queues", body: "Thursday and Saturday evenings are the slowest times to cross." },
     ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "One vehicle and a licensed driver from your Bahrain address, across the causeway, through to your specific gate, site or address in Jubail.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for travelers with a Gulf-registered vehicle and correct documentation, though most contractors and first-time visitors book a private transfer instead.",
-      },
-    ],
-    transferBenefits: [
-      "One booking covering the causeway crossing and the full onward leg to Jubail",
-      "Drivers familiar with Jubail Industrial City's major entry gates and standard site-pass procedures",
-      "A private vehicle for your group only, for the whole journey",
-      "Suitable for solo contractors, technical teams, and business travelers alike",
-      "Luggage space for equipment or extended-stay baggage",
-      "Available 24/7 for either direction",
-    ],
-
-    journeyPlanning: [
-      { title: "Confirm Your Gate", note: "For first-time arrivals at Jubail Industrial City, confirm your exact gate, site, or badge requirements a day ahead so the driver isn't held up at security." },
-      { title: "Documents Ready", note: "Have your passport and Saudi visa, Iqama, or GCC ID ready before departure for the causeway crossing." },
-      { title: "Longer Than Dammam", note: "Budget roughly an hour more than a standard Bahrain-to-Dammam trip, since Jubail is a further stretch up the coast." },
-      { title: "Book Ahead", note: "At least 24 hours' notice lets the pickup time, the vehicle and any site-pass requirements all be confirmed before you travel." },
-    ],
-    bestTimeToTravel: [
-      "Weekday mornings are typically the smoothest time to cross the causeway before the onward drive to Jubail.",
-      "This route tracks business and contractor schedules more than seasonal or weekend leisure patterns.",
-    ],
-
     faqs: [
-      { q: "How far is Bahrain from Jubail?", a: "Approximately 150 km by road, combining the King Fahd Causeway crossing with the onward leg past Dammam." },
-      { q: "How long does it take to get from Bahrain to Jubail?", a: "Around 2 to 2.5 hours including border processing and the drive up the coast past Dammam and Khobar." },
-      { q: "Is this route mostly for business travelers?", a: "A meaningful share, yes — contractors and technical staff heading to Jubail Industrial City or a Royal Commission assignment make up a steady portion of this route's traffic." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the journey from your Bahrain pickup, through the crossing, to your gate or address in Jubail." },
-      { q: "Is there an airport in Jubail I could fly into instead?", a: "No — Jubail has no airport of its own. This causeway route or a connection via King Fahd International Airport in Dammam are the two realistic options." },
-      { q: "Can you drop me at a specific Industrial City gate?", a: "Yes — share your exact gate, site, or address when booking, and confirm badge or pass requirements in advance for a first-time arrival." },
-      { q: "How much longer is this than Bahrain to Dammam?", a: "Roughly 50 to 70 minutes longer, since Jubail is a further stretch up the coast past Dammam and Khobar." },
+      { q: "How far is Bahrain from Jubail by road?", a: "About **150 km**, across the King Fahd Causeway and up the Dhahran–Jubail highway." },
+      { q: "How far is Jubail to Bahrain?", a: "The same **150 km** the other way. To Bahrain International Airport it is about **165 km**." },
+      { q: "How long does Bahrain to Jubail take?", a: "About **2 hours** of driving, or **2–2.5 hours** including the causeway crossing." },
+      { q: "Is there a taxi from Jubail to Bahrain?", a: "**Yes.** We drive both ways, door to door. Message us on WhatsApp with your Jubail pickup point." },
+      { q: "Do I change cars at the causeway?", a: "**No.** One car and one driver cover the whole trip; passengers show their own documents at both posts." },
+      { q: "Can you collect from Jubail Industrial City?", a: "**Yes**, including company camps and Royal Commission sites. Share the gate and contact details when you book." },
     ],
-
-    relatedDistanceSlugs: ["bahrain-to-dammam"],
-    relatedServiceLinks: [
-      { href: "/bahrain-to-jubail-taxi-service", label: "Bahrain to Jubail taxi service" },
-      { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi service" },
-      { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain taxi service" },
+    arabic: {
+      answer: "تبعد الجبيل عن البحرين نحو 150 كم براً، والرحلة ساعتان إلى ساعتين ونصف شاملة عبور جسر الملك فهد.",
+      faqs: [{ q: "كم تبعد الجبيل عن البحرين؟", a: "نحو **150 كم** عبر جسر الملك فهد وطريق الظهران–الجبيل، أي **ساعتين إلى ساعتين ونصف** تقريباً." }],
+    },
+    table: SAUDI_TO_BAHRAIN_TABLE,
+    transferBenefits: ["Same car across the causeway", "Industrial City and camp pickups", "Timed around shift changes"],
+    relatedDistanceSlugs: ["bahrain-to-dammam", "bahrain-to-riyadh", "dammam-to-kuwait"],
+    relatedLinks: [
+      { href: "/services/jubail", label: "Jubail taxi service" },
+      { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi" },
+      { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain taxi" },
     ],
-
-    ctaText: "Get a Private Transfer Quote for Bahrain to Jubail",
-    heroImage: "/destinations/manama-skyline-world-trade-center.webp",
-    heroImageAlt: "Manama skyline, Bahrain — starting point of the Bahrain to Jubail route",
-    lastReviewed: "2026-08-26",
+    source: `${OSRM}: 156 km, 1.9 h; Jubail to Bahrain airport 166 km`,
+    verified: "2026-11-20",
   },
 
-  // ─────────────────────────────────────────────────────────────────
-  // Batch 2 (route-inventory audit, Priority B backlog) — same rule as
-  // Batch 1: Tier 1 routes below each already have a live commercial
-  // "-taxi-service" page (strongest justification, since the two pages
-  // reinforce each other). Tier 2 (riyadh-to-jeddah, abha-to-riyadh,
-  // abha-to-jeddah) have no commercial counterpart yet but are justified
-  // on their own — major-city / geographic importance identified in the
-  // Batch 1 report's own backlog note.
-  // ─────────────────────────────────────────────────────────────────
+  "bahrain-to-dammam": {
+    slug: "bahrain-to-dammam", origin: "Bahrain", destination: "Dammam", region: "bahrain",
+    breadcrumbLabel: "Bahrain to Dammam",
+    title: "Bahrain to Dammam Distance by Road: 65 km, 1–1.5 hrs",
+    meta: "Bahrain to Dammam is about 65 km by road, 1–1.5 hrs incl. the King Fahd Causeway. Same distance Dammam to Bahrain. Private taxi door to door, 24/7.",
+    km: 65,
+    drive: "about 1 hour", withBorder: "1–1.5 hours",
+    highways: "King Fahd Causeway, then Route 95 through Al Khobar",
+    border: CAUSEWAY,
+    routeForward: { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi" },
+    routeReverse: { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi" },
+    routeIntro: "The shortest causeway trip: most of the time goes on the crossing itself. Al Khobar is the first Saudi city after the causeway, and Dammam is about 20 minutes beyond it.",
+    steps: [
+      { title: "Manama to the causeway", body: "About 20–25 minutes from central Manama." },
+      { title: "King Fahd Causeway", body: "The 25 km bridge with both passport posts on the middle island." },
+      { title: "Al Khobar", body: "The first stop for many passengers: the corniche, malls and business district." },
+      { title: "Dammam", body: "About 25–35 minutes from the causeway to central Dammam, Dhahran or the business districts." },
+    ],
+    reverse: "Dammam to Bahrain is the same 65 km the other way, across the causeway into Manama in 1–1.5 hours. From King Fahd International Airport (DMM) it is further, about 100 km and 1.5–2.5 hours with the crossing.",
+    options: [
+      ROUTE_TAXI("1–1.5 h"),
+      SELF_DRIVE("1–1.5 h", "Insurance valid in both countries and the causeway toll"),
+      { option: "Causeway bus", doorToDoor: false, time: "Fixed timetable", transfers: "Bus station at each end", bestFor: "Low budget, light luggage" },
+    ],
+    tips: [
+      { icon: "clock", title: "Weekday mornings are quickest", body: "Crossings before 10 am on weekdays are usually the fastest." },
+      { icon: "calendarCheck", title: "Weekend peaks", body: "Thursday and Saturday evenings and Bahrain holidays bring the longest queues." },
+      { icon: "plane", title: "Flying out of Dammam?", body: "From Manama to King Fahd International Airport allow about 2 hours plus your airline's check-in time." },
+      { icon: "fileCheck", title: "eVisa in advance", body: "Most visitors get a Bahrain eVisa online; apply at least 48 hours before travel." },
+    ],
+    faqs: [
+      { q: "How far is Bahrain from Dammam?", a: "About **65 km** by road, including the 25 km King Fahd Causeway. Al Khobar is closer, about **50 km**." },
+      { q: "Bahrain to Dammam by road: how long?", a: "About **1–1.5 hours** door to door; the crossing usually takes **45–75 minutes** of that." },
+      { q: "How far is Dammam Airport from Bahrain?", a: "About **100 km**, so allow **1.5–2.5 hours** with the causeway crossing." },
+      { q: "Is the King Fahd Causeway open 24 hours?", a: "**Yes**, around the clock; it is busiest on weekend evenings and holidays." },
+      { q: "Do I change cars at the border?", a: "**No.** You stay in the same car; each passenger shows their own passport or GCC ID." },
+      { q: "Is there a taxi from Dammam to Bahrain?", a: "**Yes**, door to door in both directions. Send your pickup address and time on WhatsApp." },
+    ],
+    arabic: {
+      answer: "المسافة من البحرين إلى الدمام نحو 65 كم براً، والرحلة ساعة إلى ساعة ونصف شاملة عبور جسر الملك فهد.",
+      faqs: [{ q: "كم ساعة من البحرين إلى الدمام؟", a: "نحو **ساعة إلى ساعة ونصف** من الباب إلى الباب، منها **45 إلى 75 دقيقة** لعبور الجسر." }],
+    },
+    table: SAUDI_TO_BAHRAIN_TABLE,
+    transferBenefits: ["Same car across the causeway", "To Dammam, Khobar or Dhahran", "Airport runs to DMM"],
+    relatedDistanceSlugs: ["bahrain-to-riyadh", "bahrain-to-jubail", "doha-to-dammam"],
+    relatedLinks: [
+      { href: "/services/dammam", label: "Dammam taxi service" },
+      { href: "/services/khobar", label: "Al Khobar taxi service" },
+      { href: "/blog/bahrain-to-dammam-travel-options", label: "Every way to cross the causeway, compared" },
+    ],
+    source: `${OSRM}: Manama–Dammam 75 km, Manama–Al Khobar 49 km, 0.7–0.9 h; DMM airport–Manama 102 km`,
+    verified: "2026-11-20",
+  },
+
+  /* ── Kuwait ───────────────────────────────────────────────────── */
+  "riyadh-to-kuwait": {
+    slug: "riyadh-to-kuwait", origin: "Riyadh", destination: "Kuwait", region: "kuwait",
+    breadcrumbLabel: "Riyadh to Kuwait",
+    title: "Riyadh to Kuwait Distance by Road: 648 km, 7h 40m, Taxi Fare",
+    meta: "Riyadh to Kuwait is about 648 km by road, 7 h 40 min driving via the Al Khafji border. Same distance Kuwait to Riyadh. Private taxi from {{fare}}.",
+    km: 648, straightKm: 535,
+    drive: "about 7 hours 40 minutes",
+    highways: "Routes 65, 550 and 95 in Saudi Arabia, then Route 40 in Kuwait",
+    border: KHAFJI,
+    routeForward: { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" },
+    routeReverse: { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh taxi" },
+    fareRoute: "riyadh-to-kuwait-taxi-service",
+    routeIntro: "The usual road runs north-east from Riyadh to the Gulf coast and crosses into Kuwait at Al Khafji / Al Nuwaiseeb. The coastal road has more towns and services than the inland alternative.",
+    steps: [
+      { title: "Riyadh", body: "Pickup in Olaya, KAFD, the Diplomatic Quarter or at King Khalid International Airport." },
+      { title: "Routes 65 and 550", body: "The long desert stretch north-east out of Riyadh towards the coast." },
+      { title: "Rest stop", body: "A planned break for prayer, coffee or fuel." },
+      { title: "Route 95 to Al Khafji", body: "Up the Gulf coast to Al Khafji, the last Saudi town before Kuwait." },
+      { title: "Al Nuwaiseeb into Kuwait", body: "Saudi exit and Kuwait entry, then Route 40 north to Kuwait City." },
+    ],
+    altRoute: "The inland crossing at Al Ruqi'i / Al Salmi, near Hafar Al Batin, is longer and emptier from Riyadh; we use it only when it suits your pickup or the conditions on the day.",
+    reverse: "Kuwait to Riyadh is the same road the other way: about 648 km via Al Nuwaiseeb / Al Khafji, Route 40 in Kuwait and then Routes 95, 550 and 65 to Riyadh. Expect roughly 7 hours 40 minutes of driving, plus the border. Our Kuwait to Riyadh taxi also starts from {{fare}} per car.",
+    options: [
+      ROUTE_TAXI("~7 h 40 min + border"),
+      SELF_DRIVE("~7 h 40 min + border", "Kuwaiti insurance bought at the border"),
+      FLIGHT,
+    ],
+    tips: [
+      { icon: "clock", title: "Plan a full day", body: "With the border and a rest stop, most travellers set aside the whole day." },
+      { icon: "calendarCheck", title: "Avoid weekend evenings", body: "Thursday and Friday evenings are the slowest times at Al Khafji." },
+      { icon: "fileCheck", title: "Check your visa", body: "Non-GCC travellers need a Kuwait visa or eVisa; Saudi residents need an exit and re-entry visa." },
+      { icon: "fuel", title: "Services on the coast road", body: "Route 95 passes more towns and fuel stations than the inland road." },
+      { icon: "plane", title: "Flying out of Kuwait?", body: "Leave Riyadh at least 11 hours before an international departure from Kuwait Airport." },
+    ],
+    faqs: [
+      { q: "How far is Riyadh to Kuwait by road?", a: "About **648 km** via the Al Khafji–Al Nuwaiseeb border. In a straight line the cities are about 535 km apart." },
+      { q: "What is the Kuwait to Riyadh distance by road?", a: "The same **648 km** the other way, with roughly **7 hours 40 minutes** of driving plus the border." },
+      { q: "How many hours from Riyadh to Kuwait by car?", a: "Roughly **7 hours 40 minutes** of driving. Border processing and a rest stop add to that." },
+      { q: "Which highways go from Riyadh to Kuwait?", a: "**Routes 65, 550 and 95** in Saudi Arabia, then **Route 40** in Kuwait after Al Nuwaiseeb." },
+      { q: "How much is a taxi from Riyadh to Kuwait?", a: "**Starting from {{fare}}** per car, one way, in both directions. Prices may vary depending on date and availability." },
+      { q: "Is Riyadh to Kuwait different from Dammam to Kuwait?", a: "Both cross at **Al Khafji / Al Nuwaiseeb**. From Dammam it is about 410 km; from Riyadh about 648 km." },
+      { q: "Do I need a visa to drive into Kuwait?", a: "GCC citizens cross on their ID. Others need a **Kuwait visa or eVisa**; check before you travel." },
+    ],
+    arabic: {
+      answer: "المسافة من الرياض إلى الكويت بالسيارة نحو 648 كم، ومدة القيادة نحو 7 ساعات و40 دقيقة عبر منفذ الخفجي والنويصيب.",
+      faqs: [{ q: "كم كيلو من الرياض إلى الكويت؟", a: "نحو **648 كم** براً عبر منفذ الخفجي، والتاكسي الخاص **يبدأ من {{fareAr}}** للسيارة." }],
+    },
+    table: SAUDI_TO_KUWAIT_TABLE,
+    transferBenefits: ["Starting from {{fare}} per car", "Same car across the border", "Coastal road with more services"],
+    relatedDistanceSlugs: ["dammam-to-kuwait", "khafji-to-kuwait", "riyadh-to-dammam", "doha-to-riyadh"],
+    relatedLinks: [
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/destinations/kuwait-city", label: "Chauffeur service in Kuwait" },
+      { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
+    ],
+    source: "Owner-confirmed route and time, 19 Nov 2026 (648 km, 7 h 40 min). OSRM's fastest route: 716 km, 7.6 h",
+    verified: "2026-11-19",
+  },
 
   "dammam-to-kuwait": {
-    slug: "dammam-to-kuwait",
-    routeHref: "/dammam-to-kuwait-taxi-service",
-    origin: "Dammam",
-    destination: "Kuwait",
-    originCitySlug: "dammam",
-    destinationAirportHref: "/dammam-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Dammam to Kuwait Distance by Road & Travel Time",
-    intro: "How far Kuwait is from Dammam by road, how long the drive up the Gulf coast takes, and what to expect at the Al Khafji / Al Nuwaiseeb border.",
+    slug: "dammam-to-kuwait", origin: "Dammam", destination: "Kuwait", region: "kuwait",
     breadcrumbLabel: "Dammam to Kuwait",
-
-    // Map routing (OSRM), Nov 2026: 413 km, about 4.4 hours of driving via
-    // Al Khafji. One figure on every Dammam/Kuwait page.
-    roadDistance: "about 410 km by road via the Al Khafji / Al Nuwaiseeb border",
-    driveTime: "about 4.5 hours of driving, 5 to 6 hours with the border",
-    routeType: "Cross-border route between Saudi Arabia and Kuwait via the Al Khafji / Al Nuwaiseeb border",
-
-    answerBox: {
-      items: [
-        { label: "Distance by road", value: "~410 km" },
-        { label: "Driving time", value: "~4.5 h" },
-        { label: "With the border", value: "5–6 h" },
-        { label: "Border", value: "Al Khafji / Al Nuwaiseeb" },
-      ],
-      arabic: "المسافة من الدمام إلى الكويت نحو 410 كم براً، ومدة القيادة نحو 4.5 ساعات عبر منفذ الخفجي والنويصيب.",
-    },
-    bookingBox: {
-      title: "Need a ride? Private taxi Dammam ↔ Kuwait",
-      text: "Door to door across the border, 24/7. Tell us your date and we confirm the fare on WhatsApp before you book.",
-      href: "/dammam-to-kuwait-taxi-service",
-      hrefLabel: "Dammam to Kuwait taxi",
-      whatsappMessage: "Hi, I want to book Dammam to Kuwait",
-      links: [{ href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi" }],
-    },
-    reverse: {
-      heading: "Kuwait to Dammam Distance by Road",
-      paragraphs: [
-        "Kuwait to Dammam is about 410 km the other way: Route 40 south to Al Nuwaiseeb, into Saudi Arabia at Al Khafji, then down the coast highway past Jubail. Allow about 4.5 hours of driving, 5 to 6 hours with the border.",
-      ],
-      link: { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi" },
-    },
-    comparison: SAUDI_TO_KUWAIT_TABLE,
-
-    overviewParagraphs: [
-      "Dammam to Kuwait follows the Gulf coast highway north past Jubail to Al Khafji and the Al Nuwaiseeb border crossing — the most direct land route between Saudi Arabia's Eastern Province and Kuwait.",
-      "This corridor carries a steady flow of business and family travel, reflecting the close economic and personal ties between the Eastern Province and Kuwait, including a significant oil and gas sector workforce that moves regularly between the two.",
-      "Once across the border, the drive continues into Kuwait City or specific districts such as Al Ahmadi or Fahaheel, depending on your final destination.",
+    title: "Dammam to Kuwait Distance by Road: 410 km, 4.5 hrs + Border",
+    meta: "Dammam to Kuwait is about 410 km by road, 4.5 hrs driving (5–6 with the Khafji border). Same distance Kuwait to Dammam. Private taxi door to door, 24/7.",
+    km: 410,
+    drive: "about 4.5 hours", withBorder: "5–6 hours",
+    highways: "Route 95 up the Gulf coast, then Route 40 in Kuwait",
+    border: KHAFJI,
+    routeForward: { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait taxi" },
+    routeReverse: { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi" },
+    routeIntro: "One road does almost all the work: Route 95 runs north from Dammam along the Gulf coast, past Jubail, to Al Khafji and the Kuwaiti border.",
+    steps: [
+      { title: "Dammam, Al Khobar or Dhahran", body: "Pickup from homes, hotels, compounds or King Fahd International Airport." },
+      { title: "Route 95 north", body: "About 290 km up the coast past Jubail; the last fuel and food stops before the border are around Al Khafji." },
+      { title: "Al Khafji / Al Nuwaiseeb", body: "Saudi exit and Kuwait entry in the same car." },
+      { title: "Route 40 to Kuwait City", body: "About 105 km north to Kuwait City, Al Ahmadi, Fahaheel or Kuwait International Airport." },
     ],
-    routeCharacteristics: [
-      "Runs along the Gulf coast highway past Jubail to Al Khafji.",
-      "Crosses at Al Nuwaiseeb, the most direct border point between the Eastern Province and Kuwait.",
-      "A well-traveled corridor for oil and gas sector business travel and family visits.",
-      "Involves one international border crossing — no other borders en route.",
+    reverse: "Kuwait to Dammam is the same 410 km the other way: Route 40 south to Al Nuwaiseeb, into Saudi Arabia at Al Khafji, then down Route 95 past Jubail. Allow about 4.5 hours of driving, 5–6 hours with the border.",
+    options: [ROUTE_TAXI("5–6 h"), SELF_DRIVE("5–6 h", "Kuwaiti insurance bought at the border"), FLIGHT],
+    tips: [
+      { icon: "briefcase", title: "Business timing", body: "Much of this road's traffic is oil and gas staff; weekday mornings are the steadiest time to cross." },
+      { icon: "fileCheck", title: "Documents ready", body: "Passports, visas or GCC IDs within reach; this decides how smoothly the border goes." },
+      { icon: "mapPin", title: "Name your Kuwait district", body: "Kuwait City, Al Ahmadi and Fahaheel are all on the way but at different distances from the border." },
+      { icon: "fuel", title: "Fuel before the border", body: "Fill up around Jubail or Al Khafji; your driver plans this for you." },
     ],
-    factorsAffectingTime: [
-      "Border processing time varies with traffic at Al Nuwaiseeb, same as any land crossing.",
-      "Onward drive time within Kuwait varies depending on whether your destination is central Kuwait City or an outlying district like Al Ahmadi or Fahaheel.",
-      "GCC nationals cross with a national ID, while other nationalities need a valid visa — affects how smoothly the crossing goes.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle covers the full journey from Dammam to your Kuwait destination, with your driver handling the border crossing along the way.",
-      },
-      {
-        title: "Domestic/Regional Flight",
-        description: "A short flight between Dammam and Kuwait City is a realistic alternative for travelers on a tight schedule, at the cost of needing separate ground transport at each end.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for travelers with the correct cross-border documentation and vehicle insurance, following the same coastal highway route.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire journey — no need to change cars at the border",
-      "Professional driver experienced with the Al Nuwaiseeb crossing",
-      "Direct to your specific Kuwait destination, whether Kuwait City, Al Ahmadi, or Fahaheel",
-      "A private vehicle for your group only",
-      "Suitable for business travelers and families with connections on both sides of the border",
-      "Available 24/7 for either direction",
-    ],
-
-    journeyPlanning: [
-      { title: "Documents Ready", note: "Have your passport and Saudi/Kuwaiti visa or GCC ID ready before departure — this is the biggest factor in how smoothly the crossing goes." },
-      { title: "Plan for a Full Day", note: "Between the drive and border processing, budget most of a day for this journey rather than treating it as a quick trip." },
-      { title: "Confirm Your Kuwait District", note: "Let your driver know your exact destination in Kuwait — Kuwait City, Al Ahmadi, and Fahaheel are all reachable, but add different amounts of time from the border." },
-      { title: "Business Travel Timing", note: "If this is a business trip tied to oil and gas sector schedules, book ahead so the crossing timing lines up with your appointment." },
-    ],
-    bestTimeToTravel: [
-      "This route tracks business and family-visit patterns more than seasonal tourism, so it doesn't have a strongly seasonal traffic pattern.",
-      "Weekday travel tends to see smoother border processing than weekend peak periods.",
-    ],
-
     faqs: [
-      { q: "How far is Dammam from Kuwait by road?", a: "About 410 km, following the Gulf coast highway past Jubail to the Al Khafji / Al Nuwaiseeb border." },
-      { q: "How long does it take to drive from Dammam to Kuwait?", a: "About 4.5 hours of driving, or 5 to 6 hours including border processing at Al Khafji / Al Nuwaiseeb." },
-      { q: "How far is Kuwait to Dammam by road?", a: "The same road the other way: about 410 km, about 4.5 hours of driving plus the border." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
-      { q: "What is the best way to travel from Dammam to Kuwait?", a: "A private taxi or chauffeur transfer covers the full distance in one vehicle. A short flight is a realistic alternative for travelers on a tight schedule." },
-      { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service arranges direct Dammam to Kuwait transfers via the Al Nuwaiseeb border." },
-      { q: "Is the route mostly used for business travel?", a: "A significant share, yes — the Eastern Province and Kuwait have close oil and gas sector ties that generate regular business travel on this corridor." },
-      { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid visa — confirm current requirements before traveling." },
+      { q: "How far is Dammam to Kuwait by road?", a: "About **410 km**, up Route 95 past Jubail to the Al Khafji–Al Nuwaiseeb border." },
+      { q: "How far is Kuwait to Dammam by road?", a: "The same **410 km**, about **4.5 hours** of driving plus the border." },
+      { q: "How long does Dammam to Kuwait take?", a: "About **4.5 hours** of driving, or **5–6 hours** including border processing." },
+      { q: "Which border is used between Dammam and Kuwait?", a: "**Al Khafji** on the Saudi side and **Al Nuwaiseeb** on the Kuwaiti side, on the coast road." },
+      { q: "Do I change cars at the border?", a: "**No.** One car and driver cover the whole journey; passengers show their own documents." },
+      { q: "Is it better to fly from Dammam to Kuwait?", a: "Flying is quicker for one person. By road you go **door to door** with luggage and no airport transfers." },
     ],
-
-    relatedDistanceSlugs: ["riyadh-to-kuwait", "khafji-to-kuwait"],
-    relatedServiceLinks: [
-      { href: "/dammam-to-kuwait-taxi-service", label: "Dammam to Kuwait taxi service" },
-      { href: "/kuwait-to-dammam-taxi-service", label: "Kuwait to Dammam taxi service" },
-      { href: "/destinations/kuwait-city", label: "Kuwait City private transfer" },
+    arabic: {
+      answer: "المسافة من الدمام إلى الكويت نحو 410 كم براً، ومدة القيادة نحو 4.5 ساعات عبر منفذ الخفجي والنويصيب.",
+      faqs: [{ q: "كم المسافة من الدمام إلى الكويت؟", a: "نحو **410 كم** على الطريق الساحلي 95، أي **4.5 ساعات قيادة** و**5 إلى 6 ساعات** مع الحدود." }],
+    },
+    table: SAUDI_TO_KUWAIT_TABLE,
+    transferBenefits: ["Same car across the border", "To Kuwait City, Ahmadi or Fahaheel", "24/7, both directions"],
+    relatedDistanceSlugs: ["riyadh-to-kuwait", "khafji-to-kuwait", "bahrain-to-jubail", "doha-to-dammam"],
+    relatedLinks: [
+      { href: "/services/dammam", label: "Dammam taxi service" },
+      { href: "/destinations/kuwait-city", label: "Chauffeur service in Kuwait" },
       { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
     ],
-
-    ctaText: "Get a Private Transfer Quote for Dammam to Kuwait",
-    lastReviewed: "2026-11-19",
-  },
-
-  "riyadh-to-kuwait": {
-    slug: "riyadh-to-kuwait",
-    routeHref: "/riyadh-to-kuwait-taxi-service",
-    origin: "Riyadh",
-    destination: "Kuwait",
-    originCitySlug: "riyadh",
-    originAirportHref: "/riyadh-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Riyadh to Kuwait Distance by Road & Travel Time",
-    intro: "How far Kuwait is from Riyadh by road, how long the drive takes, which border it crosses, and how to book a private taxi for the trip.",
-    breadcrumbLabel: "Riyadh to Kuwait",
-
-    // Owner-confirmed (19 Nov 2026): the coastal Al Khafji / Al Nuwaiseeb
-    // crossing via Routes 65, 550 and 95, then Route 40 in Kuwait. The same
-    // figures are on the route pages in both directions.
-    roadDistance: "about 648 km by road via the Al Khafji / Al Nuwaiseeb border",
-    straightLineDistance: "about 535 km",
-    driveTime: "roughly 7 hours 40 minutes of driving, plus time at the border",
-    routeType: "Cross-border route via the coastal Al Khafji (Saudi) / Al Nuwaiseeb (Kuwait) crossing",
-
-    answerBox: {
-      items: [
-        { label: "Distance by road", value: "~648 km" },
-        { label: "Driving time", value: "~7 h 40 min" },
-        { label: "Border", value: "Al Khafji / Al Nuwaiseeb" },
-        { label: "Straight line", value: "~535 km" },
-      ],
-      arabic: "المسافة من الرياض إلى الكويت بالسيارة نحو 648 كم، ومدة القيادة نحو 7 ساعات و40 دقيقة عبر منفذ الخفجي والنويصيب.",
-    },
-    bookingBox: {
-      title: "Need a ride? Private taxi Riyadh → Kuwait from 220 KWD",
-      text: "One car and one driver, door to door, across the border. Prices may vary depending on date and availability.",
-      href: "/riyadh-to-kuwait-taxi-service#booking",
-      hrefLabel: "Book Online",
-      whatsappMessage: "Hi, I want to book Riyadh to Kuwait",
-      links: [{ href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" }],
-    },
-    reverse: {
-      heading: "Kuwait to Riyadh Distance by Road",
-      paragraphs: [
-        "Kuwait to Riyadh is the same road the other way: about 648 km via the Al Nuwaiseeb / Al Khafji border, on Route 40 in Kuwait and then Routes 95, 550 and 65 to Riyadh. Expect roughly 7 hours 40 minutes of driving, plus the border.",
-        "Leaving from Kuwait? Our private Kuwait to Riyadh taxi makes the same door-to-door trip, also starting from 220 KWD per car.",
-      ],
-      link: { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh taxi" },
-    },
-    comparison: SAUDI_TO_KUWAIT_TABLE,
-
-    overviewParagraphs: [
-      "Riyadh to Kuwait runs north-east from the capital to the Gulf coast on Routes 65, 550 and 95, crosses into Kuwait at Al Khafji / Al Nuwaiseeb, and finishes on Route 40 into Kuwait City.",
-      "This is a genuine long-distance journey: about 648 km by road and roughly 7 hours 40 minutes of driving, against about 535 km in a straight line. The coastal road has more towns and services than the inland alternative through Hafar Al Batin.",
-      "Business travelers, GCC nationals and families often prefer the private overland trip to flying and arranging separate ground transport at each end, especially with luggage.",
-    ],
-    routeCharacteristics: [
-      "Routes 65, 550 and 95 in Saudi Arabia, then Route 40 in Kuwait.",
-      "Crosses at Al Khafji (Saudi) / Al Nuwaiseeb (Kuwait) on the Gulf coast.",
-      "More towns and services along the way than the inland route.",
-      "One international border crossing, no other borders en route.",
-    ],
-    factorsAffectingTime: [
-      "Border processing time varies with the day and hour; weekends and holidays are busier.",
-      "Rest, meal and prayer stops add to the driving time on a trip this long.",
-      "GCC nationals cross with a national ID, while other nationalities need a valid visa.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle and driver cover the full journey from Riyadh across the border to your Kuwait destination, door to door.",
-      },
-      {
-        title: "Domestic/Regional Flight",
-        description: "Given the distance, a direct flight between Riyadh and Kuwait City is a realistic and commonly chosen alternative for business travelers on a tight schedule.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for confident long-distance drivers with the correct cross-border documentation, though it's a demanding single day given the distance.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire journey, arranged in advance",
-      "Professional driver experienced with the Saudi–Kuwait border crossings",
-      "Executive vehicle options with extra legroom for the multi-hour drive",
-      "A scheduled rest stop planned into the journey",
-      "Suitable for business travelers and GCC nationals making regular trips",
-      "Flexible departure timing around your own schedule",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day", note: "Between the long drive, border processing and realistic rest stops, treat this as a full-day journey." },
-      { title: "Consider Flying for Tight Schedules", note: "Business travelers on a same-day schedule often prefer a direct flight between Riyadh and Kuwait City instead of the full drive." },
-      { title: "Documents Ready", note: "Have your passport and Saudi/Kuwaiti visa or GCC ID ready before departure for the border crossing." },
-      { title: "Executive Vehicle for Comfort", note: "Given the distance, an executive vehicle with extra legroom is worth requesting for a more comfortable multi-hour drive." },
-    ],
-    bestTimeToTravel: [
-      "This route tracks business travel patterns rather than seasonal tourism, so it doesn't have a strongly seasonal pattern.",
-      "Weekday travel tends to see smoother border processing than weekend peak periods.",
-    ],
-
-    faqs: [
-      { q: "How far is Riyadh from Kuwait by road?", a: "About 648 km by road via the Al Khafji / Al Nuwaiseeb border on the coast. In a straight line the two cities are about 535 km apart." },
-      { q: "How long does it take to drive from Riyadh to Kuwait?", a: "Roughly 7 hours 40 minutes of driving. Border processing and rest stops add to that, so plan most of a day." },
-      { q: "What is the Kuwait to Riyadh distance by road?", a: "The same road the other way: about 648 km, roughly 7 hours 40 minutes of driving plus the border." },
-      { q: "Which highways go from Riyadh to Kuwait?", a: "Routes 65, 550 and 95 in Saudi Arabia, then Route 40 in Kuwait after the Al Nuwaiseeb border." },
-      { q: "Is it faster to fly instead of driving?", a: "For one person on a tight schedule, yes. By car you go door to door with your luggage and skip two airports." },
-      { q: "Do I need to change vehicles at the border?", a: "No. One vehicle and driver cover the whole journey, door to door, including the crossing." },
-      { q: "How much is a private taxi from Riyadh to Kuwait?", a: "Gulf Trip Service runs private, door-to-door Riyadh to Kuwait taxis starting from 220 KWD per car. Prices may vary depending on date and availability." },
-      { q: "Is this route different from Dammam to Kuwait?", a: "Both use the Al Khafji / Al Nuwaiseeb crossing. From Dammam it is about 410 km; from Riyadh about 648 km." },
-      { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Kuwait visa or eVisa; confirm current requirements before traveling." },
-    ],
-
-    relatedDistanceSlugs: ["dammam-to-kuwait", "khafji-to-kuwait"],
-    relatedServiceLinks: [
-      { href: "/riyadh-to-kuwait-taxi-service", label: "Riyadh to Kuwait taxi" },
-      { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
-      { href: "/kuwait-to-riyadh-taxi-service", label: "Kuwait to Riyadh taxi service" },
-      { href: "/destinations/kuwait-city", label: "Kuwait City private transfer" },
-    ],
-
-    ctaText: "Book a Private Riyadh to Kuwait Taxi",
-    lastReviewed: "2026-11-19",
+    source: `${OSRM}: 413 km, 4.4 h`,
+    verified: "2026-11-20",
   },
 
   "khafji-to-kuwait": {
-    slug: "khafji-to-kuwait",
-    routeHref: "/khafji-to-kuwait-taxi-service",
-    origin: "Khafji",
-    destination: "Kuwait",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Khafji to Kuwait Distance & Travel Time",
-    intro: "How far Kuwait City is from Khafji, how long the short border crossing at Al Nuwaiseeb takes, and why this is the most direct Saudi-Kuwait route.",
+    slug: "khafji-to-kuwait", origin: "Khafji", destination: "Kuwait", region: "kuwait",
     breadcrumbLabel: "Khafji to Kuwait",
-
-    // Map routing (OSRM), Nov 2026: 124 km and about 1.4 hours of driving
-    // to central Kuwait City. Was "roughly 180 km", which was wrong.
-    // Border first, total last: the distance card shows the last km figure.
-    roadDistance: "about 15 km to the border and about 125 km by road to Kuwait City",
-    driveTime: "about 1.5 hours of driving, 2 to 3 hours with the border",
-
-    answerBox: {
-      items: [
-        { label: "To Kuwait City", value: "~125 km" },
-        { label: "To the border", value: "~15 km" },
-        { label: "Driving time", value: "~1.5 h" },
-        { label: "Border", value: "Al Khafji / Al Nuwaiseeb" },
-      ],
-      arabic: "تبعد الخفجي عن مدينة الكويت نحو 125 كم براً، منها نحو 15 كم حتى منفذ النويصيب، ومدة القيادة نحو ساعة ونصف.",
+    title: "Khafji to Kuwait Distance by Road: 125 km, 1.5 hrs",
+    meta: "Khafji is about 15 km from the Al Nuwaiseeb border and 125 km from Kuwait City by road: 1.5 hrs driving, 2–3 hrs with the border. Same distance both ways.",
+    km: 125,
+    drive: "about 1.5 hours", withBorder: "2–3 hours",
+    highways: "A short run to the border, then Route 40 in Kuwait",
+    border: KHAFJI,
+    routeForward: { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait taxi" },
+    routeReverse: { href: "/kuwait-to-khafji-taxi-service", label: "Kuwait to Khafji taxi" },
+    routeIntro: "The shortest way into Kuwait from Saudi Arabia. The border is only about 15 km from Al Khafji; most of the distance is on Route 40 inside Kuwait.",
+    steps: [
+      { title: "Al Khafji", body: "Pickup in the town, at the KJO compound or a hotel." },
+      { title: "To the border", body: "About 15 km and 15–20 minutes to the Saudi exit post." },
+      { title: "Al Nuwaiseeb", body: "Kuwait entry, in the same car." },
+      { title: "Route 40 north", body: "About 105 km to Kuwait City, with Al Ahmadi and Fahaheel on the way." },
+    ],
+    reverse: "Kuwait City to Al Khafji is the same 125 km the other way, about 1.5 hours of driving and 2–3 hours with the crossing.",
+    options: [ROUTE_TAXI("2–3 h"), SELF_DRIVE("2–3 h", "Kuwaiti insurance bought at the border")],
+    tips: [
+      { icon: "clock", title: "Commuter peaks", body: "Shift-change times bring more traffic at Al Nuwaiseeb; off-peak hours are smoother." },
+      { icon: "fileCheck", title: "Documents ready", body: "Passport or GCC ID, plus a Kuwait visa if you need one." },
+      { icon: "mapPin", title: "Confirm your Kuwait stop", body: "Al Ahmadi and Fahaheel come before Kuwait City; tell us where you are going." },
+      { icon: "calendarCheck", title: "Weekend evenings", body: "Thursday and Friday evenings and holidays are the slowest times to cross." },
+    ],
+    faqs: [
+      { q: "How far is Khafji from Kuwait?", a: "About **15 km** to the Al Nuwaiseeb border and about **125 km** by road to Kuwait City." },
+      { q: "How long does Khafji to Kuwait take?", a: "About **1.5 hours** of driving, or **2–3 hours** with the border." },
+      { q: "What is the Khafji border to Kuwait called?", a: "**Al Khafji** on the Saudi side and **Al Nuwaiseeb** on the Kuwaiti side; it is open 24 hours." },
+      { q: "Do I change cars at the border?", a: "**No.** The same car and driver take you through both posts." },
+      { q: "Is there a taxi from Kuwait to Khafji?", a: "**Yes**, door to door in both directions, booked on WhatsApp." },
+    ],
+    arabic: {
+      answer: "تبعد الخفجي عن مدينة الكويت نحو 125 كم براً، منها نحو 15 كم حتى منفذ النويصيب، ومدة القيادة نحو ساعة ونصف.",
+      faqs: [{ q: "كم تبعد الخفجي عن الكويت؟", a: "نحو **15 كم** حتى منفذ النويصيب، ونحو **125 كم** حتى مدينة الكويت، أي **ساعة ونصف** قيادة." }],
     },
-    bookingBox: {
-      title: "Need a ride? Private taxi Khafji ↔ Kuwait",
-      text: "Door to door through the Al Nuwaiseeb border, 24/7. We confirm your fare on WhatsApp before you book.",
-      href: "/khafji-to-kuwait-taxi-service",
-      hrefLabel: "Khafji to Kuwait taxi",
-      whatsappMessage: "Hi, I want to book Khafji to Kuwait",
-      links: [{ href: "/kuwait-to-khafji-taxi-service", label: "Kuwait to Khafji taxi" }],
-    },
-    comparison: SAUDI_TO_KUWAIT_TABLE,
-    routeType: "Cross-border route between Saudi Arabia and Kuwait via the Al Nuwaiseeb border",
-
-    overviewParagraphs: [
-      "Khafji, Saudi Arabia's northernmost Gulf coast city, sits just a short drive from the Al Nuwaiseeb border crossing — the primary and most direct land gateway into Kuwait, far shorter than routing via Riyadh or even Dammam.",
-      "This is the shortest of the Saudi-Kuwait routes by a wide margin, which is why it's the preferred option for cross-border commuters, workers in the joint Neutral Zone oil fields, and travelers already in the Khafji area rather than starting from further south.",
-      "Once across the border, the drive continues to Kuwait City, Al Ahmadi, or Fahaheel depending on your specific destination.",
+    table: SAUDI_TO_KUWAIT_TABLE,
+    transferBenefits: ["The shortest Saudi–Kuwait crossing", "KJO and commuter pickups", "24/7, both directions"],
+    relatedDistanceSlugs: ["dammam-to-kuwait", "riyadh-to-kuwait", "bahrain-to-jubail"],
+    relatedLinks: [
+      { href: "/destinations/kuwait-city", label: "Chauffeur service in Kuwait" },
+      { href: "/dammam-airport-to-khafji-taxi-service", label: "Dammam Airport to Khafji taxi" },
+      { href: "/guides/saudi-arabia-to-kuwait-by-road", label: "Saudi Arabia to Kuwait by road guide" },
     ],
-    routeCharacteristics: [
-      "The shortest Saudi-Kuwait crossing point by a significant margin.",
-      "A short approach to the border itself, followed by a longer stretch inside Kuwait to the city.",
-      "Popular with cross-border commuters and Neutral Zone oil field workers.",
-      "Involves one international border crossing — no other borders en route.",
-    ],
-    factorsAffectingTime: [
-      "Border processing time at Al Nuwaiseeb varies with commuter traffic, since this is a regularly used crossing for daily cross-border work.",
-      "The onward distance to your specific Kuwait destination (city centre versus Al Ahmadi or Fahaheel) affects total time more than the short Khafji-to-border leg does.",
-      "GCC nationals cross with a national ID, while other nationalities need a valid visa.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct, single-vehicle journey from Khafji through the border to your Kuwait destination — the most straightforward option given how short the approach to the crossing is.",
-      },
-      {
-        title: "Self-Driving",
-        description: "A realistic option given the short distance, for travelers with the correct cross-border documentation and vehicle insurance.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire journey, door to door across the border",
-      "Professional driver experienced with the Al Nuwaiseeb crossing's commuter patterns",
-      "Direct to your specific Kuwait destination",
-      "A private vehicle for your group only",
-      "Suitable for cross-border commuters and workers as well as one-off travelers",
-      "Available 24/7 for either direction",
-    ],
-
-    journeyPlanning: [
-      { title: "Documents Ready", note: "Have your passport and Saudi/Kuwaiti visa or GCC ID ready before departure — this is the biggest factor in crossing time." },
-      { title: "Commuter Traffic Awareness", note: "Since this crossing sees regular daily commuter traffic, typical peak work-shift times can be busier than off-peak hours." },
-      { title: "Confirm Your Kuwait Destination", note: "The short Khafji-to-border leg is quick, but confirm your specific onward destination since Kuwait City, Al Ahmadi, and Fahaheel add different amounts of additional time." },
-    ],
-    bestTimeToTravel: [
-      "Given the commuter nature of this crossing, off-peak hours outside typical shift-change times tend to see smoother processing.",
-      "This route doesn't have a strongly seasonal pattern — daily work and family travel drive its traffic more than time of year.",
-    ],
-
-    faqs: [
-      { q: "How far is Khafji from Kuwait?", a: "About 15 km to the Al Nuwaiseeb border itself, and about 125 km by road to Kuwait City." },
-      { q: "How long does it take to get from Khafji to Kuwait?", a: "About 1.5 hours of driving to Kuwait City, or 2 to 3 hours including border processing: the shortest of the Saudi–Kuwait routes." },
-      { q: "Why is this route shorter than Dammam or Riyadh to Kuwait?", a: "Khafji is Saudi Arabia's northernmost Gulf coast city, sitting right next to the Al Nuwaiseeb border — the most direct gateway into Kuwait from anywhere in Saudi Arabia." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
-      { q: "Is this route used by daily commuters?", a: "Yes — a meaningful share of traffic here is cross-border commuters and workers in the joint Neutral Zone oil fields." },
-      { q: "Can I book a private transfer for this route?", a: "Yes — Gulf Trip Service arranges direct Khafji to Kuwait transfers via the Al Nuwaiseeb border." },
-      { q: "Do I need a visa to cross?", a: "GCC nationals cross with a national ID. Other nationalities need a valid visa — confirm current requirements before traveling." },
-    ],
-
-    relatedDistanceSlugs: ["dammam-to-kuwait", "riyadh-to-kuwait"],
-    relatedServiceLinks: [
-      { href: "/khafji-to-kuwait-taxi-service", label: "Khafji to Kuwait taxi service" },
-      { href: "/kuwait-to-khafji-taxi-service", label: "Kuwait to Khafji taxi service" },
-      { href: "/border-crossing", label: "All border crossing routes" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Khafji to Kuwait",
-    lastReviewed: "2026-11-19",
+    source: `${OSRM}: 124 km, 1.4 h`,
+    verified: "2026-11-20",
   },
 
-  "dammam-to-abu-dhabi": {
-    slug: "dammam-to-abu-dhabi",
-    routeHref: "/dammam-to-abu-dhabi-taxi-service",
-    origin: "Dammam",
-    destination: "Abu Dhabi",
-    originCitySlug: "dammam",
-    originAirportHref: "/dammam-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Dammam to Abu Dhabi Distance & Travel Time",
-    intro: "How far Abu Dhabi is from Dammam, how long the long overland drive via the Al Batha/Ghuwaifat border takes, and who this route genuinely suits.",
-    breadcrumbLabel: "Dammam to Abu Dhabi",
-
-    roadDistance: "approximately 950 km by road",
-    driveTime: "approximately 10–11.5 hours, including border processing",
-    routeType: "Cross-border route between Saudi Arabia and the UAE via the Al Batha / Ghuwaifat border",
-
-    overviewParagraphs: [
-      "Dammam to Abu Dhabi is a genuine long-haul overland journey — well over 900 km — best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers avoiding airport-to-airport connections on both ends.",
-      "The route runs south-east from Dammam through Saudi Arabia's Eastern Province and along the Gulf coast toward the Al Batha/Ghuwaifat border crossing into the UAE, then continues to Abu Dhabi.",
-      "Given the distance, one or more scheduled rest stops are standard, and executive-grade vehicles built for long-distance comfort are the norm on this corridor.",
-    ],
-    routeCharacteristics: [
-      "One of the longer cross-border corridors in the Gulf, at roughly 950 km.",
-      "Runs along the Eastern Province and Gulf coast to the Al Batha/Ghuwaifat border.",
-      "Best suited to groups, travelers with significant luggage, or those avoiding airport connections.",
-      "Involves one international border crossing — no other borders en route.",
-    ],
-    factorsAffectingTime: [
-      "Given the length of this drive, rest, meal, and prayer stops meaningfully extend the total journey time beyond the pure driving estimate.",
-      "Border processing time at Al Batha/Ghuwaifat varies with traffic, same as any crossing.",
-      "Departure timing matters — starting early avoids finishing the approach into Abu Dhabi very late at night.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle and driver cover the entire long-haul journey, handling the border crossing and rest-stop planning directly.",
-      },
-      {
-        title: "Domestic/Regional Flight",
-        description: "Given the distance, a flight between Dammam and Abu Dhabi is a realistic and commonly chosen alternative, especially for solo travelers or those on a tight schedule.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for confident long-distance drivers with the correct cross-border documentation, though most self-drivers plan an overnight stop given the distance.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire long-haul journey, door to door across the border",
-      "Executive-grade vehicles built for long-distance comfort",
-      "Professional driver experienced with the Al Batha/Ghuwaifat crossing",
-      "Scheduled rest stops planned into the journey",
-      "Suitable for groups traveling together with significant luggage",
-      "Flexible departure timing to avoid a late-night arrival",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day", note: "Between the 10–11.5 hour driving estimate and realistic rest stops, treat this as a full-day journey." },
-      { title: "Consider Flying for a Quick Trip", note: "At nearly 950 km, solo travelers or those on a tight schedule are often better served flying between Dammam and Abu Dhabi." },
-      { title: "Early Departure", note: "Starting early is more comfortable than a late departure, avoiding a very late-night arrival into Abu Dhabi." },
-      { title: "Documents Ready", note: "Have your passport and Saudi/UAE visa ready before departure for the Al Batha/Ghuwaifat crossing." },
-    ],
-    bestTimeToTravel: [
-      "This route doesn't have a strongly seasonal traffic pattern — the length of the drive matters more than time of year.",
-      "An early morning departure is generally more comfortable regardless of season, given the length of the journey.",
-    ],
-
-    faqs: [
-      { q: "How far is Dammam from Abu Dhabi?", a: "Approximately 950 km by road via the Al Batha/Ghuwaifat border crossing." },
-      { q: "How long does it take to drive from Dammam to Abu Dhabi?", a: "Around 10 to 11.5 hours including border processing. In practice, most journeys take longer once rest stops are added." },
-      { q: "What is the best way to travel from Dammam to Abu Dhabi?", a: "A private taxi or chauffeur transfer covers the full distance in one vehicle. Given the length, a flight is also a realistic and commonly chosen alternative." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
-      { q: "Is this route suitable for a family trip?", a: "It's a genuinely long journey, so it suits groups and families who specifically prefer a private overland drive with significant luggage over flying." },
-      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges direct Dammam to Abu Dhabi transfers via the Al Batha/Ghuwaifat border." },
-      { q: "Do I need a visa to cross?", a: "Requirements vary by nationality — confirm current Saudi and UAE visa requirements before traveling." },
-    ],
-
-    relatedDistanceSlugs: ["dammam-to-dubai", "riyadh-to-dubai"],
-    relatedServiceLinks: [
-      { href: "/dammam-to-abu-dhabi-taxi-service", label: "Dammam to Abu Dhabi taxi service" },
-      { href: "/abu-dhabi-to-dammam-taxi-service", label: "Abu Dhabi to Dammam taxi service" },
-      { href: "/destinations/abu-dhabi", label: "Abu Dhabi private transfer" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Dammam to Abu Dhabi",
-    lastReviewed: "2026-08-26",
-  },
-
-  "dammam-to-dubai": {
-    slug: "dammam-to-dubai",
-    routeHref: "/dammam-to-dubai-taxi-service",
-    origin: "Dammam",
-    destination: "Dubai",
-    originCitySlug: "dammam",
-    originAirportHref: "/dammam-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Dammam to Dubai Distance & Travel Time",
-    intro: "How far Dubai is from Dammam, how long the long overland drive via the UAE border takes, and who genuinely benefits from driving instead of flying.",
-    breadcrumbLabel: "Dammam to Dubai",
-
-    roadDistance: "approximately 1,100 km by road",
-    driveTime: "approximately 11.5–13 hours, including border processing",
-    routeType: "Cross-border route between Saudi Arabia and the UAE via the Al Batha / Ghuwaifat border",
-
-    overviewParagraphs: [
-      "Dammam to Dubai is one of the longest regularly booked cross-border routes in this network — well over 1,000 km — and is best suited to travelers who specifically want a private, direct drive rather than flying: groups moving together, those with significant luggage, or travelers avoiding airport-to-airport connections on both ends.",
-      "The route runs south-east from Dammam through Saudi Arabia's Eastern Province and along the Gulf coast toward the Al Batha/Ghuwaifat border crossing into the UAE, then continues across Abu Dhabi emirate to Dubai.",
-      "Given the distance, one or more scheduled rest stops are built into the journey, using executive-grade vehicles designed for long-distance comfort.",
-    ],
-    routeCharacteristics: [
-      "One of the longest cross-border corridors in this network, at roughly 1,100 km.",
-      "Runs along the Eastern Province and Gulf coast, through Abu Dhabi emirate, to Dubai.",
-      "Best suited to groups, travelers with significant luggage, or those avoiding airport connections.",
-      "Involves one international border crossing — no other borders en route.",
-    ],
-    factorsAffectingTime: [
-      "Given the length of this drive, rest, meal, and prayer stops meaningfully extend total journey time well beyond the pure driving estimate.",
-      "Border processing time at Al Batha/Ghuwaifat varies with traffic.",
-      "The onward stretch from the UAE border through Abu Dhabi emirate to Dubai adds meaningful time beyond the border crossing itself.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle and driver cover the entire journey from Dammam through the border and on to Dubai, handling rest-stop planning directly.",
-      },
-      {
-        title: "Domestic/Regional Flight",
-        description: "Given the distance, a flight between Dammam and Dubai is a realistic and commonly chosen alternative, particularly for solo travelers or tight schedules.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for confident long-distance drivers with the correct documentation, though most self-drivers plan an overnight stop given the length of this specific corridor.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire long-haul journey, door to door across the border",
-      "Executive-grade vehicles built for long-distance comfort",
-      "Professional driver experienced with the Al Batha/Ghuwaifat crossing and the onward UAE stretch",
-      "Scheduled rest stops planned into the journey",
-      "Suitable for groups traveling together with significant luggage",
-      "Direct to your specific Dubai address, hotel, or business location",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day Plus", note: "At 11.5–13 hours driving, plus rest stops, this is realistically more than a single working day — plan accordingly." },
-      { title: "Consider Flying for a Quick Trip", note: "At 1,100 km, solo travelers or those on a tight schedule are often better served flying between Dammam and Dubai directly." },
-      { title: "Early Departure", note: "Starting early in the day is strongly recommended given the total length of this specific corridor." },
-      { title: "Documents Ready", note: "Have your passport and Saudi/UAE visa ready before departure for the Al Batha/Ghuwaifat crossing." },
-    ],
-    bestTimeToTravel: [
-      "This route doesn't have a strongly seasonal traffic pattern — the sheer length of the drive is the dominant factor, not time of year.",
-      "An early morning departure is essentially always the better choice given how long this specific journey is.",
-    ],
-
-    faqs: [
-      { q: "How far is Dammam from Dubai?", a: "Approximately 1,100 km by road via the Al Batha/Ghuwaifat border crossing." },
-      { q: "How long does it take to drive from Dammam to Dubai?", a: "Around 11.5 to 13 hours including border processing — one of the longer cross-border drives in this network." },
-      { q: "Is it faster to fly instead of driving?", a: "For most travelers, yes — given the 1,100 km distance, a flight between Dammam and Dubai is usually the faster overall option unless you specifically want the private overland journey." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
-      { q: "Who typically chooses to drive this route instead of flying?", a: "Groups traveling together, travelers with significant luggage, and those who specifically prefer a private overland journey without airport connections." },
-      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges direct Dammam to Dubai transfers via the Al Batha/Ghuwaifat border." },
-      { q: "Do I need a visa to cross?", a: "Requirements vary by nationality — confirm current Saudi and UAE visa requirements before traveling." },
-    ],
-
-    relatedDistanceSlugs: ["dammam-to-abu-dhabi", "riyadh-to-dubai"],
-    relatedServiceLinks: [
-      { href: "/dammam-to-dubai-taxi-service", label: "Dammam to Dubai taxi service" },
-      { href: "/dubai-to-dammam-taxi-service", label: "Dubai to Dammam taxi service" },
-      { href: "/destinations/abu-dhabi", label: "Abu Dhabi private transfer" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Dammam to Dubai",
-    lastReviewed: "2026-08-26",
-  },
-
-  "riyadh-to-dubai": {
-    slug: "riyadh-to-dubai",
-    routeHref: "/riyadh-to-dubai-taxi-service",
-    origin: "Riyadh",
-    destination: "Dubai",
-    originCitySlug: "riyadh",
-    originAirportHref: "/riyadh-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Riyadh to Dubai Distance & Travel Time",
-    intro: "How far Dubai is from Riyadh, how long the cross-country and cross-border drive takes, and why business travelers on this corridor often choose to fly instead.",
-    breadcrumbLabel: "Riyadh to Dubai",
-
-    roadDistance: "approximately 1,100 km by road",
-    driveTime: "approximately 11–12.5 hours, including border processing",
-    routeType: "Cross-border route between Saudi Arabia and the UAE via the Al Batha / Ghuwaifat border",
-
-    overviewParagraphs: [
-      "Riyadh to Dubai is a genuine long-haul overland journey of around 1,100 km, run by travelers who specifically want a private, direct drive rather than flying — groups moving together, those with significant luggage, or travelers avoiding airport-to-airport connections.",
-      "The route runs east from Riyadh across the Najd plateau and Eastern Province toward the Al Batha/Ghuwaifat border crossing into the UAE, then continues across Abu Dhabi emirate to Dubai.",
-      "Given the strong business ties between Riyadh's corporate and government sector and Dubai's financial and trade hub, this corridor also sees regular business travel — though many business travelers on a tight schedule choose to fly given the distance.",
-    ],
-    routeCharacteristics: [
-      "Crosses the Najd plateau and Eastern Province before reaching the UAE border.",
-      "One of the longest cross-border corridors in this network, at roughly 1,100 km.",
-      "Carries both long-distance leisure/group travel and business travel between Riyadh and Dubai.",
-      "Involves one international border crossing — no other borders en route.",
-    ],
-    factorsAffectingTime: [
-      "Given the length of this drive, rest, meal, and prayer stops meaningfully extend total journey time beyond the pure driving estimate.",
-      "Border processing time at Al Batha/Ghuwaifat varies with traffic.",
-      "Business travelers with fixed meeting times should weigh the total journey length against flight options.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle and driver cover the entire cross-country and cross-border journey from Riyadh to Dubai.",
-      },
-      {
-        title: "Domestic/Regional Flight",
-        description: "Given the distance and the strong Riyadh-Dubai business travel demand, a direct flight is the more commonly chosen option for travelers on a fixed schedule.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for confident long-distance drivers with the correct documentation, though most plan an overnight stop given the length of the journey.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire long-haul journey, door to door across the border",
-      "Executive-grade vehicles built for long-distance comfort",
-      "Professional driver experienced with the Al Batha/Ghuwaifat crossing",
-      "Scheduled rest stops planned into the journey",
-      "Suitable for groups traveling together with significant luggage",
-      "Direct to your specific Dubai business location, hotel, or address",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day", note: "At 11–12.5 hours driving, plus rest stops, this is a full day's journey — plan accordingly rather than fitting it around other commitments." },
-      { title: "Weigh Flying for Business Trips", note: "For a fixed-time business meeting, a direct flight between Riyadh and Dubai is often the more practical choice given the total drive length." },
-      { title: "Early Departure", note: "Starting early in the day is strongly recommended given the total length of this journey." },
-      { title: "Documents Ready", note: "Have your passport and Saudi/UAE visa ready before departure for the Al Batha/Ghuwaifat crossing." },
-    ],
-    bestTimeToTravel: [
-      "This route doesn't have a strongly seasonal traffic pattern — the length of the drive is the dominant factor rather than time of year.",
-      "An early morning departure is generally the better choice given how long this journey is.",
-    ],
-
-    faqs: [
-      { q: "How far is Riyadh from Dubai?", a: "Approximately 1,100 km by road via the Al Batha/Ghuwaifat border crossing." },
-      { q: "How long does it take to drive from Riyadh to Dubai?", a: "Around 11 to 12.5 hours including border processing." },
-      { q: "Is it faster to fly for a business trip?", a: "Usually, yes — given the strong Riyadh-Dubai business travel demand and the 1,100 km distance, a direct flight is the more common choice for fixed-schedule trips." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey, including the crossing." },
-      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges direct Riyadh to Dubai transfers via the Al Batha/Ghuwaifat border." },
-      { q: "Who typically drives this route instead of flying?", a: "Groups traveling together, travelers with significant luggage, and those who specifically prefer a private overland journey over flying." },
-      { q: "Do I need a visa to cross?", a: "Requirements vary by nationality — confirm current Saudi and UAE visa requirements before traveling." },
-    ],
-
-    relatedDistanceSlugs: ["dammam-to-dubai", "dammam-to-abu-dhabi"],
-    relatedServiceLinks: [
-      { href: "/riyadh-to-dubai-taxi-service", label: "Riyadh to Dubai taxi service" },
-      { href: "/dubai-to-riyadh-taxi-service", label: "Dubai to Riyadh taxi service" },
-      { href: "/corporate-transportation-services", label: "Corporate transportation" },
-      { href: "/guides/long-distance-private-transfers", label: "How long-distance private transfers work" },
-    ],
-
-    ctaText: "Get a Private Transfer Quote for Riyadh to Dubai",
-    lastReviewed: "2026-08-26",
-  },
-
+  /* ── Qatar ────────────────────────────────────────────────────── */
   "doha-to-riyadh": {
-    slug: "doha-to-riyadh",
-    routeHref: "/qatar-to-riyadh-taxi-service",
-    origin: "Doha",
-    destination: "Riyadh",
-    destinationCitySlug: "riyadh",
-    destinationAirportHref: "/riyadh-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Doha to Riyadh Distance & Travel Time",
-    intro: "How far Riyadh is from Doha, how long the drive across the Salwa border takes, and why this long overland route appeals to business travelers and GCC nationals alike.",
+    slug: "doha-to-riyadh", origin: "Doha", destination: "Riyadh", region: "qatar",
     breadcrumbLabel: "Doha to Riyadh",
-
-    roadDistance: "approximately 580 km by road",
-    driveTime: "approximately 6.5–7.5 hours, including border processing",
-    routeType: "Cross-border route between Qatar and Saudi Arabia via the Salwa / Abu Samra border",
-
-    overviewParagraphs: [
-      "Doha to Riyadh is a long but comfortable overland journey across the Salwa (Abu Samra) border into the heart of Saudi Arabia — popular with business travelers, diplomatic missions, and families who prefer a private drive to flying and arranging separate transport on both ends.",
-      "The route departs Doha westward to the Abu Samra border post, crosses into Saudi Arabia at Salwa, then continues north-west across the Eastern Province and central desert plateau to Riyadh.",
-      "Given the distance, a scheduled rest stop roughly midway — typically near Al-Ahsa or Hofuf — is standard, along with executive vehicles suited to the multi-hour drive.",
+    title: "Doha to Riyadh Distance by Road: 580 km & Taxi Fare",
+    meta: "Doha to Riyadh is about 580 km by road, 6.5–7.5 hrs incl. the Salwa border. Same distance Riyadh to Doha. Private taxi from {{fare}}, 24/7.",
+    km: 580,
+    drive: "about 6.5 hours", withBorder: "6.5–7.5 hours",
+    highways: "Salwa Road in Qatar, then Routes 615 and 522 via Al-Ahsa and Highway 40",
+    border: SALWA,
+    routeForward: { href: "/qatar-to-riyadh-taxi-service", label: "Doha to Riyadh taxi" },
+    routeReverse: { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Doha taxi" },
+    fareRoute: "riyadh-to-qatar-taxi-service",
+    routeIntro: "Doha's only land border is with Saudi Arabia, so every road trip to Riyadh crosses at Salwa / Abu Samra, about an hour from Doha, then runs west through the Al-Ahsa region.",
+    steps: [
+      { title: "Doha", body: "Pickup in West Bay, The Pearl, Lusail, Al Wakrah or at Hamad International Airport." },
+      { title: "Salwa Road to Abu Samra", body: "About 90 km and an hour to the Qatari exit post." },
+      { title: "Salwa", body: "Saudi entry, in the same car." },
+      { title: "Routes 615 and 522", body: "West through the Al-Ahsa region, the usual place for the rest stop." },
+      { title: "Highway 40 into Riyadh", body: "The last 100 km on the main motorway into the capital." },
     ],
-    routeCharacteristics: [
-      "Crosses at Salwa/Abu Samra, the primary land border between Qatar and Saudi Arabia.",
-      "Runs from Doha through the Eastern Province and central plateau to Riyadh.",
-      "Popular around major events, GCC summits, and for travelers avoiding connecting flights.",
-      "Involves one international border crossing — no other borders en route.",
+    reverse: "Riyadh to Doha is the same 580 km the other way, crossing at Salwa / Abu Samra: about 6.5 hours of driving, 6.5–7.5 hours with the border. Our Riyadh to Doha taxi starts from {{fare}} per car.",
+    options: [ROUTE_TAXI("6.5–7.5 h"), SELF_DRIVE("6.5–7.5 h", "Insurance valid in both countries"), FLIGHT],
+    tips: [
+      { icon: "clock", title: "Leave early", body: "An early start gets you through Salwa before the midday build-up." },
+      { icon: "coffee", title: "Rest stop at Al-Ahsa", body: "The natural halfway break for prayer, food and fuel." },
+      { icon: "fileCheck", title: "Visas both ways", body: "Check Qatar and Saudi entry rules for every passenger before you set off." },
+      { icon: "users", title: "Groups and delegations", body: "Larger groups travel as a convoy of cars, all crossing together." },
+      { icon: "plane", title: "Connecting at DOH or RUH?", body: "Give us your flight number and we time the pickup around it." },
     ],
-    factorsAffectingTime: [
-      "Border processing time at Salwa/Abu Samra typically takes 30–60 minutes combined during off-peak hours, but varies with traffic.",
-      "Given the 580 km distance, a scheduled rest stop near Al-Ahsa or Hofuf meaningfully extends total journey time.",
-      "GCC nationals cross with a national ID, while other nationalities need a valid Saudi visa.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle and driver cover the entire journey from Doha through the Salwa border to Riyadh, with a scheduled rest stop built in.",
-      },
-      {
-        title: "Domestic/Regional Flight",
-        description: "A direct flight between Doha and Riyadh is a realistic and commonly chosen alternative for business travelers on a tight schedule.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for travelers with the correct cross-border documentation, following the same route via Abu Samra and Salwa.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire journey, door to door across the border",
-      "Executive vehicles with extra legroom for the multi-hour drive",
-      "Professional driver experienced with the Salwa/Abu Samra crossing",
-      "A scheduled rest stop near Al-Ahsa or Hofuf built into the journey",
-      "Suitable for business travelers, diplomatic missions, and families",
-      "Direct to your specific Riyadh address, hotel, or business location",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day", note: "Between the 6.5–7.5 hour driving estimate and the scheduled rest stop, treat this as a full-day journey." },
-      { title: "GCC Summit and Event Timing", note: "This route sees higher demand around major events and GCC summits — book ahead during those periods." },
-      { title: "Documents Ready", note: "Have your passport and Saudi visa or GCC ID ready before departure for the Salwa/Abu Samra crossing." },
-      { title: "Executive Vehicle for Comfort", note: "Given the distance, an executive vehicle with extra legroom is worth requesting." },
-    ],
-    bestTimeToTravel: [
-      "This route sees increased demand around major events and GCC summits — booking ahead during those periods is worthwhile.",
-      "Outside of peak event periods, this route doesn't have a strongly seasonal traffic pattern.",
-    ],
-
     faqs: [
-      { q: "How far is Doha from Riyadh?", a: "Approximately 580 km by road via the Salwa/Abu Samra border crossing." },
-      { q: "How long does it take to drive from Doha to Riyadh?", a: "Around 6.5 to 7.5 hours including border processing and a scheduled rest stop." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey from Doha into Saudi Arabia, including the crossing." },
-      { q: "Is it faster to fly instead of driving?", a: "For business travelers on a tight schedule, yes — a direct flight between Doha and Riyadh is often faster than the full drive." },
-      { q: "Can I book a private transfer for this whole route?", a: "Yes — Gulf Trip Service arranges direct Doha to Riyadh transfers via the Salwa/Abu Samra border." },
-      { q: "Where does the rest stop happen?", a: "Typically near Al-Ahsa or Hofuf, roughly midway through the Saudi portion of the journey." },
-      { q: "Do I need a visa to cross into Saudi Arabia?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa — confirm current requirements before traveling." },
+      { q: "How far is Doha from Riyadh by road?", a: "About **580 km**, via the Salwa / Abu Samra border and the Al-Ahsa region." },
+      { q: "Riyadh to Qatar by road: how many hours?", a: "About **6.5 hours** of driving, or **6.5–7.5 hours** including the border." },
+      { q: "How much is a taxi from Riyadh to Doha?", a: "**From {{fare}}** per car, one way, in both directions. Every vehicle's fare is on the route page." },
+      { q: "Which border do you cross from Riyadh to Qatar?", a: "**Salwa** on the Saudi side and **Abu Samra** on the Qatari side, the only land border." },
+      { q: "Can I drive from Qatar to Saudi Arabia?", a: "**Yes.** Private cars use Salwa / Abu Samra; you need insurance valid in Saudi Arabia." },
+      { q: "Do I change cars at the border?", a: "**No.** One car and one driver from Doha to your door in Riyadh." },
     ],
-
-    relatedDistanceSlugs: ["doha-to-dammam"],
-    relatedServiceLinks: [
-      { href: "/qatar-to-riyadh-taxi-service", label: "Qatar to Riyadh taxi service" },
-      { href: "/riyadh-to-qatar-taxi-service", label: "Riyadh to Doha taxi" },
-      { href: "/corporate-transportation-services", label: "Corporate transportation" },
+    arabic: {
+      answer: "المسافة من الرياض إلى قطر بالسيارة نحو 580 كم، والرحلة 6.5 إلى 7.5 ساعات شاملة منفذ سلوى وأبو سمرة.",
+      faqs: [
+        { q: "من الرياض لقطر كم ساعة بالسيارة؟", a: "نحو **6.5 ساعات قيادة**، أو **6.5 إلى 7.5 ساعات** مع إجراءات منفذ سلوى." },
+        { q: "كم المسافة بين الرياض وقطر؟", a: "نحو **580 كم** براً، والتاكسي الخاص يبدأ من **{{fareAr}}** للسيارة في الاتجاهين." },
+      ],
+    },
+    transferBenefits: ["From {{fare}} per car", "Same car through Salwa", "Rest stop at Al-Ahsa"],
+    relatedDistanceSlugs: ["doha-to-dammam", "bahrain-to-riyadh", "riyadh-to-kuwait", "riyadh-to-dammam"],
+    relatedLinks: [
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/destinations/doha", label: "Doha private transfers" },
+      { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar taxi" },
     ],
-
-    ctaText: "Get a Private Transfer Quote for Doha to Riyadh",
-    lastReviewed: "2026-08-26",
+    source: `${OSRM}: 584 km, 6.5 h`,
+    verified: "2026-11-20",
   },
 
   "doha-to-dammam": {
-    slug: "doha-to-dammam",
-    routeHref: "/qatar-to-dammam-taxi-service",
-    origin: "Doha",
-    destination: "Dammam",
-    destinationCitySlug: "dammam",
-    destinationAirportHref: "/dammam-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Doha to Dammam Distance & Travel Time",
-    intro: "How far Dammam is from Doha, how long the drive across the Salwa border takes, and what business travelers and families should know before booking.",
+    slug: "doha-to-dammam", origin: "Doha", destination: "Dammam", region: "qatar",
     breadcrumbLabel: "Doha to Dammam",
-
-    roadDistance: "approximately 440 km by road",
-    driveTime: "approximately 5–6 hours, including border processing",
-    routeType: "Cross-border route between Qatar and Saudi Arabia via the Salwa / Abu Samra border",
-
-    overviewParagraphs: [
-      "Doha to Dammam is a common trip for business travelers, event attendees, and families with ties on both sides of the Salwa border — shorter than the Doha-Riyadh route since Dammam sits closer to the border within the Eastern Province.",
-      "The route runs north-west from Doha to the Abu Samra border post, crosses into Saudi Arabia at Salwa, then continues through Al-Ahsa and Hofuf before reaching Dammam, Al Khobar, or Dhahran.",
-      "Your driver stays with you the entire way — one vehicle covers the full journey from Qatar into Saudi Arabia, including the crossing.",
+    title: "Doha to Dammam Distance by Road: 330 km, 4 hrs + Border",
+    meta: "Doha to Dammam is about 330 km by road, about 4 hrs driving plus the Salwa–Abu Samra border. Same distance Dammam to Doha. Private taxi door to door, 24/7.",
+    km: 330,
+    drive: "about 4 hours", withBorder: "4.5–5.5 hours",
+    highways: "Salwa Road in Qatar, then Route 95 up the coast",
+    border: SALWA,
+    routeForward: { href: "/qatar-to-dammam-taxi-service", label: "Doha to Dammam taxi" },
+    routeReverse: { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport to Doha taxi" },
+    routeIntro: "The shortest Saudi city from Doha by road. After Salwa, Route 95 follows the coast north past Al Uqair to Dammam, Al Khobar and Dhahran.",
+    steps: [
+      { title: "Doha", body: "Pickup anywhere in Doha or at Hamad International Airport." },
+      { title: "Salwa Road to Abu Samra", body: "About 90 km to the Qatari exit post." },
+      { title: "Salwa", body: "Saudi entry, in the same car." },
+      { title: "Route 95 north", body: "About 160 km up the coast to the Dammam area." },
+      { title: "Dammam, Al Khobar or Dhahran", body: "Drop-off at your address or King Fahd International Airport." },
     ],
-    routeCharacteristics: [
-      "Crosses at Salwa/Abu Samra, the primary land border between Qatar and Saudi Arabia.",
-      "Runs through Al-Ahsa and Hofuf before reaching the Dammam metropolitan area.",
-      "Shorter than the Doha-Riyadh corridor, since Dammam is closer to the border.",
-      "Involves one international border crossing — no other borders en route.",
+    reverse: "Dammam to Doha is the same 330 km the other way, 4.5–5.5 hours with the border. From King Fahd International Airport it is about 350 km.",
+    options: [ROUTE_TAXI("4.5–5.5 h"), SELF_DRIVE("4.5–5.5 h", "Insurance valid in both countries"), FLIGHT],
+    tips: [
+      { icon: "clock", title: "Half a day each way", body: "With the border, the trip fits comfortably into a morning or an afternoon." },
+      { icon: "fileCheck", title: "Entry rules", body: "Check Qatar and Saudi requirements for each passenger before travel." },
+      { icon: "plane", title: "Flight at DMM?", body: "From Doha to King Fahd International Airport allow about 5–6 hours plus check-in." },
+      { icon: "luggage", title: "Moving house or events kit", body: "Tell us what you carry; an SUV or van can take far more than a flight." },
     ],
-    factorsAffectingTime: [
-      "Border processing time at Salwa/Abu Samra varies with traffic, typically 30–60 minutes combined during off-peak hours.",
-      "The route through Al-Ahsa and Hofuf adds a predictable stretch of driving beyond the border itself.",
-      "GCC nationals cross with a national ID, while other nationalities need a valid Saudi visa.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A single vehicle and driver cover the entire journey from Doha through the Salwa border to your Dammam, Khobar, or Dhahran destination.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for travelers with the correct cross-border documentation, following the same route via Abu Samra and Salwa.",
-      },
-      {
-        title: "Domestic/Regional Flight",
-        description: "A short flight is a realistic alternative for travelers who'd rather not spend 5–6 hours on the road, at the cost of arranging separate ground transport.",
-      },
-    ],
-    transferBenefits: [
-      "One vehicle for the entire journey, door to door across the border",
-      "Professional driver experienced with the Salwa/Abu Samra crossing",
-      "Direct to Dammam, Al Khobar, or Dhahran depending on your destination",
-      "A private vehicle for your group only",
-      "Suitable for business travelers, event attendees, and families",
-      "Available for either direction of the crossing",
-    ],
-
-    journeyPlanning: [
-      { title: "Documents Ready", note: "Have your passport and Saudi visa or GCC ID ready before departure for the Salwa/Abu Samra crossing." },
-      { title: "Confirm Your Eastern Province Destination", note: "Let your driver know whether you're headed to Dammam, Khobar, or Dhahran specifically, since they're a short distance apart but not identical." },
-      { title: "Event Timing", note: "This route sees increased demand around business events and family visit seasons — book ahead during busier periods." },
-      { title: "Rest Stops", note: "The drive through Al-Ahsa and Hofuf offers natural stopping points if you'd like a break partway." },
-    ],
-    bestTimeToTravel: [
-      "This route doesn't have a strongly seasonal traffic pattern beyond specific business events or family visit periods.",
-      "Weekday travel tends to see smoother border processing than weekend peak periods.",
-    ],
-
     faqs: [
-      { q: "How far is Doha from Dammam?", a: "Approximately 440 km by road via the Salwa/Abu Samra border crossing." },
-      { q: "How long does it take to drive from Doha to Dammam?", a: "Around 5 to 6 hours including border processing." },
-      { q: "Do I need to change vehicles at the border?", a: "No — one vehicle and driver cover the full journey from Qatar into Saudi Arabia, including the crossing." },
-      { q: "Is this route shorter than Doha to Riyadh?", a: "Yes — Dammam sits closer to the Salwa border within the Eastern Province, making this a shorter drive than continuing on to Riyadh." },
-      { q: "Can I book a private transfer for this whole route?", a: "Yes — Gulf Trip Service arranges direct Doha to Dammam transfers via the Salwa/Abu Samra border." },
-      { q: "Can you drop me off in Khobar or Dhahran instead of central Dammam?", a: "Yes — all three are covered by this route; let your driver know your specific destination when booking." },
-      { q: "Do I need a visa to cross into Saudi Arabia?", a: "GCC nationals cross with a national ID. Other nationalities need a valid Saudi visa — confirm current requirements before traveling." },
+      { q: "How far is Doha to Dammam by road?", a: "About **330 km**, through the Salwa / Abu Samra border and up Route 95." },
+      { q: "How long is the drive from Dammam to Qatar?", a: "About **4 hours** of driving, or **4.5–5.5 hours** with the border." },
+      { q: "How far is Qatar from Dammam?", a: "Doha is about **330 km** from Dammam by road; the Salwa border is about **240 km** from Dammam." },
+      { q: "Is there a taxi from Dammam to Doha?", a: "**Yes**, door to door in both directions, including from King Fahd International Airport." },
+      { q: "Do I change cars at Salwa?", a: "**No.** One car and driver for the whole journey." },
     ],
-
-    relatedDistanceSlugs: ["doha-to-riyadh"],
-    relatedServiceLinks: [
-      { href: "/qatar-to-dammam-taxi-service", label: "Qatar to Dammam taxi service" },
-      { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport to Qatar taxi service" },
-      { href: "/private-taxi", label: "Private taxi service" },
+    arabic: {
+      answer: "المسافة من الدوحة إلى الدمام نحو 330 كم براً، ومدة القيادة نحو 4 ساعات زائد إجراءات منفذ سلوى.",
+      faqs: [{ q: "من الدمام إلى قطر بالسيارة كم ساعة؟", a: "نحو **4 ساعات قيادة**، أو **4.5 إلى 5.5 ساعات** مع إجراءات الحدود." }],
+    },
+    transferBenefits: ["Same car through Salwa", "To Dammam, Khobar or Dhahran", "DMM airport runs"],
+    relatedDistanceSlugs: ["doha-to-riyadh", "bahrain-to-dammam", "dammam-to-kuwait"],
+    relatedLinks: [
+      { href: "/services/dammam", label: "Dammam taxi service" },
+      { href: "/destinations/doha", label: "Doha private transfers" },
+      { href: "/saudi-arabia-to-qatar-taxi-service", label: "Saudi Arabia to Qatar taxi" },
     ],
+    source: `${OSRM}: 327 km, 3.9 h (Rome2Rio 329 km); DMM airport–Doha 351 km`,
+    verified: "2026-11-20",
+  },
 
-    ctaText: "Get a Private Transfer Quote for Doha to Dammam",
-    lastReviewed: "2026-08-26",
+  /* ── UAE ──────────────────────────────────────────────────────── */
+  "riyadh-to-dubai": {
+    slug: "riyadh-to-dubai", origin: "Riyadh", destination: "Dubai", region: "uae",
+    breadcrumbLabel: "Riyadh to Dubai",
+    title: "Riyadh to Dubai Distance by Road: 1,000 km, 10–11 hrs",
+    meta: "Riyadh to Dubai is about 1,000 km by road, 10–11 hrs driving plus the Al Batha–Ghuwaifat border. Same distance Dubai to Riyadh. Private taxi door to door.",
+    km: 1000,
+    drive: "10–11 hours", withBorder: "11–12.5 hours",
+    highways: "Route 10 via Haradh to Al Batha, then the E11 through Abu Dhabi",
+    border: BATHA,
+    routeForward: { href: "/riyadh-to-dubai-taxi-service", label: "Riyadh to Dubai taxi" },
+    routeReverse: { href: "/dubai-to-riyadh-taxi-service", label: "Dubai to Riyadh taxi" },
+    routeIntro: "A full day on the road. Route 10 runs south-east from Riyadh through Haradh to the UAE border at Al Batha, and the E11 carries on along the coast through Abu Dhabi to Dubai.",
+    steps: [
+      { title: "Riyadh", body: "An early pickup from your home, hotel or office." },
+      { title: "Route 10 via Haradh", body: "About 440 km across the desert to the border, with a rest stop on the way." },
+      { title: "Al Batha / Al Ghuwaifat", body: "Saudi exit and UAE entry, in the same car." },
+      { title: "E11 through Abu Dhabi", body: "About 450 km along the coast, past Abu Dhabi, to Dubai." },
+      { title: "Dubai", body: "Drop-off at your hotel, home or Dubai International Airport." },
+    ],
+    reverse: "Dubai to Riyadh is the same 1,000 km the other way: the E11 to Al Ghuwaifat, then Route 10 via Haradh to Riyadh. Allow 11–12.5 hours with the border.",
+    options: [ROUTE_TAXI("11–12.5 h"), SELF_DRIVE("11–12.5 h", "Insurance valid in both countries"), FLIGHT],
+    tips: [
+      { icon: "clock", title: "Start at dawn", body: "Leaving early puts the border in daylight and Dubai before late evening." },
+      { icon: "coffee", title: "Two breaks", body: "On a drive this long we plan at least two rest stops." },
+      { icon: "fileCheck", title: "UAE entry", body: "Check whether each passenger gets a visa on arrival or needs one in advance." },
+      { icon: "users", title: "Best for groups", body: "One fare per car makes the drive good value for families; solo travellers usually fly." },
+    ],
+    faqs: [
+      { q: "How far is Riyadh to Dubai by road?", a: "About **1,000 km**, via Route 10, the Al Batha border and the E11 through Abu Dhabi." },
+      { q: "How many hours from Riyadh to Dubai by car?", a: "About **10–11 hours** of driving, or **11–12.5 hours** with the border and rest stops." },
+      { q: "Which border do you cross to the UAE?", a: "**Al Batha** (Saudi Arabia) and **Al Ghuwaifat** (UAE), the main Saudi–UAE road crossing." },
+      { q: "Is there a car with driver from Riyadh to Dubai?", a: "**Yes.** One private car and driver, door to door, priced on WhatsApp." },
+      { q: "Should I fly or drive from Riyadh to Dubai?", a: "Fly if you are alone with light luggage. **Drive** with family, a group or a lot of luggage." },
+    ],
+    transferBenefits: ["One car for the whole day", "Same car through Al Batha", "Two planned rest stops"],
+    relatedDistanceSlugs: ["dammam-to-dubai", "dammam-to-abu-dhabi", "riyadh-to-kuwait", "doha-to-riyadh"],
+    relatedLinks: [
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/destinations/dubai", label: "Dubai private transfers" },
+      { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE taxi" },
+    ],
+    source: `${OSRM}: 996 km, 10.4 h via Route 10 and Al Batha`,
+    verified: "2026-11-20",
+  },
+
+  "dammam-to-dubai": {
+    slug: "dammam-to-dubai", origin: "Dammam", destination: "Dubai", region: "uae",
+    breadcrumbLabel: "Dammam to Dubai",
+    title: "Dammam to Dubai Distance by Road: 800 km, 8–9 hrs + Border",
+    meta: "Dammam to Dubai is about 800 km by road, 8–9 hrs driving via the Al Batha–Ghuwaifat border. Same distance Dubai to Dammam. Private taxi door to door.",
+    km: 800,
+    drive: "8–9 hours", withBorder: "9–10.5 hours",
+    highways: "Route 95 south past Salwa to Al Batha, then the E11 through Abu Dhabi",
+    border: BATHA,
+    routeForward: { href: "/dammam-to-dubai-taxi-service", label: "Dammam to Dubai taxi" },
+    routeReverse: { href: "/dubai-to-dammam-taxi-service", label: "Dubai to Dammam taxi" },
+    routeIntro: "Shorter than many expect: about 800 km. Route 95 runs south from the Dammam area along the coast past Al Uqair and Salwa to the UAE border at Al Batha, then the E11 continues through Abu Dhabi to Dubai.",
+    steps: [
+      { title: "Dammam, Al Khobar or Dhahran", body: "Pickup from your address or King Fahd International Airport." },
+      { title: "Route 95 south", body: "About 300 km down the coast past Al Uqair and Salwa." },
+      { title: "Al Batha / Al Ghuwaifat", body: "Saudi exit and UAE entry, in the same car." },
+      { title: "E11 through Abu Dhabi", body: "About 450 km along the coast to Dubai." },
+      { title: "Dubai", body: "Drop-off at your hotel, home or Dubai International Airport." },
+    ],
+    reverse: "Dubai to Dammam is the same 800 km the other way, via Al Ghuwaifat and Route 95: 9–10.5 hours with the border.",
+    options: [ROUTE_TAXI("9–10.5 h"), SELF_DRIVE("9–10.5 h", "Insurance valid in both countries"), FLIGHT],
+    tips: [
+      { icon: "clock", title: "A long day", body: "Plan the trip as a full travel day and start early." },
+      { icon: "coffee", title: "Rest stops", body: "Breaks around Salwa and in Abu Dhabi emirate split the drive." },
+      { icon: "fileCheck", title: "UAE entry", body: "Check each passenger's UAE visa status before departure." },
+      { icon: "luggage", title: "Luggage freedom", body: "No airline limits: useful for relocations and long stays." },
+    ],
+    faqs: [
+      { q: "How far is Dammam to Dubai by road?", a: "About **800 km**, down Route 95 to the Al Batha border and along the E11." },
+      { q: "How long is the drive from Dammam to Dubai?", a: "About **8–9 hours** of driving, or **9–10.5 hours** with the border." },
+      { q: "Which border is used from Dammam to Dubai?", a: "**Al Batha** on the Saudi side and **Al Ghuwaifat** on the UAE side." },
+      { q: "Is there a taxi from Dammam to Dubai?", a: "**Yes**, one private car and driver door to door, priced on WhatsApp." },
+      { q: "Does the road go through Qatar?", a: "**No.** It stays in Saudi Arabia until Al Batha, passing Salwa but not entering Qatar." },
+    ],
+    transferBenefits: ["About 800 km, one car", "Same car through Al Batha", "Relocation-friendly luggage space"],
+    relatedDistanceSlugs: ["dammam-to-abu-dhabi", "riyadh-to-dubai", "doha-to-dammam"],
+    relatedLinks: [
+      { href: "/services/dammam", label: "Dammam taxi service" },
+      { href: "/destinations/dubai", label: "Dubai private transfers" },
+      { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE taxi" },
+    ],
+    source: `${OSRM}: 803 km, 7.8 h via Route 95, Al Batha and the E11 (other sources 787–885 km)`,
+    verified: "2026-11-20",
+  },
+
+  "dammam-to-abu-dhabi": {
+    slug: "dammam-to-abu-dhabi", origin: "Dammam", destination: "Abu Dhabi", region: "uae",
+    breadcrumbLabel: "Dammam to Abu Dhabi",
+    title: "Dammam to Abu Dhabi Distance by Road: 700 km, 7–8 hrs",
+    meta: "Dammam to Abu Dhabi is about 700 km by road, 7–8 hrs driving plus the Al Batha–Ghuwaifat border. Same distance Abu Dhabi to Dammam. Private taxi, 24/7.",
+    km: 700,
+    drive: "7–8 hours", withBorder: "8–9.5 hours",
+    highways: "Route 95 south to Al Batha, then the E11 and E22 into Abu Dhabi",
+    border: BATHA,
+    routeForward: { href: "/dammam-to-abu-dhabi-taxi-service", label: "Dammam to Abu Dhabi taxi" },
+    routeReverse: { href: "/abu-dhabi-to-dammam-taxi-service", label: "Abu Dhabi to Dammam taxi" },
+    routeIntro: "The coast road from the Eastern Province to the UAE capital: Route 95 south past Salwa to Al Batha, then the E11 east and the E22 into the city.",
+    steps: [
+      { title: "Dammam, Al Khobar or Dhahran", body: "Pickup from your address or King Fahd International Airport." },
+      { title: "Route 95 south", body: "About 300 km down the coast past Al Uqair and Salwa." },
+      { title: "Al Batha / Al Ghuwaifat", body: "Saudi exit and UAE entry, in the same car." },
+      { title: "E11 and E22", body: "About 360 km east to Abu Dhabi city, Yas or Saadiyat." },
+    ],
+    reverse: "Abu Dhabi to Dammam is the same 700 km the other way, via Al Ghuwaifat and Route 95: 8–9.5 hours with the border.",
+    options: [ROUTE_TAXI("8–9.5 h"), SELF_DRIVE("8–9.5 h", "Insurance valid in both countries"), FLIGHT],
+    tips: [
+      { icon: "clock", title: "Start early", body: "An early start puts the border in daylight." },
+      { icon: "coffee", title: "Break around Salwa", body: "The usual place for a rest before the border." },
+      { icon: "fileCheck", title: "UAE entry", body: "Confirm visa-on-arrival eligibility for each passenger." },
+      { icon: "mapPin", title: "Name your Abu Dhabi area", body: "Abu Dhabi island, Yas and Saadiyat add different times at the end." },
+    ],
+    faqs: [
+      { q: "How far is Dammam to Abu Dhabi by road?", a: "About **700 km**, down Route 95 to the Al Batha border, then the E11." },
+      { q: "How far is Abu Dhabi to Dammam by road?", a: "The same **700 km** the other way, about **8–9.5 hours** with the border." },
+      { q: "How long does Dammam to Abu Dhabi take?", a: "About **7–8 hours** of driving, or **8–9.5 hours** with the border." },
+      { q: "Is Khobar to Abu Dhabi the same road?", a: "**Yes.** From Al Khobar you join the same Route 95 south; the distance is similar." },
+      { q: "Do I change cars at the border?", a: "**No.** One car and driver for the whole journey." },
+    ],
+    transferBenefits: ["About 700 km, one car", "Same car through Al Batha", "To Abu Dhabi, Yas or Saadiyat"],
+    relatedDistanceSlugs: ["dammam-to-dubai", "riyadh-to-dubai", "doha-to-dammam"],
+    relatedLinks: [
+      { href: "/services/dammam", label: "Dammam taxi service" },
+      { href: "/destinations/abu-dhabi", label: "Abu Dhabi private transfers" },
+      { href: "/saudi-arabia-to-uae-taxi-service", label: "Saudi Arabia to UAE taxi" },
+    ],
+    source: `${OSRM}: 706 km, 6.9 h via Route 95, Al Batha, E11 and E22`,
+    verified: "2026-11-20",
+  },
+
+  /* ── Saudi Arabia ─────────────────────────────────────────────── */
+  "riyadh-to-dammam": {
+    slug: "riyadh-to-dammam", origin: "Riyadh", destination: "Dammam", region: "saudi",
+    breadcrumbLabel: "Riyadh to Dammam",
+    title: "Riyadh to Dammam Distance by Road: 400 km, 4 hrs",
+    meta: "Riyadh to Dammam is about 400 km on Highway 40, around 4 hours of driving with no border. Same distance Dammam to Riyadh. Private taxi door to door, 24/7.",
+    km: 400,
+    drive: "about 4 hours",
+    highways: "Highway 40, the Riyadh–Dammam motorway",
+    routeForward: { href: "/riyadh-to-dammam-guide", label: "Riyadh to Dammam taxi" },
+    routeReverse: { href: "/dammam-to-riyadh-taxi-service", label: "Dammam to Riyadh taxi" },
+    routeIntro: "One motorway, no border: Highway 40 links Riyadh and the Eastern Province in a straight line across the desert.",
+    steps: [
+      { title: "Riyadh", body: "Pickup anywhere in the city or at King Khalid International Airport." },
+      { title: "Highway 40 east", body: "About 400 km of motorway, with a rest stop halfway if you want one." },
+      { title: "Dammam, Al Khobar or Dhahran", body: "Drop-off at your address or King Fahd International Airport." },
+    ],
+    reverse: "Dammam to Riyadh is the same 400 km on Highway 40, about 4 hours of driving.",
+    options: [
+      ROUTE_TAXI("~4 h"),
+      SELF_DRIVE("~4 h"),
+      { option: "Train", doorToDoor: false, time: "Train ride, plus station transfers", transfers: "A ride to and from each station", bestFor: "Solo travellers" },
+      FLIGHT,
+    ],
+    tips: [
+      { icon: "clock", title: "Avoid Riyadh rush hour", body: "Leaving before 7 am or after 9 am misses the worst city traffic." },
+      { icon: "briefcase", title: "Work on the way", body: "A private car lets you take calls and work for the whole four hours." },
+      { icon: "coffee", title: "Halfway stop", body: "Services on Highway 40 make an easy break." },
+      { icon: "plane", title: "Airport to airport", body: "We run RUH to DMM and back, timed to your flights." },
+    ],
+    faqs: [
+      { q: "How far is Riyadh to Dammam by road?", a: "About **400 km** on **Highway 40**, with no border to cross." },
+      { q: "How long does Riyadh to Dammam take by car?", a: "About **4 hours** of driving, depending on traffic leaving Riyadh." },
+      { q: "How far is Dammam to Riyadh?", a: "The same **400 km** the other way, about **4 hours**." },
+      { q: "Should I take the train or a taxi?", a: "The train avoids road traffic; a taxi saves the trips to and from each station and goes **door to door**." },
+      { q: "Can I book a taxi from Dammam to Riyadh?", a: "**Yes**, door to door in both directions, 24/7." },
+    ],
+    transferBenefits: ["No border, one motorway", "Door to door in about 4 hours", "Airport-to-airport runs"],
+    relatedDistanceSlugs: ["bahrain-to-riyadh", "riyadh-to-kuwait", "doha-to-riyadh", "riyadh-to-makkah"],
+    relatedLinks: [
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/services/dammam", label: "Dammam taxi service" },
+      { href: "/riyadh-to-dammam-airport-taxi-service", label: "Riyadh to Dammam Airport taxi" },
+    ],
+    source: `${OSRM}: 410 km, 3.9 h on Highway 40`,
+    verified: "2026-11-20",
   },
 
   "riyadh-to-jeddah": {
-    slug: "riyadh-to-jeddah",
-    origin: "Riyadh",
-    destination: "Jeddah",
-    originCitySlug: "riyadh",
-    destinationCitySlug: "jeddah",
-    originAirportHref: "/riyadh-airport-taxi-service",
-    destinationAirportHref: "/jeddah-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Riyadh to Jeddah Distance & Travel Time",
-    intro: "How far Jeddah is from Riyadh, how long the drive between Saudi Arabia's two largest cities takes, and why most travelers on this route choose to fly.",
+    slug: "riyadh-to-jeddah", origin: "Riyadh", destination: "Jeddah", region: "saudi",
     breadcrumbLabel: "Riyadh to Jeddah",
-
-    roadDistance: "approximately 950–1,000 km by road",
-    driveTime: "approximately 10–11 hours of continuous driving",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Riyadh to Jeddah connects Saudi Arabia's capital to its main Red Sea gateway city — the two largest cities in the country, roughly 950 to 1,000 km apart across the width of the peninsula.",
-      "Given the distance, this is realistically a full-day journey by road, and the large majority of travelers between these two cities choose to fly rather than drive — domestic flights between Riyadh and Jeddah are frequent and short.",
-      "For those who do drive — often for business reasons requiring a vehicle at the destination, or travelers who specifically want to see the country by road — the route crosses from the central Najd plateau down to the western Hejaz coastal region.",
+    title: "Riyadh to Jeddah Distance by Road: 950 km, 10–11 hrs",
+    meta: "Riyadh to Jeddah is about 950 km by road, 10–11 hours driving on Highway 40 via Taif. Same distance Jeddah to Riyadh. Private car with driver on request.",
+    km: 950,
+    drive: "10–11 hours",
+    highways: "Highway 40 via Taif",
+    routeIntro: "Coast to coast across the country: Highway 40 runs west from Riyadh across the Najd, climbs to Taif and descends to the Red Sea at Jeddah.",
+    steps: [
+      { title: "Riyadh", body: "An early-morning pickup." },
+      { title: "Highway 40 west", body: "About 750 km across the Najd to Taif, with two rest stops." },
+      { title: "Taif", body: "The mountain city where many travellers break the journey." },
+      { title: "Down to Jeddah", body: "The final stretch to the Red Sea. Non-Muslims follow the signed road that bypasses Makkah." },
     ],
-    routeCharacteristics: [
-      "Connects Saudi Arabia's two largest cities, roughly 950–1,000 km apart.",
-      "Crosses from the central Najd plateau to the western Hejaz coastal region.",
-      "One of the longest major domestic corridors, similar in scale to Riyadh-Makkah.",
-      "No international border crossing — entirely domestic.",
+    reverse: "Jeddah to Riyadh is the same 950 km the other way on Highway 40, 10–11 hours of driving.",
+    options: [
+      ROUTE_TAXI("10–11 h + stops"),
+      SELF_DRIVE("10–11 h + stops"),
+      { option: "Intercity coach", doorToDoor: false, time: "Longer, fixed timetable", transfers: "Coach station at each end", bestFor: "Low budget" },
+      FLIGHT,
     ],
-    factorsAffectingTime: [
-      "Given the length of this drive, rest, meal, and prayer stops meaningfully extend the total journey time beyond the pure driving estimate.",
-      "The large majority of travel between these two cities happens by air rather than road, given how frequent and short domestic flights are.",
-      "Departure timing matters for those who do drive — starting early avoids a very late arrival into Jeddah.",
+    tips: [
+      { icon: "clock", title: "Treat it as a full day", body: "With stops, most travellers spend 11–12 hours on the road." },
+      { icon: "mapPin", title: "Break in Taif", body: "Taif is the natural place for a long stop or an overnight." },
+      { icon: "navigation", title: "Makkah bypass", body: "Non-Muslims must use the signed bypass road around Makkah; your driver knows it." },
+      { icon: "users", title: "Who drives it", body: "Families moving house and groups with luggage; solo travellers usually fly." },
     ],
-
-    travelOptions: [
-      {
-        title: "Domestic Flight",
-        description: "The default choice for the large majority of travelers between Riyadh and Jeddah — frequent, short domestic flights make this far more practical than the 10–11 hour drive for most trips.",
-      },
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct, door-to-door option for travelers who specifically need a vehicle at their destination, or who prefer a private overland journey over flying.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for confident long-distance drivers, though a 10–11 hour single-day drive is demanding — most self-drivers split the journey with an overnight stop.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door pickup — useful for travelers who need a vehicle available at the Jeddah end",
-      "A private vehicle for your group only, suited to a full-day journey",
-      "Professional driver experienced with long-distance travel across the country",
-      "Flexible departure time, so you can start early and avoid a late-night arrival",
-      "Rest stops planned around your group rather than a fixed schedule",
-      "Suitable for business travelers moving equipment or vehicles between the two cities",
-    ],
-
-    journeyPlanning: [
-      { title: "Consider Flying First", note: "For the large majority of trips between these two cities, a domestic flight is faster and more practical than the full road journey." },
-      { title: "Plan for a Full Day if Driving", note: "If you do choose to drive, treat it as a full-day journey with realistic rest stops rather than something to fit around other plans." },
-      { title: "Early Departure", note: "If driving, an early start avoids finishing the journey into Jeddah late at night." },
-      { title: "Business Vehicle Transport", note: "If you specifically need your own vehicle in Jeddah, driving (or arranging transport) may be worth the extra time compared to flying." },
-    ],
-    bestTimeToTravel: [
-      "This route doesn't have a strongly seasonal traffic pattern for road travel — most travelers choose flights regardless of season, given the distance.",
-      "For those driving, an early morning departure is generally more comfortable than a late-day start, given the length of the journey.",
-    ],
-
     faqs: [
-      { q: "How far is Riyadh from Jeddah?", a: "Approximately 950 to 1,000 km by road — the distance between Saudi Arabia's two largest cities." },
-      { q: "How long does it take to drive from Riyadh to Jeddah?", a: "Around 10 to 11 hours of continuous driving. In practice, most journeys take longer once rest and meal stops are added." },
-      { q: "Do most people drive or fly between Riyadh and Jeddah?", a: "The large majority fly — domestic flights between the two cities are frequent and short, making them far more practical than the 10–11 hour drive for most trips." },
-      { q: "Why would someone drive instead of flying this route?", a: "Mainly travelers who need their own vehicle at the destination, or those who specifically prefer a private overland journey over flying." },
-      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges private transfers for the full Riyadh to Jeddah journey for travelers who prefer to drive." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Is this route similar in length to Riyadh to Makkah?", a: "Yes — Jeddah and Makkah are close together, so the Riyadh-Jeddah and Riyadh-Makkah distances are similar, both around 870–1,000 km." },
+      { q: "How far is Riyadh to Jeddah by road?", a: "About **950 km** on **Highway 40**, via Taif." },
+      { q: "How many hours from Riyadh to Jeddah by car?", a: "About **10–11 hours** of driving, plus rest stops." },
+      { q: "Is it better to fly from Riyadh to Jeddah?", a: "For one person, **yes**. A private car suits families, groups and anyone moving a lot of luggage." },
+      { q: "Can non-Muslims drive from Riyadh to Jeddah?", a: "**Yes**, using the signed road that bypasses Makkah." },
+      { q: "Can I book a car with driver from Riyadh to Jeddah?", a: "**Yes**, on request. Send your date and passengers on WhatsApp for a quote." },
     ],
-
-    relatedDistanceSlugs: ["jeddah-to-makkah", "riyadh-to-makkah", "abha-to-jeddah"],
-    relatedServiceLinks: [
-      { href: "/private-taxi", label: "Private taxi service" },
-      { href: "/corporate-transportation-services", label: "Corporate transportation" },
-      { href: "/jeddah-airport-taxi-service", label: "Jeddah airport taxi service" },
-      // Deliberately cross-linked rather than consolidated: the blog post
-      // compares the full set of travel options (fly / drive / bus /
-      // private transfer) and is this corridor's better-performing page in
-      // Search Console, while this page owns the distance and drive-time
-      // facts. Two distinct intents, so both are kept and linked.
-      { href: "/blog/riyadh-to-jeddah-travel", label: "Riyadh to Jeddah: all travel options compared" },
+    transferBenefits: ["Coast to coast in one car", "Break the trip in Taif", "Ideal for moving house"],
+    relatedDistanceSlugs: ["riyadh-to-makkah", "jeddah-to-makkah", "jeddah-to-madinah", "abha-to-jeddah"],
+    relatedLinks: [
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/services/jeddah", label: "Jeddah taxi service" },
+      { href: "/blog/riyadh-to-jeddah-travel", label: "Riyadh to Jeddah: every way to travel" },
     ],
+    source: `${OSRM}: 955 km, 10.5 h on Highway 40`,
+    verified: "2026-11-20",
+  },
 
-    ctaText: "Get a Private Transfer Quote for Riyadh to Jeddah",
-    lastReviewed: "2026-08-26",
+  "riyadh-to-makkah": {
+    slug: "riyadh-to-makkah", origin: "Riyadh", destination: "Makkah", region: "saudi",
+    breadcrumbLabel: "Riyadh to Makkah",
+    title: "Riyadh to Makkah Distance by Road: 870 km, 9–10 hrs",
+    meta: "Riyadh to Makkah is about 870 km on Highway 40 via Taif, 9–10 hours of driving. Same distance Makkah to Riyadh. Private taxi with a Miqat stop, 24/7.",
+    km: 870,
+    drive: "9–10 hours",
+    highways: "Highway 40 via Taif",
+    routeForward: { href: "/riyadh-to-makkah-taxi-service", label: "Riyadh to Makkah taxi" },
+    routeReverse: { href: "/makkah-to-riyadh-taxi-service", label: "Makkah to Riyadh taxi" },
+    routeIntro: "The road for Umrah from the capital: Highway 40 west to Taif, past the Miqat at Qarn al-Manazil, and down into Makkah.",
+    steps: [
+      { title: "Riyadh", body: "Pickup at home or your hotel, timed around prayer if you wish." },
+      { title: "Highway 40 west", body: "About 750 km across the Najd with planned rest stops." },
+      { title: "Qarn al-Manazil Miqat", body: "A stop to enter Ihram for pilgrims performing Umrah." },
+      { title: "Makkah", body: "Drop-off at your hotel near the Haram." },
+    ],
+    reverse: "Makkah to Riyadh is the same 870 km the other way on Highway 40, 9–10 hours of driving.",
+    options: [
+      ROUTE_TAXI("9–10 h + stops"),
+      SELF_DRIVE("9–10 h + stops"),
+      { option: "Intercity coach", doorToDoor: false, time: "Longer, fixed timetable", transfers: "Coach station at each end", bestFor: "Low budget" },
+      { option: "Fly to Jeddah, then road", doorToDoor: false, time: "Shorter, two legs", transfers: "Jeddah airport to Makkah by car or train", bestFor: "Solo pilgrims" },
+    ],
+    tips: [
+      { icon: "landmark", title: "Miqat stop", body: "Tell us if you are performing Umrah; we stop at Qarn al-Manazil for Ihram." },
+      { icon: "clock", title: "Plan around prayer", body: "Departure and stops can follow prayer times." },
+      { icon: "calendarCheck", title: "Peak seasons", body: "Ramadan and school holidays fill Makkah hotels and roads; book early." },
+      { icon: "users", title: "Families together", body: "One car for the whole family, with room for luggage and Zamzam." },
+    ],
+    faqs: [
+      { q: "How far is Riyadh to Makkah by road?", a: "About **870 km** on **Highway 40**, via Taif." },
+      { q: "How many hours from Riyadh to Makkah by car?", a: "About **9–10 hours** of driving, plus prayer and rest stops." },
+      { q: "Do you stop at the Miqat?", a: "**Yes.** We stop at **Qarn al-Manazil** for pilgrims to enter Ihram." },
+      { q: "How far is Makkah to Riyadh?", a: "The same **870 km** the other way." },
+      { q: "Is there a taxi from Riyadh to Makkah?", a: "**Yes**, door to door in both directions, booked on WhatsApp." },
+    ],
+    transferBenefits: ["Miqat stop included", "Door to your Makkah hotel", "Planned prayer stops"],
+    relatedDistanceSlugs: ["riyadh-to-jeddah", "jeddah-to-makkah", "makkah-to-madinah"],
+    relatedLinks: [
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/services/makkah", label: "Makkah taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+    ],
+    source: `${OSRM}: 872 km, 9.6 h on Highway 40`,
+    verified: "2026-11-20",
+  },
+
+  "jeddah-to-madinah": {
+    slug: "jeddah-to-madinah", origin: "Jeddah", destination: "Madinah", region: "saudi",
+    breadcrumbLabel: "Jeddah to Madinah",
+    title: "Jeddah to Madinah Distance by Road: 420 km, 4.5 hrs",
+    meta: "Jeddah to Madinah is about 420 km by road, about 4.5 hours of driving on Route 15. Same distance Madinah to Jeddah. Private taxi from Jeddah Airport.",
+    km: 420,
+    drive: "about 4.5 hours",
+    highways: "Route 5 north, then Route 15 to Madinah",
+    routeForward: { href: "/jeddah-airport-to-madinah-taxi-service", label: "Jeddah Airport to Madinah taxi" },
+    routeReverse: { href: "/madinah-to-jeddah-airport-taxi-service", label: "Madinah to Jeddah Airport taxi" },
+    routeIntro: "The usual first leg of a Madinah-first Umrah: north out of Jeddah, then Route 15 inland to Madinah.",
+    steps: [
+      { title: "Jeddah or KAIA", body: "Meet and greet at King Abdulaziz International Airport, or pickup in the city." },
+      { title: "North out of Jeddah", body: "Route 5 for the first stretch." },
+      { title: "Route 15", body: "About 300 km inland to Madinah, with a rest stop on the way." },
+      { title: "Madinah", body: "Drop-off at your hotel near Al-Masjid an-Nabawi." },
+    ],
+    reverse: "Madinah to Jeddah is the same 420 km the other way, about 4.5 hours. For a flight from KAIA, leave Madinah at least 8 hours before an international departure.",
+    options: [
+      ROUTE_TAXI("~4.5 h"),
+      { option: "Haramain train", doorToDoor: false, time: "Shorter on the train, plus station transfers", transfers: "A ride to and from each station", bestFor: "Light luggage" },
+      FLIGHT,
+    ],
+    tips: [
+      { icon: "plane", title: "Straight from KAIA", body: "We track your flight and meet you at arrivals." },
+      { icon: "luggage", title: "Umrah luggage", body: "Zamzam and extra bags fit easily in an SUV or van." },
+      { icon: "clock", title: "Arrive rested", body: "Door to door means no station transfer with luggage at either end." },
+      { icon: "users", title: "Family groups", body: "One car or van for the whole group, booked once." },
+    ],
+    faqs: [
+      { q: "How far is Jeddah to Madinah by road?", a: "About **420 km**, mostly on **Route 15**." },
+      { q: "How long is the drive from Jeddah to Madinah?", a: "About **4.5 hours** of driving." },
+      { q: "Is the train faster?", a: "The Haramain train is quicker on the rails, but a taxi goes **door to door** with your luggage." },
+      { q: "Can you pick me up at Jeddah Airport for Madinah?", a: "**Yes**, with meet and greet and flight tracking at KAIA." },
+    ],
+    transferBenefits: ["Straight from KAIA arrivals", "Room for Umrah luggage", "Door to your Madinah hotel"],
+    relatedDistanceSlugs: ["jeddah-to-makkah", "makkah-to-madinah", "riyadh-to-jeddah"],
+    relatedLinks: [
+      { href: "/services/jeddah", label: "Jeddah taxi service" },
+      { href: "/services/madinah", label: "Madinah taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+    ],
+    source: `${OSRM}: 404 km city centre to city centre, 4.6 h`,
+    verified: "2026-11-20",
+  },
+
+  "jeddah-to-makkah": {
+    slug: "jeddah-to-makkah", origin: "Jeddah", destination: "Makkah", region: "saudi",
+    breadcrumbLabel: "Jeddah to Makkah",
+    title: "Jeddah to Makkah Distance by Road: 80 km, 1–1.5 hrs",
+    meta: "Jeddah to Makkah is about 80 km by road, 1–1.5 hours on Highway 40, longer in Umrah season. Same distance Makkah to Jeddah. Private taxi from KAIA, 24/7.",
+    km: 80,
+    drive: "1–1.5 hours",
+    highways: "Highway 40",
+    routeForward: { href: "/jeddah-to-makkah-taxi-service", label: "Jeddah to Makkah taxi" },
+    routeReverse: { href: "/makkah-to-jeddah-taxi-service", label: "Makkah to Jeddah taxi" },
+    routeIntro: "The short road from the coast to the Haram: Highway 40 east from Jeddah to Makkah. Non-Muslims cannot enter Makkah.",
+    steps: [
+      { title: "Jeddah or KAIA", body: "Pickup in the city or meet and greet at King Abdulaziz International Airport." },
+      { title: "Highway 40 east", body: "About an hour outside peak times." },
+      { title: "Makkah", body: "Drop-off at your hotel, as close to the Haram as traffic rules allow." },
+    ],
+    reverse: "Makkah to Jeddah is the same 80 km the other way, 1–1.5 hours, and longer in Umrah season.",
+    options: [
+      ROUTE_TAXI("1–1.5 h"),
+      { option: "Haramain train", doorToDoor: false, time: "Short ride, plus station transfers", transfers: "A ride to and from each station", bestFor: "Light luggage" },
+      { option: "Bus", doorToDoor: false, time: "Longer", transfers: "Bus station at each end", bestFor: "Low budget" },
+    ],
+    tips: [
+      { icon: "calendarCheck", title: "Umrah season traffic", body: "Ramadan and peak weeks can stretch the drive to two hours." },
+      { icon: "plane", title: "From KAIA", body: "We track your flight and wait at arrivals." },
+      { icon: "landmark", title: "Ihram before you land", body: "Pilgrims from abroad usually enter Ihram on the plane before the Miqat." },
+      { icon: "luggage", title: "Luggage to the hotel", body: "Your driver helps with bags to the hotel drop-off point." },
+    ],
+    faqs: [
+      { q: "How far is Jeddah to Makkah by road?", a: "About **80 km** on **Highway 40**." },
+      { q: "How long does Jeddah to Makkah take?", a: "About **1–1.5 hours**, and up to **2 hours** in peak Umrah season." },
+      { q: "How far is Makkah from Jeddah Airport?", a: "KAIA is on Jeddah's north side; allow about **1.5 hours** to Makkah outside peak times." },
+      { q: "Can non-Muslims go to Makkah?", a: "**No.** Entry to Makkah is for Muslims only." },
+    ],
+    transferBenefits: ["KAIA meet and greet", "Door to your Makkah hotel", "24/7, Umrah season included"],
+    relatedDistanceSlugs: ["makkah-to-madinah", "jeddah-to-madinah", "riyadh-to-makkah"],
+    relatedLinks: [
+      { href: "/services/jeddah", label: "Jeddah taxi service" },
+      { href: "/services/makkah", label: "Makkah taxi service" },
+      { href: "/airport-transfer-for-umrah", label: "Umrah airport transfer" },
+    ],
+    source: `${OSRM}: 88 km city centre to the Haram area, 1.1 h`,
+    verified: "2026-11-20",
+  },
+
+  "makkah-to-madinah": {
+    slug: "makkah-to-madinah", origin: "Makkah", destination: "Madinah", region: "saudi",
+    breadcrumbLabel: "Makkah to Madinah",
+    title: "Makkah to Madinah Distance by Road: 450 km, 4–5 hrs",
+    meta: "Makkah to Madinah is about 450 km on Route 15 (Hijrah Road), 4–5 hours of driving. Same distance Madinah to Makkah. Private taxi hotel to hotel, 24/7.",
+    km: 450,
+    drive: "4–5 hours",
+    highways: "Route 15, the Hijrah Road",
+    routeForward: { href: "/makkah-to-madinah-taxi-service", label: "Makkah to Madinah taxi" },
+    routeReverse: { href: "/madinah-to-makkah-taxi-service", label: "Madinah to Makkah taxi" },
+    routeIntro: "The road between the two holy cities: Route 15 runs north from Makkah to Madinah through open desert.",
+    steps: [
+      { title: "Makkah hotel", body: "Pickup at your hotel after your last prayer at the Haram." },
+      { title: "Route 15 north", body: "About 430 km with a rest stop on the way." },
+      { title: "Madinah hotel", body: "Drop-off near Al-Masjid an-Nabawi." },
+    ],
+    reverse: "Madinah to Makkah is the same 450 km on Route 15, 4–5 hours. Pilgrims entering Ihram stop at the Miqat of Dhul Hulayfah, just outside Madinah.",
+    options: [
+      ROUTE_TAXI("4–5 h"),
+      { option: "Haramain train", doorToDoor: false, time: "Shorter on the train, plus station transfers", transfers: "A ride to and from each station", bestFor: "Light luggage" },
+      { option: "Coach", doorToDoor: false, time: "Longer", transfers: "Coach station at each end", bestFor: "Low budget" },
+    ],
+    tips: [
+      { icon: "landmark", title: "Miqat going to Makkah", body: "From Madinah, we stop at Dhul Hulayfah for Ihram." },
+      { icon: "clock", title: "Time it around prayer", body: "Many pilgrims leave after Fajr or Asr." },
+      { icon: "luggage", title: "Zamzam and gifts", body: "Room for extra bags without train limits." },
+      { icon: "users", title: "Hotel to hotel", body: "No station transfers with tired children or elderly parents." },
+    ],
+    faqs: [
+      { q: "How far is Makkah to Madinah by road?", a: "About **450 km** on **Route 15**, the Hijrah Road." },
+      { q: "How long does Makkah to Madinah take by car?", a: "About **4–5 hours** of driving." },
+      { q: "Is the Haramain train better?", a: "The train is quicker on the rails; a taxi goes **hotel to hotel** with all your luggage." },
+      { q: "Do you stop at the Miqat from Madinah?", a: "**Yes**, at **Dhul Hulayfah** for pilgrims going to Makkah." },
+    ],
+    transferBenefits: ["Hotel to hotel", "Miqat stop on request", "Room for Zamzam"],
+    relatedDistanceSlugs: ["jeddah-to-makkah", "jeddah-to-madinah", "riyadh-to-makkah"],
+    relatedLinks: [
+      { href: "/services/makkah", label: "Makkah taxi service" },
+      { href: "/services/madinah", label: "Madinah taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+    ],
+    source: `${OSRM}: 436 km, 4.8 h on Route 15`,
+    verified: "2026-11-20",
   },
 
   "abha-to-riyadh": {
-    slug: "abha-to-riyadh",
-    origin: "Abha",
-    destination: "Riyadh",
-    originCitySlug: "abha",
-    destinationCitySlug: "riyadh",
-    originAirportHref: "/abha-airport-taxi-service",
-    destinationAirportHref: "/riyadh-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Abha to Riyadh Distance & Travel Time",
-    intro: "How far Riyadh is from Abha, how long the drive down from the Asir highlands to the capital takes, and the realistic options for making this long journey.",
+    slug: "abha-to-riyadh", origin: "Abha", destination: "Riyadh", region: "saudi",
     breadcrumbLabel: "Abha to Riyadh",
-
-    roadDistance: "approximately 780–850 km by road",
-    driveTime: "approximately 8.5–9.5 hours of continuous driving",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Abha to Riyadh connects the cool Asir highlands in the southwest to the capital in the central Najd region — a long domestic corridor that starts with a descent out of the mountains before joining the main highway network heading north-east.",
-      "This route is genuinely long enough that a meaningful share of travelers choose to fly rather than drive, particularly business and government travelers connecting to Riyadh on a fixed schedule.",
-      "For those who do drive, the journey passes through Bisha and the Wadi ad-Dawasir region before reaching the flatter central plateau approaching Riyadh.",
+    title: "Abha to Riyadh Distance by Road: 950 km, 11–12 hrs",
+    meta: "Abha to Riyadh is about 950 km by road via Khamis Mushait and Bisha, 11–12 hours of driving. Same distance Riyadh to Abha. Private car on request.",
+    km: 950,
+    drive: "11–12 hours",
+    highways: "Route 10 to Khamis Mushait, then north via Bisha, joining Highway 40 near Riyadh",
+    routeIntro: "From the Asir highlands to the capital: down from Abha through Khamis Mushait, north past Bisha across the central plateau, and into Riyadh.",
+    steps: [
+      { title: "Abha", body: "Pickup in Abha or at Abha International Airport." },
+      { title: "Khamis Mushait", body: "The first 30 km, out of the mountains." },
+      { title: "North via Bisha", body: "The long middle stretch across the plateau, with two rest stops." },
+      { title: "Into Riyadh", body: "The last 60 km on Highway 40." },
     ],
-    routeCharacteristics: [
-      "Starts with a descent out of the Asir highlands before joining the main highway network.",
-      "Passes through Bisha and the Wadi ad-Dawasir region en route to the central plateau.",
-      "One of the longer domestic corridors in the south-to-central direction.",
-      "No international border crossing — entirely domestic.",
+    reverse: "Riyadh to Abha is the same 950 km the other way, 11–12 hours of driving.",
+    options: [ROUTE_TAXI("11–12 h + stops"), SELF_DRIVE("11–12 h + stops"), FLIGHT],
+    tips: [
+      { icon: "clock", title: "Consider an overnight", body: "At 11–12 hours, many families split the drive at Bisha." },
+      { icon: "coffee", title: "Several breaks", body: "We plan at least two rest stops." },
+      { icon: "plane", title: "Flying is quicker alone", body: "Abha airport has direct flights to Riyadh; the road suits families and luggage." },
+      { icon: "navigation", title: "Mountain start", body: "The first stretch descends from the highlands; leave in daylight." },
     ],
-    factorsAffectingTime: [
-      "The initial mountain descent out of Abha is slower than open highway and factors into the total time.",
-      "Given the distance, rest, meal, and prayer stops meaningfully extend the journey beyond the pure driving estimate.",
-      "Business and government travelers on a fixed Riyadh schedule often weigh flying against the length of this drive.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct, door-to-door option covering the mountain descent and the long highway stretch to Riyadh in one vehicle.",
-      },
-      {
-        title: "Domestic Flight",
-        description: "Given the distance, a domestic flight between Abha and Riyadh is a realistic and commonly chosen alternative, particularly for business and government travelers on a schedule.",
-      },
-      {
-        title: "Self-Driving",
-        description: "Realistic for confident long-distance drivers, though the combination of mountain descent and long highway distance makes it a demanding single day for some.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door pickup — no need to arrange separate transport at either end",
-      "A private vehicle for your group only, suited to a full-day journey",
-      "Professional driver experienced with the mountain descent and long highway stretch",
-      "Flexible departure time to avoid finishing the journey after dark",
-      "Rest stops planned around your group rather than a fixed schedule",
-      "Suitable for families and small groups making the full journey together",
-    ],
-
-    journeyPlanning: [
-      { title: "Plan for a Full Day", note: "Between the 8.5–9.5 hour driving estimate and realistic rest stops, treat this as a full-day journey." },
-      { title: "Consider Flying for a Fixed Schedule", note: "Business and government travelers connecting to a specific Riyadh appointment often find flying more reliable than the full drive." },
-      { title: "Early Departure", note: "Starting early is more comfortable than a late departure, since it avoids finishing the mountain descent or the Riyadh approach after dark." },
-      { title: "Families & Elderly Passengers", note: "Build in extra rest stops beyond the minimum — a long mountain-to-highway drive is more tiring than the driving-time estimate alone suggests." },
-    ],
-    bestTimeToTravel: [
-      "Cooler early-morning hours are generally easier for the mountain descent out of Abha than the heat of midday.",
-      "This route doesn't have a strongly seasonal traffic pattern beyond that — road conditions matter more than time of year for a journey this long.",
-    ],
-
     faqs: [
-      { q: "How far is Abha from Riyadh?", a: "Approximately 780–850 km by road, from the Asir highlands to the central Najd plateau." },
-      { q: "How long does it take to drive from Abha to Riyadh?", a: "Around 8.5 to 9.5 hours of continuous driving. In practice, most journeys take longer with rest and meal stops." },
-      { q: "What is the best way to travel from Abha to Riyadh?", a: "A private taxi or chauffeur transfer covers the full distance directly. Given the length, a domestic flight is also a realistic alternative, especially for a fixed-schedule business trip." },
-      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges private transfers for the full Abha to Riyadh journey." },
-      { q: "Is this route suitable for a family trip?", a: "It can be, with realistic planning — build in extra rest stops beyond the minimum, especially with young children or elderly passengers." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Does the route pass through any other cities?", a: "Yes — the journey typically passes through Bisha and the Wadi ad-Dawasir region before reaching the central plateau approaching Riyadh." },
+      { q: "How far is Abha to Riyadh by road?", a: "About **950 km**, via Khamis Mushait and Bisha." },
+      { q: "How long does Abha to Riyadh take by car?", a: "About **11–12 hours** of driving, plus rest stops." },
+      { q: "Should I fly from Abha to Riyadh?", a: "Alone, **yes**. A private car suits families, groups and heavy luggage." },
+      { q: "Can I book a car with driver from Abha to Riyadh?", a: "**Yes**, on request. Send your date and passengers on WhatsApp." },
     ],
-
-    relatedDistanceSlugs: ["abha-to-madinah", "abha-to-jeddah"],
-    relatedServiceLinks: [
-      { href: "/private-taxi", label: "Private taxi service" },
-      { href: "/corporate-transportation-services", label: "Corporate transportation" },
-      { href: "/riyadh-airport-taxi-service", label: "Riyadh airport taxi service" },
+    transferBenefits: ["One car the whole way", "Overnight stop on request", "Family and luggage friendly"],
+    relatedDistanceSlugs: ["abha-to-jeddah", "abha-to-madinah", "riyadh-to-jeddah"],
+    relatedLinks: [
+      { href: "/services/abha", label: "Abha taxi service" },
+      { href: "/services/riyadh", label: "Riyadh taxi service" },
+      { href: "/abha-airport-taxi-service", label: "Abha airport taxi" },
     ],
-
-    ctaText: "Get a Private Transfer Quote for Abha to Riyadh",
-    heroImage: "/destinations/abha-asir-mountains-view.webp",
-    heroImageAlt: "The Asir mountains near Abha, starting point of the Abha to Riyadh route",
-    lastReviewed: "2026-08-26",
+    source: `${OSRM}: 947 km, 11.5 h via Khamis Mushait and Bisha (was shown as 780–850 km)`,
+    verified: "2026-11-20",
   },
 
   "abha-to-jeddah": {
-    slug: "abha-to-jeddah",
-    origin: "Abha",
-    destination: "Jeddah",
-    originCitySlug: "abha",
-    destinationCitySlug: "jeddah",
-    originAirportHref: "/abha-airport-taxi-service",
-    destinationAirportHref: "/jeddah-airport-taxi-service",
-
-    eyebrow: "Distance & Travel Guide",
-    h1: "Abha to Jeddah Distance & Travel Time",
-    intro: "How far Jeddah is from Abha, how long the drive from the Asir highlands to the Red Sea coast takes via Taif, and the realistic travel options for this route.",
+    slug: "abha-to-jeddah", origin: "Abha", destination: "Jeddah", region: "saudi",
     breadcrumbLabel: "Abha to Jeddah",
-
-    roadDistance: "approximately 620–680 km by road",
-    driveTime: "approximately 7–7.5 hours of continuous driving",
-    routeType: "Domestic route within Saudi Arabia — no border crossing",
-
-    overviewParagraphs: [
-      "Abha to Jeddah runs from the cool Asir highlands down toward the Red Sea coast, typically routed through Taif — the well-known mountain resort city that sits roughly midway between the two.",
-      "This is shorter than Abha's other long-distance corridors (to Riyadh or Madinah), making it a more manageable single-day drive, though still substantial enough that rest planning matters.",
-      "The route mixes tourism traffic (travelers combining Abha's mountain scenery with Jeddah's Red Sea coast) with business travel connecting the two regions.",
+    title: "Abha to Jeddah Distance by Road: 690 km, 7.5–8.5 hrs",
+    meta: "Abha to Jeddah is about 690 km by road along the Red Sea coast, 7.5–8.5 hours of driving. Same distance Jeddah to Abha. Private car with driver on request.",
+    km: 690,
+    drive: "7.5–8.5 hours",
+    highways: "Down to the coast, then Route 5 north along the Red Sea",
+    routeIntro: "The fastest road leaves the highlands for the coast and runs north on Route 5 along the Red Sea to Jeddah.",
+    steps: [
+      { title: "Abha", body: "Pickup in Abha or at Abha International Airport." },
+      { title: "Down to the coast", body: "The descent from the Asir mountains towards the Tihama plain." },
+      { title: "Route 5 north", body: "About 580 km along the Red Sea coast, with a rest stop." },
+      { title: "Jeddah", body: "Drop-off in the city or at King Abdulaziz International Airport." },
     ],
-    routeCharacteristics: [
-      "Runs from the Asir highlands through Taif to the Red Sea coast at Jeddah.",
-      "Taif serves as a natural roughly-midway point on this corridor.",
-      "Shorter than Abha's routes to Riyadh or Madinah.",
-      "No international border crossing — entirely domestic.",
+    altRoute: "The mountain road via Al Baha and Taif is more scenic but slower; we can take it on request.",
+    reverse: "Jeddah to Abha is the same 690 km the other way, 7.5–8.5 hours of driving.",
+    options: [ROUTE_TAXI("7.5–8.5 h + stops"), SELF_DRIVE("7.5–8.5 h + stops"), FLIGHT],
+    tips: [
+      { icon: "navigation", title: "Coast or mountains", body: "The coast road is faster; the Taif road is the scenic choice." },
+      { icon: "clock", title: "Daylight descent", body: "Plan the mountain section in daylight." },
+      { icon: "coffee", title: "One long break", body: "A rest stop on Route 5 splits the drive." },
+      { icon: "plane", title: "Connecting at KAIA?", body: "We time the drive to your flight from Jeddah." },
     ],
-    factorsAffectingTime: [
-      "The initial mountain descent out of Abha is slower than open highway and factors into the total time.",
-      "Traffic through the Taif area can vary, particularly during the region's cooler-season tourism periods.",
-      "Rest stops for meals and prayer are worth planning into a 7–7.5 hour drive.",
-    ],
-
-    travelOptions: [
-      {
-        title: "Private Taxi / Chauffeur Transfer",
-        description: "A direct, door-to-door option covering the mountain descent, the Taif stretch, and the final approach to Jeddah in one vehicle.",
-      },
-      {
-        title: "Self-Driving",
-        description: "A manageable single day's drive for confident drivers, shorter than Abha's other long-distance routes.",
-      },
-      {
-        title: "Domestic Flight",
-        description: "A realistic alternative for travelers who'd rather skip the drive entirely, particularly those on a tight schedule.",
-      },
-    ],
-    transferBenefits: [
-      "Door-to-door pickup — no need to arrange separate transport at either end",
-      "A private vehicle for your group only",
-      "Professional driver experienced with the mountain descent and the Taif stretch",
-      "Flexible departure time around your own schedule",
-      "Suitable for families and small groups combining Abha and Jeddah in one trip",
-      "Available for either direction of the journey",
-    ],
-
-    journeyPlanning: [
-      { title: "Combine with Taif", note: "Since the route passes through Taif roughly midway, some travelers build in a stop there rather than treating it purely as a pass-through point." },
-      { title: "Plan for a Full Day", note: "At 7–7.5 hours plus rest stops, this is a substantial single-day journey, though shorter than Abha's other long-distance routes." },
-      { title: "Mountain Descent Timing", note: "An earlier departure makes the initial descent out of Abha more comfortable than a late-day start." },
-      { title: "Luggage for a Multi-Region Trip", note: "Travelers combining Abha's mountains with Jeddah's coast often carry gear for both — mention this when booking so the right vehicle is arranged." },
-    ],
-    bestTimeToTravel: [
-      "Cooler early-morning hours are generally easier for the mountain descent out of Abha than the heat of midday.",
-      "This route doesn't have a strongly seasonal traffic pattern beyond that, though the Taif area can see more visitors during its own cooler-season tourism periods.",
-    ],
-
     faqs: [
-      { q: "How far is Abha from Jeddah?", a: "Approximately 620–680 km by road, typically routed through Taif." },
-      { q: "How long does it take to drive from Abha to Jeddah?", a: "Around 7 to 7.5 hours of continuous driving, including the route through Taif." },
-      { q: "Does this route pass through Taif?", a: "Yes — Taif sits roughly midway on this corridor and is the natural route between the Asir highlands and Jeddah." },
-      { q: "Is this route shorter than Abha to Riyadh?", a: "Yes, noticeably — Abha to Jeddah is roughly 620–680 km compared to 780–850 km for Abha to Riyadh." },
-      { q: "Can I book a private taxi for this whole route?", a: "Yes — Gulf Trip Service arranges private transfers for the full Abha to Jeddah journey." },
-      { q: "Is the route domestic or international?", a: "Entirely domestic — no border crossing is involved." },
-      { q: "Is this route suitable for a family trip combining mountains and coast?", a: "Yes — many travelers combine Abha's mountain scenery with Jeddah's Red Sea coast in one trip, and this route connects them directly." },
+      { q: "How far is Abha to Jeddah by road?", a: "About **690 km** along the Red Sea coast on **Route 5**." },
+      { q: "How long does Abha to Jeddah take by car?", a: "About **7.5–8.5 hours** of driving, plus stops." },
+      { q: "Can we go via Taif?", a: "**Yes.** The mountain road via Al Baha and Taif is slower but scenic." },
+      { q: "Can I book a car with driver from Abha to Jeddah?", a: "**Yes**, on request, priced on WhatsApp." },
     ],
-
+    transferBenefits: ["Coast or mountain road", "One car the whole way", "KAIA drop-offs"],
     relatedDistanceSlugs: ["abha-to-riyadh", "abha-to-madinah", "riyadh-to-jeddah"],
-    relatedServiceLinks: [
-      { href: "/private-taxi", label: "Private taxi service" },
-      { href: "/jeddah-airport-taxi-service", label: "Jeddah airport taxi service" },
-      { href: "/abha-airport-taxi-service", label: "Abha airport taxi service" },
+    relatedLinks: [
+      { href: "/services/abha", label: "Abha taxi service" },
+      { href: "/services/jeddah", label: "Jeddah taxi service" },
+      { href: "/abha-airport-taxi-service", label: "Abha airport taxi" },
     ],
+    source: `${OSRM}: 687 km, 7.9 h via Route 5 (the page said 620–680 km via Taif)`,
+    verified: "2026-11-20",
+  },
 
-    ctaText: "Get a Private Transfer Quote for Abha to Jeddah",
-    heroImage: "/destinations/abha-asir-mountains-view.webp",
-    heroImageAlt: "The Asir mountains near Abha, starting point of the Abha to Jeddah route",
-    lastReviewed: "2026-08-26",
+  "abha-to-madinah": {
+    slug: "abha-to-madinah", origin: "Abha", destination: "Madinah", region: "saudi",
+    breadcrumbLabel: "Abha to Madinah",
+    title: "Abha to Madinah Distance by Road: 1,080 km, 12–13 hrs",
+    meta: "Abha to Madinah is about 1,080 km by road via the Red Sea coast and Jeddah, 12–13 hours of driving. Same distance Madinah to Abha. Private car on request.",
+    km: 1080,
+    drive: "12–13 hours",
+    highways: "Route 5 along the Red Sea, then Route 15 to Madinah",
+    routeIntro: "The longest of the Abha routes: down to the coast, north on Route 5 past Jeddah, then inland on Route 15 to Madinah.",
+    steps: [
+      { title: "Abha", body: "An early pickup in Abha or at the airport." },
+      { title: "Route 5 north", body: "About 690 km to the Jeddah area along the coast." },
+      { title: "Break in Jeddah", body: "Most travellers stop overnight or for a long break here." },
+      { title: "Route 15 to Madinah", body: "About 400 km inland to Madinah." },
+    ],
+    reverse: "Madinah to Abha is the same 1,080 km the other way, 12–13 hours of driving, best split in Jeddah.",
+    options: [ROUTE_TAXI("12–13 h + stops"), SELF_DRIVE("12–13 h + stops"), FLIGHT],
+    tips: [
+      { icon: "clock", title: "Split the journey", body: "Over 1,000 km is best done over two days, with a night in Jeddah." },
+      { icon: "landmark", title: "Umrah on the way", body: "The road passes near Makkah; we can plan an Umrah stop." },
+      { icon: "coffee", title: "Several breaks", body: "We plan rest stops every two to three hours." },
+      { icon: "luggage", title: "Room for everything", body: "An SUV or van carries a family's luggage without airline limits." },
+    ],
+    faqs: [
+      { q: "How far is Abha to Madinah by road?", a: "About **1,080 km**, via the Red Sea coast and Jeddah." },
+      { q: "How long does Abha to Madinah take by car?", a: "About **12–13 hours** of driving; most travellers split it in **Jeddah**." },
+      { q: "Can we combine it with Umrah?", a: "**Yes.** The road passes near Makkah, so an Umrah stop can be planned in." },
+      { q: "Can I book a car with driver from Abha to Madinah?", a: "**Yes**, on request, priced on WhatsApp." },
+    ],
+    transferBenefits: ["Two-day option via Jeddah", "Umrah stop on request", "One car the whole way"],
+    relatedDistanceSlugs: ["abha-to-jeddah", "jeddah-to-madinah", "makkah-to-madinah"],
+    relatedLinks: [
+      { href: "/services/abha", label: "Abha taxi service" },
+      { href: "/services/madinah", label: "Madinah taxi service" },
+      { href: "/umrah-taxi-services", label: "Umrah taxi services" },
+    ],
+    source: `${OSRM}: 1,084 km, 12.3 h via Route 5 and Route 15 (was shown as 980–1,060 km)`,
+    verified: "2026-11-20",
   },
 };
 
 export const allDistanceRoutes: DistanceRouteData[] = Object.values(distanceRoutes);
+
+/** "~470 km" */
+export const kmLabel = (d: DistanceRouteData) => `~${d.km.toLocaleString("en-US")} km`;
+
+export const isCrossBorder = (d: DistanceRouteData) => Boolean(d.border);
+
+/** Display order and headings for the /distance index. */
+export const DISTANCE_REGIONS: { id: DistanceRegion; heading: string; intro: string }[] = [
+  { id: "bahrain", heading: "Saudi Arabia ↔ Bahrain", intro: "Across the King Fahd Causeway." },
+  { id: "qatar", heading: "Saudi Arabia ↔ Qatar", intro: "Through the Salwa / Abu Samra border." },
+  { id: "kuwait", heading: "Saudi Arabia ↔ Kuwait", intro: "Through Al Khafji / Al Nuwaiseeb." },
+  { id: "uae", heading: "Saudi Arabia ↔ UAE", intro: "Through Al Batha / Al Ghuwaifat." },
+  { id: "saudi", heading: "Within Saudi Arabia", intro: "Intercity and Umrah routes, no border." },
+];
+
+/**
+ * The distance page for a route page, if one exists, with the anchor
+ * "{A} to {B} distance by road" written in the route page's own direction.
+ */
+export function distanceLinkForRoute(routeHref: string): { href: string; label: string } | null {
+  for (const d of allDistanceRoutes) {
+    if (d.routeForward?.href === routeHref) return { href: `/distance/${d.slug}`, label: `${d.origin} to ${d.destination} distance by road` };
+    if (d.routeReverse?.href === routeHref) return { href: `/distance/${d.slug}`, label: `${d.destination} to ${d.origin} distance by road` };
+  }
+  return null;
+}

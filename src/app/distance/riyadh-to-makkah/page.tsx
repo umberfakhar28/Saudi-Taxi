@@ -1,13 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Riyadh to Makkah Distance: 870 km by Road",
-  description: "Riyadh to Makkah is approximately 870 km by road, around 9 to 10 hours of continuous driving — plus the alternatives for an Umrah trip.",
-  path: "/distance/riyadh-to-makkah",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["riyadh-to-makkah"];
+
+export const metadata = distanceMetadata(data);
 
 export default function RiyadhToMakkahDistance() {
-  return <DistancePage data={distanceRoutes["riyadh-to-makkah"]} />;
+  return <DistancePage data={data} />;
 }

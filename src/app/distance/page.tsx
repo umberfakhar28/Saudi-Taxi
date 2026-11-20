@@ -3,7 +3,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { WhatsAppIcon } from "@/components/Icons";
 import { breadcrumbSchema, jsonLd } from "@/lib/jsonld";
 import { waLink } from "@/lib/contact";
-import { allDistanceRoutes, type DistanceRouteData } from "@/lib/distanceRouteData";
+import { allDistanceRoutes, DISTANCE_REGIONS } from "@/lib/distanceRouteData";
 import DistanceRouteCard from "@/components/DistanceRouteCard";
 import styles from "./distance.module.css";
 
@@ -14,10 +14,8 @@ import styles from "./distance.module.css";
  * keep in sync. Exists specifically so DistancePage.tsx's own breadcrumb
  * link ("Distance Guides") resolves to a real page instead of a dead link.
  *
- * Routes are grouped into Saudi Arabia / Cross-Border by reading
- * `routeType` (already states "Domestic" or "Cross-border" in plain
- * language for the page itself) rather than a second category field to
- * keep in sync — same principle as /routes' own classify() helper.
+ * Routes are grouped by region (Bahrain, Qatar, Kuwait, UAE, within Saudi
+ * Arabia), read from each record's `region` field.
  */
 export const metadata = generatePageMetadata({
   title: "Distance & Travel Time Guides | Saudi Arabia & Gulf Routes",
@@ -27,13 +25,8 @@ export const metadata = generatePageMetadata({
 
 const schemas = [breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Distance Guides", path: "/distance" }])];
 
-function isCrossBorder(route: DistanceRouteData): boolean {
-  return route.routeType.toLowerCase().includes("cross-border");
-}
-
 export default function DistanceHubPage() {
-  const saudiRoutes = allDistanceRoutes.filter((r) => !isCrossBorder(r)).sort((a, b) => a.origin.localeCompare(b.origin));
-  const crossBorderRoutes = allDistanceRoutes.filter(isCrossBorder).sort((a, b) => a.origin.localeCompare(b.origin));
+  const groups = DISTANCE_REGIONS.map((g) => ({ ...g, routes: allDistanceRoutes.filter((r) => r.region === g.id) })).filter((g) => g.routes.length > 0);
 
   return (
     <>
@@ -50,33 +43,20 @@ export default function DistanceHubPage() {
           </div>
         </section>
 
-        {saudiRoutes.length > 0 && (
-          <section className="section-lg">
+        {groups.map((g, gi) => (
+          <section key={g.id} className="section-lg" style={gi % 2 === 1 ? { background: "var(--bg-subtle)" } : undefined}>
             <div className="container">
               <div className="section-header centered">
-                <span className="section-eyebrow">{saudiRoutes.length} Routes</span>
-                <h2 className="section-title">Saudi Arabia Routes</h2>
+                <span className="section-eyebrow">{g.routes.length} {g.routes.length === 1 ? "Route" : "Routes"}</span>
+                <h2 className="section-title">{g.heading}</h2>
+                <p className="section-subtitle">{g.intro}</p>
               </div>
               <div className={styles.grid}>
-                {saudiRoutes.map((route, i) => <DistanceRouteCard key={route.slug} route={route} priority={i < 3} />)}
+                {g.routes.map((route, i) => <DistanceRouteCard key={route.slug} route={route} priority={gi === 0 && i < 3} />)}
               </div>
             </div>
           </section>
-        )}
-
-        {crossBorderRoutes.length > 0 && (
-          <section className="section-lg" style={{ background: "var(--bg-subtle)" }}>
-            <div className="container">
-              <div className="section-header centered">
-                <span className="section-eyebrow">{crossBorderRoutes.length} Routes</span>
-                <h2 className="section-title">Cross-Border Routes</h2>
-              </div>
-              <div className={styles.grid}>
-                {crossBorderRoutes.map((route) => <DistanceRouteCard key={route.slug} route={route} />)}
-              </div>
-            </div>
-          </section>
-        )}
+        ))}
 
         <section style={{ background: "linear-gradient(135deg, var(--bg-dark), var(--accent-dark))", padding: "5rem 0", textAlign: "center" }}>
           <div className="container">

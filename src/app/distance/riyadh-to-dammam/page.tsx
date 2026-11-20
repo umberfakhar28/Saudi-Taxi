@@ -1,13 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Riyadh to Dammam Distance: 400 km, 4 Hours",
-  description: "Riyadh to Dammam is about 400 km by road and roughly 4 hours of driving across open highway — no border crossing. Journey planning and private transfer options.",
-  path: "/distance/riyadh-to-dammam",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["riyadh-to-dammam"];
+
+export const metadata = distanceMetadata(data);
 
 export default function RiyadhToDammamDistance() {
-  return <DistancePage data={distanceRoutes["riyadh-to-dammam"]} />;
+  return <DistancePage data={data} />;
 }

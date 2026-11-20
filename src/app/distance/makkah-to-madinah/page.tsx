@@ -1,13 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Makkah to Madinah Distance: 450 km by Road",
-  description: "Makkah to Madinah is approximately 450 km by road, about 4 to 5 hours via the Haramain Expressway. Compare the train, flying and a private transfer for Umrah.",
-  path: "/distance/makkah-to-madinah",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["makkah-to-madinah"];
+
+export const metadata = distanceMetadata(data);
 
 export default function MakkahToMadinahDistance() {
-  return <DistancePage data={distanceRoutes["makkah-to-madinah"]} />;
+  return <DistancePage data={data} />;
 }

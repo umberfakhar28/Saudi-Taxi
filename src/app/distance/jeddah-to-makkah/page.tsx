@@ -1,13 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Jeddah to Makkah Distance: 80 km by Road",
-  description: "Jeddah to Makkah is about 80 km by road — 60 to 90 minutes outside peak season, 90 to 120 minutes during Umrah season. Transfer options for pilgrims from KAIA.",
-  path: "/distance/jeddah-to-makkah",
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["jeddah-to-makkah"];
+
+export const metadata = distanceMetadata(data);
 
 export default function JeddahToMakkahDistance() {
-  return <DistancePage data={distanceRoutes["jeddah-to-makkah"]} />;
+  return <DistancePage data={data} />;
 }

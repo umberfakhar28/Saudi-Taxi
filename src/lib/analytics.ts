@@ -150,6 +150,7 @@ const BUTTON_LOCATIONS: Record<string, string> = {
   "hotel-card": "hotel_card",
   "final-cta": "final_cta",
   "booking-box": "booking_box",
+  "distance-booking-box": "distance_booking_box",
   "footer-social": "footer",
   "footer-contact": "footer",
   "unlabelled-footer": "footer",

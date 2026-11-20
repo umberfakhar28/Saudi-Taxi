@@ -1,15 +1,13 @@
-import { generatePageMetadata } from "@/lib/seo";
 import DistancePage from "@/components/DistancePage";
 import { distanceRoutes } from "@/lib/distanceRouteData";
+import { distanceMetadata } from "@/lib/distanceFare";
 
-export const metadata = generatePageMetadata({
-  title: "Bahrain to Jubail Distance: 150 km by Road",
-  description: "Bahrain to Jubail is about 150 km including the King Fahd Causeway, usually 2 to 2.5 hours with border processing — the practical route for Jubail contractors.",
-  path: "/distance/bahrain-to-jubail",
-  ogImage: distanceRoutes["bahrain-to-jubail"].heroImage,
-  ogImageAlt: distanceRoutes["bahrain-to-jubail"].heroImageAlt,
-});
+// Title, description and every figure come from the pair's record in
+// lib/distanceRouteData.ts (docs/seo/distance/distance-audit.md).
+const data = distanceRoutes["bahrain-to-jubail"];
+
+export const metadata = distanceMetadata(data);
 
 export default function BahrainToJubailDistance() {
-  return <DistancePage data={distanceRoutes["bahrain-to-jubail"]} />;
+  return <DistancePage data={data} />;
 }
