@@ -241,8 +241,11 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { slug: "/abu-dhabi-to-dammam-taxi-service", priority: 0.72 },
     // Search Query Content Map, §D — the one new route page the query audit justified
     { slug: "/bahrain-to-jubail-taxi-service", priority: 0.76 },
+    // Phase A route pages (docs/seo/routes/new-routes-plan.md)
+    { slug: "/jubail-to-bahrain-taxi-service", priority: 0.76 },
+    { slug: "/dammam-to-bahrain-taxi-service", priority: 0.8 },
   ].map(({ slug, priority }) => {
-    const hasArabic = slug === "/dammam-airport-to-bahrain-taxi-service" || slug === "/dammam-airport-to-qatar-taxi-service";
+    const hasArabic = slug === "/dammam-airport-to-bahrain-taxi-service" || slug === "/dammam-airport-to-qatar-taxi-service" || slug === "/dammam-to-bahrain-taxi-service";
     return {
       url: `${BASE_URL}${slug}`,
       lastModified: lastMod(slug),
@@ -266,6 +269,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { slug: "/ar/qatar-to-riyadh-taxi-service", enSlug: "/qatar-to-riyadh-taxi-service", priority: 0.8 },
     { slug: "/ar/riyadh-to-kuwait-taxi-service", enSlug: "/riyadh-to-kuwait-taxi-service", priority: 0.8 },
     { slug: "/ar/riyadh-to-bahrain-taxi-service", enSlug: "/riyadh-to-bahrain-taxi-service", priority: 0.8 },
+    { slug: "/ar/dammam-to-bahrain-taxi-service", enSlug: "/dammam-to-bahrain-taxi-service", priority: 0.8 },
   ].map(({ slug, enSlug, priority }) => ({
     url: `${BASE_URL}${slug}`,
     lastModified: lastMod(slug),

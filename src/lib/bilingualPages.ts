@@ -12,6 +12,7 @@ export const BILINGUAL_PAGES: { en: string; ar: string; labelEn: string; labelAr
   { en: "/contact-us", ar: "/ar/contact-us", labelEn: "Contact Us", labelAr: "تواصل معنا" },
   { en: "/book-online", ar: "/ar/book-online", labelEn: "Book Online", labelAr: "الحجز عبر الإنترنت" },
   { en: "/bahrain-to-dammam-taxi-service", ar: "/ar/bahrain-to-dammam-taxi-service", labelEn: "Bahrain to Dammam", labelAr: "البحرين إلى الدمام" },
+  { en: "/dammam-to-bahrain-taxi-service", ar: "/ar/dammam-to-bahrain-taxi-service", labelEn: "Dammam to Bahrain", labelAr: "الدمام إلى البحرين" },
   { en: "/riyadh-to-qatar-taxi-service", ar: "/ar/riyadh-to-qatar-taxi-service", labelEn: "Riyadh to Doha", labelAr: "الرياض إلى الدوحة" },
   { en: "/riyadh-to-kuwait-taxi-service", ar: "/ar/riyadh-to-kuwait-taxi-service", labelEn: "Riyadh to Kuwait", labelAr: "الرياض إلى الكويت" },
   { en: "/riyadh-to-bahrain-taxi-service", ar: "/ar/riyadh-to-bahrain-taxi-service", labelEn: "Riyadh to Bahrain", labelAr: "الرياض إلى البحرين" },

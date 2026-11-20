@@ -704,6 +704,8 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
       { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi" },
       { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain to Riyadh taxi service" },
       { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain to Dammam taxi service" },
+      { href: "/dammam-to-bahrain-taxi-service", label: "Dammam to Bahrain taxi" },
+      { href: "/jubail-to-bahrain-taxi-service", label: "Jubail to Bahrain taxi" },
       { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },
       { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain cross-border transfer" },
       { href: "/border-crossing", label: "GCC border crossing routes" },
@@ -745,6 +747,8 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     chauffeurInfo: "An hourly chauffeur suits a Pearling Trail walking tour paired with a Manama city stop in the same booking.",
     internalLinks: [
       { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi service" },
+      { href: "/dammam-to-bahrain-taxi-service", label: "Dammam to Bahrain taxi" },
+      { href: "/jubail-to-bahrain-taxi-service", label: "Jubail to Bahrain taxi" },
       { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },
       { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain cross-border transfer" },
       { href: "/border-crossing", label: "GCC border crossing routes" },
@@ -785,6 +789,8 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     cityTransferInfo: "A private transfer connects Amwaj directly into Manama for those splitting a stay between beach time and the city's heritage sights.",
     chauffeurInfo: "An hourly chauffeur suits an evening that moves between an Amwaj beach club and Manama dining without needing to book two separate one-way trips.",
     internalLinks: [
+      { href: "/dammam-to-bahrain-taxi-service", label: "Dammam to Bahrain taxi" },
+      { href: "/jubail-to-bahrain-taxi-service", label: "Jubail to Bahrain taxi" },
       { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },
       { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain cross-border transfer" },
       { href: "/border-crossing", label: "GCC border crossing routes" },
@@ -826,6 +832,8 @@ export const DESTINATION_DETAILS: Record<string, DestinationDetail> = {
     chauffeurInfo: "An hourly chauffeur is especially useful on Grand Prix weekends, when circuit traffic and road closures make timing unpredictable for a single fixed transfer.",
     internalLinks: [
       { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi service" },
+      { href: "/dammam-to-bahrain-taxi-service", label: "Dammam to Bahrain taxi" },
+      { href: "/jubail-to-bahrain-taxi-service", label: "Jubail to Bahrain taxi" },
       { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport to Bahrain taxi service" },
       { href: "/saudi-arabia-to-bahrain-taxi-service", label: "Saudi Arabia to Bahrain cross-border transfer" },
     ],

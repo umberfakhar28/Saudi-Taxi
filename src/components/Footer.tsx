@@ -67,6 +67,7 @@ const Footer = () => {
                     <div className={styles.column}>
                         <h4 className={styles.heading}>Cross-Border Routes</h4>
                         <ul className={styles.list}>
+                            <li className={styles.listItem}><Link href="/dammam-to-bahrain-taxi-service" className={styles.link}>Dammam → Bahrain</Link></li>
                             <li className={styles.listItem}><Link href="/dammam-airport-to-bahrain-taxi-service" className={styles.link}>Dammam Airport → Bahrain</Link></li>
                             <li className={styles.listItem}><Link href="/dammam-airport-to-qatar-taxi-service" className={styles.link}>Dammam Airport → Qatar</Link></li>
                             <li className={styles.listItem}><Link href="/khafji-to-kuwait-taxi-service" className={styles.link}>Khafji → Kuwait</Link></li>

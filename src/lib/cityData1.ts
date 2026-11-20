@@ -364,7 +364,8 @@ export const dammam: CityData = {
   popularRoutes: [
     { from: "Dammam Airport (DMM)", to: "Khobar / Dhahran", time: "30–40 min" },
     { from: "Dammam Airport", to: "Riyadh", time: "~4 hrs", href: "/dammam-airport-to-riyadh-taxi-service" },
-    { from: "Dammam Airport", to: "Bahrain (King Fahd Causeway)", time: "~1–1.5 hrs", href: "/dammam-airport-to-bahrain-taxi-service" },
+    { from: "Dammam", to: "Bahrain (King Fahd Causeway)", time: "~1–2 hrs", href: "/dammam-to-bahrain-taxi-service" },
+    { from: "Dammam Airport", to: "Bahrain (King Fahd Causeway)", time: "~1.5–2.5 hrs", href: "/dammam-airport-to-bahrain-taxi-service" },
     { from: "Dammam Airport", to: "Qatar (Salwa Border)", time: "~5–6 hrs", href: "/dammam-airport-to-qatar-taxi-service" },
     { from: "Dammam Airport", to: "Khafji", time: "~2–2.5 hrs", href: "/dammam-airport-to-khafji-taxi-service" },
   ],

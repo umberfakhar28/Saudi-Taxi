@@ -23,6 +23,7 @@ export const khobar: CityData = {
     { from: "Khobar", to: "DMM Airport", time: "25–35 min" },
     { from: "Khobar", to: "Dammam / Dhahran", time: "15–25 min" },
     { from: "Khobar", to: "Jubail", time: "~1 hr" },
+    { from: "Khobar", to: "Bahrain (King Fahd Causeway)", time: "~1–2 hrs", href: "/dammam-to-bahrain-taxi-service" },
   ],
   pickupPoints: ["Khobar Corniche", "Al Rashid Mall", "Dhahran Mall", "Half Moon Bay Road hotels", "Prince Turki Street", "Khobar business district"],
   faqs: [
@@ -91,6 +92,7 @@ export const jubail: CityData = {
     { from: "Jubail Industrial City", to: "DMM Airport", time: "~1 hr" },
     { from: "Jubail", to: "Dammam / Khobar", time: "~1 hr" },
     { from: "Jubail", to: "Riyadh", time: "~3.5 hrs" },
+    { from: "Jubail", to: "Bahrain (King Fahd Causeway)", time: "~2.5–3 hrs", href: "/jubail-to-bahrain-taxi-service" },
   ],
   pickupPoints: ["Jubail Industrial City gates", "SABIC headquarters", "Jubail residential area hotels", "Royal Commission guesthouses", "Fanateer Beach", "Jubail Commercial Area"],
   faqs: [

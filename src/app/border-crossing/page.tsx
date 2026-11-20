@@ -505,6 +505,8 @@ export default function BorderCrossing() {
             <RelatedLinks
                 title="Popular Specific Cross-Border Routes"
                 links={[
+                    { href: "/dammam-to-bahrain-taxi-service", label: "Dammam → Bahrain" },
+                    { href: "/jubail-to-bahrain-taxi-service", label: "Jubail → Bahrain" },
                     { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport → Bahrain" },
                     { href: "/bahrain-to-dammam-taxi-service", label: "Bahrain → Dammam" },
                     { href: "/dammam-airport-to-qatar-taxi-service", label: "Dammam Airport → Qatar" },

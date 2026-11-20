@@ -46,6 +46,7 @@ const ArabicFooter = () => {
                     <div className={styles.column}>
                         <h4 className={styles.heading}>الرحلات عبر الحدود</h4>
                         <ul className={styles.list}>
+                            <li className={styles.listItem}><Link href="/ar/dammam-to-bahrain-taxi-service" className={styles.link}>الدمام ← البحرين</Link></li>
                             <li className={styles.listItem}><Link href="/ar/dammam-airport-to-bahrain-taxi-service" className={styles.link}>مطار الدمام ← البحرين</Link></li>
                             <li className={styles.listItem}><Link href="/ar/dammam-airport-to-qatar-taxi-service" className={styles.link}>مطار الدمام ← قطر</Link></li>
                             <li className={styles.listItem}><Link href="/ar/bahrain-to-dammam-taxi-service" className={styles.link}>البحرين ← الدمام</Link></li>

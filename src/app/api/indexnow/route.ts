@@ -45,6 +45,16 @@ const ALL_URLS = [
   `${BASE_URL}/saudi-arabia-to-qatar-taxi-service`,
   `${BASE_URL}/saudi-arabia-to-uae-taxi-service`,
   `${BASE_URL}/saudi-arabia-to-jordan-land-transfer`,
+  // Phase A route pages (20 Nov 2026) and the pages whose figures or links changed with them
+  `${BASE_URL}/jubail-to-bahrain-taxi-service`,
+  `${BASE_URL}/dammam-to-bahrain-taxi-service`,
+  `${BASE_URL}/ar/dammam-to-bahrain-taxi-service`,
+  `${BASE_URL}/bahrain-to-jubail-taxi-service`,
+  `${BASE_URL}/bahrain-to-dammam-taxi-service`,
+  `${BASE_URL}/ar/bahrain-to-dammam-taxi-service`,
+  `${BASE_URL}/dammam-airport-to-bahrain-taxi-service`,
+  `${BASE_URL}/distance/bahrain-to-jubail`,
+  `${BASE_URL}/distance/bahrain-to-dammam`,
   // City tours
   `${BASE_URL}/jeddah-city-tour-services-in-saudi-arabia`,
   `${BASE_URL}/jeddah-to-makkah-taxi-service`,

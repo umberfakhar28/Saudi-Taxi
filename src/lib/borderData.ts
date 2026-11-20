@@ -70,6 +70,8 @@ export const saudiToBahrain: BorderData = {
     { href: "/dammam-airport-taxi-service", label: "Dammam Airport (DMM)" },
   ],
   routeLinks: [
+    { href: "/dammam-to-bahrain-taxi-service", label: "Dammam → Bahrain" },
+    { href: "/jubail-to-bahrain-taxi-service", label: "Jubail → Bahrain" },
     { href: "/dammam-airport-to-bahrain-taxi-service", label: "Dammam Airport → Bahrain" },
     { href: "/riyadh-to-bahrain-taxi-service", label: "Riyadh to Bahrain taxi" },
     { href: "/bahrain-to-riyadh-taxi-service", label: "Bahrain → Riyadh" },
